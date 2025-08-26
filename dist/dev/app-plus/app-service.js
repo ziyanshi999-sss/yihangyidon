@@ -1,0 +1,547 @@
+if (typeof Promise !== "undefined" && !Promise.prototype.finally) {
+  Promise.prototype.finally = function(callback) {
+    const promise = this.constructor;
+    return this.then(
+      (value) => promise.resolve(callback()).then(() => value),
+      (reason) => promise.resolve(callback()).then(() => {
+        throw reason;
+      })
+    );
+  };
+}
+;
+if (typeof uni !== "undefined" && uni && uni.requireGlobal) {
+  const global = uni.requireGlobal();
+  ArrayBuffer = global.ArrayBuffer;
+  Int8Array = global.Int8Array;
+  Uint8Array = global.Uint8Array;
+  Uint8ClampedArray = global.Uint8ClampedArray;
+  Int16Array = global.Int16Array;
+  Uint16Array = global.Uint16Array;
+  Int32Array = global.Int32Array;
+  Uint32Array = global.Uint32Array;
+  Float32Array = global.Float32Array;
+  Float64Array = global.Float64Array;
+  BigInt64Array = global.BigInt64Array;
+  BigUint64Array = global.BigUint64Array;
+}
+;
+if (uni.restoreGlobal) {
+  uni.restoreGlobal(Vue, weex, plus, setTimeout, clearTimeout, setInterval, clearInterval);
+}
+(function(vue) {
+  "use strict";
+  function formatAppLog(type, filename, ...args) {
+    if (uni.__log__) {
+      uni.__log__(type, filename, ...args);
+    } else {
+      console[type].apply(console, [...args, filename]);
+    }
+  }
+  const _export_sfc = (sfc, props) => {
+    const target = sfc.__vccOpts || sfc;
+    for (const [key, val] of props) {
+      target[key] = val;
+    }
+    return target;
+  };
+  const _sfc_main$4 = {};
+  function _sfc_render$3(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("view", { class: "home-container" }, [
+      vue.createElementVNode("h1", null, "首页")
+    ]);
+  }
+  const PagesIndexIndex = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["render", _sfc_render$3], ["__file", "E:/Vue项目/专高六/1/银行项目/uniapp/src/pages/index/index.vue"]]);
+  const _sfc_main$3 = {
+    data() {
+      return {};
+    },
+    methods: {
+      goToProfile() {
+        uni.showToast({
+          title: "个人资料",
+          icon: "none"
+        });
+      },
+      goToSettings() {
+        uni.showToast({
+          title: "设置",
+          icon: "none"
+        });
+      },
+      goToHelp() {
+        uni.showToast({
+          title: "帮助中心",
+          icon: "none"
+        });
+      }
+    }
+  };
+  function _sfc_render$2(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("view", { class: "user-page" }, [
+      vue.createElementVNode("h1", null, "个人中心")
+    ]);
+  }
+  const PagesUserUser = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["render", _sfc_render$2], ["__scopeId", "data-v-99b0ba47"], ["__file", "E:/Vue项目/专高六/1/银行项目/uniapp/src/pages/user/user.vue"]]);
+  const _sfc_main$2 = {};
+  function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("view", { class: "doctor-page" }, [
+      vue.createElementVNode("h1", null, "财富")
+    ]);
+  }
+  const PagesWealthWealth = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["render", _sfc_render$1], ["__file", "E:/Vue项目/专高六/1/银行项目/uniapp/src/pages/wealth/wealth.vue"]]);
+  const _sfc_main$1 = {};
+  function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("view", { class: "encyclopedia-page" }, [
+      vue.createElementVNode("h1", null, "生活")
+    ]);
+  }
+  const PagesLifeLife = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["render", _sfc_render], ["__file", "E:/Vue项目/专高六/1/银行项目/uniapp/src/pages/life/life.vue"]]);
+  __definePage("pages/index/index", PagesIndexIndex);
+  __definePage("pages/user/user", PagesUserUser);
+  __definePage("pages/wealth/wealth", PagesWealthWealth);
+  __definePage("pages/life/life", PagesLifeLife);
+  const _sfc_main = {
+    name: "App",
+    onLaunch(options) {
+      formatAppLog("log", "at App.vue:10", "App Launch", options);
+      this.checkUpdate();
+      this.initUserInfo();
+      this.setSystemInfo();
+      this.initNetworkListener();
+    },
+    onShow(options) {
+      formatAppLog("log", "at App.vue:26", "App Show", options);
+      this.checkLoginStatus();
+      this.restoreAppState();
+    },
+    onHide() {
+      formatAppLog("log", "at App.vue:36", "App Hide");
+      this.saveAppState();
+    },
+    onError(error) {
+      formatAppLog("error", "at App.vue:43", "App Error:", error);
+      this.reportError(error);
+    },
+    onPageNotFound(options) {
+      formatAppLog("log", "at App.vue:50", "Page Not Found:", options);
+      uni.switchTab({
+        url: "/pages/index/index"
+      });
+    },
+    methods: {
+      /**
+       * 检查应用更新
+       */
+      checkUpdate() {
+        plus.runtime.getProperty(plus.runtime.appid, (widgetInfo) => {
+          formatAppLog("log", "at App.vue:65", "当前应用版本:", widgetInfo.version);
+        });
+      },
+      /**
+       * 初始化用户信息
+       */
+      initUserInfo() {
+        try {
+          const userInfo = uni.getStorageSync("userInfo");
+          if (userInfo) {
+            this.globalData.userInfo = userInfo;
+            formatAppLog("log", "at App.vue:79", "用户信息已恢复:", userInfo);
+          }
+        } catch (error) {
+          formatAppLog("error", "at App.vue:82", "恢复用户信息失败:", error);
+        }
+      },
+      /**
+       * 设置系统信息
+       */
+      setSystemInfo() {
+        try {
+          const systemInfo = uni.getSystemInfoSync();
+          this.globalData.systemInfo = systemInfo;
+          formatAppLog("log", "at App.vue:93", "系统信息:", systemInfo);
+        } catch (error) {
+          formatAppLog("error", "at App.vue:95", "获取系统信息失败:", error);
+        }
+      },
+      /**
+       * 初始化网络状态监听
+       */
+      initNetworkListener() {
+        uni.onNetworkStatusChange((res) => {
+          formatAppLog("log", "at App.vue:104", "网络状态变化:", res);
+          this.globalData.networkType = res.networkType;
+          this.globalData.isConnected = res.isConnected;
+          if (!res.isConnected) {
+            uni.showToast({
+              title: "网络连接已断开",
+              icon: "none"
+            });
+          }
+        });
+      },
+      /**
+       * 检查登录状态
+       */
+      checkLoginStatus() {
+        const userInfo = uni.getStorageSync("userInfo");
+        if (!userInfo) {
+          const pages = getCurrentPages();
+          const currentPage = pages[pages.length - 1];
+          if (currentPage && !currentPage.route.includes("login")) {
+            uni.navigateTo({
+              url: "/login/login"
+            });
+          }
+        }
+      },
+      /**
+       * 保存应用状态
+       */
+      saveAppState() {
+        try {
+          const appState = {
+            timestamp: Date.now(),
+            userInfo: this.globalData.userInfo
+          };
+          uni.setStorageSync("appState", appState);
+        } catch (error) {
+          formatAppLog("error", "at App.vue:145", "保存应用状态失败:", error);
+        }
+      },
+      /**
+       * 恢复应用状态
+       */
+      restoreAppState() {
+        try {
+          const appState = uni.getStorageSync("appState");
+          if (appState) {
+            const isExpired = Date.now() - appState.timestamp > 24 * 60 * 60 * 1e3;
+            if (!isExpired) {
+              this.globalData.userInfo = appState.userInfo;
+            }
+          }
+        } catch (error) {
+          formatAppLog("error", "at App.vue:163", "恢复应用状态失败:", error);
+        }
+      },
+      /**
+       * 错误上报
+       */
+      reportError(error) {
+        formatAppLog("error", "at App.vue:172", "错误上报:", error);
+      }
+    },
+    /**
+     * 全局数据
+     */
+    globalData: {
+      userInfo: null,
+      systemInfo: null,
+      networkType: "unknown",
+      isConnected: true
+    }
+  };
+  const App = /* @__PURE__ */ _export_sfc(_sfc_main, [["__file", "E:/Vue项目/专高六/1/银行项目/uniapp/src/App.vue"]]);
+  function createApp() {
+    const app = vue.createVueApp(App);
+    app.config.errorHandler = (err, vm, info) => {
+      formatAppLog("error", "at main.js:15", "Vue Error:", err);
+      formatAppLog("error", "at main.js:16", "Error Info:", info);
+      reportError(err, info);
+      uni.showToast({
+        title: "应用出现错误，请重试",
+        icon: "none",
+        duration: 3e3
+      });
+    };
+    app.config.warnHandler = (msg, vm, trace) => {
+      formatAppLog("warn", "at main.js:31", "Vue Warning:", msg);
+      formatAppLog("warn", "at main.js:32", "Warning Trace:", trace);
+    };
+    app.config.globalProperties.$app = {
+      // 应用版本
+      version: "1.0.0",
+      // 环境信息
+      env: "development",
+      // 平台信息
+      platform: uni.getSystemInfoSync().platform,
+      // 工具方法
+      utils: {
+        // 格式化时间
+        formatTime(date, format = "YYYY-MM-DD HH:mm:ss") {
+          const d = new Date(date);
+          const year = d.getFullYear();
+          const month = String(d.getMonth() + 1).padStart(2, "0");
+          const day = String(d.getDate()).padStart(2, "0");
+          const hours = String(d.getHours()).padStart(2, "0");
+          const minutes = String(d.getMinutes()).padStart(2, "0");
+          const seconds = String(d.getSeconds()).padStart(2, "0");
+          return format.replace("YYYY", year).replace("MM", month).replace("DD", day).replace("HH", hours).replace("mm", minutes).replace("ss", seconds);
+        },
+        // 防抖函数
+        debounce(func, wait) {
+          let timeout;
+          return function executedFunction(...args) {
+            const later = () => {
+              clearTimeout(timeout);
+              func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+          };
+        },
+        // 节流函数
+        throttle(func, limit) {
+          let inThrottle;
+          return function() {
+            const args = arguments;
+            const context = this;
+            if (!inThrottle) {
+              func.apply(context, args);
+              inThrottle = true;
+              setTimeout(() => inThrottle = false, limit);
+            }
+          };
+        },
+        // 深拷贝
+        deepClone(obj) {
+          if (obj === null || typeof obj !== "object")
+            return obj;
+          if (obj instanceof Date)
+            return new Date(obj.getTime());
+          if (obj instanceof Array)
+            return obj.map((item) => this.deepClone(item));
+          if (typeof obj === "object") {
+            const clonedObj = {};
+            for (const key in obj) {
+              if (obj.hasOwnProperty(key)) {
+                clonedObj[key] = this.deepClone(obj[key]);
+              }
+            }
+            return clonedObj;
+          }
+        },
+        // 生成唯一ID
+        generateId() {
+          return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        },
+        // 验证手机号
+        validatePhone(phone) {
+          const phoneRegex = /^1[3-9]\d{9}$/;
+          return phoneRegex.test(phone);
+        },
+        // 验证邮箱
+        validateEmail(email) {
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          return emailRegex.test(email);
+        },
+        // 验证身份证号
+        validateIdCard(idCard) {
+          const idCardRegex = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+          return idCardRegex.test(idCard);
+        }
+      },
+      // 网络请求封装
+      request: {
+        // 基础配置
+        baseURL: "http://localhost:3000/api",
+        // 请求拦截器
+        beforeRequest(config) {
+          const token = uni.getStorageSync("token");
+          if (token) {
+            config.header = {
+              ...config.header,
+              "Authorization": `Bearer ${token}`
+            };
+          }
+          config.url += (config.url.includes("?") ? "&" : "?") + `_t=${Date.now()}`;
+          formatAppLog("log", "at main.js:155", "Request:", config);
+          return config;
+        },
+        // 响应拦截器
+        afterResponse(response) {
+          formatAppLog("log", "at main.js:161", "Response:", response);
+          if (response.statusCode === 401) {
+            uni.removeStorageSync("token");
+            uni.removeStorageSync("userInfo");
+            uni.showToast({
+              title: "登录已过期，请重新登录",
+              icon: "none"
+            });
+            setTimeout(() => {
+              uni.navigateTo({
+                url: "/login/login"
+              });
+            }, 1500);
+            return Promise.reject(response);
+          }
+          return response;
+        },
+        // 发起请求
+        async request(options) {
+          const config = this.beforeRequest(options);
+          try {
+            const response = await new Promise((resolve, reject) => {
+              uni.request({
+                ...config,
+                success: resolve,
+                fail: reject
+              });
+            });
+            return this.afterResponse(response);
+          } catch (error) {
+            formatAppLog("error", "at main.js:197", "Request Error:", error);
+            if (error.errMsg && error.errMsg.includes("request:fail")) {
+              uni.showToast({
+                title: "网络连接失败，请检查网络设置",
+                icon: "none"
+              });
+            }
+            return Promise.reject(error);
+          }
+        },
+        // GET请求
+        get(url, params = {}) {
+          return this.request({
+            url,
+            method: "GET",
+            data: params
+          });
+        },
+        // POST请求
+        post(url, data = {}) {
+          return this.request({
+            url,
+            method: "POST",
+            data
+          });
+        },
+        // PUT请求
+        put(url, data = {}) {
+          return this.request({
+            url,
+            method: "PUT",
+            data
+          });
+        },
+        // DELETE请求
+        delete(url) {
+          return this.request({
+            url,
+            method: "DELETE"
+          });
+        }
+      },
+      // 存储管理
+      storage: {
+        // 设置存储
+        set(key, value, expire = null) {
+          const data = {
+            value,
+            timestamp: Date.now()
+          };
+          if (expire) {
+            data.expire = expire;
+          }
+          try {
+            uni.setStorageSync(key, JSON.stringify(data));
+          } catch (error) {
+            formatAppLog("error", "at main.js:263", "Storage Set Error:", error);
+          }
+        },
+        // 获取存储
+        get(key, defaultValue = null) {
+          try {
+            const data = uni.getStorageSync(key);
+            if (!data)
+              return defaultValue;
+            const parsed = JSON.parse(data);
+            if (parsed.expire && Date.now() - parsed.timestamp > parsed.expire) {
+              this.remove(key);
+              return defaultValue;
+            }
+            return parsed.value;
+          } catch (error) {
+            formatAppLog("error", "at main.js:283", "Storage Get Error:", error);
+            return defaultValue;
+          }
+        },
+        // 删除存储
+        remove(key) {
+          try {
+            uni.removeStorageSync(key);
+          } catch (error) {
+            formatAppLog("error", "at main.js:293", "Storage Remove Error:", error);
+          }
+        },
+        // 清空存储
+        clear() {
+          try {
+            uni.clearStorageSync();
+          } catch (error) {
+            formatAppLog("error", "at main.js:302", "Storage Clear Error:", error);
+          }
+        }
+      }
+    };
+    app.mixin({
+      // 页面生命周期
+      onLoad(options) {
+        formatAppLog("log", "at main.js:312", "Page Load:", this.$options.name, options);
+        this.pageStartTime = Date.now();
+      },
+      onShow() {
+        formatAppLog("log", "at main.js:319", "Page Show:", this.$options.name);
+      },
+      onHide() {
+        formatAppLog("log", "at main.js:323", "Page Hide:", this.$options.name);
+        if (this.pageStartTime) {
+          const duration = Date.now() - this.pageStartTime;
+          formatAppLog("log", "at main.js:328", "Page Duration:", this.$options.name, duration + "ms");
+        }
+      },
+      onUnload() {
+        formatAppLog("log", "at main.js:333", "Page Unload:", this.$options.name);
+      },
+      // 错误处理
+      onError(error) {
+        formatAppLog("error", "at main.js:338", "Page Error:", this.$options.name, error);
+        reportError(error, `Page: ${this.$options.name}`);
+      }
+    });
+    return {
+      app
+    };
+  }
+  function reportError(error, info = "") {
+    var _a;
+    const errorData = {
+      message: error.message || error,
+      stack: error.stack,
+      info,
+      timestamp: (/* @__PURE__ */ new Date()).toISOString(),
+      userAgent: uni.getSystemInfoSync(),
+      url: ((_a = getCurrentPages().pop()) == null ? void 0 : _a.route) || "unknown"
+    };
+    formatAppLog("error", "at main.js:364", "Error Report:", errorData);
+  }
+  if (typeof window !== "undefined") {
+    window.addEventListener("error", (event) => {
+      formatAppLog("error", "at main.js:377", "Global Error:", event.error);
+      reportError(event.error, "Global Error");
+    });
+    window.addEventListener("unhandledrejection", (event) => {
+      formatAppLog("error", "at main.js:382", "Unhandled Promise Rejection:", event.reason);
+      reportError(event.reason, "Unhandled Promise Rejection");
+    });
+  }
+  const { app: __app__, Vuex: __Vuex__, Pinia: __Pinia__ } = createApp();
+  uni.Vuex = __Vuex__;
+  uni.Pinia = __Pinia__;
+  __app__.provide("__globalStyles", __uniConfig.styles);
+  __app__._component.mpType = "app";
+  __app__._component.render = () => {
+  };
+  __app__.mount("#app");
+})(Vue);
