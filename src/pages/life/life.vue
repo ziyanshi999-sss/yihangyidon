@@ -173,24 +173,24 @@ export default {
       categories: ["精选", "活动", "折扣", "品牌"],
       quickServices: [
         {
-          icon: "⚡",
+          icon: "💧",
           label: "生活缴费",
           bgColor: "#00D4AA",
           action: "payment",
         },
         {
-          icon: "¥",
+          icon: "📱",
           label: "手机充值",
           bgColor: "#FF9500",
           action: "recharge",
         },
         {
-          icon: "👥",
+          icon: "🏛️",
           label: "政务民生",
           bgColor: "#34C759",
           action: "government",
         },
-        { icon: "🎯", label: "小豆乐园", bgColor: "#FF6B35", action: "games" },
+        { icon: "🎮", label: "小豆乐园", bgColor: "#FF6B35", action: "games" },
       ],
       allServices: [
         { icon: "🏫", label: "校园", bgColor: "#5AC8FA", action: "campus" },

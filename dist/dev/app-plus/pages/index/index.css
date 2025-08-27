@@ -1,0 +1,252 @@
+
+.home-container[data-v-83a5a03c] {
+  padding-bottom: 60px; /* 为底部导航栏留出空间 */
+  background-color: #f8f8f8;
+  min-height: 100vh;
+}
+
+/* 顶部搜索栏 */
+.search-header[data-v-83a5a03c] {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: #f9a825;
+  border-bottom: 1px solid #e0e0e0;
+}
+.search-bar[data-v-83a5a03c] {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 20px;
+  padding: 5px 15px;
+  margin-right: 10px;
+}
+.icon-search[data-v-83a5a03c] {
+  margin-right: 5px;
+}
+.search-text[data-v-83a5a03c] {
+  color: #999;
+}
+.header-icons[data-v-83a5a03c] {
+  display: flex;
+  align-items: center;
+}
+.icon[data-v-83a5a03c] {
+  margin-left: 15px;
+  font-size: 20px;
+}
+
+/* 广告横幅 */
+.banner[data-v-83a5a03c] {
+  background-color: #f9a825;
+  padding: 15px;
+  text-align: center;
+  border-bottom: 1px solid #e0e0e0;
+}
+.banner-text[data-v-83a5a03c] {
+  font-size: 16px;
+  color: #fff;
+  font-weight: bold;
+}
+.banner-btn[data-v-83a5a03c] {
+  background-color: #fff;
+  color: #f9a825;
+  border-radius: 20px;
+  margin-top: 10px;
+  padding: 5px 20px;
+  font-size: 14px;
+}
+
+/* 功能区域 */
+.function-area[data-v-83a5a03c] {
+  background-color: #fff;
+  padding: 20px 15px;
+  margin-bottom: 10px;
+}
+.function-grid[data-v-83a5a03c] {
+  display: flex;
+  margin-bottom: 20px;
+}
+.function-item[data-v-83a5a03c] {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.function-icon[data-v-83a5a03c] {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+.icon-account[data-v-83a5a03c] {
+  background-color: #4caf50;
+}
+.icon-transfer[data-v-83a5a03c] {
+  background-color: #ff9800;
+}
+.icon-balance[data-v-83a5a03c] {
+  background-color: #4caf50;
+}
+.icon-scan[data-v-83a5a03c] {
+  background-color: #ff9800;
+}
+.icon-card[data-v-83a5a03c] {
+  background-color: #2196f3;
+}
+.icon-deposit[data-v-83a5a03c] {
+  background-color: #ffeb3b;
+}
+.icon-activity[data-v-83a5a03c] {
+  background-color: #e91e63;
+}
+.icon-branch[data-v-83a5a03c] {
+  background-color: #9c27b0;
+}
+.icon-electronic[data-v-83a5a03c] {
+  background-color: #00bcd4;
+}
+.icon-loan[data-v-83a5a03c] {
+  background-color: #f44336;
+}
+.icon-topup[data-v-83a5a03c] {
+  background-color: #03a9f4;
+}
+.icon-more[data-v-83a5a03c] {
+  background-color: #795548;
+}
+.function-text[data-v-83a5a03c] {
+  font-size: 14px;
+  color: #333;
+  margin-top: 5px;
+}
+
+/* 待办和新闻区域 */
+.todo-section[data-v-83a5a03c], .news-section[data-v-83a5a03c] {
+  background-color: #fff;
+  padding: 15px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+.section-title[data-v-83a5a03c] {
+  font-weight: bold;
+  margin-right: 10px;
+  color: #333;
+}
+.todo-content[data-v-83a5a03c], .news-content[data-v-83a5a03c] {
+  flex: 1;
+  color: #666;
+  font-size: 14px;
+}
+.arrow-right[data-v-83a5a03c] {
+  color: #ccc;
+}
+
+/* 轮播图样式 */
+.swiper-container[data-v-83a5a03c] {
+  background-color: #fff;
+  padding: 15px;
+  margin-bottom: 10px;
+}
+.swiper[data-v-83a5a03c] {
+  height: 200px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.swiper-item[data-v-83a5a03c] {
+  height: 100%;
+  position: relative;
+}
+.swiper-image[data-v-83a5a03c] {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+}
+.swiper-desc[data-v-83a5a03c] {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+/* 广告区域 */
+.ad-section[data-v-83a5a03c] {
+  background-color: #fff;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+}
+.ad-content[data-v-83a5a03c] {
+  background-color: #f9f0e0;
+  padding: 20px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.ad-title[data-v-83a5a03c] {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+.ad-desc[data-v-83a5a03c] {
+  font-size: 14px;
+  color: #666;
+  margin-top: 5px;
+}
+.ad-btn[data-v-83a5a03c] {
+  background-color: #ff6b00;
+  color: #fff;
+  border-radius: 5px;
+  padding: 5px 15px;
+  font-size: 14px;
+}
+
+/* 热门活动 */
+.hot-activities[data-v-83a5a03c] {
+  background-color: #fff;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.activities-title[data-v-83a5a03c] {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* 活动卡片 */
+.activity-cards[data-v-83a5a03c] {
+  display: flex;
+  padding: 0 15px 15px;
+  gap: 10px;
+}
+.activity-card[data-v-83a5a03c] {
+  flex: 1;
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.card-title[data-v-83a5a03c] {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+.card-desc[data-v-83a5a03c] {
+  font-size: 12px;
+  color: #666;
+}

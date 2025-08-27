@@ -105,6 +105,8 @@
 </template>
 
 <script>
+import { forceCheckLogin } from '@/utils/auth.js'
+
 export default {
   data() {
     return {
@@ -129,6 +131,27 @@ export default {
     this.checkVerificationStatus()
     // 检查银行卡绑定状态
     this.checkBankCardStatus()
+  },
+  
+  onShow() {
+    try {
+      // 检查登录状态
+      if (!forceCheckLogin()) {
+        console.log('账户页面：用户未登录，跳转到登录页面')
+        uni.reLaunch({
+          url: '/pages/denglu/login'
+        })
+        return
+      }
+      
+      // 页面显示逻辑
+      console.log('账户页面显示')
+    } catch (error) {
+      console.error('账户页面onShow检查失败:', error)
+      uni.reLaunch({
+        url: '/pages/denglu/login'
+      })
+    }
   },
   
   methods: {

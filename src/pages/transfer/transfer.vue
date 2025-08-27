@@ -72,6 +72,8 @@
 </template>
 
 <script>
+import { forceCheckLogin } from '@/utils/auth.js'
+
 export default {
   data() {
     return {
@@ -89,6 +91,28 @@ export default {
       }
     }
   },
+  
+  onShow() {
+    try {
+      // 检查登录状态
+      if (!forceCheckLogin()) {
+        console.log('转账页面：用户未登录，跳转到登录页面')
+        uni.reLaunch({
+          url: '/pages/denglu/login'
+        })
+        return
+      }
+      
+      // 页面显示逻辑
+      console.log('转账页面显示')
+    } catch (error) {
+      console.error('转账页面onShow检查失败:', error)
+      uni.reLaunch({
+        url: '/pages/denglu/login'
+      })
+    }
+  },
+  
   methods: {
     // 切换转账类型
     switchTab(tab) {

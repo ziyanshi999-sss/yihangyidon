@@ -147,17 +147,38 @@
 </template>
 
 <script>
+import { forceCheckLogin } from '@/utils/auth.js'
+
 export default {
   data() {
     return {
-      isLoggedIn: true, // 默认已登录
-      loginForm: {
-        username: '',
-        password: ''
-      }
+      isLoggedIn: false
     }
   },
+  
+  // 页面加载时检查登录状态
+  onLoad() {
+    this.checkLoginStatus()
+  },
+  
+  // 页面显示时检查登录状态
+  onShow() {
+    this.checkLoginStatus()
+  },
+  
   methods: {
+    // 检查登录状态
+    checkLoginStatus() {
+      if (!forceCheckLogin()) {
+        console.log('首页：用户未登录，跳转到登录页面')
+        uni.reLaunch({
+          url: '/pages/denglu/login'
+        })
+        return
+      }
+      this.isLoggedIn = true
+    },
+
     // 处理转账按钮点击事件
     handleTransferClick() {
       if (this.isLoggedIn) {
@@ -166,8 +187,10 @@ export default {
           url: '/pages/transfer/transfer'
         })
       } else {
-        // 未登录，显示登录弹窗
-        this.$refs.loginPopup.open()
+        // 未登录，跳转到登录页面
+        uni.navigateTo({
+          url: '/pages/denglu/login'
+        })
       }
     },
     
@@ -179,41 +202,11 @@ export default {
           url: '/pages/account/account'
         })
       } else {
-        // 未登录，显示登录弹窗
-        this.$refs.loginPopup.open()
-      }
-    },
-    
-    // 关闭登录弹窗
-    closeLoginPopup() {
-      this.$refs.loginPopup.close()
-    },
-    
-    // 登录处理
-    login() {
-      // 这里简化处理，实际项目中应该调用登录API
-      if (this.loginForm.username && this.loginForm.password) {
-        this.isLoggedIn = true
-        this.$refs.loginPopup.close()
-        
-        // 保存用户登录状态
-        uni.setStorageSync('userInfo', {
-          username: this.loginForm.username
-        })
-      } else {
-        uni.showToast({
-          title: '请输入账号和密码',
-          icon: 'none'
+        // 未登录，跳转到登录页面
+        uni.navigateTo({
+          url: '/pages/denglu/login'
         })
       }
-    }
-  },
-  
-  // 页面加载时检查登录状态
-  onLoad() {
-    const userInfo = uni.getStorageSync('userInfo')
-    if (userInfo) {
-      this.isLoggedIn = true
     }
   }
 }
@@ -508,52 +501,5 @@ export default {
 .card-desc {
   font-size: 12px;
   color: #666;
-}
-
-/* 登录弹窗样式 */
-.login-popup {
-  width: 80%;
-  background-color: #fff;
-  border-radius: 10px;
-  padding: 20px;
-}
-
-.popup-title {
-  font-size: 18px;
-  font-weight: bold;
-  text-align: center;
-  display: block;
-  margin-bottom: 20px;
-}
-
-.popup-input {
-  width: 100%;
-  height: 40px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  padding: 0 10px;
-  margin-bottom: 15px;
-}
-
-.popup-buttons {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-}
-
-.popup-btn {
-  flex: 1;
-  margin: 0 5px;
-  border-radius: 5px;
-}
-
-.cancel-btn {
-  background-color: #f8f8f8;
-  color: #333;
-}
-
-.confirm-btn {
-  background-color: #ff6b00;
-  color: #fff;
 }
 </style>

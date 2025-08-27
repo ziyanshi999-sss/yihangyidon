@@ -9,8 +9,6 @@
 
     <!-- 登录方式选择 -->
     <view class="login-methods">
-      
-
       <!-- 手机号验证码登录卡片 -->
       <view class="login-card" :class="{ 'active': loginMethod === 'phone' }" @click="switchLoginMethod('phone')">
         <view class="card-icon">📱</view>
@@ -166,8 +164,7 @@ export default {
     }
   },
   
-    computed: {
-  },
+  
   
 
   
@@ -280,9 +277,9 @@ export default {
 
         if (this.loginMethod === 'phone') {
           // 验证码登录
-                  if (verifyCode(this.phoneForm.phone, this.phoneForm.code)) {
-          const { users } = await import('@/data/users.js')
-          user = users.find(u => u.phone === this.phoneForm.phone)
+          if (verifyCode(this.phoneForm.phone, this.phoneForm.code)) {
+            const { users } = await import('@/data/users.js')
+            user = users.find(u => u.phone === this.phoneForm.phone)
           } else {
             this.errorMessage = '验证码错误或已过期'
             return
@@ -312,9 +309,6 @@ export default {
           setTimeout(() => {
             handleLoginSuccess(user)
           }, 1500)
-          
-  
-          this.$forceUpdate()
         } else {
           this.errorMessage = this.loginMethod === 'phone' ? '手机号不存在' : '用户名或密码错误'
         }

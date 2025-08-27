@@ -132,7 +132,7 @@
     "statusbar": {
       "immersed": "supportedDevice",
       "style": "dark",
-      "background": "#F8F8F8"
+      "background": "#fff"
     },
     "uniStatistics": {
       "enable": false
@@ -160,8 +160,8 @@
     },
     "tabBar": {
       "position": "bottom",
-      "color": "#7A7E83",
-      "selectedColor": "#3cc51f",
+      "color": "#999999",
+      "selectedColor": "#f9a825",
       "borderStyle": "rgba(0,0,0,0.4)",
       "blurEffect": "none",
       "fontSize": "10px",
@@ -177,14 +177,14 @@
         },
         {
           "pagePath": "pages/wealth/wealth",
-          "iconPath": "/static/tabbar/service.png",
-          "selectedIconPath": "/static/tabbar/service-active.png",
+          "iconPath": "/static/tabbar/wealth.png",
+          "selectedIconPath": "/static/tabbar/wealth-active.png",
           "text": "财富"
         },
         {
           "pagePath": "pages/life/life",
-          "iconPath": "/static/tabbar/order.png",
-          "selectedIconPath": "/static/tabbar/order-active.png",
+          "iconPath": "/static/tabbar/life.png",
+          "selectedIconPath": "/static/tabbar/life-active.png",
           "text": "生活"
         },
         {

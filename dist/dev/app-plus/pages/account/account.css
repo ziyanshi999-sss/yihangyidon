@@ -1,0 +1,180 @@
+
+.account-page[data-v-f7e9057f] {
+  background-color: #f8f8f8;
+  min-height: 100vh;
+}
+
+/* 顶部导航 */
+.nav-bar[data-v-f7e9057f] {
+  background-color: #fff;
+  padding: 15px;
+  text-align: center;
+  border-bottom: 1px solid #e0e0e0;
+}
+.nav-title[data-v-f7e9057f] {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* 实名认证部分 */
+.verify-section[data-v-f7e9057f] {
+  padding: 1.25rem 0.9375rem;
+  text-align: center;
+}
+.verify-icon[data-v-f7e9057f] {
+  font-size: 2.5rem;
+  margin-bottom: 0.625rem;
+}
+.verify-title[data-v-f7e9057f] {
+  font-size: 1.125rem;
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-bottom: 0.3125rem;
+}
+.verify-desc[data-v-f7e9057f] {
+  font-size: 0.875rem;
+  color: #666;
+  display: block;
+  margin-bottom: 0.9375rem;
+}
+.verify-btn[data-v-f7e9057f] {
+  background-color: #f9a825;
+  color: #fff;
+  border: none;
+  padding: 0.46875rem 1.25rem;
+  border-radius: 0.15625rem;
+  margin-bottom: 0.9375rem;
+}
+
+/* 银行卡部分 */
+.bankcard-section[data-v-f7e9057f] {
+  padding: 1.25rem 0.9375rem;
+  text-align: center;
+}
+.bankcard-icon[data-v-f7e9057f] {
+  font-size: 2.5rem;
+  margin-bottom: 0.625rem;
+}
+.bankcard-title[data-v-f7e9057f] {
+  font-size: 1.125rem;
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-bottom: 0.3125rem;
+}
+.bankcard-desc[data-v-f7e9057f] {
+  font-size: 0.875rem;
+  color: #666;
+  display: block;
+  margin-bottom: 0.9375rem;
+}
+.bankcard-btn[data-v-f7e9057f] {
+  background-color: #f9a825;
+  color: #fff;
+  border: none;
+  padding: 0.46875rem 1.25rem;
+  border-radius: 0.15625rem;
+  margin-bottom: 0.9375rem;
+}
+
+/* 表单样式 */
+.verify-form[data-v-f7e9057f],
+.card-form[data-v-f7e9057f] {
+  background-color: #fff;
+  padding: 0.9375rem;
+  border-radius: 0.3125rem;
+}
+.form-item[data-v-f7e9057f] {
+  margin-bottom: 0.9375rem;
+}
+.form-label[data-v-f7e9057f] {
+  font-size: 0.875rem;
+  color: #333;
+  display: block;
+  margin-bottom: 0.3125rem;
+}
+.form-input[data-v-f7e9057f] {
+  width: 100%;
+  padding: 0.625rem;
+  border: 0.03125rem solid #ddd;
+  border-radius: 0.15625rem;
+  font-size: 0.875rem;
+}
+.submit-btn[data-v-f7e9057f] {
+  width: 100%;
+  background-color: #f9a825;
+  color: #fff;
+  border: none;
+  padding: 0.625rem;
+  border-radius: 0.15625rem;
+  font-size: 1rem;
+}
+
+/* 账户主页面 */
+.account-main[data-v-f7e9057f] {
+  padding: 0.625rem;
+}
+
+/* 余额部分 */
+.balance-section[data-v-f7e9057f] {
+  background-color: #fff;
+  padding: 0.9375rem;
+  border-radius: 0.3125rem;
+  margin-bottom: 0.625rem;
+  text-align: center;
+}
+.balance-title[data-v-f7e9057f] {
+  font-size: 0.875rem;
+  color: #666;
+  display: block;
+  margin-bottom: 0.3125rem;
+}
+.balance-amount[data-v-f7e9057f] {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-bottom: 0.625rem;
+}
+.balance-actions[data-v-f7e9057f] {
+  display: flex;
+  justify-content: center;
+}
+.action-btn[data-v-f7e9057f] {
+  background-color: #f9a825;
+  color: #fff;
+  border: none;
+  padding: 0.46875rem 1.25rem;
+  border-radius: 0.15625rem;
+  margin: 0 0.3125rem;
+  font-size: 0.875rem;
+}
+
+/* 功能菜单 */
+.account-functions[data-v-f7e9057f] {
+  background-color: #fff;
+  padding: 0.625rem;
+  border-radius: 0.3125rem;
+}
+.function-row[data-v-f7e9057f] {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.625rem;
+}
+.function-item[data-v-f7e9057f] {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.625rem;
+}
+.function-icon[data-v-f7e9057f] {
+  font-size: 1.5rem;
+  margin-bottom: 0.3125rem;
+}
+.function-text[data-v-f7e9057f] {
+  font-size: 0.875rem;
+  color: #333;
+}
