@@ -148,6 +148,14 @@ export default {
       uni.addInterceptor('navigateTo', {
         invoke(e) {
           console.log('拦截 navigateTo:', e.url)
+          
+          // 如果正在退出登录，允许跳转到登录页面
+          const isLoggingOut = uni.getStorageSync('isLoggingOut')
+          if (isLoggingOut && e.url.includes('/pages/denglu/login')) {
+            console.log('正在退出登录，允许跳转到登录页面')
+            return true
+          }
+          
           // 强制检查登录状态
           if (!forceCheckLogin()) {
             console.log('用户未登录，阻止页面跳转')
@@ -165,6 +173,14 @@ export default {
       uni.addInterceptor('switchTab', {
         invoke(e) {
           console.log('拦截 switchTab:', e.url)
+          
+          // 如果正在退出登录，允许跳转到登录页面
+          const isLoggingOut = uni.getStorageSync('isLoggingOut')
+          if (isLoggingOut && e.url.includes('/pages/denglu/login')) {
+            console.log('正在退出登录，允许跳转到登录页面')
+            return true
+          }
+          
           // 强制检查登录状态
           if (!forceCheckLogin()) {
             console.log('用户未登录，阻止tabBar跳转')
@@ -182,6 +198,14 @@ export default {
       uni.addInterceptor('reLaunch', {
         invoke(e) {
           console.log('拦截 reLaunch:', e.url)
+          
+          // 如果正在退出登录，允许跳转到登录页面
+          const isLoggingOut = uni.getStorageSync('isLoggingOut')
+          if (isLoggingOut && e.url.includes('/pages/denglu/login')) {
+            console.log('正在退出登录，允许跳转到登录页面')
+            return true
+          }
+          
           // 强制检查登录状态
           if (!forceCheckLogin()) {
             console.log('用户未登录，阻止重定向')
@@ -199,6 +223,14 @@ export default {
       uni.addInterceptor('redirectTo', {
         invoke(e) {
           console.log('拦截 redirectTo:', e.url)
+          
+          // 如果正在退出登录，允许跳转到登录页面
+          const isLoggingOut = uni.getStorageSync('isLoggingOut')
+          if (isLoggingOut && e.url.includes('/pages/denglu/login')) {
+            console.log('正在退出登录，允许跳转到登录页面')
+            return true
+          }
+          
           // 强制检查登录状态
           if (!forceCheckLogin()) {
             console.log('用户未登录，阻止重定向')

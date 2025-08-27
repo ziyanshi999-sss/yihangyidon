@@ -101,6 +101,13 @@ export function checkLoginAndRedirect(redirectUrl = '') {
  * @returns {boolean} 是否已登录
  */
 export function forceCheckLogin() {
+  // 如果正在退出登录，跳过检查
+  const isLoggingOut = uni.getStorageSync('isLoggingOut')
+  if (isLoggingOut) {
+    console.log('正在退出登录，跳过登录检查')
+    return false
+  }
+  
   const isLoggedIn = uni.getStorageSync('isLoggedIn')
   const userInfo = uni.getStorageSync('userInfo')
   
@@ -166,6 +173,9 @@ export function logout(options = {}) {
 
   const performLogout = async () => {
     try {
+      // 设置退出状态标记，防止拦截器干扰
+      uni.setStorageSync('isLoggingOut', true)
+      
       // 记录退出日志
       logLogoutEvent(reason)
       
@@ -184,26 +194,36 @@ export function logout(options = {}) {
         duration: 1500
       })
       
-      // 立即跳转到登录页面，确保用户无法访问其他页面
-      uni.reLaunch({
-        url: '/pages/denglu/login',
-        success: () => {
-          console.log('已强制跳转到登录页面')
-        },
-        fail: (error) => {
-          console.error('跳转登录页面失败:', error)
-          // 如果reLaunch失败，尝试使用navigateTo
-          uni.navigateTo({
-            url: '/pages/denglu/login'
-          })
-        }
-      })
+      // 强制跳转到登录页面，绕过所有拦截器
+      setTimeout(() => {
+        uni.reLaunch({
+          url: '/pages/denglu/login',
+          success: () => {
+            console.log('已强制跳转到登录页面')
+            // 清除退出状态标记
+            uni.removeStorageSync('isLoggingOut')
+          },
+          fail: (error) => {
+            console.error('跳转登录页面失败:', error)
+            // 如果reLaunch失败，尝试使用navigateTo
+            uni.navigateTo({
+              url: '/pages/denglu/login',
+              success: () => {
+                uni.removeStorageSync('isLoggingOut')
+              }
+            })
+          }
+        })
+      }, 100) // 短暂延迟确保数据清除完成
       
     } catch (error) {
       console.error('退出登录失败:', error)
       
       // 即使同步失败，也要清除本地数据
       clearAllUserData()
+      
+      // 清除退出状态标记
+      uni.removeStorageSync('isLoggingOut')
       
       uni.showToast({
         title: '退出登录失败，请重试',

@@ -163,6 +163,8 @@
 </template>
 
 <script>
+import { checkLoginAndRedirect, forceCheckLogin } from '@/utils/auth.js'
+
 export default {
   name: "LifePage",
   data() {
@@ -222,6 +224,32 @@ export default {
 
   onLoad() {
     this.initPage();
+  },
+
+  onShow() {
+    // 如果正在退出登录，跳过检查
+    const isLoggingOut = uni.getStorageSync('isLoggingOut')
+    if (isLoggingOut) {
+      console.log('正在退出登录，跳过生活页面登录检查')
+      return
+    }
+    
+    // 强制检查登录状态
+    if (!forceCheckLogin()) {
+      console.log('生活页面：用户未登录，强制跳转')
+      uni.reLaunch({
+        url: '/pages/denglu/login'
+      })
+      return
+    }
+    
+    // 检查登录状态
+    if (!checkLoginAndRedirect()) {
+      return
+    }
+    
+    // 页面显示逻辑
+    console.log('生活页面显示')
   },
 
   methods: {

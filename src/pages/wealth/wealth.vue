@@ -15,6 +15,13 @@ export default {
   },
   
   onShow() {
+    // 如果正在退出登录，跳过检查
+    const isLoggingOut = uni.getStorageSync('isLoggingOut')
+    if (isLoggingOut) {
+      console.log('正在退出登录，跳过财富页面登录检查')
+      return
+    }
+    
     // 强制检查登录状态
     if (!forceCheckLogin()) {
       console.log('财富页面：用户未登录，强制跳转')
