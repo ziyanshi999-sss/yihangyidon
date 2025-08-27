@@ -1,12 +1,6 @@
 {
+	"login": "pages/login/login",
 	"pages": [
-		{
-			"path": "pages/denglu/login",
-			"style": {
-				"navigationBarTitleText": "登录",
-				"navigationStyle": "custom"
-			}
-		},
 		{
 			"path": "pages/index/index",
 			"style": {
@@ -32,48 +26,28 @@
 			}
 		},
 		{
-			"path": "pages/payment/payment",
+			"path": "pages/transfer/transfer",
 			"style": {
-				"navigationBarTitleText": "生活缴费",
-				"navigationBarBackgroundColor": "#00D4AA",
-				"navigationBarTextStyle": "white"
+				"navigationBarTitleText": "转账",
+				"enablePullDownRefresh": false
 			}
 		},
 		{
-			"path": "pages/recharge/recharge",
+			"path": "pages/account/account",
 			"style": {
-				"navigationBarTitleText": "手机充值",
-				"navigationBarBackgroundColor": "#FF9500",
-				"navigationBarTextStyle": "white"
-			}
-		},
-		{
-			"path": "pages/government/government",
-			"style": {
-				"navigationBarTitleText": "政务民生",
-				"navigationBarBackgroundColor": "#34C759",
-				"navigationBarTextStyle": "white"
-			}
-		},
-		{
-			"path": "pages/games/games",
-			"style": {
-				"navigationBarTitleText": "小豆乐园",
-				"navigationBarBackgroundColor": "#FF6B35",
-				"navigationBarTextStyle": "white"
+				"navigationBarTitleText": "我的账户",
+				"enablePullDownRefresh": false
 			}
 		}
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "农业银行",
-		"navigationBarBackgroundColor": "#F8F8F8",
+		"navigationBarBackgroundColor": "#fff",
 		"backgroundColor": "#F8F8F8"
 	},
 	"tabBar": {
-		"color": "#7A7E83",
-		"selectedColor": "#3cc51f",
-		"borderStyle": "black",
+		"color": "#999999",
+		"selectedColor": "#f9a825",
 		"backgroundColor": "#ffffff",
 		"list": [
 			{
@@ -84,14 +58,14 @@
 			},
 			{
 				"pagePath": "pages/wealth/wealth",
-				"iconPath": "static/tabbar/service.png",
-				"selectedIconPath": "static/tabbar/service-active.png",
+				"iconPath": "static/tabbar/wealth.png",
+				"selectedIconPath": "static/tabbar/wealth-active.png",
 				"text": "财富"
 			},
 			{
 				"pagePath": "pages/life/life",
-				"iconPath": "static/tabbar/order.png",
-				"selectedIconPath": "static/tabbar/order-active.png",
+				"iconPath": "static/tabbar/life.png",
+				"selectedIconPath": "static/tabbar/life-active.png",
 				"text": "生活"
 			},
 			{
