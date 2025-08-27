@@ -24,6 +24,38 @@
 			"style": {
 				"navigationBarTitleText": "生活"
 			}
+		},
+		{
+			"path": "pages/payment/payment",
+			"style": {
+				"navigationBarTitleText": "生活缴费",
+				"navigationBarBackgroundColor": "#00D4AA",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/recharge/recharge",
+			"style": {
+				"navigationBarTitleText": "手机充值",
+				"navigationBarBackgroundColor": "#FF9500",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/government/government",
+			"style": {
+				"navigationBarTitleText": "政务民生",
+				"navigationBarBackgroundColor": "#34C759",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/games/games",
+			"style": {
+				"navigationBarTitleText": "小豆乐园",
+				"navigationBarBackgroundColor": "#FF6B35",
+				"navigationBarTextStyle": "white"
+			}
 		}
 	],
 	"globalStyle": {

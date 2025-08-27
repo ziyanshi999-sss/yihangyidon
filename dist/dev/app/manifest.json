@@ -4,19 +4,34 @@
     "iPhone",
     "iPad"
   ],
-  "id": "",
-  "name": "",
+  "id": "__UNI__ABC_BANK_APP",
+  "name": "中国农业银行",
   "version": {
     "name": "1.0.0",
     "code": "100"
   },
-  "description": "",
+  "description": "中国农业银行官方APP，提供全面的金融服务",
   "developer": {
     "name": "",
     "email": "",
     "url": ""
   },
   "permissions": {
+    "Fingerprint": {},
+    "FaceID": {},
+    "Payment": {},
+    "Push": {},
+    "Share": {},
+    "OAuth": {},
+    "Barcode": {},
+    "Camera": {},
+    "Contacts": {},
+    "Geolocation": {},
+    "Maps": {
+      "coordType": "gcj02"
+    },
+    "Messaging": {},
+    "Speech": {},
     "UniNView": {
       "description": "UniNView原生渲染"
     }
@@ -60,8 +75,54 @@
           "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
         ]
       },
-      "apple": {},
+      "apple": {
+        "privacyDescription": {
+          "NSCameraUsageDescription": "农业银行需要使用相机进行扫码支付和身份认证",
+          "NSPhotoLibraryUsageDescription": "农业银行需要访问相册来上传身份证照片",
+          "NSLocationWhenInUseUsageDescription": "农业银行需要获取位置信息用于网点查询和风险控制",
+          "NSContactsUsageDescription": "农业银行需要访问通讯录来快速转账给联系人",
+          "NSMicrophoneUsageDescription": "农业银行需要使用麦克风进行语音客服",
+          "NSFaceIDUsageDescription": "农业银行需要使用Face ID进行安全验证"
+        },
+        "capabilities": {
+          "entitlements": {
+            "com.apple.developer.associated-domains": [
+              "applinks:m.abchina.com"
+            ]
+          }
+        }
+      },
       "plugins": {
+        "payment": {
+          "alipay": {
+            "scheme": "abcbank"
+          },
+          "weixin": {
+            "appid": "wx1234567890abcdef"
+          }
+        },
+        "oauth": {
+          "weixin": {
+            "appid": "wx1234567890abcdef",
+            "appsecret": "your_wechat_secret"
+          },
+          "qq": {
+            "appid": "123456789"
+          }
+        },
+        "push": {
+          "unipush": {
+            "enable": true
+          }
+        },
+        "maps": {
+          "amap": {
+            "key": "your_amap_key"
+          },
+          "baidu": {
+            "key": "your_baidu_key"
+          }
+        },
         "audio": {
           "mp3": {
             "description": "Android平台录音支持MP3格式文件"

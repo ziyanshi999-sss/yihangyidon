@@ -1,6 +1,6 @@
 <script>
 /**
- * 医院问诊应用主入口
+ * 中国农业银行应用主入口
  * @description 管理应用全局状态和生命周期
  */
 export default {

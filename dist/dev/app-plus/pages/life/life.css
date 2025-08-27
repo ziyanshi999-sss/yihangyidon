@@ -1,0 +1,309 @@
+
+.life-page[data-v-980f0516] {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #ff6b4a 0%, #ff8a65 50%, #f5f5f5 50%);
+}
+
+/* 头部区域 */
+.header-section[data-v-980f0516] {
+  padding: 0.9375rem;
+  padding-top: 1.875rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.location-info[data-v-980f0516] {
+  display: flex;
+  align-items: center;
+}
+.location-icon[data-v-980f0516] {
+  font-size: 1rem;
+  margin-right: 0.25rem;
+}
+.location-text[data-v-980f0516] {
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 500;
+}
+.search-container[data-v-980f0516] {
+  flex: 1;
+  margin: 0 0.9375rem;
+}
+.search-box[data-v-980f0516] {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 1.5625rem;
+  padding: 0.625rem 0.9375rem;
+  display: flex;
+  align-items: center;
+  backdrop-filter: blur(0.3125rem);
+}
+.search-icon[data-v-980f0516] {
+  font-size: 1rem;
+  margin-right: 0.625rem;
+}
+.search-input[data-v-980f0516] {
+  flex: 1;
+  color: #fff;
+  font-size: 0.875rem;
+}
+.voice-icon[data-v-980f0516] {
+  font-size: 1rem;
+  margin-left: 0.625rem;
+}
+.header-actions[data-v-980f0516] {
+  display: flex;
+  gap: 0.9375rem;
+}
+.action-item[data-v-980f0516] {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.action-icon[data-v-980f0516] {
+  font-size: 1.25rem;
+  margin-bottom: 0.25rem;
+}
+.action-text[data-v-980f0516] {
+  color: #fff;
+  font-size: 0.6875rem;
+}
+
+/* 轮播广告 */
+.banner-section[data-v-980f0516] {
+  margin: 0 0.9375rem 1.25rem;
+}
+.banner-swiper[data-v-980f0516] {
+  height: 6.25rem;
+  border-radius: 0.625rem;
+  overflow: hidden;
+}
+.banner-item[data-v-980f0516] {
+  background: linear-gradient(135deg, #ff9a56 0%, #ff6b35 100%);
+  height: 100%;
+  padding: 0.9375rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.banner-title[data-v-980f0516] {
+  color: #fff;
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 0.3125rem;
+}
+.banner-subtitle[data-v-980f0516] {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.75rem;
+}
+.banner-image[data-v-980f0516] {
+  position: absolute;
+  right: 0.625rem;
+  top: 0.625rem;
+  width: 3.75rem;
+  height: 3.75rem;
+}
+
+/* 快捷服务 */
+.quick-services[data-v-980f0516] {
+  background: #fff;
+  margin: 0 0.9375rem 0.9375rem;
+  padding: 1.25rem 0.9375rem;
+  border-radius: 0.625rem;
+  box-shadow: 0 0.125rem 0.625rem rgba(0, 0, 0, 0.1);
+}
+.services-grid[data-v-980f0516] {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+}
+.service-item[data-v-980f0516] {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.service-icon[data-v-980f0516] {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0.625rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.625rem;
+}
+.icon-text[data-v-980f0516] {
+  font-size: 1.125rem;
+  color: #fff;
+}
+.service-label[data-v-980f0516] {
+  font-size: 0.8125rem;
+  color: #333;
+  line-height: 1.2;
+}
+
+/* 全部服务 */
+.all-services[data-v-980f0516] {
+  background: #fff;
+  margin: 0 0.9375rem 0.9375rem;
+  padding: 1.25rem 0.9375rem;
+  border-radius: 0.625rem;
+  box-shadow: 0 0.125rem 0.625rem rgba(0, 0, 0, 0.1);
+}
+.services-grid-large[data-v-980f0516] {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.25rem 0.625rem;
+}
+.service-item-large[data-v-980f0516] {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.service-icon-large[data-v-980f0516] {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+.icon-text-large[data-v-980f0516] {
+  font-size: 1rem;
+  color: #fff;
+}
+.service-label-large[data-v-980f0516] {
+  font-size: 0.75rem;
+  color: #333;
+  line-height: 1.2;
+}
+
+/* 分类导航 */
+.category-nav[data-v-980f0516] {
+  display: flex;
+  background: #fff;
+  margin: 0 0.9375rem 0.9375rem;
+  border-radius: 0.625rem;
+  padding: 0.3125rem;
+  box-shadow: 0 0.125rem 0.625rem rgba(0, 0, 0, 0.1);
+}
+.nav-item[data-v-980f0516] {
+  flex: 1;
+  text-align: center;
+  padding: 0.625rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+}
+.nav-item.active[data-v-980f0516] {
+  background: #00d4aa;
+}
+.nav-text[data-v-980f0516] {
+  font-size: 0.875rem;
+  color: #666;
+  font-weight: 500;
+}
+.nav-item.active .nav-text[data-v-980f0516] {
+  color: #fff;
+}
+
+/* 优惠活动卡片 */
+.promotion-section[data-v-980f0516] {
+  margin: 0 0.9375rem 3.125rem;
+}
+.promotion-cards[data-v-980f0516] {
+  display: flex;
+  gap: 0.625rem;
+  height: 12.5rem;
+}
+.promotion-card.large[data-v-980f0516] {
+  flex: 1;
+  background: linear-gradient(135deg, #32d74b 0%, #30db5b 100%);
+  border-radius: 0.625rem;
+  padding: 0.9375rem;
+  position: relative;
+  overflow: hidden;
+}
+.card-content[data-v-980f0516] {
+  position: relative;
+  z-index: 2;
+}
+.card-title[data-v-980f0516] {
+  color: #fff;
+  font-size: 1.125rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+.card-subtitle[data-v-980f0516] {
+  color: #fff;
+  font-size: 0.75rem;
+  margin-bottom: 0.625rem;
+}
+.card-desc[data-v-980f0516] {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.6875rem;
+  margin-bottom: 0.3125rem;
+}
+.card-detail[data-v-980f0516] {
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+.card-mascot[data-v-980f0516] {
+  position: absolute;
+  bottom: 0.625rem;
+  right: 0.625rem;
+  width: 3.75rem;
+  height: 3.75rem;
+}
+.promotion-cards-right[data-v-980f0516] {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  width: 9.375rem;
+}
+.promotion-card.small[data-v-980f0516] {
+  flex: 1;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #007aff 0%, #5ac8fa 100%);
+}
+.promotion-card.small[data-v-980f0516]:last-child {
+  background: linear-gradient(135deg, #ff9500 0%, #ffad33 100%);
+}
+.card-title-small[data-v-980f0516] {
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: bold;
+  margin-bottom: 0.375rem;
+  position: relative;
+  z-index: 2;
+}
+.card-subtitle-small[data-v-980f0516] {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.625rem;
+  line-height: 1.4;
+  position: relative;
+  z-index: 2;
+}
+.card-bg[data-v-980f0516] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.3;
+}
+
+/* 点击效果 */
+.service-item[data-v-980f0516]:active,
+.service-item-large[data-v-980f0516]:active,
+.promotion-card[data-v-980f0516]:active {
+  opacity: 0.8;
+  transform: scale(0.95);
+  transition: all 0.1s ease;
+}
