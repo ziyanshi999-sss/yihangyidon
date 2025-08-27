@@ -24,18 +24,30 @@
 			"style": {
 				"navigationBarTitleText": "生活"
 			}
+		},
+		{
+			"path": "pages/transfer/transfer",
+			"style": {
+				"navigationBarTitleText": "转账",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/account/account",
+			"style": {
+				"navigationBarTitleText": "我的账户",
+				"enablePullDownRefresh": false
+			}
 		}
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "农业银行",
-		"navigationBarBackgroundColor": "#F8F8F8",
+		"navigationBarBackgroundColor": "#fff",
 		"backgroundColor": "#F8F8F8"
 	},
 	"tabBar": {
-		"color": "#7A7E83",
-		"selectedColor": "#3cc51f",
-		"borderStyle": "black",
+		"color": "#999999",
+		"selectedColor": "#f9a825",
 		"backgroundColor": "#ffffff",
 		"list": [
 			{
@@ -46,14 +58,14 @@
 			},
 			{
 				"pagePath": "pages/wealth/wealth",
-				"iconPath": "static/tabbar/service.png",
-				"selectedIconPath": "static/tabbar/service-active.png",
+				"iconPath": "static/tabbar/wealth.png",
+				"selectedIconPath": "static/tabbar/wealth-active.png",
 				"text": "财富"
 			},
 			{
 				"pagePath": "pages/life/life",
-				"iconPath": "static/tabbar/order.png",
-				"selectedIconPath": "static/tabbar/order-active.png",
+				"iconPath": "static/tabbar/life.png",
+				"selectedIconPath": "static/tabbar/life-active.png",
 				"text": "生活"
 			},
 			{
