@@ -1,5 +1,4 @@
 {
-	"login": "pages/login/login",
 	"pages": [
 		{
 			"path": "pages/index/index",
@@ -23,6 +22,18 @@
 			"path": "pages/life/life",
 			"style": {
 				"navigationBarTitleText": "生活"
+			}
+		},
+		{
+			"path": "pages/denglu/login",
+			"style": {
+				"navigationBarTitleText": "登录"
+			}
+		},
+		{
+			"path": "pages/service/chat",
+			"style": {
+				"navigationBarTitleText": "AI客服"
 			}
 		}
 	],

@@ -6,6 +6,8 @@ if (!Math) {
   "./pages/user/user.js";
   "./pages/wealth/wealth.js";
   "./pages/life/life.js";
+  "./pages/denglu/login.js";
+  "./pages/service/chat.js";
 }
 const _sfc_main = {
   name: "App",
@@ -91,9 +93,9 @@ const _sfc_main = {
       if (!userInfo) {
         const pages = getCurrentPages();
         const currentPage = pages[pages.length - 1];
-        if (currentPage && !currentPage.route.includes("login")) {
+        if (currentPage && !currentPage.route.includes("denglu/login")) {
           common_vendor.index.navigateTo({
-            url: "/login/login"
+            url: "/pages/denglu/login"
           });
         }
       }
@@ -273,7 +275,7 @@ function createApp() {
           });
           setTimeout(() => {
             common_vendor.index.navigateTo({
-              url: "/login/login"
+              url: "/pages/denglu/login"
             });
           }, 1500);
           return Promise.reject(response);

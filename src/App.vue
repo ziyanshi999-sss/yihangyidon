@@ -123,9 +123,9 @@ export default {
         // 如果未登录且不在登录页面，跳转到登录页
         const pages = getCurrentPages()
         const currentPage = pages[pages.length - 1]
-        if (currentPage && !currentPage.route.includes('login')) {
+        if (currentPage && !currentPage.route.includes('denglu/login')) {
           uni.navigateTo({
-            url: '/login/login'
+            url: '/pages/denglu/login'
           })
         }
       }

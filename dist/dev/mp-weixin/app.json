@@ -3,7 +3,9 @@
     "pages/index/index",
     "pages/user/user",
     "pages/wealth/wealth",
-    "pages/life/life"
+    "pages/life/life",
+    "pages/denglu/login",
+    "pages/service/chat"
   ],
   "window": {
     "navigationBarTextStyle": "black",
