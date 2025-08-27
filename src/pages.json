@@ -1,6 +1,12 @@
 {
-	"login": "pages/login/login",
 	"pages": [
+		{
+			"path": "pages/denglu/login",
+			"style": {
+				"navigationBarTitleText": "登录",
+				"navigationStyle": "custom"
+			}
+		},
 		{
 			"path": "pages/index/index",
 			"style": {

@@ -1,4 +1,6 @@
 <script>
+import { checkLoginAndRedirect, forceCheckLogin } from '@/utils/auth.js'
+
 /**
  * 医院问诊应用主入口
  * @description 管理应用全局状态和生命周期
@@ -20,6 +22,9 @@ export default {
 
     // 初始化网络状态监听
     this.initNetworkListener()
+
+    // 初始化登录拦截
+    this.initLoginInterceptor()
   },
 
   onShow(options) {
@@ -30,6 +35,9 @@ export default {
 
     // 恢复应用状态
     this.restoreAppState()
+
+    // 全局登录拦截检查
+    this.globalLoginCheck()
   },
 
   onHide() {
@@ -118,16 +126,100 @@ export default {
      * 检查登录状态
      */
     checkLoginStatus() {
-      const userInfo = uni.getStorageSync('userInfo')
-      if (!userInfo) {
-        // 如果未登录且不在登录页面，跳转到登录页
+      // 使用强制检查登录状态
+      if (!forceCheckLogin()) {
+        // 如果未登录且不在登录页面，强制跳转到登录页
         const pages = getCurrentPages()
         const currentPage = pages[pages.length - 1]
         if (currentPage && !currentPage.route.includes('login')) {
-          uni.navigateTo({
-            url: '/login/login'
+          console.log('应用启动时检测到未登录，强制跳转到登录页面')
+          uni.reLaunch({
+            url: '/pages/denglu/login'
           })
         }
+      }
+    },
+
+    /**
+     * 初始化登录拦截器
+     */
+    initLoginInterceptor() {
+      // 拦截页面跳转
+      uni.addInterceptor('navigateTo', {
+        invoke(e) {
+          console.log('拦截 navigateTo:', e.url)
+          // 强制检查登录状态
+          if (!forceCheckLogin()) {
+            console.log('用户未登录，阻止页面跳转')
+            return false
+          }
+          // 检查是否需要登录
+          if (!checkLoginAndRedirect()) {
+            return false
+          }
+          return true
+        }
+      })
+
+      // 拦截tabBar页面跳转
+      uni.addInterceptor('switchTab', {
+        invoke(e) {
+          console.log('拦截 switchTab:', e.url)
+          // 强制检查登录状态
+          if (!forceCheckLogin()) {
+            console.log('用户未登录，阻止tabBar跳转')
+            return false
+          }
+          // 检查是否需要登录
+          if (!checkLoginAndRedirect()) {
+            return false
+          }
+          return true
+        }
+      })
+
+      // 拦截重定向
+      uni.addInterceptor('reLaunch', {
+        invoke(e) {
+          console.log('拦截 reLaunch:', e.url)
+          // 强制检查登录状态
+          if (!forceCheckLogin()) {
+            console.log('用户未登录，阻止重定向')
+            return false
+          }
+          // 检查是否需要登录
+          if (!checkLoginAndRedirect()) {
+            return false
+          }
+          return true
+        }
+      })
+
+      // 拦截redirectTo
+      uni.addInterceptor('redirectTo', {
+        invoke(e) {
+          console.log('拦截 redirectTo:', e.url)
+          // 强制检查登录状态
+          if (!forceCheckLogin()) {
+            console.log('用户未登录，阻止重定向')
+            return false
+          }
+          // 检查是否需要登录
+          if (!checkLoginAndRedirect()) {
+            return false
+          }
+          return true
+        }
+      })
+    },
+
+    /**
+     * 全局登录检查
+     */
+    globalLoginCheck() {
+      // 使用强制检查，确保退出后立即生效
+      if (!forceCheckLogin()) {
+        checkLoginAndRedirect()
       }
     },
 
