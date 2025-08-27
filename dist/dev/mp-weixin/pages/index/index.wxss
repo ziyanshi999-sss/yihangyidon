@@ -1,0 +1,75 @@
+
+.home-container.data-v-83a5a03c {
+  padding: 20rpx;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+.banner.data-v-83a5a03c {
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  border-radius: 20rpx;
+  padding: 40rpx;
+  text-align: center;
+  margin-bottom: 30rpx;
+  color: white;
+}
+.logo.data-v-83a5a03c {
+  width: 120rpx;
+  height: 120rpx;
+  margin-bottom: 20rpx;
+}
+.welcome.data-v-83a5a03c {
+  font-size: 36rpx;
+  font-weight: bold;
+}
+.quick-actions.data-v-83a5a03c {
+  display: flex;
+  justify-content: space-around;
+  background: white;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+}
+.action-item.data-v-83a5a03c {
+  text-align: center;
+  flex: 1;
+}
+.action-icon.data-v-83a5a03c {
+  font-size: 60rpx;
+  margin-bottom: 10rpx;
+}
+.action-text.data-v-83a5a03c {
+  font-size: 28rpx;
+  color: #333;
+}
+.bank-services.data-v-83a5a03c {
+  background: white;
+  border-radius: 20rpx;
+  padding: 30rpx;
+}
+.service-title.data-v-83a5a03c {
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 30rpx;
+  color: #333;
+}
+.service-grid.data-v-83a5a03c {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30rpx;
+}
+.service-item.data-v-83a5a03c {
+  background: #f8f9fa;
+  border-radius: 15rpx;
+  padding: 30rpx;
+  text-align: center;
+  border: 2rpx solid #e9ecef;
+}
+.service-icon.data-v-83a5a03c {
+  font-size: 50rpx;
+  margin-bottom: 15rpx;
+  display: block;
+}
+.service-name.data-v-83a5a03c {
+  font-size: 28rpx;
+  color: #555;
+}
