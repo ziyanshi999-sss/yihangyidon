@@ -4926,6 +4926,7 @@ function getCreateApp() {
     return my[method];
   }
 }
+<<<<<<< Updated upstream
 function vOn(value, key) {
   const instance = getCurrentInstance();
   const ctx = instance.ctx;
@@ -5021,6 +5022,8 @@ function patchStopImmediatePropagation(e2, value) {
   }
 }
 const o = (value, key) => vOn(value);
+=======
+>>>>>>> Stashed changes
 function createApp$1(rootComponent, rootProps = null) {
   rootComponent && (rootComponent.mpType = "app");
   return createVueApp(rootComponent, rootProps).use(plugin);
@@ -7213,4 +7216,7 @@ const createSubpackageApp = initCreateSubpackageApp();
 exports._export_sfc = _export_sfc;
 exports.createSSRApp = createSSRApp;
 exports.index = index;
+<<<<<<< Updated upstream
 exports.o = o;
+=======
+>>>>>>> Stashed changes

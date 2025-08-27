@@ -6,16 +6,27 @@
   "setting": {
     "urlCheck": false,
     "es6": true,
+<<<<<<< Updated upstream
     "postcss": true,
     "minified": true,
     "newFeature": true,
     "bigPackageSizeSupport": true,
     "checkSiteMap": false
+=======
+    "postcss": false,
+    "minified": false,
+    "newFeature": true,
+    "bigPackageSizeSupport": true
+>>>>>>> Stashed changes
   },
   "compileType": "miniprogram",
   "libVersion": "",
   "appid": "touristappid",
+<<<<<<< Updated upstream
   "projectname": "农业银行",
+=======
+  "projectname": "",
+>>>>>>> Stashed changes
   "condition": {
     "search": {
       "current": -1,
