@@ -51,7 +51,7 @@ if (uni.restoreGlobal) {
       vue.createElementVNode("h1", null, "首页")
     ]);
   }
-  const PagesIndexIndex = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["render", _sfc_render$3], ["__file", "E:/Vue项目/专高六/1/银行项目/uniapp/src/pages/index/index.vue"]]);
+  const PagesIndexIndex = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["render", _sfc_render$3], ["__file", "E:/项目/yihangyidon/src/pages/index/index.vue"]]);
   const _sfc_main$3 = {
     data() {
       return {};
@@ -82,21 +82,21 @@ if (uni.restoreGlobal) {
       vue.createElementVNode("h1", null, "个人中心")
     ]);
   }
-  const PagesUserUser = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["render", _sfc_render$2], ["__scopeId", "data-v-99b0ba47"], ["__file", "E:/Vue项目/专高六/1/银行项目/uniapp/src/pages/user/user.vue"]]);
+  const PagesUserUser = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["render", _sfc_render$2], ["__scopeId", "data-v-99b0ba47"], ["__file", "E:/项目/yihangyidon/src/pages/user/user.vue"]]);
   const _sfc_main$2 = {};
   function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "doctor-page" }, [
       vue.createElementVNode("h1", null, "财富")
     ]);
   }
-  const PagesWealthWealth = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["render", _sfc_render$1], ["__file", "E:/Vue项目/专高六/1/银行项目/uniapp/src/pages/wealth/wealth.vue"]]);
+  const PagesWealthWealth = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["render", _sfc_render$1], ["__file", "E:/项目/yihangyidon/src/pages/wealth/wealth.vue"]]);
   const _sfc_main$1 = {};
   function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "encyclopedia-page" }, [
       vue.createElementVNode("h1", null, "生活")
     ]);
   }
-  const PagesLifeLife = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["render", _sfc_render], ["__file", "E:/Vue项目/专高六/1/银行项目/uniapp/src/pages/life/life.vue"]]);
+  const PagesLifeLife = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["render", _sfc_render], ["__file", "E:/项目/yihangyidon/src/pages/life/life.vue"]]);
   __definePage("pages/index/index", PagesIndexIndex);
   __definePage("pages/user/user", PagesUserUser);
   __definePage("pages/wealth/wealth", PagesWealthWealth);
@@ -242,7 +242,7 @@ if (uni.restoreGlobal) {
       isConnected: true
     }
   };
-  const App = /* @__PURE__ */ _export_sfc(_sfc_main, [["__file", "E:/Vue项目/专高六/1/银行项目/uniapp/src/App.vue"]]);
+  const App = /* @__PURE__ */ _export_sfc(_sfc_main, [["__file", "E:/项目/yihangyidon/src/App.vue"]]);
   function createApp() {
     const app = vue.createVueApp(App);
     app.config.errorHandler = (err, vm, info) => {
