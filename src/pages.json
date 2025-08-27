@@ -97,14 +97,14 @@
 			},
 			{
 				"pagePath": "pages/wealth/wealth",
-				"iconPath": "static/tabbar/wealth.png",
-				"selectedIconPath": "static/tabbar/wealth-active.png",
+				"iconPath": "static/tabbar/service.png",
+				"selectedIconPath": "static/tabbar/service-active.png",
 				"text": "财富"
 			},
 			{
 				"pagePath": "pages/life/life",
-				"iconPath": "static/tabbar/life.png",
-				"selectedIconPath": "static/tabbar/life-active.png",
+				"iconPath": "static/tabbar/order.png",
+				"selectedIconPath": "static/tabbar/order-active.png",
 				"text": "生活"
 			},
 			{
