@@ -1,0 +1,345 @@
+
+.games-page[data-v-5e0e9dd0] {
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+.page-header[data-v-5e0e9dd0] {
+  background: linear-gradient(135deg, #ff6b35 0%, #ff8a65 100%);
+  padding: 1.875rem 0.9375rem 1.25rem;
+  text-align: center;
+}
+.header-title[data-v-5e0e9dd0] {
+  color: #fff;
+  font-size: 1.125rem;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 0.3125rem;
+}
+.header-subtitle[data-v-5e0e9dd0] {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.75rem;
+}
+.coming-soon[data-v-5e0e9dd0] {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6.25rem 1.875rem;
+  text-align: center;
+}
+.coming-title[data-v-5e0e9dd0] {
+  font-size: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+.coming-desc[data-v-5e0e9dd0] {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 2.5rem;
+}
+
+/* 积分信息 */
+.points-info[data-v-5e0e9dd0] {
+  margin: 0.625rem 0.9375rem;
+}
+.points-card[data-v-5e0e9dd0] {
+  background: linear-gradient(135deg, #ff6b35, #ff8a65);
+  border-radius: 0.625rem;
+  padding: 1.25rem;
+  color: #fff;
+}
+.points-header[data-v-5e0e9dd0] {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.9375rem;
+}
+.points-title[data-v-5e0e9dd0] {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+.points-rule[data-v-5e0e9dd0] {
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+.points-content[data-v-5e0e9dd0] {
+  text-align: center;
+  margin-bottom: 0.9375rem;
+}
+.points-number[data-v-5e0e9dd0] {
+  font-size: 2.25rem;
+  font-weight: bold;
+  margin-right: 0.3125rem;
+}
+.points-unit[data-v-5e0e9dd0] {
+  font-size: 1rem;
+  opacity: 0.8;
+}
+.points-actions[data-v-5e0e9dd0] {
+  display: flex;
+  gap: 0.625rem;
+}
+.action-btn[data-v-5e0e9dd0] {
+  flex: 1;
+  padding: 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 0.8125rem;
+  border: none;
+}
+.action-btn.primary[data-v-5e0e9dd0] {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+.action-btn.secondary[data-v-5e0e9dd0] {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+/* 游戏分类 */
+.game-categories[data-v-5e0e9dd0] {
+  background: #fff;
+  margin: 0 0.9375rem 0.625rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.375rem rgba(0, 0, 0, 0.1);
+}
+.category-tabs[data-v-5e0e9dd0] {
+  display: flex;
+  padding: 0.25rem;
+}
+.tab-item[data-v-5e0e9dd0] {
+  flex: 1;
+  text-align: center;
+  padding: 0.5rem 0.25rem;
+  border-radius: 0.375rem;
+  transition: all 0.3s ease;
+}
+.tab-item.active[data-v-5e0e9dd0] {
+  background: #ff6b35;
+}
+.tab-text[data-v-5e0e9dd0] {
+  font-size: 0.8125rem;
+  color: #666;
+  font-weight: 500;
+}
+.tab-item.active .tab-text[data-v-5e0e9dd0] {
+  color: #fff;
+}
+
+/* 游戏网格 */
+.games-grid[data-v-5e0e9dd0] {
+  margin: 0 0.9375rem 0.625rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.625rem;
+}
+.game-item[data-v-5e0e9dd0] {
+  background: #fff;
+  border-radius: 0.5rem;
+  padding: 0.9375rem;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 0.125rem 0.375rem rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+.game-item[data-v-5e0e9dd0]:active {
+  transform: scale(0.98);
+  box-shadow: 0 0.0625rem 0.25rem rgba(0, 0, 0, 0.15);
+}
+.game-cover[data-v-5e0e9dd0] {
+  position: relative;
+  margin-right: 0.9375rem;
+}
+.game-icon[data-v-5e0e9dd0] {
+  display: block;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: linear-gradient(135deg, #ff6b35, #ff8a65);
+  border-radius: 0.5rem;
+  line-height: 2.5rem;
+  text-align: center;
+  font-size: 1.125rem;
+}
+.game-badge[data-v-5e0e9dd0] {
+  position: absolute;
+  top: -0.25rem;
+  right: -0.25rem;
+  background: #ff3b30;
+  border-radius: 0.625rem;
+  padding: 0.125rem 0.375rem;
+}
+.badge-text[data-v-5e0e9dd0] {
+  font-size: 0.625rem;
+  color: #fff;
+  font-weight: bold;
+}
+.game-info[data-v-5e0e9dd0] {
+  flex: 1;
+}
+.game-title[data-v-5e0e9dd0] {
+  font-size: 1rem;
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  display: block;
+}
+.game-desc[data-v-5e0e9dd0] {
+  font-size: 0.8125rem;
+  color: #999;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+.game-reward[data-v-5e0e9dd0] {
+  display: inline-block;
+}
+.reward-text[data-v-5e0e9dd0] {
+  background: #ff6b35;
+  color: #fff;
+  padding: 0.1875rem 0.5rem;
+  border-radius: 0.625rem;
+  font-size: 0.6875rem;
+  font-weight: 500;
+}
+
+/* 活动专区 */
+.activity-section[data-v-5e0e9dd0] {
+  background: #fff;
+  margin: 0 0.9375rem 0.625rem;
+  padding: 0.9375rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.375rem rgba(0, 0, 0, 0.1);
+}
+.section-header[data-v-5e0e9dd0] {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.9375rem;
+}
+.section-title[data-v-5e0e9dd0] {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+}
+.view-all[data-v-5e0e9dd0] {
+  font-size: 0.8125rem;
+  color: #ff6b35;
+}
+.activity-cards[data-v-5e0e9dd0] {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+.activity-card[data-v-5e0e9dd0] {
+  padding: 0.9375rem;
+  border-radius: 0.375rem;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  border-left: 0.1875rem solid #ff6b35;
+  transition: all 0.3s ease;
+}
+.activity-card[data-v-5e0e9dd0]:active {
+  transform: scale(0.98);
+  background: linear-gradient(135deg, #e9ecef, #dee2e6);
+}
+.activity-header[data-v-5e0e9dd0] {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+.activity-title[data-v-5e0e9dd0] {
+  font-size: 0.875rem;
+  color: #333;
+  font-weight: 600;
+}
+.activity-status[data-v-5e0e9dd0] {
+  background: #ff6b35;
+  color: #fff;
+  padding: 0.1875rem 0.5rem;
+  border-radius: 0.625rem;
+  font-size: 0.6875rem;
+}
+.activity-desc[data-v-5e0e9dd0] {
+  font-size: 0.8125rem;
+  color: #666;
+  line-height: 1.5;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+.activity-footer[data-v-5e0e9dd0] {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.activity-time[data-v-5e0e9dd0] {
+  font-size: 0.75rem;
+  color: #999;
+}
+.activity-reward[data-v-5e0e9dd0] {
+  font-size: 0.75rem;
+  color: #ff6b35;
+  font-weight: 500;
+}
+
+/* 兑换商城 */
+.exchange-section[data-v-5e0e9dd0] {
+  background: #fff;
+  margin: 0 0.9375rem 3.125rem;
+  padding: 0.9375rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.375rem rgba(0, 0, 0, 0.1);
+}
+.exchange-grid[data-v-5e0e9dd0] {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.625rem;
+}
+.exchange-item[data-v-5e0e9dd0] {
+  padding: 0.9375rem 0.625rem;
+  border-radius: 0.375rem;
+  background: #fafafa;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+.exchange-item[data-v-5e0e9dd0]:active {
+  transform: scale(0.98);
+  background: #f0f0f0;
+}
+.item-image[data-v-5e0e9dd0] {
+  margin-bottom: 0.5rem;
+}
+.item-icon[data-v-5e0e9dd0] {
+  display: block;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: linear-gradient(135deg, #ff6b35, #ff8a65);
+  border-radius: 0.5rem;
+  line-height: 2.5rem;
+  text-align: center;
+  font-size: 1.125rem;
+  margin: 0 auto;
+}
+.item-name[data-v-5e0e9dd0] {
+  font-size: 0.8125rem;
+  color: #333;
+  font-weight: 500;
+  margin-bottom: 0.375rem;
+  display: block;
+}
+.item-points[data-v-5e0e9dd0] {
+  font-size: 0.75rem;
+  color: #ff6b35;
+  font-weight: 600;
+  margin-bottom: 0.625rem;
+  display: block;
+}
+.exchange-btn[data-v-5e0e9dd0] {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  background: #ff6b35;
+  color: #fff;
+  font-size: 0.75rem;
+  border: none;
+}
+.exchange-btn[disabled][data-v-5e0e9dd0] {
+  background: #ccc;
+  color: #999;
+}

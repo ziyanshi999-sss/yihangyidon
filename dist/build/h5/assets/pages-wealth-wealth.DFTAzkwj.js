@@ -1,0 +1,1 @@
+import{c as a,w as s,i as e,o,a as r}from"./index-M9oHmXK2.js";import{_ as t}from"./_plugin-vue_export-helper.BCo6x5W8.js";const n=t({},[["render",function(t,n,l,p,u,c){const i=e;return o(),a(i,{class:"doctor-page"},{default:s(()=>[r("h1",null,"财富")]),_:1})}]]);export{n as default};
