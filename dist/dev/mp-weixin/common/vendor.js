@@ -892,7 +892,7 @@ function get(target, key, isReadonly2 = false, isShallow2 = false) {
     target.get(key);
   }
 }
-function has(key, isReadonly2 = false) {
+function has$1(key, isReadonly2 = false) {
   const target = this["__v_raw"];
   const rawTarget = toRaw(target);
   const rawKey = toRaw(key);
@@ -1029,7 +1029,7 @@ function createInstrumentations() {
     get size() {
       return size(this);
     },
-    has,
+    has: has$1,
     add,
     set: set$1,
     delete: deleteEntry,
@@ -1043,7 +1043,7 @@ function createInstrumentations() {
     get size() {
       return size(this);
     },
-    has,
+    has: has$1,
     add,
     set: set$1,
     delete: deleteEntry,
@@ -1058,7 +1058,7 @@ function createInstrumentations() {
       return size(this, true);
     },
     has(key) {
-      return has.call(this, key, true);
+      return has$1.call(this, key, true);
     },
     add: createReadonlyMethod("add"),
     set: createReadonlyMethod("set"),
@@ -1074,7 +1074,7 @@ function createInstrumentations() {
       return size(this, true);
     },
     has(key) {
-      return has.call(this, key, true);
+      return has$1.call(this, key, true);
     },
     add: createReadonlyMethod("add"),
     set: createReadonlyMethod("set"),
@@ -4926,7 +4926,6 @@ function getCreateApp() {
     return my[method];
   }
 }
-<<<<<<< Updated upstream
 function vOn(value, key) {
   const instance = getCurrentInstance();
   const ctx = instance.ctx;
@@ -5022,8 +5021,6 @@ function patchStopImmediatePropagation(e2, value) {
   }
 }
 const o = (value, key) => vOn(value);
-=======
->>>>>>> Stashed changes
 function createApp$1(rootComponent, rootProps = null) {
   rootComponent && (rootComponent.mpType = "app");
   return createVueApp(rootComponent, rootProps).use(plugin);
@@ -5945,7 +5942,7 @@ function populateParameters(fromRes, toRes) {
   let _SDKVersion = SDKVersion;
   const hostLanguage = (language || "").replace(/_/g, "-");
   const parameters = {
-    appId: "",
+    appId: "wxbdd11cdc1af803d6",
     appName: "农业银行",
     appVersion: "1.0.0",
     appVersionCode: "100",
@@ -6094,7 +6091,7 @@ const getAppBaseInfo = {
       hostName: _hostName,
       hostSDKVersion: SDKVersion,
       hostTheme: theme,
-      appId: "",
+      appId: "wxbdd11cdc1af803d6",
       appName: "农业银行",
       appVersion: "1.0.0",
       appVersionCode: "100",
@@ -6341,6 +6338,582 @@ var protocols = /* @__PURE__ */ Object.freeze({
 });
 const wx$1 = initWx();
 var index = initUni(shims, protocols, wx$1);
+function initRuntimeSocket(hosts, port, id) {
+  return hosts.split(",").reduce((promise, host2) => {
+    return promise.then((socket) => {
+      if (socket != null)
+        return Promise.resolve(socket);
+      return tryConnectSocket(host2, port, id);
+    });
+  }, Promise.resolve(null));
+}
+const SOCKET_TIMEOUT = 500;
+function tryConnectSocket(host2, port, id) {
+  return new Promise((resolve, reject) => {
+    const socket = index.connectSocket({
+      url: `ws://${host2}:${port}/${id}`,
+      multiple: true,
+      // 支付宝小程序 是否开启多实例
+      fail() {
+        resolve(null);
+      }
+    });
+    const timer = setTimeout(() => {
+      socket.close({
+        code: 1006,
+        reason: "connect timeout"
+      });
+      resolve(null);
+    }, SOCKET_TIMEOUT);
+    socket.onOpen((e) => {
+      clearTimeout(timer);
+      resolve(socket);
+    });
+    socket.onClose((e) => {
+      clearTimeout(timer);
+      resolve(null);
+    });
+    socket.onError((e) => {
+      clearTimeout(timer);
+      resolve(null);
+    });
+  });
+}
+const CONSOLE_TYPES = ["log", "warn", "error", "info", "debug"];
+const originalConsole = /* @__PURE__ */ CONSOLE_TYPES.reduce((methods, type) => {
+  methods[type] = console[type].bind(console);
+  return methods;
+}, {});
+let sendError = null;
+const errorQueue = /* @__PURE__ */ new Set();
+const errorExtra = {};
+function sendErrorMessages(errors) {
+  if (sendError == null) {
+    errors.forEach((error) => {
+      errorQueue.add(error);
+    });
+    return;
+  }
+  const data = errors.map((err) => {
+    if (typeof err === "string") {
+      return err;
+    }
+    const isPromiseRejection = err && "promise" in err && "reason" in err;
+    const prefix = isPromiseRejection ? "UnhandledPromiseRejection: " : "";
+    if (isPromiseRejection) {
+      err = err.reason;
+    }
+    if (err instanceof Error && err.stack) {
+      if (err.message && !err.stack.includes(err.message)) {
+        return `${prefix}${err.message}
+${err.stack}`;
+      }
+      return `${prefix}${err.stack}`;
+    }
+    if (typeof err === "object" && err !== null) {
+      try {
+        return prefix + JSON.stringify(err);
+      } catch (err2) {
+        return prefix + String(err2);
+      }
+    }
+    return prefix + String(err);
+  }).filter(Boolean);
+  if (data.length > 0) {
+    sendError(JSON.stringify(Object.assign({
+      type: "error",
+      data
+    }, errorExtra)));
+  }
+}
+function setSendError(value, extra = {}) {
+  sendError = value;
+  Object.assign(errorExtra, extra);
+  if (value != null && errorQueue.size > 0) {
+    const errors = Array.from(errorQueue);
+    errorQueue.clear();
+    sendErrorMessages(errors);
+  }
+}
+function initOnError() {
+  function onError2(error) {
+    try {
+      if (typeof PromiseRejectionEvent !== "undefined" && error instanceof PromiseRejectionEvent && error.reason instanceof Error && error.reason.message && error.reason.message.includes(`Cannot create property 'errMsg' on string 'taskId`)) {
+        return;
+      }
+      if (true) {
+        originalConsole.error(error);
+      }
+      sendErrorMessages([error]);
+    } catch (err) {
+      originalConsole.error(err);
+    }
+  }
+  if (typeof index.onError === "function") {
+    index.onError(onError2);
+  }
+  if (typeof index.onUnhandledRejection === "function") {
+    index.onUnhandledRejection(onError2);
+  }
+  return function offError2() {
+    if (typeof index.offError === "function") {
+      index.offError(onError2);
+    }
+    if (typeof index.offUnhandledRejection === "function") {
+      index.offUnhandledRejection(onError2);
+    }
+  };
+}
+function formatMessage(type, args) {
+  try {
+    return {
+      type,
+      args: formatArgs(args)
+    };
+  } catch (e) {
+  }
+  return {
+    type,
+    args: []
+  };
+}
+function formatArgs(args) {
+  return args.map((arg) => formatArg(arg));
+}
+function formatArg(arg, depth = 0) {
+  if (depth >= 7) {
+    return {
+      type: "object",
+      value: "[Maximum depth reached]"
+    };
+  }
+  const type = typeof arg;
+  switch (type) {
+    case "string":
+      return formatString(arg);
+    case "number":
+      return formatNumber(arg);
+    case "boolean":
+      return formatBoolean(arg);
+    case "object":
+      try {
+        return formatObject(arg, depth);
+      } catch (e) {
+        return {
+          type: "object",
+          value: {
+            properties: []
+          }
+        };
+      }
+    case "undefined":
+      return formatUndefined();
+    case "function":
+      return formatFunction(arg);
+    case "symbol": {
+      return formatSymbol(arg);
+    }
+    case "bigint":
+      return formatBigInt(arg);
+  }
+}
+function formatFunction(value) {
+  return {
+    type: "function",
+    value: `function ${value.name}() {}`
+  };
+}
+function formatUndefined() {
+  return {
+    type: "undefined"
+  };
+}
+function formatBoolean(value) {
+  return {
+    type: "boolean",
+    value: String(value)
+  };
+}
+function formatNumber(value) {
+  return {
+    type: "number",
+    value: String(value)
+  };
+}
+function formatBigInt(value) {
+  return {
+    type: "bigint",
+    value: String(value)
+  };
+}
+function formatString(value) {
+  return {
+    type: "string",
+    value
+  };
+}
+function formatSymbol(value) {
+  return {
+    type: "symbol",
+    value: value.description
+  };
+}
+function formatObject(value, depth) {
+  if (value === null) {
+    return {
+      type: "null"
+    };
+  }
+  {
+    if (isComponentPublicInstance(value)) {
+      return formatComponentPublicInstance(value, depth);
+    }
+    if (isComponentInternalInstance(value)) {
+      return formatComponentInternalInstance(value, depth);
+    }
+    if (isUniElement(value)) {
+      return formatUniElement(value, depth);
+    }
+    if (isCSSStyleDeclaration(value)) {
+      return formatCSSStyleDeclaration(value, depth);
+    }
+  }
+  if (Array.isArray(value)) {
+    return {
+      type: "object",
+      subType: "array",
+      value: {
+        properties: value.map((v, i) => formatArrayElement(v, i, depth + 1))
+      }
+    };
+  }
+  if (value instanceof Set) {
+    return {
+      type: "object",
+      subType: "set",
+      className: "Set",
+      description: `Set(${value.size})`,
+      value: {
+        entries: Array.from(value).map((v) => formatSetEntry(v, depth + 1))
+      }
+    };
+  }
+  if (value instanceof Map) {
+    return {
+      type: "object",
+      subType: "map",
+      className: "Map",
+      description: `Map(${value.size})`,
+      value: {
+        entries: Array.from(value.entries()).map((v) => formatMapEntry(v, depth + 1))
+      }
+    };
+  }
+  if (value instanceof Promise) {
+    return {
+      type: "object",
+      subType: "promise",
+      value: {
+        properties: []
+      }
+    };
+  }
+  if (value instanceof RegExp) {
+    return {
+      type: "object",
+      subType: "regexp",
+      value: String(value),
+      className: "Regexp"
+    };
+  }
+  if (value instanceof Date) {
+    return {
+      type: "object",
+      subType: "date",
+      value: String(value),
+      className: "Date"
+    };
+  }
+  if (value instanceof Error) {
+    return {
+      type: "object",
+      subType: "error",
+      value: value.message || String(value),
+      className: value.name || "Error"
+    };
+  }
+  let className = void 0;
+  {
+    const constructor = value.constructor;
+    if (constructor) {
+      if (constructor.get$UTSMetadata$) {
+        className = constructor.get$UTSMetadata$().name;
+      }
+    }
+  }
+  let entries = Object.entries(value);
+  if (isHarmonyBuilderParams(value)) {
+    entries = entries.filter(([key]) => key !== "modifier" && key !== "nodeContent");
+  }
+  return {
+    type: "object",
+    className,
+    value: {
+      properties: entries.map((entry) => formatObjectProperty(entry[0], entry[1], depth + 1))
+    }
+  };
+}
+function isHarmonyBuilderParams(value) {
+  return value.modifier && value.modifier._attribute && value.nodeContent;
+}
+function isComponentPublicInstance(value) {
+  return value.$ && isComponentInternalInstance(value.$);
+}
+function isComponentInternalInstance(value) {
+  return value.type && value.uid != null && value.appContext;
+}
+function formatComponentPublicInstance(value, depth) {
+  return {
+    type: "object",
+    className: "ComponentPublicInstance",
+    value: {
+      properties: Object.entries(value.$.type).map(([name, value2]) => formatObjectProperty(name, value2, depth + 1))
+    }
+  };
+}
+function formatComponentInternalInstance(value, depth) {
+  return {
+    type: "object",
+    className: "ComponentInternalInstance",
+    value: {
+      properties: Object.entries(value.type).map(([name, value2]) => formatObjectProperty(name, value2, depth + 1))
+    }
+  };
+}
+function isUniElement(value) {
+  return value.style && value.tagName != null && value.nodeName != null;
+}
+function formatUniElement(value, depth) {
+  return {
+    type: "object",
+    // 非 x 没有 UniElement 的概念
+    // className: 'UniElement',
+    value: {
+      properties: Object.entries(value).filter(([name]) => [
+        "id",
+        "tagName",
+        "nodeName",
+        "dataset",
+        "offsetTop",
+        "offsetLeft",
+        "style"
+      ].includes(name)).map(([name, value2]) => formatObjectProperty(name, value2, depth + 1))
+    }
+  };
+}
+function isCSSStyleDeclaration(value) {
+  return typeof value.getPropertyValue === "function" && typeof value.setProperty === "function" && value.$styles;
+}
+function formatCSSStyleDeclaration(style, depth) {
+  return {
+    type: "object",
+    value: {
+      properties: Object.entries(style.$styles).map(([name, value]) => formatObjectProperty(name, value, depth + 1))
+    }
+  };
+}
+function formatObjectProperty(name, value, depth) {
+  const result = formatArg(value, depth);
+  result.name = name;
+  return result;
+}
+function formatArrayElement(value, index2, depth) {
+  const result = formatArg(value, depth);
+  result.name = `${index2}`;
+  return result;
+}
+function formatSetEntry(value, depth) {
+  return {
+    value: formatArg(value, depth)
+  };
+}
+function formatMapEntry(value, depth) {
+  return {
+    key: formatArg(value[0], depth),
+    value: formatArg(value[1], depth)
+  };
+}
+let sendConsole = null;
+const messageQueue = [];
+const messageExtra = {};
+const EXCEPTION_BEGIN_MARK = "---BEGIN:EXCEPTION---";
+const EXCEPTION_END_MARK = "---END:EXCEPTION---";
+function sendConsoleMessages(messages) {
+  if (sendConsole == null) {
+    messageQueue.push(...messages);
+    return;
+  }
+  sendConsole(JSON.stringify(Object.assign({
+    type: "console",
+    data: messages
+  }, messageExtra)));
+}
+function setSendConsole(value, extra = {}) {
+  sendConsole = value;
+  Object.assign(messageExtra, extra);
+  if (value != null && messageQueue.length > 0) {
+    const messages = messageQueue.slice();
+    messageQueue.length = 0;
+    sendConsoleMessages(messages);
+  }
+}
+const atFileRegex = /^\s*at\s+[\w/./-]+:\d+$/;
+function rewriteConsole() {
+  function wrapConsole(type) {
+    return function(...args) {
+      {
+        const originalArgs = [...args];
+        if (originalArgs.length) {
+          const maybeAtFile = originalArgs[originalArgs.length - 1];
+          if (typeof maybeAtFile === "string" && atFileRegex.test(maybeAtFile)) {
+            originalArgs.pop();
+          }
+        }
+        originalConsole[type](...originalArgs);
+      }
+      if (type === "error" && args.length === 1) {
+        const arg = args[0];
+        if (typeof arg === "string" && arg.startsWith(EXCEPTION_BEGIN_MARK)) {
+          const startIndex = EXCEPTION_BEGIN_MARK.length;
+          const endIndex = arg.length - EXCEPTION_END_MARK.length;
+          sendErrorMessages([arg.slice(startIndex, endIndex)]);
+          return;
+        } else if (arg instanceof Error) {
+          sendErrorMessages([arg]);
+          return;
+        }
+      }
+      sendConsoleMessages([formatMessage(type, args)]);
+    };
+  }
+  if (isConsoleWritable()) {
+    CONSOLE_TYPES.forEach((type) => {
+      console[type] = wrapConsole(type);
+    });
+    return function restoreConsole() {
+      CONSOLE_TYPES.forEach((type) => {
+        console[type] = originalConsole[type];
+      });
+    };
+  } else {
+    {
+      if (typeof index !== "undefined" && index.__f__) {
+        const oldLog = index.__f__;
+        if (oldLog) {
+          index.__f__ = function(...args) {
+            const [type, filename, ...rest] = args;
+            oldLog(type, "", ...rest);
+            sendConsoleMessages([formatMessage(type, [...rest, filename])]);
+          };
+          return function restoreConsole() {
+            index.__f__ = oldLog;
+          };
+        }
+      }
+    }
+  }
+  return function restoreConsole() {
+  };
+}
+function isConsoleWritable() {
+  const value = console.log;
+  const sym = Symbol();
+  try {
+    console.log = sym;
+  } catch (ex) {
+    return false;
+  }
+  const isWritable = console.log === sym;
+  console.log = value;
+  return isWritable;
+}
+function initRuntimeSocketService() {
+  const hosts = "192.168.182.1,192.168.9.1,192.168.103.112,127.0.0.1";
+  const port = "8090";
+  const id = "mp-weixin_BryyGS";
+  const lazy = typeof swan !== "undefined";
+  let restoreError = lazy ? () => {
+  } : initOnError();
+  let restoreConsole = lazy ? () => {
+  } : rewriteConsole();
+  return Promise.resolve().then(() => {
+    if (lazy) {
+      restoreError = initOnError();
+      restoreConsole = rewriteConsole();
+    }
+    return initRuntimeSocket(hosts, port, id).then((socket) => {
+      if (!socket) {
+        restoreError();
+        restoreConsole();
+        originalConsole.error(wrapError("开发模式下日志通道建立 socket 连接失败。"));
+        {
+          originalConsole.error(wrapError("小程序平台，请勾选不校验合法域名配置。"));
+        }
+        originalConsole.error(wrapError("如果是运行到真机，请确认手机与电脑处于同一网络。"));
+        return false;
+      }
+      {
+        initMiniProgramGlobalFlag();
+      }
+      socket.onClose(() => {
+        {
+          originalConsole.error(wrapError("开发模式下日志通道 socket 连接关闭，请在 HBuilderX 中重新运行。"));
+        }
+        restoreError();
+        restoreConsole();
+      });
+      setSendConsole((data) => {
+        socket.send({
+          data
+        });
+      });
+      setSendError((data) => {
+        socket.send({
+          data
+        });
+      });
+      return true;
+    });
+  });
+}
+const ERROR_CHAR = "‌";
+function wrapError(error) {
+  return `${ERROR_CHAR}${error}${ERROR_CHAR}`;
+}
+function initMiniProgramGlobalFlag() {
+  if (typeof wx$1 !== "undefined") {
+    wx$1.__uni_console__ = true;
+  } else if (typeof my !== "undefined") {
+    my.__uni_console__ = true;
+  } else if (typeof tt !== "undefined") {
+    tt.__uni_console__ = true;
+  } else if (typeof swan !== "undefined") {
+    swan.__uni_console__ = true;
+  } else if (typeof qq !== "undefined") {
+    qq.__uni_console__ = true;
+  } else if (typeof ks !== "undefined") {
+    ks.__uni_console__ = true;
+  } else if (typeof jd !== "undefined") {
+    jd.__uni_console__ = true;
+  } else if (typeof xhs !== "undefined") {
+    xhs.__uni_console__ = true;
+  } else if (typeof has !== "undefined") {
+    has.__uni_console__ = true;
+  } else if (typeof qa !== "undefined") {
+    qa.__uni_console__ = true;
+  }
+}
+initRuntimeSocketService();
 const _export_sfc = (sfc, props) => {
   const target = sfc.__vccOpts || sfc;
   for (const [key, val] of props) {
@@ -7216,7 +7789,5 @@ const createSubpackageApp = initCreateSubpackageApp();
 exports._export_sfc = _export_sfc;
 exports.createSSRApp = createSSRApp;
 exports.index = index;
-<<<<<<< Updated upstream
 exports.o = o;
-=======
->>>>>>> Stashed changes
+//# sourceMappingURL=../../.sourcemap/mp-weixin/common/vendor.js.map

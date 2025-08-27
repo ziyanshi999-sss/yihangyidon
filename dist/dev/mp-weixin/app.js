@@ -10,27 +10,27 @@ if (!Math) {
 const _sfc_main = {
   name: "App",
   onLaunch(options) {
-    console.log("App Launch", options);
+    common_vendor.index.__f__("log", "at App.vue:10", "App Launch", options);
     this.checkUpdate();
     this.initUserInfo();
     this.setSystemInfo();
     this.initNetworkListener();
   },
   onShow(options) {
-    console.log("App Show", options);
+    common_vendor.index.__f__("log", "at App.vue:26", "App Show", options);
     this.checkLoginStatus();
     this.restoreAppState();
   },
   onHide() {
-    console.log("App Hide");
+    common_vendor.index.__f__("log", "at App.vue:36", "App Hide");
     this.saveAppState();
   },
   onError(error) {
-    console.error("App Error:", error);
+    common_vendor.index.__f__("error", "at App.vue:43", "App Error:", error);
     this.reportError(error);
   },
   onPageNotFound(options) {
-    console.log("Page Not Found:", options);
+    common_vendor.index.__f__("log", "at App.vue:50", "Page Not Found:", options);
     common_vendor.index.switchTab({
       url: "/pages/index/index"
     });
@@ -49,10 +49,10 @@ const _sfc_main = {
         const userInfo = common_vendor.index.getStorageSync("userInfo");
         if (userInfo) {
           this.globalData.userInfo = userInfo;
-          console.log("用户信息已恢复:", userInfo);
+          common_vendor.index.__f__("log", "at App.vue:79", "用户信息已恢复:", userInfo);
         }
       } catch (error) {
-        console.error("恢复用户信息失败:", error);
+        common_vendor.index.__f__("error", "at App.vue:82", "恢复用户信息失败:", error);
       }
     },
     /**
@@ -62,9 +62,9 @@ const _sfc_main = {
       try {
         const systemInfo = common_vendor.index.getSystemInfoSync();
         this.globalData.systemInfo = systemInfo;
-        console.log("系统信息:", systemInfo);
+        common_vendor.index.__f__("log", "at App.vue:93", "系统信息:", systemInfo);
       } catch (error) {
-        console.error("获取系统信息失败:", error);
+        common_vendor.index.__f__("error", "at App.vue:95", "获取系统信息失败:", error);
       }
     },
     /**
@@ -72,7 +72,7 @@ const _sfc_main = {
      */
     initNetworkListener() {
       common_vendor.index.onNetworkStatusChange((res) => {
-        console.log("网络状态变化:", res);
+        common_vendor.index.__f__("log", "at App.vue:104", "网络状态变化:", res);
         this.globalData.networkType = res.networkType;
         this.globalData.isConnected = res.isConnected;
         if (!res.isConnected) {
@@ -109,7 +109,7 @@ const _sfc_main = {
         };
         common_vendor.index.setStorageSync("appState", appState);
       } catch (error) {
-        console.error("保存应用状态失败:", error);
+        common_vendor.index.__f__("error", "at App.vue:145", "保存应用状态失败:", error);
       }
     },
     /**
@@ -125,14 +125,14 @@ const _sfc_main = {
           }
         }
       } catch (error) {
-        console.error("恢复应用状态失败:", error);
+        common_vendor.index.__f__("error", "at App.vue:163", "恢复应用状态失败:", error);
       }
     },
     /**
      * 错误上报
      */
     reportError(error) {
-      console.error("错误上报:", error);
+      common_vendor.index.__f__("error", "at App.vue:172", "错误上报:", error);
     }
   },
   /**
@@ -148,8 +148,8 @@ const _sfc_main = {
 function createApp() {
   const app = common_vendor.createSSRApp(_sfc_main);
   app.config.errorHandler = (err, vm, info) => {
-    console.error("Vue Error:", err);
-    console.error("Error Info:", info);
+    common_vendor.index.__f__("error", "at main.js:15", "Vue Error:", err);
+    common_vendor.index.__f__("error", "at main.js:16", "Error Info:", info);
     reportError(err, info);
     common_vendor.index.showToast({
       title: "应用出现错误，请重试",
@@ -158,8 +158,8 @@ function createApp() {
     });
   };
   app.config.warnHandler = (msg, vm, trace) => {
-    console.warn("Vue Warning:", msg);
-    console.warn("Warning Trace:", trace);
+    common_vendor.index.__f__("warn", "at main.js:31", "Vue Warning:", msg);
+    common_vendor.index.__f__("warn", "at main.js:32", "Warning Trace:", trace);
   };
   app.config.globalProperties.$app = {
     // 应用版本
@@ -258,12 +258,12 @@ function createApp() {
           };
         }
         config.url += (config.url.includes("?") ? "&" : "?") + `_t=${Date.now()}`;
-        console.log("Request:", config);
+        common_vendor.index.__f__("log", "at main.js:155", "Request:", config);
         return config;
       },
       // 响应拦截器
       afterResponse(response) {
-        console.log("Response:", response);
+        common_vendor.index.__f__("log", "at main.js:161", "Response:", response);
         if (response.statusCode === 401) {
           common_vendor.index.removeStorageSync("token");
           common_vendor.index.removeStorageSync("userInfo");
@@ -293,7 +293,7 @@ function createApp() {
           });
           return this.afterResponse(response);
         } catch (error) {
-          console.error("Request Error:", error);
+          common_vendor.index.__f__("error", "at main.js:197", "Request Error:", error);
           if (error.errMsg && error.errMsg.includes("request:fail")) {
             common_vendor.index.showToast({
               title: "网络连接失败，请检查网络设置",
@@ -349,7 +349,7 @@ function createApp() {
         try {
           common_vendor.index.setStorageSync(key, JSON.stringify(data));
         } catch (error) {
-          console.error("Storage Set Error:", error);
+          common_vendor.index.__f__("error", "at main.js:263", "Storage Set Error:", error);
         }
       },
       // 获取存储
@@ -365,7 +365,7 @@ function createApp() {
           }
           return parsed.value;
         } catch (error) {
-          console.error("Storage Get Error:", error);
+          common_vendor.index.__f__("error", "at main.js:283", "Storage Get Error:", error);
           return defaultValue;
         }
       },
@@ -374,7 +374,7 @@ function createApp() {
         try {
           common_vendor.index.removeStorageSync(key);
         } catch (error) {
-          console.error("Storage Remove Error:", error);
+          common_vendor.index.__f__("error", "at main.js:293", "Storage Remove Error:", error);
         }
       },
       // 清空存储
@@ -382,7 +382,7 @@ function createApp() {
         try {
           common_vendor.index.clearStorageSync();
         } catch (error) {
-          console.error("Storage Clear Error:", error);
+          common_vendor.index.__f__("error", "at main.js:302", "Storage Clear Error:", error);
         }
       }
     }
@@ -390,25 +390,25 @@ function createApp() {
   app.mixin({
     // 页面生命周期
     onLoad(options) {
-      console.log("Page Load:", this.$options.name, options);
+      common_vendor.index.__f__("log", "at main.js:312", "Page Load:", this.$options.name, options);
       this.pageStartTime = Date.now();
     },
     onShow() {
-      console.log("Page Show:", this.$options.name);
+      common_vendor.index.__f__("log", "at main.js:319", "Page Show:", this.$options.name);
     },
     onHide() {
-      console.log("Page Hide:", this.$options.name);
+      common_vendor.index.__f__("log", "at main.js:323", "Page Hide:", this.$options.name);
       if (this.pageStartTime) {
         const duration = Date.now() - this.pageStartTime;
-        console.log("Page Duration:", this.$options.name, duration + "ms");
+        common_vendor.index.__f__("log", "at main.js:328", "Page Duration:", this.$options.name, duration + "ms");
       }
     },
     onUnload() {
-      console.log("Page Unload:", this.$options.name);
+      common_vendor.index.__f__("log", "at main.js:333", "Page Unload:", this.$options.name);
     },
     // 错误处理
     onError(error) {
-      console.error("Page Error:", this.$options.name, error);
+      common_vendor.index.__f__("error", "at main.js:338", "Page Error:", this.$options.name, error);
       reportError(error, `Page: ${this.$options.name}`);
     }
   });
@@ -426,17 +426,18 @@ function reportError(error, info = "") {
     userAgent: common_vendor.index.getSystemInfoSync(),
     url: ((_a = getCurrentPages().pop()) == null ? void 0 : _a.route) || "unknown"
   };
-  console.error("Error Report:", errorData);
+  common_vendor.index.__f__("error", "at main.js:364", "Error Report:", errorData);
 }
 if (typeof window !== "undefined") {
   window.addEventListener("error", (event) => {
-    console.error("Global Error:", event.error);
+    common_vendor.index.__f__("error", "at main.js:377", "Global Error:", event.error);
     reportError(event.error, "Global Error");
   });
   window.addEventListener("unhandledrejection", (event) => {
-    console.error("Unhandled Promise Rejection:", event.reason);
+    common_vendor.index.__f__("error", "at main.js:382", "Unhandled Promise Rejection:", event.reason);
     reportError(event.reason, "Unhandled Promise Rejection");
   });
 }
 createApp().app.mount("#app");
 exports.createApp = createApp;
+//# sourceMappingURL=../.sourcemap/mp-weixin/app.js.map

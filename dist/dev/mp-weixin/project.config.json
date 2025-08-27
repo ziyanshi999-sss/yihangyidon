@@ -1,48 +1,30 @@
 {
   "description": "项目配置文件。",
   "packOptions": {
-    "ignore": []
+    "ignore": [],
+    "include": []
   },
   "setting": {
     "urlCheck": false,
     "es6": true,
-<<<<<<< Updated upstream
     "postcss": true,
     "minified": true,
     "newFeature": true,
     "bigPackageSizeSupport": true,
-    "checkSiteMap": false
-=======
-    "postcss": false,
-    "minified": false,
-    "newFeature": true,
-    "bigPackageSizeSupport": true
->>>>>>> Stashed changes
+    "checkSiteMap": false,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    }
   },
   "compileType": "miniprogram",
-  "libVersion": "",
+  "libVersion": "3.7.11",
   "appid": "touristappid",
-<<<<<<< Updated upstream
   "projectname": "农业银行",
-=======
-  "projectname": "",
->>>>>>> Stashed changes
-  "condition": {
-    "search": {
-      "current": -1,
-      "list": []
-    },
-    "conversation": {
-      "current": -1,
-      "list": []
-    },
-    "game": {
-      "current": -1,
-      "list": []
-    },
-    "miniprogram": {
-      "current": -1,
-      "list": []
-    }
+  "condition": {},
+  "editorSetting": {
+    "tabIndent": "insertSpaces",
+    "tabSize": 2
   }
 }
