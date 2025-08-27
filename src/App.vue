@@ -149,22 +149,18 @@ export default {
         invoke(e) {
           console.log('拦截 navigateTo:', e.url)
           
-          // 如果正在退出登录，允许跳转到登录页面
-          const isLoggingOut = uni.getStorageSync('isLoggingOut')
-          if (isLoggingOut && e.url.includes('/pages/denglu/login')) {
-            console.log('正在退出登录，允许跳转到登录页面')
+          // 检查是否为登录页面
+          if (e.url.includes('/pages/denglu/login')) {
+            console.log('跳转到登录页面，允许')
             return true
           }
           
-          // 强制检查登录状态
+          // 检查登录状态
           if (!forceCheckLogin()) {
             console.log('用户未登录，阻止页面跳转')
             return false
           }
-          // 检查是否需要登录
-          if (!checkLoginAndRedirect()) {
-            return false
-          }
+          
           return true
         }
       })
@@ -174,22 +170,12 @@ export default {
         invoke(e) {
           console.log('拦截 switchTab:', e.url)
           
-          // 如果正在退出登录，允许跳转到登录页面
-          const isLoggingOut = uni.getStorageSync('isLoggingOut')
-          if (isLoggingOut && e.url.includes('/pages/denglu/login')) {
-            console.log('正在退出登录，允许跳转到登录页面')
-            return true
-          }
-          
-          // 强制检查登录状态
+          // 检查登录状态
           if (!forceCheckLogin()) {
             console.log('用户未登录，阻止tabBar跳转')
             return false
           }
-          // 检查是否需要登录
-          if (!checkLoginAndRedirect()) {
-            return false
-          }
+          
           return true
         }
       })
@@ -199,22 +185,18 @@ export default {
         invoke(e) {
           console.log('拦截 reLaunch:', e.url)
           
-          // 如果正在退出登录，允许跳转到登录页面
-          const isLoggingOut = uni.getStorageSync('isLoggingOut')
-          if (isLoggingOut && e.url.includes('/pages/denglu/login')) {
-            console.log('正在退出登录，允许跳转到登录页面')
+          // 检查是否为登录页面
+          if (e.url.includes('/pages/denglu/login')) {
+            console.log('重定向到登录页面，允许')
             return true
           }
           
-          // 强制检查登录状态
+          // 检查登录状态
           if (!forceCheckLogin()) {
             console.log('用户未登录，阻止重定向')
             return false
           }
-          // 检查是否需要登录
-          if (!checkLoginAndRedirect()) {
-            return false
-          }
+          
           return true
         }
       })
@@ -224,22 +206,18 @@ export default {
         invoke(e) {
           console.log('拦截 redirectTo:', e.url)
           
-          // 如果正在退出登录，允许跳转到登录页面
-          const isLoggingOut = uni.getStorageSync('isLoggingOut')
-          if (isLoggingOut && e.url.includes('/pages/denglu/login')) {
-            console.log('正在退出登录，允许跳转到登录页面')
+          // 检查是否为登录页面
+          if (e.url.includes('/pages/denglu/login')) {
+            console.log('重定向到登录页面，允许')
             return true
           }
           
-          // 强制检查登录状态
+          // 检查登录状态
           if (!forceCheckLogin()) {
             console.log('用户未登录，阻止重定向')
             return false
           }
-          // 检查是否需要登录
-          if (!checkLoginAndRedirect()) {
-            return false
-          }
+          
           return true
         }
       })

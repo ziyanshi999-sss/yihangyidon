@@ -227,29 +227,24 @@ export default {
   },
 
   onShow() {
-    // 如果正在退出登录，跳过检查
-    const isLoggingOut = uni.getStorageSync('isLoggingOut')
-    if (isLoggingOut) {
-      console.log('正在退出登录，跳过生活页面登录检查')
-      return
-    }
-    
-    // 强制检查登录状态
-    if (!forceCheckLogin()) {
-      console.log('生活页面：用户未登录，强制跳转')
+    try {
+      // 检查登录状态
+      if (!forceCheckLogin()) {
+        console.log('生活页面：用户未登录，跳转到登录页面')
+        uni.reLaunch({
+          url: '/pages/denglu/login'
+        })
+        return
+      }
+      
+      // 页面显示逻辑
+      console.log('生活页面显示')
+    } catch (error) {
+      console.error('生活页面onShow检查失败:', error)
       uni.reLaunch({
         url: '/pages/denglu/login'
       })
-      return
     }
-    
-    // 检查登录状态
-    if (!checkLoginAndRedirect()) {
-      return
-    }
-    
-    // 页面显示逻辑
-    console.log('生活页面显示')
   },
 
   methods: {

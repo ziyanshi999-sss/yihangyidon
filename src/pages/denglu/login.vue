@@ -9,12 +9,7 @@
 
     <!-- 登录方式选择 -->
     <view class="login-methods">
-      <!-- 指纹登录卡片 -->
-      <view class="login-card fingerprint-card" @click="handleFingerprintLogin" v-if="isFingerprintSupported">
-        <view class="card-icon">👆</view>
-        <text class="card-title">指纹登录</text>
-        <text class="card-desc">{{ fingerprintMessage }}</text>
-      </view>
+      
 
       <!-- 手机号验证码登录卡片 -->
       <view class="login-card" :class="{ 'active': loginMethod === 'phone' }" @click="switchLoginMethod('phone')">
@@ -32,7 +27,7 @@
     </view>
 
     <!-- 登录表单 -->
-    <view class="login-form" v-if="loginMethod !== 'fingerprint'">
+    <view class="login-form">
       <!-- 手机号验证码登录表单 -->
       <view v-if="loginMethod === 'phone'">
         <view class="form-item">
@@ -150,7 +145,6 @@
 <script>
 import { validateUser, generateVerificationCode, verifyCode } from '@/data/users.js'
 import { handleLoginSuccess } from '@/utils/auth.js'
-import { isFingerprintSupported, getFingerprintMessage, handleFingerprintLogin } from '@/utils/fingerprint.js'
 
 export default {
   data() {
@@ -172,15 +166,11 @@ export default {
     }
   },
   
-  computed: {
-    isFingerprintSupported() {
-      return isFingerprintSupported()
-    },
-    
-    fingerprintMessage() {
-      return getFingerprintMessage()
-    }
+    computed: {
   },
+  
+
+  
   methods: {
     // 切换登录方式
     switchLoginMethod(method) {
@@ -303,7 +293,7 @@ export default {
         }
 
         if (user) {
-          // 保存最近登录用户（用于指纹登录）
+          // 保存最近登录用户
           uni.setStorageSync('recentUser', user)
           
           // 如果记住密码，保存密码
@@ -322,6 +312,9 @@ export default {
           setTimeout(() => {
             handleLoginSuccess(user)
           }, 1500)
+          
+  
+          this.$forceUpdate()
         } else {
           this.errorMessage = this.loginMethod === 'phone' ? '手机号不存在' : '用户名或密码错误'
         }
@@ -333,34 +326,7 @@ export default {
       }
     },
 
-    // 处理指纹登录
-    async handleFingerprintLogin() {
-      try {
-        this.isLoading = true
-        this.errorMessage = ''
 
-        const user = await handleFingerprintLogin()
-        
-        if (user) {
-          // 显示成功提示
-          uni.showToast({
-            title: '指纹登录成功',
-            icon: 'success',
-            duration: 1500
-          })
-
-          // 使用统一的登录成功处理函数
-          setTimeout(() => {
-            handleLoginSuccess(user)
-          }, 1500)
-        }
-      } catch (error) {
-        this.errorMessage = error.message || '指纹登录失败'
-        console.error('指纹登录错误:', error)
-      } finally {
-        this.isLoading = false
-      }
-    },
 
     // 忘记密码
     forgotPassword() {
@@ -416,9 +382,12 @@ export default {
   transform: translateY(-4rpx);
 }
 
-.fingerprint-card {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
-  border-color: rgba(255, 255, 255, 0.3);
+
+
+.status-text {
+  font-size: 22rpx;
+  color: #ffffff;
+  font-weight: bold;
 }
 
 .card-icon {

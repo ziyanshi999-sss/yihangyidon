@@ -18,7 +18,7 @@
         },
         /* 模块配置 */
         "modules": {
-            "Fingerprint": {},
+        
             "FaceID": {},
             "Payment": {},
             "Push": {},

@@ -53,28 +53,31 @@ export default {
 		}
 	},
 	onShow() {
-		// 如果正在退出登录，跳过检查
-		const isLoggingOut = uni.getStorageSync('isLoggingOut')
-		if (isLoggingOut) {
-			console.log('正在退出登录，跳过个人中心登录检查')
-			return
-		}
-		
-		// 强制检查登录状态
-		if (!forceCheckLogin()) {
-			console.log('个人中心：用户未登录，强制跳转')
+		try {
+			// 检查登录状态
+			if (!forceCheckLogin()) {
+				console.log('个人中心：用户未登录，跳转到登录页面')
+				uni.reLaunch({
+					url: '/pages/denglu/login',
+					fail: (error) => {
+						console.error('个人中心跳转失败:', error)
+						uni.navigateTo({ url: '/pages/denglu/login' })
+					}
+				})
+				return
+			}
+			
+			this.checkLoginStatus()
+		} catch (error) {
+			console.error('个人中心onShow检查失败:', error)
+			// 如果检查失败，跳转到登录页面
 			uni.reLaunch({
-				url: '/pages/denglu/login'
+				url: '/pages/denglu/login',
+				fail: () => {
+					uni.navigateTo({ url: '/pages/denglu/login' })
+				}
 			})
-			return
 		}
-		
-		// 检查登录状态
-		if (!checkLoginAndRedirect()) {
-			return
-		}
-		
-		this.checkLoginStatus()
 	},
 	methods: {
 		// 检查登录状态

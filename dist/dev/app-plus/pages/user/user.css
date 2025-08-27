@@ -1,6 +1,32 @@
 
 .user-page[data-v-99b0ba47] {
 	padding: 0.625rem;
+	background: #f5f5f5;
+	min-height: 100vh;
+}
+.login-prompt[data-v-99b0ba47] {
+	text-align: center;
+	padding: 3.125rem 1.25rem;
+	background: #ffffff;
+	border-radius: 0.375rem;
+	margin-bottom: 1.25rem;
+}
+.prompt-text[data-v-99b0ba47] {
+	display: block;
+	font-size: 1rem;
+	color: #666;
+	margin-bottom: 1.25rem;
+}
+.login-btn[data-v-99b0ba47] {
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	color: #ffffff;
+	border: none;
+	border-radius: 0.375rem;
+	padding: 0.625rem 1.875rem;
+	font-size: 1rem;
+}
+.logout-text[data-v-99b0ba47] {
+	color: #e74c3c !important;
 }
 .user-header[data-v-99b0ba47] {
 	display: flex;

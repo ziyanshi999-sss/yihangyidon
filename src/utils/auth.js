@@ -45,8 +45,24 @@ export function getCurrentPagePath() {
  * @returns {boolean} 是否在白名单中
  */
 export function isWhiteListPage(pagePath = '') {
-  const path = pagePath || getCurrentPagePath()
-  return WHITE_LIST.some(whitePath => path.includes(whitePath))
+  try {
+    const path = pagePath || getCurrentPagePath()
+    if (!path) {
+      console.log('无法获取页面路径，默认允许访问')
+      return true
+    }
+    
+    const isWhiteList = WHITE_LIST.some(whitePath => {
+      // 精确匹配或包含匹配
+      return path === whitePath || path.includes(whitePath.replace('/pages/', ''))
+    })
+    
+    console.log(`页面路径: ${path}, 是否在白名单: ${isWhiteList}`)
+    return isWhiteList
+  } catch (error) {
+    console.error('检查白名单页面失败:', error)
+    return true // 出错时默认允许访问
+  }
 }
 
 /**
@@ -101,23 +117,27 @@ export function checkLoginAndRedirect(redirectUrl = '') {
  * @returns {boolean} 是否已登录
  */
 export function forceCheckLogin() {
-  // 如果正在退出登录，跳过检查
-  const isLoggingOut = uni.getStorageSync('isLoggingOut')
-  if (isLoggingOut) {
-    console.log('正在退出登录，跳过登录检查')
+  try {
+    const isLoggedIn = uni.getStorageSync('isLoggedIn')
+    const userInfo = uni.getStorageSync('userInfo')
+    
+    if (!isLoggedIn || !userInfo) {
+      console.log('强制检查：用户未登录，清除所有状态')
+      // 清除所有可能的登录状态
+      clearAllUserData()
+      return false
+    }
+    return true
+  } catch (error) {
+    console.error('强制检查登录状态时发生错误:', error)
+    // 如果检查过程中发生错误，清除数据并返回false
+    try {
+      clearAllUserData()
+    } catch (clearError) {
+      console.error('清除数据失败:', clearError)
+    }
     return false
   }
-  
-  const isLoggedIn = uni.getStorageSync('isLoggedIn')
-  const userInfo = uni.getStorageSync('userInfo')
-  
-  if (!isLoggedIn || !userInfo) {
-    console.log('强制检查：用户未登录，清除所有状态')
-    // 清除所有可能的登录状态
-    clearAllUserData()
-    return false
-  }
-  return true
 }
 
 /**
@@ -173,18 +193,23 @@ export function logout(options = {}) {
 
   const performLogout = async () => {
     try {
-      // 设置退出状态标记，防止拦截器干扰
-      uni.setStorageSync('isLoggingOut', true)
+      console.log('开始退出登录流程')
       
       // 记录退出日志
       logLogoutEvent(reason)
       
       // 清除所有用户相关数据
       clearAllUserData()
+      console.log('用户数据已清除')
       
       // 同步到服务器（如果启用）
       if (syncToServer) {
-        await syncLogoutToServer(reason)
+        try {
+          await syncLogoutToServer(reason)
+          console.log('服务器同步完成')
+        } catch (syncError) {
+          console.warn('服务器同步失败，但继续退出流程:', syncError)
+        }
       }
       
       // 显示退出成功提示
@@ -194,41 +219,55 @@ export function logout(options = {}) {
         duration: 1500
       })
       
-      // 强制跳转到登录页面，绕过所有拦截器
+      // 直接跳转到登录页面
+      console.log('跳转到登录页面')
+      uni.reLaunch({
+        url: '/pages/denglu/login',
+        success: () => {
+          console.log('已成功跳转到登录页面')
+        },
+        fail: (error) => {
+          console.error('跳转失败:', error)
+          // 如果reLaunch失败，尝试navigateTo
+          uni.navigateTo({
+            url: '/pages/denglu/login',
+            fail: () => {
+              console.error('所有跳转方式都失败')
+              uni.showToast({
+                title: '跳转失败，请手动返回登录页面',
+                icon: 'none'
+              })
+            }
+          })
+        }
+      })
+      
+    } catch (error) {
+      console.error('退出登录过程中发生错误:', error)
+      
+      // 确保清除本地数据
+      try {
+        clearAllUserData()
+      } catch (clearError) {
+        console.error('清除数据失败:', clearError)
+      }
+      
+      // 显示错误提示
+      uni.showToast({
+        title: '退出登录失败，请重试',
+        icon: 'none',
+        duration: 2000
+      })
+      
+      // 尝试跳转到登录页面
       setTimeout(() => {
         uni.reLaunch({
           url: '/pages/denglu/login',
-          success: () => {
-            console.log('已强制跳转到登录页面')
-            // 清除退出状态标记
-            uni.removeStorageSync('isLoggingOut')
-          },
-          fail: (error) => {
-            console.error('跳转登录页面失败:', error)
-            // 如果reLaunch失败，尝试使用navigateTo
-            uni.navigateTo({
-              url: '/pages/denglu/login',
-              success: () => {
-                uni.removeStorageSync('isLoggingOut')
-              }
-            })
+          fail: () => {
+            uni.navigateTo({ url: '/pages/denglu/login' })
           }
         })
-      }, 100) // 短暂延迟确保数据清除完成
-      
-    } catch (error) {
-      console.error('退出登录失败:', error)
-      
-      // 即使同步失败，也要清除本地数据
-      clearAllUserData()
-      
-      // 清除退出状态标记
-      uni.removeStorageSync('isLoggingOut')
-      
-      uni.showToast({
-        title: '退出登录失败，请重试',
-        icon: 'none'
-      })
+      }, 1000)
     }
   }
 

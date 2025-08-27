@@ -38,6 +38,465 @@ if (uni.restoreGlobal) {
       console[type].apply(console, [...args, filename]);
     }
   }
+  const scriptRel = "modulepreload";
+  const assetsURL = function(dep) {
+    return "/" + dep;
+  };
+  const seen = {};
+  const __vitePreload = function preload(baseModule, deps, importerUrl) {
+    let promise = Promise.resolve();
+    if (false) {
+      document.getElementsByTagName("link");
+      const cspNonceMeta = document.querySelector("meta[property=csp-nonce]");
+      const cspNonce = (cspNonceMeta == null ? void 0 : cspNonceMeta.nonce) || (cspNonceMeta == null ? void 0 : cspNonceMeta.getAttribute("nonce"));
+      promise = Promise.all(deps.map((dep) => {
+        dep = assetsURL(dep);
+        if (dep in seen)
+          return;
+        seen[dep] = true;
+        const isCss = dep.endsWith(".css");
+        const cssSelector = isCss ? '[rel="stylesheet"]' : "";
+        if (document.querySelector(`link[href="${dep}"]${cssSelector}`)) {
+          return;
+        }
+        const link = document.createElement("link");
+        link.rel = isCss ? "stylesheet" : scriptRel;
+        if (!isCss) {
+          link.as = "script";
+          link.crossOrigin = "";
+        }
+        link.href = dep;
+        if (cspNonce) {
+          link.setAttribute("nonce", cspNonce);
+        }
+        document.head.appendChild(link);
+        if (isCss) {
+          return new Promise((res, rej) => {
+            link.addEventListener("load", res);
+            link.addEventListener("error", () => rej(new Error(`Unable to preload CSS for ${dep}`)));
+          });
+        }
+      }));
+    }
+    return promise.then(() => baseModule()).catch((err) => {
+      const e = new Event("vite:preloadError", { cancelable: true });
+      e.payload = err;
+      window.dispatchEvent(e);
+      if (!e.defaultPrevented) {
+        throw err;
+      }
+    });
+  };
+  const users = [
+    {
+      id: 1,
+      username: "admin",
+      password: "123456",
+      phone: "13800138000",
+      nickname: "管理员",
+      avatar: "/static/logo.png",
+      email: "admin@example.com"
+    },
+    {
+      id: 2,
+      username: "user001",
+      password: "123456",
+      phone: "13800138001",
+      nickname: "张三",
+      avatar: "/static/logo.png",
+      email: "user001@example.com"
+    },
+    {
+      id: 3,
+      username: "user002",
+      password: "123456",
+      phone: "13800138002",
+      nickname: "李四",
+      avatar: "/static/logo.png",
+      email: "user002@example.com"
+    },
+    {
+      id: 4,
+      username: "test",
+      password: "test123",
+      phone: "13800138003",
+      nickname: "测试用户",
+      avatar: "/static/logo.png",
+      email: "test@example.com"
+    }
+  ];
+  const verificationCodes = /* @__PURE__ */ new Map();
+  function generateVerificationCode(phone) {
+    const code = Math.floor(1e5 + Math.random() * 9e5).toString();
+    verificationCodes.set(phone, {
+      code,
+      expireTime: Date.now() + 5 * 60 * 1e3
+      // 5分钟过期
+    });
+    return code;
+  }
+  function verifyCode(phone, code) {
+    const stored = verificationCodes.get(phone);
+    if (!stored)
+      return false;
+    if (Date.now() > stored.expireTime) {
+      verificationCodes.delete(phone);
+      return false;
+    }
+    if (stored.code === code) {
+      verificationCodes.delete(phone);
+      return true;
+    }
+    return false;
+  }
+  function validateUser(username, password) {
+    return users.find(
+      (user) => (user.username === username || user.phone === username) && user.password === password
+    );
+  }
+  function findUserByUsername(username) {
+    return users.find(
+      (user) => user.username === username || user.phone === username
+    );
+  }
+  const users$1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+    __proto__: null,
+    findUserByUsername,
+    generateVerificationCode,
+    users,
+    validateUser,
+    verifyCode
+  }, Symbol.toStringTag, { value: "Module" }));
+  const WHITE_LIST = [
+    "/pages/denglu/login",
+    "/pages/denglu/register",
+    "/pages/common/404",
+    "/pages/common/error"
+  ];
+  function isLoggedIn() {
+    try {
+      const userInfo = uni.getStorageSync("userInfo");
+      const isLoggedIn2 = uni.getStorageSync("isLoggedIn");
+      return !!(userInfo && isLoggedIn2);
+    } catch (error) {
+      formatAppLog("error", "at utils/auth.js:24", "检查登录状态失败:", error);
+      return false;
+    }
+  }
+  function getCurrentPagePath() {
+    const pages = getCurrentPages();
+    if (pages.length > 0) {
+      const currentPage = pages[pages.length - 1];
+      return "/" + currentPage.route;
+    }
+    return "";
+  }
+  function isWhiteListPage(pagePath = "") {
+    try {
+      const path = pagePath || getCurrentPagePath();
+      if (!path) {
+        formatAppLog("log", "at utils/auth.js:51", "无法获取页面路径，默认允许访问");
+        return true;
+      }
+      const isWhiteList = WHITE_LIST.some((whitePath) => {
+        return path === whitePath || path.includes(whitePath.replace("/pages/", ""));
+      });
+      formatAppLog("log", "at utils/auth.js:60", `页面路径: ${path}, 是否在白名单: ${isWhiteList}`);
+      return isWhiteList;
+    } catch (error) {
+      formatAppLog("error", "at utils/auth.js:63", "检查白名单页面失败:", error);
+      return true;
+    }
+  }
+  function redirectToLogin(redirectUrl = "") {
+    const currentPath = getCurrentPagePath();
+    if (!isWhiteListPage(currentPath)) {
+      redirectUrl = currentPath;
+    }
+    if (redirectUrl) {
+      uni.setStorageSync("redirectUrl", redirectUrl);
+    }
+    uni.navigateTo({
+      url: "/pages/denglu/login",
+      fail: (error) => {
+        formatAppLog("error", "at utils/auth.js:89", "跳转登录页面失败:", error);
+        uni.switchTab({
+          url: "/pages/denglu/login"
+        });
+      }
+    });
+  }
+  function checkLoginAndRedirect(redirectUrl = "") {
+    if (!isLoggedIn()) {
+      if (!isWhiteListPage()) {
+        formatAppLog("log", "at utils/auth.js:107", "用户未登录，强制跳转到登录页面");
+        redirectToLogin(redirectUrl);
+        return false;
+      }
+    }
+    return true;
+  }
+  function forceCheckLogin() {
+    try {
+      const isLoggedIn2 = uni.getStorageSync("isLoggedIn");
+      const userInfo = uni.getStorageSync("userInfo");
+      if (!isLoggedIn2 || !userInfo) {
+        formatAppLog("log", "at utils/auth.js:125", "强制检查：用户未登录，清除所有状态");
+        clearAllUserData();
+        return false;
+      }
+      return true;
+    } catch (error) {
+      formatAppLog("error", "at utils/auth.js:132", "强制检查登录状态时发生错误:", error);
+      try {
+        clearAllUserData();
+      } catch (clearError) {
+        formatAppLog("error", "at utils/auth.js:137", "清除数据失败:", clearError);
+      }
+      return false;
+    }
+  }
+  function handleLoginSuccess(userInfo) {
+    uni.setStorageSync("userInfo", userInfo);
+    uni.setStorageSync("isLoggedIn", true);
+    const redirectUrl = uni.getStorageSync("redirectUrl");
+    if (redirectUrl) {
+      uni.removeStorageSync("redirectUrl");
+      if (redirectUrl.includes("/pages/")) {
+        if (isTabBarPage(redirectUrl)) {
+          uni.switchTab({
+            url: redirectUrl
+          });
+        } else {
+          uni.navigateTo({
+            url: redirectUrl
+          });
+        }
+      }
+    } else {
+      uni.switchTab({
+        url: "/pages/index/index"
+      });
+    }
+  }
+  function logout(options = {}) {
+    const {
+      showConfirm = true,
+      syncToServer = true,
+      reason = "用户主动退出"
+    } = options;
+    const performLogout = async () => {
+      try {
+        formatAppLog("log", "at utils/auth.js:196", "开始退出登录流程");
+        logLogoutEvent(reason);
+        clearAllUserData();
+        formatAppLog("log", "at utils/auth.js:203", "用户数据已清除");
+        if (syncToServer) {
+          try {
+            await syncLogoutToServer(reason);
+            formatAppLog("log", "at utils/auth.js:209", "服务器同步完成");
+          } catch (syncError) {
+            formatAppLog("warn", "at utils/auth.js:211", "服务器同步失败，但继续退出流程:", syncError);
+          }
+        }
+        uni.showToast({
+          title: "已安全退出登录",
+          icon: "success",
+          duration: 1500
+        });
+        formatAppLog("log", "at utils/auth.js:223", "跳转到登录页面");
+        uni.reLaunch({
+          url: "/pages/denglu/login",
+          success: () => {
+            formatAppLog("log", "at utils/auth.js:227", "已成功跳转到登录页面");
+          },
+          fail: (error) => {
+            formatAppLog("error", "at utils/auth.js:230", "跳转失败:", error);
+            uni.navigateTo({
+              url: "/pages/denglu/login",
+              fail: () => {
+                formatAppLog("error", "at utils/auth.js:235", "所有跳转方式都失败");
+                uni.showToast({
+                  title: "跳转失败，请手动返回登录页面",
+                  icon: "none"
+                });
+              }
+            });
+          }
+        });
+      } catch (error) {
+        formatAppLog("error", "at utils/auth.js:246", "退出登录过程中发生错误:", error);
+        try {
+          clearAllUserData();
+        } catch (clearError) {
+          formatAppLog("error", "at utils/auth.js:252", "清除数据失败:", clearError);
+        }
+        uni.showToast({
+          title: "退出登录失败，请重试",
+          icon: "none",
+          duration: 2e3
+        });
+        setTimeout(() => {
+          uni.reLaunch({
+            url: "/pages/denglu/login",
+            fail: () => {
+              uni.navigateTo({ url: "/pages/denglu/login" });
+            }
+          });
+        }, 1e3);
+      }
+    };
+    if (showConfirm) {
+      uni.showModal({
+        title: "确认退出",
+        content: "确定要退出登录吗？退出后将清除所有登录信息。",
+        confirmText: "确认退出",
+        cancelText: "取消",
+        confirmColor: "#e74c3c",
+        success: (res) => {
+          if (res.confirm) {
+            performLogout();
+          }
+        }
+      });
+    } else {
+      performLogout();
+    }
+  }
+  function clearAllUserData() {
+    const keysToRemove = [
+      "userInfo",
+      "isLoggedIn",
+      "redirectUrl",
+      "recentUser",
+      "rememberedPassword",
+      "token",
+      "refreshToken",
+      "userPreferences",
+      "lastLoginTime",
+      "sessionData"
+    ];
+    keysToRemove.forEach((key) => {
+      try {
+        uni.removeStorageSync(key);
+      } catch (error) {
+        formatAppLog("warn", "at utils/auth.js:315", `清除存储键 ${key} 失败:`, error);
+      }
+    });
+    try {
+      const allKeys = uni.getStorageInfoSync().keys;
+      allKeys.forEach((key) => {
+        if (key.startsWith("user_") || key.startsWith("auth_") || key.includes("login")) {
+          uni.removeStorageSync(key);
+        }
+      });
+    } catch (error) {
+      formatAppLog("warn", "at utils/auth.js:328", "清除用户相关数据失败:", error);
+    }
+  }
+  function logLogoutEvent(reason) {
+    const logoutData = {
+      timestamp: Date.now(),
+      reason,
+      platform: uni.getSystemInfoSync().platform,
+      version: "1.0.0"
+    };
+    try {
+      const logoutLogs = uni.getStorageSync("logoutLogs") || [];
+      logoutLogs.push(logoutData);
+      if (logoutLogs.length > 10) {
+        logoutLogs.splice(0, logoutLogs.length - 10);
+      }
+      uni.setStorageSync("logoutLogs", logoutLogs);
+      formatAppLog("log", "at utils/auth.js:357", "用户退出登录:", logoutData);
+    } catch (error) {
+      formatAppLog("error", "at utils/auth.js:359", "记录退出日志失败:", error);
+    }
+  }
+  async function syncLogoutToServer(reason) {
+    try {
+      const userInfo = getUserInfo();
+      if (!userInfo) {
+        formatAppLog("log", "at utils/auth.js:372", "用户信息不存在，跳过服务器同步");
+        return;
+      }
+      const logoutData = {
+        userId: userInfo.id,
+        username: userInfo.username,
+        phone: userInfo.phone,
+        reason,
+        timestamp: Date.now(),
+        platform: uni.getSystemInfoSync().platform,
+        deviceId: getDeviceId()
+      };
+      await new Promise((resolve, reject) => {
+        setTimeout(() => {
+          const success = Math.random() > 0.1;
+          if (success) {
+            resolve();
+          } else {
+            reject(new Error("网络请求失败"));
+          }
+        }, 500);
+      });
+      formatAppLog("log", "at utils/auth.js:403", "退出登录已同步到服务器:", logoutData);
+      saveLogoutRecord(logoutData);
+    } catch (error) {
+      formatAppLog("warn", "at utils/auth.js:409", "同步退出到服务器失败:", error);
+    }
+  }
+  function getDeviceId() {
+    try {
+      const systemInfo = uni.getSystemInfoSync();
+      return `${systemInfo.platform}_${systemInfo.model}_${systemInfo.system}`;
+    } catch (error) {
+      return "unknown_device";
+    }
+  }
+  function saveLogoutRecord(logoutData) {
+    try {
+      const logoutRecords = uni.getStorageSync("logoutRecords") || [];
+      logoutRecords.push(logoutData);
+      if (logoutRecords.length > 20) {
+        logoutRecords.splice(0, logoutRecords.length - 20);
+      }
+      uni.setStorageSync("logoutRecords", logoutRecords);
+    } catch (error) {
+      formatAppLog("error", "at utils/auth.js:443", "保存退出记录失败:", error);
+    }
+  }
+  function isTabBarPage(pagePath) {
+    const tabBarPages = [
+      "/pages/index/index",
+      "/pages/wealth/wealth",
+      "/pages/life/life",
+      "/pages/user/user"
+    ];
+    return tabBarPages.some((tabPath) => pagePath.includes(tabPath));
+  }
+  function getUserInfo() {
+    try {
+      return uni.getStorageSync("userInfo");
+    } catch (error) {
+      formatAppLog("error", "at utils/auth.js:484", "获取用户信息失败:", error);
+      return null;
+    }
+  }
+  function quickLogout(reason = "快速退出") {
+    logout({
+      showConfirm: false,
+      syncToServer: true,
+      reason
+    });
+  }
+  function forceLogout(reason = "强制退出") {
+    logout({
+      showConfirm: false,
+      syncToServer: false,
+      reason
+    });
+  }
+  const _imports_0$1 = "/static/logo.png";
   const _export_sfc = (sfc, props) => {
     const target = sfc.__vccOpts || sfc;
     for (const [key, val] of props) {
@@ -45,18 +504,501 @@ if (uni.restoreGlobal) {
     }
     return target;
   };
-  const _sfc_main$8 = {};
+  const _sfc_main$9 = {
+    data() {
+      return {
+        loginMethod: "password",
+        // 默认密码登录
+        phoneForm: {
+          phone: "",
+          code: ""
+        },
+        passwordForm: {
+          username: "",
+          password: ""
+        },
+        showPassword: false,
+        rememberPassword: false,
+        isLoading: false,
+        errorMessage: "",
+        codeCountdown: 0
+      };
+    },
+    computed: {},
+    methods: {
+      // 切换登录方式
+      switchLoginMethod(method) {
+        this.loginMethod = method;
+        this.clearError();
+      },
+      // 切换密码显示
+      togglePassword() {
+        this.showPassword = !this.showPassword;
+      },
+      // 切换记住密码
+      toggleRememberPassword(e) {
+        this.rememberPassword = e.detail.value;
+      },
+      // 清除错误信息
+      clearError() {
+        this.errorMessage = "";
+      },
+      // 发送验证码
+      async sendVerificationCode() {
+        if (!this.phoneForm.phone.trim()) {
+          this.errorMessage = "请输入手机号";
+          return;
+        }
+        if (!/^1[3-9]\d{9}$/.test(this.phoneForm.phone)) {
+          this.errorMessage = "请输入正确的手机号";
+          return;
+        }
+        try {
+          const code = generateVerificationCode(this.phoneForm.phone);
+          uni.showToast({
+            title: `验证码：${code}`,
+            icon: "none",
+            duration: 3e3
+          });
+          this.codeCountdown = 60;
+          const timer = setInterval(() => {
+            this.codeCountdown--;
+            if (this.codeCountdown <= 0) {
+              clearInterval(timer);
+            }
+          }, 1e3);
+        } catch (error) {
+          this.errorMessage = "发送验证码失败";
+          formatAppLog("error", "at pages/denglu/login.vue:230", "发送验证码错误:", error);
+        }
+      },
+      // 表单验证
+      validateForm() {
+        if (this.loginMethod === "phone") {
+          if (!this.phoneForm.phone.trim()) {
+            this.errorMessage = "请输入手机号";
+            return false;
+          }
+          if (!/^1[3-9]\d{9}$/.test(this.phoneForm.phone)) {
+            this.errorMessage = "请输入正确的手机号";
+            return false;
+          }
+          if (!this.phoneForm.code.trim()) {
+            this.errorMessage = "请输入验证码";
+            return false;
+          }
+          if (!/^\d{6}$/.test(this.phoneForm.code)) {
+            this.errorMessage = "请输入6位验证码";
+            return false;
+          }
+        } else if (this.loginMethod === "password") {
+          if (!this.passwordForm.username.trim()) {
+            this.errorMessage = "请输入用户名或手机号";
+            return false;
+          }
+          if (!this.passwordForm.password.trim()) {
+            this.errorMessage = "请输入密码";
+            return false;
+          }
+        }
+        return true;
+      },
+      // 处理登录
+      async handleLogin() {
+        if (!this.validateForm()) {
+          return;
+        }
+        this.isLoading = true;
+        this.errorMessage = "";
+        try {
+          await new Promise((resolve) => setTimeout(resolve, 1e3));
+          let user = null;
+          if (this.loginMethod === "phone") {
+            if (verifyCode(this.phoneForm.phone, this.phoneForm.code)) {
+              const { users: users2 } = await __vitePreload(() => Promise.resolve().then(() => users$1), false ? "__VITE_PRELOAD__" : void 0);
+              user = users2.find((u) => u.phone === this.phoneForm.phone);
+            } else {
+              this.errorMessage = "验证码错误或已过期";
+              return;
+            }
+          } else if (this.loginMethod === "password") {
+            user = validateUser(this.passwordForm.username, this.passwordForm.password);
+          }
+          if (user) {
+            uni.setStorageSync("recentUser", user);
+            if (this.rememberPassword) {
+              uni.setStorageSync("rememberedPassword", this.passwordForm.password);
+            }
+            uni.showToast({
+              title: "登录成功",
+              icon: "success",
+              duration: 1500
+            });
+            setTimeout(() => {
+              handleLoginSuccess(user);
+            }, 1500);
+            this.$forceUpdate();
+          } else {
+            this.errorMessage = this.loginMethod === "phone" ? "手机号不存在" : "用户名或密码错误";
+          }
+        } catch (error) {
+          this.errorMessage = "登录失败，请重试";
+          formatAppLog("error", "at pages/denglu/login.vue:323", "登录错误:", error);
+        } finally {
+          this.isLoading = false;
+        }
+      },
+      // 忘记密码
+      forgotPassword() {
+        uni.showToast({
+          title: "请联系客服重置密码",
+          icon: "none"
+        });
+      },
+      // 注册账号
+      goToRegister() {
+        uni.showToast({
+          title: "请到银行网点办理开户",
+          icon: "none"
+        });
+      }
+    }
+  };
+  function _sfc_render$8(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("view", { class: "login-container" }, [
+      vue.createCommentVNode(" 顶部Logo区域 "),
+      vue.createElementVNode("view", { class: "logo-section" }, [
+        vue.createElementVNode("image", {
+          class: "logo",
+          src: _imports_0$1,
+          mode: "aspectFit"
+        }),
+        vue.createElementVNode("text", { class: "app-name" }, "农业银行"),
+        vue.createElementVNode("text", { class: "app-slogan" }, "安全便捷的金融服务")
+      ]),
+      vue.createCommentVNode(" 登录方式选择 "),
+      vue.createElementVNode("view", { class: "login-methods" }, [
+        vue.createCommentVNode(" 手机号验证码登录卡片 "),
+        vue.createElementVNode(
+          "view",
+          {
+            class: vue.normalizeClass(["login-card", { "active": $data.loginMethod === "phone" }]),
+            onClick: _cache[0] || (_cache[0] = ($event) => $options.switchLoginMethod("phone"))
+          },
+          [
+            vue.createElementVNode("view", { class: "card-icon" }, "📱"),
+            vue.createElementVNode("text", { class: "card-title" }, "手机号登录"),
+            vue.createElementVNode("text", { class: "card-desc" }, "验证码快速登录")
+          ],
+          2
+          /* CLASS */
+        ),
+        vue.createCommentVNode(" 用户名密码登录卡片 "),
+        vue.createElementVNode(
+          "view",
+          {
+            class: vue.normalizeClass(["login-card", { "active": $data.loginMethod === "password" }]),
+            onClick: _cache[1] || (_cache[1] = ($event) => $options.switchLoginMethod("password"))
+          },
+          [
+            vue.createElementVNode("view", { class: "card-icon" }, "🔐"),
+            vue.createElementVNode("text", { class: "card-title" }, "密码登录"),
+            vue.createElementVNode("text", { class: "card-desc" }, "用户名密码登录")
+          ],
+          2
+          /* CLASS */
+        )
+      ]),
+      vue.createCommentVNode(" 登录表单 "),
+      vue.createElementVNode("view", { class: "login-form" }, [
+        vue.createCommentVNode(" 手机号验证码登录表单 "),
+        $data.loginMethod === "phone" ? (vue.openBlock(), vue.createElementBlock("view", { key: 0 }, [
+          vue.createElementVNode("view", { class: "form-item" }, [
+            vue.createElementVNode("view", { class: "input-wrapper" }, [
+              vue.createElementVNode("text", { class: "input-icon" }, "📱"),
+              vue.withDirectives(vue.createElementVNode(
+                "input",
+                {
+                  class: "input-field",
+                  type: "number",
+                  placeholder: "请输入手机号",
+                  "onUpdate:modelValue": _cache[2] || (_cache[2] = ($event) => $data.phoneForm.phone = $event),
+                  maxlength: "11",
+                  onInput: _cache[3] || (_cache[3] = (...args) => $options.clearError && $options.clearError(...args))
+                },
+                null,
+                544
+                /* NEED_HYDRATION, NEED_PATCH */
+              ), [
+                [vue.vModelText, $data.phoneForm.phone]
+              ])
+            ])
+          ]),
+          vue.createElementVNode("view", { class: "form-item" }, [
+            vue.createElementVNode("view", { class: "input-wrapper" }, [
+              vue.createElementVNode("text", { class: "input-icon" }, "🔢"),
+              vue.withDirectives(vue.createElementVNode(
+                "input",
+                {
+                  class: "input-field",
+                  type: "number",
+                  placeholder: "请输入验证码",
+                  "onUpdate:modelValue": _cache[4] || (_cache[4] = ($event) => $data.phoneForm.code = $event),
+                  maxlength: "6",
+                  onInput: _cache[5] || (_cache[5] = (...args) => $options.clearError && $options.clearError(...args))
+                },
+                null,
+                544
+                /* NEED_HYDRATION, NEED_PATCH */
+              ), [
+                [vue.vModelText, $data.phoneForm.code]
+              ]),
+              vue.createElementVNode("button", {
+                class: "send-code-btn",
+                disabled: $data.codeCountdown > 0,
+                onClick: _cache[6] || (_cache[6] = (...args) => $options.sendVerificationCode && $options.sendVerificationCode(...args))
+              }, vue.toDisplayString($data.codeCountdown > 0 ? `${$data.codeCountdown}s` : "发送验证码"), 9, ["disabled"])
+            ])
+          ])
+        ])) : vue.createCommentVNode("v-if", true),
+        vue.createCommentVNode(" 用户名密码登录表单 "),
+        $data.loginMethod === "password" ? (vue.openBlock(), vue.createElementBlock("view", { key: 1 }, [
+          vue.createElementVNode("view", { class: "form-item" }, [
+            vue.createElementVNode("view", { class: "input-wrapper" }, [
+              vue.createElementVNode("text", { class: "input-icon" }, "👤"),
+              vue.withDirectives(vue.createElementVNode(
+                "input",
+                {
+                  class: "input-field",
+                  type: "text",
+                  placeholder: "请输入用户名或手机号",
+                  "onUpdate:modelValue": _cache[7] || (_cache[7] = ($event) => $data.passwordForm.username = $event),
+                  onInput: _cache[8] || (_cache[8] = (...args) => $options.clearError && $options.clearError(...args))
+                },
+                null,
+                544
+                /* NEED_HYDRATION, NEED_PATCH */
+              ), [
+                [vue.vModelText, $data.passwordForm.username]
+              ])
+            ])
+          ]),
+          vue.createElementVNode("view", { class: "form-item" }, [
+            vue.createElementVNode("view", { class: "input-wrapper" }, [
+              vue.createElementVNode("text", { class: "input-icon" }, "🔒"),
+              vue.withDirectives(vue.createElementVNode("input", {
+                class: "input-field",
+                type: $data.showPassword ? "text" : "password",
+                placeholder: "请输入密码",
+                "onUpdate:modelValue": _cache[9] || (_cache[9] = ($event) => $data.passwordForm.password = $event),
+                onInput: _cache[10] || (_cache[10] = (...args) => $options.clearError && $options.clearError(...args))
+              }, null, 40, ["type"]), [
+                [vue.vModelDynamic, $data.passwordForm.password]
+              ]),
+              vue.createElementVNode(
+                "text",
+                {
+                  class: "password-toggle",
+                  onClick: _cache[11] || (_cache[11] = (...args) => $options.togglePassword && $options.togglePassword(...args))
+                },
+                vue.toDisplayString($data.showPassword ? "👁️" : "👁️‍🗨️"),
+                1
+                /* TEXT */
+              )
+            ])
+          ]),
+          vue.createElementVNode("view", { class: "form-item" }, [
+            vue.createElementVNode("view", { class: "remember-password" }, [
+              vue.createElementVNode("checkbox", {
+                checked: $data.rememberPassword,
+                onChange: _cache[12] || (_cache[12] = (...args) => $options.toggleRememberPassword && $options.toggleRememberPassword(...args)),
+                color: "#667eea"
+              }, null, 40, ["checked"]),
+              vue.createElementVNode("text", { class: "remember-text" }, "记住密码")
+            ])
+          ])
+        ])) : vue.createCommentVNode("v-if", true),
+        vue.createCommentVNode(" 错误提示 "),
+        $data.errorMessage ? (vue.openBlock(), vue.createElementBlock(
+          "view",
+          {
+            key: 2,
+            class: "error-message"
+          },
+          vue.toDisplayString($data.errorMessage),
+          1
+          /* TEXT */
+        )) : vue.createCommentVNode("v-if", true),
+        vue.createCommentVNode(" 登录按钮 "),
+        vue.createElementVNode("button", {
+          class: vue.normalizeClass(["login-btn", { "loading": $data.isLoading }]),
+          disabled: $data.isLoading,
+          onClick: _cache[13] || (_cache[13] = (...args) => $options.handleLogin && $options.handleLogin(...args))
+        }, [
+          !$data.isLoading ? (vue.openBlock(), vue.createElementBlock("text", { key: 0 }, "登录")) : (vue.openBlock(), vue.createElementBlock("text", { key: 1 }, "登录中..."))
+        ], 10, ["disabled"]),
+        vue.createCommentVNode(" 其他选项 "),
+        vue.createElementVNode("view", { class: "other-options" }, [
+          vue.createElementVNode("text", {
+            class: "forgot-password",
+            onClick: _cache[14] || (_cache[14] = (...args) => $options.forgotPassword && $options.forgotPassword(...args))
+          }, "忘记密码？"),
+          vue.createElementVNode("text", {
+            class: "register-link",
+            onClick: _cache[15] || (_cache[15] = (...args) => $options.goToRegister && $options.goToRegister(...args))
+          }, "注册账号")
+        ])
+      ]),
+      vue.createCommentVNode(" 测试账号提示 "),
+      vue.createElementVNode("view", { class: "test-accounts" }, [
+        vue.createElementVNode("text", { class: "test-title" }, "测试账号："),
+        vue.createElementVNode("text", { class: "test-item" }, "手机号：13800138000，验证码：123456"),
+        vue.createElementVNode("text", { class: "test-item" }, "用户名：admin，密码：123456"),
+        vue.createElementVNode("text", { class: "test-item" }, "用户名：test，密码：test123")
+      ])
+    ]);
+  }
+  const PagesDengluLogin = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["render", _sfc_render$8], ["__scopeId", "data-v-6f56e16f"], ["__file", "E:/项目/yihangyidon/src/pages/denglu/login.vue"]]);
+  const _sfc_main$8 = {
+    name: "Index",
+    onLoad(options) {
+      formatAppLog("log", "at pages/index/index.vue:14", "首页加载", options);
+    },
+    onShow() {
+      try {
+        if (!forceCheckLogin()) {
+          formatAppLog("log", "at pages/index/index.vue:21", "首页：用户未登录，跳转到登录页面");
+          uni.reLaunch({
+            url: "/pages/denglu/login"
+          });
+          return;
+        }
+        formatAppLog("log", "at pages/index/index.vue:29", "首页显示");
+      } catch (error) {
+        formatAppLog("error", "at pages/index/index.vue:31", "首页onShow检查失败:", error);
+        uni.reLaunch({
+          url: "/pages/denglu/login"
+        });
+      }
+    }
+  };
   function _sfc_render$7(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "home-container" }, [
       vue.createElementVNode("h1", null, "首页")
     ]);
   }
-  const PagesIndexIndex = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["render", _sfc_render$7], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/index/index.vue"]]);
+  const PagesIndexIndex = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["render", _sfc_render$7], ["__file", "E:/项目/yihangyidon/src/pages/index/index.vue"]]);
   const _sfc_main$7 = {
     data() {
-      return {};
+      return {
+        userInfo: null
+      };
+    },
+    onShow() {
+      try {
+        if (!forceCheckLogin()) {
+          formatAppLog("log", "at pages/user/user.vue:59", "个人中心：用户未登录，跳转到登录页面");
+          uni.reLaunch({
+            url: "/pages/denglu/login",
+            fail: (error) => {
+              formatAppLog("error", "at pages/user/user.vue:63", "个人中心跳转失败:", error);
+              uni.navigateTo({ url: "/pages/denglu/login" });
+            }
+          });
+          return;
+        }
+        this.checkLoginStatus();
+      } catch (error) {
+        formatAppLog("error", "at pages/user/user.vue:72", "个人中心onShow检查失败:", error);
+        uni.reLaunch({
+          url: "/pages/denglu/login",
+          fail: () => {
+            uni.navigateTo({ url: "/pages/denglu/login" });
+          }
+        });
+      }
     },
     methods: {
+      // 检查登录状态
+      checkLoginStatus() {
+        const userInfo = getUserInfo();
+        if (userInfo) {
+          this.userInfo = userInfo;
+        } else {
+          this.userInfo = null;
+        }
+      },
+      // 跳转到登录页面
+      goToLogin() {
+        uni.navigateTo({
+          url: "/pages/denglu/login"
+        });
+      },
+      // 查看退出记录
+      viewLogoutHistory() {
+        try {
+          const logoutLogs = uni.getStorageSync("logoutLogs") || [];
+          if (logoutLogs.length === 0) {
+            uni.showToast({
+              title: "暂无退出记录",
+              icon: "none"
+            });
+            return;
+          }
+          const formattedLogs = logoutLogs.map((log) => {
+            const date = new Date(log.timestamp);
+            return `${date.toLocaleString()}
+原因：${log.reason}
+平台：${log.platform}`;
+          }).join("\n\n");
+          uni.showModal({
+            title: "退出记录",
+            content: formattedLogs,
+            showCancel: false,
+            confirmText: "确定"
+          });
+        } catch (error) {
+          formatAppLog("error", "at pages/user/user.vue:126", "查看退出记录失败:", error);
+          uni.showToast({
+            title: "查看记录失败",
+            icon: "none"
+          });
+        }
+      },
+      // 退出登录
+      handleLogout() {
+        uni.showActionSheet({
+          itemList: ["普通退出", "快速退出", "强制退出"],
+          success: (res) => {
+            switch (res.tapIndex) {
+              case 0:
+                logout({
+                  showConfirm: true,
+                  syncToServer: true,
+                  reason: "用户从个人中心退出"
+                });
+                break;
+              case 1:
+                quickLogout("用户快速退出");
+                break;
+              case 2:
+                uni.showModal({
+                  title: "强制退出确认",
+                  content: "强制退出将清除所有数据且不同步服务器，确定继续吗？",
+                  confirmText: "确定",
+                  cancelText: "取消",
+                  confirmColor: "#e74c3c",
+                  success: (modalRes) => {
+                    if (modalRes.confirm) {
+                      forceLogout("用户强制退出");
+                    }
+                  }
+                });
+                break;
+            }
+          }
+        });
+      },
       goToProfile() {
         uni.showToast({
           title: "个人资料",
@@ -79,17 +1021,122 @@ if (uni.restoreGlobal) {
   };
   function _sfc_render$6(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "user-page" }, [
-      vue.createElementVNode("h1", null, "个人中心")
+      vue.createCommentVNode(" 用户信息头部 "),
+      $data.userInfo ? (vue.openBlock(), vue.createElementBlock("view", {
+        key: 0,
+        class: "user-header"
+      }, [
+        vue.createElementVNode("view", { class: "avatar" }, [
+          vue.createElementVNode("image", {
+            src: $data.userInfo.avatar,
+            mode: "aspectFill"
+          }, null, 8, ["src"])
+        ]),
+        vue.createElementVNode("view", { class: "user-info" }, [
+          vue.createElementVNode(
+            "text",
+            { class: "username" },
+            vue.toDisplayString($data.userInfo.nickname),
+            1
+            /* TEXT */
+          ),
+          vue.createElementVNode(
+            "text",
+            { class: "user-desc" },
+            vue.toDisplayString($data.userInfo.phone),
+            1
+            /* TEXT */
+          )
+        ])
+      ])) : (vue.openBlock(), vue.createElementBlock(
+        vue.Fragment,
+        { key: 1 },
+        [
+          vue.createCommentVNode(" 未登录状态 "),
+          vue.createElementVNode("view", { class: "login-prompt" }, [
+            vue.createElementVNode("text", { class: "prompt-text" }, "请先登录"),
+            vue.createElementVNode("button", {
+              class: "login-btn",
+              onClick: _cache[0] || (_cache[0] = (...args) => $options.goToLogin && $options.goToLogin(...args))
+            }, "立即登录")
+          ])
+        ],
+        2112
+        /* STABLE_FRAGMENT, DEV_ROOT_FRAGMENT */
+      )),
+      vue.createCommentVNode(" 功能菜单 "),
+      $data.userInfo ? (vue.openBlock(), vue.createElementBlock("view", {
+        key: 2,
+        class: "menu-list"
+      }, [
+        vue.createElementVNode("view", {
+          class: "menu-item",
+          onClick: _cache[1] || (_cache[1] = (...args) => $options.goToProfile && $options.goToProfile(...args))
+        }, [
+          vue.createElementVNode("text", { class: "menu-text" }, "个人资料"),
+          vue.createElementVNode("text", { class: "arrow" }, ">")
+        ]),
+        vue.createElementVNode("view", {
+          class: "menu-item",
+          onClick: _cache[2] || (_cache[2] = (...args) => $options.goToSettings && $options.goToSettings(...args))
+        }, [
+          vue.createElementVNode("text", { class: "menu-text" }, "设置"),
+          vue.createElementVNode("text", { class: "arrow" }, ">")
+        ]),
+        vue.createElementVNode("view", {
+          class: "menu-item",
+          onClick: _cache[3] || (_cache[3] = (...args) => $options.goToHelp && $options.goToHelp(...args))
+        }, [
+          vue.createElementVNode("text", { class: "menu-text" }, "帮助中心"),
+          vue.createElementVNode("text", { class: "arrow" }, ">")
+        ]),
+        vue.createElementVNode("view", {
+          class: "menu-item",
+          onClick: _cache[4] || (_cache[4] = (...args) => $options.viewLogoutHistory && $options.viewLogoutHistory(...args))
+        }, [
+          vue.createElementVNode("text", { class: "menu-text" }, "退出记录"),
+          vue.createElementVNode("text", { class: "arrow" }, ">")
+        ]),
+        vue.createElementVNode("view", {
+          class: "menu-item",
+          onClick: _cache[5] || (_cache[5] = (...args) => $options.handleLogout && $options.handleLogout(...args))
+        }, [
+          vue.createElementVNode("text", { class: "menu-text logout-text" }, "退出登录"),
+          vue.createElementVNode("text", { class: "arrow" }, ">")
+        ])
+      ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesUserUser = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["render", _sfc_render$6], ["__scopeId", "data-v-99b0ba47"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/user/user.vue"]]);
-  const _sfc_main$6 = {};
+  const PagesUserUser = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["render", _sfc_render$6], ["__scopeId", "data-v-99b0ba47"], ["__file", "E:/项目/yihangyidon/src/pages/user/user.vue"]]);
+  const _sfc_main$6 = {
+    name: "Wealth",
+    onLoad(options) {
+      formatAppLog("log", "at pages/wealth/wealth.vue:14", "财富页面加载", options);
+    },
+    onShow() {
+      try {
+        if (!forceCheckLogin()) {
+          formatAppLog("log", "at pages/wealth/wealth.vue:21", "财富页面：用户未登录，跳转到登录页面");
+          uni.reLaunch({
+            url: "/pages/denglu/login"
+          });
+          return;
+        }
+        formatAppLog("log", "at pages/wealth/wealth.vue:29", "财富页面显示");
+      } catch (error) {
+        formatAppLog("error", "at pages/wealth/wealth.vue:31", "财富页面onShow检查失败:", error);
+        uni.reLaunch({
+          url: "/pages/denglu/login"
+        });
+      }
+    }
+  };
   function _sfc_render$5(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "doctor-page" }, [
       vue.createElementVNode("h1", null, "财富")
     ]);
   }
-  const PagesWealthWealth = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["render", _sfc_render$5], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/wealth/wealth.vue"]]);
+  const PagesWealthWealth = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["render", _sfc_render$5], ["__file", "E:/项目/yihangyidon/src/pages/wealth/wealth.vue"]]);
   const _imports_0 = "/static/banner1.png";
   const _imports_1 = "/static/banner2.png";
   const _imports_2 = "/static/frog-mascot.png";
@@ -154,12 +1201,29 @@ if (uni.restoreGlobal) {
     onLoad() {
       this.initPage();
     },
+    onShow() {
+      try {
+        if (!forceCheckLogin()) {
+          formatAppLog("log", "at pages/life/life.vue:233", "生活页面：用户未登录，跳转到登录页面");
+          uni.reLaunch({
+            url: "/pages/denglu/login"
+          });
+          return;
+        }
+        formatAppLog("log", "at pages/life/life.vue:241", "生活页面显示");
+      } catch (error) {
+        formatAppLog("error", "at pages/life/life.vue:243", "生活页面onShow检查失败:", error);
+        uni.reLaunch({
+          url: "/pages/denglu/login"
+        });
+      }
+    },
     methods: {
       initPage() {
-        formatAppLog("log", "at pages/life/life.vue:230", "生活页面初始化");
+        formatAppLog("log", "at pages/life/life.vue:253", "生活页面初始化");
       },
       handleServiceTap(service) {
-        formatAppLog("log", "at pages/life/life.vue:234", "点击服务:", service);
+        formatAppLog("log", "at pages/life/life.vue:257", "点击服务:", service);
         switch (service.action) {
           case "payment":
             this.goToPayment();
@@ -182,17 +1246,17 @@ if (uni.restoreGlobal) {
       },
       switchCategory(index) {
         this.activeCategory = index;
-        formatAppLog("log", "at pages/life/life.vue:259", "切换分类:", this.categories[index]);
+        formatAppLog("log", "at pages/life/life.vue:282", "切换分类:", this.categories[index]);
       },
       goToPayment() {
-        formatAppLog("log", "at pages/life/life.vue:263", "跳转到生活缴费页面");
+        formatAppLog("log", "at pages/life/life.vue:286", "跳转到生活缴费页面");
         uni.navigateTo({
           url: "/pages/payment/payment",
           success: () => {
-            formatAppLog("log", "at pages/life/life.vue:267", "成功跳转到生活缴费页面");
+            formatAppLog("log", "at pages/life/life.vue:290", "成功跳转到生活缴费页面");
           },
           fail: (err) => {
-            formatAppLog("error", "at pages/life/life.vue:270", "跳转失败:", err);
+            formatAppLog("error", "at pages/life/life.vue:293", "跳转失败:", err);
             uni.showToast({
               title: "页面跳转失败",
               icon: "none"
@@ -201,14 +1265,14 @@ if (uni.restoreGlobal) {
         });
       },
       goToRecharge() {
-        formatAppLog("log", "at pages/life/life.vue:280", "跳转到手机充值页面");
+        formatAppLog("log", "at pages/life/life.vue:303", "跳转到手机充值页面");
         uni.navigateTo({
           url: "/pages/recharge/recharge",
           success: () => {
-            formatAppLog("log", "at pages/life/life.vue:284", "成功跳转到手机充值页面");
+            formatAppLog("log", "at pages/life/life.vue:307", "成功跳转到手机充值页面");
           },
           fail: (err) => {
-            formatAppLog("error", "at pages/life/life.vue:287", "跳转失败:", err);
+            formatAppLog("error", "at pages/life/life.vue:310", "跳转失败:", err);
             uni.showToast({
               title: "页面跳转失败",
               icon: "none"
@@ -444,7 +1508,7 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesLifeLife = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["render", _sfc_render$4], ["__scopeId", "data-v-980f0516"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/life/life.vue"]]);
+  const PagesLifeLife = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["render", _sfc_render$4], ["__scopeId", "data-v-980f0516"], ["__file", "E:/项目/yihangyidon/src/pages/life/life.vue"]]);
   const BASE_URL = "https://api.abchina.com";
   const TIMEOUT = 1e4;
   const requestInterceptor = (config) => {
@@ -945,7 +2009,7 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesPaymentPayment = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["render", _sfc_render$3], ["__scopeId", "data-v-6e0fac4f"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/payment/payment.vue"]]);
+  const PagesPaymentPayment = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["render", _sfc_render$3], ["__scopeId", "data-v-6e0fac4f"], ["__file", "E:/项目/yihangyidon/src/pages/payment/payment.vue"]]);
   const _sfc_main$3 = {
     name: "RechargePage",
     data() {
@@ -1308,7 +2372,7 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesRechargeRecharge = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["render", _sfc_render$2], ["__scopeId", "data-v-d370def1"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/recharge/recharge.vue"]]);
+  const PagesRechargeRecharge = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["render", _sfc_render$2], ["__scopeId", "data-v-d370def1"], ["__file", "E:/项目/yihangyidon/src/pages/recharge/recharge.vue"]]);
   const _sfc_main$2 = {
     name: "GovernmentPage",
     data() {
@@ -1714,7 +2778,7 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesGovernmentGovernment = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["render", _sfc_render$1], ["__scopeId", "data-v-55002ac7"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/government/government.vue"]]);
+  const PagesGovernmentGovernment = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["render", _sfc_render$1], ["__scopeId", "data-v-55002ac7"], ["__file", "E:/项目/yihangyidon/src/pages/government/government.vue"]]);
   const _sfc_main$1 = {
     name: "GamesPage",
     data() {
@@ -2207,7 +3271,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesGamesGames = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["render", _sfc_render], ["__scopeId", "data-v-5e0e9dd0"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/games/games.vue"]]);
+  const PagesGamesGames = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["render", _sfc_render], ["__scopeId", "data-v-5e0e9dd0"], ["__file", "E:/项目/yihangyidon/src/pages/games/games.vue"]]);
+  __definePage("pages/denglu/login", PagesDengluLogin);
   __definePage("pages/index/index", PagesIndexIndex);
   __definePage("pages/user/user", PagesUserUser);
   __definePage("pages/wealth/wealth", PagesWealthWealth);
@@ -2255,27 +3320,29 @@ if (uni.restoreGlobal) {
   const _sfc_main = {
     name: "App",
     onLaunch(options) {
-      formatAppLog("log", "at App.vue:10", "App Launch", options);
+      formatAppLog("log", "at App.vue:12", "App Launch", options);
       this.checkUpdate();
       this.initUserInfo();
       this.setSystemInfo();
       this.initNetworkListener();
+      this.initLoginInterceptor();
     },
     onShow(options) {
-      formatAppLog("log", "at App.vue:26", "App Show", options);
+      formatAppLog("log", "at App.vue:31", "App Show", options);
       this.checkLoginStatus();
       this.restoreAppState();
+      this.globalLoginCheck();
     },
     onHide() {
-      formatAppLog("log", "at App.vue:36", "App Hide");
+      formatAppLog("log", "at App.vue:44", "App Hide");
       this.saveAppState();
     },
     onError(error) {
-      formatAppLog("error", "at App.vue:43", "App Error:", error);
+      formatAppLog("error", "at App.vue:51", "App Error:", error);
       this.reportError(error);
     },
     onPageNotFound(options) {
-      formatAppLog("log", "at App.vue:50", "Page Not Found:", options);
+      formatAppLog("log", "at App.vue:58", "Page Not Found:", options);
       uni.switchTab({
         url: "/pages/index/index"
       });
@@ -2286,7 +3353,7 @@ if (uni.restoreGlobal) {
        */
       checkUpdate() {
         plus.runtime.getProperty(plus.runtime.appid, (widgetInfo) => {
-          formatAppLog("log", "at App.vue:65", "当前应用版本:", widgetInfo.version);
+          formatAppLog("log", "at App.vue:73", "当前应用版本:", widgetInfo.version);
         });
       },
       /**
@@ -2297,10 +3364,10 @@ if (uni.restoreGlobal) {
           const userInfo = uni.getStorageSync("userInfo");
           if (userInfo) {
             this.globalData.userInfo = userInfo;
-            formatAppLog("log", "at App.vue:79", "用户信息已恢复:", userInfo);
+            formatAppLog("log", "at App.vue:87", "用户信息已恢复:", userInfo);
           }
         } catch (error) {
-          formatAppLog("error", "at App.vue:82", "恢复用户信息失败:", error);
+          formatAppLog("error", "at App.vue:90", "恢复用户信息失败:", error);
         }
       },
       /**
@@ -2310,9 +3377,9 @@ if (uni.restoreGlobal) {
         try {
           const systemInfo = uni.getSystemInfoSync();
           this.globalData.systemInfo = systemInfo;
-          formatAppLog("log", "at App.vue:93", "系统信息:", systemInfo);
+          formatAppLog("log", "at App.vue:101", "系统信息:", systemInfo);
         } catch (error) {
-          formatAppLog("error", "at App.vue:95", "获取系统信息失败:", error);
+          formatAppLog("error", "at App.vue:103", "获取系统信息失败:", error);
         }
       },
       /**
@@ -2320,7 +3387,7 @@ if (uni.restoreGlobal) {
        */
       initNetworkListener() {
         uni.onNetworkStatusChange((res) => {
-          formatAppLog("log", "at App.vue:104", "网络状态变化:", res);
+          formatAppLog("log", "at App.vue:112", "网络状态变化:", res);
           this.globalData.networkType = res.networkType;
           this.globalData.isConnected = res.isConnected;
           if (!res.isConnected) {
@@ -2335,15 +3402,80 @@ if (uni.restoreGlobal) {
        * 检查登录状态
        */
       checkLoginStatus() {
-        const userInfo = uni.getStorageSync("userInfo");
-        if (!userInfo) {
+        if (!forceCheckLogin()) {
           const pages = getCurrentPages();
           const currentPage = pages[pages.length - 1];
           if (currentPage && !currentPage.route.includes("login")) {
-            uni.navigateTo({
-              url: "/login/login"
+            formatAppLog("log", "at App.vue:135", "应用启动时检测到未登录，强制跳转到登录页面");
+            uni.reLaunch({
+              url: "/pages/denglu/login"
             });
           }
+        }
+      },
+      /**
+       * 初始化登录拦截器
+       */
+      initLoginInterceptor() {
+        uni.addInterceptor("navigateTo", {
+          invoke(e) {
+            formatAppLog("log", "at App.vue:150", "拦截 navigateTo:", e.url);
+            if (e.url.includes("/pages/denglu/login")) {
+              formatAppLog("log", "at App.vue:154", "跳转到登录页面，允许");
+              return true;
+            }
+            if (!forceCheckLogin()) {
+              formatAppLog("log", "at App.vue:160", "用户未登录，阻止页面跳转");
+              return false;
+            }
+            return true;
+          }
+        });
+        uni.addInterceptor("switchTab", {
+          invoke(e) {
+            formatAppLog("log", "at App.vue:171", "拦截 switchTab:", e.url);
+            if (!forceCheckLogin()) {
+              formatAppLog("log", "at App.vue:175", "用户未登录，阻止tabBar跳转");
+              return false;
+            }
+            return true;
+          }
+        });
+        uni.addInterceptor("reLaunch", {
+          invoke(e) {
+            formatAppLog("log", "at App.vue:186", "拦截 reLaunch:", e.url);
+            if (e.url.includes("/pages/denglu/login")) {
+              formatAppLog("log", "at App.vue:190", "重定向到登录页面，允许");
+              return true;
+            }
+            if (!forceCheckLogin()) {
+              formatAppLog("log", "at App.vue:196", "用户未登录，阻止重定向");
+              return false;
+            }
+            return true;
+          }
+        });
+        uni.addInterceptor("redirectTo", {
+          invoke(e) {
+            formatAppLog("log", "at App.vue:207", "拦截 redirectTo:", e.url);
+            if (e.url.includes("/pages/denglu/login")) {
+              formatAppLog("log", "at App.vue:211", "重定向到登录页面，允许");
+              return true;
+            }
+            if (!forceCheckLogin()) {
+              formatAppLog("log", "at App.vue:217", "用户未登录，阻止重定向");
+              return false;
+            }
+            return true;
+          }
+        });
+      },
+      /**
+       * 全局登录检查
+       */
+      globalLoginCheck() {
+        if (!forceCheckLogin()) {
+          checkLoginAndRedirect();
         }
       },
       /**
@@ -2357,7 +3489,7 @@ if (uni.restoreGlobal) {
           };
           uni.setStorageSync("appState", appState);
         } catch (error) {
-          formatAppLog("error", "at App.vue:145", "保存应用状态失败:", error);
+          formatAppLog("error", "at App.vue:247", "保存应用状态失败:", error);
         }
       },
       /**
@@ -2373,14 +3505,14 @@ if (uni.restoreGlobal) {
             }
           }
         } catch (error) {
-          formatAppLog("error", "at App.vue:163", "恢复应用状态失败:", error);
+          formatAppLog("error", "at App.vue:265", "恢复应用状态失败:", error);
         }
       },
       /**
        * 错误上报
        */
       reportError(error) {
-        formatAppLog("error", "at App.vue:172", "错误上报:", error);
+        formatAppLog("error", "at App.vue:274", "错误上报:", error);
       }
     },
     /**
@@ -2393,7 +3525,7 @@ if (uni.restoreGlobal) {
       isConnected: true
     }
   };
-  const App = /* @__PURE__ */ _export_sfc(_sfc_main, [["__file", "E:/Vue项目/专高六/1/项目/src/App.vue"]]);
+  const App = /* @__PURE__ */ _export_sfc(_sfc_main, [["__file", "E:/项目/yihangyidon/src/App.vue"]]);
   function createApp() {
     const app = vue.createVueApp(App);
     app.config.errorHandler = (err, vm, info) => {

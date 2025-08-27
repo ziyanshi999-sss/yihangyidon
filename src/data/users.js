@@ -7,8 +7,7 @@ export const users = [
     phone: '13800138000',
     nickname: '管理员',
     avatar: '/static/logo.png',
-    email: 'admin@example.com',
-    fingerprintEnabled: true
+    email: 'admin@example.com'
   },
   {
     id: 2,
@@ -17,8 +16,7 @@ export const users = [
     phone: '13800138001',
     nickname: '张三',
     avatar: '/static/logo.png',
-    email: 'user001@example.com',
-    fingerprintEnabled: true
+    email: 'user001@example.com'
   },
   {
     id: 3,
@@ -27,8 +25,7 @@ export const users = [
     phone: '13800138002',
     nickname: '李四',
     avatar: '/static/logo.png',
-    email: 'user002@example.com',
-    fingerprintEnabled: false
+    email: 'user002@example.com'
   },
   {
     id: 4,
@@ -37,8 +34,7 @@ export const users = [
     phone: '13800138003',
     nickname: '测试用户',
     avatar: '/static/logo.png',
-    email: 'test@example.com',
-    fingerprintEnabled: true
+    email: 'test@example.com'
   }
 ]
 
