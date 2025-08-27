@@ -31,6 +31,12 @@
 			}
 		},
 		{
+			"path": "pages/denglu/login",
+			"style": {
+				"navigationBarTitleText": "登录"
+			}
+		},
+		{
 			"path": "pages/service/chat",
 			"style": {
 				"navigationBarTitleText": "AI客服"
