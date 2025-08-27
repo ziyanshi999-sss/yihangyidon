@@ -170,7 +170,7 @@ export function createApp() {
 					})
 					setTimeout(() => {
 						uni.navigateTo({
-							url: '/login/login'
+							url: '/pages/denglu/login'
 						})
 					}, 1500)
 					return Promise.reject(response)
