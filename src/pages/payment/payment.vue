@@ -24,20 +24,43 @@
     </view>
 
     <!-- 缴费表单 -->
-    <view class="payment-form" v-if="selectedType">
-      <view class="form-section">
-        <view class="section-title">
-          <text>{{ selectedType.label }}缴费</text>
+    <view class="payment-form" v-if="selectedType" @tap.stop>
+      <!-- 缴费类型信息 -->
+      <view class="type-info">
+        <view class="info-header">
+          <view
+            class="type-icon-large"
+            :style="{ backgroundColor: selectedType.bgColor }"
+          >
+            <text class="icon-text-large">{{ selectedType.icon }}</text>
+          </view>
+          <view class="type-details">
+            <text class="type-title">{{ selectedType.label }}缴费</text>
+            <text class="type-desc">{{ selectedType.description }}</text>
+            <text class="avg-amount"
+              >常见金额: {{ selectedType.avgAmount }}元</text
+            >
+          </view>
         </view>
+      </view>
 
+      <view class="form-section" @tap.stop>
         <view class="form-item">
           <text class="form-label">{{ selectedType.numberLabel }}</text>
           <input
             class="form-input"
             v-model="paymentForm.number"
-            :placeholder="`请输入${selectedType.numberLabel}`"
+            :placeholder="selectedType.placeholder"
             type="text"
+            @input="onNumberInput"
+            @blur="validateNumber"
+            @focus="clearNumberError"
+            :maxlength="20"
+            confirm-type="done"
           />
+          <view class="input-error" v-if="formErrors.number">
+            <text class="error-text">{{ formErrors.number }}</text>
+          </view>
         </view>
 
         <view class="form-item" v-if="selectedType.showAddress">
@@ -45,9 +68,16 @@
           <input
             class="form-input"
             v-model="paymentForm.address"
-            placeholder="请输入详细地址"
+            placeholder="请输入详细地址（如：XX小区XX号楼XX室）"
             type="text"
+            @input="onAddressInput"
+            @focus="clearAddressError"
+            :maxlength="100"
+            confirm-type="done"
           />
+          <view class="input-error" v-if="formErrors.address">
+            <text class="error-text">{{ formErrors.address }}</text>
+          </view>
         </view>
 
         <view class="form-item">
@@ -55,15 +85,43 @@
           <input
             class="form-input amount-input"
             v-model="paymentForm.amount"
-            placeholder="请输入缴费金额"
+            placeholder="请输入缴费金额或点击查询账单"
             type="digit"
+            @input="onAmountInput"
+            @blur="validateAmount"
+            @focus="clearAmountError"
+            :maxlength="8"
+            confirm-type="done"
           />
+          <view class="input-error" v-if="formErrors.amount">
+            <text class="error-text">{{ formErrors.amount }}</text>
+          </view>
+        </view>
+
+        <!-- 温馨提示 -->
+        <view class="tips-section">
+          <text class="tips-title">💡 温馨提示</text>
+          <view class="tips-list">
+            <text
+              class="tip-item"
+              v-for="(tip, index) in selectedType.tips"
+              :key="index"
+            >
+              • {{ tip }}
+            </text>
+          </view>
         </view>
       </view>
 
       <!-- 缴费按钮 -->
       <view class="payment-actions">
-        <button class="query-btn" @tap="queryBill">查询账单</button>
+        <button
+          class="query-btn"
+          @tap="queryBill"
+          :disabled="!paymentForm.number"
+        >
+          查询账单
+        </button>
         <button class="pay-btn" @tap="submitPayment" :disabled="!canSubmit">
           立即缴费
         </button>
@@ -113,6 +171,11 @@ export default {
         address: "",
         amount: "",
       },
+      formErrors: {
+        number: "",
+        address: "",
+        amount: "",
+      },
       paymentTypes: [
         {
           icon: "💡",
@@ -121,6 +184,16 @@ export default {
           type: "electric",
           numberLabel: "电费户号",
           showAddress: true,
+          description: "支持国家电网、南方电网等",
+          placeholder: "请输入10-12位电费户号",
+          pattern: /^\d{10,12}$/,
+          errorMsg: "电费户号格式不正确",
+          avgAmount: "150-300",
+          tips: [
+            "查看电费单上的户号",
+            "户号通常为10-12位数字",
+            "支持预付费和后付费",
+          ],
         },
         {
           icon: "💧",
@@ -129,6 +202,16 @@ export default {
           type: "water",
           numberLabel: "水费户号",
           showAddress: true,
+          description: "支持自来水公司缴费",
+          placeholder: "请输入8-10位水费户号",
+          pattern: /^\d{8,10}$/,
+          errorMsg: "水费户号格式不正确",
+          avgAmount: "50-150",
+          tips: [
+            "查看水费单上的用户编号",
+            "户号通常为8-10位数字",
+            "支持阶梯水价计费",
+          ],
         },
         {
           icon: "🔥",
@@ -137,6 +220,16 @@ export default {
           type: "gas",
           numberLabel: "燃气户号",
           showAddress: true,
+          description: "支持天然气公司缴费",
+          placeholder: "请输入燃气用户号",
+          pattern: /^\d{6,12}$/,
+          errorMsg: "燃气户号格式不正确",
+          avgAmount: "80-200",
+          tips: [
+            "查看燃气费单上的用户号",
+            "户号格式因地区而异",
+            "支持IC卡和直供用户",
+          ],
         },
         {
           icon: "📱",
@@ -145,6 +238,12 @@ export default {
           type: "phone",
           numberLabel: "手机号码",
           showAddress: false,
+          description: "支持三大运营商话费充值",
+          placeholder: "请输入11位手机号码",
+          pattern: /^1[3-9]\d{9}$/,
+          errorMsg: "手机号码格式不正确",
+          avgAmount: "30-100",
+          tips: ["支持移动、联通、电信", "充值后即时到账", "可设置自动充值"],
         },
         {
           icon: "📺",
@@ -153,6 +252,16 @@ export default {
           type: "tv",
           numberLabel: "用户编号",
           showAddress: true,
+          description: "支持有线电视费缴纳",
+          placeholder: "请输入有线电视用户编号",
+          pattern: /^\d{8,15}$/,
+          errorMsg: "用户编号格式不正确",
+          avgAmount: "20-50",
+          tips: [
+            "查看有线电视缴费单",
+            "用户编号在机顶盒上",
+            "支持数字电视和高清频道",
+          ],
         },
         {
           icon: "🌐",
@@ -161,6 +270,16 @@ export default {
           type: "internet",
           numberLabel: "宽带账号",
           showAddress: true,
+          description: "支持宽带费用缴纳",
+          placeholder: "请输入宽带账号",
+          pattern: /^[a-zA-Z0-9]{6,20}$/,
+          errorMsg: "宽带账号格式不正确",
+          avgAmount: "50-200",
+          tips: [
+            "查看宽带缴费单上的账号",
+            "账号可能包含字母和数字",
+            "支持包年包月套餐",
+          ],
         },
       ],
       paymentHistory: [
@@ -211,36 +330,146 @@ export default {
         address: "",
         amount: "",
       };
+      this.formErrors = {
+        number: "",
+        address: "",
+        amount: "",
+      };
+    },
+
+    // 验证号码格式
+    validateNumber() {
+      if (!this.paymentForm.number) {
+        this.formErrors.number = `请输入${this.selectedType.numberLabel}`;
+        return false;
+      }
+
+      if (!this.selectedType.pattern.test(this.paymentForm.number)) {
+        this.formErrors.number = this.selectedType.errorMsg;
+        return false;
+      }
+
+      this.formErrors.number = "";
+      return true;
+    },
+
+    // 验证金额
+    validateAmount() {
+      if (!this.paymentForm.amount) {
+        this.formErrors.amount = "请输入缴费金额";
+        return false;
+      }
+
+      const amount = parseFloat(this.paymentForm.amount);
+      if (isNaN(amount) || amount <= 0) {
+        this.formErrors.amount = "请输入有效的金额";
+        return false;
+      }
+
+      if (amount > 10000) {
+        this.formErrors.amount = "单次缴费金额不能超过10000元";
+        return false;
+      }
+
+      this.formErrors.amount = "";
+      return true;
+    },
+
+    // 验证地址
+    validateAddress() {
+      if (this.selectedType.showAddress && !this.paymentForm.address) {
+        this.formErrors.address = "请输入缴费地址";
+        return false;
+      }
+
+      this.formErrors.address = "";
+      return true;
+    },
+
+    // 验证所有表单字段
+    validateForm() {
+      const isNumberValid = this.validateNumber();
+      const isAmountValid = this.validateAmount();
+      const isAddressValid = this.validateAddress();
+
+      return isNumberValid && isAmountValid && isAddressValid;
+    },
+
+    // 输入事件处理
+    onNumberInput(e) {
+      this.paymentForm.number = e.detail.value;
+      // 清除错误提示
+      if (this.formErrors.number) {
+        this.formErrors.number = "";
+      }
+    },
+
+    onAddressInput(e) {
+      this.paymentForm.address = e.detail.value;
+      // 清除错误提示
+      if (this.formErrors.address) {
+        this.formErrors.address = "";
+      }
+    },
+
+    onAmountInput(e) {
+      this.paymentForm.amount = e.detail.value;
+      // 清除错误提示
+      if (this.formErrors.amount) {
+        this.formErrors.amount = "";
+      }
+    },
+
+    // 清除错误提示
+    clearNumberError() {
+      this.formErrors.number = "";
+    },
+
+    clearAddressError() {
+      this.formErrors.address = "";
+    },
+
+    clearAmountError() {
+      this.formErrors.amount = "";
     },
 
     async queryBill() {
-      if (!this.paymentForm.number) {
-        uni.showToast({
-          title: `请输入${this.selectedType.numberLabel}`,
-          icon: "none",
-        });
+      // 验证号码格式
+      if (!this.validateNumber()) {
+        return;
+      }
+
+      // 验证地址（如果需要）
+      if (!this.validateAddress()) {
         return;
       }
 
       try {
         uni.showLoading({ title: "查询中..." });
 
-        const result = await queryUtilityBill({
+        // 模拟查询结果（实际项目中调用真实API）
+        const result = await this.mockQueryBill({
           type: this.selectedType.type,
           number: this.paymentForm.number,
           address: this.paymentForm.address,
         });
 
-        if (result.amount) {
+        if (result.success && result.amount) {
           this.paymentForm.amount = result.amount.toString();
-          uni.showToast({
+          uni.showModal({
             title: "查询成功",
-            icon: "success",
+            content: `查询到待缴费用：${result.amount}元\n账期：${
+              result.period
+            }\n地址：${result.address || this.paymentForm.address}`,
+            confirmText: "确定",
+            showCancel: false,
           });
         } else {
-          uni.showToast({
-            title: "暂无待缴费用",
-            icon: "none",
+          uni.showModal({
+            title: "查询结果",
+            content: result.message || "暂无待缴费用",
+            confirmText: "确定",
+            showCancel: false,
           });
         }
       } catch (error) {
@@ -254,40 +483,135 @@ export default {
     },
 
     async submitPayment() {
-      if (!this.canSubmit) return;
+      // 验证整个表单
+      if (!this.validateForm()) {
+        uni.showToast({
+          title: "请检查输入信息",
+          icon: "none",
+        });
+        return;
+      }
+
+      // 确认缴费
+      const confirmResult = await new Promise((resolve) => {
+        uni.showModal({
+          title: "确认缴费",
+          content: `${this.selectedType.label}缴费\n${this.selectedType.numberLabel}：${this.paymentForm.number}\n缴费金额：${this.paymentForm.amount}元`,
+          confirmText: "确认缴费",
+          cancelText: "取消",
+          success: (res) => resolve(res.confirm),
+        });
+      });
+
+      if (!confirmResult) return;
 
       try {
         uni.showLoading({ title: "缴费中..." });
 
-        await payLifeBill({
+        // 模拟缴费（实际项目中调用真实API）
+        const result = await this.mockPayment({
           type: this.selectedType.type,
           number: this.paymentForm.number,
           address: this.paymentForm.address,
           amount: parseFloat(this.paymentForm.amount),
         });
 
-        uni.showToast({
-          title: "缴费成功",
-          icon: "success",
-        });
+        if (result.success) {
+          uni.showToast({
+            title: "缴费成功",
+            icon: "success",
+          });
 
-        // 重新加载缴费记录
-        this.loadPaymentHistory();
+          // 重新加载缴费记录
+          this.loadPaymentHistory();
 
-        // 清空表单
-        this.paymentForm = {
-          number: "",
-          address: "",
-          amount: "",
-        };
+          // 清空表单
+          this.paymentForm = {
+            number: "",
+            address: "",
+            amount: "",
+          };
+          this.formErrors = {
+            number: "",
+            address: "",
+            amount: "",
+          };
+        } else {
+          throw new Error(result.message);
+        }
       } catch (error) {
         uni.showToast({
-          title: "缴费失败，请稍后重试",
+          title: error.message || "缴费失败，请稍后重试",
           icon: "none",
         });
       } finally {
         uni.hideLoading();
       }
+    },
+
+    // 模拟查询账单API
+    async mockQueryBill(params) {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          // 根据不同类型返回不同的模拟数据
+          const mockData = {
+            electric: {
+              success: true,
+              amount: 156.8,
+              period: "2024年1月",
+              address: "XX小区XX号楼",
+            },
+            water: {
+              success: true,
+              amount: 89.5,
+              period: "2024年1月",
+              address: "XX小区XX号楼",
+            },
+            gas: {
+              success: true,
+              amount: 125.3,
+              period: "2024年1月",
+              address: "XX小区XX号楼",
+            },
+            phone: {
+              success: true,
+              amount: 50.0,
+              period: "当前余额",
+              address: null,
+            },
+            tv: {
+              success: true,
+              amount: 25.0,
+              period: "2024年1月",
+              address: "XX小区XX号楼",
+            },
+            internet: {
+              success: true,
+              amount: 100.0,
+              period: "2024年1月",
+              address: "XX小区XX号楼",
+            },
+          };
+
+          resolve(
+            mockData[params.type] || { success: false, message: "查询失败" }
+          );
+        }, 1500);
+      });
+    },
+
+    // 模拟缴费API
+    async mockPayment(params) {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          // 模拟成功缴费
+          resolve({
+            success: true,
+            orderId: `PAY${Date.now()}`,
+            message: "缴费成功",
+          });
+        }, 2000);
+      });
     },
 
     async loadPaymentHistory() {
@@ -383,8 +707,63 @@ export default {
   box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.1);
 }
 
+/* 缴费类型信息 */
+.type-info {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  padding: 30rpx;
+  border-bottom: 2rpx solid #f0f0f0;
+}
+
+.info-header {
+  display: flex;
+  align-items: center;
+}
+
+.type-icon-large {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 24rpx;
+  box-shadow: 0 6rpx 16rpx rgba(0, 0, 0, 0.15);
+}
+
+.icon-text-large {
+  font-size: 40rpx;
+  color: #fff;
+}
+
+.type-details {
+  flex: 1;
+}
+
+.type-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8rpx;
+  display: block;
+}
+
+.type-desc {
+  font-size: 26rpx;
+  color: #666;
+  margin-bottom: 6rpx;
+  display: block;
+}
+
+.avg-amount {
+  font-size: 24rpx;
+  color: #999;
+  display: block;
+}
+
 .form-section {
   padding: 40rpx 30rpx;
+  position: relative;
+  z-index: 1;
 }
 
 .section-title {
@@ -401,6 +780,7 @@ export default {
 
 .form-item {
   margin-bottom: 30rpx;
+  position: relative;
 }
 
 .form-label {
@@ -417,16 +797,75 @@ export default {
   border-radius: 12rpx;
   font-size: 28rpx;
   background: #fafafa;
+  box-sizing: border-box;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+  pointer-events: auto;
+  user-select: text;
+  -webkit-user-select: text;
+  cursor: text;
 }
 
 .form-input:focus {
   border-color: #00d4aa;
   background: #fff;
+  box-shadow: 0 0 0 2rpx rgba(0, 212, 170, 0.2);
+}
+
+.form-input:disabled {
+  background: #f5f5f5;
+  color: #ccc;
+  cursor: not-allowed;
 }
 
 .amount-input {
   color: #ff6b35;
   font-weight: 600;
+}
+
+/* 输入错误样式 */
+.input-error {
+  margin-top: 8rpx;
+}
+
+.error-text {
+  color: #ff4757;
+  font-size: 24rpx;
+}
+
+.form-input.error {
+  border-color: #ff4757;
+  background: #fff5f5;
+}
+
+/* 温馨提示 */
+.tips-section {
+  background: #f8f9ff;
+  border: 2rpx solid #e6f3ff;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  margin-top: 30rpx;
+}
+
+.tips-title {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 16rpx;
+  display: block;
+}
+
+.tips-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.tip-item {
+  font-size: 24rpx;
+  color: #666;
+  line-height: 1.5;
 }
 
 .payment-actions {
@@ -444,6 +883,18 @@ export default {
   color: #666;
   font-size: 28rpx;
   border: none;
+  transition: all 0.3s ease;
+}
+
+.query-btn[disabled] {
+  background: #e0e0e0;
+  color: #999;
+  opacity: 0.6;
+}
+
+.query-btn:not([disabled]):active {
+  background: #e0e0e0;
+  transform: scale(0.98);
 }
 
 .pay-btn {
@@ -455,11 +906,18 @@ export default {
   font-size: 28rpx;
   font-weight: 600;
   border: none;
+  transition: all 0.3s ease;
 }
 
 .pay-btn[disabled] {
   background: #cccccc;
   color: #999;
+  opacity: 0.6;
+}
+
+.pay-btn:not([disabled]):active {
+  background: #00b89d;
+  transform: scale(0.98);
 }
 
 .payment-history {
