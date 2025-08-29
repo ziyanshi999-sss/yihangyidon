@@ -6029,8 +6029,8 @@ function populateParameters(fromRes, toRes) {
   let _SDKVersion = SDKVersion;
   const hostLanguage = (language || "").replace(/_/g, "-");
   const parameters = {
-    appId: "wxbdd11cdc1af803d6",
-    appName: "农业银行",
+    appId: "__UNI__ABC_BANK_APP",
+    appName: "中国农业银行",
     appVersion: "1.0.0",
     appVersionCode: "100",
     appLanguage: getAppLanguage(hostLanguage),
@@ -6178,8 +6178,8 @@ const getAppBaseInfo = {
       hostName: _hostName,
       hostSDKVersion: SDKVersion,
       hostTheme: theme,
-      appId: "wxbdd11cdc1af803d6",
-      appName: "农业银行",
+      appId: "__UNI__ABC_BANK_APP",
+      appName: "中国农业银行",
       appVersion: "1.0.0",
       appVersionCode: "100",
       appLanguage: getAppLanguage(hostLanguage),
@@ -6925,9 +6925,9 @@ function isConsoleWritable() {
   return isWritable;
 }
 function initRuntimeSocketService() {
-  const hosts = "192.168.182.1,192.168.9.1,192.168.103.112,127.0.0.1";
+  const hosts = "192.168.182.1,192.168.9.1,192.168.25.112,127.0.0.1";
   const port = "8090";
-  const id = "mp-weixin_BryyGS";
+  const id = "mp-weixin_T7kOFt";
   const lazy = typeof swan !== "undefined";
   let restoreError = lazy ? () => {
   } : initOnError();
@@ -7881,4 +7881,5 @@ exports.index = index;
 exports.n = n;
 exports.o = o;
 exports.t = t;
+exports.wx$1 = wx$1;
 //# sourceMappingURL=../../.sourcemap/mp-weixin/common/vendor.js.map

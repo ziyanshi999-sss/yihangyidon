@@ -7,11 +7,10 @@
   "setting": {
     "urlCheck": false,
     "es6": true,
-    "postcss": true,
-    "minified": true,
+    "postcss": false,
+    "minified": false,
     "newFeature": true,
     "bigPackageSizeSupport": true,
-    "checkSiteMap": false,
     "babelSetting": {
       "ignore": [],
       "disablePlugins": [],
@@ -21,7 +20,7 @@
   "compileType": "miniprogram",
   "libVersion": "3.7.11",
   "appid": "touristappid",
-  "projectname": "农业银行",
+  "projectname": "中国农业银行",
   "condition": {},
   "editorSetting": {
     "tabIndent": "insertSpaces",

@@ -1,71 +1,62 @@
 "use strict";
 const common_vendor = require("../../common/vendor.js");
-const common_assets = require("../../common/assets.js");
+const utils_auth = require("../../utils/auth.js");
 const _sfc_main = {
   data() {
     return {
-      userInfo: null
+      isLoggedIn: false
     };
   },
+  // 页面加载时检查登录状态
   onLoad() {
-    this.initPage();
+    this.checkLoginStatus();
+  },
+  // 页面显示时检查登录状态
+  onShow() {
+    this.checkLoginStatus();
   },
   methods: {
-    initPage() {
-      try {
-        const userInfo = common_vendor.index.getStorageSync("userInfo");
-        if (userInfo) {
-          this.userInfo = userInfo;
-        }
-      } catch (error) {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:71", "获取用户信息失败:", error);
+    // 检查登录状态
+    checkLoginStatus() {
+      if (!utils_auth.forceCheckLogin()) {
+        common_vendor.index.__f__("log", "at pages/index/index.vue:173", "首页：用户未登录，跳转到登录页面");
+        common_vendor.index.reLaunch({
+          url: "/pages/denglu/login"
+        });
+        return;
+      }
+      this.isLoggedIn = true;
+    },
+    // 处理转账按钮点击事件
+    handleTransferClick() {
+      if (this.isLoggedIn) {
+        common_vendor.index.navigateTo({
+          url: "/pages/transfer/transfer"
+        });
+      } else {
+        common_vendor.index.navigateTo({
+          url: "/pages/denglu/login"
+        });
       }
     },
-    navigateTo(url) {
-      common_vendor.index.switchTab({
-        url
-      });
-    },
-    handleService(type) {
-      switch (type) {
-        case "transfer":
-          common_vendor.index.showToast({
-            title: "转账汇款功能开发中",
-            icon: "none"
-          });
-          break;
-        case "payment":
-          common_vendor.index.showToast({
-            title: "缴费支付功能开发中",
-            icon: "none"
-          });
-          break;
-        case "investment":
-          common_vendor.index.showToast({
-            title: "投资理财功能开发中",
-            icon: "none"
-          });
-          break;
-        case "loan":
-          common_vendor.index.showToast({
-            title: "贷款服务功能开发中",
-            icon: "none"
-          });
-          break;
+    // 处理我的账户点击事件
+    handleAccountClick() {
+      if (this.isLoggedIn) {
+        common_vendor.index.navigateTo({
+          url: "/pages/account/account"
+        });
+      } else {
+        common_vendor.index.navigateTo({
+          url: "/pages/denglu/login"
+        });
       }
     }
   }
 };
 function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
   return {
-    a: common_assets._imports_0,
-    b: common_vendor.o(($event) => $options.navigateTo("/pages/wealth/wealth")),
-    c: common_vendor.o(($event) => $options.navigateTo("/pages/life/life")),
-    d: common_vendor.o(($event) => $options.navigateTo("/pages/user/user")),
-    e: common_vendor.o(($event) => $options.handleService("transfer")),
-    f: common_vendor.o(($event) => $options.handleService("payment")),
-    g: common_vendor.o(($event) => $options.handleService("investment")),
-    h: common_vendor.o(($event) => $options.handleService("loan"))
+    a: common_vendor.o((...args) => $options.handleAccountClick && $options.handleAccountClick(...args)),
+    b: common_vendor.o((...args) => $options.handleTransferClick && $options.handleTransferClick(...args))
   };
 }
 const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render], ["__scopeId", "data-v-83a5a03c"]]);

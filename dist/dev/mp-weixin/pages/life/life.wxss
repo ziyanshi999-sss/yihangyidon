@@ -1,0 +1,309 @@
+
+.life-page.data-v-980f0516 {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #ff6b4a 0%, #ff8a65 50%, #f5f5f5 50%);
+}
+
+/* 头部区域 */
+.header-section.data-v-980f0516 {
+  padding: 30rpx;
+  padding-top: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.location-info.data-v-980f0516 {
+  display: flex;
+  align-items: center;
+}
+.location-icon.data-v-980f0516 {
+  font-size: 32rpx;
+  margin-right: 8rpx;
+}
+.location-text.data-v-980f0516 {
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: 500;
+}
+.search-container.data-v-980f0516 {
+  flex: 1;
+  margin: 0 30rpx;
+}
+.search-box.data-v-980f0516 {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50rpx;
+  padding: 20rpx 30rpx;
+  display: flex;
+  align-items: center;
+  backdrop-filter: blur(10rpx);
+}
+.search-icon.data-v-980f0516 {
+  font-size: 32rpx;
+  margin-right: 20rpx;
+}
+.search-input.data-v-980f0516 {
+  flex: 1;
+  color: #fff;
+  font-size: 28rpx;
+}
+.voice-icon.data-v-980f0516 {
+  font-size: 32rpx;
+  margin-left: 20rpx;
+}
+.header-actions.data-v-980f0516 {
+  display: flex;
+  gap: 30rpx;
+}
+.action-item.data-v-980f0516 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.action-icon.data-v-980f0516 {
+  font-size: 40rpx;
+  margin-bottom: 8rpx;
+}
+.action-text.data-v-980f0516 {
+  color: #fff;
+  font-size: 22rpx;
+}
+
+/* 轮播广告 */
+.banner-section.data-v-980f0516 {
+  margin: 0 30rpx 40rpx;
+}
+.banner-swiper.data-v-980f0516 {
+  height: 200rpx;
+  border-radius: 20rpx;
+  overflow: hidden;
+}
+.banner-item.data-v-980f0516 {
+  background: linear-gradient(135deg, #ff9a56 0%, #ff6b35 100%);
+  height: 100%;
+  padding: 30rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.banner-title.data-v-980f0516 {
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 10rpx;
+}
+.banner-subtitle.data-v-980f0516 {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 24rpx;
+}
+.banner-image.data-v-980f0516 {
+  position: absolute;
+  right: 20rpx;
+  top: 20rpx;
+  width: 120rpx;
+  height: 120rpx;
+}
+
+/* 快捷服务 */
+.quick-services.data-v-980f0516 {
+  background: #fff;
+  margin: 0 30rpx 30rpx;
+  padding: 40rpx 30rpx;
+  border-radius: 20rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.1);
+}
+.services-grid.data-v-980f0516 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40rpx;
+}
+.service-item.data-v-980f0516 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.service-icon.data-v-980f0516 {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20rpx;
+}
+.icon-text.data-v-980f0516 {
+  font-size: 36rpx;
+  color: #fff;
+}
+.service-label.data-v-980f0516 {
+  font-size: 26rpx;
+  color: #333;
+  line-height: 1.2;
+}
+
+/* 全部服务 */
+.all-services.data-v-980f0516 {
+  background: #fff;
+  margin: 0 30rpx 30rpx;
+  padding: 40rpx 30rpx;
+  border-radius: 20rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.1);
+}
+.services-grid-large.data-v-980f0516 {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 40rpx 20rpx;
+}
+.service-item-large.data-v-980f0516 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.service-icon-large.data-v-980f0516 {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16rpx;
+}
+.icon-text-large.data-v-980f0516 {
+  font-size: 32rpx;
+  color: #fff;
+}
+.service-label-large.data-v-980f0516 {
+  font-size: 24rpx;
+  color: #333;
+  line-height: 1.2;
+}
+
+/* 分类导航 */
+.category-nav.data-v-980f0516 {
+  display: flex;
+  background: #fff;
+  margin: 0 30rpx 30rpx;
+  border-radius: 20rpx;
+  padding: 10rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.1);
+}
+.nav-item.data-v-980f0516 {
+  flex: 1;
+  text-align: center;
+  padding: 20rpx;
+  border-radius: 16rpx;
+  transition: all 0.3s ease;
+}
+.nav-item.active.data-v-980f0516 {
+  background: #00d4aa;
+}
+.nav-text.data-v-980f0516 {
+  font-size: 28rpx;
+  color: #666;
+  font-weight: 500;
+}
+.nav-item.active .nav-text.data-v-980f0516 {
+  color: #fff;
+}
+
+/* 优惠活动卡片 */
+.promotion-section.data-v-980f0516 {
+  margin: 0 30rpx 100rpx;
+}
+.promotion-cards.data-v-980f0516 {
+  display: flex;
+  gap: 20rpx;
+  height: 400rpx;
+}
+.promotion-card.large.data-v-980f0516 {
+  flex: 1;
+  background: linear-gradient(135deg, #32d74b 0%, #30db5b 100%);
+  border-radius: 20rpx;
+  padding: 30rpx;
+  position: relative;
+  overflow: hidden;
+}
+.card-content.data-v-980f0516 {
+  position: relative;
+  z-index: 2;
+}
+.card-title.data-v-980f0516 {
+  color: #fff;
+  font-size: 36rpx;
+  font-weight: bold;
+  margin-bottom: 16rpx;
+}
+.card-subtitle.data-v-980f0516 {
+  color: #fff;
+  font-size: 24rpx;
+  margin-bottom: 20rpx;
+}
+.card-desc.data-v-980f0516 {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 22rpx;
+  margin-bottom: 10rpx;
+}
+.card-detail.data-v-980f0516 {
+  color: #fff;
+  font-size: 24rpx;
+  font-weight: 500;
+}
+.card-mascot.data-v-980f0516 {
+  position: absolute;
+  bottom: 20rpx;
+  right: 20rpx;
+  width: 120rpx;
+  height: 120rpx;
+}
+.promotion-cards-right.data-v-980f0516 {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+  width: 300rpx;
+}
+.promotion-card.small.data-v-980f0516 {
+  flex: 1;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #007aff 0%, #5ac8fa 100%);
+}
+.promotion-card.small.data-v-980f0516:last-child {
+  background: linear-gradient(135deg, #ff9500 0%, #ffad33 100%);
+}
+.card-title-small.data-v-980f0516 {
+  color: #fff;
+  font-size: 28rpx;
+  font-weight: bold;
+  margin-bottom: 12rpx;
+  position: relative;
+  z-index: 2;
+}
+.card-subtitle-small.data-v-980f0516 {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 20rpx;
+  line-height: 1.4;
+  position: relative;
+  z-index: 2;
+}
+.card-bg.data-v-980f0516 {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.3;
+}
+
+/* 点击效果 */
+.service-item.data-v-980f0516:active,
+.service-item-large.data-v-980f0516:active,
+.promotion-card.data-v-980f0516:active {
+  opacity: 0.8;
+  transform: scale(0.95);
+  transition: all 0.1s ease;
+}
