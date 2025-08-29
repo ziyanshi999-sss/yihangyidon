@@ -52,7 +52,21 @@
 </template>
 
 <script>
-const AI_BASE = 'http://127.0.0.1:5000'
+// 后端地址策略：
+// - H5：使用相对路径，通过 Vite 代理转发到后端（避免跨域/混合内容）
+// - 小程序：优先读本地存储 AI_BASE（可在控制台设置），否则读环境变量 VITE_AI_BASE
+const AI_BASE = (() => {
+  let base = ''
+  // #ifdef H5
+  base = '' // 相对路径，配合 vite.config.js -> server.proxy['/api']
+  // #endif
+  // #ifdef MP-WEIXIN
+  try {
+    base = (uni.getStorageSync && uni.getStorageSync('AI_BASE')) || (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_AI_BASE) || ''
+  } catch (_) { base = '' }
+  // #endif
+  return base
+})()
 
 export default {
   data() {
@@ -115,20 +129,171 @@ export default {
     } catch (e) {}
   },
   methods: {
-    // 渲染：安全转义 + 基础Markdown + 表情替换（与 mobile.html 对齐）
-    renderMarkdownAndEmojis(text = '') {
-      let html = this.escapeHtml(text)
-      // Markdown 粗体 **text**
-      html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-      // 换行
-      html = html.replace(/\n/g, '<br/>')
-      // 表情替换：短码/Unicode -> img（注意：小程序需将域名加入下载白名单）
-      for (const item of (this.EMOJI_ITEMS || [])) {
-        const img = `<img src="${item.url}" alt="${item.code}" style="height:1.2em;vertical-align:-0.2em"/>`
-        html = html.split(item.code).join(img)
-        html = html.split(item.char).join(img)
+    showThinking() {
+      const botId = Date.now() + '-thinking'
+      const msg = { id: botId, role: 'bot', html: '思考中…', time: '' }
+      this.messages.push(msg)
+      this.toBottom()
+      return this.messages.length - 1
+    },
+    updateBotMessage(index, text) {
+      const rendered = this.renderMarkdownAndEmojis(text)
+      if (this.messages[index] && this.messages[index].role === 'bot') {
+        this.$set(this.messages[index], 'html', rendered)
+        this.$set(this.messages[index], 'time', this.nowTime())
       }
-      return html
+      this.toBottom()
+    },
+    typeOut(fullText, index, chunkSize = 2, interval = 30) {
+      return new Promise((resolve) => {
+        let pos = 0
+        const step = () => {
+          if (pos >= fullText.length) return resolve()
+          const nextPos = Math.min(fullText.length, pos + chunkSize)
+          const slice = fullText.slice(0, nextPos)
+          this.updateBotMessage(index, slice)
+          pos = nextPos
+          setTimeout(step, interval)
+        }
+        // 从空开始
+        this.updateBotMessage(index, '')
+        step()
+      })
+    },
+    async streamTextReply(content) {
+      // 在H5端使用fetch流式；其他端或失败则回退普通请求
+      const thinkingIndex = this.showThinking()
+      try {
+        if (!AI_BASE) throw new Error('未配置AI服务地址')
+        if (typeof window === 'undefined' || !window.fetch) {
+          throw new Error('stream not supported')
+        }
+        const res = await fetch(`${AI_BASE}/api/chat-stream`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: content, session_id: this.sessionId })
+        })
+        if (!res.ok || !res.body) throw new Error('stream request failed')
+        const reader = res.body.getReader()
+        const decoder = new TextDecoder('utf-8')
+        let buffer = ''
+        let full = ''
+        // 将“思考中…”先清空
+        this.updateBotMessage(thinkingIndex, '')
+        while (true) {
+          const { done, value } = await reader.read()
+          if (done) break
+          buffer += decoder.decode(value, { stream: true })
+          const parts = buffer.split('\n\n')
+          buffer = parts.pop() || ''
+          for (const part of parts) {
+            const line = part.trim()
+            if (!line.startsWith('data:')) continue
+            const dataPart = line.slice(5).trim()
+            if (dataPart === '[DONE]') {
+              buffer = ''
+              break
+            }
+            try {
+              const obj = JSON.parse(dataPart)
+              const delta = obj && obj.delta ? obj.delta : ''
+              if (delta) {
+                full += delta
+                this.updateBotMessage(thinkingIndex, full)
+              }
+            } catch (_) {
+              // 非JSON增量，直接追加
+              full += dataPart
+              this.updateBotMessage(thinkingIndex, full)
+            }
+          }
+        }
+        // 流结束后TTS
+        if (full) {
+          const [tErr, tRes] = await new Promise((resolve) => {
+            uni.request({
+              url: `${AI_BASE}/api/text-to-speech`,
+              method: 'POST',
+              header: { 'Content-Type': 'application/json' },
+              data: { text: full },
+              success: (r) => resolve([null, r]),
+              fail: (e) => resolve([e, null])
+            })
+          })
+          if (!tErr && tRes && tRes.statusCode >= 200 && tRes.statusCode < 300 && tRes.data && tRes.data.success && tRes.data.audio_file) {
+            const url = `${AI_BASE}/api/audio/${tRes.data.audio_file}`
+            this.$set(this.messages[thinkingIndex], 'audio', url)
+          }
+        }
+      } catch (e) {
+        console.error('AI stream error:', e)
+        // 失败回退到普通请求
+        await this.requestOnceText(content, thinkingIndex)
+      }
+    },
+    async requestOnceText(content, botIndexToReuse = null) {
+      // 普通一次性请求（用于小程序或流失败）
+      if (!AI_BASE) {
+        const fallback = this.generateReply(content)
+        const msg = '未配置AI服务地址，小程序可执行 uni.setStorageSync("AI_BASE","http://你的电脑IP:5000")；H5请配置 /api 代理'
+        if (botIndexToReuse != null) this.updateBotMessage(botIndexToReuse, fallback)
+        else this.messages.push({ id: Date.now() + '-b', role: 'bot', html: this.renderMarkdownAndEmojis(fallback), time: this.nowTime() })
+        uni.showToast({ title: msg.slice(0,28), icon: 'none' })
+        console.warn(msg)
+        return
+      }
+      const [err, res] = await new Promise((resolve) => {
+        uni.request({
+          url: `${AI_BASE}/api/chat`,
+          method: 'POST',
+          header: { 'Content-Type': 'application/json' },
+          data: { message: content, session_id: this.sessionId, image: null },
+          success: (r) => resolve([null, r]),
+          fail: (e) => resolve([e, null])
+        })
+      })
+      if (err || !res || res.statusCode < 200 || res.statusCode >= 300 || !res.data || (!res.data.success && !res.data.reply)) {
+        const fallback = this.generateReply(content)
+        if (botIndexToReuse != null) this.updateBotMessage(botIndexToReuse, fallback)
+        else this.messages.push({ id: Date.now() + '-b', role: 'bot', html: this.renderMarkdownAndEmojis(fallback), time: this.nowTime() })
+        console.error('AI /api/chat error:', err, res)
+        uni.showToast({ title: 'AI服务请求失败', icon: 'none' })
+        return
+      }
+      let replyText = Array.isArray(res.data.reply) ? (res.data.reply.map(p => (p && p.text) ? p.text : '').join('')) : (typeof res.data.reply === 'string' ? res.data.reply : '')
+      // 小程序端伪流式（打字机效果）
+      // #ifdef MP-WEIXIN
+      if (botIndexToReuse != null) {
+        await this.typeOut(replyText || '', botIndexToReuse, 2, 25)
+      } else {
+        const idx = this.showThinking()
+        await this.typeOut(replyText || '', idx, 2, 25)
+      }
+      // #endif
+      // #ifndef MP-WEIXIN
+      const renderedReply = this.renderMarkdownAndEmojis(replyText || '')
+      if (botIndexToReuse != null) this.updateBotMessage(botIndexToReuse, replyText || '')
+      else this.messages.push({ id: Date.now() + '-b', role: 'bot', html: renderedReply, time: res.data.timestamp || this.nowTime() })
+      // #endif
+      // TTS
+      const [tErr, tRes] = await new Promise((resolve) => {
+        uni.request({
+          url: `${AI_BASE}/api/text-to-speech`,
+          method: 'POST',
+          header: { 'Content-Type': 'application/json' },
+          data: { text: replyText || '' },
+          success: (r) => resolve([null, r]),
+          fail: (e) => resolve([e, null])
+        })
+      })
+      if (!tErr && tRes && tRes.statusCode >= 200 && tRes.statusCode < 300 && tRes.data && tRes.data.success && tRes.data.audio_file) {
+        const url = `${AI_BASE}/api/audio/${tRes.data.audio_file}`
+        // 确定目标索引（小程序伪流式下复用思考中索引）
+        const lastIdx = botIndexToReuse != null ? botIndexToReuse : (this.messages.length - 1)
+        if (lastIdx >= 0 && this.messages[lastIdx].role === 'bot') {
+          this.$set(this.messages[lastIdx], 'audio', url)
+        }
+      }
     },
     playAudio(url) {
       try {
@@ -141,6 +306,24 @@ export default {
     },
     toggleEmoji() {
       this.showEmoji = !this.showEmoji
+    },
+    // 安全转义 + 简单Markdown + 表情替换
+    renderMarkdownAndEmojis(text = '') {
+      // 转义
+      let html = this.escapeHtml(text || '')
+      // 粗体 **text**
+      html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      // 换行
+      html = html.replace(/\n/g, '<br/>')
+      // 表情：短码与Unicode替换为图片
+      if (Array.isArray(this.EMOJI_ITEMS)) {
+        for (const item of this.EMOJI_ITEMS) {
+          const img = `<img src="${item.url}" alt="${item.code}" style="height:1.2em;vertical-align:-0.2em"/>`
+          html = html.split(item.code).join(img)
+          html = html.split(item.char).join(img)
+        }
+      }
+      return html
     },
     appendEmoji(item) {
       const ch = (item && item.char) ? item.char : ''
@@ -254,48 +437,16 @@ export default {
 
       this.sending = true
       try {
-        // 调用 /api/chat（支持多模态）
-        const [err, res] = await new Promise((resolve) => {
-          uni.request({
-            url: `${AI_BASE}/api/chat`,
-            method: 'POST',
-            header: { 'Content-Type': 'application/json' },
-            data: { message: content, session_id: this.sessionId, image: this.pendingImageBase64 || null },
-            success: (r) => resolve([null, r]),
-            fail: (e) => resolve([e, null])
-          })
-        })
-        // 清除待发图片
-        this.pendingImageBase64 = ''
-        this.pendingImageLocalPath = ''
-        if (err) throw err
-        if (!res || res.statusCode < 200 || res.statusCode >= 300 || !res.data) throw new Error('接口异常')
-        const data = res.data
-        if (!(data.success && data.reply) && !data.reply) {
-          throw new Error(data.error || '无有效应答')
-        }
-        let replyText = Array.isArray(data.reply) ? (data.reply.map(p => (p && p.text) ? p.text : '').join('')) : (typeof data.reply === 'string' ? data.reply : '')
-        const renderedReply = this.renderMarkdownAndEmojis(replyText || '')
-        // 先渲染文字
-        const botId = Date.now() + '-b'
-        this.messages.push({ id: botId, role: 'bot', html: renderedReply, time: data.timestamp || this.nowTime() })
-        this.toBottom()
-        // 再调用 TTS 获取语音
-        const [tErr, tRes] = await new Promise((resolve) => {
-          uni.request({
-            url: `${AI_BASE}/api/text-to-speech`,
-            method: 'POST',
-            header: { 'Content-Type': 'application/json' },
-            data: { text: replyText || '' },
-            success: (r) => resolve([null, r]),
-            fail: (e) => resolve([e, null])
-          })
-        })
-        if (!tErr && tRes && tRes.statusCode >= 200 && tRes.statusCode < 300 && tRes.data && tRes.data.success && tRes.data.audio_file) {
-          const url = `${AI_BASE}/api/audio/${tRes.data.audio_file}`
-          const lastIdx = this.messages.length - 1
-          if (lastIdx >= 0 && this.messages[lastIdx].role === 'bot') {
-            this.$set(this.messages[lastIdx], 'audio', url)
+        // 带图：一次性请求；纯文本：H5流式/小程序一次性
+        if (this.pendingImageBase64) {
+          await this.requestOnceText(content)
+        } else {
+          if (typeof window !== 'undefined' && window.fetch) {
+            await this.streamTextReply(content)
+          } else {
+            // 小程序端：先显示思考中，再伪流式
+            const thinkingIndex = this.showThinking()
+            await this.requestOnceText(content, thinkingIndex)
           }
         }
       } catch (e) {
@@ -305,6 +456,9 @@ export default {
         uni.showToast({ title: 'AI服务不可用，已使用本地回复', icon: 'none' })
       } finally {
         this.sending = false
+        // 清除待发图片
+        this.pendingImageBase64 = ''
+        this.pendingImageLocalPath = ''
         this.toBottom()
       }
     },

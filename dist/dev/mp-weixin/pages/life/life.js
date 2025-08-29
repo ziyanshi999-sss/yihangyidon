@@ -355,15 +355,15 @@ const _sfc_main = {
   onShow() {
     try {
       if (!utils_auth.forceCheckLogin()) {
-        common_vendor.index.__f__("log", "at pages/life/life.vue:525", "生活页面：用户未登录，跳转到登录页面");
+        console.log("生活页面：用户未登录，跳转到登录页面");
         common_vendor.index.reLaunch({
           url: "/pages/denglu/login"
         });
         return;
       }
-      common_vendor.index.__f__("log", "at pages/life/life.vue:533", "生活页面显示");
+      console.log("生活页面显示");
     } catch (error) {
-      common_vendor.index.__f__("error", "at pages/life/life.vue:535", "生活页面onShow检查失败:", error);
+      console.error("生活页面onShow检查失败:", error);
       common_vendor.index.reLaunch({
         url: "/pages/denglu/login"
       });
@@ -371,10 +371,10 @@ const _sfc_main = {
   },
   methods: {
     initPage() {
-      common_vendor.index.__f__("log", "at pages/life/life.vue:545", "生活页面初始化");
+      console.log("生活页面初始化");
     },
     handleServiceTap(service) {
-      common_vendor.index.__f__("log", "at pages/life/life.vue:549", "点击服务:", service);
+      console.log("点击服务:", service);
       switch (service.action) {
         case "payment":
           this.goToPayment();
@@ -397,7 +397,7 @@ const _sfc_main = {
     },
     switchCategory(index) {
       this.activeCategory = index;
-      common_vendor.index.__f__("log", "at pages/life/life.vue:574", "切换分类:", this.categories[index]);
+      console.log("切换分类:", this.categories[index]);
       common_vendor.index.showToast({
         title: `切换到${this.categories[index]}`,
         icon: "none",
@@ -421,7 +421,7 @@ const _sfc_main = {
     // 处理主卡片点击
     handleMainCardTap() {
       const currentCard = this.currentPromotionData.main;
-      common_vendor.index.__f__("log", "at pages/life/life.vue:601", "点击主卡片:", currentCard);
+      console.log("点击主卡片:", currentCard);
       common_vendor.index.showToast({
         title: `点击了${currentCard.title}`,
         icon: "none"
@@ -429,7 +429,7 @@ const _sfc_main = {
     },
     // 处理小卡片点击
     handleSmallCardTap(card, index) {
-      common_vendor.index.__f__("log", "at pages/life/life.vue:610", "点击小卡片:", card, index);
+      console.log("点击小卡片:", card, index);
       common_vendor.index.showToast({
         title: `点击了${card.title}`,
         icon: "none"
@@ -437,7 +437,7 @@ const _sfc_main = {
     },
     // 处理轮播图点击
     handleBannerTap(banner) {
-      common_vendor.index.__f__("log", "at pages/life/life.vue:619", "点击轮播图:", banner);
+      console.log("点击轮播图:", banner);
       switch (banner.action) {
         case "payment":
           this.goToPayment();
@@ -456,10 +456,10 @@ const _sfc_main = {
             common_vendor.index.navigateTo({
               url: banner.url,
               success: () => {
-                common_vendor.index.__f__("log", "at pages/life/life.vue:641", `成功跳转到: ${banner.url}`);
+                console.log(`成功跳转到: ${banner.url}`);
               },
               fail: (err) => {
-                common_vendor.index.__f__("error", "at pages/life/life.vue:644", "跳转失败:", err);
+                console.error("跳转失败:", err);
                 common_vendor.index.showToast({
                   title: "页面跳转失败",
                   icon: "none"
@@ -475,14 +475,14 @@ const _sfc_main = {
       }
     },
     goToPayment() {
-      common_vendor.index.__f__("log", "at pages/life/life.vue:661", "跳转到生活缴费页面");
+      console.log("跳转到生活缴费页面");
       common_vendor.index.navigateTo({
         url: "/pages/payment/payment",
         success: () => {
-          common_vendor.index.__f__("log", "at pages/life/life.vue:665", "成功跳转到生活缴费页面");
+          console.log("成功跳转到生活缴费页面");
         },
         fail: (err) => {
-          common_vendor.index.__f__("error", "at pages/life/life.vue:668", "跳转失败:", err);
+          console.error("跳转失败:", err);
           common_vendor.index.showToast({
             title: "页面跳转失败",
             icon: "none"
@@ -491,14 +491,14 @@ const _sfc_main = {
       });
     },
     goToRecharge() {
-      common_vendor.index.__f__("log", "at pages/life/life.vue:678", "跳转到手机充值页面");
+      console.log("跳转到手机充值页面");
       common_vendor.index.navigateTo({
         url: "/pages/recharge/recharge",
         success: () => {
-          common_vendor.index.__f__("log", "at pages/life/life.vue:682", "成功跳转到手机充值页面");
+          console.log("成功跳转到手机充值页面");
         },
         fail: (err) => {
-          common_vendor.index.__f__("error", "at pages/life/life.vue:685", "跳转失败:", err);
+          console.error("跳转失败:", err);
           common_vendor.index.showToast({
             title: "页面跳转失败",
             icon: "none"
@@ -578,4 +578,3 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
 }
 const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render], ["__scopeId", "data-v-980f0516"]]);
 wx.createPage(MiniProgramPage);
-//# sourceMappingURL=../../../.sourcemap/mp-weixin/pages/life/life.js.map

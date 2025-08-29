@@ -19,7 +19,7 @@ const _sfc_main = {
     // 检查登录状态
     checkLoginStatus() {
       if (!utils_auth.forceCheckLogin()) {
-        common_vendor.index.__f__("log", "at pages/index/index.vue:173", "首页：用户未登录，跳转到登录页面");
+        console.log("首页：用户未登录，跳转到登录页面");
         common_vendor.index.reLaunch({
           url: "/pages/denglu/login"
         });
@@ -61,4 +61,3 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
 }
 const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render], ["__scopeId", "data-v-83a5a03c"]]);
 wx.createPage(MiniProgramPage);
-//# sourceMappingURL=../../../.sourcemap/mp-weixin/pages/index/index.js.map
