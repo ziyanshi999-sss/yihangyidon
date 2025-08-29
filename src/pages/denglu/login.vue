@@ -68,10 +68,18 @@
       </button>
     </form>
     
+    <!-- 快速注册按钮 -->
+    <view class="quick-register">
+      <navigator url="/pages/register/register" open-type="navigate">
+        <button class="quick-register-btn">
+          还没有账户？立即注册
+        </button>
+      </navigator>
+    </view>
+    
     <!-- 辅助链接 -->
     <view class="links">
       <navigator url="/pages/forget/forget">忘记密码</navigator>
-      <navigator url="/pages/register/register">注册账号</navigator>
     </view>
 
     <!-- 登录注意事项 -->
@@ -230,14 +238,14 @@ export default {
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
 }
 
 .title {
   font-size: 56rpx;
   font-weight: bold;
   margin-bottom: 60rpx;
-  color: #0066b2; /* 农行蓝 */
+  color: #2e7d32; /* 深绿色 */
 }
 
 .tab-bar {
@@ -263,9 +271,9 @@ export default {
 }
 
 .tab-item.active {
-  color: #0066b2;
+  color: #2e7d32;
   font-weight: bold;
-  background: rgba(0, 102, 178, 0.1);
+  background: rgba(46, 125, 50, 0.1);
 }
 
 .tab-item.active::after {
@@ -276,7 +284,7 @@ export default {
   transform: translateX(-50%);
   width: 60%;
   height: 4rpx;
-  background-color: #0066b2;
+  background-color: #2e7d32;
   border-radius: 2rpx;
 }
 
@@ -296,8 +304,8 @@ export default {
 }
 
 .input-item:focus-within {
-  border-color: #0066b2;
-  box-shadow: 0 0 0 4rpx rgba(0, 102, 178, 0.1);
+  border-color: #2e7d32;
+  box-shadow: 0 0 0 4rpx rgba(46, 125, 50, 0.1);
 }
 
 .input-item input {
@@ -312,7 +320,7 @@ export default {
 }
 
 .get-code-btn {
-  background-color: #0066b2;
+  background-color: #2e7d32;
   color: white;
   padding: 20rpx 25rpx;
   border-radius: 8rpx;
@@ -333,7 +341,7 @@ export default {
 
 .login-btn {
   width: 100%;
-  background: linear-gradient(135deg, #0066b2 0%, #0056a3 100%);
+  background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
   color: white;
   padding: 20rpx 30rpx;
   border-radius: 12rpx;
@@ -341,7 +349,7 @@ export default {
   font-weight: bold;
   margin-top: 30rpx;
   border: none;
-  box-shadow: 0 4rpx 12rpx rgba(0, 102, 178, 0.3);
+  box-shadow: 0 4rpx 12rpx rgba(46, 125, 50, 0.3);
   transition: all 0.3s ease;
   min-height: 80rpx;
   box-sizing: border-box;
@@ -354,11 +362,40 @@ export default {
   transform: scale(0.98);
 }
 
+.quick-register {
+  width: 100%;
+  margin-top: 20rpx;
+}
+
+.quick-register-btn {
+  width: 100%;
+  background: transparent;
+  color: #2e7d32;
+  padding: 20rpx 30rpx;
+  border: 2rpx solid #2e7d32;
+  border-radius: 12rpx;
+  font-size: 32rpx;
+  font-weight: normal;
+  margin: 0;
+  box-shadow: none;
+  transition: all 0.3s ease;
+  min-height: 80rpx;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quick-register-btn:active {
+  background: rgba(46, 125, 50, 0.1);
+  transform: scale(0.98);
+}
+
 .links {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   width: 100%;
-  margin-top: 60rpx;
+  margin-top: 40rpx;
 }
 
 .links navigator {
@@ -369,7 +406,7 @@ export default {
 }
 
 .links navigator:hover {
-  color: #0066b2;
+  color: #2e7d32;
 }
 
 .login-notice {
@@ -383,7 +420,7 @@ export default {
 
 .notice-title {
   display: block;
-  color: #0066b2;
+  color: #2e7d32;
   font-size: 32rpx;
   font-weight: bold;
   margin-bottom: 20rpx;
@@ -410,7 +447,7 @@ export default {
 .debug-title {
   font-size: 28rpx;
   font-weight: bold;
-  color: #0066b2;
+  color: #2e7d32;
   margin-bottom: 10rpx;
 }
 
@@ -421,7 +458,7 @@ export default {
 }
 
 .debug-btn {
-  background-color: #0066b2;
+  background-color: #2e7d32;
   color: white;
   padding: 10rpx 20rpx;
   border-radius: 8rpx;

@@ -1,6 +1,12 @@
 {
 	"pages": [
 		{
+			"path": "pages/register/register",
+			"style": {
+				"navigationBarTitleText": "注册账户"
+			}
+		},
+		{
 			"path": "pages/denglu/login",
 			"style": {
 				"navigationBarTitleText": "登录"
