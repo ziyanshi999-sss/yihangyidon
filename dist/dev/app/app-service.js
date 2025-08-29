@@ -496,7 +496,7 @@ if (uni.restoreGlobal) {
       reason
     });
   }
-  const _imports_0$1 = "/static/logo.png";
+  const _imports_0$2 = "/static/logo.png";
   const _export_sfc = (sfc, props) => {
     const target = sfc.__vccOpts || sfc;
     for (const [key, val] of props) {
@@ -504,7 +504,7 @@ if (uni.restoreGlobal) {
     }
     return target;
   };
-  const _sfc_main$b = {
+  const _sfc_main$c = {
     data() {
       return {
         loginMethod: "password",
@@ -662,13 +662,13 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$a(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$b(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "login-container" }, [
       vue.createCommentVNode(" 顶部Logo区域 "),
       vue.createElementVNode("view", { class: "logo-section" }, [
         vue.createElementVNode("image", {
           class: "logo",
-          src: _imports_0$1,
+          src: _imports_0$2,
           mode: "aspectFit"
         }),
         vue.createElementVNode("text", { class: "app-name" }, "农业银行"),
@@ -856,8 +856,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesDengluLogin = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["render", _sfc_render$a], ["__scopeId", "data-v-6f56e16f"], ["__file", "E:/项目/yihangyidon/src/pages/denglu/login.vue"]]);
-  const _sfc_main$a = {
+  const PagesDengluLogin = /* @__PURE__ */ _export_sfc(_sfc_main$c, [["render", _sfc_render$b], ["__scopeId", "data-v-6f56e16f"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/denglu/login.vue"]]);
+  const _sfc_main$b = {
     data() {
       return {
         isLoggedIn: false
@@ -909,7 +909,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$9(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$a(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "home-container" }, [
       vue.createCommentVNode(" 顶部搜索栏 "),
       vue.createElementVNode("view", { class: "search-header" }, [
@@ -1070,8 +1070,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesIndexIndex = /* @__PURE__ */ _export_sfc(_sfc_main$a, [["render", _sfc_render$9], ["__scopeId", "data-v-83a5a03c"], ["__file", "E:/项目/yihangyidon/src/pages/index/index.vue"]]);
-  const _sfc_main$9 = {
+  const PagesIndexIndex = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["render", _sfc_render$a], ["__scopeId", "data-v-83a5a03c"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/index/index.vue"]]);
+  const _sfc_main$a = {
     data() {
       return {
         userInfo: null
@@ -1202,7 +1202,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$8(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$9(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "user-page" }, [
       vue.createCommentVNode(" 用户信息头部 "),
       $data.userInfo ? (vue.openBlock(), vue.createElementBlock("view", {
@@ -1290,47 +1290,598 @@ if (uni.restoreGlobal) {
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesUserUser = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["render", _sfc_render$8], ["__scopeId", "data-v-99b0ba47"], ["__file", "E:/项目/yihangyidon/src/pages/user/user.vue"]]);
-  const _sfc_main$8 = {
-    name: "Wealth",
-    onLoad(options) {
-      formatAppLog("log", "at pages/wealth/wealth.vue:14", "财富页面加载", options);
+  const PagesUserUser = /* @__PURE__ */ _export_sfc(_sfc_main$a, [["render", _sfc_render$9], ["__scopeId", "data-v-99b0ba47"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/user/user.vue"]]);
+  const _imports_0$1 = "/static/tabbar/service.png";
+  const _sfc_main$9 = {
+    data() {
+      return {
+        hideAmount: false,
+        activeTab: "deposit",
+        tabs: [
+          { key: "deposit", name: "存款" },
+          { key: "product", name: "理财产品" },
+          { key: "insurance", name: "保险" },
+          { key: "forex", name: "外汇" }
+        ],
+        // 顶部轮播图片
+        swiperImages: [
+          "https://www.abchina.com/cn/advis/grfw_gggl/sygg/202102/P020210202316125719385.jpg",
+          "https://ewealth.abchina.com.cn/advis/sygg/201712/P020200120402132224758.jpg",
+          "https://ewealth.abchina.com.cn/advis/whgg/201712/P020171220394037986599.jpg"
+        ],
+        // 客服
+        serviceHotline: "95599",
+        serviceHours: "7×24小时在线",
+        totalAssets: "125,438.52",
+        yesterdayProfit: "+35.78",
+        depositSummary: {
+          current: "23,560.20",
+          fixed: "80,000.00",
+          smart: "8,520.32"
+        },
+        depositProducts: [
+          { id: "d1", name: "整存整取", term: "3个月", minAmount: 1e3, rate: 1.85 },
+          { id: "d2", name: "整存整取", term: "1年", minAmount: 1e3, rate: 2.1 },
+          { id: "d3", name: "大额存单", term: "3年", minAmount: 2e5, rate: 2.95 }
+        ],
+        wealthProducts: [
+          { id: "w1", name: "稳健优选第68期", risk: "低", term: "90天", minAmount: 1e4, yield: 3.2 },
+          { id: "w2", name: "灵活理财T+1", risk: "低", term: "开放式", minAmount: 1e3, yield: 2.65 },
+          { id: "w3", name: "进取增强半年期", risk: "中", term: "180天", minAmount: 1e4, yield: 4.1 }
+        ],
+        insuranceList: [
+          { id: "i1", name: "安心医疗险", type: "health", typeText: "医疗险", desc: "百万保额·报销广", premium: 268 },
+          { id: "i2", name: "家庭意外险", type: "accident", typeText: "意外险", desc: "全家保障·一年期", premium: 199 },
+          { id: "i3", name: "重疾守护", type: "critical", typeText: "重疾险", desc: "重大疾病全面保障", premium: 860 }
+        ],
+        forexList: [
+          { code: "USD/CNY", price: "7.2375", change: 0.12 },
+          { code: "EUR/CNY", price: "7.8801", change: -0.08 },
+          { code: "JPY/CNY", price: "0.0468", change: 0.02 }
+        ]
+      };
     },
-    onShow() {
-      try {
-        if (!forceCheckLogin()) {
-          formatAppLog("log", "at pages/wealth/wealth.vue:21", "财富页面：用户未登录，跳转到登录页面");
-          uni.reLaunch({
-            url: "/pages/denglu/login"
-          });
-          return;
-        }
-        formatAppLog("log", "at pages/wealth/wealth.vue:29", "财富页面显示");
-      } catch (error) {
-        formatAppLog("error", "at pages/wealth/wealth.vue:31", "财富页面onShow检查失败:", error);
-        uni.reLaunch({
-          url: "/pages/denglu/login"
-        });
+    methods: {
+      onSwiperClick(idx) {
+        uni.showToast({ title: `轮播图第${idx + 1}张`, icon: "none" });
+      },
+      onOnlineService() {
+        uni.navigateTo({ url: "/pages/service/chat" });
+      },
+      onCallHotline() {
+        uni.makePhoneCall({ phoneNumber: this.serviceHotline });
+      },
+      onRecharge() {
+        uni.showToast({ title: "充值功能开发中", icon: "none" });
+      },
+      onWithdraw() {
+        uni.showToast({ title: "提现功能开发中", icon: "none" });
+      },
+      onViewAll(type) {
+        uni.showToast({ title: `查看全部(${type})`, icon: "none" });
+      },
+      onDepositDetail(item) {
+        uni.showToast({ title: `${item.name} · ${item.term}`, icon: "none" });
+      },
+      onDepositBuy(item) {
+        uni.showToast({ title: `存入：${item.name}`, icon: "none" });
+      },
+      onProductDetail(p) {
+        uni.showToast({ title: `${p.name}`, icon: "none" });
+      },
+      onProductBuy(p) {
+        uni.showToast({ title: `申购：${p.name}`, icon: "none" });
+      },
+      onInsuranceDetail(ins) {
+        uni.showToast({ title: `${ins.name}`, icon: "none" });
+      },
+      onInsuranceBuy(ins) {
+        uni.showToast({ title: `投保：${ins.name}`, icon: "none" });
+      },
+      onForexTrade(fx) {
+        uni.showToast({ title: `外汇交易：${fx.code}`, icon: "none" });
+      },
+      onOpenTool(tool) {
+        const map = { calc: "收益计算器", calendar: "产品日历", risk: "风险评测" };
+        uni.showToast({ title: `${map[tool]}(开发中)`, icon: "none" });
       }
     }
   };
-  function _sfc_render$7(_ctx, _cache, $props, $setup, $data, $options) {
-    return vue.openBlock(), vue.createElementBlock("view", { class: "doctor-page" }, [
-      vue.createElementVNode("h1", null, "财富")
+  function _sfc_render$8(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("view", { class: "wealth-container" }, [
+      vue.createCommentVNode(" 资产概览轮播（图片版） "),
+      vue.createElementVNode("view", { class: "asset-swiper-wrap" }, [
+        vue.createElementVNode("swiper", {
+          class: "asset-swiper",
+          circular: true,
+          autoplay: true,
+          interval: 4e3,
+          duration: 500,
+          "indicator-dots": "",
+          "indicator-active-color": "#2e7d32"
+        }, [
+          (vue.openBlock(true), vue.createElementBlock(
+            vue.Fragment,
+            null,
+            vue.renderList($data.swiperImages, (img, idx) => {
+              return vue.openBlock(), vue.createElementBlock("swiper-item", { key: idx }, [
+                vue.createElementVNode("image", {
+                  class: "swiper-image",
+                  src: img,
+                  mode: "aspectFill",
+                  onClick: ($event) => $options.onSwiperClick(idx)
+                }, null, 8, ["src", "onClick"])
+              ]);
+            }),
+            128
+            /* KEYED_FRAGMENT */
+          ))
+        ])
+      ]),
+      vue.createCommentVNode(" 客服模块 "),
+      vue.createElementVNode("view", {
+        class: "service-card",
+        onClick: _cache[2] || (_cache[2] = (...args) => $options.onOnlineService && $options.onOnlineService(...args))
+      }, [
+        vue.createElementVNode("image", {
+          class: "service-icon",
+          src: _imports_0$1,
+          mode: "aspectFit"
+        }),
+        vue.createElementVNode("view", { class: "service-info" }, [
+          vue.createElementVNode("text", { class: "service-title" }, "专属客服"),
+          vue.createElementVNode(
+            "text",
+            { class: "service-sub" },
+            vue.toDisplayString($data.serviceHours) + " · 为您解答理财问题",
+            1
+            /* TEXT */
+          )
+        ]),
+        vue.createElementVNode("view", { class: "service-actions" }, [
+          vue.createElementVNode("button", {
+            class: "mini-btn ghost",
+            onClick: _cache[0] || (_cache[0] = vue.withModifiers((...args) => $options.onOnlineService && $options.onOnlineService(...args), ["stop"]))
+          }, "在线客服"),
+          vue.createElementVNode(
+            "button",
+            {
+              class: "mini-btn call",
+              onClick: _cache[1] || (_cache[1] = vue.withModifiers((...args) => $options.onCallHotline && $options.onCallHotline(...args), ["stop"]))
+            },
+            "拨打 " + vue.toDisplayString($data.serviceHotline),
+            1
+            /* TEXT */
+          )
+        ])
+      ]),
+      vue.createCommentVNode(" 四宫格入口 "),
+      vue.createElementVNode("view", { class: "entry-grid" }, [
+        vue.createElementVNode("view", {
+          class: "entry-item",
+          onClick: _cache[3] || (_cache[3] = ($event) => $data.activeTab = "deposit")
+        }, [
+          vue.createElementVNode("view", { class: "entry-icon" }, "🏦"),
+          vue.createElementVNode("text", { class: "entry-text" }, "存款")
+        ]),
+        vue.createElementVNode("view", {
+          class: "entry-item",
+          onClick: _cache[4] || (_cache[4] = ($event) => $data.activeTab = "product")
+        }, [
+          vue.createElementVNode("view", { class: "entry-icon" }, "📈"),
+          vue.createElementVNode("text", { class: "entry-text" }, "理财产品")
+        ]),
+        vue.createElementVNode("view", {
+          class: "entry-item",
+          onClick: _cache[5] || (_cache[5] = ($event) => $data.activeTab = "insurance")
+        }, [
+          vue.createElementVNode("view", { class: "entry-icon" }, "🛡️"),
+          vue.createElementVNode("text", { class: "entry-text" }, "保险")
+        ]),
+        vue.createElementVNode("view", {
+          class: "entry-item",
+          onClick: _cache[6] || (_cache[6] = ($event) => $data.activeTab = "forex")
+        }, [
+          vue.createElementVNode("view", { class: "entry-icon" }, "💱"),
+          vue.createElementVNode("text", { class: "entry-text" }, "外汇")
+        ])
+      ]),
+      vue.createCommentVNode(" Tabs "),
+      vue.createElementVNode("view", { class: "tabs" }, [
+        (vue.openBlock(true), vue.createElementBlock(
+          vue.Fragment,
+          null,
+          vue.renderList($data.tabs, (t) => {
+            return vue.openBlock(), vue.createElementBlock("view", {
+              key: t.key,
+              class: vue.normalizeClass(["tab-item", { active: $data.activeTab === t.key }]),
+              onClick: ($event) => $data.activeTab = t.key
+            }, vue.toDisplayString(t.name), 11, ["onClick"]);
+          }),
+          128
+          /* KEYED_FRAGMENT */
+        ))
+      ]),
+      vue.createCommentVNode(" 内容区 "),
+      vue.createElementVNode("scroll-view", {
+        "scroll-y": "",
+        class: "content"
+      }, [
+        vue.createCommentVNode(" 存款 "),
+        $data.activeTab === "deposit" ? (vue.openBlock(), vue.createElementBlock("view", { key: 0 }, [
+          vue.createElementVNode("view", { class: "section-card highlight" }, [
+            vue.createElementVNode("view", { class: "section-header" }, [
+              vue.createElementVNode("text", { class: "section-title" }, "我的存款"),
+              vue.createElementVNode("text", {
+                class: "link",
+                onClick: _cache[7] || (_cache[7] = ($event) => $options.onViewAll("deposit"))
+              }, "查看明细")
+            ]),
+            vue.createElementVNode("view", { class: "deposit-stats" }, [
+              vue.createElementVNode("view", { class: "stat-item" }, [
+                vue.createElementVNode("text", { class: "stat-label" }, "活期(元)"),
+                vue.createElementVNode(
+                  "text",
+                  { class: "stat-value" },
+                  vue.toDisplayString($data.hideAmount ? "****" : $data.depositSummary.current),
+                  1
+                  /* TEXT */
+                )
+              ]),
+              vue.createElementVNode("view", { class: "divider" }),
+              vue.createElementVNode("view", { class: "stat-item" }, [
+                vue.createElementVNode("text", { class: "stat-label" }, "定期(元)"),
+                vue.createElementVNode(
+                  "text",
+                  { class: "stat-value" },
+                  vue.toDisplayString($data.hideAmount ? "****" : $data.depositSummary.fixed),
+                  1
+                  /* TEXT */
+                )
+              ]),
+              vue.createElementVNode("view", { class: "divider" }),
+              vue.createElementVNode("view", { class: "stat-item" }, [
+                vue.createElementVNode("text", { class: "stat-label" }, "智能存款(元)"),
+                vue.createElementVNode(
+                  "text",
+                  { class: "stat-value" },
+                  vue.toDisplayString($data.hideAmount ? "****" : $data.depositSummary.smart),
+                  1
+                  /* TEXT */
+                )
+              ])
+            ])
+          ]),
+          vue.createElementVNode("view", { class: "section-card" }, [
+            vue.createElementVNode("view", { class: "section-header" }, [
+              vue.createElementVNode("text", { class: "section-title" }, "热门定期存款"),
+              vue.createElementVNode("text", { class: "sub" }, "优选期限 · 灵活到期")
+            ]),
+            vue.createElementVNode("view", { class: "list" }, [
+              (vue.openBlock(true), vue.createElementBlock(
+                vue.Fragment,
+                null,
+                vue.renderList($data.depositProducts, (item) => {
+                  return vue.openBlock(), vue.createElementBlock("view", {
+                    class: "list-item",
+                    key: item.id,
+                    onClick: ($event) => $options.onDepositDetail(item)
+                  }, [
+                    vue.createElementVNode("view", { class: "li-left" }, [
+                      vue.createElementVNode("view", { class: "title-row" }, [
+                        vue.createElementVNode(
+                          "text",
+                          { class: "li-title" },
+                          vue.toDisplayString(item.name),
+                          1
+                          /* TEXT */
+                        ),
+                        vue.createElementVNode(
+                          "text",
+                          { class: "tag" },
+                          vue.toDisplayString(item.term),
+                          1
+                          /* TEXT */
+                        )
+                      ]),
+                      vue.createElementVNode(
+                        "text",
+                        { class: "li-sub" },
+                        "起存金额 " + vue.toDisplayString(item.minAmount) + " 元",
+                        1
+                        /* TEXT */
+                      )
+                    ]),
+                    vue.createElementVNode("view", { class: "li-right" }, [
+                      vue.createElementVNode(
+                        "text",
+                        { class: "rate" },
+                        vue.toDisplayString(item.rate) + "%",
+                        1
+                        /* TEXT */
+                      ),
+                      vue.createElementVNode("text", { class: "rate-sub" }, "年化利率"),
+                      vue.createElementVNode("button", {
+                        class: "mini-btn",
+                        onClick: vue.withModifiers(($event) => $options.onDepositBuy(item), ["stop"])
+                      }, "存入", 8, ["onClick"])
+                    ])
+                  ], 8, ["onClick"]);
+                }),
+                128
+                /* KEYED_FRAGMENT */
+              ))
+            ])
+          ])
+        ])) : vue.createCommentVNode("v-if", true),
+        vue.createCommentVNode(" 理财产品 "),
+        $data.activeTab === "product" ? (vue.openBlock(), vue.createElementBlock("view", { key: 1 }, [
+          vue.createElementVNode("view", { class: "section-card" }, [
+            vue.createElementVNode("view", { class: "section-header" }, [
+              vue.createElementVNode("text", { class: "section-title" }, "精选理财"),
+              vue.createElementVNode("text", { class: "sub" }, "稳健优选 · 风险匹配")
+            ]),
+            vue.createElementVNode("view", { class: "list" }, [
+              (vue.openBlock(true), vue.createElementBlock(
+                vue.Fragment,
+                null,
+                vue.renderList($data.wealthProducts, (p) => {
+                  return vue.openBlock(), vue.createElementBlock("view", {
+                    class: "list-item",
+                    key: p.id,
+                    onClick: ($event) => $options.onProductDetail(p)
+                  }, [
+                    vue.createElementVNode("view", { class: "li-left" }, [
+                      vue.createElementVNode("view", { class: "title-row" }, [
+                        vue.createElementVNode(
+                          "text",
+                          { class: "li-title" },
+                          vue.toDisplayString(p.name),
+                          1
+                          /* TEXT */
+                        ),
+                        p.risk === "中" ? (vue.openBlock(), vue.createElementBlock("text", {
+                          key: 0,
+                          class: "tag warn"
+                        }, "中风险")) : vue.createCommentVNode("v-if", true),
+                        p.risk === "低" ? (vue.openBlock(), vue.createElementBlock("text", {
+                          key: 1,
+                          class: "tag safe"
+                        }, "低风险")) : vue.createCommentVNode("v-if", true)
+                      ]),
+                      vue.createElementVNode(
+                        "text",
+                        { class: "li-sub" },
+                        vue.toDisplayString(p.term) + " · 起投 " + vue.toDisplayString(p.minAmount) + " 元",
+                        1
+                        /* TEXT */
+                      )
+                    ]),
+                    vue.createElementVNode("view", { class: "li-right" }, [
+                      vue.createElementVNode(
+                        "text",
+                        { class: "rate strong" },
+                        vue.toDisplayString(p.yield) + "%",
+                        1
+                        /* TEXT */
+                      ),
+                      vue.createElementVNode("text", { class: "rate-sub" }, "近七日年化"),
+                      vue.createElementVNode("button", {
+                        class: "mini-btn primary",
+                        onClick: vue.withModifiers(($event) => $options.onProductBuy(p), ["stop"])
+                      }, "申购", 8, ["onClick"])
+                    ])
+                  ], 8, ["onClick"]);
+                }),
+                128
+                /* KEYED_FRAGMENT */
+              ))
+            ])
+          ])
+        ])) : vue.createCommentVNode("v-if", true),
+        vue.createCommentVNode(" 保险 "),
+        $data.activeTab === "insurance" ? (vue.openBlock(), vue.createElementBlock("view", { key: 2 }, [
+          vue.createElementVNode("view", { class: "section-card" }, [
+            vue.createElementVNode("view", { class: "section-header" }, [
+              vue.createElementVNode("text", { class: "section-title" }, "热门保险"),
+              vue.createElementVNode("text", { class: "sub" }, "健康/意外/重疾 全面覆盖")
+            ]),
+            vue.createElementVNode("view", { class: "ins-grid" }, [
+              (vue.openBlock(true), vue.createElementBlock(
+                vue.Fragment,
+                null,
+                vue.renderList($data.insuranceList, (ins) => {
+                  return vue.openBlock(), vue.createElementBlock("view", {
+                    class: "ins-card",
+                    key: ins.id,
+                    onClick: ($event) => $options.onInsuranceDetail(ins)
+                  }, [
+                    vue.createElementVNode("view", { class: "ins-head" }, [
+                      vue.createElementVNode(
+                        "text",
+                        { class: "ins-name" },
+                        vue.toDisplayString(ins.name),
+                        1
+                        /* TEXT */
+                      ),
+                      vue.createElementVNode(
+                        "text",
+                        {
+                          class: vue.normalizeClass(["ins-tag", ins.type])
+                        },
+                        vue.toDisplayString(ins.typeText),
+                        3
+                        /* TEXT, CLASS */
+                      )
+                    ]),
+                    vue.createElementVNode(
+                      "text",
+                      { class: "ins-desc" },
+                      vue.toDisplayString(ins.desc),
+                      1
+                      /* TEXT */
+                    ),
+                    vue.createElementVNode("view", { class: "ins-foot" }, [
+                      vue.createElementVNode(
+                        "text",
+                        { class: "ins-prem" },
+                        "￥" + vue.toDisplayString(ins.premium) + "/年起",
+                        1
+                        /* TEXT */
+                      ),
+                      vue.createElementVNode("button", {
+                        class: "mini-btn",
+                        onClick: vue.withModifiers(($event) => $options.onInsuranceBuy(ins), ["stop"])
+                      }, "投保", 8, ["onClick"])
+                    ])
+                  ], 8, ["onClick"]);
+                }),
+                128
+                /* KEYED_FRAGMENT */
+              ))
+            ])
+          ])
+        ])) : vue.createCommentVNode("v-if", true),
+        vue.createCommentVNode(" 外汇 "),
+        $data.activeTab === "forex" ? (vue.openBlock(), vue.createElementBlock("view", { key: 3 }, [
+          vue.createElementVNode("view", { class: "section-card" }, [
+            vue.createElementVNode("view", { class: "section-header" }, [
+              vue.createElementVNode("text", { class: "section-title" }, "外汇行情"),
+              vue.createElementVNode("text", { class: "sub" }, "实时汇率 · 支持结售汇")
+            ]),
+            vue.createElementVNode("view", { class: "fx-table" }, [
+              vue.createElementVNode("view", { class: "fx-row fx-head" }, [
+                vue.createElementVNode("text", { class: "fx-col code" }, "币种"),
+                vue.createElementVNode("text", { class: "fx-col price" }, "现价"),
+                vue.createElementVNode("text", { class: "fx-col change" }, "涨跌"),
+                vue.createElementVNode("text", { class: "fx-col op" }, "操作")
+              ]),
+              (vue.openBlock(true), vue.createElementBlock(
+                vue.Fragment,
+                null,
+                vue.renderList($data.forexList, (fx) => {
+                  return vue.openBlock(), vue.createElementBlock("view", {
+                    class: "fx-row",
+                    key: fx.code
+                  }, [
+                    vue.createElementVNode(
+                      "text",
+                      { class: "fx-col code" },
+                      vue.toDisplayString(fx.code),
+                      1
+                      /* TEXT */
+                    ),
+                    vue.createElementVNode(
+                      "text",
+                      { class: "fx-col price" },
+                      vue.toDisplayString(fx.price),
+                      1
+                      /* TEXT */
+                    ),
+                    vue.createElementVNode(
+                      "text",
+                      {
+                        class: vue.normalizeClass(["fx-col change", { up: fx.change > 0, down: fx.change < 0 }])
+                      },
+                      vue.toDisplayString(fx.change > 0 ? "+" + fx.change : fx.change) + "% ",
+                      3
+                      /* TEXT, CLASS */
+                    ),
+                    vue.createElementVNode("view", { class: "fx-col op" }, [
+                      vue.createElementVNode("button", {
+                        class: "mini-btn",
+                        onClick: vue.withModifiers(($event) => $options.onForexTrade(fx), ["stop"])
+                      }, "交易", 8, ["onClick"])
+                    ])
+                  ]);
+                }),
+                128
+                /* KEYED_FRAGMENT */
+              ))
+            ])
+          ]),
+          vue.createElementVNode("view", { class: "section-card" }, [
+            vue.createElementVNode("view", { class: "section-header" }, [
+              vue.createElementVNode("text", { class: "section-title" }, "常用工具")
+            ]),
+            vue.createElementVNode("view", { class: "tool-grid" }, [
+              vue.createElementVNode("view", {
+                class: "tool-item",
+                onClick: _cache[8] || (_cache[8] = ($event) => $options.onOpenTool("calc"))
+              }, [
+                vue.createElementVNode("text", { class: "tool-icon" }, "🧮"),
+                vue.createElementVNode("text", { class: "tool-text" }, "收益计算器")
+              ]),
+              vue.createElementVNode("view", {
+                class: "tool-item",
+                onClick: _cache[9] || (_cache[9] = ($event) => $options.onOpenTool("calendar"))
+              }, [
+                vue.createElementVNode("text", { class: "tool-icon" }, "📅"),
+                vue.createElementVNode("text", { class: "tool-text" }, "产品日历")
+              ]),
+              vue.createElementVNode("view", {
+                class: "tool-item",
+                onClick: _cache[10] || (_cache[10] = ($event) => $options.onOpenTool("risk"))
+              }, [
+                vue.createElementVNode("text", { class: "tool-icon" }, "⚖️"),
+                vue.createElementVNode("text", { class: "tool-text" }, "风险评测")
+              ])
+            ])
+          ])
+        ])) : vue.createCommentVNode("v-if", true)
+      ])
     ]);
   }
-  const PagesWealthWealth = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["render", _sfc_render$7], ["__file", "E:/项目/yihangyidon/src/pages/wealth/wealth.vue"]]);
-  const _imports_0 = "/static/banner1.png";
-  const _imports_1 = "/static/banner2.png";
-  const _imports_2 = "/static/frog-mascot.png";
-  const _imports_3 = "/static/train-bg.png";
-  const _imports_4 = "/static/tea-bg.png";
-  const _sfc_main$7 = {
+  const PagesWealthWealth = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["render", _sfc_render$8], ["__scopeId", "data-v-a00d3a3e"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/wealth/wealth.vue"]]);
+  const _sfc_main$8 = {
     name: "LifePage",
     data() {
       return {
         activeCategory: 0,
         categories: ["精选", "活动", "折扣", "品牌"],
+        // 轮播图数据
+        bannerData: [
+          {
+            id: 1,
+            title: "生活缴费优惠",
+            subtitle: "水电燃气一键支付",
+            discount: "立减10元",
+            icon: "💳",
+            action: "payment",
+            // 跳转到生活缴费页面
+            url: "/pages/payment/payment"
+          },
+          {
+            id: 2,
+            title: "手机充值特惠",
+            subtitle: "充值满100送20",
+            discount: "限时优惠",
+            icon: "📱",
+            action: "recharge",
+            // 跳转到手机充值页面
+            url: "/pages/recharge/recharge"
+          },
+          {
+            id: 3,
+            title: "政务服务大厅",
+            subtitle: "在线办事更便民",
+            discount: "免费办理",
+            icon: "🏛️",
+            action: "government",
+            // 跳转到政务服务页面
+            url: "/pages/government/government"
+          },
+          {
+            id: 4,
+            title: "小豆乐园",
+            subtitle: "趣味游戏赢积分",
+            discount: "每日签到",
+            icon: "🎮",
+            action: "games",
+            // 跳转到游戏页面
+            url: "/pages/games/games"
+          }
+        ],
         quickServices: [
           {
             icon: "💧",
@@ -1378,8 +1929,257 @@ if (uni.restoreGlobal) {
           { icon: "🎁", label: "京东特惠", bgColor: "#FF9500", action: "jd" },
           { icon: "🏪", label: "城市专区", bgColor: "#5856D6", action: "city" },
           { icon: "🎊", label: "热门活动", bgColor: "#FF2D92", action: "events" }
-        ]
+        ],
+        // 不同分类的卡片数据
+        promotionCards: {
+          0: {
+            // 精选
+            main: {
+              title: "积分当钱花",
+              subtitle: "至高抵现50%",
+              desc: "积分当钱花优惠手不停",
+              buttonText: "立即使用",
+              icon: "🎁"
+            },
+            small: [
+              {
+                title: "车票优惠享",
+                subtitle: "最高88元立减金",
+                icon: "🚄",
+                type: "blue"
+              },
+              {
+                title: "美食优惠券",
+                subtitle: "新用户专享优惠",
+                icon: "🍔",
+                type: "orange"
+              },
+              {
+                title: "话费充值",
+                subtitle: "充100送20话费",
+                icon: "📱",
+                type: "green"
+              },
+              {
+                title: "电影票特惠",
+                subtitle: "周末观影5折起",
+                icon: "🎬",
+                type: "purple"
+              },
+              {
+                title: "外卖红包",
+                subtitle: "满30减15元",
+                icon: "🥘",
+                type: "red"
+              },
+              {
+                title: "购物返现",
+                subtitle: "消费满100返20",
+                icon: "🛍️",
+                type: "pink"
+              },
+              {
+                title: "加油优惠",
+                subtitle: "95号汽油9.5折",
+                icon: "⛽",
+                type: "yellow"
+              },
+              {
+                title: "咖啡买一送一",
+                subtitle: "指定门店限时优惠",
+                icon: "☕",
+                type: "gray"
+              }
+            ]
+          },
+          1: {
+            // 活动
+            main: {
+              title: "限时秒杀",
+              subtitle: "每日10点开抢",
+              desc: "超值商品限量抢购",
+              buttonText: "立即抢购",
+              icon: "⚡"
+            },
+            small: [
+              {
+                title: "双11狂欢",
+                subtitle: "全场商品5折起",
+                icon: "🛒",
+                type: "red"
+              },
+              {
+                title: "签到有礼",
+                subtitle: "连续签到送好礼",
+                icon: "📅",
+                type: "blue"
+              },
+              {
+                title: "新人专享",
+                subtitle: "注册即送50元券",
+                icon: "🎊",
+                type: "orange"
+              },
+              {
+                title: "邀请好友",
+                subtitle: "邀请1人得10元",
+                icon: "👥",
+                type: "green"
+              },
+              {
+                title: "抽奖大转盘",
+                subtitle: "每日免费3次机会",
+                icon: "🎰",
+                type: "purple"
+              },
+              {
+                title: "满减活动",
+                subtitle: "满199减50元",
+                icon: "💸",
+                type: "pink"
+              },
+              {
+                title: "积分翻倍",
+                subtitle: "本周积分双倍返还",
+                icon: "⭐",
+                type: "yellow"
+              },
+              {
+                title: "会员专场",
+                subtitle: "VIP专享8折优惠",
+                icon: "👑",
+                type: "gray"
+              }
+            ]
+          },
+          2: {
+            // 折扣
+            main: {
+              title: "超级折扣日",
+              subtitle: "全场最低3折",
+              desc: "品牌商品超低折扣",
+              buttonText: "查看折扣",
+              icon: "💰"
+            },
+            small: [
+              {
+                title: "服装鞋帽",
+                subtitle: "春季新品5折起",
+                icon: "👕",
+                type: "pink"
+              },
+              {
+                title: "数码家电",
+                subtitle: "爆款产品直降",
+                icon: "📱",
+                type: "blue"
+              },
+              {
+                title: "母婴用品",
+                subtitle: "进口奶粉8折",
+                icon: "🍼",
+                type: "orange"
+              },
+              {
+                title: "美妆护肤",
+                subtitle: "大牌化妆品6折",
+                icon: "💄",
+                type: "purple"
+              },
+              {
+                title: "家居用品",
+                subtitle: "家具家纺7折起",
+                icon: "🏠",
+                type: "green"
+              },
+              {
+                title: "图书文具",
+                subtitle: "学习用品5折起",
+                icon: "📚",
+                type: "red"
+              },
+              {
+                title: "运动户外",
+                subtitle: "健身装备6折起",
+                icon: "🏃‍♂️",
+                type: "yellow"
+              },
+              {
+                title: "食品生鲜",
+                subtitle: "进口食品8折起",
+                icon: "🥗",
+                type: "gray"
+              }
+            ]
+          },
+          3: {
+            // 品牌
+            main: {
+              title: "品牌联盟",
+              subtitle: "知名品牌集结",
+              desc: "精选品牌特惠专区",
+              buttonText: "进入专区",
+              icon: "⭐"
+            },
+            small: [
+              {
+                title: "苹果专区",
+                subtitle: "iPhone新品上市",
+                icon: "📱",
+                type: "gray"
+              },
+              {
+                title: "耐克运动",
+                subtitle: "运动装备8折起",
+                icon: "👟",
+                type: "red"
+              },
+              {
+                title: "星巴克",
+                subtitle: "咖啡买二送一",
+                icon: "☕",
+                type: "green"
+              },
+              {
+                title: "麦当劳",
+                subtitle: "套餐优惠券",
+                icon: "🍟",
+                type: "yellow"
+              },
+              {
+                title: "华为商城",
+                subtitle: "智能设备新品",
+                icon: "📟",
+                type: "blue"
+              },
+              {
+                title: "优衣库",
+                subtitle: "基础款服饰特价",
+                icon: "👔",
+                type: "orange"
+              },
+              {
+                title: "肯德基",
+                subtitle: "全家桶特惠价",
+                icon: "🍗",
+                type: "purple"
+              },
+              {
+                title: "小米有品",
+                subtitle: "智能家居9折",
+                icon: "🏡",
+                type: "pink"
+              }
+            ]
+          }
+        }
       };
+    },
+    computed: {
+      // 当前分类的推广卡片数据
+      currentPromotionData() {
+        return this.promotionCards[this.activeCategory] || this.promotionCards[0];
+      }
     },
     onLoad() {
       this.initPage();
@@ -1387,15 +2187,15 @@ if (uni.restoreGlobal) {
     onShow() {
       try {
         if (!forceCheckLogin()) {
-          formatAppLog("log", "at pages/life/life.vue:233", "生活页面：用户未登录，跳转到登录页面");
+          formatAppLog("log", "at pages/life/life.vue:525", "生活页面：用户未登录，跳转到登录页面");
           uni.reLaunch({
             url: "/pages/denglu/login"
           });
           return;
         }
-        formatAppLog("log", "at pages/life/life.vue:241", "生活页面显示");
+        formatAppLog("log", "at pages/life/life.vue:533", "生活页面显示");
       } catch (error) {
-        formatAppLog("error", "at pages/life/life.vue:243", "生活页面onShow检查失败:", error);
+        formatAppLog("error", "at pages/life/life.vue:535", "生活页面onShow检查失败:", error);
         uni.reLaunch({
           url: "/pages/denglu/login"
         });
@@ -1403,10 +2203,10 @@ if (uni.restoreGlobal) {
     },
     methods: {
       initPage() {
-        formatAppLog("log", "at pages/life/life.vue:253", "生活页面初始化");
+        formatAppLog("log", "at pages/life/life.vue:545", "生活页面初始化");
       },
       handleServiceTap(service) {
-        formatAppLog("log", "at pages/life/life.vue:257", "点击服务:", service);
+        formatAppLog("log", "at pages/life/life.vue:549", "点击服务:", service);
         switch (service.action) {
           case "payment":
             this.goToPayment();
@@ -1429,17 +2229,92 @@ if (uni.restoreGlobal) {
       },
       switchCategory(index) {
         this.activeCategory = index;
-        formatAppLog("log", "at pages/life/life.vue:282", "切换分类:", this.categories[index]);
+        formatAppLog("log", "at pages/life/life.vue:574", "切换分类:", this.categories[index]);
+        uni.showToast({
+          title: `切换到${this.categories[index]}`,
+          icon: "none",
+          duration: 1e3
+        });
+      },
+      // 获取小卡片的样式类
+      getCardClass(type) {
+        const classMap = {
+          blue: "card-blue",
+          orange: "card-orange",
+          green: "card-green",
+          purple: "card-purple",
+          red: "card-red",
+          pink: "card-pink",
+          gray: "card-gray",
+          yellow: "card-yellow"
+        };
+        return classMap[type] || "card-blue";
+      },
+      // 处理主卡片点击
+      handleMainCardTap() {
+        const currentCard = this.currentPromotionData.main;
+        formatAppLog("log", "at pages/life/life.vue:601", "点击主卡片:", currentCard);
+        uni.showToast({
+          title: `点击了${currentCard.title}`,
+          icon: "none"
+        });
+      },
+      // 处理小卡片点击
+      handleSmallCardTap(card, index) {
+        formatAppLog("log", "at pages/life/life.vue:610", "点击小卡片:", card, index);
+        uni.showToast({
+          title: `点击了${card.title}`,
+          icon: "none"
+        });
+      },
+      // 处理轮播图点击
+      handleBannerTap(banner) {
+        formatAppLog("log", "at pages/life/life.vue:619", "点击轮播图:", banner);
+        switch (banner.action) {
+          case "payment":
+            this.goToPayment();
+            break;
+          case "recharge":
+            this.goToRecharge();
+            break;
+          case "government":
+            this.goToGovernment();
+            break;
+          case "games":
+            this.goToGames();
+            break;
+          default:
+            if (banner.url) {
+              uni.navigateTo({
+                url: banner.url,
+                success: () => {
+                  formatAppLog("log", "at pages/life/life.vue:641", `成功跳转到: ${banner.url}`);
+                },
+                fail: (err) => {
+                  formatAppLog("error", "at pages/life/life.vue:644", "跳转失败:", err);
+                  uni.showToast({
+                    title: "页面跳转失败",
+                    icon: "none"
+                  });
+                }
+              });
+            } else {
+              uni.showToast({
+                title: `点击了${banner.title}`,
+                icon: "none"
+              });
+            }
+        }
       },
       goToPayment() {
-        formatAppLog("log", "at pages/life/life.vue:286", "跳转到生活缴费页面");
+        formatAppLog("log", "at pages/life/life.vue:661", "跳转到生活缴费页面");
         uni.navigateTo({
           url: "/pages/payment/payment",
           success: () => {
-            formatAppLog("log", "at pages/life/life.vue:290", "成功跳转到生活缴费页面");
+            formatAppLog("log", "at pages/life/life.vue:665", "成功跳转到生活缴费页面");
           },
           fail: (err) => {
-            formatAppLog("error", "at pages/life/life.vue:293", "跳转失败:", err);
+            formatAppLog("error", "at pages/life/life.vue:668", "跳转失败:", err);
             uni.showToast({
               title: "页面跳转失败",
               icon: "none"
@@ -1448,14 +2323,14 @@ if (uni.restoreGlobal) {
         });
       },
       goToRecharge() {
-        formatAppLog("log", "at pages/life/life.vue:303", "跳转到手机充值页面");
+        formatAppLog("log", "at pages/life/life.vue:678", "跳转到手机充值页面");
         uni.navigateTo({
           url: "/pages/recharge/recharge",
           success: () => {
-            formatAppLog("log", "at pages/life/life.vue:307", "成功跳转到手机充值页面");
+            formatAppLog("log", "at pages/life/life.vue:682", "成功跳转到手机充值页面");
           },
           fail: (err) => {
-            formatAppLog("error", "at pages/life/life.vue:310", "跳转失败:", err);
+            formatAppLog("error", "at pages/life/life.vue:685", "跳转失败:", err);
             uni.showToast({
               title: "页面跳转失败",
               icon: "none"
@@ -1475,34 +2350,23 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$6(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$7(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "life-page" }, [
-      vue.createCommentVNode(" 头部搜索区域 "),
+      vue.createCommentVNode(" 头部标题区域 "),
       vue.createElementVNode("view", { class: "header-section" }, [
-        vue.createElementVNode("view", { class: "location-info" }, [
-          vue.createElementVNode("view", { class: "location-icon" }, "📍"),
-          vue.createElementVNode("text", { class: "location-text" }, "牡丹江")
-        ]),
-        vue.createElementVNode("view", { class: "search-container" }, [
-          vue.createElementVNode("view", { class: "search-box" }, [
-            vue.createElementVNode("view", { class: "search-icon" }, "🔍"),
-            vue.createElementVNode("input", {
-              class: "search-input",
-              placeholder: "本地优惠",
-              "placeholder-style": "color: rgba(255,255,255,0.7)"
-            }),
-            vue.createElementVNode("view", { class: "voice-icon" }, "🎤")
-          ])
-        ]),
-        vue.createElementVNode("view", { class: "header-actions" }, [
-          vue.createElementVNode("view", { class: "action-item" }, [
-            vue.createElementVNode("text", { class: "action-icon" }, "📝"),
-            vue.createElementVNode("text", { class: "action-text" }, "记事")
+        vue.createElementVNode("view", { class: "header-content" }, [
+          vue.createElementVNode("view", { class: "greeting-section" }, [
+            vue.createElementVNode("text", { class: "greeting-text" }, "你好，欢迎使用"),
+            vue.createElementVNode("text", { class: "app-name" }, "生活服务")
           ]),
-          vue.createElementVNode("view", { class: "action-item" }, [
-            vue.createElementVNode("text", { class: "action-icon" }, "🗂️"),
-            vue.createElementVNode("text", { class: "action-text" }, "卡券")
+          vue.createElementVNode("view", { class: "user-avatar" }, [
+            vue.createElementVNode("text", { class: "avatar-icon" }, "👤")
           ])
+        ]),
+        vue.createElementVNode("view", { class: "header-decoration" }, [
+          vue.createElementVNode("view", { class: "decoration-circle circle-1" }),
+          vue.createElementVNode("view", { class: "decoration-circle circle-2" }),
+          vue.createElementVNode("view", { class: "decoration-circle circle-3" })
         ])
       ]),
       vue.createCommentVNode(" 轮播广告 "),
@@ -1515,32 +2379,72 @@ if (uni.restoreGlobal) {
           "indicator-color": "rgba(255,255,255,0.5)",
           "indicator-active-color": "#fff"
         }, [
-          vue.createElementVNode("swiper-item", null, [
-            vue.createElementVNode("view", { class: "banner-item" }, [
-              vue.createElementVNode("text", { class: "banner-title" }, "京东购物用农行信用卡"),
-              vue.createElementVNode("text", { class: "banner-subtitle" }, "积分抵现至高10%"),
-              vue.createElementVNode("image", {
-                class: "banner-image",
-                src: _imports_0,
-                mode: "aspectFit"
-              })
-            ])
-          ]),
-          vue.createElementVNode("swiper-item", null, [
-            vue.createElementVNode("view", { class: "banner-item" }, [
-              vue.createElementVNode("text", { class: "banner-title" }, "生活缴费享优惠"),
-              vue.createElementVNode("text", { class: "banner-subtitle" }, "水电燃气一键支付"),
-              vue.createElementVNode("image", {
-                class: "banner-image",
-                src: _imports_1,
-                mode: "aspectFit"
-              })
-            ])
-          ])
+          (vue.openBlock(true), vue.createElementBlock(
+            vue.Fragment,
+            null,
+            vue.renderList($data.bannerData, (banner, index) => {
+              return vue.openBlock(), vue.createElementBlock("swiper-item", {
+                key: banner.id
+              }, [
+                vue.createElementVNode("view", {
+                  class: vue.normalizeClass(["banner-item", `banner-item-${index + 1}`]),
+                  onClick: ($event) => $options.handleBannerTap(banner)
+                }, [
+                  vue.createElementVNode("view", { class: "banner-content" }, [
+                    vue.createElementVNode(
+                      "text",
+                      { class: "banner-title" },
+                      vue.toDisplayString(banner.title),
+                      1
+                      /* TEXT */
+                    ),
+                    vue.createElementVNode(
+                      "text",
+                      { class: "banner-subtitle" },
+                      vue.toDisplayString(banner.subtitle),
+                      1
+                      /* TEXT */
+                    ),
+                    vue.createElementVNode(
+                      "text",
+                      { class: "banner-discount" },
+                      vue.toDisplayString(banner.discount),
+                      1
+                      /* TEXT */
+                    )
+                  ]),
+                  vue.createElementVNode("view", { class: "banner-decoration" }, [
+                    vue.createElementVNode(
+                      "view",
+                      {
+                        class: vue.normalizeClass(["decoration-shape", `shape-${index + 1}`])
+                      },
+                      null,
+                      2
+                      /* CLASS */
+                    ),
+                    vue.createElementVNode(
+                      "view",
+                      { class: "decoration-icon" },
+                      vue.toDisplayString(banner.icon),
+                      1
+                      /* TEXT */
+                    )
+                  ])
+                ], 10, ["onClick"])
+              ]);
+            }),
+            128
+            /* KEYED_FRAGMENT */
+          ))
         ])
       ]),
       vue.createCommentVNode(" 快捷服务 "),
       vue.createElementVNode("view", { class: "quick-services" }, [
+        vue.createElementVNode("view", { class: "section-header" }, [
+          vue.createElementVNode("text", { class: "section-title" }, "快捷服务"),
+          vue.createElementVNode("text", { class: "section-subtitle" }, "常用功能一键直达")
+        ]),
         vue.createElementVNode("view", { class: "services-grid" }, [
           (vue.openBlock(true), vue.createElementBlock(
             vue.Fragment,
@@ -1564,7 +2468,8 @@ if (uni.restoreGlobal) {
                       vue.toDisplayString(service.icon),
                       1
                       /* TEXT */
-                    )
+                    ),
+                    vue.createElementVNode("view", { class: "icon-glow" })
                   ],
                   4
                   /* STYLE */
@@ -1585,6 +2490,10 @@ if (uni.restoreGlobal) {
       ]),
       vue.createCommentVNode(" 全部服务 "),
       vue.createElementVNode("view", { class: "all-services" }, [
+        vue.createElementVNode("view", { class: "section-header" }, [
+          vue.createElementVNode("text", { class: "section-title" }, "全部服务"),
+          vue.createElementVNode("text", { class: "section-subtitle" }, "更多精彩功能等你发现")
+        ]),
         vue.createElementVNode("view", { class: "services-grid-large" }, [
           (vue.openBlock(true), vue.createElementBlock(
             vue.Fragment,
@@ -1608,7 +2517,8 @@ if (uni.restoreGlobal) {
                       vue.toDisplayString(service.icon),
                       1
                       /* TEXT */
-                    )
+                    ),
+                    vue.createElementVNode("view", { class: "icon-glow-large" })
                   ],
                   4
                   /* STYLE */
@@ -1653,45 +2563,298 @@ if (uni.restoreGlobal) {
       ]),
       vue.createCommentVNode(" 优惠活动卡片 "),
       vue.createElementVNode("view", { class: "promotion-section" }, [
+        vue.createElementVNode("view", { class: "section-header" }, [
+          vue.createElementVNode("text", { class: "section-title" }, "精选优惠"),
+          vue.createElementVNode("text", { class: "section-subtitle" }, "专享福利等你来领")
+        ]),
         vue.createElementVNode("view", { class: "promotion-cards" }, [
           vue.createElementVNode("view", { class: "promotion-card large" }, [
             vue.createElementVNode("view", { class: "card-content" }, [
-              vue.createElementVNode("text", { class: "card-title" }, "积分当钱花"),
-              vue.createElementVNode("text", { class: "card-subtitle" }, "至高抵现50%"),
-              vue.createElementVNode("text", { class: "card-desc" }, "积分当钱花优惠手不..."),
-              vue.createElementVNode("text", { class: "card-detail" }, "至高抵现50%"),
-              vue.createElementVNode("image", {
-                class: "card-mascot",
-                src: _imports_2,
-                mode: "aspectFit"
-              })
+              vue.createElementVNode(
+                "text",
+                { class: "card-title" },
+                vue.toDisplayString($options.currentPromotionData.main.title),
+                1
+                /* TEXT */
+              ),
+              vue.createElementVNode(
+                "text",
+                { class: "card-subtitle" },
+                vue.toDisplayString($options.currentPromotionData.main.subtitle),
+                1
+                /* TEXT */
+              ),
+              vue.createElementVNode(
+                "text",
+                { class: "card-desc" },
+                vue.toDisplayString($options.currentPromotionData.main.desc),
+                1
+                /* TEXT */
+              ),
+              vue.createElementVNode("view", {
+                class: "card-button",
+                onClick: _cache[0] || (_cache[0] = (...args) => $options.handleMainCardTap && $options.handleMainCardTap(...args))
+              }, [
+                vue.createElementVNode(
+                  "text",
+                  { class: "button-text" },
+                  vue.toDisplayString($options.currentPromotionData.main.buttonText),
+                  1
+                  /* TEXT */
+                )
+              ])
+            ]),
+            vue.createElementVNode("view", { class: "card-decoration" }, [
+              vue.createElementVNode("view", { class: "decoration-element element-1" }),
+              vue.createElementVNode("view", { class: "decoration-element element-2" }),
+              vue.createElementVNode(
+                "text",
+                { class: "card-icon" },
+                vue.toDisplayString($options.currentPromotionData.main.icon),
+                1
+                /* TEXT */
+              )
             ])
           ]),
           vue.createElementVNode("view", { class: "promotion-cards-right" }, [
-            vue.createElementVNode("view", { class: "promotion-card small" }, [
-              vue.createElementVNode("text", { class: "card-title-small" }, "车票优惠享"),
-              vue.createElementVNode("text", { class: "card-subtitle-small" }, "最高88元12306立减金"),
-              vue.createElementVNode("image", {
-                class: "card-bg",
-                src: _imports_3,
-                mode: "aspectFill"
-              })
-            ]),
-            vue.createElementVNode("view", { class: "promotion-card small" }, [
-              vue.createElementVNode("text", { class: "card-title-small" }, "茶颜优惠券"),
-              vue.createElementVNode("text", { class: "card-subtitle-small" }, "新用户专享首杯至5.9元"),
-              vue.createElementVNode("image", {
-                class: "card-bg",
-                src: _imports_4,
-                mode: "aspectFill"
-              })
+            vue.createElementVNode("view", { class: "cards-scroll-container" }, [
+              (vue.openBlock(true), vue.createElementBlock(
+                vue.Fragment,
+                null,
+                vue.renderList($options.currentPromotionData.small, (card, index) => {
+                  return vue.openBlock(), vue.createElementBlock("view", {
+                    class: vue.normalizeClass(["promotion-card small", $options.getCardClass(card.type)]),
+                    key: index,
+                    onClick: ($event) => $options.handleSmallCardTap(card, index)
+                  }, [
+                    vue.createElementVNode("view", { class: "small-card-content" }, [
+                      vue.createElementVNode(
+                        "text",
+                        { class: "card-title-small" },
+                        vue.toDisplayString(card.title),
+                        1
+                        /* TEXT */
+                      ),
+                      vue.createElementVNode(
+                        "text",
+                        { class: "card-subtitle-small" },
+                        vue.toDisplayString(card.subtitle),
+                        1
+                        /* TEXT */
+                      ),
+                      vue.createElementVNode(
+                        "view",
+                        { class: "small-card-icon" },
+                        vue.toDisplayString(card.icon),
+                        1
+                        /* TEXT */
+                      )
+                    ])
+                  ], 10, ["onClick"]);
+                }),
+                128
+                /* KEYED_FRAGMENT */
+              ))
             ])
           ])
         ])
       ])
     ]);
   }
-  const PagesLifeLife = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["render", _sfc_render$6], ["__scopeId", "data-v-980f0516"], ["__file", "E:/项目/yihangyidon/src/pages/life/life.vue"]]);
+  const PagesLifeLife = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["render", _sfc_render$7], ["__scopeId", "data-v-980f0516"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/life/life.vue"]]);
+  const _imports_0 = "/static/tabbar/user-active.png";
+  const _sfc_main$7 = {
+    data() {
+      return {
+        draft: "",
+        sending: false,
+        scrollIntoId: "",
+        placeholder: "请输入您的问题，如“我要查询理财收益”",
+        messages: [
+          {
+            id: "hello",
+            role: "bot",
+            html: "您好，我是农业银行AI客服。可为您解答存款、理财、保险、外汇等问题。",
+            time: ""
+          }
+        ]
+      };
+    },
+    methods: {
+      chooseImage() {
+        uni.chooseImage({
+          count: 1,
+          sizeType: ["compressed"],
+          sourceType: ["album", "camera"],
+          success: (res) => {
+            const path = res.tempFilePaths[0];
+            this.messages.push({ id: Date.now() + "-uimg", role: "user", html: `<img src="${path}" style="max-width:100%;border-radius:8rpx;"/>`, time: this.nowTime() });
+            this.toBottom();
+          },
+          fail: () => {
+            uni.showToast({ title: "选择图片取消", icon: "none" });
+          }
+        });
+      },
+      openEmoji() {
+        uni.showToast({ title: "表情面板（待接入）", icon: "none" });
+      },
+      startVoice() {
+        uni.showToast({ title: "语音输入（待接入）", icon: "none" });
+      },
+      send() {
+        const content = this.draft.trim();
+        if (!content || this.sending)
+          return;
+        const userMsg = {
+          id: Date.now() + "-u",
+          role: "user",
+          html: this.escapeHtml(content),
+          time: this.nowTime()
+        };
+        this.messages.push(userMsg);
+        this.draft = "";
+        this.toBottom();
+        this.sending = true;
+        setTimeout(() => {
+          const reply = this.generateReply(content);
+          this.messages.push({
+            id: Date.now() + "-b",
+            role: "bot",
+            html: reply,
+            time: this.nowTime()
+          });
+          this.sending = false;
+          this.toBottom();
+        }, 600);
+      },
+      generateReply(text) {
+        const t = text.toLowerCase();
+        if (t.includes("存款") || t.includes("定期") || t.includes("利率")) {
+          return "存款业务：活期按日计息，定期支持3个月/6个月/1年/3年等档，起存金额1000元起。可通过“财富-存款”进行办理。";
+        }
+        if (t.includes("理财") || t.includes("收益") || t.includes("申购")) {
+          return "理财产品分为低/中风险，起投金额1000-10000元不等，支持T+1灵活赎回与封闭期产品，详情见“财富-理财产品”。";
+        }
+        if (t.includes("保险") || t.includes("意外") || t.includes("重疾")) {
+          return "保险服务：提供医疗险、意外险、重疾险等多品类方案，支持在线投保与电子保单。可在“财富-保险”查看。";
+        }
+        if (t.includes("外汇") || t.includes("汇率") || t.includes("结售汇")) {
+          return "外汇业务：支持主要币种实时汇率查询与结售汇，您可在“财富-外汇”查看行情并发起交易。";
+        }
+        if (t.includes("人工") || t.includes("转接") || t.includes("客服")) {
+          return "需要人工服务吗？您可以拨打客服热线 95599，我们将尽快为您安排专属服务。";
+        }
+        return "已收到您的问题。我将为您查找相关信息，您也可以具体描述业务类型（如：存款/理财/保险/外汇）。";
+      },
+      toBottom() {
+        this.$nextTick(() => {
+          this.scrollIntoId = "msg-" + (this.messages.length - 1);
+        });
+      },
+      escapeHtml(s) {
+        return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      },
+      nowTime() {
+        const d = /* @__PURE__ */ new Date();
+        const hh = String(d.getHours()).padStart(2, "0");
+        const mm = String(d.getMinutes()).padStart(2, "0");
+        return `${hh}:${mm}`;
+      }
+    }
+  };
+  function _sfc_render$6(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("view", { class: "chat-page" }, [
+      vue.createElementVNode("view", { class: "chat-header" }, [
+        vue.createElementVNode("text", { class: "title" }, "AI 智能客服"),
+        vue.createElementVNode("text", { class: "sub" }, "7×24小时为您服务")
+      ]),
+      vue.createElementVNode("scroll-view", {
+        "scroll-y": "",
+        class: "chat-body",
+        "scroll-into-view": $data.scrollIntoId
+      }, [
+        (vue.openBlock(true), vue.createElementBlock(
+          vue.Fragment,
+          null,
+          vue.renderList($data.messages, (m, i) => {
+            return vue.openBlock(), vue.createElementBlock("view", {
+              key: m.id,
+              id: "msg-" + i,
+              class: vue.normalizeClass(["msg-row", m.role])
+            }, [
+              m.role === "bot" ? (vue.openBlock(), vue.createElementBlock("image", {
+                key: 0,
+                class: "avatar",
+                src: "https://onlineservice.cdn-static.abchina.com.cn/chat/static/img/sister_icon.08ee4961.png",
+                mode: "aspectFit"
+              })) : vue.createCommentVNode("v-if", true),
+              vue.createElementVNode("view", { class: "bubble" }, [
+                vue.createElementVNode("rich-text", {
+                  nodes: m.html
+                }, null, 8, ["nodes"]),
+                m.time ? (vue.openBlock(), vue.createElementBlock(
+                  "text",
+                  {
+                    key: 0,
+                    class: "time"
+                  },
+                  vue.toDisplayString(m.time),
+                  1
+                  /* TEXT */
+                )) : vue.createCommentVNode("v-if", true)
+              ]),
+              m.role === "user" ? (vue.openBlock(), vue.createElementBlock("image", {
+                key: 1,
+                class: "avatar",
+                src: _imports_0,
+                mode: "aspectFit"
+              })) : vue.createCommentVNode("v-if", true)
+            ], 10, ["id"]);
+          }),
+          128
+          /* KEYED_FRAGMENT */
+        ))
+      ], 8, ["scroll-into-view"]),
+      vue.createElementVNode("view", { class: "chat-input" }, [
+        vue.createElementVNode("view", { class: "tools" }, [
+          vue.createElementVNode("button", {
+            class: "tool-btn",
+            onClick: _cache[0] || (_cache[0] = (...args) => $options.chooseImage && $options.chooseImage(...args)),
+            "hover-class": "btn-hover",
+            "hover-stay-time": "50"
+          }, "🖼️"),
+          vue.createElementVNode("button", {
+            class: "tool-btn",
+            onClick: _cache[1] || (_cache[1] = (...args) => $options.openEmoji && $options.openEmoji(...args)),
+            "hover-class": "btn-hover",
+            "hover-stay-time": "50"
+          }, "😀"),
+          vue.createElementVNode("button", {
+            class: "tool-btn",
+            onClick: _cache[2] || (_cache[2] = (...args) => $options.startVoice && $options.startVoice(...args)),
+            "hover-class": "btn-hover",
+            "hover-stay-time": "50"
+          }, "🎤")
+        ]),
+        vue.withDirectives(vue.createElementVNode("input", {
+          class: "input",
+          "onUpdate:modelValue": _cache[3] || (_cache[3] = ($event) => $data.draft = $event),
+          placeholder: $data.placeholder,
+          "confirm-type": "send",
+          onConfirm: _cache[4] || (_cache[4] = (...args) => $options.send && $options.send(...args))
+        }, null, 40, ["placeholder"]), [
+          [vue.vModelText, $data.draft]
+        ]),
+        vue.createElementVNode("button", {
+          class: "send",
+          disabled: !$data.draft.trim() || $data.sending,
+          onClick: _cache[5] || (_cache[5] = (...args) => $options.send && $options.send(...args))
+        }, vue.toDisplayString($data.sending ? "发送中..." : "发送"), 9, ["disabled"])
+      ])
+    ]);
+  }
+  const PagesServiceChat = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["render", _sfc_render$6], ["__scopeId", "data-v-e19cce9b"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/service/chat.vue"]]);
   const _sfc_main$6 = {
     data() {
       return {
@@ -1992,7 +3155,7 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesTransferTransfer = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["render", _sfc_render$5], ["__scopeId", "data-v-d303ad3d"], ["__file", "E:/项目/yihangyidon/src/pages/transfer/transfer.vue"]]);
+  const PagesTransferTransfer = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["render", _sfc_render$5], ["__scopeId", "data-v-d303ad3d"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/transfer/transfer.vue"]]);
   const _sfc_main$5 = {
     data() {
       return {
@@ -2384,7 +3547,7 @@ if (uni.restoreGlobal) {
       ))
     ]);
   }
-  const PagesAccountAccount = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["render", _sfc_render$4], ["__scopeId", "data-v-f7e9057f"], ["__file", "E:/项目/yihangyidon/src/pages/account/account.vue"]]);
+  const PagesAccountAccount = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["render", _sfc_render$4], ["__scopeId", "data-v-f7e9057f"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/account/account.vue"]]);
   const BASE_URL = "https://api.abchina.com";
   const TIMEOUT = 1e4;
   const requestInterceptor = (config) => {
@@ -2488,17 +3651,11 @@ if (uni.restoreGlobal) {
       });
     }
   };
-  const payLifeBill = (paymentInfo) => {
-    return http.post("/life/payment", paymentInfo);
-  };
   const mobileRecharge = (rechargeInfo) => {
     return http.post("/life/recharge", rechargeInfo);
   };
   const getPaymentHistory = (params) => {
     return http.get("/life/payment-history", params);
-  };
-  const queryUtilityBill = (queryInfo) => {
-    return http.post("/life/utility/query", queryInfo);
   };
   const _sfc_main$4 = {
     name: "PaymentPage",
@@ -2510,6 +3667,11 @@ if (uni.restoreGlobal) {
           address: "",
           amount: ""
         },
+        formErrors: {
+          number: "",
+          address: "",
+          amount: ""
+        },
         paymentTypes: [
           {
             icon: "💡",
@@ -2517,7 +3679,17 @@ if (uni.restoreGlobal) {
             bgColor: "#FFD700",
             type: "electric",
             numberLabel: "电费户号",
-            showAddress: true
+            showAddress: true,
+            description: "支持国家电网、南方电网等",
+            placeholder: "请输入10-12位电费户号",
+            pattern: /^\d{10,12}$/,
+            errorMsg: "电费户号格式不正确",
+            avgAmount: "150-300",
+            tips: [
+              "查看电费单上的户号",
+              "户号通常为10-12位数字",
+              "支持预付费和后付费"
+            ]
           },
           {
             icon: "💧",
@@ -2525,7 +3697,17 @@ if (uni.restoreGlobal) {
             bgColor: "#1E90FF",
             type: "water",
             numberLabel: "水费户号",
-            showAddress: true
+            showAddress: true,
+            description: "支持自来水公司缴费",
+            placeholder: "请输入8-10位水费户号",
+            pattern: /^\d{8,10}$/,
+            errorMsg: "水费户号格式不正确",
+            avgAmount: "50-150",
+            tips: [
+              "查看水费单上的用户编号",
+              "户号通常为8-10位数字",
+              "支持阶梯水价计费"
+            ]
           },
           {
             icon: "🔥",
@@ -2533,7 +3715,17 @@ if (uni.restoreGlobal) {
             bgColor: "#FF6347",
             type: "gas",
             numberLabel: "燃气户号",
-            showAddress: true
+            showAddress: true,
+            description: "支持天然气公司缴费",
+            placeholder: "请输入燃气用户号",
+            pattern: /^\d{6,12}$/,
+            errorMsg: "燃气户号格式不正确",
+            avgAmount: "80-200",
+            tips: [
+              "查看燃气费单上的用户号",
+              "户号格式因地区而异",
+              "支持IC卡和直供用户"
+            ]
           },
           {
             icon: "📱",
@@ -2541,7 +3733,13 @@ if (uni.restoreGlobal) {
             bgColor: "#32CD32",
             type: "phone",
             numberLabel: "手机号码",
-            showAddress: false
+            showAddress: false,
+            description: "支持三大运营商话费充值",
+            placeholder: "请输入11位手机号码",
+            pattern: /^1[3-9]\d{9}$/,
+            errorMsg: "手机号码格式不正确",
+            avgAmount: "30-100",
+            tips: ["支持移动、联通、电信", "充值后即时到账", "可设置自动充值"]
           },
           {
             icon: "📺",
@@ -2549,7 +3747,17 @@ if (uni.restoreGlobal) {
             bgColor: "#9370DB",
             type: "tv",
             numberLabel: "用户编号",
-            showAddress: true
+            showAddress: true,
+            description: "支持有线电视费缴纳",
+            placeholder: "请输入有线电视用户编号",
+            pattern: /^\d{8,15}$/,
+            errorMsg: "用户编号格式不正确",
+            avgAmount: "20-50",
+            tips: [
+              "查看有线电视缴费单",
+              "用户编号在机顶盒上",
+              "支持数字电视和高清频道"
+            ]
           },
           {
             icon: "🌐",
@@ -2557,7 +3765,17 @@ if (uni.restoreGlobal) {
             bgColor: "#FF1493",
             type: "internet",
             numberLabel: "宽带账号",
-            showAddress: true
+            showAddress: true,
+            description: "支持宽带费用缴纳",
+            placeholder: "请输入宽带账号",
+            pattern: /^[a-zA-Z0-9]{6,20}$/,
+            errorMsg: "宽带账号格式不正确",
+            avgAmount: "50-200",
+            tips: [
+              "查看宽带缴费单上的账号",
+              "账号可能包含字母和数字",
+              "支持包年包月套餐"
+            ]
           }
         ],
         paymentHistory: [
@@ -2601,32 +3819,118 @@ if (uni.restoreGlobal) {
           address: "",
           amount: ""
         };
+        this.formErrors = {
+          number: "",
+          address: "",
+          amount: ""
+        };
+      },
+      // 验证号码格式
+      validateNumber() {
+        if (!this.paymentForm.number) {
+          this.formErrors.number = `请输入${this.selectedType.numberLabel}`;
+          return false;
+        }
+        if (!this.selectedType.pattern.test(this.paymentForm.number)) {
+          this.formErrors.number = this.selectedType.errorMsg;
+          return false;
+        }
+        this.formErrors.number = "";
+        return true;
+      },
+      // 验证金额
+      validateAmount() {
+        if (!this.paymentForm.amount) {
+          this.formErrors.amount = "请输入缴费金额";
+          return false;
+        }
+        const amount = parseFloat(this.paymentForm.amount);
+        if (isNaN(amount) || amount <= 0) {
+          this.formErrors.amount = "请输入有效的金额";
+          return false;
+        }
+        if (amount > 1e4) {
+          this.formErrors.amount = "单次缴费金额不能超过10000元";
+          return false;
+        }
+        this.formErrors.amount = "";
+        return true;
+      },
+      // 验证地址
+      validateAddress() {
+        if (this.selectedType.showAddress && !this.paymentForm.address) {
+          this.formErrors.address = "请输入缴费地址";
+          return false;
+        }
+        this.formErrors.address = "";
+        return true;
+      },
+      // 验证所有表单字段
+      validateForm() {
+        const isNumberValid = this.validateNumber();
+        const isAmountValid = this.validateAmount();
+        const isAddressValid = this.validateAddress();
+        return isNumberValid && isAmountValid && isAddressValid;
+      },
+      // 输入事件处理
+      onNumberInput(e) {
+        this.paymentForm.number = e.detail.value;
+        if (this.formErrors.number) {
+          this.formErrors.number = "";
+        }
+      },
+      onAddressInput(e) {
+        this.paymentForm.address = e.detail.value;
+        if (this.formErrors.address) {
+          this.formErrors.address = "";
+        }
+      },
+      onAmountInput(e) {
+        this.paymentForm.amount = e.detail.value;
+        if (this.formErrors.amount) {
+          this.formErrors.amount = "";
+        }
+      },
+      // 清除错误提示
+      clearNumberError() {
+        this.formErrors.number = "";
+      },
+      clearAddressError() {
+        this.formErrors.address = "";
+      },
+      clearAmountError() {
+        this.formErrors.amount = "";
       },
       async queryBill() {
-        if (!this.paymentForm.number) {
-          uni.showToast({
-            title: `请输入${this.selectedType.numberLabel}`,
-            icon: "none"
-          });
+        if (!this.validateNumber()) {
+          return;
+        }
+        if (!this.validateAddress()) {
           return;
         }
         try {
           uni.showLoading({ title: "查询中..." });
-          const result = await queryUtilityBill({
+          const result = await this.mockQueryBill({
             type: this.selectedType.type,
             number: this.paymentForm.number,
             address: this.paymentForm.address
           });
-          if (result.amount) {
+          if (result.success && result.amount) {
             this.paymentForm.amount = result.amount.toString();
-            uni.showToast({
+            uni.showModal({
               title: "查询成功",
-              icon: "success"
+              content: `查询到待缴费用：${result.amount}元
+账期：${result.period}
+地址：${result.address || this.paymentForm.address}`,
+              confirmText: "确定",
+              showCancel: false
             });
           } else {
-            uni.showToast({
-              title: "暂无待缴费用",
-              icon: "none"
+            uni.showModal({
+              title: "查询结果",
+              content: result.message || "暂无待缴费用",
+              confirmText: "确定",
+              showCancel: false
             });
           }
         } catch (error) {
@@ -2639,41 +3943,128 @@ if (uni.restoreGlobal) {
         }
       },
       async submitPayment() {
-        if (!this.canSubmit)
+        if (!this.validateForm()) {
+          uni.showToast({
+            title: "请检查输入信息",
+            icon: "none"
+          });
+          return;
+        }
+        const confirmResult = await new Promise((resolve) => {
+          uni.showModal({
+            title: "确认缴费",
+            content: `${this.selectedType.label}缴费
+${this.selectedType.numberLabel}：${this.paymentForm.number}
+缴费金额：${this.paymentForm.amount}元`,
+            confirmText: "确认缴费",
+            cancelText: "取消",
+            success: (res) => resolve(res.confirm)
+          });
+        });
+        if (!confirmResult)
           return;
         try {
           uni.showLoading({ title: "缴费中..." });
-          await payLifeBill({
+          const result = await this.mockPayment({
             type: this.selectedType.type,
             number: this.paymentForm.number,
             address: this.paymentForm.address,
             amount: parseFloat(this.paymentForm.amount)
           });
-          uni.showToast({
-            title: "缴费成功",
-            icon: "success"
-          });
-          this.loadPaymentHistory();
-          this.paymentForm = {
-            number: "",
-            address: "",
-            amount: ""
-          };
+          if (result.success) {
+            uni.showToast({
+              title: "缴费成功",
+              icon: "success"
+            });
+            this.loadPaymentHistory();
+            this.paymentForm = {
+              number: "",
+              address: "",
+              amount: ""
+            };
+            this.formErrors = {
+              number: "",
+              address: "",
+              amount: ""
+            };
+          } else {
+            throw new Error(result.message);
+          }
         } catch (error) {
           uni.showToast({
-            title: "缴费失败，请稍后重试",
+            title: error.message || "缴费失败，请稍后重试",
             icon: "none"
           });
         } finally {
           uni.hideLoading();
         }
       },
+      // 模拟查询账单API
+      async mockQueryBill(params) {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            const mockData = {
+              electric: {
+                success: true,
+                amount: 156.8,
+                period: "2024年1月",
+                address: "XX小区XX号楼"
+              },
+              water: {
+                success: true,
+                amount: 89.5,
+                period: "2024年1月",
+                address: "XX小区XX号楼"
+              },
+              gas: {
+                success: true,
+                amount: 125.3,
+                period: "2024年1月",
+                address: "XX小区XX号楼"
+              },
+              phone: {
+                success: true,
+                amount: 50,
+                period: "当前余额",
+                address: null
+              },
+              tv: {
+                success: true,
+                amount: 25,
+                period: "2024年1月",
+                address: "XX小区XX号楼"
+              },
+              internet: {
+                success: true,
+                amount: 100,
+                period: "2024年1月",
+                address: "XX小区XX号楼"
+              }
+            };
+            resolve(
+              mockData[params.type] || { success: false, message: "查询失败" }
+            );
+          }, 1500);
+        });
+      },
+      // 模拟缴费API
+      async mockPayment(params) {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve({
+              success: true,
+              orderId: `PAY${Date.now()}`,
+              message: "缴费成功"
+            });
+          }, 2e3);
+        });
+      },
       async loadPaymentHistory() {
         try {
           const history = await getPaymentHistory({ limit: 3 });
           this.paymentHistory = history;
         } catch (error) {
-          formatAppLog("error", "at pages/payment/payment.vue:298", "加载缴费记录失败:", error);
+          formatAppLog("error", "at pages/payment/payment.vue:622", "加载缴费记录失败:", error);
         }
       },
       viewAllHistory() {
@@ -2737,18 +4128,61 @@ if (uni.restoreGlobal) {
       vue.createCommentVNode(" 缴费表单 "),
       $data.selectedType ? (vue.openBlock(), vue.createElementBlock("view", {
         key: 0,
-        class: "payment-form"
+        class: "payment-form",
+        onClick: _cache[14] || (_cache[14] = vue.withModifiers(() => {
+        }, ["stop"]))
       }, [
-        vue.createElementVNode("view", { class: "form-section" }, [
-          vue.createElementVNode("view", { class: "section-title" }, [
+        vue.createCommentVNode(" 缴费类型信息 "),
+        vue.createElementVNode("view", { class: "type-info" }, [
+          vue.createElementVNode("view", { class: "info-header" }, [
             vue.createElementVNode(
-              "text",
-              null,
-              vue.toDisplayString($data.selectedType.label) + "缴费",
-              1
-              /* TEXT */
-            )
-          ]),
+              "view",
+              {
+                class: "type-icon-large",
+                style: vue.normalizeStyle({ backgroundColor: $data.selectedType.bgColor })
+              },
+              [
+                vue.createElementVNode(
+                  "text",
+                  { class: "icon-text-large" },
+                  vue.toDisplayString($data.selectedType.icon),
+                  1
+                  /* TEXT */
+                )
+              ],
+              4
+              /* STYLE */
+            ),
+            vue.createElementVNode("view", { class: "type-details" }, [
+              vue.createElementVNode(
+                "text",
+                { class: "type-title" },
+                vue.toDisplayString($data.selectedType.label) + "缴费",
+                1
+                /* TEXT */
+              ),
+              vue.createElementVNode(
+                "text",
+                { class: "type-desc" },
+                vue.toDisplayString($data.selectedType.description),
+                1
+                /* TEXT */
+              ),
+              vue.createElementVNode(
+                "text",
+                { class: "avg-amount" },
+                "常见金额: " + vue.toDisplayString($data.selectedType.avgAmount) + "元",
+                1
+                /* TEXT */
+              )
+            ])
+          ])
+        ]),
+        vue.createElementVNode("view", {
+          class: "form-section",
+          onClick: _cache[11] || (_cache[11] = vue.withModifiers(() => {
+          }, ["stop"]))
+        }, [
           vue.createElementVNode("view", { class: "form-item" }, [
             vue.createElementVNode(
               "text",
@@ -2760,11 +4194,28 @@ if (uni.restoreGlobal) {
             vue.withDirectives(vue.createElementVNode("input", {
               class: "form-input",
               "onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => $data.paymentForm.number = $event),
-              placeholder: `请输入${$data.selectedType.numberLabel}`,
-              type: "text"
-            }, null, 8, ["placeholder"]), [
+              placeholder: $data.selectedType.placeholder,
+              type: "text",
+              onInput: _cache[1] || (_cache[1] = (...args) => $options.onNumberInput && $options.onNumberInput(...args)),
+              onBlur: _cache[2] || (_cache[2] = (...args) => $options.validateNumber && $options.validateNumber(...args)),
+              onFocus: _cache[3] || (_cache[3] = (...args) => $options.clearNumberError && $options.clearNumberError(...args)),
+              maxlength: 20,
+              "confirm-type": "done"
+            }, null, 40, ["placeholder"]), [
               [vue.vModelText, $data.paymentForm.number]
-            ])
+            ]),
+            $data.formErrors.number ? (vue.openBlock(), vue.createElementBlock("view", {
+              key: 0,
+              class: "input-error"
+            }, [
+              vue.createElementVNode(
+                "text",
+                { class: "error-text" },
+                vue.toDisplayString($data.formErrors.number),
+                1
+                /* TEXT */
+              )
+            ])) : vue.createCommentVNode("v-if", true)
           ]),
           $data.selectedType.showAddress ? (vue.openBlock(), vue.createElementBlock("view", {
             key: 0,
@@ -2775,16 +4226,32 @@ if (uni.restoreGlobal) {
               "input",
               {
                 class: "form-input",
-                "onUpdate:modelValue": _cache[1] || (_cache[1] = ($event) => $data.paymentForm.address = $event),
-                placeholder: "请输入详细地址",
-                type: "text"
+                "onUpdate:modelValue": _cache[4] || (_cache[4] = ($event) => $data.paymentForm.address = $event),
+                placeholder: "请输入详细地址（如：XX小区XX号楼XX室）",
+                type: "text",
+                onInput: _cache[5] || (_cache[5] = (...args) => $options.onAddressInput && $options.onAddressInput(...args)),
+                onFocus: _cache[6] || (_cache[6] = (...args) => $options.clearAddressError && $options.clearAddressError(...args)),
+                maxlength: 100,
+                "confirm-type": "done"
               },
               null,
-              512
-              /* NEED_PATCH */
+              544
+              /* NEED_HYDRATION, NEED_PATCH */
             ), [
               [vue.vModelText, $data.paymentForm.address]
-            ])
+            ]),
+            $data.formErrors.address ? (vue.openBlock(), vue.createElementBlock("view", {
+              key: 0,
+              class: "input-error"
+            }, [
+              vue.createElementVNode(
+                "text",
+                { class: "error-text" },
+                vue.toDisplayString($data.formErrors.address),
+                1
+                /* TEXT */
+              )
+            ])) : vue.createCommentVNode("v-if", true)
           ])) : vue.createCommentVNode("v-if", true),
           vue.createElementVNode("view", { class: "form-item" }, [
             vue.createElementVNode("text", { class: "form-label" }, "缴费金额"),
@@ -2792,15 +4259,56 @@ if (uni.restoreGlobal) {
               "input",
               {
                 class: "form-input amount-input",
-                "onUpdate:modelValue": _cache[2] || (_cache[2] = ($event) => $data.paymentForm.amount = $event),
-                placeholder: "请输入缴费金额",
-                type: "digit"
+                "onUpdate:modelValue": _cache[7] || (_cache[7] = ($event) => $data.paymentForm.amount = $event),
+                placeholder: "请输入缴费金额或点击查询账单",
+                type: "digit",
+                onInput: _cache[8] || (_cache[8] = (...args) => $options.onAmountInput && $options.onAmountInput(...args)),
+                onBlur: _cache[9] || (_cache[9] = (...args) => $options.validateAmount && $options.validateAmount(...args)),
+                onFocus: _cache[10] || (_cache[10] = (...args) => $options.clearAmountError && $options.clearAmountError(...args)),
+                maxlength: 8,
+                "confirm-type": "done"
               },
               null,
-              512
-              /* NEED_PATCH */
+              544
+              /* NEED_HYDRATION, NEED_PATCH */
             ), [
               [vue.vModelText, $data.paymentForm.amount]
+            ]),
+            $data.formErrors.amount ? (vue.openBlock(), vue.createElementBlock("view", {
+              key: 0,
+              class: "input-error"
+            }, [
+              vue.createElementVNode(
+                "text",
+                { class: "error-text" },
+                vue.toDisplayString($data.formErrors.amount),
+                1
+                /* TEXT */
+              )
+            ])) : vue.createCommentVNode("v-if", true)
+          ]),
+          vue.createCommentVNode(" 温馨提示 "),
+          vue.createElementVNode("view", { class: "tips-section" }, [
+            vue.createElementVNode("text", { class: "tips-title" }, "💡 温馨提示"),
+            vue.createElementVNode("view", { class: "tips-list" }, [
+              (vue.openBlock(true), vue.createElementBlock(
+                vue.Fragment,
+                null,
+                vue.renderList($data.selectedType.tips, (tip, index) => {
+                  return vue.openBlock(), vue.createElementBlock(
+                    "text",
+                    {
+                      class: "tip-item",
+                      key: index
+                    },
+                    " • " + vue.toDisplayString(tip),
+                    1
+                    /* TEXT */
+                  );
+                }),
+                128
+                /* KEYED_FRAGMENT */
+              ))
             ])
           ])
         ]),
@@ -2808,11 +4316,12 @@ if (uni.restoreGlobal) {
         vue.createElementVNode("view", { class: "payment-actions" }, [
           vue.createElementVNode("button", {
             class: "query-btn",
-            onClick: _cache[3] || (_cache[3] = (...args) => $options.queryBill && $options.queryBill(...args))
-          }, "查询账单"),
+            onClick: _cache[12] || (_cache[12] = (...args) => $options.queryBill && $options.queryBill(...args)),
+            disabled: !$data.paymentForm.number
+          }, " 查询账单 ", 8, ["disabled"]),
           vue.createElementVNode("button", {
             class: "pay-btn",
-            onClick: _cache[4] || (_cache[4] = (...args) => $options.submitPayment && $options.submitPayment(...args)),
+            onClick: _cache[13] || (_cache[13] = (...args) => $options.submitPayment && $options.submitPayment(...args)),
             disabled: !$options.canSubmit
           }, " 立即缴费 ", 8, ["disabled"])
         ])
@@ -2823,7 +4332,7 @@ if (uni.restoreGlobal) {
           vue.createElementVNode("text", { class: "history-title" }, "最近缴费记录"),
           vue.createElementVNode("text", {
             class: "view-all",
-            onClick: _cache[5] || (_cache[5] = (...args) => $options.viewAllHistory && $options.viewAllHistory(...args))
+            onClick: _cache[15] || (_cache[15] = (...args) => $options.viewAllHistory && $options.viewAllHistory(...args))
           }, "查看全部")
         ]),
         vue.createElementVNode("view", { class: "history-list" }, [
@@ -2885,7 +4394,7 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesPaymentPayment = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["render", _sfc_render$3], ["__scopeId", "data-v-6e0fac4f"], ["__file", "E:/项目/yihangyidon/src/pages/payment/payment.vue"]]);
+  const PagesPaymentPayment = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["render", _sfc_render$3], ["__scopeId", "data-v-6e0fac4f"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/payment/payment.vue"]]);
   const _sfc_main$3 = {
     name: "RechargePage",
     data() {
@@ -3248,7 +4757,7 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesRechargeRecharge = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["render", _sfc_render$2], ["__scopeId", "data-v-d370def1"], ["__file", "E:/项目/yihangyidon/src/pages/recharge/recharge.vue"]]);
+  const PagesRechargeRecharge = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["render", _sfc_render$2], ["__scopeId", "data-v-d370def1"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/recharge/recharge.vue"]]);
   const _sfc_main$2 = {
     name: "GovernmentPage",
     data() {
@@ -3654,7 +5163,7 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesGovernmentGovernment = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["render", _sfc_render$1], ["__scopeId", "data-v-55002ac7"], ["__file", "E:/项目/yihangyidon/src/pages/government/government.vue"]]);
+  const PagesGovernmentGovernment = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["render", _sfc_render$1], ["__scopeId", "data-v-55002ac7"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/government/government.vue"]]);
   const _sfc_main$1 = {
     name: "GamesPage",
     data() {
@@ -4147,12 +5656,13 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesGamesGames = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["render", _sfc_render], ["__scopeId", "data-v-5e0e9dd0"], ["__file", "E:/项目/yihangyidon/src/pages/games/games.vue"]]);
+  const PagesGamesGames = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["render", _sfc_render], ["__scopeId", "data-v-5e0e9dd0"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/games/games.vue"]]);
   __definePage("pages/denglu/login", PagesDengluLogin);
   __definePage("pages/index/index", PagesIndexIndex);
   __definePage("pages/user/user", PagesUserUser);
   __definePage("pages/wealth/wealth", PagesWealthWealth);
   __definePage("pages/life/life", PagesLifeLife);
+  __definePage("pages/service/chat", PagesServiceChat);
   __definePage("pages/transfer/transfer", PagesTransferTransfer);
   __definePage("pages/account/account", PagesAccountAccount);
   __definePage("pages/payment/payment", PagesPaymentPayment);
@@ -4403,7 +5913,7 @@ if (uni.restoreGlobal) {
       isConnected: true
     }
   };
-  const App = /* @__PURE__ */ _export_sfc(_sfc_main, [["__file", "E:/项目/yihangyidon/src/App.vue"]]);
+  const App = /* @__PURE__ */ _export_sfc(_sfc_main, [["__file", "E:/Vue项目/专高六/1/项目/src/App.vue"]]);
   function createApp() {
     const app = vue.createVueApp(App);
     app.config.errorHandler = (err, vm, info) => {
@@ -4532,7 +6042,7 @@ if (uni.restoreGlobal) {
             });
             setTimeout(() => {
               uni.navigateTo({
-                url: "/login/login"
+                url: "/pages/denglu/login"
               });
             }, 1500);
             return Promise.reject(response);
