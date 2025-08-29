@@ -6,9 +6,30 @@
 import { createSSRApp } from "vue"
 import App from "./App.vue"
 
+// 环境检测函数
+function getEnvironment() {
+	// 优先使用uni-app的环境变量
+	if (typeof uni !== 'undefined' && uni.getSystemInfoSync) {
+		const systemInfo = uni.getSystemInfoSync()
+		// 根据平台判断环境
+		if (systemInfo.platform === 'devtools') {
+			return 'development'
+		}
+	}
+	
+	// 回退到process.env
+	if (typeof process !== 'undefined' && process.env && process.env.NODE_ENV) {
+		return process.env.NODE_ENV
+	}
+	
+	// 默认返回development
+	return 'development'
+}
+
 // 创建应用实例
 export function createApp() {
 	const app = createSSRApp(App)
+	const currentEnv = getEnvironment()
 
 	// 全局错误处理
 	app.config.errorHandler = (err, vm, info) => {
@@ -38,7 +59,7 @@ export function createApp() {
 		version: '1.0.0',
 
 		// 环境信息
-		env: process.env.NODE_ENV,
+		env: currentEnv,
 
 		// 平台信息
 		platform: uni.getSystemInfoSync().platform,
@@ -134,7 +155,7 @@ export function createApp() {
 		// 网络请求封装
 		request: {
 			// 基础配置
-			baseURL: process.env.NODE_ENV === 'development'
+			baseURL: currentEnv === 'development'
 				? 'http://localhost:3000/api'
 				: 'https://api.hospital.com',
 
