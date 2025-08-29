@@ -7,7 +7,7 @@
 
     <scroll-view scroll-y class="chat-body" :scroll-into-view="scrollIntoId">
       <view v-for="(m, i) in messages" :key="m.id" :id="'msg-' + i" class="msg-row" :class="m.role">
-        <image v-if="m.role==='bot'" class="avatar" src="https://onlineservice.cdn-static.abchina.com.cn/chat/static/img/sister_icon.08ee4961.png" mode="aspectFit" />
+        <image v-if="m.role==='bot'" class="avatar" src="/static/wealth/aiavatar.png" mode="aspectFit" />
         <view class="bubble">
           <rich-text v-if="m.html" :nodes="m.html"></rich-text>
           <image v-if="m.image" :src="m.image" style="max-width:100%;border-radius:8rpx;" mode="widthFix" />
@@ -16,7 +16,7 @@
           </view>
           <text v-if="m.time" class="time">{{ m.time }}</text>
         </view>
-        <image v-if="m.role==='user'" class="avatar" src="https://img.ixintu.com/download/jpg/20201226/9d64c2d320c079cbd4f38f10e066dc71_512_512.jpg!ys" mode="aspectFit" />
+        <image v-if="m.role==='user'" class="avatar" src="/static/wealth/useravatar.jpg" mode="aspectFit" />
       </view>
     </scroll-view>
 
