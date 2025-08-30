@@ -219,11 +219,11 @@ export default {
         { key: 'insurance', name: '保险' },
         { key: 'forex', name: '外汇' }
       ],
-      // 顶部轮播图片
+      // 顶部轮播图片（本地）
       swiperImages: [
-        'https://www.abchina.com/cn/advis/grfw_gggl/sygg/202102/P020210202316125719385.jpg',
-        'https://ewealth.abchina.com.cn/advis/sygg/201712/P020200120402132224758.jpg',
-        'https://ewealth.abchina.com.cn/advis/whgg/201712/P020171220394037986599.jpg'
+        '/static/wealth/swip1.jpg',
+        '/static/wealth/swip2.jpg',
+        '/static/wealth/swip3.jpg'
       ],
       // 客服
       serviceHotline: '95599',

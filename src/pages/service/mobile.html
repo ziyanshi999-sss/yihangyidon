@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<title>AI智能客服（移动端）</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<style>
+		:root {
+			--bg: #ffffff;
+			--panel: #ffffff;
+			--card: #ffffff;
+			--text: #0f172a;
+			--muted: #475569;
+			--primary: #16a34a;
+			--accent: #2563eb;
+			--danger: #dc2626;
+		}
+		* { box-sizing: border-box; }
+		body {
+			margin: 0; padding: 0; background: var(--bg); color: var(--text);
+			font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',
+				'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol','Noto Color Emoji',sans-serif;
+		}
+		.header { position: sticky; top: 0; z-index: 10; background: var(--panel); padding: 12px 16px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #e2e8f0; }
+		.header h1 { font-size: 16px; margin: 0; }
+		.header small { color: var(--muted); }
+		.container { display: flex; flex-direction: column; height: 100dvh; }
+		.chat { flex: 1; overflow-y: auto; padding: 12px; }
+		.msg { display: flex; gap: 8px; margin-bottom: 12px; }
+		.msg .bubble { max-width: 80%; padding: 10px 12px; border-radius: 12px; line-height: 1.5; word-wrap: break-word; border: 1px solid #e5e7eb; }
+		.msg.user { justify-content: flex-end; }
+		.msg.user .bubble { background: #dcfce7; border-color: #86efac; }
+		.msg.bot .bubble { background: #f8fafc; border-color: #e2e8f0; }
+		.toolbar { display: flex; align-items: center; gap: 8px; padding: 8px; background: var(--panel); border-top: 1px solid #e2e8f0; }
+		.input-wrap { display: flex; align-items: center; gap: 8px; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 6px 8px; flex: 1; }
+		.input-wrap input { flex: 1; background: transparent; border: none; outline: none; color: var(--text); font-size: 14px; }
+		.icon-btn { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 10px; border: 1px solid #e2e8f0; background: #ffffff; color: var(--text); }
+		.icon-btn:active { transform: scale(0.98); }
+		.send-btn { background: var(--primary); border-color: #16a34a; color: #ffffff; font-weight: 600; }
+		.preview { display: none; padding: 8px 12px; background: #f8fafc; border-top: 1px solid #e2e8f0; }
+		.preview img { max-width: 100%; border-radius: 8px; }
+		.emoji-panel { display: none; position: absolute; bottom: 64px; left: 8px; right: 8px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 8px; max-height: 180px; overflow: auto; }
+		.emoji-panel button { background: transparent; border: none; font-size: 22px; padding: 6px; line-height: 1; cursor: pointer;
+			font-family: 'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol','Noto Color Emoji',-apple-system,'Segoe UI',Roboto,Arial,sans-serif; }
+		.status { color: var(--muted); font-size: 12px; padding: 4px 12px 8px; }
+		@media (min-width: 768px) { .container { max-width: 560px; margin: 0 auto; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; } }
+
+		/* 录音可视化覆盖层 */
+		#voiceOverlay { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.25); backdrop-filter: blur(3px); z-index: 50; }
+		#voicePanel { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 16px; padding: 16px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); display: flex; flex-direction: column; align-items: center; gap: 8px; }
+		#voiceText { font-size: 12px; color: #475569; }
+		#voiceCanvas { width: 220px; height: 80px; display: block; }
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="header">
+			<div>
+				<h1>AI智能客服</h1>
+				<small>移动端 · 语音 / 图片 / 表情 / 文本</small>
+			</div>
+		</div>
+		<div id="chat" class="chat"></div>
+		<div id="preview" class="preview">
+			<img id="previewImg" alt="preview">
+		</div>
+		<div class="status" id="status">就绪</div>
+		<div class="toolbar">
+			<button id="emojiBtn" class="icon-btn">😊</button>
+			<label class="icon-btn" for="imageInput">📷</label>
+			<input id="imageInput" type="file" accept="image/*" style="display:none;" />
+			<div class="input-wrap">
+				<input id="messageInput" type="text" placeholder="输入消息..." />
+			</div>
+			<button id="micBtn" class="icon-btn">🎤</button>
+			<button id="sendBtn" class="icon-btn send-btn">发送</button>
+		</div>
+		<div id="emojiPanel" class="emoji-panel"></div>
+	</div>
+
+	<!-- 录音可视化覆盖层 -->
+	<div id="voiceOverlay">
+		<div id="voicePanel">
+			<canvas id="voiceCanvas" width="440" height="160"></canvas>
+			<div id="voiceText">录音中... 松开结束</div>
+		</div>
+	</div>
+
+	<script>
+		const chat = document.getElementById('chat');
+		const messageInput = document.getElementById('messageInput');
+		const sendBtn = document.getElementById('sendBtn');
+		const imageInput = document.getElementById('imageInput');
+		const preview = document.getElementById('preview');
+		const previewImg = document.getElementById('previewImg');
+		const statusEl = document.getElementById('status');
+		const emojiBtn = document.getElementById('emojiBtn');
+		const emojiPanel = document.getElementById('emojiPanel');
+		const micBtn = document.getElementById('micBtn');
+
+
+		// 表情清单（同时包含短码与Unicode，用Unicode插入到输入框，渲染时转为图片）
+		const EMOJI_ITEMS = [
+			{ code: ":grinning:", char: "😀", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f600.png" },
+			{ code: ":smiley:", char: "😃", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f603.png" },
+			{ code: ":smile:", char: "😄", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f604.png" },
+			{ code: ":grin:", char: "😁", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f601.png" },
+			{ code: ":joy:", char: "😂", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f602.png" },
+			{ code: ":sweat_smile:", char: "😅", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f605.png" },
+			{ code: ":wink:", char: "😉", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f609.png" },
+			{ code: ":blush:", char: "😊", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f60a.png" },
+			{ code: ":heart_eyes:", char: "😍", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f60d.png" },
+			{ code: ":kissing_heart:", char: "😘", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f618.png" },
+			{ code: ":thinking:", char: "🤔", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f914.png" },
+			{ code: ":sunglasses:", char: "😎", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f60e.png" },
+			{ code: ":cry:", char: "😢", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f622.png" },
+			{ code: ":sob:", char: "😭", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f62d.png" },
+			{ code: ":angry:", char: "😠", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f620.png" },
+			{ code: ":thumbsup:", char: "👍", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f44d.png" },
+			{ code: ":clap:", char: "👏", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f44f.png" },
+			{ code: ":ok_hand:", char: "👌", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f44c.png" },
+			{ code: ":heart:", char: "❤️", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2764.png" }
+		];
+
+		function renderEmojiPanel() {
+			emojiPanel.innerHTML = '';
+			EMOJI_ITEMS.forEach(item => {
+				const b = document.createElement('button');
+				b.title = item.code;
+				b.innerHTML = `<img src="${item.url}" alt="${item.code}" style="width:24px;height:24px">`;
+				b.onclick = () => { messageInput.value += ' ' + item.char + ' '; emojiPanel.style.display = 'none'; messageInput.focus(); };
+				emojiPanel.appendChild(b);
+			});
+		}
+		renderEmojiPanel();
+
+		function escapeHTML(s) {
+			return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+		}
+
+		function renderMarkdownAndEmojis(text) {
+			// 1) 安全转义
+			let html = escapeHTML(text || '');
+			// 2) 基础Markdown：加粗、换行
+			// **bold**
+			html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1<\/strong>');
+			// 换行：将\n转为<br/>
+			html = html.replace(/\n/g, '<br/>');
+			// 3) 表情替换（短码与Unicode）
+			for (const item of EMOJI_ITEMS) {
+				const img = `<img src="${item.url}" alt="${item.code}" style="height:1.2em;vertical-align:-0.2em">`;
+				html = html.split(item.code).join(img);
+				html = html.split(item.char).join(img);
+			}
+			return html;
+		}
+
+		function addMsg(role, html) {
+			const row = document.createElement('div');
+			row.className = `msg ${role}`;
+			const bubble = document.createElement('div');
+			bubble.className = 'bubble';
+			bubble.innerHTML = html;
+			row.appendChild(bubble);
+			// 右侧操作区（仅bot显示语音按钮）
+			if (role === 'bot') {
+				const voiceBtn = document.createElement('button');
+				voiceBtn.className = 'icon-btn';
+				voiceBtn.style.marginLeft = '6px';
+				voiceBtn.title = '播放语音';
+				voiceBtn.textContent = '🔊';
+				voiceBtn.disabled = true; // 等待绑定文本
+				row.appendChild(voiceBtn);
+				row._voiceBtn = voiceBtn;
+			}
+			chat.appendChild(row);
+			chat.scrollTop = chat.scrollHeight;
+		}
+
+		function getBrowserZhVoice() {
+			const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+			let zh = voices.find(v => (v.lang||'').toLowerCase().startsWith('zh'));
+			if (!zh) zh = voices.find(v => /chinese|中文|zh/i.test(v.name||''));
+			return zh || voices[0];
+		}
+
+		async function playTTS(text, btn) {
+			try {
+				btn.disabled = true; btn.textContent = '⏳';
+				// 优先使用浏览器内置TTS（更稳定、无需服务器voice参数）
+				if ('speechSynthesis' in window) {
+					const speak = () => {
+						const voice = getBrowserZhVoice();
+						const u = new SpeechSynthesisUtterance(text);
+						if (voice) u.voice = voice;
+						u.rate = 1.0; u.pitch = 1.0; u.lang = (voice && voice.lang) || 'zh-CN';
+						u.onend = () => { btn.textContent = '🔊'; btn.disabled = false; };
+						btn.textContent = '▶️';
+						window.speechSynthesis.cancel();
+						window.speechSynthesis.speak(u);
+					};
+					// 某些浏览器需要等待voices加载
+					const voices = window.speechSynthesis.getVoices();
+					if (!voices || voices.length === 0) {
+						window.speechSynthesis.onvoiceschanged = () => { speak(); };
+						setTimeout(() => speak(), 300);
+					} else {
+						speak();
+					}
+					return;
+				}
+
+				// 回退：调用后端TTS
+				const res = await fetch('/api/text-to-speech', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text }) });
+				const data = await res.json();
+				if (data.success && data.audio_file) {
+					const url = `/api/audio/${data.audio_file}`;
+					const audio = new Audio(url);
+					audio.onended = () => { btn.textContent = '🔊'; };
+					btn.textContent = '▶️';
+					audio.play();
+				} else {
+					btn.textContent = '❌';
+				}
+			} catch (e) {
+				btn.textContent = '❌';
+			} finally {
+				btn.disabled = false;
+			}
+		}
+
+		function setStatus(text) { statusEl.textContent = text; }
+
+		emojiBtn.onclick = () => {
+			emojiPanel.style.display = emojiPanel.style.display === 'block' ? 'none' : 'block';
+		};
+
+		imageInput.onchange = (e) => {
+			const file = e.target.files[0];
+			if (!file) return;
+			const reader = new FileReader();
+			reader.onload = () => {
+				previewImg.src = reader.result;
+				preview.style.display = 'block';
+			};
+			reader.readAsDataURL(file);
+		};
+
+		async function send(message, imageData) {
+			if (!message && !imageData) return;
+			const rendered = message ? renderMarkdownAndEmojis(message) : '';
+			addMsg('user', `${rendered}${imageData ? '<br/><img src="'+imageData+'" style="max-width:60%;border-radius:8px;" />' : ''}`);
+			setStatus('发送中...');
+			try {
+				if (imageData) {
+					// 带图：走非流式接口
+					const res = await fetch('/api/chat', {
+						method: 'POST', headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify({ message, image: imageData })
+					});
+					const data = await res.json();
+					if (data.success) {
+						let replyText = Array.isArray(data.reply) ? data.reply.map(p => p.text || '').join('') : (typeof data.reply === 'string' ? data.reply : '');
+						const htmlReply = renderMarkdownAndEmojis(replyText || '');
+						addMsg('bot', htmlReply || '（无内容）');
+						// 绑定右侧TTS按钮
+						const lastRow = chat.lastElementChild;
+						if (lastRow && lastRow._voiceBtn) {
+							lastRow._voiceBtn.disabled = false;
+							lastRow._voiceBtn.onclick = () => playTTS(replyText, lastRow._voiceBtn);
+						}
+						setStatus('就绪');
+					} else {
+						addMsg('bot', '请求失败：'+(data.error||'未知错误'));
+						setStatus('错误');
+					}
+				} else {
+					// 纯文本：SSE流式
+					const row = document.createElement('div');
+					row.className = 'msg bot';
+					const bubble = document.createElement('div');
+					bubble.className = 'bubble';
+					row.appendChild(bubble);
+					// 右侧语音按钮（先创建，流式结束后绑定文本）
+					const voiceBtn = document.createElement('button');
+					voiceBtn.className = 'icon-btn';
+					voiceBtn.style.marginLeft = '6px';
+					voiceBtn.title = '播放语音';
+					voiceBtn.textContent = '🔊';
+					voiceBtn.disabled = true;
+					row.appendChild(voiceBtn);
+					row._voiceBtn = voiceBtn;
+					chat.appendChild(row);
+					chat.scrollTop = chat.scrollHeight;
+					let full = '';
+					const ctrl = new AbortController();
+					const res = await fetch('/api/chat-stream', {
+						method: 'POST', headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify({ message }), signal: ctrl.signal
+					});
+					const reader = res.body.getReader();
+					const decoder = new TextDecoder('utf-8');
+					let buf = '';
+					while (true) {
+						const { value, done } = await reader.read();
+						if (done) break;
+						buf += decoder.decode(value, { stream: true });
+						let idx;
+						while ((idx = buf.indexOf('\n\n')) !== -1) {
+							const packet = buf.slice(0, idx);
+							buf = buf.slice(idx + 2);
+							const line = packet.trim();
+							if (!line.startsWith('data:')) continue;
+							const jsonStr = line.slice(5).trim();
+							if (jsonStr === '[DONE]') { buf = ''; break; }
+							try {
+								const obj = JSON.parse(jsonStr);
+								if (obj.error) {
+									bubble.textContent = '服务错误：' + obj.error;
+									continue;
+								}
+								if (obj.delta) {
+									full += obj.delta;
+									bubble.innerHTML = renderMarkdownAndEmojis(full);
+									chat.scrollTop = chat.scrollHeight;
+								}
+							} catch (e) {
+								// 跳过不完整JSON，等待下一片段
+							}
+						}
+					}
+					setStatus('就绪');
+					// 绑定右侧TTS按钮（流式完成后）
+					const lastRow = chat.lastElementChild;
+					if (lastRow && lastRow._voiceBtn) {
+						lastRow._voiceBtn.disabled = false;
+						lastRow._voiceBtn.onclick = () => playTTS(full, lastRow._voiceBtn);
+					}
+				}
+			} catch (e) {
+				addMsg('bot', '网络错误');
+				setStatus('错误');
+			}
+		}
+
+		sendBtn.onclick = () => {
+			const msg = messageInput.value.trim();
+			const img = preview.style.display === 'block' ? previewImg.src : null;
+			send(msg, img);
+			messageInput.value = '';
+			preview.style.display = 'none';
+			previewImg.src = '';
+		};
+
+		messageInput.addEventListener('keydown', (e) => {
+			if (e.key === 'Enter') { e.preventDefault(); sendBtn.click(); }
+		});
+
+		// 语音录制（MediaRecorder）
+		let mediaRecorder, chunks = [];
+		let recordTimeout = null;
+		let recordTicker = null;
+		let recordSeconds = 0;
+		let audioCtx = null, analyser = null, srcNode = null, rafId = null, dataArray = null;
+		const voiceOverlay = document.getElementById('voiceOverlay');
+		const voiceCanvas = document.getElementById('voiceCanvas');
+		const vctx = voiceCanvas.getContext('2d');
+
+		function showOverlay() { voiceOverlay.style.display = 'flex'; }
+		function hideOverlay() { voiceOverlay.style.display = 'none'; }
+
+		function drawBars() {
+			if (!analyser) return;
+			const W = voiceCanvas.width, H = voiceCanvas.height;
+			vctx.clearRect(0, 0, W, H);
+			analyser.getByteTimeDomainData(dataArray);
+			// 计算音量（RMS）
+			let sum = 0;
+			for (let i = 0; i < dataArray.length; i++) {
+				const v = (dataArray[i] - 128) / 128;
+				sum += v * v;
+			}
+			const rms = Math.sqrt(sum / dataArray.length);
+			const level = Math.min(1, rms * 8); // 0~1
+			// 绘制中心柱形波纹
+			const bars = 24;
+			const barW = (W - 40) / bars;
+			for (let i = 0; i < bars; i++) {
+				const t = i / (bars - 1);
+				const atten = 1 - Math.abs(t - 0.5) * 2; // 中间高，两端低
+
+				const h = (H * 0.6) * (0.15 + level * 0.85) * atten;
+				const x = 20 + i * barW;
+				const y = (H - h) / 2;
+				vctx.fillStyle = '#16a34a';
+				vctx.fillRect(x, y, barW * 0.7, h);
+			}
+			rafId = requestAnimationFrame(drawBars);
+		}
+
+		async function startRecord() {
+			try {
+				const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+				mediaRecorder = new MediaRecorder(stream);
+				chunks = [];
+				mediaRecorder.ondataavailable = e => chunks.push(e.data);
+				mediaRecorder.onstop = async () => {
+					const blob = new Blob(chunks, { type: 'audio/webm' });
+					const form = new FormData();
+					form.append('audio', blob, 'voice.webm');
+					setStatus('识别中...');
+					try {
+						const res = await fetch('/api/speech-to-text', { method: 'POST', body: form });
+						const data = await res.json();
+						if (data.success) {
+							messageInput.value = data.text;
+							setStatus('就绪');
+						} else {
+							setStatus('语音识别失败');
+						}
+					} catch (e) { setStatus('网络错误'); }
+				};
+				mediaRecorder.start();
+				// Web Audio 可视化
+				audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+				srcNode = audioCtx.createMediaStreamSource(stream);
+				analyser = audioCtx.createAnalyser();
+				analyser.fftSize = 1024;
+				dataArray = new Uint8Array(analyser.fftSize);
+				srcNode.connect(analyser);
+				showOverlay();
+				drawBars();
+				recordSeconds = 0;
+				setStatus('录音中... 长按，最多60秒 (0s)');
+				// 每秒更新一次计时
+				recordTicker = setInterval(() => {
+					recordSeconds += 1;
+					setStatus(`录音中... 长按，最多60秒 (${recordSeconds}s)`);
+				}, 1000);
+				// 最长60秒自动停止
+				recordTimeout = setTimeout(() => {
+					stopRecordIfActive();
+				}, 60000);
+			} catch (e) {
+				setStatus('无法访问麦克风');
+			}
+		}
+
+		function clearRecordTimers() {
+			if (recordTimeout) { clearTimeout(recordTimeout); recordTimeout = null; }
+			if (recordTicker) { clearInterval(recordTicker); recordTicker = null; }
+		}
+
+		function stopRecordIfActive() {
+			if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+				mediaRecorder.stop();
+				clearRecordTimers();
+				if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+				if (audioCtx) { try { audioCtx.close(); } catch(e){} audioCtx = null; }
+				analyser = null; srcNode = null; dataArray = null;
+				hideOverlay();
+			}
+		}
+
+		// 长按开始，松开结束（支持触摸与鼠标）
+		micBtn.addEventListener('touchstart', (e) => { e.preventDefault(); if (!mediaRecorder || mediaRecorder.state === 'inactive') startRecord(); }, { passive: false });
+		micBtn.addEventListener('mousedown', (e) => { if (!mediaRecorder || mediaRecorder.state === 'inactive') startRecord(); });
+		window.addEventListener('touchend', () => { stopRecordIfActive(); });
+		window.addEventListener('mouseup', () => { stopRecordIfActive(); });
+	</script>
+</body>
+</html>

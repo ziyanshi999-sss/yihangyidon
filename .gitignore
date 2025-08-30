@@ -14,8 +14,34 @@ dist
 
 # Editor directories and files
 .idea
+.vscode
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# Env files
+.env
+.env.*
+
+# Build outputs
+unpackage/
+dist-ssr
+
+# Python (server)
+**/__pycache__/
+*.py[cod]
+*.pyo
+server/venv/
+server/.venv/
+venv/
+.venv/
+server/audio/
+server/logs/
+server/temp/
+
+# Misc
+*.pid
+*.seed
+*.pid.lock

@@ -1,38 +1,47 @@
 "use strict";
 Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
 const common_vendor = require("./common/vendor.js");
+const utils_auth = require("./utils/auth.js");
 if (!Math) {
+  "./pages/denglu/login.js";
   "./pages/index/index.js";
   "./pages/user/user.js";
   "./pages/wealth/wealth.js";
   "./pages/life/life.js";
-  "./pages/denglu/login.js";
   "./pages/service/chat.js";
+  "./pages/transfer/transfer.js";
+  "./pages/account/account.js";
+  "./pages/payment/payment.js";
+  "./pages/recharge/recharge.js";
+  "./pages/government/government.js";
+  "./pages/games/games.js";
 }
 const _sfc_main = {
   name: "App",
   onLaunch(options) {
-    common_vendor.index.__f__("log", "at App.vue:10", "App Launch", options);
+    common_vendor.index.__f__("log", "at App.vue:12", "App Launch", options);
     this.checkUpdate();
     this.initUserInfo();
     this.setSystemInfo();
     this.initNetworkListener();
+    this.initLoginInterceptor();
   },
   onShow(options) {
-    common_vendor.index.__f__("log", "at App.vue:26", "App Show", options);
+    common_vendor.index.__f__("log", "at App.vue:31", "App Show", options);
     this.checkLoginStatus();
     this.restoreAppState();
+    this.globalLoginCheck();
   },
   onHide() {
-    common_vendor.index.__f__("log", "at App.vue:36", "App Hide");
+    common_vendor.index.__f__("log", "at App.vue:44", "App Hide");
     this.saveAppState();
   },
   onError(error) {
-    common_vendor.index.__f__("error", "at App.vue:43", "App Error:", error);
+    common_vendor.index.__f__("error", "at App.vue:51", "App Error:", error);
     this.reportError(error);
   },
   onPageNotFound(options) {
-    common_vendor.index.__f__("log", "at App.vue:50", "Page Not Found:", options);
+    common_vendor.index.__f__("log", "at App.vue:58", "Page Not Found:", options);
     common_vendor.index.switchTab({
       url: "/pages/index/index"
     });
@@ -51,10 +60,10 @@ const _sfc_main = {
         const userInfo = common_vendor.index.getStorageSync("userInfo");
         if (userInfo) {
           this.globalData.userInfo = userInfo;
-          common_vendor.index.__f__("log", "at App.vue:79", "用户信息已恢复:", userInfo);
+          common_vendor.index.__f__("log", "at App.vue:87", "用户信息已恢复:", userInfo);
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at App.vue:82", "恢复用户信息失败:", error);
+        common_vendor.index.__f__("error", "at App.vue:90", "恢复用户信息失败:", error);
       }
     },
     /**
@@ -64,9 +73,9 @@ const _sfc_main = {
       try {
         const systemInfo = common_vendor.index.getSystemInfoSync();
         this.globalData.systemInfo = systemInfo;
-        common_vendor.index.__f__("log", "at App.vue:93", "系统信息:", systemInfo);
+        common_vendor.index.__f__("log", "at App.vue:101", "系统信息:", systemInfo);
       } catch (error) {
-        common_vendor.index.__f__("error", "at App.vue:95", "获取系统信息失败:", error);
+        common_vendor.index.__f__("error", "at App.vue:103", "获取系统信息失败:", error);
       }
     },
     /**
@@ -74,7 +83,7 @@ const _sfc_main = {
      */
     initNetworkListener() {
       common_vendor.index.onNetworkStatusChange((res) => {
-        common_vendor.index.__f__("log", "at App.vue:104", "网络状态变化:", res);
+        common_vendor.index.__f__("log", "at App.vue:112", "网络状态变化:", res);
         this.globalData.networkType = res.networkType;
         this.globalData.isConnected = res.isConnected;
         if (!res.isConnected) {
@@ -89,15 +98,80 @@ const _sfc_main = {
      * 检查登录状态
      */
     checkLoginStatus() {
-      const userInfo = common_vendor.index.getStorageSync("userInfo");
-      if (!userInfo) {
+      if (!utils_auth.forceCheckLogin()) {
         const pages = getCurrentPages();
         const currentPage = pages[pages.length - 1];
-        if (currentPage && !currentPage.route.includes("denglu/login")) {
-          common_vendor.index.navigateTo({
+        if (currentPage && !currentPage.route.includes("login")) {
+          common_vendor.index.__f__("log", "at App.vue:135", "应用启动时检测到未登录，强制跳转到登录页面");
+          common_vendor.index.reLaunch({
             url: "/pages/denglu/login"
           });
         }
+      }
+    },
+    /**
+     * 初始化登录拦截器
+     */
+    initLoginInterceptor() {
+      common_vendor.index.addInterceptor("navigateTo", {
+        invoke(e) {
+          common_vendor.index.__f__("log", "at App.vue:150", "拦截 navigateTo:", e.url);
+          if (e.url.includes("/pages/denglu/login")) {
+            common_vendor.index.__f__("log", "at App.vue:154", "跳转到登录页面，允许");
+            return true;
+          }
+          if (!utils_auth.forceCheckLogin()) {
+            common_vendor.index.__f__("log", "at App.vue:160", "用户未登录，阻止页面跳转");
+            return false;
+          }
+          return true;
+        }
+      });
+      common_vendor.index.addInterceptor("switchTab", {
+        invoke(e) {
+          common_vendor.index.__f__("log", "at App.vue:171", "拦截 switchTab:", e.url);
+          if (!utils_auth.forceCheckLogin()) {
+            common_vendor.index.__f__("log", "at App.vue:175", "用户未登录，阻止tabBar跳转");
+            return false;
+          }
+          return true;
+        }
+      });
+      common_vendor.index.addInterceptor("reLaunch", {
+        invoke(e) {
+          common_vendor.index.__f__("log", "at App.vue:186", "拦截 reLaunch:", e.url);
+          if (e.url.includes("/pages/denglu/login")) {
+            common_vendor.index.__f__("log", "at App.vue:190", "重定向到登录页面，允许");
+            return true;
+          }
+          if (!utils_auth.forceCheckLogin()) {
+            common_vendor.index.__f__("log", "at App.vue:196", "用户未登录，阻止重定向");
+            return false;
+          }
+          return true;
+        }
+      });
+      common_vendor.index.addInterceptor("redirectTo", {
+        invoke(e) {
+          common_vendor.index.__f__("log", "at App.vue:207", "拦截 redirectTo:", e.url);
+          if (e.url.includes("/pages/denglu/login")) {
+            common_vendor.index.__f__("log", "at App.vue:211", "重定向到登录页面，允许");
+            return true;
+          }
+          if (!utils_auth.forceCheckLogin()) {
+            common_vendor.index.__f__("log", "at App.vue:217", "用户未登录，阻止重定向");
+            return false;
+          }
+          return true;
+        }
+      });
+    },
+    /**
+     * 全局登录检查
+     */
+    globalLoginCheck() {
+      if (!utils_auth.forceCheckLogin()) {
+        utils_auth.checkLoginAndRedirect();
       }
     },
     /**
@@ -111,7 +185,7 @@ const _sfc_main = {
         };
         common_vendor.index.setStorageSync("appState", appState);
       } catch (error) {
-        common_vendor.index.__f__("error", "at App.vue:145", "保存应用状态失败:", error);
+        common_vendor.index.__f__("error", "at App.vue:247", "保存应用状态失败:", error);
       }
     },
     /**
@@ -127,14 +201,14 @@ const _sfc_main = {
           }
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at App.vue:163", "恢复应用状态失败:", error);
+        common_vendor.index.__f__("error", "at App.vue:265", "恢复应用状态失败:", error);
       }
     },
     /**
      * 错误上报
      */
     reportError(error) {
-      common_vendor.index.__f__("error", "at App.vue:172", "错误上报:", error);
+      common_vendor.index.__f__("error", "at App.vue:274", "错误上报:", error);
     }
   },
   /**
