@@ -77,6 +77,13 @@
 				"navigationBarTitleText": "小豆乐园",
 				"enablePullDownRefresh": false
 			}
+		},
+		{
+			"path": "pages/transfer/history",
+			"style": {
+				"navigationBarTitleText": "转账记录",
+				"enablePullDownRefresh": true
+			}
 		}
 	],
 	"globalStyle": {

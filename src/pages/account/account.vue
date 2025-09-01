@@ -1,3 +1,4 @@
+// 修改页面结构，添加登录提示区域
 <template>
   <view class="account-page">
     <!-- 顶部导航 -->
@@ -5,8 +6,15 @@
       <text class="nav-title">我的账户</text>
     </view>
     
+    <!-- 登录提示区域 -->
+    <view v-if="isLoginNeeded" class="login-prompt">
+      <view class="login-icon">🔐</view>
+      <text class="login-text">请先登录</text>
+      <button class="login-btn" @click="goToLogin">去登录</button>
+    </view>
+    
     <!-- 未实名认证页面 -->
-    <view v-if="!isVerified" class="verify-section">
+    <view v-else-if="!isVerified" class="verify-section">
       <view class="verify-icon">🔍</view>
       <text class="verify-title">请完成实名认证</text>
       <text class="verify-desc">完成实名认证后可享受更多金融服务</text>
@@ -110,6 +118,7 @@ import { forceCheckLogin } from '@/utils/auth.js'
 export default {
   data() {
     return {
+      isLoginNeeded: false, // 添加登录提示标志
       isVerified: true, // 默认已实名认证
       hasBankCard: true, // 默认有银行卡
       verifyInfo: {
@@ -122,55 +131,89 @@ export default {
       },
       accountInfo: {
         balance: '12,345.67'
-      }
+      },
+      userBalance: 100000, // 模拟用户余额
     }
   },
   
+  // 在onLoad方法中添加调试信息
   onLoad() {
-    // 检查实名认证状态
-    this.checkVerificationStatus()
-    // 检查银行卡绑定状态
-    this.checkBankCardStatus()
+  // 初始化时先检查登录状态
+  this.checkLoginStatus()
+  
+  if (!this.isLoginNeeded) {
+  // 检查实名认证状态
+  this.checkVerificationStatus()
+  // 检查银行卡绑定状态
+  this.checkBankCardStatus()
+  
+  // 添加调试信息
+  console.log('账户页面初始化 - 认证状态:', this.isVerified)
+  console.log('账户页面初始化 - 银行卡状态:', this.hasBankCard)
+  }
   },
   
   onShow() {
-    try {
-      // 检查登录状态
-      if (!forceCheckLogin()) {
-        console.log('账户页面：用户未登录，跳转到登录页面')
-        uni.reLaunch({
-          url: '/pages/denglu/login'
-        })
-        return
-      }
-      
-      // 页面显示逻辑
-      console.log('账户页面显示')
-    } catch (error) {
-      console.error('账户页面onShow检查失败:', error)
-      uni.reLaunch({
-        url: '/pages/denglu/login'
-      })
-    }
+    // 每次页面显示时都检查登录状态
+    this.checkLoginStatus()
+    
+    // 获取用户余额（模拟数据）
+    this.getUserBalance()
   },
   
+  // 修改checkVerificationStatus方法
   methods: {
+    // 检查登录状态
+    checkLoginStatus() {
+      try {
+        // 检查登录状态
+        if (!forceCheckLogin()) {
+          console.log('账户页面：用户未登录，显示登录提示')
+          this.isLoginNeeded = true
+          return
+        }
+        
+        this.isLoginNeeded = false
+        console.log('账户页面显示')
+      } catch (error) {
+        console.error('账户页面登录检查失败:', error)
+        this.isLoginNeeded = true
+      }
+    },
+    
+    // 跳转到登录页面
+    goToLogin() {
+      // 保存当前页面路径，登录成功后返回
+      const currentPath = getCurrentPages()[getCurrentPages().length - 1].route
+      uni.setStorageSync('redirectUrl', `/${currentPath}`)
+      
+      // 跳转到登录页面
+      uni.navigateTo({
+        url: '/pages/denglu/login'
+      })
+    },
+    
+    // 检查实名认证状态
     // 检查实名认证状态
     checkVerificationStatus() {
-      // 实际项目中应该从服务器或本地存储获取认证状态
-      const verified = uni.getStorageSync('userVerified')
-      if (verified !== null) {
-        this.isVerified = verified
-      }
+    // 实际项目中应该从服务器或本地存储获取认证状态
+    const verified = uni.getStorageSync('userVerified')
+    // 只有当verified明确为false时才设置为false，避免null值导致问题
+    if (verified === false) {
+      this.isVerified = false
+    }
+    // 其他情况保持默认值true
     },
     
     // 检查银行卡绑定状态
     checkBankCardStatus() {
-      // 实际项目中应该从服务器或本地存储获取银行卡状态
-      const hasCard = uni.getStorageSync('hasBankCard')
-      if (hasCard !== null) {
-        this.hasBankCard = hasCard
-      }
+    // 实际项目中应该从服务器或本地存储获取银行卡状态
+    const hasCard = uni.getStorageSync('hasBankCard')
+    // 只有当hasCard明确为false时才设置为false，避免null值导致问题
+    if (hasCard === false) {
+      this.hasBankCard = false
+    }
+    // 其他情况保持默认值true
     },
     
     // 提交实名认证
@@ -340,6 +383,34 @@ export default {
   font-size: 18px;
   font-weight: bold;
   color: #333;
+}
+
+.login-prompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60rpx 0;
+  text-align: center;
+}
+
+.login-icon {
+  font-size: 120rpx;
+  margin-bottom: 30rpx;
+}
+
+.login-text {
+  font-size: 32rpx;
+  color: #666;
+  margin-bottom: 40rpx;
+}
+
+.login-btn {
+  background-color: #667eea;
+  color: white;
+  font-size: 32rpx;
+  padding: 20rpx 80rpx;
+  border-radius: 8rpx;
 }
 
 /* 实名认证部分 */
