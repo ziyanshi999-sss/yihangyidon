@@ -856,7 +856,7 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesDengluLogin = /* @__PURE__ */ _export_sfc(_sfc_main$c, [["render", _sfc_render$b], ["__scopeId", "data-v-6f56e16f"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/denglu/login.vue"]]);
+  const PagesDengluLogin = /* @__PURE__ */ _export_sfc(_sfc_main$c, [["render", _sfc_render$b], ["__scopeId", "data-v-6f56e16f"], ["__file", "D:/项目/yihangyidon/src/pages/denglu/login.vue"]]);
   const _sfc_main$b = {
     data() {
       return {
@@ -1070,7 +1070,7 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesIndexIndex = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["render", _sfc_render$a], ["__scopeId", "data-v-83a5a03c"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/index/index.vue"]]);
+  const PagesIndexIndex = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["render", _sfc_render$a], ["__scopeId", "data-v-83a5a03c"], ["__file", "D:/项目/yihangyidon/src/pages/index/index.vue"]]);
   const _sfc_main$a = {
     data() {
       return {
@@ -1290,7 +1290,7 @@ if (uni.restoreGlobal) {
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesUserUser = /* @__PURE__ */ _export_sfc(_sfc_main$a, [["render", _sfc_render$9], ["__scopeId", "data-v-99b0ba47"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/user/user.vue"]]);
+  const PagesUserUser = /* @__PURE__ */ _export_sfc(_sfc_main$a, [["render", _sfc_render$9], ["__scopeId", "data-v-99b0ba47"], ["__file", "D:/项目/yihangyidon/src/pages/user/user.vue"]]);
   const _imports_0$1 = "/static/tabbar/service.png";
   const _sfc_main$9 = {
     data() {
@@ -1303,11 +1303,11 @@ if (uni.restoreGlobal) {
           { key: "insurance", name: "保险" },
           { key: "forex", name: "外汇" }
         ],
-        // 顶部轮播图片
+        // 顶部轮播图片（本地）
         swiperImages: [
-          "https://www.abchina.com/cn/advis/grfw_gggl/sygg/202102/P020210202316125719385.jpg",
-          "https://ewealth.abchina.com.cn/advis/sygg/201712/P020200120402132224758.jpg",
-          "https://ewealth.abchina.com.cn/advis/whgg/201712/P020171220394037986599.jpg"
+          "/static/wealth/swip1.jpg",
+          "/static/wealth/swip2.jpg",
+          "/static/wealth/swip3.jpg"
         ],
         // 客服
         serviceHotline: "95599",
@@ -1832,7 +1832,7 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesWealthWealth = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["render", _sfc_render$8], ["__scopeId", "data-v-a00d3a3e"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/wealth/wealth.vue"]]);
+  const PagesWealthWealth = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["render", _sfc_render$8], ["__scopeId", "data-v-a00d3a3e"], ["__file", "D:/项目/yihangyidon/src/pages/wealth/wealth.vue"]]);
   const _sfc_main$8 = {
     name: "LifePage",
     data() {
@@ -2661,15 +2661,47 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesLifeLife = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["render", _sfc_render$7], ["__scopeId", "data-v-980f0516"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/life/life.vue"]]);
-  const _imports_0 = "/static/tabbar/user-active.png";
+  const PagesLifeLife = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["render", _sfc_render$7], ["__scopeId", "data-v-980f0516"], ["__file", "D:/项目/yihangyidon/src/pages/life/life.vue"]]);
+  const _imports_0 = "/static/wealth/aiavatar.png";
+  const _imports_1 = "/static/wealth/useravatar.jpg";
+  const AI_BASE = /* @__PURE__ */ (() => {
+    let base = "";
+    return base;
+  })();
   const _sfc_main$7 = {
     data() {
       return {
         draft: "",
         sending: false,
+        recording: false,
         scrollIntoId: "",
         placeholder: "请输入您的问题，如“我要查询理财收益”",
+        sessionId: "default",
+        pendingImageBase64: "",
+        pendingImageLocalPath: "",
+        showEmoji: false,
+        emojiList: ["😀", "😁", "😂", "🤣", "😊", "😍", "😎", "👍", "🙏", "💰", "📈", "🏦", "🛡️", "💱"],
+        // 与 mobile.html 一致的表情清单（含短码与图片URL），用于渲染替换
+        EMOJI_ITEMS: [
+          { code: ":grinning:", char: "😀", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f600.png" },
+          { code: ":smiley:", char: "😃", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f603.png" },
+          { code: ":smile:", char: "😄", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f604.png" },
+          { code: ":grin:", char: "😁", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f601.png" },
+          { code: ":joy:", char: "😂", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f602.png" },
+          { code: ":sweat_smile:", char: "😅", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f605.png" },
+          { code: ":wink:", char: "😉", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f609.png" },
+          { code: ":blush:", char: "😊", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f60a.png" },
+          { code: ":heart_eyes:", char: "😍", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f60d.png" },
+          { code: ":thinking:", char: "🤔", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f914.png" },
+          { code: ":sunglasses:", char: "😎", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f60e.png" },
+          { code: ":cry:", char: "😢", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f622.png" },
+          { code: ":sob:", char: "😭", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f62d.png" },
+          { code: ":angry:", char: "😠", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f620.png" },
+          { code: ":thumbsup:", char: "👍", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f44d.png" },
+          { code: ":clap:", char: "👏", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f44f.png" },
+          { code: ":ok_hand:", char: "👌", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f44c.png" },
+          { code: ":heart:", char: "❤️", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2764.png" }
+        ],
         messages: [
           {
             id: "hello",
@@ -2677,10 +2709,216 @@ if (uni.restoreGlobal) {
             html: "您好，我是农业银行AI客服。可为您解答存款、理财、保险、外汇等问题。",
             time: ""
           }
-        ]
+        ],
+        recorder: null,
+        audioCtx: null
       };
     },
+    onLoad() {
+      try {
+        this.recorder = uni.getRecorderManager && uni.getRecorderManager();
+        if (this.recorder) {
+          this.recorder.onStop((res) => {
+            this.recording = false;
+            const tempFilePath = res.tempFilePath;
+            this.uploadAudio(tempFilePath);
+          });
+        }
+        this.audioCtx = uni.createInnerAudioContext && uni.createInnerAudioContext();
+      } catch (e) {
+      }
+    },
     methods: {
+      showThinking() {
+        const botId = Date.now() + "-thinking";
+        const msg = { id: botId, role: "bot", html: "思考中…", time: "" };
+        this.messages.push(msg);
+        this.toBottom();
+        return this.messages.length - 1;
+      },
+      updateBotMessage(index, text) {
+        const rendered = this.renderMarkdownAndEmojis(text);
+        if (this.messages[index] && this.messages[index].role === "bot") {
+          this.$set(this.messages[index], "html", rendered);
+          this.$set(this.messages[index], "time", this.nowTime());
+        }
+        this.toBottom();
+      },
+      typeOut(fullText, index, chunkSize = 2, interval = 30) {
+        return new Promise((resolve) => {
+          let pos = 0;
+          const step = () => {
+            if (pos >= fullText.length)
+              return resolve();
+            const nextPos = Math.min(fullText.length, pos + chunkSize);
+            const slice = fullText.slice(0, nextPos);
+            this.updateBotMessage(index, slice);
+            pos = nextPos;
+            setTimeout(step, interval);
+          };
+          this.updateBotMessage(index, "");
+          step();
+        });
+      },
+      async streamTextReply(content) {
+        const thinkingIndex = this.showThinking();
+        try {
+          if (!AI_BASE)
+            throw new Error("未配置AI服务地址");
+          if (typeof window === "undefined" || !window.fetch) {
+            throw new Error("stream not supported");
+          }
+          const res = await fetch(`${AI_BASE}/api/chat-stream`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: content, session_id: this.sessionId })
+          });
+          if (!res.ok || !res.body)
+            throw new Error("stream request failed");
+          const reader = res.body.getReader();
+          const decoder = new TextDecoder("utf-8");
+          let buffer = "";
+          let full = "";
+          this.updateBotMessage(thinkingIndex, "");
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done)
+              break;
+            buffer += decoder.decode(value, { stream: true });
+            const parts = buffer.split("\n\n");
+            buffer = parts.pop() || "";
+            for (const part of parts) {
+              const line = part.trim();
+              if (!line.startsWith("data:"))
+                continue;
+              const dataPart = line.slice(5).trim();
+              if (dataPart === "[DONE]") {
+                buffer = "";
+                break;
+              }
+              try {
+                const obj = JSON.parse(dataPart);
+                const delta = obj && obj.delta ? obj.delta : "";
+                if (delta) {
+                  full += delta;
+                  this.updateBotMessage(thinkingIndex, full);
+                }
+              } catch (_) {
+                full += dataPart;
+                this.updateBotMessage(thinkingIndex, full);
+              }
+            }
+          }
+          if (full) {
+            const [tErr, tRes] = await new Promise((resolve) => {
+              uni.request({
+                url: `${AI_BASE}/api/text-to-speech`,
+                method: "POST",
+                header: { "Content-Type": "application/json" },
+                data: { text: full },
+                success: (r) => resolve([null, r]),
+                fail: (e) => resolve([e, null])
+              });
+            });
+            if (!tErr && tRes && tRes.statusCode >= 200 && tRes.statusCode < 300 && tRes.data && tRes.data.success && tRes.data.audio_file) {
+              const url = `${AI_BASE}/api/audio/${tRes.data.audio_file}`;
+              this.$set(this.messages[thinkingIndex], "audio", url);
+            }
+          }
+        } catch (e) {
+          formatAppLog("error", "at pages/service/chat.vue:229", "AI stream error:", e);
+          await this.requestOnceText(content, thinkingIndex);
+        }
+      },
+      async requestOnceText(content, botIndexToReuse = null) {
+        {
+          const fallback = this.generateReply(content);
+          const msg = '未配置AI服务地址，小程序可执行 uni.setStorageSync("AI_BASE","http://你的电脑IP:5000")；H5请配置 /api 代理';
+          if (botIndexToReuse != null)
+            this.updateBotMessage(botIndexToReuse, fallback);
+          else
+            this.messages.push({ id: Date.now() + "-b", role: "bot", html: this.renderMarkdownAndEmojis(fallback), time: this.nowTime() });
+          uni.showToast({ title: msg.slice(0, 28), icon: "none" });
+          formatAppLog("warn", "at pages/service/chat.vue:242", msg);
+          return;
+        }
+      },
+      playAudio(url) {
+        try {
+          if (!this.audioCtx)
+            this.audioCtx = uni.createInnerAudioContext();
+          this.audioCtx.src = url;
+          this.audioCtx.play();
+        } catch (e) {
+          uni.showToast({ title: "无法播放语音", icon: "none" });
+        }
+      },
+      toggleEmoji() {
+        this.showEmoji = !this.showEmoji;
+      },
+      // 安全转义 + 简单Markdown + 表情替换
+      renderMarkdownAndEmojis(text = "") {
+        let html = this.escapeHtml(text || "");
+        html = html.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+        html = html.replace(/\n/g, "<br/>");
+        if (Array.isArray(this.EMOJI_ITEMS)) {
+          for (const item of this.EMOJI_ITEMS) {
+            const img = `<img src="${item.url}" alt="${item.code}" style="height:1.2em;vertical-align:-0.2em"/>`;
+            html = html.split(item.code).join(img);
+            html = html.split(item.char).join(img);
+          }
+        }
+        return html;
+      },
+      appendEmoji(item) {
+        const ch = item && item.char ? item.char : "";
+        this.draft += (this.draft && !/\s$/.test(this.draft) ? " " : "") + ch + " ";
+        this.showEmoji = false;
+      },
+      toggleRecord() {
+        if (!this.recorder) {
+          uni.showToast({ title: "当前平台不支持录音", icon: "none" });
+          return;
+        }
+        if (this.recording) {
+          this.recorder.stop();
+        } else {
+          this.recording = true;
+          this.recorder.start({
+            duration: 6e4,
+            sampleRate: 16e3,
+            numberOfChannels: 1,
+            encodeBitRate: 48e3,
+            format: "mp3"
+          });
+        }
+      },
+      uploadAudio(filePath) {
+        uni.showLoading({ title: "识别中" });
+        uni.uploadFile({
+          url: `${AI_BASE}/api/speech-to-text`,
+          name: "audio",
+          filePath,
+          success: (res) => {
+            uni.hideLoading();
+            try {
+              const data = JSON.parse(res.data);
+              if (data.success && data.text) {
+                this.draft = data.text;
+                this.send();
+              } else {
+                uni.showToast({ title: data.error || "识别失败", icon: "none" });
+              }
+            } catch (e) {
+              uni.showToast({ title: "解析失败", icon: "none" });
+            }
+          },
+          fail: () => {
+            uni.hideLoading();
+            uni.showToast({ title: "上传失败", icon: "none" });
+          }
+        });
+      },
       chooseImage() {
         uni.chooseImage({
           count: 1,
@@ -2688,45 +2926,68 @@ if (uni.restoreGlobal) {
           sourceType: ["album", "camera"],
           success: (res) => {
             const path = res.tempFilePaths[0];
-            this.messages.push({ id: Date.now() + "-uimg", role: "user", html: `<img src="${path}" style="max-width:100%;border-radius:8rpx;"/>`, time: this.nowTime() });
-            this.toBottom();
+            this.pendingImageLocalPath = path;
+            try {
+              this.pendingImageBase64 = "";
+              uni.showToast({ title: "H5预览模式：不进行图片转换", icon: "none" });
+            } catch (e) {
+              formatAppLog("warn", "at pages/service/chat.vue:404", "图片转base64失败:", e);
+              this.pendingImageBase64 = "";
+              this.pendingImageLocalPath = "";
+            }
+            uni.showToast({ title: "已选择图片，可继续输入文字后发送", icon: "none" });
           },
           fail: () => {
             uni.showToast({ title: "选择图片取消", icon: "none" });
           }
         });
       },
-      openEmoji() {
-        uni.showToast({ title: "表情面板（待接入）", icon: "none" });
+      clearPendingImage() {
+        this.pendingImageLocalPath = "";
+        this.pendingImageBase64 = "";
       },
-      startVoice() {
-        uni.showToast({ title: "语音输入（待接入）", icon: "none" });
-      },
-      send() {
+      async send() {
         const content = this.draft.trim();
-        if (!content || this.sending)
+        if (!content && !this.pendingImageBase64) {
           return;
-        const userMsg = {
-          id: Date.now() + "-u",
-          role: "user",
-          html: this.escapeHtml(content),
-          time: this.nowTime()
-        };
+        }
+        if (this.sending)
+          return;
+        await this.sendMessage(content);
+      },
+      async sendMessage(content) {
+        const renderedUser = this.renderMarkdownAndEmojis(content);
+        const userMsg = { id: Date.now() + "-u", role: "user", html: renderedUser, time: this.nowTime() };
+        if (this.pendingImageLocalPath) {
+          userMsg.image = this.pendingImageLocalPath;
+        }
         this.messages.push(userMsg);
         this.draft = "";
+        this.showEmoji = false;
         this.toBottom();
         this.sending = true;
-        setTimeout(() => {
+        try {
+          if (this.pendingImageBase64) {
+            await this.requestOnceText(content);
+          } else {
+            if (typeof window !== "undefined" && window.fetch) {
+              await this.streamTextReply(content);
+            } else {
+              const thinkingIndex = this.showThinking();
+              await this.requestOnceText(content, thinkingIndex);
+            }
+          }
+        } catch (e) {
           const reply = this.generateReply(content);
-          this.messages.push({
-            id: Date.now() + "-b",
-            role: "bot",
-            html: reply,
-            time: this.nowTime()
-          });
+          const rendered = this.renderMarkdownAndEmojis(reply);
+          this.messages.push({ id: Date.now() + "-b", role: "bot", html: rendered, time: this.nowTime() });
+          uni.showToast({ title: "AI服务不可用，已使用本地回复", icon: "none" });
+        } finally {
           this.sending = false;
+          this.pendingImageBase64 = "";
+          this.pendingImageLocalPath = "";
           this.toBottom();
-        }, 600);
+        }
       },
       generateReply(text) {
         const t = text.toLowerCase();
@@ -2767,7 +3028,7 @@ if (uni.restoreGlobal) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "chat-page" }, [
       vue.createElementVNode("view", { class: "chat-header" }, [
         vue.createElementVNode("text", { class: "title" }, "AI 智能客服"),
-        vue.createElementVNode("text", { class: "sub" }, "7×24小时为您服务")
+        vue.createElementVNode("text", { class: "sub" }, "24小时为您服务")
       ]),
       vue.createElementVNode("scroll-view", {
         "scroll-y": "",
@@ -2786,17 +3047,33 @@ if (uni.restoreGlobal) {
               m.role === "bot" ? (vue.openBlock(), vue.createElementBlock("image", {
                 key: 0,
                 class: "avatar",
-                src: "https://onlineservice.cdn-static.abchina.com.cn/chat/static/img/sister_icon.08ee4961.png",
+                src: _imports_0,
                 mode: "aspectFit"
               })) : vue.createCommentVNode("v-if", true),
               vue.createElementVNode("view", { class: "bubble" }, [
-                vue.createElementVNode("rich-text", {
+                m.html ? (vue.openBlock(), vue.createElementBlock("rich-text", {
+                  key: 0,
                   nodes: m.html
-                }, null, 8, ["nodes"]),
+                }, null, 8, ["nodes"])) : vue.createCommentVNode("v-if", true),
+                m.image ? (vue.openBlock(), vue.createElementBlock("image", {
+                  key: 1,
+                  src: m.image,
+                  style: { "max-width": "100%", "border-radius": "8rpx" },
+                  mode: "widthFix"
+                }, null, 8, ["src"])) : vue.createCommentVNode("v-if", true),
+                m.audio ? (vue.openBlock(), vue.createElementBlock("view", {
+                  key: 2,
+                  class: "audio-row"
+                }, [
+                  vue.createElementVNode("button", {
+                    class: "mini-btn ghost",
+                    onClick: ($event) => $options.playAudio(m.audio)
+                  }, "▶ 播放语音", 8, ["onClick"])
+                ])) : vue.createCommentVNode("v-if", true),
                 m.time ? (vue.openBlock(), vue.createElementBlock(
                   "text",
                   {
-                    key: 0,
+                    key: 3,
                     class: "time"
                   },
                   vue.toDisplayString(m.time),
@@ -2807,7 +3084,7 @@ if (uni.restoreGlobal) {
               m.role === "user" ? (vue.openBlock(), vue.createElementBlock("image", {
                 key: 1,
                 class: "avatar",
-                src: _imports_0,
+                src: _imports_1,
                 mode: "aspectFit"
               })) : vue.createCommentVNode("v-if", true)
             ], 10, ["id"]);
@@ -2816,45 +3093,93 @@ if (uni.restoreGlobal) {
           /* KEYED_FRAGMENT */
         ))
       ], 8, ["scroll-into-view"]),
+      vue.createCommentVNode(" 待发送图片预览（不改变原布局，仅在输入栏上方增加一行） "),
+      $data.pendingImageLocalPath ? (vue.openBlock(), vue.createElementBlock("view", {
+        key: 0,
+        class: "pending-preview"
+      }, [
+        vue.createElementVNode("image", {
+          src: $data.pendingImageLocalPath,
+          class: "pending-img",
+          mode: "aspectFit"
+        }, null, 8, ["src"]),
+        vue.createElementVNode("button", {
+          class: "mini-btn ghost",
+          onClick: _cache[0] || (_cache[0] = (...args) => $options.clearPendingImage && $options.clearPendingImage(...args))
+        }, "移除")
+      ])) : vue.createCommentVNode("v-if", true),
+      vue.createCommentVNode(" 表情面板（与 mobile.html 一致：图片表情选择） "),
+      $data.showEmoji ? (vue.openBlock(), vue.createElementBlock("view", {
+        key: 1,
+        class: "emoji-panel"
+      }, [
+        (vue.openBlock(true), vue.createElementBlock(
+          vue.Fragment,
+          null,
+          vue.renderList($data.EMOJI_ITEMS, (item, idx) => {
+            return vue.openBlock(), vue.createElementBlock("view", {
+              class: "emoji-item",
+              key: idx,
+              onClick: ($event) => $options.appendEmoji(item),
+              title: item.code
+            }, [
+              vue.createElementVNode("image", {
+                src: item.url,
+                alt: item.code,
+                style: { "width": "24px", "height": "24px" },
+                mode: "aspectFit"
+              }, null, 8, ["src", "alt"])
+            ], 8, ["onClick", "title"]);
+          }),
+          128
+          /* KEYED_FRAGMENT */
+        ))
+      ])) : vue.createCommentVNode("v-if", true),
       vue.createElementVNode("view", { class: "chat-input" }, [
         vue.createElementVNode("view", { class: "tools" }, [
           vue.createElementVNode("button", {
             class: "tool-btn",
-            onClick: _cache[0] || (_cache[0] = (...args) => $options.chooseImage && $options.chooseImage(...args)),
+            onClick: _cache[1] || (_cache[1] = (...args) => $options.chooseImage && $options.chooseImage(...args)),
             "hover-class": "btn-hover",
             "hover-stay-time": "50"
           }, "🖼️"),
           vue.createElementVNode("button", {
             class: "tool-btn",
-            onClick: _cache[1] || (_cache[1] = (...args) => $options.openEmoji && $options.openEmoji(...args)),
+            onClick: _cache[2] || (_cache[2] = (...args) => $options.toggleEmoji && $options.toggleEmoji(...args)),
             "hover-class": "btn-hover",
             "hover-stay-time": "50"
           }, "😀"),
-          vue.createElementVNode("button", {
-            class: "tool-btn",
-            onClick: _cache[2] || (_cache[2] = (...args) => $options.startVoice && $options.startVoice(...args)),
-            "hover-class": "btn-hover",
-            "hover-stay-time": "50"
-          }, "🎤")
+          vue.createElementVNode(
+            "button",
+            {
+              class: "tool-btn",
+              onClick: _cache[3] || (_cache[3] = (...args) => $options.toggleRecord && $options.toggleRecord(...args)),
+              "hover-class": "btn-hover",
+              "hover-stay-time": "50"
+            },
+            vue.toDisplayString($data.recording ? "■" : "🎤"),
+            1
+            /* TEXT */
+          )
         ]),
         vue.withDirectives(vue.createElementVNode("input", {
           class: "input",
-          "onUpdate:modelValue": _cache[3] || (_cache[3] = ($event) => $data.draft = $event),
+          "onUpdate:modelValue": _cache[4] || (_cache[4] = ($event) => $data.draft = $event),
           placeholder: $data.placeholder,
           "confirm-type": "send",
-          onConfirm: _cache[4] || (_cache[4] = (...args) => $options.send && $options.send(...args))
+          onConfirm: _cache[5] || (_cache[5] = (...args) => $options.send && $options.send(...args))
         }, null, 40, ["placeholder"]), [
           [vue.vModelText, $data.draft]
         ]),
         vue.createElementVNode("button", {
           class: "send",
           disabled: !$data.draft.trim() || $data.sending,
-          onClick: _cache[5] || (_cache[5] = (...args) => $options.send && $options.send(...args))
+          onClick: _cache[6] || (_cache[6] = (...args) => $options.send && $options.send(...args))
         }, vue.toDisplayString($data.sending ? "发送中..." : "发送"), 9, ["disabled"])
       ])
     ]);
   }
-  const PagesServiceChat = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["render", _sfc_render$6], ["__scopeId", "data-v-e19cce9b"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/service/chat.vue"]]);
+  const PagesServiceChat = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["render", _sfc_render$6], ["__scopeId", "data-v-e19cce9b"], ["__file", "D:/项目/yihangyidon/src/pages/service/chat.vue"]]);
   const _sfc_main$6 = {
     data() {
       return {
@@ -3155,7 +3480,7 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesTransferTransfer = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["render", _sfc_render$5], ["__scopeId", "data-v-d303ad3d"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/transfer/transfer.vue"]]);
+  const PagesTransferTransfer = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["render", _sfc_render$5], ["__scopeId", "data-v-d303ad3d"], ["__file", "D:/项目/yihangyidon/src/pages/transfer/transfer.vue"]]);
   const _sfc_main$5 = {
     data() {
       return {
@@ -3547,7 +3872,7 @@ if (uni.restoreGlobal) {
       ))
     ]);
   }
-  const PagesAccountAccount = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["render", _sfc_render$4], ["__scopeId", "data-v-f7e9057f"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/account/account.vue"]]);
+  const PagesAccountAccount = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["render", _sfc_render$4], ["__scopeId", "data-v-f7e9057f"], ["__file", "D:/项目/yihangyidon/src/pages/account/account.vue"]]);
   const BASE_URL = "https://api.abchina.com";
   const TIMEOUT = 1e4;
   const requestInterceptor = (config) => {
@@ -4394,7 +4719,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       ])
     ]);
   }
-  const PagesPaymentPayment = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["render", _sfc_render$3], ["__scopeId", "data-v-6e0fac4f"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/payment/payment.vue"]]);
+  const PagesPaymentPayment = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["render", _sfc_render$3], ["__scopeId", "data-v-6e0fac4f"], ["__file", "D:/项目/yihangyidon/src/pages/payment/payment.vue"]]);
   const _sfc_main$3 = {
     name: "RechargePage",
     data() {
@@ -4757,7 +5082,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       ])
     ]);
   }
-  const PagesRechargeRecharge = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["render", _sfc_render$2], ["__scopeId", "data-v-d370def1"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/recharge/recharge.vue"]]);
+  const PagesRechargeRecharge = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["render", _sfc_render$2], ["__scopeId", "data-v-d370def1"], ["__file", "D:/项目/yihangyidon/src/pages/recharge/recharge.vue"]]);
   const _sfc_main$2 = {
     name: "GovernmentPage",
     data() {
@@ -5163,7 +5488,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       ])
     ]);
   }
-  const PagesGovernmentGovernment = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["render", _sfc_render$1], ["__scopeId", "data-v-55002ac7"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/government/government.vue"]]);
+  const PagesGovernmentGovernment = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["render", _sfc_render$1], ["__scopeId", "data-v-55002ac7"], ["__file", "D:/项目/yihangyidon/src/pages/government/government.vue"]]);
   const _sfc_main$1 = {
     name: "GamesPage",
     data() {
@@ -5656,7 +5981,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       ])
     ]);
   }
-  const PagesGamesGames = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["render", _sfc_render], ["__scopeId", "data-v-5e0e9dd0"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/games/games.vue"]]);
+  const PagesGamesGames = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["render", _sfc_render], ["__scopeId", "data-v-5e0e9dd0"], ["__file", "D:/项目/yihangyidon/src/pages/games/games.vue"]]);
   __definePage("pages/denglu/login", PagesDengluLogin);
   __definePage("pages/index/index", PagesIndexIndex);
   __definePage("pages/user/user", PagesUserUser);
@@ -5913,7 +6238,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       isConnected: true
     }
   };
-  const App = /* @__PURE__ */ _export_sfc(_sfc_main, [["__file", "E:/Vue项目/专高六/1/项目/src/App.vue"]]);
+  const App = /* @__PURE__ */ _export_sfc(_sfc_main, [["__file", "D:/项目/yihangyidon/src/App.vue"]]);
   function createApp() {
     const app = vue.createVueApp(App);
     app.config.errorHandler = (err, vm, info) => {
