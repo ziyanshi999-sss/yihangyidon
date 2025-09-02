@@ -1,22 +1,30 @@
 {
   "pages": [
+    "pages/denglu/login",
     "pages/index/index",
     "pages/user/user",
     "pages/wealth/wealth",
     "pages/life/life",
-    "pages/denglu/login",
-    "pages/service/chat"
+    "pages/service/chat",
+    "pages/transfer/transfer",
+    "pages/account/account",
+    "pages/payment/payment",
+    "pages/recharge/recharge",
+    "pages/government/government",
+    "pages/games/games",
+    "pages/transfer/history",
+    "pages/credit-card/credit-card",
+    "pages/balance/balance",
+    "pages/loan/loan"
   ],
   "window": {
     "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "农业银行",
-    "navigationBarBackgroundColor": "#F8F8F8",
+    "navigationBarBackgroundColor": "#fff",
     "backgroundColor": "#F8F8F8"
   },
   "tabBar": {
-    "color": "#7A7E83",
-    "selectedColor": "#3cc51f",
-    "borderStyle": "black",
+    "color": "#999999",
+    "selectedColor": "#f9a825",
     "backgroundColor": "#ffffff",
     "list": [
       {
@@ -44,11 +52,6 @@
         "text": "我的"
       }
     ]
-  },
-  "permission": {
-    "scope.userLocation": {
-      "desc": "您的位置信息将用于为您提供更好的服务"
-    }
   },
   "usingComponents": {}
 }

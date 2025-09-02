@@ -84,6 +84,27 @@
 				"navigationBarTitleText": "转账记录",
 				"enablePullDownRefresh": true
 			}
+		},
+		{
+			"path": "pages/credit-card/credit-card",
+			"style": {
+				"navigationBarTitleText": "信用卡",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/balance/balance",
+			"style": {
+				"navigationBarTitleText": "收支明细",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/loan/loan",
+			"style": {
+				"navigationBarTitleText": "贷款服务",
+				"enablePullDownRefresh": false
+			}
 		}
 	],
 	"globalStyle": {

@@ -30,51 +30,51 @@
           <view class="function-icon icon-transfer">↔️</view>
           <text class="function-text">转账</text>
         </view>
-        <view class="function-item">
+        <view class="function-item" @click="handleBalanceClick">
           <view class="function-icon icon-balance">📊</view>
           <text class="function-text">收支</text>
         </view>
-        <view class="function-item">
+        <view class="function-item" v-if="showMoreFunctions" @click="handleScanClick">
           <view class="function-icon icon-scan">🔍</view>
           <text class="function-text">扫一扫</text>
         </view>
       </view>
 
       <view class="function-grid">
-        <view class="function-item">
+        <view class="function-item" v-if="showMoreFunctions" @click="handleCreditCardClick">
           <view class="function-icon icon-card">💳</view>
           <text class="function-text">信用卡</text>
         </view>
-        <view class="function-item">
+        <view class="function-item" v-if="showMoreFunctions">
           <view class="function-icon icon-deposit">💰</view>
           <text class="function-text">存款</text>
         </view>
-        <view class="function-item">
+        <view class="function-item" @click="scrollToHotActivities">
           <view class="function-icon icon-activity">🎉</view>
           <text class="function-text">热门活动</text>
         </view>
-        <view class="function-item">
+        <view class="function-item" v-if="showMoreFunctions">
           <view class="function-icon icon-branch">🏦</view>
           <text class="function-text">网点查询</text>
         </view>
-        <view class="function-item">
+        <view class="function-item" v-if="showMoreFunctions">
           <view class="function-icon icon-electronic">📱</view>
           <text class="function-text">开通电子</text>
         </view>
       </view>
 
       <view class="function-grid">
-        <view class="function-item">
+        <view class="function-item" v-if="showMoreFunctions" @click="handleLoanClick">
           <view class="function-icon icon-loan">💸</view>
           <text class="function-text">贷款</text>
         </view>
-        <view class="function-item">
+        <view class="function-item" @click="handleRechargeClick">
           <view class="function-icon icon-topup">📱</view>
           <text class="function-text">手机充值</text>
         </view>
-        <view class="function-item">
+        <view class="function-item" @click="toggleMoreFunctions">
           <view class="function-icon icon-more">•••</view>
-          <text class="function-text">全部</text>
+          <text class="function-text">{{ showMoreFunctions ? '收起' : '全部' }}</text>
         </view>
       </view>
     </view>
@@ -126,12 +126,12 @@
       </view>
     </view>
 
-    <!-- 热门活动 -->
-    <view class="hot-activities">
+    <!-- 热门活动 (添加id) -->
+    <view id="hot-activities-section" class="hot-activities">
       <text class="activities-title">热门活动</text>
       <text class="arrow-right">➡️</text>
     </view>
-
+    
     <!-- 活动卡片 -->
     <view class="activity-cards">
       <view class="activity-card">
@@ -152,7 +152,8 @@ import { forceCheckLogin } from '@/utils/auth.js'
 export default {
   data() {
     return {
-      isLoggedIn: false
+      isLoggedIn: false,
+      showMoreFunctions: false // 控制更多功能按钮的显示/隐藏
     }
   },
   
@@ -166,6 +167,7 @@ export default {
     this.checkLoginStatus()
   },
   
+  // 在methods对象中添加缺失的scrollToHotActivities方法
   methods: {
     // 检查登录状态
     checkLoginStatus() {
@@ -207,6 +209,163 @@ export default {
           url: '/pages/denglu/login'
         })
       }
+    },
+    
+    // 处理信用卡点击
+    handleCreditCardClick() {
+      if (this.isLoggedIn) {
+        // 已登录，跳转到信用卡页面
+        uni.navigateTo({
+          url: '/pages/credit-card/credit-card'
+        })
+      } else {
+        // 未登录，跳转到登录页面
+        uni.navigateTo({
+          url: '/pages/denglu/login'
+        })
+      }
+    },
+    
+    // 处理收支点击
+    handleBalanceClick() {
+      if (this.isLoggedIn) {
+        // 已登录，跳转到收支页面
+        uni.navigateTo({
+          url: '/pages/balance/balance'
+        })
+      } else {
+        // 未登录，跳转到登录页面
+        uni.navigateTo({
+          url: '/pages/denglu/login'
+        })
+      }
+    },
+    
+    // 处理贷款点击
+    handleLoanClick() {
+      if (this.isLoggedIn) {
+        // 已登录，跳转到贷款页面
+        uni.navigateTo({
+          url: '/pages/loan/loan'
+        })
+      } else {
+        // 未登录，跳转到登录页面
+        uni.navigateTo({
+          url: '/pages/denglu/login'
+        })
+      }
+    },
+    
+    // 处理手机充值点击
+    handleRechargeClick() {
+      if (this.isLoggedIn) {
+        // 已登录，跳转到手机充值页面
+        uni.navigateTo({
+          url: '/pages/recharge/recharge'
+        })
+      } else {
+        // 未登录，跳转到登录页面
+        uni.navigateTo({
+          url: '/pages/denglu/login'
+        })
+      }
+    },
+    
+    // 处理扫一扫点击 - 完善后的实现
+    handleScanClick() {
+      // 检查是否登录
+      if (!this.isLoggedIn) {
+        uni.navigateTo({
+          url: '/pages/denglu/login'
+        })
+        return
+      }
+      
+      // 调用uni-app的扫码API
+      uni.scanCode({
+        // 允许的扫码类型：barCode（一维码）和qrCode（二维码）
+        scanType: ['barCode', 'qrCode'],
+        // 是否显示闪光灯按钮
+        showFlash: true,
+        // 成功扫码的回调
+        success: (res) => {
+          console.log('扫码结果：', res)
+          
+          // 解析扫码结果
+          const result = res.result
+          
+          // 这里可以根据扫码结果做不同的处理
+          // 例如，如果是URL则打开链接，如果是支付码则处理支付等
+          if (result.startsWith('http')) {
+            // 打开网页链接
+            uni.showModal({
+              title: '打开链接',
+              content: `确定要打开链接: ${result} 吗？`,
+              success: (confirmRes) => {
+                if (confirmRes.confirm) {
+                  // 在外部浏览器打开链接
+                  uni.openURL({
+                    url: result
+                  })
+                }
+              }
+            })
+          } else if (result.includes('payment')) {
+            // 处理支付相关扫码
+            uni.showModal({
+              title: '支付确认',
+              content: '检测到支付码，是否继续？',
+              success: (confirmRes) => {
+                if (confirmRes.confirm) {
+                  // 这里可以跳转到支付页面或处理支付逻辑
+                  uni.showToast({
+                    title: '正在处理支付',
+                    icon: 'loading'
+                  })
+                  // 实际项目中这里会有更多支付相关的逻辑
+                }
+              }
+            })
+          } else {
+            // 其他类型的扫码结果，直接显示
+            uni.showModal({
+              title: '扫码结果',
+              content: result,
+              showCancel: false
+            })
+          }
+        },
+        // 扫码失败的回调
+        fail: (err) => {
+          console.error('扫码失败：', err)
+          // 如果用户取消扫码，不显示错误提示
+          if (err.errMsg !== 'scanCode:fail cancel') {
+            uni.showToast({
+              title: '扫码失败，请重试',
+              icon: 'none'
+            })
+          }
+        }
+      })
+    },
+    
+    // 切换更多功能的显示/隐藏
+    toggleMoreFunctions() {
+      this.showMoreFunctions = !this.showMoreFunctions
+    },
+    
+    // 新增：滚动到热门活动区域
+    scrollToHotActivities() {
+      // 使用uni-app的查询API选择目标元素
+      uni.createSelectorQuery().select('#hot-activities-section').boundingClientRect((rect) => {
+        // 获取元素的顶部位置
+        const top = rect.top
+        // 滚动到指定位置
+        uni.pageScrollTo({
+          scrollTop: top,
+          duration: 300 // 滚动动画持续时间（毫秒）
+        })
+      }).exec()
     }
   }
 }
