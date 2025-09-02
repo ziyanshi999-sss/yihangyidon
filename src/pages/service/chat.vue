@@ -524,8 +524,8 @@ export default {
 
 .chat-body { flex: 1; padding: 16rpx 20rpx; padding-bottom: 260rpx; }
 .msg-row { display: flex; align-items: flex-end; margin: 16rpx 0; gap: 12rpx; }
-.msg-row.user { justify-content: flex-end; }
-.avatar { width: 64rpx; height: 64rpx; border-radius: 50%; }
+.msg-row.user { justify-content: flex-end; padding-right: 40rpx; }
+.avatar { width: 64rpx; height: 64rpx; border-radius: 50%; flex-shrink: 0; }
 .bubble { max-width: 72%; padding: 16rpx 20rpx; border-radius: 16rpx; box-shadow: 0 6rpx 20rpx rgba(0,0,0,0.04); }
 .msg-row.bot .bubble { background: #ffffff; color: var(--text); border: 2rpx solid var(--line); }
 .msg-row.user .bubble { background: var(--primary); color: #fff; }
