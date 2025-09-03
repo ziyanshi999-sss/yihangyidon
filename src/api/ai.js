@@ -133,11 +133,11 @@ export const textToSpeech = async (text) => {
     const requestData = {
       model: 'fnlp/MOSS-TTSD-v0.5',
       input: `[S1]${text}`, // 使用[S1]标记说话人1
-      voice: 'fnlp/MOSS-TTSD-v0.5:alex', // 选择alex语音
+      voice: 'fnlp/MOSS-TTSD-v0.5:anna', // 切换为 anna（温柔女声）
       response_format: 'mp3',
       sample_rate: 44100,
       stream: false, // 改为false，获取完整音频文件
-      speed: 1.0,
+      speed: 1.0, // 语速
       gain: 0
     }
     

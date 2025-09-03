@@ -5,7 +5,7 @@
       <text class="sub">24小时为您服务</text>
     </view>
 
-    <scroll-view scroll-y class="chat-body" :scroll-into-view="scrollIntoId">
+    <scroll-view scroll-y class="chat-body" :scroll-into-view="scrollIntoId" scroll-with-animation="true">
       <view v-for="(m, i) in messages" :key="m.id" :id="'msg-' + i" class="msg-row" :class="m.role">
         <image v-if="m.role==='bot'" class="avatar" src="/static/wealth/aiavatar.png" mode="aspectFit" />
         <view class="bubble">
@@ -13,8 +13,8 @@
           <image v-if="m.image" :src="m.image" class="message-img" mode="widthFix" />
           <text v-if="m.time" class="time">{{ m.time }}</text>
         </view>
-        <!-- AI回复的播放按钮 -->
-        <view v-if="m.role === 'bot'" class="play-btn-container">
+        <!-- AI回复的播放按钮（仅在存在音频时显示） -->
+        <view v-if="m.role === 'bot' && m.audio" class="play-btn-container">
                      <button 
              class="play-btn" 
              :class="{ 'playing': m.isPlaying }"
@@ -41,6 +41,8 @@
         </view>
         <image v-if="m.role==='user'" class="avatar" src="/static/wealth/useravatar.jpg" mode="aspectFit" />
       </view>
+      <!-- 底部锚点用于自动滚动 -->
+      <view :id="scrollIntoId"></view>
     </scroll-view>
 
     <!-- 待发送图片预览（不改变原布局，仅在输入栏上方增加一行） -->
@@ -84,7 +86,7 @@ export default {
       draft: '',
       sending: false,
       recording: false,
-      scrollIntoId: '',
+      scrollIntoId: 'chat-bottom-anchor',
       placeholder: '请输入您的问题',
       sessionId: 'default',
       pendingImageBase64: '',
@@ -136,8 +138,11 @@ export default {
           this.uploadAudio(tempFilePath)
         })
       }
-      this.audioCtx = uni.createInnerAudioContext && uni.createInnerAudioContext()
-    } catch (e) {}
+      // 初始化音频上下文
+      this.initAudioContext()
+    } catch (e) {
+      console.error('onLoad初始化失败:', e)
+    }
   },
   onUnload() {
     // 页面销毁时清理音频资源
@@ -148,9 +153,9 @@ export default {
     }
   },
   methods: {
-    showThinking() {
+    showThinking(text = '思考中…') {
       const botId = Date.now() + '-thinking'
-      const msg = { id: botId, role: 'bot', html: '思考中…', time: '' }
+      const msg = { id: botId, role: 'bot', html: text, time: '' }
       this.messages.push(msg)
       this.toBottom()
       return this.messages.length - 1
@@ -172,10 +177,13 @@ export default {
           const slice = fullText.slice(0, nextPos)
           this.updateBotMessage(index, slice)
           pos = nextPos
+          // 每次追加都触发滚动
+          this.toBottom()
           setTimeout(step, interval)
         }
         // 从空开始
         this.updateBotMessage(index, '')
+        this.toBottom()
         step()
       })
     },
@@ -192,10 +200,15 @@ export default {
           
           // TTS
           const ttsResult = await textToSpeech(replyText)
+          console.log('TTS结果:', ttsResult)
           if (ttsResult.success) {
             if (targetIndex >= 0 && this.messages[targetIndex].role === 'bot') {
+              console.log('设置音频路径:', ttsResult.audioPath)
               this.$set(this.messages[targetIndex], 'audio', ttsResult.audioPath)
+              console.log('消息对象:', this.messages[targetIndex])
             }
+          } else {
+            console.error('TTS失败:', ttsResult.error)
           }
         } else {
           throw new Error(result.error || 'AI服务请求失败')
@@ -221,6 +234,7 @@ export default {
       console.log('点击播放按钮，消息对象:', message)
       console.log('音频路径:', message.audio)
       console.log('播放状态:', message.isPlaying)
+      console.log('音频数据前100字符:', message.audio ? message.audio.substring(0, 100) : '无')
       
       if (!message.audio) {
         uni.showToast({ title: '没有语音内容', icon: 'none' })
@@ -236,51 +250,114 @@ export default {
       // 停止其他正在播放的音频
       this.stopCurrentAudio()
       
+      // 确保音频上下文存在
+      if (!this.audioCtx) {
+        console.log('音频上下文不存在，重新初始化')
+        this.initAudioContext()
+      }
+      
       // 开始播放当前消息的音频
       try {
-        if (!this.audioCtx) {
-          this.audioCtx = uni.createInnerAudioContext()
-          
-          // 监听播放结束
-          this.audioCtx.onEnded(() => {
-            console.log('音频播放结束')
-            this.stopCurrentAudio()
-          })
-          
-          // 监听播放错误
-          this.audioCtx.onError((err) => {
-            console.error('音频播放错误:', err)
-            this.stopCurrentAudio()
-            uni.showToast({ title: '播放失败', icon: 'none' })
-          })
-          
-          // 监听播放开始
-          this.audioCtx.onPlay(() => {
-            console.log('音频开始播放')
-          })
-          
-          // 监听加载完成
-          this.audioCtx.onCanplay(() => {
-            console.log('音频加载完成')
-          })
-          
-          // 监听加载中
-          this.audioCtx.onLoadstart(() => {
-            console.log('音频开始加载')
-          })
-        }
-        
         console.log('设置音频源:', message.audio)
-        this.audioCtx.src = message.audio
-        console.log('开始播放音频')
-        this.audioCtx.play()
         
-        // 设置播放状态
-        this.$set(message, 'isPlaying', true)
-        this.currentPlayingMessage = message
+        // 直接使用临时文件方式播放（避免base64兼容性问题）
+        try {
+          // 将base64转换为临时文件
+          const base64Data = message.audio.replace('data:audio/mp3;base64,', '')
+          console.log('base64数据长度:', base64Data.length)
+          
+          const arrayBuffer = this.base64ToArrayBuffer(base64Data)
+          console.log('ArrayBuffer长度:', arrayBuffer.byteLength)
+          
+          // 根据平台选择不同的文件系统API
+          // #ifdef MP-WEIXIN
+          // 微信小程序环境
+          const fs = uni.getFileSystemManager()
+          const tempFilePath = `${uni.env.USER_DATA_PATH}/temp_audio_${Date.now()}.mp3`
+          
+          console.log('开始保存临时文件(小程序):', tempFilePath)
+          
+          fs.writeFile({
+            filePath: tempFilePath,
+            data: arrayBuffer,
+            encoding: 'binary',
+            success: () => {
+              console.log('临时文件保存成功(小程序):', tempFilePath)
+              this.audioCtx.src = tempFilePath
+              this.audioCtx.play()
+              
+              // 设置播放状态
+              this.$set(message, 'isPlaying', true)
+              this.currentPlayingMessage = message
+            },
+            fail: (err) => {
+              console.error('保存临时文件失败(小程序):', err)
+              console.error('错误详情:', JSON.stringify(err))
+              uni.showToast({ title: '音频格式不支持', icon: 'none' })
+            }
+          })
+          // #endif
+          
+          // #ifdef APP-PLUS || APP-NVUE
+          // App-Plus环境（HBuilderX手机基座）优先使用安卓原生写文件再播放
+          try {
+            console.log('App-Plus环境：使用Android原生写入文件后播放')
+            const tempFileName = `temp_audio_${Date.now()}.mp3`
+            const appPlusTempPath = `_doc/${tempFileName}`
+            const nativePath = plus.io.convertLocalFileSystemURL(appPlusTempPath)
+
+            // 使用 Android 原生 API 写文件
+            const Base64 = plus.android.importClass('android.util.Base64')
+            const FileOutputStream = plus.android.importClass('java.io.FileOutputStream')
+            const File = plus.android.importClass('java.io.File')
+            const bytes = Base64.decode(base64Data, Base64.DEFAULT)
+            const file = new File(nativePath)
+            const fos = new FileOutputStream(file)
+            fos.write(bytes)
+            fos.flush()
+            fos.close()
+            console.log('原生写入完成:', nativePath)
+
+            this.audioCtx.src = appPlusTempPath
+            this.audioCtx.play()
+            // 设置播放状态
+            this.$set(message, 'isPlaying', true)
+            this.currentPlayingMessage = message
+          } catch (appPlusNativeErr) {
+            console.error('App-Plus 原生写入失败，回退尝试base64播放:', appPlusNativeErr)
+            try {
+              this.audioCtx.src = message.audio
+              this.audioCtx.play()
+              // 设置播放状态
+              this.$set(message, 'isPlaying', true)
+              this.currentPlayingMessage = message
+            } catch (fallbackErr) {
+              console.error('App-Plus base64播放仍失败:', fallbackErr)
+              uni.showToast({ title: '播放失败', icon: 'none' })
+            }
+          }
+          // #endif
+          
+          // #ifndef MP-WEIXIN || APP-PLUS || APP-NVUE
+          // H5或其他环境，尝试直接播放base64
+          console.log('H5环境，尝试直接播放base64')
+          this.audioCtx.src = message.audio
+          this.audioCtx.play()
+          
+          // 设置播放状态
+          this.$set(message, 'isPlaying', true)
+          this.currentPlayingMessage = message
+          // #endif
+          
+        } catch (convertError) {
+          console.error('音频转换失败:', convertError)
+          console.error('转换错误堆栈:', convertError.stack)
+          uni.showToast({ title: '音频格式不支持', icon: 'none' })
+        }
         
       } catch (e) {
         console.error('播放音频失败:', e)
+        console.error('错误堆栈:', e.stack)
         uni.showToast({ title: '无法播放语音', icon: 'none' })
       }
     },
@@ -447,10 +524,17 @@ export default {
       try {
         // 发送前缓存图片数据，并立刻清空预览，避免发送中仍显示
         const imageDataForSend = this.pendingImageBase64
-        this.pendingImageBase64 = ''
         this.pendingImageLocalPath = ''
+        
+        // 如果有图片，先显示"正在分析图片中..."
+        let botIndex = null
+        if (imageDataForSend) {
+          botIndex = this.showThinking('正在分析图片中...')
+        }
+        
+        this.pendingImageBase64 = ''
         // 统一一次性请求（非流式），使用打字机效果展示
-        await this.requestOnceText(content, null, imageDataForSend)
+        await this.requestOnceText(content, botIndex, imageDataForSend)
       } catch (e) {
         const reply = this.generateReply(content)
         const rendered = this.renderMarkdownAndEmojis(reply)
@@ -482,7 +566,8 @@ export default {
     },
     toBottom() {
       this.$nextTick(() => {
-        this.scrollIntoId = 'msg-' + (this.messages.length - 1)
+        // 使用稳定的锚点 id，便于 scroll-into-view 正常定位
+        this.scrollIntoId = 'chat-bottom-anchor'
       })
     },
     escapeHtml(s) {
@@ -496,6 +581,67 @@ export default {
       const hh = String(d.getHours()).padStart(2, '0')
       const mm = String(d.getMinutes()).padStart(2, '0')
       return `${hh}:${mm}`
+    },
+    // base64转ArrayBuffer
+    base64ToArrayBuffer(base64) {
+      const binaryString = atob(base64)
+      const bytes = new Uint8Array(binaryString.length)
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i)
+      }
+      return bytes.buffer
+    },
+    // 初始化音频上下文
+    initAudioContext() {
+      try {
+        if (this.audioCtx) {
+          this.audioCtx.destroy()
+        }
+        this.audioCtx = uni.createInnerAudioContext()
+        console.log('音频上下文初始化成功')
+        
+        // 监听播放结束
+        this.audioCtx.onEnded(() => {
+          console.log('音频播放结束')
+          this.stopCurrentAudio()
+        })
+        
+        // 监听播放错误
+        this.audioCtx.onError((err) => {
+          console.error('音频播放错误:', err)
+          console.error('错误详情:', JSON.stringify(err))
+          this.stopCurrentAudio()
+          uni.showToast({ title: '播放失败', icon: 'none' })
+        })
+        
+        // 监听播放开始
+        this.audioCtx.onPlay(() => {
+          console.log('音频开始播放')
+        })
+        
+        // 监听加载完成
+        this.audioCtx.onCanplay(() => {
+          console.log('音频加载完成')
+        })
+        
+        // 监听加载中（仅在支持时添加）
+        if (this.audioCtx.onLoadstart) {
+          this.audioCtx.onLoadstart(() => {
+            console.log('音频开始加载')
+          })
+        }
+        
+        // 监听加载失败（仅在支持时添加）
+        if (this.audioCtx.onLoaderror) {
+          this.audioCtx.onLoaderror((err) => {
+            console.error('音频加载失败:', err)
+            console.error('加载错误详情:', JSON.stringify(err))
+          })
+        }
+        
+      } catch (e) {
+        console.error('音频上下文初始化失败:', e)
+      }
     }
   }
 }
@@ -734,4 +880,6 @@ export default {
 .speaker-icon.playing .wave {
   background: #fff;
 }
+
+
 </style>
