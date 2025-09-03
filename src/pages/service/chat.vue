@@ -201,24 +201,15 @@ export default {
         } else {
           throw new Error(result.error)
         }
-        
-        // 清除待发图片（在AI处理完成后）
-        this.pendingImageBase64 = ''
-        this.pendingImageLocalPath = ''
-        
       } catch (e) {
         console.error('AI stream error:', e)
         // 失败回退到普通请求
         await this.requestOnceText(content, thinkingIndex)
-        
-        // 注意：失败情况下图片数据会在requestOnceText中清除
       }
     },
     async requestOnceText(content, botIndexToReuse = null) {
       // 使用前端API进行一次性请求
       try {
-        console.log('requestOnceText调用，图片数据长度:', this.pendingImageBase64 ? this.pendingImageBase64.length : 0)
-        console.log('图片数据前50字符:', this.pendingImageBase64 ? this.pendingImageBase64.substring(0, 50) : '无')
         const result = await chat(content, this.sessionId, this.pendingImageBase64)
         
         if (result.success) {
@@ -250,21 +241,12 @@ export default {
         } else {
           throw new Error(result.error || 'AI服务请求失败')
         }
-        
-        // 清除待发图片（在AI处理完成后）
-        this.pendingImageBase64 = ''
-        this.pendingImageLocalPath = ''
-        
       } catch (e) {
         console.error('AI request error:', e)
         const fallback = this.generateReply(content)
         if (botIndexToReuse != null) this.updateBotMessage(botIndexToReuse, fallback)
         else this.messages.push({ id: Date.now() + '-b', role: 'bot', html: this.renderMarkdownAndEmojis(fallback), time: this.nowTime() })
         uni.showToast({ title: 'AI服务请求失败', icon: 'none' })
-        
-        // 清除待发图片（即使失败也要清除）
-        this.pendingImageBase64 = ''
-        this.pendingImageLocalPath = ''
       }
     },
     playAudio(url) {
@@ -433,16 +415,13 @@ export default {
             else if (ext === 'webp') mime = 'image/webp'
             const base64 = fsm.readFileSync(path, 'base64')
             this.pendingImageBase64 = `data:${mime};base64,${base64}`
-            console.log('图片转base64成功，长度:', base64.length, 'MIME:', mime)
-            console.log('pendingImageBase64设置成功，长度:', this.pendingImageBase64.length)
             // #endif
             // #ifndef MP-WEIXIN
             this.pendingImageBase64 = ''
             uni.showToast({ title: 'H5预览模式：不进行图片转换', icon: 'none' })
             // #endif
           } catch (e) {
-            console.error('图片转base64失败:', e)
-            console.error('错误详情:', e.message, e.stack)
+            console.warn('图片转base64失败:', e)
             this.pendingImageBase64 = ''
             this.pendingImageLocalPath = ''
           }
@@ -478,14 +457,10 @@ export default {
 
       this.sending = true
       try {
-        console.log('发送消息，pendingImageBase64长度:', this.pendingImageBase64 ? this.pendingImageBase64.length : 0)
-        console.log('pendingImageBase64前20字符:', this.pendingImageBase64 ? this.pendingImageBase64.substring(0, 20) : '无')
         // 带图：一次性请求；纯文本：流式
         if (this.pendingImageBase64) {
-          console.log('检测到图片，使用requestOnceText方法')
           await this.requestOnceText(content)
         } else {
-          console.log('无图片，使用streamTextReply方法')
           await this.streamTextReply(content)
         }
       } catch (e) {
@@ -495,6 +470,9 @@ export default {
         uni.showToast({ title: 'AI服务不可用，已使用本地回复', icon: 'none' })
       } finally {
         this.sending = false
+        // 清除待发图片
+        this.pendingImageBase64 = ''
+        this.pendingImageLocalPath = ''
         this.toBottom()
       }
     },
