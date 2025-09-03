@@ -97,6 +97,17 @@
         />
       </view>
       
+      <!-- 身份证号输入 -->
+      <view class="input-item">
+        <input 
+          type="text" 
+          v-model="form.idCard" 
+          placeholder="请输入身份证号" 
+          maxlength="18"
+          required
+        />
+      </view>
+      
       <!-- 注册按钮 -->
       <button 
         class="register-btn" 
@@ -141,7 +152,8 @@ export default {
         password: '',
         confirmPassword: '',
         email: '',
-        nickname: ''
+        nickname: '',
+        idCard: ''
       },
       countdown: 0,
       loading: false,
@@ -226,7 +238,8 @@ export default {
             phone: this.form.phone,
             password: this.form.password,
             email: this.form.email,
-            nickname: this.form.nickname || this.form.username
+            nickname: this.form.nickname || this.form.username,
+            idCard: this.form.idCard
           });
           
           // 显示成功提示
@@ -261,6 +274,50 @@ export default {
         return false;
       }
       return true;
+    },
+    
+    // 身份证号验证
+    validateIdCard(idCard) {
+      // 18位身份证号正则
+      const idCardRegex = /^\d{17}[\dXx]$/;
+      if (!idCardRegex.test(idCard)) {
+        return false;
+      }
+      
+      // 测试环境：允许特殊测试身份证号
+      const testIdCards = [
+        '111111111111111111',
+        '222222222222222222', 
+        '333333333333333333',
+        '123456789012345678'
+      ];
+      
+      if (testIdCards.includes(idCard)) {
+        console.log('使用测试身份证号:', idCard);
+        return true;
+      }
+      
+      // 正式环境：校验位验证
+      const weights = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2];
+      const checkCodes = ['1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2'];
+      
+      let sum = 0;
+      for (let i = 0; i < 17; i++) {
+        sum += parseInt(idCard[i]) * weights[i];
+      }
+      
+      const checkCode = checkCodes[sum % 11];
+      const isValid = checkCode === idCard[17].toUpperCase();
+      
+      if (!isValid) {
+        console.log('身份证校验失败:', {
+          输入: idCard,
+          计算校验位: checkCode,
+          实际最后一位: idCard[17]
+        });
+      }
+      
+      return isValid;
     },
     
     // 表单验证
@@ -316,6 +373,16 @@ export default {
         return false;
       }
       
+      // 身份证号验证
+      if (!this.form.idCard.trim()) {
+        uni.showToast({ title: '请输入身份证号', icon: 'none' });
+        return false;
+      }
+      if (!this.validateIdCard(this.form.idCard)) {
+        uni.showToast({ title: '请输入正确的身份证号', icon: 'none' });
+        return false;
+      }
+      
       return true;
     }
   }
@@ -324,7 +391,7 @@ export default {
 
 <style scoped>
 .register-container {
-  padding: 50rpx 30rpx;
+  padding: 100rpx 60rpx;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -347,7 +414,8 @@ export default {
 
 .input-item {
   width: 100%;
-  border: 1px solid #eee;
+  height: 80rpx;
+  border: 2px solid #eee;
   border-radius: 12rpx;
   padding: 20rpx 30rpx;
   margin-bottom: 25rpx;
@@ -356,7 +424,6 @@ export default {
   background: #ffffff;
   box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
-  min-height: 80rpx;
   box-sizing: border-box;
 }
 
@@ -369,8 +436,8 @@ export default {
   flex: 1;
   font-size: 34rpx;
   color: #333;
-  height: 60rpx;
-  line-height: 60rpx;
+  height: 40rpx;
+  line-height: 40rpx;
   border: none;
   outline: none;
   background: transparent;
@@ -379,16 +446,19 @@ export default {
 .get-code-btn {
   background-color: #2e7d32;
   color: white;
-  padding: 20rpx 25rpx;
+  padding: 15rpx 20rpx;
   border-radius: 8rpx;
-  font-size: 30rpx;
+  font-size: 28rpx;
   border: none;
   margin-left: 20rpx;
   transition: all 0.3s ease;
-  height: 60rpx;
-  line-height: 20rpx;
+  height: 40rpx;
+  line-height: 40rpx;
   white-space: nowrap;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .get-code-btn:disabled {
@@ -401,13 +471,19 @@ export default {
   border: none;
   font-size: 32rpx;
   color: #666;
-  padding: 10rpx;
+  padding: 8rpx;
   margin-left: 10rpx;
   flex-shrink: 0;
+  height: 40rpx;
+  width: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .register-btn {
   width: 100%;
+  height: 80rpx;
   background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
   color: white;
   padding: 20rpx 30rpx;
@@ -418,7 +494,6 @@ export default {
   border: none;
   box-shadow: 0 4rpx 12rpx rgba(46, 125, 50, 0.3);
   transition: all 0.3s ease;
-  min-height: 80rpx;
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -436,6 +511,7 @@ export default {
 
 .quick-login-btn {
   width: 100%;
+  height: 80rpx;
   background: transparent;
   color: #2e7d32;
   padding: 20rpx 30rpx;
@@ -446,7 +522,6 @@ export default {
   margin: 0;
   box-shadow: none;
   transition: all 0.3s ease;
-  min-height: 80rpx;
   box-sizing: border-box;
   display: flex;
   align-items: center;

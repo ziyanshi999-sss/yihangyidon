@@ -21,13 +21,13 @@
     
     <!-- 登录表单 -->
     <form @submit="handleLogin">
-      <!-- 手机号输入 -->
+      <!-- 用户名/手机号输入 -->
       <view class="input-item">
         <input 
-          type="number" 
+          type="text" 
           v-model="phone" 
-          placeholder="请输入用户名/手机号" 
-          maxlength="11"
+          placeholder="请输入用户名（仅中文）或手机号" 
+          maxlength="20"
           required
         />
       </view>
@@ -40,6 +40,7 @@
           placeholder="请输入登录密码" 
           required
         />
+        <view class="password-placeholder"></view>
       </view>
       <view class="input-item" v-if="loginType === 'code'">
         <input 
@@ -94,7 +95,7 @@
 </template>
 
 <script>
-import { validateUser, generateVerificationCode, verifyCode } from '@/data/users.js'
+import { validateUser, generateVerificationCode, verifyCode, users } from '@/data/users.js'
 import { handleLoginSuccess } from '@/utils/auth.js'
 
 export default {
@@ -111,6 +112,9 @@ export default {
   
   onLoad() {
     console.log('页面加载完成');
+    // 测试用户数据加载
+    console.log('加载的用户数据:', users);
+    console.log('用户数量:', users.length);
   },
   
   methods: {
@@ -163,8 +167,11 @@ export default {
         } else {
           // 验证码登录
           if (verifyCode(this.phone, this.code)) {
-            const { users } = require('@/data/users.js');
             user = users.find(u => u.phone === this.phone);
+            if (user) {
+              // 更新最后登录时间
+              user.lastLoginTime = new Date().toISOString();
+            }
           } else {
             uni.showToast({ title: '验证码错误或已过期', icon: 'none' });
             this.loading = false;
@@ -201,11 +208,22 @@ export default {
     // 表单验证
     validateForm() {
       if (!this.phone.trim()) {
-        uni.showToast({ title: '请输入手机号', icon: 'none' });
+        uni.showToast({ title: '请输入用户名或手机号', icon: 'none' });
         return false;
       }
-      if (!/^1[3-9]\d{9}$/.test(this.phone)) {
-        uni.showToast({ title: '请输入正确的手机号', icon: 'none' });
+      
+      // 判断输入的是用户名还是手机号
+      const isPhone = /^1[3-9]\d{9}$/.test(this.phone);
+      const isUsername = /^[\u4e00-\u9fa5]+$/.test(this.phone);
+      
+      if (!isPhone && !isUsername) {
+        uni.showToast({ title: '用户名仅支持中文字符，或输入正确的手机号', icon: 'none' });
+        return false;
+      }
+      
+      // 验证码登录只支持手机号
+      if (this.loginType === 'code' && !isPhone) {
+        uni.showToast({ title: '验证码登录仅支持手机号', icon: 'none' });
         return false;
       }
       
@@ -252,7 +270,7 @@ export default {
   display: flex;
   width: 100%;
   margin-bottom: 40rpx;
-  border-bottom: 1px solid #eee;
+  border-bottom: 2px solid #eee;
   background: #ffffff;
   border-radius: 12rpx;
   padding: 4rpx;
@@ -290,7 +308,8 @@ export default {
 
 .input-item {
   width: 100%;
-  border: 1px solid #eee;
+  height: 80rpx;
+  border: 2px solid #eee;
   border-radius: 12rpx;
   padding: 20rpx 30rpx;
   margin-bottom: 25rpx;
@@ -299,7 +318,6 @@ export default {
   background: #ffffff;
   box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
-  min-height: 80rpx;
   box-sizing: border-box;
 }
 
@@ -312,8 +330,8 @@ export default {
   flex: 1;
   font-size: 34rpx;
   color: #333;
-  height: 60rpx;
-  line-height: 60rpx;
+  height: 40rpx;
+  line-height: 40rpx;
   border: none;
   outline: none;
   background: transparent;
@@ -322,16 +340,19 @@ export default {
 .get-code-btn {
   background-color: #2e7d32;
   color: white;
-  padding: 20rpx 25rpx;
+  padding: 15rpx 20rpx;
   border-radius: 8rpx;
-  font-size: 30rpx;
+  font-size: 28rpx;
   border: none;
   margin-left: 20rpx;
   transition: all 0.3s ease;
-  height: 60rpx;
-  line-height: 20rpx;
+  height: 40rpx;
+  line-height: 40rpx;
   white-space: nowrap;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .get-code-btn:disabled {
@@ -341,6 +362,7 @@ export default {
 
 .login-btn {
   width: 100%;
+  height: 80rpx;
   background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
   color: white;
   padding: 20rpx 30rpx;
@@ -351,7 +373,6 @@ export default {
   border: none;
   box-shadow: 0 4rpx 12rpx rgba(46, 125, 50, 0.3);
   transition: all 0.3s ease;
-  min-height: 80rpx;
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -369,6 +390,7 @@ export default {
 
 .quick-register-btn {
   width: 100%;
+  height: 80rpx;
   background: transparent;
   color: #2e7d32;
   padding: 20rpx 30rpx;
@@ -379,7 +401,6 @@ export default {
   margin: 0;
   box-shadow: none;
   transition: all 0.3s ease;
-  min-height: 80rpx;
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -432,6 +453,14 @@ export default {
   font-size: 28rpx;
   margin-bottom: 10rpx;
   line-height: 1.5;
+}
+
+/* 密码占位符，保持与验证码按钮宽度一致 */
+.password-placeholder {
+  width: 90rpx;
+  height: 40rpx;
+  margin-left: 20rpx;
+  flex-shrink: 0;
 }
 
 .debug-info {

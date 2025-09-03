@@ -5,19 +5,19 @@
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
 }
 .title[data-v-6f56e16f] {
   font-size: 1.75rem;
   font-weight: bold;
   margin-bottom: 1.875rem;
-  color: #0066b2; /* 农行蓝 */
+  color: #2e7d32; /* 深绿色 */
 }
 .tab-bar[data-v-6f56e16f] {
   display: flex;
   width: 100%;
   margin-bottom: 1.25rem;
-  border-bottom: 1px solid #eee;
+  border-bottom: 2px solid #eee;
   background: #ffffff;
   border-radius: 0.375rem;
   padding: 0.125rem;
@@ -34,9 +34,9 @@
   transition: all 0.3s ease;
 }
 .tab-item.active[data-v-6f56e16f] {
-  color: #0066b2;
+  color: #2e7d32;
   font-weight: bold;
-  background: rgba(0, 102, 178, 0.1);
+  background: rgba(46, 125, 50, 0.1);
 }
 .tab-item.active[data-v-6f56e16f]::after {
   content: '';
@@ -46,12 +46,13 @@
   transform: translateX(-50%);
   width: 60%;
   height: 0.125rem;
-  background-color: #0066b2;
+  background-color: #2e7d32;
   border-radius: 0.0625rem;
 }
 .input-item[data-v-6f56e16f] {
   width: 100%;
-  border: 1px solid #eee;
+  height: 2.5rem;
+  border: 2px solid #eee;
   border-radius: 0.375rem;
   padding: 0.625rem 0.9375rem;
   margin-bottom: 0.78125rem;
@@ -60,36 +61,38 @@
   background: #ffffff;
   box-shadow: 0 0.0625rem 0.25rem rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
-  min-height: 2.5rem;
   box-sizing: border-box;
 }
 .input-item[data-v-6f56e16f]:focus-within {
-  border-color: #0066b2;
-  box-shadow: 0 0 0 0.125rem rgba(0, 102, 178, 0.1);
+  border-color: #2e7d32;
+  box-shadow: 0 0 0 0.125rem rgba(46, 125, 50, 0.1);
 }
 .input-item uni-input[data-v-6f56e16f] {
   flex: 1;
   font-size: 1.0625rem;
   color: #333;
-  height: 1.875rem;
-  line-height: 1.875rem;
+  height: 1.25rem;
+  line-height: 1.25rem;
   border: none;
   outline: none;
   background: transparent;
 }
 .get-code-btn[data-v-6f56e16f] {
-  background-color: #0066b2;
+  background-color: #2e7d32;
   color: white;
-  padding: 0.625rem 0.78125rem;
+  padding: 0.46875rem 0.625rem;
   border-radius: 0.25rem;
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   border: none;
   margin-left: 0.625rem;
   transition: all 0.3s ease;
-  height: 1.875rem;
-  line-height: 0.625rem;
+  height: 1.25rem;
+  line-height: 1.25rem;
   white-space: nowrap;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .get-code-btn[data-v-6f56e16f]:disabled {
   background-color: #ccc;
@@ -97,7 +100,8 @@
 }
 .login-btn[data-v-6f56e16f] {
   width: 100%;
-  background: linear-gradient(135deg, #0066b2 0%, #0056a3 100%);
+  height: 2.5rem;
+  background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
   color: white;
   padding: 0.625rem 0.9375rem;
   border-radius: 0.375rem;
@@ -105,9 +109,8 @@
   font-weight: bold;
   margin-top: 0.9375rem;
   border: none;
-  box-shadow: 0 0.125rem 0.375rem rgba(0, 102, 178, 0.3);
+  box-shadow: 0 0.125rem 0.375rem rgba(46, 125, 50, 0.3);
   transition: all 0.3s ease;
-  min-height: 2.5rem;
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -116,11 +119,37 @@
 .login-btn[data-v-6f56e16f]:active {
   transform: scale(0.98);
 }
+.quick-register[data-v-6f56e16f] {
+  width: 100%;
+  margin-top: 0.625rem;
+}
+.quick-register-btn[data-v-6f56e16f] {
+  width: 100%;
+  height: 2.5rem;
+  background: transparent;
+  color: #2e7d32;
+  padding: 0.625rem 0.9375rem;
+  border: 0.0625rem solid #2e7d32;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  font-weight: normal;
+  margin: 0;
+  box-shadow: none;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.quick-register-btn[data-v-6f56e16f]:active {
+  background: rgba(46, 125, 50, 0.1);
+  transform: scale(0.98);
+}
 .links[data-v-6f56e16f] {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   width: 100%;
-  margin-top: 1.875rem;
+  margin-top: 1.25rem;
 }
 .links uni-navigator[data-v-6f56e16f] {
   color: #666;
@@ -129,7 +158,7 @@
   transition: color 0.3s ease;
 }
 .links uni-navigator[data-v-6f56e16f]:hover {
-  color: #0066b2;
+  color: #2e7d32;
 }
 .login-notice[data-v-6f56e16f] {
   margin-top: 1.25rem;
@@ -141,7 +170,7 @@
 }
 .notice-title[data-v-6f56e16f] {
   display: block;
-  color: #0066b2;
+  color: #2e7d32;
   font-size: 1rem;
   font-weight: bold;
   margin-bottom: 0.625rem;
@@ -152,6 +181,14 @@
   font-size: 0.875rem;
   margin-bottom: 0.3125rem;
   line-height: 1.5;
+}
+
+/* 密码占位符，保持与验证码按钮宽度一致 */
+.password-placeholder[data-v-6f56e16f] {
+  width: 2.8125rem;
+  height: 1.25rem;
+  margin-left: 0.625rem;
+  flex-shrink: 0;
 }
 .debug-info[data-v-6f56e16f] {
   margin-top: 0.625rem;
@@ -165,7 +202,7 @@
 .debug-title[data-v-6f56e16f] {
   font-size: 0.875rem;
   font-weight: bold;
-  color: #0066b2;
+  color: #2e7d32;
   margin-bottom: 0.3125rem;
 }
 .debug-item[data-v-6f56e16f] {
@@ -174,7 +211,7 @@
   margin-bottom: 0.15625rem;
 }
 .debug-btn[data-v-6f56e16f] {
-  background-color: #0066b2;
+  background-color: #2e7d32;
   color: white;
   padding: 0.3125rem 0.625rem;
   border-radius: 0.25rem;

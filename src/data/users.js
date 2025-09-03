@@ -1,42 +1,8 @@
-// 模拟用户数据
-export const users = [
-  {
-    id: 1,
-    username: 'admin',
-    password: '123456',
-    phone: '13800138000',
-    nickname: '管理员',
-    avatar: '/static/logo.png',
-    email: 'admin@example.com'
-  },
-  {
-    id: 2,
-    username: 'user001',
-    password: '123456',
-    phone: '13800138001',
-    nickname: '张三',
-    avatar: '/static/logo.png',
-    email: 'user001@example.com'
-  },
-  {
-    id: 3,
-    username: 'user002',
-    password: '123456',
-    phone: '13800138002',
-    nickname: '李四',
-    avatar: '/static/logo.png',
-    email: 'user002@example.com'
-  },
-  {
-    id: 4,
-    username: 'test',
-    password: 'test123',
-    phone: '13800138003',
-    nickname: '测试用户',
-    avatar: '/static/logo.png',
-    email: 'test@example.com'
-  }
-]
+// 从JSON文件加载用户数据
+import userDataJson from '../../db/user.json'
+
+// 用户数据存储
+export const users = userDataJson || []
 
 // 模拟验证码存储
 const verificationCodes = new Map()
@@ -70,11 +36,36 @@ export function verifyCode(phone, code) {
 }
 
 // 验证用户登录
-export function validateUser(username, password) {
-  return users.find(user => 
-    (user.username === username || user.phone === username) && 
-    user.password === password
-  )
+export function validateUser(usernameOrPhone, password) {
+  console.log('登录验证:', { usernameOrPhone, password, totalUsers: users.length })
+  
+  const user = users.find(user => {
+    // 支持用户名或手机号登录
+    const matchUsername = user.username && user.username === usernameOrPhone
+    const matchPhone = user.phone && user.phone === usernameOrPhone
+    const matchPassword = user.password === password
+    
+    console.log('检查用户:', { 
+      userId: user.id, 
+      username: user.username, 
+      phone: user.phone,
+      matchUsername, 
+      matchPhone, 
+      matchPassword 
+    })
+    
+    return (matchUsername || matchPhone) && matchPassword
+  })
+  
+  if (user) {
+    console.log('登录成功:', user.id)
+    // 更新最后登录时间
+    user.lastLoginTime = new Date().toISOString()
+  } else {
+    console.log('登录失败: 用户名/手机号或密码错误')
+  }
+  
+  return user
 }
 
 // 根据用户名或手机号查找用户
@@ -93,15 +84,21 @@ export function checkUserExists(username, phone) {
 
 // 注册新用户
 export function registerUser(userData) {
+  // 生成新的用户ID
+  const maxId = users.length > 0 ? Math.max(...users.map(u => parseInt(u.id.replace('u', '')))) : 0
+  const newId = `u${String(maxId + 1).padStart(3, '0')}`
+  
   const newUser = {
-    id: users.length + 1,
+    id: newId,
     username: userData.username,
     password: userData.password,
     phone: userData.phone,
     nickname: userData.nickname || userData.username,
-    avatar: '/static/logo.png',
+    avatar: '',
     email: userData.email || '',
+    idCard: userData.idCard || '',
     createTime: new Date().toISOString(),
+    lastLoginTime: null,
     status: 'active'
   }
   

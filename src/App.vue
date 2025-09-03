@@ -1,5 +1,6 @@
 <script>
 import { checkLoginAndRedirect, forceCheckLogin } from '@/utils/auth.js'
+import themeManager from '@/utils/theme.js'
 
 /**
  * 中国农业银行应用主入口
@@ -10,6 +11,9 @@ export default {
 
   onLaunch(options) {
     console.log('App Launch', options)
+
+    // 初始化主题
+    themeManager.init()
 
     // 检查更新
     this.checkUpdate()
@@ -149,9 +153,9 @@ export default {
         invoke(e) {
           console.log('拦截 navigateTo:', e.url)
           
-          // 检查是否为登录页面
-          if (e.url.includes('/pages/denglu/login')) {
-            console.log('跳转到登录页面，允许')
+          // 检查是否为登录页面或注册页面
+          if (e.url.includes('/pages/denglu/login') || e.url.includes('/pages/register/register')) {
+            console.log('跳转到登录页面或注册页面，允许')
             return true
           }
           
@@ -185,9 +189,9 @@ export default {
         invoke(e) {
           console.log('拦截 reLaunch:', e.url)
           
-          // 检查是否为登录页面
-          if (e.url.includes('/pages/denglu/login')) {
-            console.log('重定向到登录页面，允许')
+          // 检查是否为登录页面或注册页面
+          if (e.url.includes('/pages/denglu/login') || e.url.includes('/pages/register/register')) {
+            console.log('重定向到登录页面或注册页面，允许')
             return true
           }
           
@@ -206,9 +210,9 @@ export default {
         invoke(e) {
           console.log('拦截 redirectTo:', e.url)
           
-          // 检查是否为登录页面
-          if (e.url.includes('/pages/denglu/login')) {
-            console.log('重定向到登录页面，允许')
+          // 检查是否为登录页面或注册页面
+          if (e.url.includes('/pages/denglu/login') || e.url.includes('/pages/register/register')) {
+            console.log('重定向到登录页面或注册页面，允许')
             return true
           }
           

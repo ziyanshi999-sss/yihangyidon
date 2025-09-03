@@ -38,44 +38,48 @@ if (uni.restoreGlobal) {
       console[type].apply(console, [...args, filename]);
     }
   }
-  const users = [
+  const userDataJson = [
     {
-      id: 1,
-      username: "admin",
+      id: "u001",
+      username: null,
+      phone: "13888888888",
       password: "123456",
-      phone: "13800138000",
-      nickname: "管理员",
-      avatar: "/static/logo.png",
-      email: "admin@example.com"
+      nickname: "手机用户",
+      email: "phone@example.com",
+      idCard: "110101199001011234",
+      avatar: "",
+      status: "active",
+      createTime: "2024-01-01T08:00:00.000Z",
+      lastLoginTime: "2024-01-15T10:30:00.000Z"
     },
     {
-      id: 2,
-      username: "user001",
-      password: "123456",
-      phone: "13800138001",
-      nickname: "张三",
-      avatar: "/static/logo.png",
-      email: "user001@example.com"
+      id: "u002",
+      username: "张小明",
+      phone: "13999999999",
+      password: "abc123",
+      nickname: "小明",
+      email: "zhangxiaoming@example.com",
+      idCard: "110101199202021456",
+      avatar: "",
+      status: "active",
+      createTime: "2024-01-02T09:15:00.000Z",
+      lastLoginTime: "2024-01-15T14:20:00.000Z"
     },
     {
-      id: 3,
-      username: "user002",
-      password: "123456",
-      phone: "13800138002",
-      nickname: "李四",
-      avatar: "/static/logo.png",
-      email: "user002@example.com"
-    },
-    {
-      id: 4,
-      username: "test",
-      password: "test123",
-      phone: "13800138003",
-      nickname: "测试用户",
-      avatar: "/static/logo.png",
-      email: "test@example.com"
+      id: "u003",
+      username: "李小红",
+      phone: "13777777777",
+      password: "password123",
+      nickname: "小红",
+      email: "lixiaohong@example.com",
+      idCard: "110101199303031789",
+      avatar: "",
+      status: "active",
+      createTime: "2024-01-03T16:45:00.000Z",
+      lastLoginTime: "2024-01-14T11:10:00.000Z"
     }
   ];
+  const users = userDataJson || [];
   const verificationCodes = /* @__PURE__ */ new Map();
   function generateVerificationCode(phone) {
     const code = Math.floor(1e5 + Math.random() * 9e5).toString();
@@ -100,10 +104,54 @@ if (uni.restoreGlobal) {
     }
     return false;
   }
-  function validateUser(username, password) {
-    return users.find(
-      (user) => (user.username === username || user.phone === username) && user.password === password
+  function validateUser(usernameOrPhone, password) {
+    formatAppLog("log", "at data/users.js:40", "登录验证:", { usernameOrPhone, password, totalUsers: users.length });
+    const user = users.find((user2) => {
+      const matchUsername = user2.username && user2.username === usernameOrPhone;
+      const matchPhone = user2.phone && user2.phone === usernameOrPhone;
+      const matchPassword = user2.password === password;
+      formatAppLog("log", "at data/users.js:48", "检查用户:", {
+        userId: user2.id,
+        username: user2.username,
+        phone: user2.phone,
+        matchUsername,
+        matchPhone,
+        matchPassword
+      });
+      return (matchUsername || matchPhone) && matchPassword;
+    });
+    if (user) {
+      formatAppLog("log", "at data/users.js:61", "登录成功:", user.id);
+      user.lastLoginTime = (/* @__PURE__ */ new Date()).toISOString();
+    } else {
+      formatAppLog("log", "at data/users.js:65", "登录失败: 用户名/手机号或密码错误");
+    }
+    return user;
+  }
+  function checkUserExists(username, phone) {
+    return users.some(
+      (user) => user.username === username || user.phone === phone
     );
+  }
+  function registerUser(userData) {
+    const maxId = users.length > 0 ? Math.max(...users.map((u) => parseInt(u.id.replace("u", "")))) : 0;
+    const newId = `u${String(maxId + 1).padStart(3, "0")}`;
+    const newUser = {
+      id: newId,
+      username: userData.username,
+      password: userData.password,
+      phone: userData.phone,
+      nickname: userData.nickname || userData.username,
+      avatar: "",
+      email: userData.email || "",
+      idCard: userData.idCard || "",
+      createTime: (/* @__PURE__ */ new Date()).toISOString(),
+      lastLoginTime: null,
+      status: "active"
+    };
+    users.push(newUser);
+    formatAppLog("log", "at data/users.js:108", "新用户注册成功:", newUser);
+    return newUser;
   }
   const WHITE_LIST = [
     "/pages/denglu/login",
@@ -441,7 +489,7 @@ if (uni.restoreGlobal) {
     }
     return target;
   };
-  const _sfc_main$c = {
+  const _sfc_main$d = {
     data() {
       return {
         loginType: "password",
@@ -454,7 +502,9 @@ if (uni.restoreGlobal) {
       };
     },
     onLoad() {
-      formatAppLog("log", "at pages/denglu/login.vue:105", "页面加载完成");
+      formatAppLog("log", "at pages/denglu/login.vue:114", "页面加载完成");
+      formatAppLog("log", "at pages/denglu/login.vue:116", "加载的用户数据:", users);
+      formatAppLog("log", "at pages/denglu/login.vue:117", "用户数量:", users.length);
     },
     methods: {
       // 获取验证码
@@ -493,8 +543,10 @@ if (uni.restoreGlobal) {
             user = validateUser(this.phone, this.password);
           } else {
             if (verifyCode(this.phone, this.code)) {
-              const { users: users2 } = require("@/data/users.js");
-              user = users2.find((u) => u.phone === this.phone);
+              user = users.find((u) => u.phone === this.phone);
+              if (user) {
+                user.lastLoginTime = (/* @__PURE__ */ new Date()).toISOString();
+              }
             } else {
               uni.showToast({ title: "验证码错误或已过期", icon: "none" });
               this.loading = false;
@@ -522,11 +574,17 @@ if (uni.restoreGlobal) {
       // 表单验证
       validateForm() {
         if (!this.phone.trim()) {
-          uni.showToast({ title: "请输入手机号", icon: "none" });
+          uni.showToast({ title: "请输入用户名或手机号", icon: "none" });
           return false;
         }
-        if (!/^1[3-9]\d{9}$/.test(this.phone)) {
-          uni.showToast({ title: "请输入正确的手机号", icon: "none" });
+        const isPhone = /^1[3-9]\d{9}$/.test(this.phone);
+        const isUsername = /^[\u4e00-\u9fa5]+$/.test(this.phone);
+        if (!isPhone && !isUsername) {
+          uni.showToast({ title: "用户名仅支持中文字符，或输入正确的手机号", icon: "none" });
+          return false;
+        }
+        if (this.loginType === "code" && !isPhone) {
+          uni.showToast({ title: "验证码登录仅支持手机号", icon: "none" });
           return false;
         }
         if (this.loginType === "password") {
@@ -548,7 +606,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$b(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$c(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "login-container" }, [
       vue.createCommentVNode(" 标题 "),
       vue.createElementVNode("view", { class: "title" }, "中国农业银行"),
@@ -582,15 +640,15 @@ if (uni.restoreGlobal) {
           onSubmit: _cache[6] || (_cache[6] = (...args) => $options.handleLogin && $options.handleLogin(...args))
         },
         [
-          vue.createCommentVNode(" 手机号输入 "),
+          vue.createCommentVNode(" 用户名/手机号输入 "),
           vue.createElementVNode("view", { class: "input-item" }, [
             vue.withDirectives(vue.createElementVNode(
               "input",
               {
-                type: "number",
+                type: "text",
                 "onUpdate:modelValue": _cache[2] || (_cache[2] = ($event) => $data.phone = $event),
-                placeholder: "请输入用户名/手机号",
-                maxlength: "11",
+                placeholder: "请输入用户名（仅中文）或手机号",
+                maxlength: "20",
                 required: ""
               },
               null,
@@ -618,7 +676,8 @@ if (uni.restoreGlobal) {
               /* NEED_PATCH */
             ), [
               [vue.vModelText, $data.password]
-            ])
+            ]),
+            vue.createElementVNode("view", { class: "password-placeholder" })
           ])) : vue.createCommentVNode("v-if", true),
           $data.loginType === "code" ? (vue.openBlock(), vue.createElementBlock("view", {
             key: 1,
@@ -655,10 +714,18 @@ if (uni.restoreGlobal) {
         32
         /* NEED_HYDRATION */
       ),
+      vue.createCommentVNode(" 快速注册按钮 "),
+      vue.createElementVNode("view", { class: "quick-register" }, [
+        vue.createElementVNode("navigator", {
+          url: "/pages/register/register",
+          "open-type": "navigate"
+        }, [
+          vue.createElementVNode("button", { class: "quick-register-btn" }, " 还没有账户？立即注册 ")
+        ])
+      ]),
       vue.createCommentVNode(" 辅助链接 "),
       vue.createElementVNode("view", { class: "links" }, [
-        vue.createElementVNode("navigator", { url: "/pages/forget/forget" }, "忘记密码"),
-        vue.createElementVNode("navigator", { url: "/pages/register/register" }, "注册账号")
+        vue.createElementVNode("navigator", { url: "/pages/forget/forget" }, "忘记密码")
       ]),
       vue.createCommentVNode(" 登录注意事项 "),
       vue.createElementVNode("view", { class: "login-notice" }, [
@@ -670,7 +737,395 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesDengluLogin = /* @__PURE__ */ _export_sfc(_sfc_main$c, [["render", _sfc_render$b], ["__scopeId", "data-v-6f56e16f"], ["__file", "E:/项目/yihangyidon/src/pages/denglu/login.vue"]]);
+  const PagesDengluLogin = /* @__PURE__ */ _export_sfc(_sfc_main$d, [["render", _sfc_render$c], ["__scopeId", "data-v-6f56e16f"], ["__file", "E:/项目/yihangyidon/src/pages/denglu/login.vue"]]);
+  const _sfc_main$c = {
+    data() {
+      return {
+        form: {
+          username: "",
+          phone: "",
+          code: "",
+          password: "",
+          confirmPassword: "",
+          email: "",
+          nickname: "",
+          idCard: ""
+        },
+        countdown: 0,
+        loading: false,
+        showPassword: false,
+        showConfirmPassword: false
+      };
+    },
+    onLoad() {
+      formatAppLog("log", "at pages/register/register.vue:166", "注册页面加载完成");
+    },
+    methods: {
+      // 切换密码显示
+      togglePassword() {
+        this.showPassword = !this.showPassword;
+      },
+      // 切换确认密码显示
+      toggleConfirmPassword() {
+        this.showConfirmPassword = !this.showConfirmPassword;
+      },
+      // 获取验证码
+      getCode() {
+        if (!this.validatePhone()) {
+          return;
+        }
+        try {
+          const code = generateVerificationCode(this.form.phone);
+          uni.showToast({
+            title: `验证码：${code}`,
+            icon: "none",
+            duration: 3e3
+          });
+          this.countdown = 60;
+          const timer = setInterval(() => {
+            this.countdown--;
+            if (this.countdown <= 0)
+              clearInterval(timer);
+          }, 1e3);
+        } catch (error) {
+          uni.showToast({ title: "发送验证码失败", icon: "none" });
+        }
+      },
+      // 注册处理
+      handleRegister() {
+        this.loading = true;
+        if (!this.validateForm()) {
+          this.loading = false;
+          return;
+        }
+        setTimeout(() => {
+          try {
+            if (!verifyCode(this.form.phone, this.form.code)) {
+              uni.showToast({ title: "验证码错误或已过期", icon: "none" });
+              this.loading = false;
+              return;
+            }
+            if (checkUserExists(this.form.username, this.form.phone)) {
+              uni.showToast({ title: "用户名或手机号已存在", icon: "none" });
+              this.loading = false;
+              return;
+            }
+            const user = registerUser({
+              username: this.form.username,
+              phone: this.form.phone,
+              password: this.form.password,
+              email: this.form.email,
+              nickname: this.form.nickname || this.form.username,
+              idCard: this.form.idCard
+            });
+            uni.showToast({
+              title: "注册成功！",
+              icon: "success",
+              duration: 1500
+            });
+            setTimeout(() => {
+              handleLoginSuccess(user);
+            }, 1500);
+          } catch (error) {
+            uni.showToast({ title: "注册失败，请重试", icon: "none" });
+            formatAppLog("error", "at pages/register/register.vue:259", "注册错误:", error);
+          } finally {
+            this.loading = false;
+          }
+        }, 1e3);
+      },
+      // 验证手机号
+      validatePhone() {
+        if (!this.form.phone.trim()) {
+          uni.showToast({ title: "请输入手机号", icon: "none" });
+          return false;
+        }
+        if (!/^1[3-9]\d{9}$/.test(this.form.phone)) {
+          uni.showToast({ title: "请输入正确的手机号", icon: "none" });
+          return false;
+        }
+        return true;
+      },
+      // 身份证号验证
+      validateIdCard(idCard) {
+        const idCardRegex = /^\d{17}[\dXx]$/;
+        if (!idCardRegex.test(idCard)) {
+          return false;
+        }
+        const testIdCards = [
+          "111111111111111111",
+          "222222222222222222",
+          "333333333333333333",
+          "123456789012345678"
+        ];
+        if (testIdCards.includes(idCard)) {
+          formatAppLog("log", "at pages/register/register.vue:296", "使用测试身份证号:", idCard);
+          return true;
+        }
+        const weights = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2];
+        const checkCodes = ["1", "0", "X", "9", "8", "7", "6", "5", "4", "3", "2"];
+        let sum = 0;
+        for (let i = 0; i < 17; i++) {
+          sum += parseInt(idCard[i]) * weights[i];
+        }
+        const checkCode = checkCodes[sum % 11];
+        const isValid = checkCode === idCard[17].toUpperCase();
+        if (!isValid) {
+          formatAppLog("log", "at pages/register/register.vue:313", "身份证校验失败:", {
+            输入: idCard,
+            计算校验位: checkCode,
+            实际最后一位: idCard[17]
+          });
+        }
+        return isValid;
+      },
+      // 表单验证
+      validateForm() {
+        if (!this.form.username.trim()) {
+          uni.showToast({ title: "请输入用户名", icon: "none" });
+          return false;
+        }
+        if (this.form.username.length < 3 || this.form.username.length > 20) {
+          uni.showToast({ title: "用户名长度应为3-20个字符", icon: "none" });
+          return false;
+        }
+        if (!this.validatePhone()) {
+          return false;
+        }
+        if (!this.form.code.trim()) {
+          uni.showToast({ title: "请输入验证码", icon: "none" });
+          return false;
+        }
+        if (!/^\d{6}$/.test(this.form.code)) {
+          uni.showToast({ title: "请输入6位验证码", icon: "none" });
+          return false;
+        }
+        if (!this.form.password.trim()) {
+          uni.showToast({ title: "请输入密码", icon: "none" });
+          return false;
+        }
+        if (this.form.password.length < 6) {
+          uni.showToast({ title: "密码长度至少6位", icon: "none" });
+          return false;
+        }
+        if (!this.form.confirmPassword.trim()) {
+          uni.showToast({ title: "请再次输入密码", icon: "none" });
+          return false;
+        }
+        if (this.form.password !== this.form.confirmPassword) {
+          uni.showToast({ title: "两次输入的密码不一致", icon: "none" });
+          return false;
+        }
+        if (this.form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email)) {
+          uni.showToast({ title: "请输入正确的邮箱地址", icon: "none" });
+          return false;
+        }
+        if (!this.form.idCard.trim()) {
+          uni.showToast({ title: "请输入身份证号", icon: "none" });
+          return false;
+        }
+        if (!this.validateIdCard(this.form.idCard)) {
+          uni.showToast({ title: "请输入正确的身份证号", icon: "none" });
+          return false;
+        }
+        return true;
+      }
+    }
+  };
+  function _sfc_render$b(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("view", { class: "register-container" }, [
+      vue.createCommentVNode(" 标题 "),
+      vue.createElementVNode("view", { class: "title" }, "注册账户"),
+      vue.createElementVNode("view", { class: "subtitle" }, "创建您的农业银行账户"),
+      vue.createCommentVNode(" 注册表单 "),
+      vue.createElementVNode(
+        "form",
+        {
+          onSubmit: _cache[11] || (_cache[11] = (...args) => $options.handleRegister && $options.handleRegister(...args))
+        },
+        [
+          vue.createCommentVNode(" 用户名输入 "),
+          vue.createElementVNode("view", { class: "input-item" }, [
+            vue.withDirectives(vue.createElementVNode(
+              "input",
+              {
+                type: "text",
+                "onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => $data.form.username = $event),
+                placeholder: "请输入用户名",
+                maxlength: "20",
+                required: ""
+              },
+              null,
+              512
+              /* NEED_PATCH */
+            ), [
+              [vue.vModelText, $data.form.username]
+            ])
+          ]),
+          vue.createCommentVNode(" 手机号输入 "),
+          vue.createElementVNode("view", { class: "input-item" }, [
+            vue.withDirectives(vue.createElementVNode(
+              "input",
+              {
+                type: "number",
+                "onUpdate:modelValue": _cache[1] || (_cache[1] = ($event) => $data.form.phone = $event),
+                placeholder: "请输入手机号",
+                maxlength: "11",
+                required: ""
+              },
+              null,
+              512
+              /* NEED_PATCH */
+            ), [
+              [vue.vModelText, $data.form.phone]
+            ])
+          ]),
+          vue.createCommentVNode(" 验证码输入 "),
+          vue.createElementVNode("view", { class: "input-item" }, [
+            vue.withDirectives(vue.createElementVNode(
+              "input",
+              {
+                type: "number",
+                "onUpdate:modelValue": _cache[2] || (_cache[2] = ($event) => $data.form.code = $event),
+                placeholder: "请输入验证码",
+                maxlength: "6",
+                required: ""
+              },
+              null,
+              512
+              /* NEED_PATCH */
+            ), [
+              [vue.vModelText, $data.form.code]
+            ]),
+            vue.createElementVNode("button", {
+              class: "get-code-btn",
+              onClick: _cache[3] || (_cache[3] = vue.withModifiers((...args) => $options.getCode && $options.getCode(...args), ["stop"])),
+              disabled: $data.countdown > 0
+            }, vue.toDisplayString($data.countdown > 0 ? `${$data.countdown}s后重发` : "获取验证码"), 9, ["disabled"])
+          ]),
+          vue.createCommentVNode(" 密码输入 "),
+          vue.createElementVNode("view", { class: "input-item" }, [
+            vue.withDirectives(vue.createElementVNode("input", {
+              type: $data.showPassword ? "text" : "password",
+              "onUpdate:modelValue": _cache[4] || (_cache[4] = ($event) => $data.form.password = $event),
+              placeholder: "请输入登录密码",
+              required: ""
+            }, null, 8, ["type"]), [
+              [vue.vModelDynamic, $data.form.password]
+            ]),
+            vue.createElementVNode(
+              "button",
+              {
+                class: "password-toggle",
+                onClick: _cache[5] || (_cache[5] = vue.withModifiers((...args) => $options.togglePassword && $options.togglePassword(...args), ["stop"]))
+              },
+              vue.toDisplayString($data.showPassword ? "🙈" : "👁️"),
+              1
+              /* TEXT */
+            )
+          ]),
+          vue.createCommentVNode(" 确认密码输入 "),
+          vue.createElementVNode("view", { class: "input-item" }, [
+            vue.withDirectives(vue.createElementVNode("input", {
+              type: $data.showConfirmPassword ? "text" : "password",
+              "onUpdate:modelValue": _cache[6] || (_cache[6] = ($event) => $data.form.confirmPassword = $event),
+              placeholder: "请再次输入密码",
+              required: ""
+            }, null, 8, ["type"]), [
+              [vue.vModelDynamic, $data.form.confirmPassword]
+            ]),
+            vue.createElementVNode(
+              "button",
+              {
+                class: "password-toggle",
+                onClick: _cache[7] || (_cache[7] = vue.withModifiers((...args) => $options.toggleConfirmPassword && $options.toggleConfirmPassword(...args), ["stop"]))
+              },
+              vue.toDisplayString($data.showConfirmPassword ? "🙈" : "👁️"),
+              1
+              /* TEXT */
+            )
+          ]),
+          vue.createCommentVNode(" 邮箱输入 "),
+          vue.createElementVNode("view", { class: "input-item" }, [
+            vue.withDirectives(vue.createElementVNode(
+              "input",
+              {
+                type: "email",
+                "onUpdate:modelValue": _cache[8] || (_cache[8] = ($event) => $data.form.email = $event),
+                placeholder: "请输入邮箱地址（选填）"
+              },
+              null,
+              512
+              /* NEED_PATCH */
+            ), [
+              [vue.vModelText, $data.form.email]
+            ])
+          ]),
+          vue.createCommentVNode(" 昵称输入 "),
+          vue.createElementVNode("view", { class: "input-item" }, [
+            vue.withDirectives(vue.createElementVNode(
+              "input",
+              {
+                type: "text",
+                "onUpdate:modelValue": _cache[9] || (_cache[9] = ($event) => $data.form.nickname = $event),
+                placeholder: "请输入昵称（选填）",
+                maxlength: "20"
+              },
+              null,
+              512
+              /* NEED_PATCH */
+            ), [
+              [vue.vModelText, $data.form.nickname]
+            ])
+          ]),
+          vue.createCommentVNode(" 身份证号输入 "),
+          vue.createElementVNode("view", { class: "input-item" }, [
+            vue.withDirectives(vue.createElementVNode(
+              "input",
+              {
+                type: "text",
+                "onUpdate:modelValue": _cache[10] || (_cache[10] = ($event) => $data.form.idCard = $event),
+                placeholder: "请输入身份证号",
+                maxlength: "18",
+                required: ""
+              },
+              null,
+              512
+              /* NEED_PATCH */
+            ), [
+              [vue.vModelText, $data.form.idCard]
+            ])
+          ]),
+          vue.createCommentVNode(" 注册按钮 "),
+          vue.createElementVNode("button", {
+            class: "register-btn",
+            "form-type": "submit",
+            loading: $data.loading
+          }, " 立即注册 ", 8, ["loading"])
+        ],
+        32
+        /* NEED_HYDRATION */
+      ),
+      vue.createCommentVNode(" 快速登录按钮 "),
+      vue.createElementVNode("view", { class: "quick-login" }, [
+        vue.createElementVNode("navigator", {
+          url: "/pages/denglu/login",
+          "open-type": "navigate"
+        }, [
+          vue.createElementVNode("button", { class: "quick-login-btn" }, " 已有账户？立即登录 ")
+        ])
+      ]),
+      vue.createCommentVNode(" 注册须知 "),
+      vue.createElementVNode("view", { class: "register-notice" }, [
+        vue.createElementVNode("text", { class: "notice-title" }, "注册须知："),
+        vue.createElementVNode("text", { class: "notice-item" }, "• 用户名支持中文、英文、数字，长度3-20个字符"),
+        vue.createElementVNode("text", { class: "notice-item" }, "• 密码长度至少6位，建议包含字母和数字"),
+        vue.createElementVNode("text", { class: "notice-item" }, "• 手机号用于接收验证码和安全提醒"),
+        vue.createElementVNode("text", { class: "notice-item" }, "• 注册即表示同意相关服务条款和隐私政策")
+      ])
+    ]);
+  }
+  const PagesRegisterRegister = /* @__PURE__ */ _export_sfc(_sfc_main$c, [["render", _sfc_render$b], ["__scopeId", "data-v-97bb96ad"], ["__file", "E:/项目/yihangyidon/src/pages/register/register.vue"]]);
   const _sfc_main$b = {
     data() {
       return {
@@ -885,28 +1340,238 @@ if (uni.restoreGlobal) {
     ]);
   }
   const PagesIndexIndex = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["render", _sfc_render$a], ["__scopeId", "data-v-83a5a03c"], ["__file", "E:/项目/yihangyidon/src/pages/index/index.vue"]]);
+  class ThemeManager {
+    constructor() {
+      this.currentTheme = "light";
+      this.themeList = [
+        "light",
+        "dark",
+        "blue",
+        "green",
+        "purple",
+        "orange",
+        "pink",
+        "red",
+        "teal",
+        "indigo",
+        "amber",
+        "cyan"
+      ];
+      this.themes = {
+        light: {
+          "--bg-color": "#f5f5f5",
+          "--text-color": "#333333",
+          "--card-bg": "#ffffff",
+          "--border-color": "#eeeeee",
+          "--primary-color": "#2e7d32",
+          "--secondary-color": "#4caf50",
+          "--danger-color": "#e74c3c",
+          "--warning-color": "#f39c12",
+          "--success-color": "#27ae60"
+        },
+        dark: {
+          "--bg-color": "#1a1a1a",
+          "--text-color": "#ffffff",
+          "--card-bg": "#2d2d2d",
+          "--border-color": "#404040",
+          "--primary-color": "#4caf50",
+          "--secondary-color": "#66bb6a",
+          "--danger-color": "#ef5350",
+          "--warning-color": "#ffa726",
+          "--success-color": "#66bb6a"
+        },
+        blue: {
+          "--bg-color": "#e3f2fd",
+          "--text-color": "#1565c0",
+          "--card-bg": "#ffffff",
+          "--border-color": "#bbdefb",
+          "--primary-color": "#1976d2",
+          "--secondary-color": "#42a5f5",
+          "--danger-color": "#f44336",
+          "--warning-color": "#ff9800",
+          "--success-color": "#4caf50"
+        },
+        green: {
+          "--bg-color": "#e8f5e8",
+          "--text-color": "#2e7d32",
+          "--card-bg": "#ffffff",
+          "--border-color": "#c8e6c9",
+          "--primary-color": "#4caf50",
+          "--secondary-color": "#66bb6a",
+          "--danger-color": "#f44336",
+          "--warning-color": "#ff9800",
+          "--success-color": "#4caf50"
+        },
+        purple: {
+          "--bg-color": "#f3e5f5",
+          "--text-color": "#7b1fa2",
+          "--card-bg": "#ffffff",
+          "--border-color": "#e1bee7",
+          "--primary-color": "#9c27b0",
+          "--secondary-color": "#ba68c8",
+          "--danger-color": "#f44336",
+          "--warning-color": "#ff9800",
+          "--success-color": "#4caf50"
+        },
+        orange: {
+          "--bg-color": "#fff3e0",
+          "--text-color": "#e65100",
+          "--card-bg": "#ffffff",
+          "--border-color": "#ffcc02",
+          "--primary-color": "#ff9800",
+          "--secondary-color": "#ffb74d",
+          "--danger-color": "#f44336",
+          "--warning-color": "#ff9800",
+          "--success-color": "#4caf50"
+        },
+        pink: {
+          "--bg-color": "#fce4ec",
+          "--text-color": "#c2185b",
+          "--card-bg": "#ffffff",
+          "--border-color": "#f8bbd9",
+          "--primary-color": "#e91e63",
+          "--secondary-color": "#f06292",
+          "--danger-color": "#f44336",
+          "--warning-color": "#ff9800",
+          "--success-color": "#4caf50"
+        },
+        red: {
+          "--bg-color": "#ffebee",
+          "--text-color": "#c62828",
+          "--card-bg": "#ffffff",
+          "--border-color": "#ffcdd2",
+          "--primary-color": "#f44336",
+          "--secondary-color": "#ef5350",
+          "--danger-color": "#d32f2f",
+          "--warning-color": "#ff9800",
+          "--success-color": "#4caf50"
+        },
+        teal: {
+          "--bg-color": "#e0f2f1",
+          "--text-color": "#00695c",
+          "--card-bg": "#ffffff",
+          "--border-color": "#b2dfdb",
+          "--primary-color": "#009688",
+          "--secondary-color": "#4db6ac",
+          "--danger-color": "#f44336",
+          "--warning-color": "#ff9800",
+          "--success-color": "#4caf50"
+        },
+        indigo: {
+          "--bg-color": "#e8eaf6",
+          "--text-color": "#283593",
+          "--card-bg": "#ffffff",
+          "--border-color": "#c5cae9",
+          "--primary-color": "#3f51b5",
+          "--secondary-color": "#7986cb",
+          "--danger-color": "#f44336",
+          "--warning-color": "#ff9800",
+          "--success-color": "#4caf50"
+        },
+        amber: {
+          "--bg-color": "#fff8e1",
+          "--text-color": "#f57f17",
+          "--card-bg": "#ffffff",
+          "--border-color": "#ffecb3",
+          "--primary-color": "#ffc107",
+          "--secondary-color": "#ffd54f",
+          "--danger-color": "#f44336",
+          "--warning-color": "#ff9800",
+          "--success-color": "#4caf50"
+        },
+        cyan: {
+          "--bg-color": "#e0f7fa",
+          "--text-color": "#006064",
+          "--card-bg": "#ffffff",
+          "--border-color": "#b2ebf2",
+          "--primary-color": "#00bcd4",
+          "--secondary-color": "#4dd0e1",
+          "--danger-color": "#f44336",
+          "--warning-color": "#ff9800",
+          "--success-color": "#4caf50"
+        }
+      };
+    }
+    // 初始化主题
+    init() {
+      try {
+        const savedTheme = uni.getStorageSync("appTheme");
+        if (savedTheme && this.themes[savedTheme]) {
+          this.currentTheme = savedTheme;
+          this.applyTheme(savedTheme);
+        }
+      } catch (error) {
+        formatAppLog("error", "at utils/theme.js:154", "初始化主题失败:", error);
+      }
+    }
+    // 获取当前主题
+    getCurrentTheme() {
+      return this.currentTheme;
+    }
+    // 切换主题
+    toggleTheme() {
+      const currentIndex = this.themeList.indexOf(this.currentTheme);
+      const nextIndex = (currentIndex + 1) % this.themeList.length;
+      const newTheme = this.themeList[nextIndex];
+      this.setTheme(newTheme);
+      return newTheme;
+    }
+    // 设置主题
+    setTheme(theme) {
+      if (!this.themes[theme]) {
+        formatAppLog("error", "at utils/theme.js:175", "不支持的主题:", theme);
+        return false;
+      }
+      this.currentTheme = theme;
+      try {
+        uni.setStorageSync("appTheme", theme);
+      } catch (error) {
+        formatAppLog("error", "at utils/theme.js:185", "保存主题失败:", error);
+      }
+      this.applyTheme(theme);
+      uni.$emit("themeChanged", theme);
+      return true;
+    }
+    // 应用主题
+    applyTheme(theme) {
+      this.themes[theme];
+    }
+    // 获取主题变量
+    getThemeVar(varName) {
+      const themeVars = this.themes[this.currentTheme];
+      return themeVars[varName] || "";
+    }
+    // 获取所有主题变量
+    getThemeVars() {
+      return this.themes[this.currentTheme];
+    }
+  }
+  const themeManager = new ThemeManager();
   const _sfc_main$a = {
     data() {
       return {
-        userInfo: null
+        userInfo: null,
+        currentTheme: "light"
+        // 默认浅色主题
       };
     },
     onShow() {
       try {
         if (!forceCheckLogin()) {
-          formatAppLog("log", "at pages/user/user.vue:59", "个人中心：用户未登录，跳转到登录页面");
+          formatAppLog("log", "at pages/user/user.vue:168", "个人中心：用户未登录，跳转到登录页面");
           uni.reLaunch({
             url: "/pages/denglu/login",
             fail: (error) => {
-              formatAppLog("error", "at pages/user/user.vue:63", "个人中心跳转失败:", error);
+              formatAppLog("error", "at pages/user/user.vue:172", "个人中心跳转失败:", error);
               uni.navigateTo({ url: "/pages/denglu/login" });
             }
           });
           return;
         }
         this.checkLoginStatus();
+        this.loadTheme();
       } catch (error) {
-        formatAppLog("error", "at pages/user/user.vue:72", "个人中心onShow检查失败:", error);
+        formatAppLog("error", "at pages/user/user.vue:182", "个人中心onShow检查失败:", error);
         uni.reLaunch({
           url: "/pages/denglu/login",
           fail: () => {
@@ -929,6 +1594,62 @@ if (uni.restoreGlobal) {
       goToLogin() {
         uni.navigateTo({
           url: "/pages/denglu/login"
+        });
+      },
+      // 快捷功能
+      goToTransfer() {
+        uni.showToast({
+          title: "转账功能",
+          icon: "none"
+        });
+      },
+      goToPayment() {
+        uni.showToast({
+          title: "缴费功能",
+          icon: "none"
+        });
+      },
+      goToInvestment() {
+        uni.showToast({
+          title: "理财功能",
+          icon: "none"
+        });
+      },
+      goToCredit() {
+        uni.showToast({
+          title: "信用卡功能",
+          icon: "none"
+        });
+      },
+      // 菜单功能
+      goToAccount() {
+        uni.showToast({
+          title: "我的账户",
+          icon: "none"
+        });
+      },
+      goToCards() {
+        uni.showToast({
+          title: "我的卡片",
+          icon: "none"
+        });
+      },
+      goToTransactions() {
+        uni.showToast({
+          title: "交易记录",
+          icon: "none"
+        });
+      },
+      goToSecurity() {
+        uni.showToast({
+          title: "安全设置",
+          icon: "none"
+        });
+      },
+      goToContact() {
+        uni.showToast({
+          title: "联系客服",
+          icon: "none"
         });
       },
       // 查看退出记录
@@ -955,7 +1676,7 @@ if (uni.restoreGlobal) {
             confirmText: "确定"
           });
         } catch (error) {
-          formatAppLog("error", "at pages/user/user.vue:126", "查看退出记录失败:", error);
+          formatAppLog("error", "at pages/user/user.vue:294", "查看退出记录失败:", error);
           uni.showToast({
             title: "查看记录失败",
             icon: "none"
@@ -1002,104 +1723,263 @@ if (uni.restoreGlobal) {
           icon: "none"
         });
       },
-      goToSettings() {
-        uni.showToast({
-          title: "设置",
-          icon: "none"
-        });
-      },
       goToHelp() {
         uni.showToast({
           title: "帮助中心",
           icon: "none"
+        });
+      },
+      // 加载主题设置
+      loadTheme() {
+        themeManager.init();
+        this.currentTheme = themeManager.getCurrentTheme();
+      },
+      // 获取主题显示名称
+      getThemeDisplayName(theme) {
+        const themeNames = {
+          "light": "浅色主题",
+          "dark": "深色主题",
+          "blue": "蓝色主题",
+          "green": "绿色主题",
+          "purple": "紫色主题",
+          "orange": "橙色主题",
+          "pink": "粉色主题",
+          "red": "红色主题",
+          "teal": "青色主题",
+          "indigo": "靛蓝主题",
+          "amber": "琥珀主题",
+          "cyan": "青色主题"
+        };
+        return themeNames[theme] || theme;
+      },
+      // 切换主题
+      toggleTheme() {
+        const newTheme = themeManager.toggleTheme();
+        this.currentTheme = newTheme;
+        uni.showToast({
+          title: `已切换到${this.getThemeDisplayName(newTheme)}`,
+          icon: "success",
+          duration: 1500
         });
       }
     }
   };
   function _sfc_render$9(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "user-page" }, [
-      vue.createCommentVNode(" 用户信息头部 "),
+      vue.createCommentVNode(" 顶部背景 "),
+      vue.createElementVNode("view", { class: "header-bg" }),
+      vue.createCommentVNode(" 用户信息卡片 "),
       $data.userInfo ? (vue.openBlock(), vue.createElementBlock("view", {
         key: 0,
-        class: "user-header"
+        class: "user-card"
       }, [
-        vue.createElementVNode("view", { class: "avatar" }, [
-          vue.createElementVNode("image", {
-            src: $data.userInfo.avatar,
-            mode: "aspectFill"
-          }, null, 8, ["src"])
-        ]),
         vue.createElementVNode("view", { class: "user-info" }, [
-          vue.createElementVNode(
-            "text",
-            { class: "username" },
-            vue.toDisplayString($data.userInfo.nickname),
-            1
-            /* TEXT */
-          ),
-          vue.createElementVNode(
-            "text",
-            { class: "user-desc" },
-            vue.toDisplayString($data.userInfo.phone),
-            1
-            /* TEXT */
-          )
+          vue.createElementVNode("view", { class: "avatar-section" }, [
+            vue.createElementVNode("view", { class: "avatar" }, [
+              vue.createElementVNode("image", {
+                src: $data.userInfo.avatar || "/static/default-avatar.png",
+                mode: "aspectFill"
+              }, null, 8, ["src"])
+            ]),
+            vue.createElementVNode("view", { class: "user-details" }, [
+              vue.createElementVNode(
+                "text",
+                { class: "username" },
+                vue.toDisplayString($data.userInfo.nickname || $data.userInfo.username),
+                1
+                /* TEXT */
+              ),
+              vue.createElementVNode("text", { class: "user-level" }, "VIP客户")
+            ])
+          ]),
+          vue.createElementVNode("view", { class: "account-info" }, [
+            vue.createElementVNode("text", { class: "account-label" }, "账户余额"),
+            vue.createElementVNode("text", { class: "account-balance" }, "¥ 12,580.00")
+          ])
         ])
       ])) : (vue.openBlock(), vue.createElementBlock(
         vue.Fragment,
         { key: 1 },
         [
           vue.createCommentVNode(" 未登录状态 "),
-          vue.createElementVNode("view", { class: "login-prompt" }, [
-            vue.createElementVNode("text", { class: "prompt-text" }, "请先登录"),
-            vue.createElementVNode("button", {
-              class: "login-btn",
-              onClick: _cache[0] || (_cache[0] = (...args) => $options.goToLogin && $options.goToLogin(...args))
-            }, "立即登录")
+          vue.createElementVNode("view", { class: "login-card" }, [
+            vue.createElementVNode("view", { class: "login-content" }, [
+              vue.createElementVNode("text", { class: "login-title" }, "欢迎使用农业银行"),
+              vue.createElementVNode("text", { class: "login-subtitle" }, "请登录您的账户"),
+              vue.createElementVNode("button", {
+                class: "login-btn",
+                onClick: _cache[0] || (_cache[0] = (...args) => $options.goToLogin && $options.goToLogin(...args))
+              }, "立即登录")
+            ])
           ])
         ],
         2112
         /* STABLE_FRAGMENT, DEV_ROOT_FRAGMENT */
       )),
-      vue.createCommentVNode(" 功能菜单 "),
+      vue.createCommentVNode(" 快捷功能 "),
       $data.userInfo ? (vue.openBlock(), vue.createElementBlock("view", {
         key: 2,
-        class: "menu-list"
+        class: "quick-functions"
       }, [
-        vue.createElementVNode("view", {
-          class: "menu-item",
-          onClick: _cache[1] || (_cache[1] = (...args) => $options.goToProfile && $options.goToProfile(...args))
-        }, [
-          vue.createElementVNode("text", { class: "menu-text" }, "个人资料"),
-          vue.createElementVNode("text", { class: "arrow" }, ">")
+        vue.createElementVNode("view", { class: "function-grid" }, [
+          vue.createElementVNode("view", {
+            class: "function-item",
+            onClick: _cache[1] || (_cache[1] = (...args) => $options.goToTransfer && $options.goToTransfer(...args))
+          }, [
+            vue.createElementVNode("view", { class: "function-icon transfer-icon" }, "💳"),
+            vue.createElementVNode("text", { class: "function-text" }, "转账")
+          ]),
+          vue.createElementVNode("view", {
+            class: "function-item",
+            onClick: _cache[2] || (_cache[2] = (...args) => $options.goToPayment && $options.goToPayment(...args))
+          }, [
+            vue.createElementVNode("view", { class: "function-icon payment-icon" }, "💰"),
+            vue.createElementVNode("text", { class: "function-text" }, "缴费")
+          ]),
+          vue.createElementVNode("view", {
+            class: "function-item",
+            onClick: _cache[3] || (_cache[3] = (...args) => $options.goToInvestment && $options.goToInvestment(...args))
+          }, [
+            vue.createElementVNode("view", { class: "function-icon investment-icon" }, "📈"),
+            vue.createElementVNode("text", { class: "function-text" }, "理财")
+          ]),
+          vue.createElementVNode("view", {
+            class: "function-item",
+            onClick: _cache[4] || (_cache[4] = (...args) => $options.goToCredit && $options.goToCredit(...args))
+          }, [
+            vue.createElementVNode("view", { class: "function-icon credit-icon" }, "💳"),
+            vue.createElementVNode("text", { class: "function-text" }, "信用卡")
+          ])
+        ])
+      ])) : vue.createCommentVNode("v-if", true),
+      vue.createCommentVNode(" 功能菜单 "),
+      $data.userInfo ? (vue.openBlock(), vue.createElementBlock("view", {
+        key: 3,
+        class: "menu-sections"
+      }, [
+        vue.createCommentVNode(" 账户管理 "),
+        vue.createElementVNode("view", { class: "menu-section" }, [
+          vue.createElementVNode("view", { class: "section-title" }, "账户管理"),
+          vue.createElementVNode("view", { class: "menu-list" }, [
+            vue.createElementVNode("view", {
+              class: "menu-item",
+              onClick: _cache[5] || (_cache[5] = (...args) => $options.goToAccount && $options.goToAccount(...args))
+            }, [
+              vue.createElementVNode("view", { class: "menu-left" }, [
+                vue.createElementVNode("text", { class: "menu-icon" }, "🏦"),
+                vue.createElementVNode("text", { class: "menu-text" }, "我的账户")
+              ]),
+              vue.createElementVNode("text", { class: "arrow" }, ">")
+            ]),
+            vue.createElementVNode("view", {
+              class: "menu-item",
+              onClick: _cache[6] || (_cache[6] = (...args) => $options.goToCards && $options.goToCards(...args))
+            }, [
+              vue.createElementVNode("view", { class: "menu-left" }, [
+                vue.createElementVNode("text", { class: "menu-icon" }, "💳"),
+                vue.createElementVNode("text", { class: "menu-text" }, "我的卡片")
+              ]),
+              vue.createElementVNode("text", { class: "arrow" }, ">")
+            ]),
+            vue.createElementVNode("view", {
+              class: "menu-item",
+              onClick: _cache[7] || (_cache[7] = (...args) => $options.goToTransactions && $options.goToTransactions(...args))
+            }, [
+              vue.createElementVNode("view", { class: "menu-left" }, [
+                vue.createElementVNode("text", { class: "menu-icon" }, "📊"),
+                vue.createElementVNode("text", { class: "menu-text" }, "交易记录")
+              ]),
+              vue.createElementVNode("text", { class: "arrow" }, ">")
+            ])
+          ])
         ]),
-        vue.createElementVNode("view", {
-          class: "menu-item",
-          onClick: _cache[2] || (_cache[2] = (...args) => $options.goToSettings && $options.goToSettings(...args))
-        }, [
-          vue.createElementVNode("text", { class: "menu-text" }, "设置"),
-          vue.createElementVNode("text", { class: "arrow" }, ">")
+        vue.createCommentVNode(" 个人设置 "),
+        vue.createElementVNode("view", { class: "menu-section" }, [
+          vue.createElementVNode("view", { class: "section-title" }, "个人设置"),
+          vue.createElementVNode("view", { class: "menu-list" }, [
+            vue.createElementVNode("view", {
+              class: "menu-item",
+              onClick: _cache[8] || (_cache[8] = (...args) => $options.goToProfile && $options.goToProfile(...args))
+            }, [
+              vue.createElementVNode("view", { class: "menu-left" }, [
+                vue.createElementVNode("text", { class: "menu-icon" }, "👤"),
+                vue.createElementVNode("text", { class: "menu-text" }, "个人资料")
+              ]),
+              vue.createElementVNode("text", { class: "arrow" }, ">")
+            ]),
+            vue.createElementVNode("view", {
+              class: "menu-item",
+              onClick: _cache[9] || (_cache[9] = (...args) => $options.goToSecurity && $options.goToSecurity(...args))
+            }, [
+              vue.createElementVNode("view", { class: "menu-left" }, [
+                vue.createElementVNode("text", { class: "menu-icon" }, "🔒"),
+                vue.createElementVNode("text", { class: "menu-text" }, "安全设置")
+              ]),
+              vue.createElementVNode("text", { class: "arrow" }, ">")
+            ]),
+            vue.createElementVNode("view", {
+              class: "menu-item theme-item",
+              onClick: _cache[10] || (_cache[10] = (...args) => $options.toggleTheme && $options.toggleTheme(...args))
+            }, [
+              vue.createElementVNode("view", { class: "menu-left" }, [
+                vue.createElementVNode("text", { class: "menu-icon" }, "🎨"),
+                vue.createElementVNode("text", { class: "menu-text" }, "主题切换")
+              ]),
+              vue.createElementVNode("view", { class: "theme-info" }, [
+                vue.createElementVNode(
+                  "text",
+                  { class: "theme-desc" },
+                  vue.toDisplayString($options.getThemeDisplayName($data.currentTheme)),
+                  1
+                  /* TEXT */
+                ),
+                vue.createElementVNode("text", { class: "arrow" }, ">")
+              ])
+            ])
+          ])
         ]),
-        vue.createElementVNode("view", {
-          class: "menu-item",
-          onClick: _cache[3] || (_cache[3] = (...args) => $options.goToHelp && $options.goToHelp(...args))
-        }, [
-          vue.createElementVNode("text", { class: "menu-text" }, "帮助中心"),
-          vue.createElementVNode("text", { class: "arrow" }, ">")
+        vue.createCommentVNode(" 客户服务 "),
+        vue.createElementVNode("view", { class: "menu-section" }, [
+          vue.createElementVNode("view", { class: "section-title" }, "客户服务"),
+          vue.createElementVNode("view", { class: "menu-list" }, [
+            vue.createElementVNode("view", {
+              class: "menu-item",
+              onClick: _cache[11] || (_cache[11] = (...args) => $options.goToHelp && $options.goToHelp(...args))
+            }, [
+              vue.createElementVNode("view", { class: "menu-left" }, [
+                vue.createElementVNode("text", { class: "menu-icon" }, "❓"),
+                vue.createElementVNode("text", { class: "menu-text" }, "帮助中心")
+              ]),
+              vue.createElementVNode("text", { class: "arrow" }, ">")
+            ]),
+            vue.createElementVNode("view", {
+              class: "menu-item",
+              onClick: _cache[12] || (_cache[12] = (...args) => $options.goToContact && $options.goToContact(...args))
+            }, [
+              vue.createElementVNode("view", { class: "menu-left" }, [
+                vue.createElementVNode("text", { class: "menu-icon" }, "📞"),
+                vue.createElementVNode("text", { class: "menu-text" }, "联系客服")
+              ]),
+              vue.createElementVNode("text", { class: "arrow" }, ">")
+            ]),
+            vue.createElementVNode("view", {
+              class: "menu-item",
+              onClick: _cache[13] || (_cache[13] = (...args) => $options.viewLogoutHistory && $options.viewLogoutHistory(...args))
+            }, [
+              vue.createElementVNode("view", { class: "menu-left" }, [
+                vue.createElementVNode("text", { class: "menu-icon" }, "📋"),
+                vue.createElementVNode("text", { class: "menu-text" }, "退出记录")
+              ]),
+              vue.createElementVNode("text", { class: "arrow" }, ">")
+            ])
+          ])
         ]),
-        vue.createElementVNode("view", {
-          class: "menu-item",
-          onClick: _cache[4] || (_cache[4] = (...args) => $options.viewLogoutHistory && $options.viewLogoutHistory(...args))
-        }, [
-          vue.createElementVNode("text", { class: "menu-text" }, "退出记录"),
-          vue.createElementVNode("text", { class: "arrow" }, ">")
-        ]),
-        vue.createElementVNode("view", {
-          class: "menu-item",
-          onClick: _cache[5] || (_cache[5] = (...args) => $options.handleLogout && $options.handleLogout(...args))
-        }, [
-          vue.createElementVNode("text", { class: "menu-text logout-text" }, "退出登录"),
-          vue.createElementVNode("text", { class: "arrow" }, ">")
+        vue.createCommentVNode(" 退出登录 "),
+        vue.createElementVNode("view", { class: "logout-section" }, [
+          vue.createElementVNode("button", {
+            class: "logout-btn",
+            onClick: _cache[14] || (_cache[14] = (...args) => $options.handleLogout && $options.handleLogout(...args))
+          }, "退出登录")
         ])
       ])) : vue.createCommentVNode("v-if", true)
     ]);
@@ -1117,11 +1997,11 @@ if (uni.restoreGlobal) {
           { key: "insurance", name: "保险" },
           { key: "forex", name: "外汇" }
         ],
-        // 顶部轮播图片
+        // 顶部轮播图片（本地）
         swiperImages: [
-          "https://www.abchina.com/cn/advis/grfw_gggl/sygg/202102/P020210202316125719385.jpg",
-          "https://ewealth.abchina.com.cn/advis/sygg/201712/P020200120402132224758.jpg",
-          "https://ewealth.abchina.com.cn/advis/whgg/201712/P020171220394037986599.jpg"
+          "/static/wealth/swip1.jpg",
+          "/static/wealth/swip2.jpg",
+          "/static/wealth/swip3.jpg"
         ],
         // 客服
         serviceHotline: "95599",
@@ -2476,14 +3356,43 @@ if (uni.restoreGlobal) {
     ]);
   }
   const PagesLifeLife = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["render", _sfc_render$7], ["__scopeId", "data-v-980f0516"], ["__file", "E:/项目/yihangyidon/src/pages/life/life.vue"]]);
-  const _imports_0 = "/static/tabbar/user-active.png";
+  const _imports_0 = "/static/wealth/aiavatar.png";
+  const _imports_1 = "/static/wealth/useravatar.jpg";
+  const AI_BASE = "http://127.0.0.1:5000";
   const _sfc_main$7 = {
     data() {
       return {
         draft: "",
         sending: false,
+        recording: false,
         scrollIntoId: "",
         placeholder: "请输入您的问题，如“我要查询理财收益”",
+        sessionId: "default",
+        pendingImageBase64: "",
+        pendingImageLocalPath: "",
+        showEmoji: false,
+        emojiList: ["😀", "😁", "😂", "🤣", "😊", "😍", "😎", "👍", "🙏", "💰", "📈", "🏦", "🛡️", "💱"],
+        // 与 mobile.html 一致的表情清单（含短码与图片URL），用于渲染替换
+        EMOJI_ITEMS: [
+          { code: ":grinning:", char: "😀", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f600.png" },
+          { code: ":smiley:", char: "😃", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f603.png" },
+          { code: ":smile:", char: "😄", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f604.png" },
+          { code: ":grin:", char: "😁", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f601.png" },
+          { code: ":joy:", char: "😂", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f602.png" },
+          { code: ":sweat_smile:", char: "😅", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f605.png" },
+          { code: ":wink:", char: "😉", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f609.png" },
+          { code: ":blush:", char: "😊", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f60a.png" },
+          { code: ":heart_eyes:", char: "😍", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f60d.png" },
+          { code: ":thinking:", char: "🤔", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f914.png" },
+          { code: ":sunglasses:", char: "😎", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f60e.png" },
+          { code: ":cry:", char: "😢", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f622.png" },
+          { code: ":sob:", char: "😭", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f62d.png" },
+          { code: ":angry:", char: "😠", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f620.png" },
+          { code: ":thumbsup:", char: "👍", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f44d.png" },
+          { code: ":clap:", char: "👏", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f44f.png" },
+          { code: ":ok_hand:", char: "👌", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f44c.png" },
+          { code: ":heart:", char: "❤️", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2764.png" }
+        ],
         messages: [
           {
             id: "hello",
@@ -2491,10 +3400,100 @@ if (uni.restoreGlobal) {
             html: "您好，我是农业银行AI客服。可为您解答存款、理财、保险、外汇等问题。",
             time: ""
           }
-        ]
+        ],
+        recorder: null,
+        audioCtx: null
       };
     },
+    onLoad() {
+      try {
+        this.recorder = uni.getRecorderManager && uni.getRecorderManager();
+        if (this.recorder) {
+          this.recorder.onStop((res) => {
+            this.recording = false;
+            const tempFilePath = res.tempFilePath;
+            this.uploadAudio(tempFilePath);
+          });
+        }
+        this.audioCtx = uni.createInnerAudioContext && uni.createInnerAudioContext();
+      } catch (e) {
+      }
+    },
     methods: {
+      // 渲染：安全转义 + 基础Markdown + 表情替换（与 mobile.html 对齐）
+      renderMarkdownAndEmojis(text = "") {
+        let html = this.escapeHtml(text);
+        html = html.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+        html = html.replace(/\n/g, "<br/>");
+        for (const item of this.EMOJI_ITEMS || []) {
+          const img = `<img src="${item.url}" alt="${item.code}" style="height:1.2em;vertical-align:-0.2em"/>`;
+          html = html.split(item.code).join(img);
+          html = html.split(item.char).join(img);
+        }
+        return html;
+      },
+      playAudio(url) {
+        try {
+          if (!this.audioCtx)
+            this.audioCtx = uni.createInnerAudioContext();
+          this.audioCtx.src = url;
+          this.audioCtx.play();
+        } catch (e) {
+          uni.showToast({ title: "无法播放语音", icon: "none" });
+        }
+      },
+      toggleEmoji() {
+        this.showEmoji = !this.showEmoji;
+      },
+      appendEmoji(item) {
+        const ch = item && item.char ? item.char : "";
+        this.draft += (this.draft && !/\s$/.test(this.draft) ? " " : "") + ch + " ";
+        this.showEmoji = false;
+      },
+      toggleRecord() {
+        if (!this.recorder) {
+          uni.showToast({ title: "当前平台不支持录音", icon: "none" });
+          return;
+        }
+        if (this.recording) {
+          this.recorder.stop();
+        } else {
+          this.recording = true;
+          this.recorder.start({
+            duration: 6e4,
+            sampleRate: 16e3,
+            numberOfChannels: 1,
+            encodeBitRate: 48e3,
+            format: "mp3"
+          });
+        }
+      },
+      uploadAudio(filePath) {
+        uni.showLoading({ title: "识别中" });
+        uni.uploadFile({
+          url: `${AI_BASE}/api/speech-to-text`,
+          name: "audio",
+          filePath,
+          success: (res) => {
+            uni.hideLoading();
+            try {
+              const data = JSON.parse(res.data);
+              if (data.success && data.text) {
+                this.draft = data.text;
+                this.send();
+              } else {
+                uni.showToast({ title: data.error || "识别失败", icon: "none" });
+              }
+            } catch (e) {
+              uni.showToast({ title: "解析失败", icon: "none" });
+            }
+          },
+          fail: () => {
+            uni.hideLoading();
+            uni.showToast({ title: "上传失败", icon: "none" });
+          }
+        });
+      },
       chooseImage() {
         uni.chooseImage({
           count: 1,
@@ -2502,45 +3501,98 @@ if (uni.restoreGlobal) {
           sourceType: ["album", "camera"],
           success: (res) => {
             const path = res.tempFilePaths[0];
-            this.messages.push({ id: Date.now() + "-uimg", role: "user", html: `<img src="${path}" style="max-width:100%;border-radius:8rpx;"/>`, time: this.nowTime() });
-            this.toBottom();
+            this.pendingImageLocalPath = path;
+            try {
+              this.pendingImageBase64 = "";
+              uni.showToast({ title: "H5预览模式：不进行图片转换", icon: "none" });
+            } catch (e) {
+              formatAppLog("warn", "at pages/service/chat.vue:221", "图片转base64失败:", e);
+              this.pendingImageBase64 = "";
+              this.pendingImageLocalPath = "";
+            }
+            uni.showToast({ title: "已选择图片，可继续输入文字后发送", icon: "none" });
           },
           fail: () => {
             uni.showToast({ title: "选择图片取消", icon: "none" });
           }
         });
       },
-      openEmoji() {
-        uni.showToast({ title: "表情面板（待接入）", icon: "none" });
+      clearPendingImage() {
+        this.pendingImageLocalPath = "";
+        this.pendingImageBase64 = "";
       },
-      startVoice() {
-        uni.showToast({ title: "语音输入（待接入）", icon: "none" });
-      },
-      send() {
+      async send() {
         const content = this.draft.trim();
-        if (!content || this.sending)
+        if (!content && !this.pendingImageBase64) {
           return;
-        const userMsg = {
-          id: Date.now() + "-u",
-          role: "user",
-          html: this.escapeHtml(content),
-          time: this.nowTime()
-        };
+        }
+        if (this.sending)
+          return;
+        await this.sendMessage(content);
+      },
+      async sendMessage(content) {
+        const renderedUser = this.renderMarkdownAndEmojis(content);
+        const userMsg = { id: Date.now() + "-u", role: "user", html: renderedUser, time: this.nowTime() };
+        if (this.pendingImageLocalPath) {
+          userMsg.image = this.pendingImageLocalPath;
+        }
         this.messages.push(userMsg);
         this.draft = "";
+        this.showEmoji = false;
         this.toBottom();
         this.sending = true;
-        setTimeout(() => {
-          const reply = this.generateReply(content);
-          this.messages.push({
-            id: Date.now() + "-b",
-            role: "bot",
-            html: reply,
-            time: this.nowTime()
+        try {
+          const [err, res] = await new Promise((resolve) => {
+            uni.request({
+              url: `${AI_BASE}/api/chat`,
+              method: "POST",
+              header: { "Content-Type": "application/json" },
+              data: { message: content, session_id: this.sessionId, image: this.pendingImageBase64 || null },
+              success: (r) => resolve([null, r]),
+              fail: (e) => resolve([e, null])
+            });
           });
+          this.pendingImageBase64 = "";
+          this.pendingImageLocalPath = "";
+          if (err)
+            throw err;
+          if (!res || res.statusCode < 200 || res.statusCode >= 300 || !res.data)
+            throw new Error("接口异常");
+          const data = res.data;
+          if (!(data.success && data.reply) && !data.reply) {
+            throw new Error(data.error || "无有效应答");
+          }
+          let replyText = Array.isArray(data.reply) ? data.reply.map((p) => p && p.text ? p.text : "").join("") : typeof data.reply === "string" ? data.reply : "";
+          const renderedReply = this.renderMarkdownAndEmojis(replyText || "");
+          const botId = Date.now() + "-b";
+          this.messages.push({ id: botId, role: "bot", html: renderedReply, time: data.timestamp || this.nowTime() });
+          this.toBottom();
+          const [tErr, tRes] = await new Promise((resolve) => {
+            uni.request({
+              url: `${AI_BASE}/api/text-to-speech`,
+              method: "POST",
+              header: { "Content-Type": "application/json" },
+              data: { text: replyText || "" },
+              success: (r) => resolve([null, r]),
+              fail: (e) => resolve([e, null])
+            });
+          });
+          if (!tErr && tRes && tRes.statusCode >= 200 && tRes.statusCode < 300 && tRes.data && tRes.data.success && tRes.data.audio_file) {
+            const url = `${AI_BASE}/api/audio/${tRes.data.audio_file}`;
+            const lastIdx = this.messages.length - 1;
+            if (lastIdx >= 0 && this.messages[lastIdx].role === "bot") {
+              this.$set(this.messages[lastIdx], "audio", url);
+            }
+          }
+        } catch (e) {
+          const reply = this.generateReply(content);
+          const rendered = this.renderMarkdownAndEmojis(reply);
+          this.messages.push({ id: Date.now() + "-b", role: "bot", html: rendered, time: this.nowTime() });
+          uni.showToast({ title: "AI服务不可用，已使用本地回复", icon: "none" });
+        } finally {
           this.sending = false;
           this.toBottom();
-        }, 600);
+        }
       },
       generateReply(text) {
         const t = text.toLowerCase();
@@ -2581,7 +3633,7 @@ if (uni.restoreGlobal) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "chat-page" }, [
       vue.createElementVNode("view", { class: "chat-header" }, [
         vue.createElementVNode("text", { class: "title" }, "AI 智能客服"),
-        vue.createElementVNode("text", { class: "sub" }, "7×24小时为您服务")
+        vue.createElementVNode("text", { class: "sub" }, "24小时为您服务")
       ]),
       vue.createElementVNode("scroll-view", {
         "scroll-y": "",
@@ -2600,17 +3652,33 @@ if (uni.restoreGlobal) {
               m.role === "bot" ? (vue.openBlock(), vue.createElementBlock("image", {
                 key: 0,
                 class: "avatar",
-                src: "https://onlineservice.cdn-static.abchina.com.cn/chat/static/img/sister_icon.08ee4961.png",
+                src: _imports_0,
                 mode: "aspectFit"
               })) : vue.createCommentVNode("v-if", true),
               vue.createElementVNode("view", { class: "bubble" }, [
-                vue.createElementVNode("rich-text", {
+                m.html ? (vue.openBlock(), vue.createElementBlock("rich-text", {
+                  key: 0,
                   nodes: m.html
-                }, null, 8, ["nodes"]),
+                }, null, 8, ["nodes"])) : vue.createCommentVNode("v-if", true),
+                m.image ? (vue.openBlock(), vue.createElementBlock("image", {
+                  key: 1,
+                  src: m.image,
+                  style: { "max-width": "100%", "border-radius": "8rpx" },
+                  mode: "widthFix"
+                }, null, 8, ["src"])) : vue.createCommentVNode("v-if", true),
+                m.audio ? (vue.openBlock(), vue.createElementBlock("view", {
+                  key: 2,
+                  class: "audio-row"
+                }, [
+                  vue.createElementVNode("button", {
+                    class: "mini-btn ghost",
+                    onClick: ($event) => $options.playAudio(m.audio)
+                  }, "▶ 播放语音", 8, ["onClick"])
+                ])) : vue.createCommentVNode("v-if", true),
                 m.time ? (vue.openBlock(), vue.createElementBlock(
                   "text",
                   {
-                    key: 0,
+                    key: 3,
                     class: "time"
                   },
                   vue.toDisplayString(m.time),
@@ -2621,7 +3689,7 @@ if (uni.restoreGlobal) {
               m.role === "user" ? (vue.openBlock(), vue.createElementBlock("image", {
                 key: 1,
                 class: "avatar",
-                src: _imports_0,
+                src: _imports_1,
                 mode: "aspectFit"
               })) : vue.createCommentVNode("v-if", true)
             ], 10, ["id"]);
@@ -2630,40 +3698,88 @@ if (uni.restoreGlobal) {
           /* KEYED_FRAGMENT */
         ))
       ], 8, ["scroll-into-view"]),
+      vue.createCommentVNode(" 待发送图片预览（不改变原布局，仅在输入栏上方增加一行） "),
+      $data.pendingImageLocalPath ? (vue.openBlock(), vue.createElementBlock("view", {
+        key: 0,
+        class: "pending-preview"
+      }, [
+        vue.createElementVNode("image", {
+          src: $data.pendingImageLocalPath,
+          class: "pending-img",
+          mode: "aspectFit"
+        }, null, 8, ["src"]),
+        vue.createElementVNode("button", {
+          class: "mini-btn ghost",
+          onClick: _cache[0] || (_cache[0] = (...args) => $options.clearPendingImage && $options.clearPendingImage(...args))
+        }, "移除")
+      ])) : vue.createCommentVNode("v-if", true),
+      vue.createCommentVNode(" 表情面板（与 mobile.html 一致：图片表情选择） "),
+      $data.showEmoji ? (vue.openBlock(), vue.createElementBlock("view", {
+        key: 1,
+        class: "emoji-panel"
+      }, [
+        (vue.openBlock(true), vue.createElementBlock(
+          vue.Fragment,
+          null,
+          vue.renderList($data.EMOJI_ITEMS, (item, idx) => {
+            return vue.openBlock(), vue.createElementBlock("view", {
+              class: "emoji-item",
+              key: idx,
+              onClick: ($event) => $options.appendEmoji(item),
+              title: item.code
+            }, [
+              vue.createElementVNode("image", {
+                src: item.url,
+                alt: item.code,
+                style: { "width": "24px", "height": "24px" },
+                mode: "aspectFit"
+              }, null, 8, ["src", "alt"])
+            ], 8, ["onClick", "title"]);
+          }),
+          128
+          /* KEYED_FRAGMENT */
+        ))
+      ])) : vue.createCommentVNode("v-if", true),
       vue.createElementVNode("view", { class: "chat-input" }, [
         vue.createElementVNode("view", { class: "tools" }, [
           vue.createElementVNode("button", {
             class: "tool-btn",
-            onClick: _cache[0] || (_cache[0] = (...args) => $options.chooseImage && $options.chooseImage(...args)),
+            onClick: _cache[1] || (_cache[1] = (...args) => $options.chooseImage && $options.chooseImage(...args)),
             "hover-class": "btn-hover",
             "hover-stay-time": "50"
           }, "🖼️"),
           vue.createElementVNode("button", {
             class: "tool-btn",
-            onClick: _cache[1] || (_cache[1] = (...args) => $options.openEmoji && $options.openEmoji(...args)),
+            onClick: _cache[2] || (_cache[2] = (...args) => $options.toggleEmoji && $options.toggleEmoji(...args)),
             "hover-class": "btn-hover",
             "hover-stay-time": "50"
           }, "😀"),
-          vue.createElementVNode("button", {
-            class: "tool-btn",
-            onClick: _cache[2] || (_cache[2] = (...args) => $options.startVoice && $options.startVoice(...args)),
-            "hover-class": "btn-hover",
-            "hover-stay-time": "50"
-          }, "🎤")
+          vue.createElementVNode(
+            "button",
+            {
+              class: "tool-btn",
+              onClick: _cache[3] || (_cache[3] = (...args) => $options.toggleRecord && $options.toggleRecord(...args)),
+              "hover-class": "btn-hover",
+              "hover-stay-time": "50"
+            },
+            vue.toDisplayString($data.recording ? "■" : "🎤"),
+            1
+            /* TEXT */
+          )
         ]),
         vue.withDirectives(vue.createElementVNode("input", {
           class: "input",
-          "onUpdate:modelValue": _cache[3] || (_cache[3] = ($event) => $data.draft = $event),
+          "onUpdate:modelValue": _cache[4] || (_cache[4] = ($event) => $data.draft = $event),
           placeholder: $data.placeholder,
           "confirm-type": "send",
-          onConfirm: _cache[4] || (_cache[4] = (...args) => $options.send && $options.send(...args))
+          onConfirm: _cache[5] || (_cache[5] = (...args) => $options.send && $options.send(...args))
         }, null, 40, ["placeholder"]), [
           [vue.vModelText, $data.draft]
         ]),
         vue.createElementVNode("button", {
           class: "send",
           disabled: !$data.draft.trim() || $data.sending,
-          onClick: _cache[5] || (_cache[5] = (...args) => $options.send && $options.send(...args))
+          onClick: _cache[6] || (_cache[6] = (...args) => $options.send && $options.send(...args))
         }, vue.toDisplayString($data.sending ? "发送中..." : "发送"), 9, ["disabled"])
       ])
     ]);
@@ -5472,6 +6588,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
   }
   const PagesGamesGames = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["render", _sfc_render], ["__scopeId", "data-v-5e0e9dd0"], ["__file", "E:/项目/yihangyidon/src/pages/games/games.vue"]]);
   __definePage("pages/denglu/login", PagesDengluLogin);
+  __definePage("pages/register/register", PagesRegisterRegister);
   __definePage("pages/index/index", PagesIndexIndex);
   __definePage("pages/user/user", PagesUserUser);
   __definePage("pages/wealth/wealth", PagesWealthWealth);
@@ -5522,7 +6639,8 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
   const _sfc_main = {
     name: "App",
     onLaunch(options) {
-      formatAppLog("log", "at App.vue:12", "App Launch", options);
+      formatAppLog("log", "at App.vue:13", "App Launch", options);
+      themeManager.init();
       this.checkUpdate();
       this.initUserInfo();
       this.setSystemInfo();
@@ -5530,21 +6648,21 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       this.initLoginInterceptor();
     },
     onShow(options) {
-      formatAppLog("log", "at App.vue:31", "App Show", options);
+      formatAppLog("log", "at App.vue:35", "App Show", options);
       this.checkLoginStatus();
       this.restoreAppState();
       this.globalLoginCheck();
     },
     onHide() {
-      formatAppLog("log", "at App.vue:44", "App Hide");
+      formatAppLog("log", "at App.vue:48", "App Hide");
       this.saveAppState();
     },
     onError(error) {
-      formatAppLog("error", "at App.vue:51", "App Error:", error);
+      formatAppLog("error", "at App.vue:55", "App Error:", error);
       this.reportError(error);
     },
     onPageNotFound(options) {
-      formatAppLog("log", "at App.vue:58", "Page Not Found:", options);
+      formatAppLog("log", "at App.vue:62", "Page Not Found:", options);
       uni.switchTab({
         url: "/pages/index/index"
       });
@@ -5555,7 +6673,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
        */
       checkUpdate() {
         plus.runtime.getProperty(plus.runtime.appid, (widgetInfo) => {
-          formatAppLog("log", "at App.vue:73", "当前应用版本:", widgetInfo.version);
+          formatAppLog("log", "at App.vue:77", "当前应用版本:", widgetInfo.version);
         });
       },
       /**
@@ -5566,10 +6684,10 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
           const userInfo = uni.getStorageSync("userInfo");
           if (userInfo) {
             this.globalData.userInfo = userInfo;
-            formatAppLog("log", "at App.vue:87", "用户信息已恢复:", userInfo);
+            formatAppLog("log", "at App.vue:91", "用户信息已恢复:", userInfo);
           }
         } catch (error) {
-          formatAppLog("error", "at App.vue:90", "恢复用户信息失败:", error);
+          formatAppLog("error", "at App.vue:94", "恢复用户信息失败:", error);
         }
       },
       /**
@@ -5579,9 +6697,9 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
         try {
           const systemInfo = uni.getSystemInfoSync();
           this.globalData.systemInfo = systemInfo;
-          formatAppLog("log", "at App.vue:101", "系统信息:", systemInfo);
+          formatAppLog("log", "at App.vue:105", "系统信息:", systemInfo);
         } catch (error) {
-          formatAppLog("error", "at App.vue:103", "获取系统信息失败:", error);
+          formatAppLog("error", "at App.vue:107", "获取系统信息失败:", error);
         }
       },
       /**
@@ -5589,7 +6707,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
        */
       initNetworkListener() {
         uni.onNetworkStatusChange((res) => {
-          formatAppLog("log", "at App.vue:112", "网络状态变化:", res);
+          formatAppLog("log", "at App.vue:116", "网络状态变化:", res);
           this.globalData.networkType = res.networkType;
           this.globalData.isConnected = res.isConnected;
           if (!res.isConnected) {
@@ -5608,7 +6726,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
           const pages = getCurrentPages();
           const currentPage = pages[pages.length - 1];
           if (currentPage && !currentPage.route.includes("login")) {
-            formatAppLog("log", "at App.vue:135", "应用启动时检测到未登录，强制跳转到登录页面");
+            formatAppLog("log", "at App.vue:139", "应用启动时检测到未登录，强制跳转到登录页面");
             uni.reLaunch({
               url: "/pages/denglu/login"
             });
@@ -5621,13 +6739,13 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       initLoginInterceptor() {
         uni.addInterceptor("navigateTo", {
           invoke(e) {
-            formatAppLog("log", "at App.vue:150", "拦截 navigateTo:", e.url);
-            if (e.url.includes("/pages/denglu/login")) {
-              formatAppLog("log", "at App.vue:154", "跳转到登录页面，允许");
+            formatAppLog("log", "at App.vue:154", "拦截 navigateTo:", e.url);
+            if (e.url.includes("/pages/denglu/login") || e.url.includes("/pages/register/register")) {
+              formatAppLog("log", "at App.vue:158", "跳转到登录页面或注册页面，允许");
               return true;
             }
             if (!forceCheckLogin()) {
-              formatAppLog("log", "at App.vue:160", "用户未登录，阻止页面跳转");
+              formatAppLog("log", "at App.vue:164", "用户未登录，阻止页面跳转");
               return false;
             }
             return true;
@@ -5635,9 +6753,9 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
         });
         uni.addInterceptor("switchTab", {
           invoke(e) {
-            formatAppLog("log", "at App.vue:171", "拦截 switchTab:", e.url);
+            formatAppLog("log", "at App.vue:175", "拦截 switchTab:", e.url);
             if (!forceCheckLogin()) {
-              formatAppLog("log", "at App.vue:175", "用户未登录，阻止tabBar跳转");
+              formatAppLog("log", "at App.vue:179", "用户未登录，阻止tabBar跳转");
               return false;
             }
             return true;
@@ -5645,13 +6763,13 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
         });
         uni.addInterceptor("reLaunch", {
           invoke(e) {
-            formatAppLog("log", "at App.vue:186", "拦截 reLaunch:", e.url);
-            if (e.url.includes("/pages/denglu/login")) {
-              formatAppLog("log", "at App.vue:190", "重定向到登录页面，允许");
+            formatAppLog("log", "at App.vue:190", "拦截 reLaunch:", e.url);
+            if (e.url.includes("/pages/denglu/login") || e.url.includes("/pages/register/register")) {
+              formatAppLog("log", "at App.vue:194", "重定向到登录页面或注册页面，允许");
               return true;
             }
             if (!forceCheckLogin()) {
-              formatAppLog("log", "at App.vue:196", "用户未登录，阻止重定向");
+              formatAppLog("log", "at App.vue:200", "用户未登录，阻止重定向");
               return false;
             }
             return true;
@@ -5659,13 +6777,13 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
         });
         uni.addInterceptor("redirectTo", {
           invoke(e) {
-            formatAppLog("log", "at App.vue:207", "拦截 redirectTo:", e.url);
-            if (e.url.includes("/pages/denglu/login")) {
-              formatAppLog("log", "at App.vue:211", "重定向到登录页面，允许");
+            formatAppLog("log", "at App.vue:211", "拦截 redirectTo:", e.url);
+            if (e.url.includes("/pages/denglu/login") || e.url.includes("/pages/register/register")) {
+              formatAppLog("log", "at App.vue:215", "重定向到登录页面或注册页面，允许");
               return true;
             }
             if (!forceCheckLogin()) {
-              formatAppLog("log", "at App.vue:217", "用户未登录，阻止重定向");
+              formatAppLog("log", "at App.vue:221", "用户未登录，阻止重定向");
               return false;
             }
             return true;
@@ -5691,7 +6809,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
           };
           uni.setStorageSync("appState", appState);
         } catch (error) {
-          formatAppLog("error", "at App.vue:247", "保存应用状态失败:", error);
+          formatAppLog("error", "at App.vue:251", "保存应用状态失败:", error);
         }
       },
       /**
@@ -5707,14 +6825,14 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
             }
           }
         } catch (error) {
-          formatAppLog("error", "at App.vue:265", "恢复应用状态失败:", error);
+          formatAppLog("error", "at App.vue:269", "恢复应用状态失败:", error);
         }
       },
       /**
        * 错误上报
        */
       reportError(error) {
-        formatAppLog("error", "at App.vue:274", "错误上报:", error);
+        formatAppLog("error", "at App.vue:278", "错误上报:", error);
       }
     },
     /**
