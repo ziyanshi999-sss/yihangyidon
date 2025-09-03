@@ -31,6 +31,7 @@ if (uni.restoreGlobal) {
 }
 (function(vue) {
   "use strict";
+  var _documentCurrentScript = typeof document !== "undefined" ? document.currentScript : null;
   function formatAppLog(type, filename, ...args) {
     if (uni.__log__) {
       uni.__log__(type, filename, ...args);
@@ -2664,8 +2665,14 @@ if (uni.restoreGlobal) {
   const PagesLifeLife = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["render", _sfc_render$7], ["__scopeId", "data-v-980f0516"], ["__file", "D:/项目/yihangyidon/src/pages/life/life.vue"]]);
   const _imports_0 = "/static/wealth/aiavatar.png";
   const _imports_1 = "/static/wealth/useravatar.jpg";
-  const AI_BASE = /* @__PURE__ */ (() => {
+  var define_import_meta_env_default$1 = { VITE_AI_BASE: "http://192.168.0.102:5000", VITE_CJS_IGNORE_WARNING: "true", VITE_ROOT_DIR: "D:\\项目\\yihangyidon", VITE_USER_NODE_ENV: "development", BASE_URL: "/", MODE: "development", DEV: true, PROD: false, SSR: false };
+  const AI_BASE = (() => {
     let base = "";
+    try {
+      base = uni.getStorageSync && uni.getStorageSync("AI_BASE") || typeof { url: _documentCurrentScript && _documentCurrentScript.tagName.toUpperCase() === "SCRIPT" && _documentCurrentScript.src || new URL("app-service.js", document.baseURI).href } !== "undefined" && define_import_meta_env_default$1 && "http://192.168.0.102:5000" || "";
+    } catch (_) {
+      base = "";
+    }
     return base;
   })();
   const _sfc_main$7 = {
@@ -2826,12 +2833,12 @@ if (uni.restoreGlobal) {
             }
           }
         } catch (e) {
-          formatAppLog("error", "at pages/service/chat.vue:229", "AI stream error:", e);
+          formatAppLog("error", "at pages/service/chat.vue:234", "AI stream error:", e);
           await this.requestOnceText(content, thinkingIndex);
         }
       },
       async requestOnceText(content, botIndexToReuse = null) {
-        {
+        if (!AI_BASE) {
           const fallback = this.generateReply(content);
           const msg = '未配置AI服务地址，小程序可执行 uni.setStorageSync("AI_BASE","http://你的电脑IP:5000")；H5请配置 /api 代理';
           if (botIndexToReuse != null)
@@ -2839,8 +2846,51 @@ if (uni.restoreGlobal) {
           else
             this.messages.push({ id: Date.now() + "-b", role: "bot", html: this.renderMarkdownAndEmojis(fallback), time: this.nowTime() });
           uni.showToast({ title: msg.slice(0, 28), icon: "none" });
-          formatAppLog("warn", "at pages/service/chat.vue:242", msg);
+          formatAppLog("warn", "at pages/service/chat.vue:247", msg);
           return;
+        }
+        const [err, res] = await new Promise((resolve) => {
+          uni.request({
+            url: `${AI_BASE}/api/chat`,
+            method: "POST",
+            header: { "Content-Type": "application/json" },
+            data: { message: content, session_id: this.sessionId, image: null },
+            success: (r) => resolve([null, r]),
+            fail: (e) => resolve([e, null])
+          });
+        });
+        if (err || !res || res.statusCode < 200 || res.statusCode >= 300 || !res.data || !res.data.success && !res.data.reply) {
+          const fallback = this.generateReply(content);
+          if (botIndexToReuse != null)
+            this.updateBotMessage(botIndexToReuse, fallback);
+          else
+            this.messages.push({ id: Date.now() + "-b", role: "bot", html: this.renderMarkdownAndEmojis(fallback), time: this.nowTime() });
+          formatAppLog("error", "at pages/service/chat.vue:264", "AI /api/chat error:", err, res);
+          uni.showToast({ title: "AI服务请求失败", icon: "none" });
+          return;
+        }
+        let replyText = Array.isArray(res.data.reply) ? res.data.reply.map((p) => p && p.text ? p.text : "").join("") : typeof res.data.reply === "string" ? res.data.reply : "";
+        const renderedReply = this.renderMarkdownAndEmojis(replyText || "");
+        if (botIndexToReuse != null)
+          this.updateBotMessage(botIndexToReuse, replyText || "");
+        else
+          this.messages.push({ id: Date.now() + "-b", role: "bot", html: renderedReply, time: res.data.timestamp || this.nowTime() });
+        const [tErr, tRes] = await new Promise((resolve) => {
+          uni.request({
+            url: `${AI_BASE}/api/text-to-speech`,
+            method: "POST",
+            header: { "Content-Type": "application/json" },
+            data: { text: replyText || "" },
+            success: (r) => resolve([null, r]),
+            fail: (e) => resolve([e, null])
+          });
+        });
+        if (!tErr && tRes && tRes.statusCode >= 200 && tRes.statusCode < 300 && tRes.data && tRes.data.success && tRes.data.audio_file) {
+          const url = `${AI_BASE}/api/audio/${tRes.data.audio_file}`;
+          const lastIdx = botIndexToReuse != null ? botIndexToReuse : this.messages.length - 1;
+          if (lastIdx >= 0 && this.messages[lastIdx].role === "bot") {
+            this.$set(this.messages[lastIdx], "audio", url);
+          }
         }
       },
       playAudio(url) {
@@ -2931,7 +2981,7 @@ if (uni.restoreGlobal) {
               this.pendingImageBase64 = "";
               uni.showToast({ title: "H5预览模式：不进行图片转换", icon: "none" });
             } catch (e) {
-              formatAppLog("warn", "at pages/service/chat.vue:404", "图片转base64失败:", e);
+              formatAppLog("warn", "at pages/service/chat.vue:409", "图片转base64失败:", e);
               this.pendingImageBase64 = "";
               this.pendingImageLocalPath = "";
             }
@@ -6030,6 +6080,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
   Promise.resolve().then(() => {
     initPushNotification();
   });
+  var define_import_meta_env_default = { VITE_AI_BASE: "http://192.168.0.102:5000", VITE_CJS_IGNORE_WARNING: "true", VITE_ROOT_DIR: "D:\\项目\\yihangyidon", VITE_USER_NODE_ENV: "development", BASE_URL: "/", MODE: "development", DEV: true, PROD: false, SSR: false };
   const _sfc_main = {
     name: "App",
     onLaunch(options) {
@@ -6039,23 +6090,35 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       this.setSystemInfo();
       this.initNetworkListener();
       this.initLoginInterceptor();
+      try {
+        const stored = uni.getStorageSync("AI_BASE");
+        const envBase = typeof { url: _documentCurrentScript && _documentCurrentScript.tagName.toUpperCase() === "SCRIPT" && _documentCurrentScript.src || new URL("app-service.js", document.baseURI).href } !== "undefined" && define_import_meta_env_default && "http://192.168.0.102:5000" || "";
+        if (!stored && envBase) {
+          uni.setStorageSync("AI_BASE", envBase);
+          formatAppLog("log", "at App.vue:35", "AI_BASE initialized from env:", envBase);
+        } else {
+          formatAppLog("log", "at App.vue:37", "AI_BASE existing:", stored || envBase || "(empty)");
+        }
+      } catch (e) {
+        formatAppLog("warn", "at App.vue:40", "AI_BASE init failed:", e);
+      }
     },
     onShow(options) {
-      formatAppLog("log", "at App.vue:31", "App Show", options);
+      formatAppLog("log", "at App.vue:45", "App Show", options);
       this.checkLoginStatus();
       this.restoreAppState();
       this.globalLoginCheck();
     },
     onHide() {
-      formatAppLog("log", "at App.vue:44", "App Hide");
+      formatAppLog("log", "at App.vue:58", "App Hide");
       this.saveAppState();
     },
     onError(error) {
-      formatAppLog("error", "at App.vue:51", "App Error:", error);
+      formatAppLog("error", "at App.vue:65", "App Error:", error);
       this.reportError(error);
     },
     onPageNotFound(options) {
-      formatAppLog("log", "at App.vue:58", "Page Not Found:", options);
+      formatAppLog("log", "at App.vue:72", "Page Not Found:", options);
       uni.switchTab({
         url: "/pages/index/index"
       });
@@ -6066,7 +6129,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
        */
       checkUpdate() {
         plus.runtime.getProperty(plus.runtime.appid, (widgetInfo) => {
-          formatAppLog("log", "at App.vue:73", "当前应用版本:", widgetInfo.version);
+          formatAppLog("log", "at App.vue:87", "当前应用版本:", widgetInfo.version);
         });
       },
       /**
@@ -6077,10 +6140,10 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
           const userInfo = uni.getStorageSync("userInfo");
           if (userInfo) {
             this.globalData.userInfo = userInfo;
-            formatAppLog("log", "at App.vue:87", "用户信息已恢复:", userInfo);
+            formatAppLog("log", "at App.vue:101", "用户信息已恢复:", userInfo);
           }
         } catch (error) {
-          formatAppLog("error", "at App.vue:90", "恢复用户信息失败:", error);
+          formatAppLog("error", "at App.vue:104", "恢复用户信息失败:", error);
         }
       },
       /**
@@ -6090,9 +6153,9 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
         try {
           const systemInfo = uni.getSystemInfoSync();
           this.globalData.systemInfo = systemInfo;
-          formatAppLog("log", "at App.vue:101", "系统信息:", systemInfo);
+          formatAppLog("log", "at App.vue:115", "系统信息:", systemInfo);
         } catch (error) {
-          formatAppLog("error", "at App.vue:103", "获取系统信息失败:", error);
+          formatAppLog("error", "at App.vue:117", "获取系统信息失败:", error);
         }
       },
       /**
@@ -6100,7 +6163,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
        */
       initNetworkListener() {
         uni.onNetworkStatusChange((res) => {
-          formatAppLog("log", "at App.vue:112", "网络状态变化:", res);
+          formatAppLog("log", "at App.vue:126", "网络状态变化:", res);
           this.globalData.networkType = res.networkType;
           this.globalData.isConnected = res.isConnected;
           if (!res.isConnected) {
@@ -6119,7 +6182,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
           const pages = getCurrentPages();
           const currentPage = pages[pages.length - 1];
           if (currentPage && !currentPage.route.includes("login")) {
-            formatAppLog("log", "at App.vue:135", "应用启动时检测到未登录，强制跳转到登录页面");
+            formatAppLog("log", "at App.vue:149", "应用启动时检测到未登录，强制跳转到登录页面");
             uni.reLaunch({
               url: "/pages/denglu/login"
             });
@@ -6132,13 +6195,13 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       initLoginInterceptor() {
         uni.addInterceptor("navigateTo", {
           invoke(e) {
-            formatAppLog("log", "at App.vue:150", "拦截 navigateTo:", e.url);
+            formatAppLog("log", "at App.vue:164", "拦截 navigateTo:", e.url);
             if (e.url.includes("/pages/denglu/login")) {
-              formatAppLog("log", "at App.vue:154", "跳转到登录页面，允许");
+              formatAppLog("log", "at App.vue:168", "跳转到登录页面，允许");
               return true;
             }
             if (!forceCheckLogin()) {
-              formatAppLog("log", "at App.vue:160", "用户未登录，阻止页面跳转");
+              formatAppLog("log", "at App.vue:174", "用户未登录，阻止页面跳转");
               return false;
             }
             return true;
@@ -6146,9 +6209,9 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
         });
         uni.addInterceptor("switchTab", {
           invoke(e) {
-            formatAppLog("log", "at App.vue:171", "拦截 switchTab:", e.url);
+            formatAppLog("log", "at App.vue:185", "拦截 switchTab:", e.url);
             if (!forceCheckLogin()) {
-              formatAppLog("log", "at App.vue:175", "用户未登录，阻止tabBar跳转");
+              formatAppLog("log", "at App.vue:189", "用户未登录，阻止tabBar跳转");
               return false;
             }
             return true;
@@ -6156,13 +6219,13 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
         });
         uni.addInterceptor("reLaunch", {
           invoke(e) {
-            formatAppLog("log", "at App.vue:186", "拦截 reLaunch:", e.url);
+            formatAppLog("log", "at App.vue:200", "拦截 reLaunch:", e.url);
             if (e.url.includes("/pages/denglu/login")) {
-              formatAppLog("log", "at App.vue:190", "重定向到登录页面，允许");
+              formatAppLog("log", "at App.vue:204", "重定向到登录页面，允许");
               return true;
             }
             if (!forceCheckLogin()) {
-              formatAppLog("log", "at App.vue:196", "用户未登录，阻止重定向");
+              formatAppLog("log", "at App.vue:210", "用户未登录，阻止重定向");
               return false;
             }
             return true;
@@ -6170,13 +6233,13 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
         });
         uni.addInterceptor("redirectTo", {
           invoke(e) {
-            formatAppLog("log", "at App.vue:207", "拦截 redirectTo:", e.url);
+            formatAppLog("log", "at App.vue:221", "拦截 redirectTo:", e.url);
             if (e.url.includes("/pages/denglu/login")) {
-              formatAppLog("log", "at App.vue:211", "重定向到登录页面，允许");
+              formatAppLog("log", "at App.vue:225", "重定向到登录页面，允许");
               return true;
             }
             if (!forceCheckLogin()) {
-              formatAppLog("log", "at App.vue:217", "用户未登录，阻止重定向");
+              formatAppLog("log", "at App.vue:231", "用户未登录，阻止重定向");
               return false;
             }
             return true;
@@ -6202,7 +6265,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
           };
           uni.setStorageSync("appState", appState);
         } catch (error) {
-          formatAppLog("error", "at App.vue:247", "保存应用状态失败:", error);
+          formatAppLog("error", "at App.vue:261", "保存应用状态失败:", error);
         }
       },
       /**
@@ -6218,14 +6281,14 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
             }
           }
         } catch (error) {
-          formatAppLog("error", "at App.vue:265", "恢复应用状态失败:", error);
+          formatAppLog("error", "at App.vue:279", "恢复应用状态失败:", error);
         }
       },
       /**
        * 错误上报
        */
       reportError(error) {
-        formatAppLog("error", "at App.vue:274", "错误上报:", error);
+        formatAppLog("error", "at App.vue:288", "错误上报:", error);
       }
     },
     /**

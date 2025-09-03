@@ -60,6 +60,11 @@ const AI_BASE = (() => {
   // #ifdef H5
   base = '' // 相对路径，配合 vite.config.js -> server.proxy['/api']
   // #endif
+  // #ifdef APP-PLUS
+  try {
+    base = (uni.getStorageSync && uni.getStorageSync('AI_BASE')) || (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_AI_BASE) || ''
+  } catch (_) { base = '' }
+  // #endif
   // #ifdef MP-WEIXIN
   try {
     base = (uni.getStorageSync && uni.getStorageSync('AI_BASE')) || (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_AI_BASE) || ''
