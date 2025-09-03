@@ -15,6 +15,12 @@ const sessionHistory = {}
  */
 export const chat = async (message, sessionId = 'default', imageData = null) => {
   try {
+    console.log('chat API调用，接收到的参数:')
+    console.log('- message:', message)
+    console.log('- sessionId:', sessionId)
+    console.log('- imageData长度:', imageData ? imageData.length : 0)
+    console.log('- imageData前50字符:', imageData ? imageData.substring(0, 50) : '无')
+    
     // 初始化会话历史
     if (!sessionHistory[sessionId]) {
       sessionHistory[sessionId] = []
@@ -23,6 +29,7 @@ export const chat = async (message, sessionId = 'default', imageData = null) => 
     // 构建消息内容
     const messageContent = []
     if (imageData) {
+      console.log('添加图片到消息内容')
       messageContent.push({
         type: "image_url",
         image_url: { url: imageData }
@@ -38,6 +45,8 @@ export const chat = async (message, sessionId = 'default', imageData = null) => 
 
     // 选择模型
     const selectedModel = imageData ? "Qwen/Qwen2.5-VL-32B-Instruct" : "Qwen/Qwen2.5-14B-Instruct"
+    console.log('选择的模型:', selectedModel)
+    console.log('发送给AI的消息内容:', JSON.stringify(messageContent, null, 2))
 
     const response = await uni.request({
       url: `${API_BASE_URL}/chat/completions`,

@@ -2667,11 +2667,17 @@ if (uni.restoreGlobal) {
   const sessionHistory = {};
   const chat = async (message, sessionId = "default", imageData = null) => {
     try {
+      formatAppLog("log", "at api/ai.js:18", "chat API调用，接收到的参数:");
+      formatAppLog("log", "at api/ai.js:19", "- message:", message);
+      formatAppLog("log", "at api/ai.js:20", "- sessionId:", sessionId);
+      formatAppLog("log", "at api/ai.js:21", "- imageData长度:", imageData ? imageData.length : 0);
+      formatAppLog("log", "at api/ai.js:22", "- imageData前50字符:", imageData ? imageData.substring(0, 50) : "无");
       if (!sessionHistory[sessionId]) {
         sessionHistory[sessionId] = [];
       }
       const messageContent = [];
       if (imageData) {
+        formatAppLog("log", "at api/ai.js:32", "添加图片到消息内容");
         messageContent.push({
           type: "image_url",
           image_url: { url: imageData }
@@ -2683,6 +2689,8 @@ if (uni.restoreGlobal) {
         content: messageContent
       });
       const selectedModel = imageData ? "Qwen/Qwen2.5-VL-32B-Instruct" : "Qwen/Qwen2.5-14B-Instruct";
+      formatAppLog("log", "at api/ai.js:48", "选择的模型:", selectedModel);
+      formatAppLog("log", "at api/ai.js:49", "发送给AI的消息内容:", JSON.stringify(messageContent, null, 2));
       const response = await uni.request({
         url: `${API_BASE_URL}/chat/completions`,
         method: "POST",
@@ -2709,7 +2717,7 @@ if (uni.restoreGlobal) {
         throw new Error(`API请求失败: ${response.statusCode}`);
       }
     } catch (error) {
-      formatAppLog("error", "at api/ai.js:70", "聊天请求失败:", error);
+      formatAppLog("error", "at api/ai.js:79", "聊天请求失败:", error);
       return {
         success: false,
         error: error.message || "请求失败"
@@ -2773,7 +2781,7 @@ if (uni.restoreGlobal) {
         throw new Error(`流式请求失败: ${response.statusCode}`);
       }
     } catch (error) {
-      formatAppLog("error", "at api/ai.js:148", "流式聊天失败:", error);
+      formatAppLog("error", "at api/ai.js:157", "流式聊天失败:", error);
       return {
         success: false,
         error: error.message || "流式请求失败"
@@ -2804,7 +2812,7 @@ if (uni.restoreGlobal) {
         throw new Error(`语音识别失败: ${response.statusCode}`);
       }
     } catch (error) {
-      formatAppLog("error", "at api/ai.js:184", "语音转文字失败:", error);
+      formatAppLog("error", "at api/ai.js:193", "语音转文字失败:", error);
       return {
         success: false,
         error: error.message || "语音识别失败"
@@ -2813,7 +2821,7 @@ if (uni.restoreGlobal) {
   };
   const textToSpeech = async (text) => {
     try {
-      formatAppLog("log", "at api/ai.js:197", "开始TTS请求，文本:", text);
+      formatAppLog("log", "at api/ai.js:206", "开始TTS请求，文本:", text);
       const requestData = {
         model: "fnlp/MOSS-TTSD-v0.5",
         input: `[S1]${text}`,
@@ -2827,7 +2835,7 @@ if (uni.restoreGlobal) {
         speed: 1,
         gain: 0
       };
-      formatAppLog("log", "at api/ai.js:211", "TTS请求数据:", requestData);
+      formatAppLog("log", "at api/ai.js:220", "TTS请求数据:", requestData);
       const response = await uni.request({
         url: `${API_BASE_URL}/audio/speech`,
         method: "POST",
@@ -2840,12 +2848,12 @@ if (uni.restoreGlobal) {
         responseType: "arraybuffer"
         // 确保返回二进制数据
       });
-      formatAppLog("log", "at api/ai.js:225", "TTS响应状态:", response.statusCode);
-      formatAppLog("log", "at api/ai.js:226", "TTS响应头:", response.header);
+      formatAppLog("log", "at api/ai.js:234", "TTS响应状态:", response.statusCode);
+      formatAppLog("log", "at api/ai.js:235", "TTS响应头:", response.header);
       if (response.statusCode === 200) {
         const arrayBuffer = response.data;
         const uint8Array = new Uint8Array(arrayBuffer);
-        formatAppLog("log", "at api/ai.js:233", "音频数据长度:", uint8Array.length);
+        formatAppLog("log", "at api/ai.js:242", "音频数据长度:", uint8Array.length);
         let base64 = "";
         try {
           let binaryString = "";
@@ -2854,7 +2862,7 @@ if (uni.restoreGlobal) {
           }
           base64 = btoa(binaryString);
         } catch (e) {
-          formatAppLog("log", "at api/ai.js:245", "btoa不可用，使用手动base64编码");
+          formatAppLog("log", "at api/ai.js:254", "btoa不可用，使用手动base64编码");
           const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
           for (let i = 0; i < uint8Array.length; i += 3) {
             const byte1 = uint8Array[i] || 0;
@@ -2867,7 +2875,7 @@ if (uni.restoreGlobal) {
             base64 += chars[enc1] + chars[enc2] + chars[enc3] + chars[enc4];
           }
         }
-        formatAppLog("log", "at api/ai.js:262", "base64长度:", base64.length);
+        formatAppLog("log", "at api/ai.js:271", "base64长度:", base64.length);
         return {
           success: true,
           audioData: `data:audio/mp3;base64,${base64}`,
@@ -2875,8 +2883,8 @@ if (uni.restoreGlobal) {
           // 兼容原有代码
         };
       } else {
-        formatAppLog("error", "at api/ai.js:271", "TTS API响应:", response);
-        formatAppLog("error", "at api/ai.js:272", "TTS响应数据:", response.data);
+        formatAppLog("error", "at api/ai.js:280", "TTS API响应:", response);
+        formatAppLog("error", "at api/ai.js:281", "TTS响应数据:", response.data);
         let errorMessage = `语音合成失败: ${response.statusCode}`;
         try {
           if (response.data) {
@@ -2884,12 +2892,12 @@ if (uni.restoreGlobal) {
             errorMessage = errorData.message || errorData.error || errorMessage;
           }
         } catch (e) {
-          formatAppLog("log", "at api/ai.js:282", "无法解析错误响应");
+          formatAppLog("log", "at api/ai.js:291", "无法解析错误响应");
         }
         throw new Error(errorMessage);
       }
     } catch (error) {
-      formatAppLog("error", "at api/ai.js:288", "文字转语音失败:", error);
+      formatAppLog("error", "at api/ai.js:297", "文字转语音失败:", error);
       return {
         success: false,
         error: error.message || "语音合成失败"
@@ -2905,7 +2913,7 @@ if (uni.restoreGlobal) {
         sending: false,
         recording: false,
         scrollIntoId: "",
-        placeholder: '请输入您的问题，如"我要查询理财收益"',
+        placeholder: "请输入您的问题",
         sessionId: "default",
         pendingImageBase64: "",
         pendingImageLocalPath: "",
@@ -3017,13 +3025,17 @@ if (uni.restoreGlobal) {
           } else {
             throw new Error(result.error);
           }
+          this.pendingImageBase64 = "";
+          this.pendingImageLocalPath = "";
         } catch (e) {
-          formatAppLog("error", "at pages/service/chat.vue:205", "AI stream error:", e);
+          formatAppLog("error", "at pages/service/chat.vue:210", "AI stream error:", e);
           await this.requestOnceText(content, thinkingIndex);
         }
       },
       async requestOnceText(content, botIndexToReuse = null) {
         try {
+          formatAppLog("log", "at pages/service/chat.vue:220", "requestOnceText调用，图片数据长度:", this.pendingImageBase64 ? this.pendingImageBase64.length : 0);
+          formatAppLog("log", "at pages/service/chat.vue:221", "图片数据前50字符:", this.pendingImageBase64 ? this.pendingImageBase64.substring(0, 50) : "无");
           const result = await chat(content, this.sessionId, this.pendingImageBase64);
           if (result.success) {
             const replyText = result.reply || "";
@@ -3042,14 +3054,18 @@ if (uni.restoreGlobal) {
           } else {
             throw new Error(result.error || "AI服务请求失败");
           }
+          this.pendingImageBase64 = "";
+          this.pendingImageLocalPath = "";
         } catch (e) {
-          formatAppLog("error", "at pages/service/chat.vue:245", "AI request error:", e);
+          formatAppLog("error", "at pages/service/chat.vue:259", "AI request error:", e);
           const fallback = this.generateReply(content);
           if (botIndexToReuse != null)
             this.updateBotMessage(botIndexToReuse, fallback);
           else
             this.messages.push({ id: Date.now() + "-b", role: "bot", html: this.renderMarkdownAndEmojis(fallback), time: this.nowTime() });
           uni.showToast({ title: "AI服务请求失败", icon: "none" });
+          this.pendingImageBase64 = "";
+          this.pendingImageLocalPath = "";
         }
       },
       playAudio(url) {
@@ -3063,9 +3079,9 @@ if (uni.restoreGlobal) {
         }
       },
       togglePlayAudio(message) {
-        formatAppLog("log", "at pages/service/chat.vue:262", "点击播放按钮，消息对象:", message);
-        formatAppLog("log", "at pages/service/chat.vue:263", "音频路径:", message.audio);
-        formatAppLog("log", "at pages/service/chat.vue:264", "播放状态:", message.isPlaying);
+        formatAppLog("log", "at pages/service/chat.vue:280", "点击播放按钮，消息对象:", message);
+        formatAppLog("log", "at pages/service/chat.vue:281", "音频路径:", message.audio);
+        formatAppLog("log", "at pages/service/chat.vue:282", "播放状态:", message.isPlaying);
         if (!message.audio) {
           uni.showToast({ title: "没有语音内容", icon: "none" });
           return;
@@ -3079,32 +3095,32 @@ if (uni.restoreGlobal) {
           if (!this.audioCtx) {
             this.audioCtx = uni.createInnerAudioContext();
             this.audioCtx.onEnded(() => {
-              formatAppLog("log", "at pages/service/chat.vue:287", "音频播放结束");
+              formatAppLog("log", "at pages/service/chat.vue:305", "音频播放结束");
               this.stopCurrentAudio();
             });
             this.audioCtx.onError((err) => {
-              formatAppLog("error", "at pages/service/chat.vue:293", "音频播放错误:", err);
+              formatAppLog("error", "at pages/service/chat.vue:311", "音频播放错误:", err);
               this.stopCurrentAudio();
               uni.showToast({ title: "播放失败", icon: "none" });
             });
             this.audioCtx.onPlay(() => {
-              formatAppLog("log", "at pages/service/chat.vue:300", "音频开始播放");
+              formatAppLog("log", "at pages/service/chat.vue:318", "音频开始播放");
             });
             this.audioCtx.onCanplay(() => {
-              formatAppLog("log", "at pages/service/chat.vue:305", "音频加载完成");
+              formatAppLog("log", "at pages/service/chat.vue:323", "音频加载完成");
             });
             this.audioCtx.onLoadstart(() => {
-              formatAppLog("log", "at pages/service/chat.vue:310", "音频开始加载");
+              formatAppLog("log", "at pages/service/chat.vue:328", "音频开始加载");
             });
           }
-          formatAppLog("log", "at pages/service/chat.vue:314", "设置音频源:", message.audio);
+          formatAppLog("log", "at pages/service/chat.vue:332", "设置音频源:", message.audio);
           this.audioCtx.src = message.audio;
-          formatAppLog("log", "at pages/service/chat.vue:316", "开始播放音频");
+          formatAppLog("log", "at pages/service/chat.vue:334", "开始播放音频");
           this.audioCtx.play();
           this.$set(message, "isPlaying", true);
           this.currentPlayingMessage = message;
         } catch (e) {
-          formatAppLog("error", "at pages/service/chat.vue:324", "播放音频失败:", e);
+          formatAppLog("error", "at pages/service/chat.vue:342", "播放音频失败:", e);
           uni.showToast({ title: "无法播放语音", icon: "none" });
         }
       },
@@ -3184,7 +3200,8 @@ if (uni.restoreGlobal) {
               this.pendingImageBase64 = "";
               uni.showToast({ title: "H5预览模式：不进行图片转换", icon: "none" });
             } catch (e) {
-              formatAppLog("warn", "at pages/service/chat.vue:424", "图片转base64失败:", e);
+              formatAppLog("error", "at pages/service/chat.vue:444", "图片转base64失败:", e);
+              formatAppLog("error", "at pages/service/chat.vue:445", "错误详情:", e.message, e.stack);
               this.pendingImageBase64 = "";
               this.pendingImageLocalPath = "";
             }
@@ -3220,9 +3237,13 @@ if (uni.restoreGlobal) {
         this.toBottom();
         this.sending = true;
         try {
+          formatAppLog("log", "at pages/service/chat.vue:481", "发送消息，pendingImageBase64长度:", this.pendingImageBase64 ? this.pendingImageBase64.length : 0);
+          formatAppLog("log", "at pages/service/chat.vue:482", "pendingImageBase64前20字符:", this.pendingImageBase64 ? this.pendingImageBase64.substring(0, 20) : "无");
           if (this.pendingImageBase64) {
+            formatAppLog("log", "at pages/service/chat.vue:485", "检测到图片，使用requestOnceText方法");
             await this.requestOnceText(content);
           } else {
+            formatAppLog("log", "at pages/service/chat.vue:488", "无图片，使用streamTextReply方法");
             await this.streamTextReply(content);
           }
         } catch (e) {
@@ -3232,8 +3253,6 @@ if (uni.restoreGlobal) {
           uni.showToast({ title: "AI服务不可用，已使用本地回复", icon: "none" });
         } finally {
           this.sending = false;
-          this.pendingImageBase64 = "";
-          this.pendingImageLocalPath = "";
           this.toBottom();
         }
       },
@@ -3306,7 +3325,7 @@ if (uni.restoreGlobal) {
                 m.image ? (vue.openBlock(), vue.createElementBlock("image", {
                   key: 1,
                   src: m.image,
-                  style: { "max-width": "100%", "border-radius": "8rpx" },
+                  class: "message-img",
                   mode: "widthFix"
                 }, null, 8, ["src"])) : vue.createCommentVNode("v-if", true),
                 m.time ? (vue.openBlock(), vue.createElementBlock(

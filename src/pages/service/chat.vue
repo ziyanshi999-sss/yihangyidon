@@ -10,7 +10,7 @@
         <image v-if="m.role==='bot'" class="avatar" src="/static/wealth/aiavatar.png" mode="aspectFit" />
         <view class="bubble">
           <rich-text v-if="m.html" :nodes="m.html"></rich-text>
-          <image v-if="m.image" :src="m.image" style="max-width:100%;border-radius:8rpx;" mode="widthFix" />
+          <image v-if="m.image" :src="m.image" class="message-img" mode="widthFix" />
           <text v-if="m.time" class="time">{{ m.time }}</text>
         </view>
         <!-- AI回复的播放按钮 -->
@@ -85,7 +85,7 @@ export default {
       sending: false,
       recording: false,
       scrollIntoId: '',
-      placeholder: '请输入您的问题，如"我要查询理财收益"',
+      placeholder: '请输入您的问题',
       sessionId: 'default',
       pendingImageBase64: '',
       pendingImageLocalPath: '',
@@ -201,15 +201,24 @@ export default {
         } else {
           throw new Error(result.error)
         }
+        
+        // 清除待发图片（在AI处理完成后）
+        this.pendingImageBase64 = ''
+        this.pendingImageLocalPath = ''
+        
       } catch (e) {
         console.error('AI stream error:', e)
         // 失败回退到普通请求
         await this.requestOnceText(content, thinkingIndex)
+        
+        // 注意：失败情况下图片数据会在requestOnceText中清除
       }
     },
     async requestOnceText(content, botIndexToReuse = null) {
       // 使用前端API进行一次性请求
       try {
+        console.log('requestOnceText调用，图片数据长度:', this.pendingImageBase64 ? this.pendingImageBase64.length : 0)
+        console.log('图片数据前50字符:', this.pendingImageBase64 ? this.pendingImageBase64.substring(0, 50) : '无')
         const result = await chat(content, this.sessionId, this.pendingImageBase64)
         
         if (result.success) {
@@ -241,12 +250,21 @@ export default {
         } else {
           throw new Error(result.error || 'AI服务请求失败')
         }
+        
+        // 清除待发图片（在AI处理完成后）
+        this.pendingImageBase64 = ''
+        this.pendingImageLocalPath = ''
+        
       } catch (e) {
         console.error('AI request error:', e)
         const fallback = this.generateReply(content)
         if (botIndexToReuse != null) this.updateBotMessage(botIndexToReuse, fallback)
         else this.messages.push({ id: Date.now() + '-b', role: 'bot', html: this.renderMarkdownAndEmojis(fallback), time: this.nowTime() })
         uni.showToast({ title: 'AI服务请求失败', icon: 'none' })
+        
+        // 清除待发图片（即使失败也要清除）
+        this.pendingImageBase64 = ''
+        this.pendingImageLocalPath = ''
       }
     },
     playAudio(url) {
@@ -415,13 +433,16 @@ export default {
             else if (ext === 'webp') mime = 'image/webp'
             const base64 = fsm.readFileSync(path, 'base64')
             this.pendingImageBase64 = `data:${mime};base64,${base64}`
+            console.log('图片转base64成功，长度:', base64.length, 'MIME:', mime)
+            console.log('pendingImageBase64设置成功，长度:', this.pendingImageBase64.length)
             // #endif
             // #ifndef MP-WEIXIN
             this.pendingImageBase64 = ''
             uni.showToast({ title: 'H5预览模式：不进行图片转换', icon: 'none' })
             // #endif
           } catch (e) {
-            console.warn('图片转base64失败:', e)
+            console.error('图片转base64失败:', e)
+            console.error('错误详情:', e.message, e.stack)
             this.pendingImageBase64 = ''
             this.pendingImageLocalPath = ''
           }
@@ -457,10 +478,14 @@ export default {
 
       this.sending = true
       try {
+        console.log('发送消息，pendingImageBase64长度:', this.pendingImageBase64 ? this.pendingImageBase64.length : 0)
+        console.log('pendingImageBase64前20字符:', this.pendingImageBase64 ? this.pendingImageBase64.substring(0, 20) : '无')
         // 带图：一次性请求；纯文本：流式
         if (this.pendingImageBase64) {
+          console.log('检测到图片，使用requestOnceText方法')
           await this.requestOnceText(content)
         } else {
+          console.log('无图片，使用streamTextReply方法')
           await this.streamTextReply(content)
         }
       } catch (e) {
@@ -470,9 +495,6 @@ export default {
         uni.showToast({ title: 'AI服务不可用，已使用本地回复', icon: 'none' })
       } finally {
         this.sending = false
-        // 清除待发图片
-        this.pendingImageBase64 = ''
-        this.pendingImageLocalPath = ''
         this.toBottom()
       }
     },
@@ -536,13 +558,23 @@ export default {
 .title { font-size: 32rpx; font-weight: 700; }
 .sub { display: block; font-size: 22rpx; opacity: 0.9; margin-top: 6rpx; }
 
-.chat-body { flex: 1; padding: 16rpx 20rpx; padding-bottom: 260rpx; }
+.chat-body { flex: 1; padding: 16rpx 20rpx; padding-bottom: 320rpx; }
 .msg-row { display: flex; align-items: flex-end; margin: 16rpx 0; gap: 12rpx; }
 .msg-row.user { justify-content: flex-end; padding-right: 40rpx; }
 .avatar { width: 64rpx; height: 64rpx; border-radius: 50%; flex-shrink: 0; }
 .bubble { max-width: 72%; padding: 16rpx 20rpx; border-radius: 16rpx; box-shadow: 0 6rpx 20rpx rgba(0,0,0,0.04); }
 .msg-row.bot .bubble { background: #ffffff; color: var(--text); border: 2rpx solid var(--line); }
 .msg-row.user .bubble { background: var(--primary); color: #fff; }
+
+/* 消息中的图片样式 */
+.message-img {
+  max-width: 200rpx;
+  max-height: 200rpx;
+  border-radius: 8rpx;
+  margin-top: 8rpx;
+  object-fit: cover;
+}
+
 .time { display: block; font-size: 20rpx; opacity: 0.85; margin-top: 6rpx; text-align: right; }
 .audio-row { margin-top: 10rpx; }
 
@@ -564,8 +596,61 @@ export default {
 .input:focus { border-color: var(--accent); }
 .send { height: 88rpx; display: inline-flex; align-items: center; justify-content: center; background: var(--primary); color: #fff; border: none; border-radius: 999rpx; padding: 0 32rpx; font-size: 28rpx; box-shadow: 0 6rpx 16rpx rgba(15,138,95,0.25); }
 .send:active { background: var(--primary-2); }
-.pending-preview { display: flex; align-items: center; gap: 12rpx; padding: 8rpx 16rpx; background: #fff; border-top: 2rpx solid var(--line); }
-.pending-img { width: 160rpx; height: 160rpx; border-radius: 8rpx; border: 2rpx solid #f0f0f0; }
+/* 图片预览区域 - 修复位置问题 */
+.pending-preview { 
+  position: fixed; 
+  left: 0; 
+  right: 0; 
+  bottom: 120rpx; /* 确保在输入框上方 */
+  z-index: 999; 
+  display: flex; 
+  align-items: center; 
+  gap: 12rpx; 
+  padding: 16rpx; 
+  background: #fff; 
+  border-top: 2rpx solid var(--line); 
+  box-shadow: 0 -4rpx 12rpx rgba(0,0,0,0.1);
+}
+.pending-img { 
+  width: 120rpx; 
+  height: 120rpx; 
+  border-radius: 8rpx; 
+  border: 2rpx solid #f0f0f0; 
+  object-fit: cover; /* 确保图片完整显示 */
+}
+
+/* 移除按钮美化样式 */
+.mini-btn {
+  padding: 8rpx 16rpx;
+  font-size: 22rpx;
+  border-radius: 20rpx;
+  border: 2rpx solid #ff6b6b;
+  background: #fff;
+  color: #ff6b6b;
+  transition: all 0.3s ease;
+  min-width: 80rpx;
+  height: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mini-btn.ghost {
+  background: transparent;
+  color: #ff6b6b;
+}
+
+.mini-btn:active {
+  background: #ff6b6b;
+  color: #fff;
+  transform: scale(0.95);
+}
+
+.mini-btn:hover {
+  background: #ff6b6b;
+  color: #fff;
+  box-shadow: 0 2rpx 8rpx rgba(255, 107, 107, 0.3);
+}
 
 /* 播放按钮样式 */
 .play-btn-container {
