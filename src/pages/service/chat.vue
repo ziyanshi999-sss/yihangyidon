@@ -75,8 +75,8 @@
 </template>
 
 <script>
-// 导入前端AI API服务
-import { chat, chatStream, speechToText, textToSpeech, clearHistory } from '@/api/ai.js'
+// 导入前端AI API服务（已移除流式）
+import { chat, speechToText, textToSpeech, clearHistory } from '@/api/ai.js'
 
 export default {
   data() {
@@ -163,7 +163,7 @@ export default {
       }
       this.toBottom()
     },
-    typeOut(fullText, index, chunkSize = 2, interval = 30) {
+    typeOut(fullText, index, chunkSize = 1, interval = 50) {
       return new Promise((resolve) => {
         let pos = 0
         const step = () => {
@@ -179,63 +179,22 @@ export default {
         step()
       })
     },
-    async streamTextReply(content) {
-      // 使用前端流式API
-      const thinkingIndex = this.showThinking()
+    // 已移除流式实现，统一走一次性请求
+    async requestOnceText(content, botIndexToReuse = null, imageData = null) {
+      // 使用前端API进行一次性请求，统一采用打字机效果展示（所有平台）
       try {
-        let fullContent = ''
-        const result = await chatStream(content, this.sessionId, (delta, full) => {
-          fullContent = full
-          this.updateBotMessage(thinkingIndex, full)
-        })
-        
-        if (result.success) {
-          // 流结束后TTS
-          const ttsResult = await textToSpeech(fullContent)
-          console.log('TTS结果:', ttsResult)
-          if (ttsResult.success) {
-            this.$set(this.messages[thinkingIndex], 'audio', ttsResult.audioPath)
-            console.log('设置音频路径:', ttsResult.audioPath)
-            console.log('消息对象:', this.messages[thinkingIndex])
-          }
-        } else {
-          throw new Error(result.error)
-        }
-      } catch (e) {
-        console.error('AI stream error:', e)
-        // 失败回退到普通请求
-        await this.requestOnceText(content, thinkingIndex)
-      }
-    },
-    async requestOnceText(content, botIndexToReuse = null) {
-      // 使用前端API进行一次性请求
-      try {
-        const result = await chat(content, this.sessionId, this.pendingImageBase64)
+        const result = await chat(content, this.sessionId, imageData != null ? imageData : this.pendingImageBase64)
         
         if (result.success) {
           const replyText = result.reply || ''
-          // 小程序端伪流式（打字机效果）
-          // #ifdef MP-WEIXIN
-          if (botIndexToReuse != null) {
-            await this.typeOut(replyText, botIndexToReuse, 2, 25)
-          } else {
-            const idx = this.showThinking()
-            await this.typeOut(replyText, idx, 2, 25)
-          }
-          // #endif
-          // #ifndef MP-WEIXIN
-          const renderedReply = this.renderMarkdownAndEmojis(replyText)
-          if (botIndexToReuse != null) this.updateBotMessage(botIndexToReuse, replyText)
-          else this.messages.push({ id: Date.now() + '-b', role: 'bot', html: renderedReply, time: result.timestamp || this.nowTime() })
-          // #endif
+          const targetIndex = botIndexToReuse != null ? botIndexToReuse : this.showThinking()
+          await this.typeOut(replyText, targetIndex, 1, 50)
           
           // TTS
           const ttsResult = await textToSpeech(replyText)
           if (ttsResult.success) {
-            // 确定目标索引（小程序伪流式下复用思考中索引）
-            const lastIdx = botIndexToReuse != null ? botIndexToReuse : (this.messages.length - 1)
-            if (lastIdx >= 0 && this.messages[lastIdx].role === 'bot') {
-              this.$set(this.messages[lastIdx], 'audio', ttsResult.audioPath)
+            if (targetIndex >= 0 && this.messages[targetIndex].role === 'bot') {
+              this.$set(this.messages[targetIndex], 'audio', ttsResult.audioPath)
             }
           }
         } else {
@@ -403,7 +362,7 @@ export default {
           const path = res.tempFilePaths[0]
           // 不立即发送，只记录待发送图片
           this.pendingImageLocalPath = path
-          // 转base64（仅小程序端执行；H5 仅样式预览，不转换）
+          // 转base64：支持小程序与 App-Plus（安卓基座）
           try {
             // #ifdef MP-WEIXIN
             const fsm = (typeof wx !== 'undefined' && wx.getFileSystemManager) ? wx.getFileSystemManager() : (uni.getFileSystemManager && uni.getFileSystemManager())
@@ -416,7 +375,36 @@ export default {
             const base64 = fsm.readFileSync(path, 'base64')
             this.pendingImageBase64 = `data:${mime};base64,${base64}`
             // #endif
-            // #ifndef MP-WEIXIN
+
+            // #ifdef APP-PLUS
+            const ext2 = (path.split('.').pop() || '').toLowerCase()
+            let mime2 = 'image/jpeg'
+            if (ext2 === 'png') mime2 = 'image/png'
+            else if (ext2 === 'jpg' || ext2 === 'jpeg') mime2 = 'image/jpeg'
+            else if (ext2 === 'webp') mime2 = 'image/webp'
+            plus.io.resolveLocalFileSystemURL(path, (entry) => {
+              entry.file((file) => {
+                const reader = new plus.io.FileReader()
+                reader.onloadend = (e) => {
+                  const dataUrl = e.target && e.target.result ? String(e.target.result) : ''
+                  // dataUrl 形如 data:<mime>;base64,xxxx
+                  if (dataUrl && dataUrl.startsWith('data:')) {
+                    this.pendingImageBase64 = dataUrl
+                  } else if (dataUrl) {
+                    // 兜底：拼接 MIME 前缀
+                    this.pendingImageBase64 = `data:${mime2};base64,${dataUrl}`
+                  }
+                }
+                reader.readAsDataURL(file)
+              }, (err) => {
+                console.warn('读取文件失败:', err)
+              })
+            }, (err) => {
+              console.warn('路径解析失败:', err)
+            })
+            // #endif
+
+            // #ifdef H5
             this.pendingImageBase64 = ''
             uni.showToast({ title: 'H5预览模式：不进行图片转换', icon: 'none' })
             // #endif
@@ -457,12 +445,12 @@ export default {
 
       this.sending = true
       try {
-        // 带图：一次性请求；纯文本：流式
-        if (this.pendingImageBase64) {
-          await this.requestOnceText(content)
-        } else {
-          await this.streamTextReply(content)
-        }
+        // 发送前缓存图片数据，并立刻清空预览，避免发送中仍显示
+        const imageDataForSend = this.pendingImageBase64
+        this.pendingImageBase64 = ''
+        this.pendingImageLocalPath = ''
+        // 统一一次性请求（非流式），使用打字机效果展示
+        await this.requestOnceText(content, null, imageDataForSend)
       } catch (e) {
         const reply = this.generateReply(content)
         const rendered = this.renderMarkdownAndEmojis(reply)
@@ -470,9 +458,6 @@ export default {
         uni.showToast({ title: 'AI服务不可用，已使用本地回复', icon: 'none' })
       } finally {
         this.sending = false
-        // 清除待发图片
-        this.pendingImageBase64 = ''
-        this.pendingImageLocalPath = ''
         this.toBottom()
       }
     },

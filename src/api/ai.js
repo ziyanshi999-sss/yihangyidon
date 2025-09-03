@@ -1,5 +1,6 @@
 /**
  * 硅基流动AI API服务
+ * 前端直接调用，无需Python后端
  */
 
 // 硅基流动API配置
@@ -83,83 +84,7 @@ export const chat = async (message, sessionId = 'default', imageData = null) => 
   }
 }
 
-/**
- * 流式聊天（仅文本）
- */
-export const chatStream = async (message, sessionId = 'default', onChunk) => {
-  try {
-    // 初始化会话历史
-    if (!sessionHistory[sessionId]) {
-      sessionHistory[sessionId] = []
-    }
-
-    // 添加用户消息
-    sessionHistory[sessionId].push({
-      role: 'user',
-      content: [{ type: 'text', text: message }]
-    })
-
-    const response = await uni.request({
-      url: `${API_BASE_URL}/chat/completions`,
-      method: 'POST',
-      header: {
-        'Authorization': `Bearer ${SILICONFLOW_API_KEY}`,
-        'Content-Type': 'application/json',
-        'Accept': 'text/event-stream'
-      },
-      data: {
-        model: "Qwen/Qwen2.5-14B-Instruct",
-        messages: sessionHistory[sessionId],
-        stream: true
-      },
-      timeout: 300000
-    })
-
-    if (response.statusCode === 200) {
-      // 处理流式响应
-      const lines = response.data.split('\n')
-      let fullContent = ''
-      
-      for (const line of lines) {
-        if (line.startsWith('data: ')) {
-          const data = line.slice(6).trim()
-          if (data === '[DONE]') break
-          
-          try {
-            const parsed = JSON.parse(data)
-            const delta = parsed.choices?.[0]?.delta?.content || ''
-            if (delta) {
-              fullContent += delta
-              onChunk && onChunk(delta, fullContent)
-            }
-          } catch (e) {
-            // 忽略解析错误
-          }
-        }
-      }
-
-      // 添加助手回复到历史
-      sessionHistory[sessionId].push({
-        role: 'assistant',
-        content: fullContent
-      })
-
-      return {
-        success: true,
-        reply: fullContent,
-        timestamp: new Date().toLocaleTimeString()
-      }
-    } else {
-      throw new Error(`流式请求失败: ${response.statusCode}`)
-    }
-  } catch (error) {
-    console.error('流式聊天失败:', error)
-    return {
-      success: false,
-      error: error.message || '流式请求失败'
-    }
-  }
-}
+// 已移除流式聊天实现，统一使用一次性请求 chat()
 
 /**
  * 语音转文字
