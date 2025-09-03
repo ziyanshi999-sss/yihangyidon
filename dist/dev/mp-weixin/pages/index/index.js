@@ -1,6 +1,7 @@
 "use strict";
 const common_vendor = require("../../common/vendor.js");
 const utils_auth = require("../../utils/auth.js");
+const utils_auth = require("../../utils/auth.js");
 const _sfc_main = {
   data() {
     return {
@@ -8,13 +9,20 @@ const _sfc_main = {
     };
   },
   // 页面加载时检查登录状态
+  // 页面加载时检查登录状态
   onLoad() {
     this.checkLoginStatus();
   },
   // 页面显示时检查登录状态
   onShow() {
     this.checkLoginStatus();
+    this.checkLoginStatus();
   },
+  // 页面显示时检查登录状态
+  onShow() {
+    this.checkLoginStatus();
+  },
+  // 在methods对象中添加缺失的scrollToHotActivities方法
   methods: {
     // 检查登录状态
     checkLoginStatus() {

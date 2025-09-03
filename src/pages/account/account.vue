@@ -1,3 +1,4 @@
+// 修改页面结构，添加登录提示区域
 <template>
   <view class="account-page">
     <!-- 顶部导航 -->
@@ -5,8 +6,15 @@
       <text class="nav-title">我的账户</text>
     </view>
     
+    <!-- 登录提示区域 -->
+    <view v-if="isLoginNeeded" class="login-prompt">
+      <view class="login-icon">🔐</view>
+      <text class="login-text">请先登录</text>
+      <button class="login-btn" @click="goToLogin">去登录</button>
+    </view>
+    
     <!-- 未实名认证页面 -->
-    <view v-if="!isVerified" class="verify-section">
+    <view v-else-if="!isVerified" class="verify-section">
       <view class="verify-icon">🔍</view>
       <text class="verify-title">请完成实名认证</text>
       <text class="verify-desc">完成实名认证后可享受更多金融服务</text>
@@ -110,6 +118,7 @@ import { forceCheckLogin } from '@/utils/auth.js'
 export default {
   data() {
     return {
+      isLoginNeeded: false, // 添加登录提示标志
       isVerified: true, // 默认已实名认证
       hasBankCard: true, // 默认有银行卡
       verifyInfo: {
@@ -122,203 +131,260 @@ export default {
       },
       accountInfo: {
         balance: '12,345.67'
-      }
+      },
+      userBalance: 100000, // 模拟用户余额
     }
   },
   
+  // 在onLoad方法中添加调试信息
   onLoad() {
-    // 检查实名认证状态
-    this.checkVerificationStatus()
-    // 检查银行卡绑定状态
-    this.checkBankCardStatus()
+  // 初始化时先检查登录状态
+  this.checkLoginStatus()
+  
+  if (!this.isLoginNeeded) {
+  // 检查实名认证状态
+  this.checkVerificationStatus()
+  // 检查银行卡绑定状态
+  this.checkBankCardStatus()
+  
+  // 添加调试信息
+  console.log('账户页面初始化 - 认证状态:', this.isVerified)
+  console.log('账户页面初始化 - 银行卡状态:', this.hasBankCard)
+  }
   },
   
   onShow() {
-    try {
-      // 检查登录状态
-      if (!forceCheckLogin()) {
-        console.log('账户页面：用户未登录，跳转到登录页面')
-        uni.reLaunch({
-          url: '/pages/denglu/login'
-        })
-        return
-      }
-      
-      // 页面显示逻辑
-      console.log('账户页面显示')
-    } catch (error) {
-      console.error('账户页面onShow检查失败:', error)
-      uni.reLaunch({
-        url: '/pages/denglu/login'
-      })
-    }
+    // 每次页面显示时都检查登录状态
+    this.checkLoginStatus()
+    
+    // 获取用户余额（模拟数据）
+    this.getUserBalance()
   },
   
-  methods: {
-    // 检查实名认证状态
-    checkVerificationStatus() {
+
+    // 检查登录状态
+    // 在methods对象中添加缺失的getUserBalance方法
+    methods: {
+      // ... 现有代码 ...
+      
+      // 检查登录状态
+      checkLoginStatus() {
+        try {
+          // 检查登录状态
+          if (!forceCheckLogin()) {
+            console.log('账户页面：用户未登录，显示登录提示')
+            this.isLoginNeeded = true
+            return
+          }
+          
+          this.isLoginNeeded = false
+          console.log('账户页面显示')
+        } catch (error) {
+          console.error('账户页面登录检查失败:', error)
+          this.isLoginNeeded = true
+        }
+      },
+      
+      // 新增：获取用户余额的方法
+      getUserBalance() {
+        // 由于是模拟环境，我们使用预设的余额数据
+        // 在实际项目中，这里应该是一个API请求获取真实余额
+        try {
+          // 模拟从本地存储获取余额（如果有）
+          const savedBalance = uni.getStorageSync('userBalance')
+          if (savedBalance) {
+            this.accountInfo.balance = savedBalance
+            return
+          }
+          
+          // 否则使用默认的模拟余额
+          console.log('使用默认模拟余额:', this.accountInfo.balance)
+        } catch (error) {
+          console.error('获取用户余额失败:', error)
+        }
+      },
+      
+      // 跳转到登录页面
+      goToLogin() {
+        // 保存当前页面路径，登录成功后返回
+        const currentPath = getCurrentPages()[getCurrentPages().length - 1].route
+        uni.setStorageSync('redirectUrl', `/${currentPath}`)
+        
+        // 跳转到登录页面
+        uni.navigateTo({
+          url: '/pages/denglu/login'
+        })
+      },
+      
+      // 检查实名认证状态
+      // 检查实名认证状态
+      checkVerificationStatus() {
       // 实际项目中应该从服务器或本地存储获取认证状态
       const verified = uni.getStorageSync('userVerified')
-      if (verified !== null) {
-        this.isVerified = verified
+      // 只有当verified明确为false时才设置为false，避免null值导致问题
+      if (verified === false) {
+        this.isVerified = false
       }
-    },
-    
-    // 检查银行卡绑定状态
-    checkBankCardStatus() {
+      // 其他情况保持默认值true
+      },
+      
+      // 检查银行卡绑定状态
+      checkBankCardStatus() {
       // 实际项目中应该从服务器或本地存储获取银行卡状态
       const hasCard = uni.getStorageSync('hasBankCard')
-      if (hasCard !== null) {
-        this.hasBankCard = hasCard
+      // 只有当hasCard明确为false时才设置为false，避免null值导致问题
+      if (hasCard === false) {
+        this.hasBankCard = false
       }
-    },
-    
-    // 提交实名认证
-    submitVerify() {
-      if (!this.verifyInfo.name || !this.verifyInfo.idCard) {
+      // 其他情况保持默认值true
+      },
+      
+      // 提交实名认证
+      submitVerify() {
+        if (!this.verifyInfo.name || !this.verifyInfo.idCard) {
+          uni.showToast({
+            title: '请填写完整信息',
+            icon: 'none'
+          })
+          return
+        }
+        
+        // 简单的身份证号验证
+        const idCardRegex = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
+        if (!idCardRegex.test(this.verifyInfo.idCard)) {
+          uni.showToast({
+            title: '请输入有效的身份证号',
+            icon: 'none'
+          })
+          return
+        }
+        
+        // 保存认证状态
+        this.isVerified = true
+        uni.setStorageSync('userVerified', true)
+        
         uni.showToast({
-          title: '请填写完整信息',
+          title: '实名认证成功',
+          icon: 'success'
+        })
+      },
+      
+      // 提交银行卡绑定
+      submitBankCard() {
+        if (!this.cardInfo.cardNumber || !this.cardInfo.bankName) {
+          uni.showToast({
+            title: '请填写完整信息',
+            icon: 'none'
+          })
+          return
+        }
+        
+        // 保存银行卡状态
+        this.hasBankCard = true
+        uni.setStorageSync('hasBankCard', true)
+        
+        uni.showToast({
+          title: '银行卡绑定成功',
+          icon: 'success'
+        })
+      },
+      
+      // 去认证
+      goToVerify() {
+        // 这里可以跳转到专门的认证页面
+        uni.showToast({
+          title: '前往认证页面',
           icon: 'none'
         })
-        return
-      }
+      },
       
-      // 简单的身份证号验证
-      const idCardRegex = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
-      if (!idCardRegex.test(this.verifyInfo.idCard)) {
+      // 添加银行卡
+      addBankCard() {
+        // 这里可以跳转到专门的添加银行卡页面
         uni.showToast({
-          title: '请输入有效的身份证号',
+          title: '前往添加银行卡页面',
           icon: 'none'
         })
-        return
-      }
+      },
       
-      // 保存认证状态
-      this.isVerified = true
-      uni.setStorageSync('userVerified', true)
-      
-      uni.showToast({
-        title: '实名认证成功',
-        icon: 'success'
-      })
-    },
-    
-    // 提交银行卡绑定
-    submitBankCard() {
-      if (!this.cardInfo.cardNumber || !this.cardInfo.bankName) {
+      // 显示取款弹窗
+      showWithdraw() {
         uni.showToast({
-          title: '请填写完整信息',
+          title: '取款功能',
           icon: 'none'
         })
-        return
+      },
+      
+      // 显示存款弹窗
+      showDeposit() {
+        uni.showToast({
+          title: '存款功能',
+          icon: 'none'
+        })
+      },
+      
+      // 跳转到转账页面
+      goToTransfer() {
+        uni.navigateTo({
+          url: '/pages/transfer/transfer'
+        })
+      },
+      
+      // 跳转到付款页面
+      goToPayment() {
+        uni.showToast({
+          title: '付款功能',
+          icon: 'none'
+        })
+      },
+      
+      // 跳转到收款页面
+      goToReceive() {
+        uni.showToast({
+          title: '收款功能',
+          icon: 'none'
+        })
+      },
+      
+      // 跳转到信用卡还款页面
+      goToCreditCard() {
+        uni.showToast({
+          title: '信用卡还款功能',
+          icon: 'none'
+        })
+      },
+      
+      // 跳转到理财通页面
+      goToWealth() {
+        uni.navigateTo({
+          url: '/pages/wealth/wealth'
+        })
+      },
+      
+      // 跳转到手机充值页面
+      goToTopup() {
+        uni.showToast({
+          title: '手机充值功能',
+          icon: 'none'
+        })
+      },
+      
+      // 跳转到生活缴费页面
+      goToBill() {
+        uni.showToast({
+          title: '生活缴费功能',
+          icon: 'none'
+        })
+      },
+      
+      // 跳转到慈善乐捐页面
+      goToDonation() {
+        uni.showToast({
+          title: '慈善乐捐功能',
+          icon: 'none'
+        })
       }
-      
-      // 保存银行卡状态
-      this.hasBankCard = true
-      uni.setStorageSync('hasBankCard', true)
-      
-      uni.showToast({
-        title: '银行卡绑定成功',
-        icon: 'success'
-      })
-    },
-    
-    // 去认证
-    goToVerify() {
-      // 这里可以跳转到专门的认证页面
-      uni.showToast({
-        title: '前往认证页面',
-        icon: 'none'
-      })
-    },
-    
-    // 添加银行卡
-    addBankCard() {
-      // 这里可以跳转到专门的添加银行卡页面
-      uni.showToast({
-        title: '前往添加银行卡页面',
-        icon: 'none'
-      })
-    },
-    
-    // 显示取款弹窗
-    showWithdraw() {
-      uni.showToast({
-        title: '取款功能',
-        icon: 'none'
-      })
-    },
-    
-    // 显示存款弹窗
-    showDeposit() {
-      uni.showToast({
-        title: '存款功能',
-        icon: 'none'
-      })
-    },
-    
-    // 跳转到转账页面
-    goToTransfer() {
-      uni.navigateTo({
-        url: '/pages/transfer/transfer'
-      })
-    },
-    
-    // 跳转到付款页面
-    goToPayment() {
-      uni.showToast({
-        title: '付款功能',
-        icon: 'none'
-      })
-    },
-    
-    // 跳转到收款页面
-    goToReceive() {
-      uni.showToast({
-        title: '收款功能',
-        icon: 'none'
-      })
-    },
-    
-    // 跳转到信用卡还款页面
-    goToCreditCard() {
-      uni.showToast({
-        title: '信用卡还款功能',
-        icon: 'none'
-      })
-    },
-    
-    // 跳转到理财通页面
-    goToWealth() {
-      uni.navigateTo({
-        url: '/pages/wealth/wealth'
-      })
-    },
-    
-    // 跳转到手机充值页面
-    goToTopup() {
-      uni.showToast({
-        title: '手机充值功能',
-        icon: 'none'
-      })
-    },
-    
-    // 跳转到生活缴费页面
-    goToBill() {
-      uni.showToast({
-        title: '生活缴费功能',
-        icon: 'none'
-      })
-    },
-    
-    // 跳转到慈善乐捐页面
-    goToDonation() {
-      uni.showToast({
-        title: '慈善乐捐功能',
-        icon: 'none'
-      })
     }
-  }
 }
 </script>
 
@@ -340,6 +406,34 @@ export default {
   font-size: 18px;
   font-weight: bold;
   color: #333;
+}
+
+.login-prompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60rpx 0;
+  text-align: center;
+}
+
+.login-icon {
+  font-size: 120rpx;
+  margin-bottom: 30rpx;
+}
+
+.login-text {
+  font-size: 32rpx;
+  color: #666;
+  margin-bottom: 40rpx;
+}
+
+.login-btn {
+  background-color: #667eea;
+  color: white;
+  font-size: 32rpx;
+  padding: 20rpx 80rpx;
+  border-radius: 8rpx;
 }
 
 /* 实名认证部分 */

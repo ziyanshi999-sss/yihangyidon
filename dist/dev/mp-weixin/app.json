@@ -11,7 +11,11 @@
     "pages/payment/payment",
     "pages/recharge/recharge",
     "pages/government/government",
-    "pages/games/games"
+    "pages/games/games",
+    "pages/transfer/history",
+    "pages/credit-card/credit-card",
+    "pages/balance/balance",
+    "pages/loan/loan"
   ],
   "window": {
     "navigationBarTextStyle": "black",

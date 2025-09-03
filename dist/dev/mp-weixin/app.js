@@ -15,6 +15,16 @@ if (!Math) {
   "./pages/recharge/recharge.js";
   "./pages/government/government.js";
   "./pages/games/games.js";
+  "./pages/transfer/transfer.js";
+  "./pages/account/account.js";
+  "./pages/payment/payment.js";
+  "./pages/recharge/recharge.js";
+  "./pages/government/government.js";
+  "./pages/games/games.js";
+  "./pages/transfer/history.js";
+  "./pages/credit-card/credit-card.js";
+  "./pages/balance/balance.js";
+  "./pages/loan/loan.js";
 }
 const _sfc_main = {
   name: "App",
