@@ -31,7 +31,6 @@ if (uni.restoreGlobal) {
 }
 (function(vue) {
   "use strict";
-  var _documentCurrentScript = typeof document !== "undefined" ? document.currentScript : null;
   function formatAppLog(type, filename, ...args) {
     if (uni.__log__) {
       uni.__log__(type, filename, ...args);
@@ -2663,18 +2662,242 @@ if (uni.restoreGlobal) {
     ]);
   }
   const PagesLifeLife = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["render", _sfc_render$7], ["__scopeId", "data-v-980f0516"], ["__file", "D:/项目/yihangyidon/src/pages/life/life.vue"]]);
+  const SILICONFLOW_API_KEY = "sk-fkzxlpblcjigbzitanooofmnfmvvedobfdvvxqdbbdodntdt";
+  const API_BASE_URL = "https://api.siliconflow.cn/v1";
+  const sessionHistory = {};
+  const chat = async (message, sessionId = "default", imageData = null) => {
+    try {
+      if (!sessionHistory[sessionId]) {
+        sessionHistory[sessionId] = [];
+      }
+      const messageContent = [];
+      if (imageData) {
+        messageContent.push({
+          type: "image_url",
+          image_url: { url: imageData }
+        });
+      }
+      messageContent.push({ type: "text", text: message });
+      sessionHistory[sessionId].push({
+        role: "user",
+        content: messageContent
+      });
+      const selectedModel = imageData ? "Qwen/Qwen2.5-VL-32B-Instruct" : "Qwen/Qwen2.5-14B-Instruct";
+      const response = await uni.request({
+        url: `${API_BASE_URL}/chat/completions`,
+        method: "POST",
+        header: {
+          "Authorization": `Bearer ${SILICONFLOW_API_KEY}`,
+          "Content-Type": "application/json"
+        },
+        data: {
+          model: selectedModel,
+          messages: sessionHistory[sessionId],
+          stream: false
+        },
+        timeout: 6e4
+      });
+      if (response.statusCode === 200 && response.data) {
+        const assistantReply = response.data.choices[0].message;
+        sessionHistory[sessionId].push(assistantReply);
+        return {
+          success: true,
+          reply: assistantReply.content,
+          timestamp: (/* @__PURE__ */ new Date()).toLocaleTimeString()
+        };
+      } else {
+        throw new Error(`API请求失败: ${response.statusCode}`);
+      }
+    } catch (error) {
+      formatAppLog("error", "at api/ai.js:70", "聊天请求失败:", error);
+      return {
+        success: false,
+        error: error.message || "请求失败"
+      };
+    }
+  };
+  const chatStream = async (message, sessionId = "default", onChunk) => {
+    var _a, _b, _c;
+    try {
+      if (!sessionHistory[sessionId]) {
+        sessionHistory[sessionId] = [];
+      }
+      sessionHistory[sessionId].push({
+        role: "user",
+        content: [{ type: "text", text: message }]
+      });
+      const response = await uni.request({
+        url: `${API_BASE_URL}/chat/completions`,
+        method: "POST",
+        header: {
+          "Authorization": `Bearer ${SILICONFLOW_API_KEY}`,
+          "Content-Type": "application/json",
+          "Accept": "text/event-stream"
+        },
+        data: {
+          model: "Qwen/Qwen2.5-14B-Instruct",
+          messages: sessionHistory[sessionId],
+          stream: true
+        },
+        timeout: 3e5
+      });
+      if (response.statusCode === 200) {
+        const lines = response.data.split("\n");
+        let fullContent = "";
+        for (const line of lines) {
+          if (line.startsWith("data: ")) {
+            const data = line.slice(6).trim();
+            if (data === "[DONE]")
+              break;
+            try {
+              const parsed = JSON.parse(data);
+              const delta = ((_c = (_b = (_a = parsed.choices) == null ? void 0 : _a[0]) == null ? void 0 : _b.delta) == null ? void 0 : _c.content) || "";
+              if (delta) {
+                fullContent += delta;
+                onChunk && onChunk(delta, fullContent);
+              }
+            } catch (e) {
+            }
+          }
+        }
+        sessionHistory[sessionId].push({
+          role: "assistant",
+          content: fullContent
+        });
+        return {
+          success: true,
+          reply: fullContent,
+          timestamp: (/* @__PURE__ */ new Date()).toLocaleTimeString()
+        };
+      } else {
+        throw new Error(`流式请求失败: ${response.statusCode}`);
+      }
+    } catch (error) {
+      formatAppLog("error", "at api/ai.js:148", "流式聊天失败:", error);
+      return {
+        success: false,
+        error: error.message || "流式请求失败"
+      };
+    }
+  };
+  const speechToText = async (audioFile) => {
+    try {
+      const response = await uni.uploadFile({
+        url: `${API_BASE_URL}/audio/transcriptions`,
+        name: "file",
+        filePath: audioFile,
+        header: {
+          "Authorization": `Bearer ${SILICONFLOW_API_KEY}`
+        },
+        formData: {
+          model: "FunAudioLLM/SenseVoiceSmall",
+          language: "zh"
+        }
+      });
+      if (response.statusCode === 200) {
+        const data = JSON.parse(response.data);
+        return {
+          success: true,
+          text: data.text || data.result || ""
+        };
+      } else {
+        throw new Error(`语音识别失败: ${response.statusCode}`);
+      }
+    } catch (error) {
+      formatAppLog("error", "at api/ai.js:184", "语音转文字失败:", error);
+      return {
+        success: false,
+        error: error.message || "语音识别失败"
+      };
+    }
+  };
+  const textToSpeech = async (text) => {
+    try {
+      formatAppLog("log", "at api/ai.js:197", "开始TTS请求，文本:", text);
+      const requestData = {
+        model: "fnlp/MOSS-TTSD-v0.5",
+        input: `[S1]${text}`,
+        // 使用[S1]标记说话人1
+        voice: "fnlp/MOSS-TTSD-v0.5:alex",
+        // 选择alex语音
+        response_format: "mp3",
+        sample_rate: 44100,
+        stream: false,
+        // 改为false，获取完整音频文件
+        speed: 1,
+        gain: 0
+      };
+      formatAppLog("log", "at api/ai.js:211", "TTS请求数据:", requestData);
+      const response = await uni.request({
+        url: `${API_BASE_URL}/audio/speech`,
+        method: "POST",
+        header: {
+          "Authorization": `Bearer ${SILICONFLOW_API_KEY}`,
+          "Content-Type": "application/json"
+        },
+        data: requestData,
+        timeout: 6e4,
+        responseType: "arraybuffer"
+        // 确保返回二进制数据
+      });
+      formatAppLog("log", "at api/ai.js:225", "TTS响应状态:", response.statusCode);
+      formatAppLog("log", "at api/ai.js:226", "TTS响应头:", response.header);
+      if (response.statusCode === 200) {
+        const arrayBuffer = response.data;
+        const uint8Array = new Uint8Array(arrayBuffer);
+        formatAppLog("log", "at api/ai.js:233", "音频数据长度:", uint8Array.length);
+        let base64 = "";
+        try {
+          let binaryString = "";
+          for (let i = 0; i < uint8Array.length; i++) {
+            binaryString += String.fromCharCode(uint8Array[i]);
+          }
+          base64 = btoa(binaryString);
+        } catch (e) {
+          formatAppLog("log", "at api/ai.js:245", "btoa不可用，使用手动base64编码");
+          const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+          for (let i = 0; i < uint8Array.length; i += 3) {
+            const byte1 = uint8Array[i] || 0;
+            const byte2 = uint8Array[i + 1] || 0;
+            const byte3 = uint8Array[i + 2] || 0;
+            const enc1 = byte1 >> 2;
+            const enc2 = (byte1 & 3) << 4 | byte2 >> 4;
+            const enc3 = (byte2 & 15) << 2 | byte3 >> 6;
+            const enc4 = byte3 & 63;
+            base64 += chars[enc1] + chars[enc2] + chars[enc3] + chars[enc4];
+          }
+        }
+        formatAppLog("log", "at api/ai.js:262", "base64长度:", base64.length);
+        return {
+          success: true,
+          audioData: `data:audio/mp3;base64,${base64}`,
+          audioPath: `data:audio/mp3;base64,${base64}`
+          // 兼容原有代码
+        };
+      } else {
+        formatAppLog("error", "at api/ai.js:271", "TTS API响应:", response);
+        formatAppLog("error", "at api/ai.js:272", "TTS响应数据:", response.data);
+        let errorMessage = `语音合成失败: ${response.statusCode}`;
+        try {
+          if (response.data) {
+            const errorData = JSON.parse(response.data);
+            errorMessage = errorData.message || errorData.error || errorMessage;
+          }
+        } catch (e) {
+          formatAppLog("log", "at api/ai.js:282", "无法解析错误响应");
+        }
+        throw new Error(errorMessage);
+      }
+    } catch (error) {
+      formatAppLog("error", "at api/ai.js:288", "文字转语音失败:", error);
+      return {
+        success: false,
+        error: error.message || "语音合成失败"
+      };
+    }
+  };
   const _imports_0 = "/static/wealth/aiavatar.png";
   const _imports_1 = "/static/wealth/useravatar.jpg";
-  var define_import_meta_env_default$1 = { VITE_AI_BASE: "http://192.168.0.102:5000", VITE_CJS_IGNORE_WARNING: "true", VITE_ROOT_DIR: "D:\\项目\\yihangyidon", VITE_USER_NODE_ENV: "development", BASE_URL: "/", MODE: "development", DEV: true, PROD: false, SSR: false };
-  const AI_BASE = (() => {
-    let base = "";
-    try {
-      base = uni.getStorageSync && uni.getStorageSync("AI_BASE") || typeof { url: _documentCurrentScript && _documentCurrentScript.tagName.toUpperCase() === "SCRIPT" && _documentCurrentScript.src || new URL("app-service.js", document.baseURI).href } !== "undefined" && define_import_meta_env_default$1 && "http://192.168.0.102:5000" || "";
-    } catch (_) {
-      base = "";
-    }
-    return base;
-  })();
   const _sfc_main$7 = {
     data() {
       return {
@@ -2682,7 +2905,7 @@ if (uni.restoreGlobal) {
         sending: false,
         recording: false,
         scrollIntoId: "",
-        placeholder: "请输入您的问题，如“我要查询理财收益”",
+        placeholder: '请输入您的问题，如"我要查询理财收益"',
         sessionId: "default",
         pendingImageBase64: "",
         pendingImageLocalPath: "",
@@ -2718,7 +2941,8 @@ if (uni.restoreGlobal) {
           }
         ],
         recorder: null,
-        audioCtx: null
+        audioCtx: null,
+        currentPlayingMessage: null
       };
     },
     onLoad() {
@@ -2733,6 +2957,13 @@ if (uni.restoreGlobal) {
         }
         this.audioCtx = uni.createInnerAudioContext && uni.createInnerAudioContext();
       } catch (e) {
+      }
+    },
+    onUnload() {
+      this.stopCurrentAudio();
+      if (this.audioCtx) {
+        this.audioCtx.destroy();
+        this.audioCtx = null;
       }
     },
     methods: {
@@ -2770,127 +3001,55 @@ if (uni.restoreGlobal) {
       async streamTextReply(content) {
         const thinkingIndex = this.showThinking();
         try {
-          if (!AI_BASE)
-            throw new Error("未配置AI服务地址");
-          if (typeof window === "undefined" || !window.fetch) {
-            throw new Error("stream not supported");
-          }
-          const res = await fetch(`${AI_BASE}/api/chat-stream`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message: content, session_id: this.sessionId })
+          let fullContent = "";
+          const result = await chatStream(content, this.sessionId, (delta, full) => {
+            fullContent = full;
+            this.updateBotMessage(thinkingIndex, full);
           });
-          if (!res.ok || !res.body)
-            throw new Error("stream request failed");
-          const reader = res.body.getReader();
-          const decoder = new TextDecoder("utf-8");
-          let buffer = "";
-          let full = "";
-          this.updateBotMessage(thinkingIndex, "");
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done)
-              break;
-            buffer += decoder.decode(value, { stream: true });
-            const parts = buffer.split("\n\n");
-            buffer = parts.pop() || "";
-            for (const part of parts) {
-              const line = part.trim();
-              if (!line.startsWith("data:"))
-                continue;
-              const dataPart = line.slice(5).trim();
-              if (dataPart === "[DONE]") {
-                buffer = "";
-                break;
-              }
-              try {
-                const obj = JSON.parse(dataPart);
-                const delta = obj && obj.delta ? obj.delta : "";
-                if (delta) {
-                  full += delta;
-                  this.updateBotMessage(thinkingIndex, full);
-                }
-              } catch (_) {
-                full += dataPart;
-                this.updateBotMessage(thinkingIndex, full);
-              }
+          if (result.success) {
+            const ttsResult = await textToSpeech(fullContent);
+            formatAppLog("log", "at pages/service/chat.vue:195", "TTS结果:", ttsResult);
+            if (ttsResult.success) {
+              this.$set(this.messages[thinkingIndex], "audio", ttsResult.audioPath);
+              formatAppLog("log", "at pages/service/chat.vue:198", "设置音频路径:", ttsResult.audioPath);
+              formatAppLog("log", "at pages/service/chat.vue:199", "消息对象:", this.messages[thinkingIndex]);
             }
-          }
-          if (full) {
-            const [tErr, tRes] = await new Promise((resolve) => {
-              uni.request({
-                url: `${AI_BASE}/api/text-to-speech`,
-                method: "POST",
-                header: { "Content-Type": "application/json" },
-                data: { text: full },
-                success: (r) => resolve([null, r]),
-                fail: (e) => resolve([e, null])
-              });
-            });
-            if (!tErr && tRes && tRes.statusCode >= 200 && tRes.statusCode < 300 && tRes.data && tRes.data.success && tRes.data.audio_file) {
-              const url = `${AI_BASE}/api/audio/${tRes.data.audio_file}`;
-              this.$set(this.messages[thinkingIndex], "audio", url);
-            }
+          } else {
+            throw new Error(result.error);
           }
         } catch (e) {
-          formatAppLog("error", "at pages/service/chat.vue:234", "AI stream error:", e);
+          formatAppLog("error", "at pages/service/chat.vue:205", "AI stream error:", e);
           await this.requestOnceText(content, thinkingIndex);
         }
       },
       async requestOnceText(content, botIndexToReuse = null) {
-        if (!AI_BASE) {
-          const fallback = this.generateReply(content);
-          const msg = '未配置AI服务地址，小程序可执行 uni.setStorageSync("AI_BASE","http://你的电脑IP:5000")；H5请配置 /api 代理';
-          if (botIndexToReuse != null)
-            this.updateBotMessage(botIndexToReuse, fallback);
-          else
-            this.messages.push({ id: Date.now() + "-b", role: "bot", html: this.renderMarkdownAndEmojis(fallback), time: this.nowTime() });
-          uni.showToast({ title: msg.slice(0, 28), icon: "none" });
-          formatAppLog("warn", "at pages/service/chat.vue:247", msg);
-          return;
-        }
-        const [err, res] = await new Promise((resolve) => {
-          uni.request({
-            url: `${AI_BASE}/api/chat`,
-            method: "POST",
-            header: { "Content-Type": "application/json" },
-            data: { message: content, session_id: this.sessionId, image: null },
-            success: (r) => resolve([null, r]),
-            fail: (e) => resolve([e, null])
-          });
-        });
-        if (err || !res || res.statusCode < 200 || res.statusCode >= 300 || !res.data || !res.data.success && !res.data.reply) {
-          const fallback = this.generateReply(content);
-          if (botIndexToReuse != null)
-            this.updateBotMessage(botIndexToReuse, fallback);
-          else
-            this.messages.push({ id: Date.now() + "-b", role: "bot", html: this.renderMarkdownAndEmojis(fallback), time: this.nowTime() });
-          formatAppLog("error", "at pages/service/chat.vue:264", "AI /api/chat error:", err, res);
-          uni.showToast({ title: "AI服务请求失败", icon: "none" });
-          return;
-        }
-        let replyText = Array.isArray(res.data.reply) ? res.data.reply.map((p) => p && p.text ? p.text : "").join("") : typeof res.data.reply === "string" ? res.data.reply : "";
-        const renderedReply = this.renderMarkdownAndEmojis(replyText || "");
-        if (botIndexToReuse != null)
-          this.updateBotMessage(botIndexToReuse, replyText || "");
-        else
-          this.messages.push({ id: Date.now() + "-b", role: "bot", html: renderedReply, time: res.data.timestamp || this.nowTime() });
-        const [tErr, tRes] = await new Promise((resolve) => {
-          uni.request({
-            url: `${AI_BASE}/api/text-to-speech`,
-            method: "POST",
-            header: { "Content-Type": "application/json" },
-            data: { text: replyText || "" },
-            success: (r) => resolve([null, r]),
-            fail: (e) => resolve([e, null])
-          });
-        });
-        if (!tErr && tRes && tRes.statusCode >= 200 && tRes.statusCode < 300 && tRes.data && tRes.data.success && tRes.data.audio_file) {
-          const url = `${AI_BASE}/api/audio/${tRes.data.audio_file}`;
-          const lastIdx = botIndexToReuse != null ? botIndexToReuse : this.messages.length - 1;
-          if (lastIdx >= 0 && this.messages[lastIdx].role === "bot") {
-            this.$set(this.messages[lastIdx], "audio", url);
+        try {
+          const result = await chat(content, this.sessionId, this.pendingImageBase64);
+          if (result.success) {
+            const replyText = result.reply || "";
+            const renderedReply = this.renderMarkdownAndEmojis(replyText);
+            if (botIndexToReuse != null)
+              this.updateBotMessage(botIndexToReuse, replyText);
+            else
+              this.messages.push({ id: Date.now() + "-b", role: "bot", html: renderedReply, time: result.timestamp || this.nowTime() });
+            const ttsResult = await textToSpeech(replyText);
+            if (ttsResult.success) {
+              const lastIdx = botIndexToReuse != null ? botIndexToReuse : this.messages.length - 1;
+              if (lastIdx >= 0 && this.messages[lastIdx].role === "bot") {
+                this.$set(this.messages[lastIdx], "audio", ttsResult.audioPath);
+              }
+            }
+          } else {
+            throw new Error(result.error || "AI服务请求失败");
           }
+        } catch (e) {
+          formatAppLog("error", "at pages/service/chat.vue:245", "AI request error:", e);
+          const fallback = this.generateReply(content);
+          if (botIndexToReuse != null)
+            this.updateBotMessage(botIndexToReuse, fallback);
+          else
+            this.messages.push({ id: Date.now() + "-b", role: "bot", html: this.renderMarkdownAndEmojis(fallback), time: this.nowTime() });
+          uni.showToast({ title: "AI服务请求失败", icon: "none" });
         }
       },
       playAudio(url) {
@@ -2901,6 +3060,61 @@ if (uni.restoreGlobal) {
           this.audioCtx.play();
         } catch (e) {
           uni.showToast({ title: "无法播放语音", icon: "none" });
+        }
+      },
+      togglePlayAudio(message) {
+        formatAppLog("log", "at pages/service/chat.vue:262", "点击播放按钮，消息对象:", message);
+        formatAppLog("log", "at pages/service/chat.vue:263", "音频路径:", message.audio);
+        formatAppLog("log", "at pages/service/chat.vue:264", "播放状态:", message.isPlaying);
+        if (!message.audio) {
+          uni.showToast({ title: "没有语音内容", icon: "none" });
+          return;
+        }
+        if (message.isPlaying) {
+          this.stopCurrentAudio();
+          return;
+        }
+        this.stopCurrentAudio();
+        try {
+          if (!this.audioCtx) {
+            this.audioCtx = uni.createInnerAudioContext();
+            this.audioCtx.onEnded(() => {
+              formatAppLog("log", "at pages/service/chat.vue:287", "音频播放结束");
+              this.stopCurrentAudio();
+            });
+            this.audioCtx.onError((err) => {
+              formatAppLog("error", "at pages/service/chat.vue:293", "音频播放错误:", err);
+              this.stopCurrentAudio();
+              uni.showToast({ title: "播放失败", icon: "none" });
+            });
+            this.audioCtx.onPlay(() => {
+              formatAppLog("log", "at pages/service/chat.vue:300", "音频开始播放");
+            });
+            this.audioCtx.onCanplay(() => {
+              formatAppLog("log", "at pages/service/chat.vue:305", "音频加载完成");
+            });
+            this.audioCtx.onLoadstart(() => {
+              formatAppLog("log", "at pages/service/chat.vue:310", "音频开始加载");
+            });
+          }
+          formatAppLog("log", "at pages/service/chat.vue:314", "设置音频源:", message.audio);
+          this.audioCtx.src = message.audio;
+          formatAppLog("log", "at pages/service/chat.vue:316", "开始播放音频");
+          this.audioCtx.play();
+          this.$set(message, "isPlaying", true);
+          this.currentPlayingMessage = message;
+        } catch (e) {
+          formatAppLog("error", "at pages/service/chat.vue:324", "播放音频失败:", e);
+          uni.showToast({ title: "无法播放语音", icon: "none" });
+        }
+      },
+      stopCurrentAudio() {
+        if (this.audioCtx) {
+          this.audioCtx.stop();
+        }
+        if (this.currentPlayingMessage) {
+          this.$set(this.currentPlayingMessage, "isPlaying", false);
+          this.currentPlayingMessage = null;
         }
       },
       toggleEmoji() {
@@ -2945,28 +3159,17 @@ if (uni.restoreGlobal) {
       },
       uploadAudio(filePath) {
         uni.showLoading({ title: "识别中" });
-        uni.uploadFile({
-          url: `${AI_BASE}/api/speech-to-text`,
-          name: "audio",
-          filePath,
-          success: (res) => {
-            uni.hideLoading();
-            try {
-              const data = JSON.parse(res.data);
-              if (data.success && data.text) {
-                this.draft = data.text;
-                this.send();
-              } else {
-                uni.showToast({ title: data.error || "识别失败", icon: "none" });
-              }
-            } catch (e) {
-              uni.showToast({ title: "解析失败", icon: "none" });
-            }
-          },
-          fail: () => {
-            uni.hideLoading();
-            uni.showToast({ title: "上传失败", icon: "none" });
+        speechToText(filePath).then((result) => {
+          uni.hideLoading();
+          if (result.success && result.text) {
+            this.draft = result.text;
+            this.send();
+          } else {
+            uni.showToast({ title: result.error || "识别失败", icon: "none" });
           }
+        }).catch((e) => {
+          uni.hideLoading();
+          uni.showToast({ title: "识别失败", icon: "none" });
         });
       },
       chooseImage() {
@@ -2981,7 +3184,7 @@ if (uni.restoreGlobal) {
               this.pendingImageBase64 = "";
               uni.showToast({ title: "H5预览模式：不进行图片转换", icon: "none" });
             } catch (e) {
-              formatAppLog("warn", "at pages/service/chat.vue:409", "图片转base64失败:", e);
+              formatAppLog("warn", "at pages/service/chat.vue:424", "图片转base64失败:", e);
               this.pendingImageBase64 = "";
               this.pendingImageLocalPath = "";
             }
@@ -3020,12 +3223,7 @@ if (uni.restoreGlobal) {
           if (this.pendingImageBase64) {
             await this.requestOnceText(content);
           } else {
-            if (typeof window !== "undefined" && window.fetch) {
-              await this.streamTextReply(content);
-            } else {
-              const thinkingIndex = this.showThinking();
-              await this.requestOnceText(content, thinkingIndex);
-            }
+            await this.streamTextReply(content);
           }
         } catch (e) {
           const reply = this.generateReply(content);
@@ -3042,16 +3240,16 @@ if (uni.restoreGlobal) {
       generateReply(text) {
         const t = text.toLowerCase();
         if (t.includes("存款") || t.includes("定期") || t.includes("利率")) {
-          return "存款业务：活期按日计息，定期支持3个月/6个月/1年/3年等档，起存金额1000元起。可通过“财富-存款”进行办理。";
+          return '存款业务：活期按日计息，定期支持3个月/6个月/1年/3年等档，起存金额1000元起。可通过"财富-存款"进行办理。';
         }
         if (t.includes("理财") || t.includes("收益") || t.includes("申购")) {
-          return "理财产品分为低/中风险，起投金额1000-10000元不等，支持T+1灵活赎回与封闭期产品，详情见“财富-理财产品”。";
+          return '理财产品分为低/中风险，起投金额1000-10000元不等，支持T+1灵活赎回与封闭期产品，详情见"财富-理财产品"。';
         }
         if (t.includes("保险") || t.includes("意外") || t.includes("重疾")) {
-          return "保险服务：提供医疗险、意外险、重疾险等多品类方案，支持在线投保与电子保单。可在“财富-保险”查看。";
+          return '保险服务：提供医疗险、意外险、重疾险等多品类方案，支持在线投保与电子保单。可在"财富-保险"查看。';
         }
         if (t.includes("外汇") || t.includes("汇率") || t.includes("结售汇")) {
-          return "外汇业务：支持主要币种实时汇率查询与结售汇，您可在“财富-外汇”查看行情并发起交易。";
+          return '外汇业务：支持主要币种实时汇率查询与结售汇，您可在"财富-外汇"查看行情并发起交易。';
         }
         if (t.includes("人工") || t.includes("转接") || t.includes("客服")) {
           return "需要人工服务吗？您可以拨打客服热线 95599，我们将尽快为您安排专属服务。";
@@ -3111,19 +3309,10 @@ if (uni.restoreGlobal) {
                   style: { "max-width": "100%", "border-radius": "8rpx" },
                   mode: "widthFix"
                 }, null, 8, ["src"])) : vue.createCommentVNode("v-if", true),
-                m.audio ? (vue.openBlock(), vue.createElementBlock("view", {
-                  key: 2,
-                  class: "audio-row"
-                }, [
-                  vue.createElementVNode("button", {
-                    class: "mini-btn ghost",
-                    onClick: ($event) => $options.playAudio(m.audio)
-                  }, "▶ 播放语音", 8, ["onClick"])
-                ])) : vue.createCommentVNode("v-if", true),
                 m.time ? (vue.openBlock(), vue.createElementBlock(
                   "text",
                   {
-                    key: 3,
+                    key: 2,
                     class: "time"
                   },
                   vue.toDisplayString(m.time),
@@ -3131,8 +3320,41 @@ if (uni.restoreGlobal) {
                   /* TEXT */
                 )) : vue.createCommentVNode("v-if", true)
               ]),
-              m.role === "user" ? (vue.openBlock(), vue.createElementBlock("image", {
+              vue.createCommentVNode(" AI回复的播放按钮 "),
+              m.role === "bot" ? (vue.openBlock(), vue.createElementBlock("view", {
                 key: 1,
+                class: "play-btn-container"
+              }, [
+                vue.createElementVNode("button", {
+                  class: vue.normalizeClass(["play-btn", { "playing": m.isPlaying }]),
+                  onClick: ($event) => $options.togglePlayAudio(m),
+                  disabled: !m.audio
+                }, [
+                  !m.isPlaying ? (vue.openBlock(), vue.createElementBlock("view", {
+                    key: 0,
+                    class: "speaker-icon"
+                  }, [
+                    vue.createElementVNode("view", { class: "speaker-body" }),
+                    vue.createElementVNode("view", { class: "speaker-waves" }, [
+                      vue.createElementVNode("view", { class: "wave" }),
+                      vue.createElementVNode("view", { class: "wave" }),
+                      vue.createElementVNode("view", { class: "wave" })
+                    ])
+                  ])) : (vue.openBlock(), vue.createElementBlock("view", {
+                    key: 1,
+                    class: "speaker-icon playing"
+                  }, [
+                    vue.createElementVNode("view", { class: "speaker-body" }),
+                    vue.createElementVNode("view", { class: "speaker-waves" }, [
+                      vue.createElementVNode("view", { class: "wave active" }),
+                      vue.createElementVNode("view", { class: "wave active" }),
+                      vue.createElementVNode("view", { class: "wave active" })
+                    ])
+                  ]))
+                ], 10, ["onClick", "disabled"])
+              ])) : vue.createCommentVNode("v-if", true),
+              m.role === "user" ? (vue.openBlock(), vue.createElementBlock("image", {
+                key: 2,
                 class: "avatar",
                 src: _imports_1,
                 mode: "aspectFit"
@@ -6080,7 +6302,6 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
   Promise.resolve().then(() => {
     initPushNotification();
   });
-  var define_import_meta_env_default = { VITE_AI_BASE: "http://192.168.0.102:5000", VITE_CJS_IGNORE_WARNING: "true", VITE_ROOT_DIR: "D:\\项目\\yihangyidon", VITE_USER_NODE_ENV: "development", BASE_URL: "/", MODE: "development", DEV: true, PROD: false, SSR: false };
   const _sfc_main = {
     name: "App",
     onLaunch(options) {
@@ -6090,35 +6311,23 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       this.setSystemInfo();
       this.initNetworkListener();
       this.initLoginInterceptor();
-      try {
-        const stored = uni.getStorageSync("AI_BASE");
-        const envBase = typeof { url: _documentCurrentScript && _documentCurrentScript.tagName.toUpperCase() === "SCRIPT" && _documentCurrentScript.src || new URL("app-service.js", document.baseURI).href } !== "undefined" && define_import_meta_env_default && "http://192.168.0.102:5000" || "";
-        if (!stored && envBase) {
-          uni.setStorageSync("AI_BASE", envBase);
-          formatAppLog("log", "at App.vue:35", "AI_BASE initialized from env:", envBase);
-        } else {
-          formatAppLog("log", "at App.vue:37", "AI_BASE existing:", stored || envBase || "(empty)");
-        }
-      } catch (e) {
-        formatAppLog("warn", "at App.vue:40", "AI_BASE init failed:", e);
-      }
     },
     onShow(options) {
-      formatAppLog("log", "at App.vue:45", "App Show", options);
+      formatAppLog("log", "at App.vue:31", "App Show", options);
       this.checkLoginStatus();
       this.restoreAppState();
       this.globalLoginCheck();
     },
     onHide() {
-      formatAppLog("log", "at App.vue:58", "App Hide");
+      formatAppLog("log", "at App.vue:44", "App Hide");
       this.saveAppState();
     },
     onError(error) {
-      formatAppLog("error", "at App.vue:65", "App Error:", error);
+      formatAppLog("error", "at App.vue:51", "App Error:", error);
       this.reportError(error);
     },
     onPageNotFound(options) {
-      formatAppLog("log", "at App.vue:72", "Page Not Found:", options);
+      formatAppLog("log", "at App.vue:58", "Page Not Found:", options);
       uni.switchTab({
         url: "/pages/index/index"
       });
@@ -6129,7 +6338,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
        */
       checkUpdate() {
         plus.runtime.getProperty(plus.runtime.appid, (widgetInfo) => {
-          formatAppLog("log", "at App.vue:87", "当前应用版本:", widgetInfo.version);
+          formatAppLog("log", "at App.vue:73", "当前应用版本:", widgetInfo.version);
         });
       },
       /**
@@ -6140,10 +6349,10 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
           const userInfo = uni.getStorageSync("userInfo");
           if (userInfo) {
             this.globalData.userInfo = userInfo;
-            formatAppLog("log", "at App.vue:101", "用户信息已恢复:", userInfo);
+            formatAppLog("log", "at App.vue:87", "用户信息已恢复:", userInfo);
           }
         } catch (error) {
-          formatAppLog("error", "at App.vue:104", "恢复用户信息失败:", error);
+          formatAppLog("error", "at App.vue:90", "恢复用户信息失败:", error);
         }
       },
       /**
@@ -6153,9 +6362,9 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
         try {
           const systemInfo = uni.getSystemInfoSync();
           this.globalData.systemInfo = systemInfo;
-          formatAppLog("log", "at App.vue:115", "系统信息:", systemInfo);
+          formatAppLog("log", "at App.vue:101", "系统信息:", systemInfo);
         } catch (error) {
-          formatAppLog("error", "at App.vue:117", "获取系统信息失败:", error);
+          formatAppLog("error", "at App.vue:103", "获取系统信息失败:", error);
         }
       },
       /**
@@ -6163,7 +6372,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
        */
       initNetworkListener() {
         uni.onNetworkStatusChange((res) => {
-          formatAppLog("log", "at App.vue:126", "网络状态变化:", res);
+          formatAppLog("log", "at App.vue:112", "网络状态变化:", res);
           this.globalData.networkType = res.networkType;
           this.globalData.isConnected = res.isConnected;
           if (!res.isConnected) {
@@ -6182,7 +6391,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
           const pages = getCurrentPages();
           const currentPage = pages[pages.length - 1];
           if (currentPage && !currentPage.route.includes("login")) {
-            formatAppLog("log", "at App.vue:149", "应用启动时检测到未登录，强制跳转到登录页面");
+            formatAppLog("log", "at App.vue:135", "应用启动时检测到未登录，强制跳转到登录页面");
             uni.reLaunch({
               url: "/pages/denglu/login"
             });
@@ -6195,13 +6404,13 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       initLoginInterceptor() {
         uni.addInterceptor("navigateTo", {
           invoke(e) {
-            formatAppLog("log", "at App.vue:164", "拦截 navigateTo:", e.url);
+            formatAppLog("log", "at App.vue:150", "拦截 navigateTo:", e.url);
             if (e.url.includes("/pages/denglu/login")) {
-              formatAppLog("log", "at App.vue:168", "跳转到登录页面，允许");
+              formatAppLog("log", "at App.vue:154", "跳转到登录页面，允许");
               return true;
             }
             if (!forceCheckLogin()) {
-              formatAppLog("log", "at App.vue:174", "用户未登录，阻止页面跳转");
+              formatAppLog("log", "at App.vue:160", "用户未登录，阻止页面跳转");
               return false;
             }
             return true;
@@ -6209,9 +6418,9 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
         });
         uni.addInterceptor("switchTab", {
           invoke(e) {
-            formatAppLog("log", "at App.vue:185", "拦截 switchTab:", e.url);
+            formatAppLog("log", "at App.vue:171", "拦截 switchTab:", e.url);
             if (!forceCheckLogin()) {
-              formatAppLog("log", "at App.vue:189", "用户未登录，阻止tabBar跳转");
+              formatAppLog("log", "at App.vue:175", "用户未登录，阻止tabBar跳转");
               return false;
             }
             return true;
@@ -6219,13 +6428,13 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
         });
         uni.addInterceptor("reLaunch", {
           invoke(e) {
-            formatAppLog("log", "at App.vue:200", "拦截 reLaunch:", e.url);
+            formatAppLog("log", "at App.vue:186", "拦截 reLaunch:", e.url);
             if (e.url.includes("/pages/denglu/login")) {
-              formatAppLog("log", "at App.vue:204", "重定向到登录页面，允许");
+              formatAppLog("log", "at App.vue:190", "重定向到登录页面，允许");
               return true;
             }
             if (!forceCheckLogin()) {
-              formatAppLog("log", "at App.vue:210", "用户未登录，阻止重定向");
+              formatAppLog("log", "at App.vue:196", "用户未登录，阻止重定向");
               return false;
             }
             return true;
@@ -6233,13 +6442,13 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
         });
         uni.addInterceptor("redirectTo", {
           invoke(e) {
-            formatAppLog("log", "at App.vue:221", "拦截 redirectTo:", e.url);
+            formatAppLog("log", "at App.vue:207", "拦截 redirectTo:", e.url);
             if (e.url.includes("/pages/denglu/login")) {
-              formatAppLog("log", "at App.vue:225", "重定向到登录页面，允许");
+              formatAppLog("log", "at App.vue:211", "重定向到登录页面，允许");
               return true;
             }
             if (!forceCheckLogin()) {
-              formatAppLog("log", "at App.vue:231", "用户未登录，阻止重定向");
+              formatAppLog("log", "at App.vue:217", "用户未登录，阻止重定向");
               return false;
             }
             return true;
@@ -6265,7 +6474,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
           };
           uni.setStorageSync("appState", appState);
         } catch (error) {
-          formatAppLog("error", "at App.vue:261", "保存应用状态失败:", error);
+          formatAppLog("error", "at App.vue:247", "保存应用状态失败:", error);
         }
       },
       /**
@@ -6281,14 +6490,14 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
             }
           }
         } catch (error) {
-          formatAppLog("error", "at App.vue:279", "恢复应用状态失败:", error);
+          formatAppLog("error", "at App.vue:265", "恢复应用状态失败:", error);
         }
       },
       /**
        * 错误上报
        */
       reportError(error) {
-        formatAppLog("error", "at App.vue:288", "错误上报:", error);
+        formatAppLog("error", "at App.vue:274", "错误上报:", error);
       }
     },
     /**

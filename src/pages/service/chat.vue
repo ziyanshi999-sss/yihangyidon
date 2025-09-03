@@ -11,10 +11,33 @@
         <view class="bubble">
           <rich-text v-if="m.html" :nodes="m.html"></rich-text>
           <image v-if="m.image" :src="m.image" style="max-width:100%;border-radius:8rpx;" mode="widthFix" />
-          <view v-if="m.audio" class="audio-row">
-            <button class="mini-btn ghost" @click="playAudio(m.audio)">▶ 播放语音</button>
-          </view>
           <text v-if="m.time" class="time">{{ m.time }}</text>
+        </view>
+        <!-- AI回复的播放按钮 -->
+        <view v-if="m.role === 'bot'" class="play-btn-container">
+                     <button 
+             class="play-btn" 
+             :class="{ 'playing': m.isPlaying }"
+             @click="togglePlayAudio(m)"
+             :disabled="!m.audio"
+           >
+             <view v-if="!m.isPlaying" class="speaker-icon">
+               <view class="speaker-body"></view>
+               <view class="speaker-waves">
+                 <view class="wave"></view>
+                 <view class="wave"></view>
+                 <view class="wave"></view>
+               </view>
+             </view>
+             <view v-else class="speaker-icon playing">
+               <view class="speaker-body"></view>
+               <view class="speaker-waves">
+                 <view class="wave active"></view>
+                 <view class="wave active"></view>
+                 <view class="wave active"></view>
+               </view>
+             </view>
+           </button>
         </view>
         <image v-if="m.role==='user'" class="avatar" src="/static/wealth/useravatar.jpg" mode="aspectFit" />
       </view>
@@ -52,26 +75,8 @@
 </template>
 
 <script>
-// 后端地址策略：
-// - H5：使用相对路径，通过 Vite 代理转发到后端（避免跨域/混合内容）
-// - 小程序：优先读本地存储 AI_BASE（可在控制台设置），否则读环境变量 VITE_AI_BASE
-const AI_BASE = (() => {
-  let base = ''
-  // #ifdef H5
-  base = '' // 相对路径，配合 vite.config.js -> server.proxy['/api']
-  // #endif
-  // #ifdef APP-PLUS
-  try {
-    base = (uni.getStorageSync && uni.getStorageSync('AI_BASE')) || (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_AI_BASE) || ''
-  } catch (_) { base = '' }
-  // #endif
-  // #ifdef MP-WEIXIN
-  try {
-    base = (uni.getStorageSync && uni.getStorageSync('AI_BASE')) || (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_AI_BASE) || ''
-  } catch (_) { base = '' }
-  // #endif
-  return base
-})()
+// 导入前端AI API服务
+import { chat, chatStream, speechToText, textToSpeech, clearHistory } from '@/api/ai.js'
 
 export default {
   data() {
@@ -80,7 +85,7 @@ export default {
       sending: false,
       recording: false,
       scrollIntoId: '',
-      placeholder: '请输入您的问题，如“我要查询理财收益”',
+      placeholder: '请输入您的问题，如"我要查询理财收益"',
       sessionId: 'default',
       pendingImageBase64: '',
       pendingImageLocalPath: '',
@@ -116,7 +121,8 @@ export default {
         }
       ],
       recorder: null,
-      audioCtx: null
+      audioCtx: null,
+      currentPlayingMessage: null
     }
   },
   onLoad() {
@@ -132,6 +138,14 @@ export default {
       }
       this.audioCtx = uni.createInnerAudioContext && uni.createInnerAudioContext()
     } catch (e) {}
+  },
+  onUnload() {
+    // 页面销毁时清理音频资源
+    this.stopCurrentAudio()
+    if (this.audioCtx) {
+      this.audioCtx.destroy()
+      this.audioCtx = null
+    }
   },
   methods: {
     showThinking() {
@@ -166,69 +180,26 @@ export default {
       })
     },
     async streamTextReply(content) {
-      // 在H5端使用fetch流式；其他端或失败则回退普通请求
+      // 使用前端流式API
       const thinkingIndex = this.showThinking()
       try {
-        if (!AI_BASE) throw new Error('未配置AI服务地址')
-        if (typeof window === 'undefined' || !window.fetch) {
-          throw new Error('stream not supported')
-        }
-        const res = await fetch(`${AI_BASE}/api/chat-stream`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: content, session_id: this.sessionId })
+        let fullContent = ''
+        const result = await chatStream(content, this.sessionId, (delta, full) => {
+          fullContent = full
+          this.updateBotMessage(thinkingIndex, full)
         })
-        if (!res.ok || !res.body) throw new Error('stream request failed')
-        const reader = res.body.getReader()
-        const decoder = new TextDecoder('utf-8')
-        let buffer = ''
-        let full = ''
-        // 将“思考中…”先清空
-        this.updateBotMessage(thinkingIndex, '')
-        while (true) {
-          const { done, value } = await reader.read()
-          if (done) break
-          buffer += decoder.decode(value, { stream: true })
-          const parts = buffer.split('\n\n')
-          buffer = parts.pop() || ''
-          for (const part of parts) {
-            const line = part.trim()
-            if (!line.startsWith('data:')) continue
-            const dataPart = line.slice(5).trim()
-            if (dataPart === '[DONE]') {
-              buffer = ''
-              break
-            }
-            try {
-              const obj = JSON.parse(dataPart)
-              const delta = obj && obj.delta ? obj.delta : ''
-              if (delta) {
-                full += delta
-                this.updateBotMessage(thinkingIndex, full)
-              }
-            } catch (_) {
-              // 非JSON增量，直接追加
-              full += dataPart
-              this.updateBotMessage(thinkingIndex, full)
-            }
+        
+        if (result.success) {
+          // 流结束后TTS
+          const ttsResult = await textToSpeech(fullContent)
+          console.log('TTS结果:', ttsResult)
+          if (ttsResult.success) {
+            this.$set(this.messages[thinkingIndex], 'audio', ttsResult.audioPath)
+            console.log('设置音频路径:', ttsResult.audioPath)
+            console.log('消息对象:', this.messages[thinkingIndex])
           }
-        }
-        // 流结束后TTS
-        if (full) {
-          const [tErr, tRes] = await new Promise((resolve) => {
-            uni.request({
-              url: `${AI_BASE}/api/text-to-speech`,
-              method: 'POST',
-              header: { 'Content-Type': 'application/json' },
-              data: { text: full },
-              success: (r) => resolve([null, r]),
-              fail: (e) => resolve([e, null])
-            })
-          })
-          if (!tErr && tRes && tRes.statusCode >= 200 && tRes.statusCode < 300 && tRes.data && tRes.data.success && tRes.data.audio_file) {
-            const url = `${AI_BASE}/api/audio/${tRes.data.audio_file}`
-            this.$set(this.messages[thinkingIndex], 'audio', url)
-          }
+        } else {
+          throw new Error(result.error)
         }
       } catch (e) {
         console.error('AI stream error:', e)
@@ -237,67 +208,45 @@ export default {
       }
     },
     async requestOnceText(content, botIndexToReuse = null) {
-      // 普通一次性请求（用于小程序或流失败）
-      if (!AI_BASE) {
-        const fallback = this.generateReply(content)
-        const msg = '未配置AI服务地址，小程序可执行 uni.setStorageSync("AI_BASE","http://你的电脑IP:5000")；H5请配置 /api 代理'
-        if (botIndexToReuse != null) this.updateBotMessage(botIndexToReuse, fallback)
-        else this.messages.push({ id: Date.now() + '-b', role: 'bot', html: this.renderMarkdownAndEmojis(fallback), time: this.nowTime() })
-        uni.showToast({ title: msg.slice(0,28), icon: 'none' })
-        console.warn(msg)
-        return
-      }
-      const [err, res] = await new Promise((resolve) => {
-        uni.request({
-          url: `${AI_BASE}/api/chat`,
-          method: 'POST',
-          header: { 'Content-Type': 'application/json' },
-          data: { message: content, session_id: this.sessionId, image: null },
-          success: (r) => resolve([null, r]),
-          fail: (e) => resolve([e, null])
-        })
-      })
-      if (err || !res || res.statusCode < 200 || res.statusCode >= 300 || !res.data || (!res.data.success && !res.data.reply)) {
-        const fallback = this.generateReply(content)
-        if (botIndexToReuse != null) this.updateBotMessage(botIndexToReuse, fallback)
-        else this.messages.push({ id: Date.now() + '-b', role: 'bot', html: this.renderMarkdownAndEmojis(fallback), time: this.nowTime() })
-        console.error('AI /api/chat error:', err, res)
-        uni.showToast({ title: 'AI服务请求失败', icon: 'none' })
-        return
-      }
-      let replyText = Array.isArray(res.data.reply) ? (res.data.reply.map(p => (p && p.text) ? p.text : '').join('')) : (typeof res.data.reply === 'string' ? res.data.reply : '')
-      // 小程序端伪流式（打字机效果）
-      // #ifdef MP-WEIXIN
-      if (botIndexToReuse != null) {
-        await this.typeOut(replyText || '', botIndexToReuse, 2, 25)
-      } else {
-        const idx = this.showThinking()
-        await this.typeOut(replyText || '', idx, 2, 25)
-      }
-      // #endif
-      // #ifndef MP-WEIXIN
-      const renderedReply = this.renderMarkdownAndEmojis(replyText || '')
-      if (botIndexToReuse != null) this.updateBotMessage(botIndexToReuse, replyText || '')
-      else this.messages.push({ id: Date.now() + '-b', role: 'bot', html: renderedReply, time: res.data.timestamp || this.nowTime() })
-      // #endif
-      // TTS
-      const [tErr, tRes] = await new Promise((resolve) => {
-        uni.request({
-          url: `${AI_BASE}/api/text-to-speech`,
-          method: 'POST',
-          header: { 'Content-Type': 'application/json' },
-          data: { text: replyText || '' },
-          success: (r) => resolve([null, r]),
-          fail: (e) => resolve([e, null])
-        })
-      })
-      if (!tErr && tRes && tRes.statusCode >= 200 && tRes.statusCode < 300 && tRes.data && tRes.data.success && tRes.data.audio_file) {
-        const url = `${AI_BASE}/api/audio/${tRes.data.audio_file}`
-        // 确定目标索引（小程序伪流式下复用思考中索引）
-        const lastIdx = botIndexToReuse != null ? botIndexToReuse : (this.messages.length - 1)
-        if (lastIdx >= 0 && this.messages[lastIdx].role === 'bot') {
-          this.$set(this.messages[lastIdx], 'audio', url)
+      // 使用前端API进行一次性请求
+      try {
+        const result = await chat(content, this.sessionId, this.pendingImageBase64)
+        
+        if (result.success) {
+          const replyText = result.reply || ''
+          // 小程序端伪流式（打字机效果）
+          // #ifdef MP-WEIXIN
+          if (botIndexToReuse != null) {
+            await this.typeOut(replyText, botIndexToReuse, 2, 25)
+          } else {
+            const idx = this.showThinking()
+            await this.typeOut(replyText, idx, 2, 25)
+          }
+          // #endif
+          // #ifndef MP-WEIXIN
+          const renderedReply = this.renderMarkdownAndEmojis(replyText)
+          if (botIndexToReuse != null) this.updateBotMessage(botIndexToReuse, replyText)
+          else this.messages.push({ id: Date.now() + '-b', role: 'bot', html: renderedReply, time: result.timestamp || this.nowTime() })
+          // #endif
+          
+          // TTS
+          const ttsResult = await textToSpeech(replyText)
+          if (ttsResult.success) {
+            // 确定目标索引（小程序伪流式下复用思考中索引）
+            const lastIdx = botIndexToReuse != null ? botIndexToReuse : (this.messages.length - 1)
+            if (lastIdx >= 0 && this.messages[lastIdx].role === 'bot') {
+              this.$set(this.messages[lastIdx], 'audio', ttsResult.audioPath)
+            }
+          }
+        } else {
+          throw new Error(result.error || 'AI服务请求失败')
         }
+      } catch (e) {
+        console.error('AI request error:', e)
+        const fallback = this.generateReply(content)
+        if (botIndexToReuse != null) this.updateBotMessage(botIndexToReuse, fallback)
+        else this.messages.push({ id: Date.now() + '-b', role: 'bot', html: this.renderMarkdownAndEmojis(fallback), time: this.nowTime() })
+        uni.showToast({ title: 'AI服务请求失败', icon: 'none' })
       }
     },
     playAudio(url) {
@@ -307,6 +256,83 @@ export default {
         this.audioCtx.play()
       } catch (e) {
         uni.showToast({ title: '无法播放语音', icon: 'none' })
+      }
+    },
+    togglePlayAudio(message) {
+      console.log('点击播放按钮，消息对象:', message)
+      console.log('音频路径:', message.audio)
+      console.log('播放状态:', message.isPlaying)
+      
+      if (!message.audio) {
+        uni.showToast({ title: '没有语音内容', icon: 'none' })
+        return
+      }
+      
+      // 如果当前消息正在播放，则停止
+      if (message.isPlaying) {
+        this.stopCurrentAudio()
+        return
+      }
+      
+      // 停止其他正在播放的音频
+      this.stopCurrentAudio()
+      
+      // 开始播放当前消息的音频
+      try {
+        if (!this.audioCtx) {
+          this.audioCtx = uni.createInnerAudioContext()
+          
+          // 监听播放结束
+          this.audioCtx.onEnded(() => {
+            console.log('音频播放结束')
+            this.stopCurrentAudio()
+          })
+          
+          // 监听播放错误
+          this.audioCtx.onError((err) => {
+            console.error('音频播放错误:', err)
+            this.stopCurrentAudio()
+            uni.showToast({ title: '播放失败', icon: 'none' })
+          })
+          
+          // 监听播放开始
+          this.audioCtx.onPlay(() => {
+            console.log('音频开始播放')
+          })
+          
+          // 监听加载完成
+          this.audioCtx.onCanplay(() => {
+            console.log('音频加载完成')
+          })
+          
+          // 监听加载中
+          this.audioCtx.onLoadstart(() => {
+            console.log('音频开始加载')
+          })
+        }
+        
+        console.log('设置音频源:', message.audio)
+        this.audioCtx.src = message.audio
+        console.log('开始播放音频')
+        this.audioCtx.play()
+        
+        // 设置播放状态
+        this.$set(message, 'isPlaying', true)
+        this.currentPlayingMessage = message
+        
+      } catch (e) {
+        console.error('播放音频失败:', e)
+        uni.showToast({ title: '无法播放语音', icon: 'none' })
+      }
+    },
+    stopCurrentAudio() {
+      if (this.audioCtx) {
+        this.audioCtx.stop()
+      }
+      
+      if (this.currentPlayingMessage) {
+        this.$set(this.currentPlayingMessage, 'isPlaying', false)
+        this.currentPlayingMessage = null
       }
     },
     toggleEmoji() {
@@ -355,28 +381,17 @@ export default {
     },
     uploadAudio(filePath) {
       uni.showLoading({ title: '识别中' })
-      uni.uploadFile({
-        url: `${AI_BASE}/api/speech-to-text`,
-        name: 'audio',
-        filePath,
-        success: (res) => {
-          uni.hideLoading()
-          try {
-            const data = JSON.parse(res.data)
-            if (data.success && data.text) {
-              this.draft = data.text
-              this.send()
-            } else {
-              uni.showToast({ title: data.error || '识别失败', icon: 'none' })
-            }
-          } catch (e) {
-            uni.showToast({ title: '解析失败', icon: 'none' })
-          }
-        },
-        fail: () => {
-          uni.hideLoading()
-          uni.showToast({ title: '上传失败', icon: 'none' })
+      speechToText(filePath).then(result => {
+        uni.hideLoading()
+        if (result.success && result.text) {
+          this.draft = result.text
+          this.send()
+        } else {
+          uni.showToast({ title: result.error || '识别失败', icon: 'none' })
         }
+      }).catch(e => {
+        uni.hideLoading()
+        uni.showToast({ title: '识别失败', icon: 'none' })
       })
     },
     chooseImage() {
@@ -442,17 +457,11 @@ export default {
 
       this.sending = true
       try {
-        // 带图：一次性请求；纯文本：H5流式/小程序一次性
+        // 带图：一次性请求；纯文本：流式
         if (this.pendingImageBase64) {
           await this.requestOnceText(content)
         } else {
-          if (typeof window !== 'undefined' && window.fetch) {
-            await this.streamTextReply(content)
-          } else {
-            // 小程序端：先显示思考中，再伪流式
-            const thinkingIndex = this.showThinking()
-            await this.requestOnceText(content, thinkingIndex)
-          }
+          await this.streamTextReply(content)
         }
       } catch (e) {
         const reply = this.generateReply(content)
@@ -470,16 +479,16 @@ export default {
     generateReply(text) {
       const t = text.toLowerCase()
       if (t.includes('存款') || t.includes('定期') || t.includes('利率')) {
-        return '存款业务：活期按日计息，定期支持3个月/6个月/1年/3年等档，起存金额1000元起。可通过“财富-存款”进行办理。'
+        return '存款业务：活期按日计息，定期支持3个月/6个月/1年/3年等档，起存金额1000元起。可通过"财富-存款"进行办理。'
       }
       if (t.includes('理财') || t.includes('收益') || t.includes('申购')) {
-        return '理财产品分为低/中风险，起投金额1000-10000元不等，支持T+1灵活赎回与封闭期产品，详情见“财富-理财产品”。'
+        return '理财产品分为低/中风险，起投金额1000-10000元不等，支持T+1灵活赎回与封闭期产品，详情见"财富-理财产品"。'
       }
       if (t.includes('保险') || t.includes('意外') || t.includes('重疾')) {
-        return '保险服务：提供医疗险、意外险、重疾险等多品类方案，支持在线投保与电子保单。可在“财富-保险”查看。'
+        return '保险服务：提供医疗险、意外险、重疾险等多品类方案，支持在线投保与电子保单。可在"财富-保险"查看。'
       }
       if (t.includes('外汇') || t.includes('汇率') || t.includes('结售汇')) {
-        return '外汇业务：支持主要币种实时汇率查询与结售汇，您可在“财富-外汇”查看行情并发起交易。'
+        return '外汇业务：支持主要币种实时汇率查询与结售汇，您可在"财富-外汇"查看行情并发起交易。'
       }
       if (t.includes('人工') || t.includes('转接') || t.includes('客服')) {
         return '需要人工服务吗？您可以拨打客服热线 95599，我们将尽快为您安排专属服务。'
@@ -557,4 +566,124 @@ export default {
 .send:active { background: var(--primary-2); }
 .pending-preview { display: flex; align-items: center; gap: 12rpx; padding: 8rpx 16rpx; background: #fff; border-top: 2rpx solid var(--line); }
 .pending-img { width: 160rpx; height: 160rpx; border-radius: 8rpx; border: 2rpx solid #f0f0f0; }
+
+/* 播放按钮样式 */
+.play-btn-container {
+  display: flex;
+  align-items: center;
+  margin-left: 12rpx;
+}
+
+.play-btn {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  border: 2rpx solid var(--primary);
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.play-btn:active {
+  transform: scale(0.95);
+}
+
+.play-btn.playing {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+.play-btn:disabled {
+  opacity: 0.5;
+  border-color: var(--muted);
+}
+
+/* 喇叭图标样式 */
+.speaker-icon {
+  position: relative;
+  width: 32rpx;
+  height: 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.speaker-body {
+  width: 16rpx;
+  height: 20rpx;
+  background: var(--primary);
+  border-radius: 8rpx 0 0 8rpx;
+  position: relative;
+}
+
+.speaker-body::before {
+  content: '';
+  position: absolute;
+  left: -4rpx;
+  top: 6rpx;
+  width: 6rpx;
+  height: 8rpx;
+  background: var(--primary);
+  border-radius: 3rpx;
+}
+
+.speaker-waves {
+  position: absolute;
+  right: -8rpx;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 2rpx;
+}
+
+.wave {
+  width: 3rpx;
+  height: 8rpx;
+  background: var(--primary);
+  border-radius: 2rpx;
+  opacity: 0.3;
+  transition: all 0.3s ease;
+}
+
+.wave.active {
+  opacity: 1;
+  animation: wavePulse 1.2s ease-in-out infinite;
+}
+
+.wave:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.wave:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.wave:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes wavePulse {
+  0%, 40%, 100% {
+    height: 8rpx;
+    opacity: 0.3;
+  }
+  20% {
+    height: 16rpx;
+    opacity: 1;
+  }
+}
+
+/* 播放状态下的喇叭样式 */
+.speaker-icon.playing .speaker-body,
+.speaker-icon.playing .speaker-body::before {
+  background: #fff;
+}
+
+.speaker-icon.playing .wave {
+  background: #fff;
+}
 </style>
