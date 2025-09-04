@@ -100,3 +100,7 @@
 .arrow-right[data-v-d303ad3d] {
   color: #ccc;
 }
+.transfer-btn[data-v-d303ad3d]:disabled {
+  background-color: #cccccc;
+  color: #666666;
+}
