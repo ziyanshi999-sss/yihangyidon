@@ -1998,7 +1998,11 @@ if (uni.restoreGlobal) {
           { key: "forex", name: "外汇" }
         ],
         // 顶部轮播图片（本地）
+        // 顶部轮播图片（本地）
         swiperImages: [
+          "/static/wealth/swip1.jpg",
+          "/static/wealth/swip2.jpg",
+          "/static/wealth/swip3.jpg"
           "/static/wealth/swip1.jpg",
           "/static/wealth/swip2.jpg",
           "/static/wealth/swip3.jpg"
@@ -2032,6 +2036,45 @@ if (uni.restoreGlobal) {
           { code: "USD/CNY", price: "7.2375", change: 0.12 },
           { code: "EUR/CNY", price: "7.8801", change: -0.08 },
           { code: "JPY/CNY", price: "0.0468", change: 0.02 }
+        ],
+        // 热点资讯（示例静态数据，可后续接入后端/抓取）
+        newsList: [
+          {
+            id: "n1",
+            title: "银行App上线智能投顾：个性化组合更省心",
+            source: "银行官方",
+            time: "今天 10:20",
+            tag: "产品上新",
+            tagClass: "tag-new",
+            cover: "https://images.unsplash.com/photo-1553729459-efe14ef6055d?q=80&w=800&auto=format&fit=crop"
+          },
+          {
+            id: "n2",
+            title: "人民币存款利率微调，稳中趋优助力财富增值",
+            source: "金融时报",
+            time: "今天 09:05",
+            tag: "利率",
+            tagClass: "tag-rate",
+            cover: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=800&auto=format&fit=crop"
+          },
+          {
+            id: "n3",
+            title: "净值型理财规模增长，风险匹配与长期主义成共识",
+            source: "理财早报",
+            time: "昨天 18:42",
+            tag: "理财",
+            tagClass: "tag-wealth",
+            cover: "https://images.unsplash.com/photo-1569025690938-a00729c9e1f9?q=80&w=1200&auto=format&fit=crop"
+          },
+          {
+            id: "n4",
+            title: "外汇市场波动加大，分散配置与风险对冲受关注",
+            source: "外汇观察",
+            time: "昨天 14:10",
+            tag: "外汇",
+            tagClass: "tag-fx",
+            cover: "https://img0.baidu.com/it/u=4159114734,4003708834&fm=253&fmt=auto&app=138&f=JPEG?w=739&h=500"
+          }
         ]
       };
     },
@@ -2078,6 +2121,9 @@ if (uni.restoreGlobal) {
       onOpenTool(tool) {
         const map = { calc: "收益计算器", calendar: "产品日历", risk: "风险评测" };
         uni.showToast({ title: `${map[tool]}(开发中)`, icon: "none" });
+      },
+      onNewsClick(n) {
+        uni.showToast({ title: n.title, icon: "none" });
       }
     }
   };
@@ -2196,11 +2242,8 @@ if (uni.restoreGlobal) {
           /* KEYED_FRAGMENT */
         ))
       ]),
-      vue.createCommentVNode(" 内容区 "),
-      vue.createElementVNode("scroll-view", {
-        "scroll-y": "",
-        class: "content"
-      }, [
+      vue.createCommentVNode(" 内容区（整页滚动） "),
+      vue.createElementVNode("view", { class: "content" }, [
         vue.createCommentVNode(" 存款 "),
         $data.activeTab === "deposit" ? (vue.openBlock(), vue.createElementBlock("view", { key: 0 }, [
           vue.createElementVNode("view", { class: "section-card highlight" }, [
@@ -2522,7 +2565,70 @@ if (uni.restoreGlobal) {
               ])
             ])
           ])
-        ])) : vue.createCommentVNode("v-if", true)
+        ])) : vue.createCommentVNode("v-if", true),
+        vue.createCommentVNode(" 热点资讯（固定展示在底部） "),
+        vue.createElementVNode("view", { class: "section-card" }, [
+          vue.createElementVNode("view", { class: "section-header" }, [
+            vue.createElementVNode("text", { class: "section-title" }, "热点资讯"),
+            vue.createElementVNode("text", { class: "sub" }, "精选银行与理财要闻")
+          ]),
+          vue.createElementVNode("view", { class: "news-list" }, [
+            (vue.openBlock(true), vue.createElementBlock(
+              vue.Fragment,
+              null,
+              vue.renderList($data.newsList, (n) => {
+                return vue.openBlock(), vue.createElementBlock("view", {
+                  class: "news-item",
+                  key: n.id,
+                  onClick: ($event) => $options.onNewsClick(n)
+                }, [
+                  vue.createElementVNode("image", {
+                    class: "news-cover",
+                    src: n.cover,
+                    mode: "aspectFill"
+                  }, null, 8, ["src"]),
+                  vue.createElementVNode("view", { class: "news-body" }, [
+                    vue.createElementVNode(
+                      "view",
+                      { class: "news-title" },
+                      vue.toDisplayString(n.title),
+                      1
+                      /* TEXT */
+                    ),
+                    vue.createElementVNode("view", { class: "news-meta" }, [
+                      vue.createElementVNode(
+                        "text",
+                        {
+                          class: vue.normalizeClass(["news-tag", n.tagClass])
+                        },
+                        vue.toDisplayString(n.tag),
+                        3
+                        /* TEXT, CLASS */
+                      ),
+                      vue.createElementVNode(
+                        "text",
+                        { class: "news-source" },
+                        vue.toDisplayString(n.source),
+                        1
+                        /* TEXT */
+                      ),
+                      vue.createElementVNode(
+                        "text",
+                        { class: "news-time" },
+                        vue.toDisplayString(n.time),
+                        1
+                        /* TEXT */
+                      )
+                    ])
+                  ]),
+                  vue.createElementVNode("view", { class: "news-arrow" }, "›")
+                ], 8, ["onClick"]);
+              }),
+              128
+              /* KEYED_FRAGMENT */
+            ))
+          ])
+        ])
       ])
     ]);
   }
@@ -3520,9 +3626,14 @@ if (uni.restoreGlobal) {
       clearPendingImage() {
         this.pendingImageLocalPath = "";
         this.pendingImageBase64 = "";
+      clearPendingImage() {
+        this.pendingImageLocalPath = "";
+        this.pendingImageBase64 = "";
       },
       async send() {
+      async send() {
         const content = this.draft.trim();
+        if (!content && !this.pendingImageBase64) {
         if (!content && !this.pendingImageBase64) {
           return;
         }
@@ -3536,8 +3647,20 @@ if (uni.restoreGlobal) {
         if (this.pendingImageLocalPath) {
           userMsg.image = this.pendingImageLocalPath;
         }
+        }
+        if (this.sending)
+          return;
+        await this.sendMessage(content);
+      },
+      async sendMessage(content) {
+        const renderedUser = this.renderMarkdownAndEmojis(content);
+        const userMsg = { id: Date.now() + "-u", role: "user", html: renderedUser, time: this.nowTime() };
+        if (this.pendingImageLocalPath) {
+          userMsg.image = this.pendingImageLocalPath;
+        }
         this.messages.push(userMsg);
         this.draft = "";
+        this.showEmoji = false;
         this.showEmoji = false;
         this.toBottom();
         this.sending = true;
@@ -3593,20 +3716,21 @@ if (uni.restoreGlobal) {
           this.sending = false;
           this.toBottom();
         }
+        }
       },
       generateReply(text) {
         const t = text.toLowerCase();
         if (t.includes("存款") || t.includes("定期") || t.includes("利率")) {
-          return "存款业务：活期按日计息，定期支持3个月/6个月/1年/3年等档，起存金额1000元起。可通过“财富-存款”进行办理。";
+          return '存款业务：活期按日计息，定期支持3个月/6个月/1年/3年等档，起存金额1000元起。可通过"财富-存款"进行办理。';
         }
         if (t.includes("理财") || t.includes("收益") || t.includes("申购")) {
-          return "理财产品分为低/中风险，起投金额1000-10000元不等，支持T+1灵活赎回与封闭期产品，详情见“财富-理财产品”。";
+          return '理财产品分为低/中风险，起投金额1000-10000元不等，支持T+1灵活赎回与封闭期产品，详情见"财富-理财产品"。';
         }
         if (t.includes("保险") || t.includes("意外") || t.includes("重疾")) {
-          return "保险服务：提供医疗险、意外险、重疾险等多品类方案，支持在线投保与电子保单。可在“财富-保险”查看。";
+          return '保险服务：提供医疗险、意外险、重疾险等多品类方案，支持在线投保与电子保单。可在"财富-保险"查看。';
         }
         if (t.includes("外汇") || t.includes("汇率") || t.includes("结售汇")) {
-          return "外汇业务：支持主要币种实时汇率查询与结售汇，您可在“财富-外汇”查看行情并发起交易。";
+          return '外汇业务：支持主要币种实时汇率查询与结售汇，您可在"财富-外汇"查看行情并发起交易。';
         }
         if (t.includes("人工") || t.includes("转接") || t.includes("客服")) {
           return "需要人工服务吗？您可以拨打客服热线 95599，我们将尽快为您安排专属服务。";
@@ -3615,7 +3739,7 @@ if (uni.restoreGlobal) {
       },
       toBottom() {
         this.$nextTick(() => {
-          this.scrollIntoId = "msg-" + (this.messages.length - 1);
+          this.scrollIntoId = "chat-bottom-anchor";
         });
       },
       escapeHtml(s) {
@@ -3626,6 +3750,54 @@ if (uni.restoreGlobal) {
         const hh = String(d.getHours()).padStart(2, "0");
         const mm = String(d.getMinutes()).padStart(2, "0");
         return `${hh}:${mm}`;
+      },
+      // base64转ArrayBuffer
+      base64ToArrayBuffer(base64) {
+        const binaryString = atob(base64);
+        const bytes = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+        return bytes.buffer;
+      },
+      // 初始化音频上下文
+      initAudioContext() {
+        try {
+          if (this.audioCtx) {
+            this.audioCtx.destroy();
+          }
+          this.audioCtx = uni.createInnerAudioContext();
+          formatAppLog("log", "at pages/service/chat.vue:601", "音频上下文初始化成功");
+          this.audioCtx.onEnded(() => {
+            formatAppLog("log", "at pages/service/chat.vue:605", "音频播放结束");
+            this.stopCurrentAudio();
+          });
+          this.audioCtx.onError((err) => {
+            formatAppLog("error", "at pages/service/chat.vue:611", "音频播放错误:", err);
+            formatAppLog("error", "at pages/service/chat.vue:612", "错误详情:", JSON.stringify(err));
+            this.stopCurrentAudio();
+            uni.showToast({ title: "播放失败", icon: "none" });
+          });
+          this.audioCtx.onPlay(() => {
+            formatAppLog("log", "at pages/service/chat.vue:619", "音频开始播放");
+          });
+          this.audioCtx.onCanplay(() => {
+            formatAppLog("log", "at pages/service/chat.vue:624", "音频加载完成");
+          });
+          if (this.audioCtx.onLoadstart) {
+            this.audioCtx.onLoadstart(() => {
+              formatAppLog("log", "at pages/service/chat.vue:630", "音频开始加载");
+            });
+          }
+          if (this.audioCtx.onLoaderror) {
+            this.audioCtx.onLoaderror((err) => {
+              formatAppLog("error", "at pages/service/chat.vue:637", "音频加载失败:", err);
+              formatAppLog("error", "at pages/service/chat.vue:638", "加载错误详情:", JSON.stringify(err));
+            });
+          }
+        } catch (e) {
+          formatAppLog("error", "at pages/service/chat.vue:643", "音频上下文初始化失败:", e);
+        }
       }
     }
   };
@@ -3634,11 +3806,13 @@ if (uni.restoreGlobal) {
       vue.createElementVNode("view", { class: "chat-header" }, [
         vue.createElementVNode("text", { class: "title" }, "AI 智能客服"),
         vue.createElementVNode("text", { class: "sub" }, "24小时为您服务")
+        vue.createElementVNode("text", { class: "sub" }, "24小时为您服务")
       ]),
       vue.createElementVNode("scroll-view", {
         "scroll-y": "",
         class: "chat-body",
-        "scroll-into-view": $data.scrollIntoId
+        "scroll-into-view": $data.scrollIntoId,
+        "scroll-with-animation": "true"
       }, [
         (vue.openBlock(true), vue.createElementBlock(
           vue.Fragment,
@@ -3653,9 +3827,12 @@ if (uni.restoreGlobal) {
                 key: 0,
                 class: "avatar",
                 src: _imports_0,
+                src: _imports_0,
                 mode: "aspectFit"
               })) : vue.createCommentVNode("v-if", true),
               vue.createElementVNode("view", { class: "bubble" }, [
+                m.html ? (vue.openBlock(), vue.createElementBlock("rich-text", {
+                  key: 0,
                 m.html ? (vue.openBlock(), vue.createElementBlock("rich-text", {
                   key: 0,
                   nodes: m.html
@@ -3686,9 +3863,43 @@ if (uni.restoreGlobal) {
                   /* TEXT */
                 )) : vue.createCommentVNode("v-if", true)
               ]),
-              m.role === "user" ? (vue.openBlock(), vue.createElementBlock("image", {
+              vue.createCommentVNode(" AI回复的播放按钮（仅在存在音频时显示） "),
+              m.role === "bot" && m.audio ? (vue.openBlock(), vue.createElementBlock("view", {
                 key: 1,
+                class: "play-btn-container"
+              }, [
+                vue.createElementVNode("button", {
+                  class: vue.normalizeClass(["play-btn", { "playing": m.isPlaying }]),
+                  onClick: ($event) => $options.togglePlayAudio(m),
+                  disabled: !m.audio
+                }, [
+                  !m.isPlaying ? (vue.openBlock(), vue.createElementBlock("view", {
+                    key: 0,
+                    class: "speaker-icon"
+                  }, [
+                    vue.createElementVNode("view", { class: "speaker-body" }),
+                    vue.createElementVNode("view", { class: "speaker-waves" }, [
+                      vue.createElementVNode("view", { class: "wave" }),
+                      vue.createElementVNode("view", { class: "wave" }),
+                      vue.createElementVNode("view", { class: "wave" })
+                    ])
+                  ])) : (vue.openBlock(), vue.createElementBlock("view", {
+                    key: 1,
+                    class: "speaker-icon playing"
+                  }, [
+                    vue.createElementVNode("view", { class: "speaker-body" }),
+                    vue.createElementVNode("view", { class: "speaker-waves" }, [
+                      vue.createElementVNode("view", { class: "wave active" }),
+                      vue.createElementVNode("view", { class: "wave active" }),
+                      vue.createElementVNode("view", { class: "wave active" })
+                    ])
+                  ]))
+                ], 10, ["onClick", "disabled"])
+              ])) : vue.createCommentVNode("v-if", true),
+              m.role === "user" ? (vue.openBlock(), vue.createElementBlock("image", {
+                key: 2,
                 class: "avatar",
+                src: _imports_1,
                 src: _imports_1,
                 mode: "aspectFit"
               })) : vue.createCommentVNode("v-if", true)
@@ -3696,8 +3907,52 @@ if (uni.restoreGlobal) {
           }),
           128
           /* KEYED_FRAGMENT */
-        ))
+        )),
+        vue.createCommentVNode(" 底部锚点用于自动滚动 "),
+        vue.createElementVNode("view", { id: $data.scrollIntoId }, null, 8, ["id"])
       ], 8, ["scroll-into-view"]),
+      vue.createCommentVNode(" 待发送图片预览（不改变原布局，仅在输入栏上方增加一行） "),
+      $data.pendingImageLocalPath ? (vue.openBlock(), vue.createElementBlock("view", {
+        key: 0,
+        class: "pending-preview"
+      }, [
+        vue.createElementVNode("image", {
+          src: $data.pendingImageLocalPath,
+          class: "pending-img",
+          mode: "aspectFit"
+        }, null, 8, ["src"]),
+        vue.createElementVNode("button", {
+          class: "mini-btn ghost",
+          onClick: _cache[0] || (_cache[0] = (...args) => $options.clearPendingImage && $options.clearPendingImage(...args))
+        }, "移除")
+      ])) : vue.createCommentVNode("v-if", true),
+      vue.createCommentVNode(" 表情面板（与 mobile.html 一致：图片表情选择） "),
+      $data.showEmoji ? (vue.openBlock(), vue.createElementBlock("view", {
+        key: 1,
+        class: "emoji-panel"
+      }, [
+        (vue.openBlock(true), vue.createElementBlock(
+          vue.Fragment,
+          null,
+          vue.renderList($data.EMOJI_ITEMS, (item, idx) => {
+            return vue.openBlock(), vue.createElementBlock("view", {
+              class: "emoji-item",
+              key: idx,
+              onClick: ($event) => $options.appendEmoji(item),
+              title: item.code
+            }, [
+              vue.createElementVNode("image", {
+                src: item.url,
+                alt: item.code,
+                style: { "width": "24px", "height": "24px" },
+                mode: "aspectFit"
+              }, null, 8, ["src", "alt"])
+            ], 8, ["onClick", "title"]);
+          }),
+          128
+          /* KEYED_FRAGMENT */
+        ))
+      ])) : vue.createCommentVNode("v-if", true),
       vue.createCommentVNode(" 待发送图片预览（不改变原布局，仅在输入栏上方增加一行） "),
       $data.pendingImageLocalPath ? (vue.openBlock(), vue.createElementBlock("view", {
         key: 0,
@@ -3745,11 +4000,13 @@ if (uni.restoreGlobal) {
           vue.createElementVNode("button", {
             class: "tool-btn",
             onClick: _cache[1] || (_cache[1] = (...args) => $options.chooseImage && $options.chooseImage(...args)),
+            onClick: _cache[1] || (_cache[1] = (...args) => $options.chooseImage && $options.chooseImage(...args)),
             "hover-class": "btn-hover",
             "hover-stay-time": "50"
           }, "🖼️"),
           vue.createElementVNode("button", {
             class: "tool-btn",
+            onClick: _cache[2] || (_cache[2] = (...args) => $options.toggleEmoji && $options.toggleEmoji(...args)),
             onClick: _cache[2] || (_cache[2] = (...args) => $options.toggleEmoji && $options.toggleEmoji(...args)),
             "hover-class": "btn-hover",
             "hover-stay-time": "50"
@@ -3766,12 +4023,26 @@ if (uni.restoreGlobal) {
             1
             /* TEXT */
           )
+          vue.createElementVNode(
+            "button",
+            {
+              class: "tool-btn",
+              onClick: _cache[3] || (_cache[3] = (...args) => $options.toggleRecord && $options.toggleRecord(...args)),
+              "hover-class": "btn-hover",
+              "hover-stay-time": "50"
+            },
+            vue.toDisplayString($data.recording ? "■" : "🎤"),
+            1
+            /* TEXT */
+          )
         ]),
         vue.withDirectives(vue.createElementVNode("input", {
           class: "input",
           "onUpdate:modelValue": _cache[4] || (_cache[4] = ($event) => $data.draft = $event),
+          "onUpdate:modelValue": _cache[4] || (_cache[4] = ($event) => $data.draft = $event),
           placeholder: $data.placeholder,
           "confirm-type": "send",
+          onConfirm: _cache[5] || (_cache[5] = (...args) => $options.send && $options.send(...args))
           onConfirm: _cache[5] || (_cache[5] = (...args) => $options.send && $options.send(...args))
         }, null, 40, ["placeholder"]), [
           [vue.vModelText, $data.draft]
@@ -3779,6 +4050,7 @@ if (uni.restoreGlobal) {
         vue.createElementVNode("button", {
           class: "send",
           disabled: !$data.draft.trim() || $data.sending,
+          onClick: _cache[6] || (_cache[6] = (...args) => $options.send && $options.send(...args))
           onClick: _cache[6] || (_cache[6] = (...args) => $options.send && $options.send(...args))
         }, vue.toDisplayString($data.sending ? "发送中..." : "发送"), 9, ["disabled"])
       ])

@@ -10,11 +10,11 @@ const _sfc_main = {
   onShow() {
     try {
       if (!utils_auth.forceCheckLogin()) {
-        common_vendor.index.__f__("log", "at pages/user/user.vue:59", "个人中心：用户未登录，跳转到登录页面");
+        console.log("个人中心：用户未登录，跳转到登录页面");
         common_vendor.index.reLaunch({
           url: "/pages/denglu/login",
           fail: (error) => {
-            common_vendor.index.__f__("error", "at pages/user/user.vue:63", "个人中心跳转失败:", error);
+            console.error("个人中心跳转失败:", error);
             common_vendor.index.navigateTo({ url: "/pages/denglu/login" });
           }
         });
@@ -22,7 +22,7 @@ const _sfc_main = {
       }
       this.checkLoginStatus();
     } catch (error) {
-      common_vendor.index.__f__("error", "at pages/user/user.vue:72", "个人中心onShow检查失败:", error);
+      console.error("个人中心onShow检查失败:", error);
       common_vendor.index.reLaunch({
         url: "/pages/denglu/login",
         fail: () => {
@@ -71,7 +71,7 @@ const _sfc_main = {
           confirmText: "确定"
         });
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/user/user.vue:126", "查看退出记录失败:", error);
+        console.error("查看退出记录失败:", error);
         common_vendor.index.showToast({
           title: "查看记录失败",
           icon: "none"
@@ -153,4 +153,3 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
 }
 const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render], ["__scopeId", "data-v-99b0ba47"]]);
 wx.createPage(MiniProgramPage);
-//# sourceMappingURL=../../../.sourcemap/mp-weixin/pages/user/user.js.map

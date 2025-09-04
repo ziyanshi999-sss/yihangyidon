@@ -55,8 +55,8 @@
       </view>
     </view>
 
-    <!-- 内容区 -->
-    <scroll-view scroll-y class="content">
+    <!-- 内容区（整页滚动） -->
+    <view class="content">
       <!-- 存款 -->
       <view v-if="activeTab === 'deposit'">
         <view class="section-card highlight">
@@ -203,7 +203,29 @@
           </view>
         </view>
       </view>
-    </scroll-view>
+
+      <!-- 热点资讯（固定展示在底部） -->
+      <view class="section-card">
+        <view class="section-header">
+          <text class="section-title">热点资讯</text>
+          <text class="sub">精选银行与理财要闻</text>
+        </view>
+        <view class="news-list">
+          <view class="news-item" v-for="n in newsList" :key="n.id" @click="onNewsClick(n)">
+            <image class="news-cover" :src="n.cover" mode="aspectFill" />
+            <view class="news-body">
+              <view class="news-title">{{ n.title }}</view>
+              <view class="news-meta">
+                <text class="news-tag" :class="n.tagClass">{{ n.tag }}</text>
+                <text class="news-source">{{ n.source }}</text>
+                <text class="news-time">{{ n.time }}</text>
+              </view>
+            </view>
+            <view class="news-arrow">›</view>
+          </view>
+        </view>
+      </view>
+    </view>
   </view>
 </template>
 
@@ -254,6 +276,45 @@ export default {
         { code: 'USD/CNY', price: '7.2375', change: 0.12 },
         { code: 'EUR/CNY', price: '7.8801', change: -0.08 },
         { code: 'JPY/CNY', price: '0.0468', change: 0.02 }
+      ],
+      // 热点资讯（示例静态数据，可后续接入后端/抓取）
+      newsList: [
+        {
+          id: 'n1',
+          title: '银行App上线智能投顾：个性化组合更省心',
+          source: '银行官方',
+          time: '今天 10:20',
+          tag: '产品上新',
+          tagClass: 'tag-new',
+          cover: 'https://images.unsplash.com/photo-1553729459-efe14ef6055d?q=80&w=800&auto=format&fit=crop'
+        },
+        {
+          id: 'n2',
+          title: '人民币存款利率微调，稳中趋优助力财富增值',
+          source: '金融时报',
+          time: '今天 09:05',
+          tag: '利率',
+          tagClass: 'tag-rate',
+          cover: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=800&auto=format&fit=crop'
+        },
+        {
+          id: 'n3',
+          title: '净值型理财规模增长，风险匹配与长期主义成共识',
+          source: '理财早报',
+          time: '昨天 18:42',
+          tag: '理财',
+          tagClass: 'tag-wealth',
+          cover: 'https://images.unsplash.com/photo-1569025690938-a00729c9e1f9?q=80&w=1200&auto=format&fit=crop'
+        },
+        {
+          id: 'n4',
+          title: '外汇市场波动加大，分散配置与风险对冲受关注',
+          source: '外汇观察',
+          time: '昨天 14:10',
+          tag: '外汇',
+          tagClass: 'tag-fx',
+          cover: 'https://img0.baidu.com/it/u=4159114734,4003708834&fm=253&fmt=auto&app=138&f=JPEG?w=739&h=500'
+        }
       ]
     }
   },
@@ -300,6 +361,10 @@ export default {
     onOpenTool(tool) {
       const map = { calc: '收益计算器', calendar: '产品日历', risk: '风险评测' }
       uni.showToast({ title: `${map[tool]}(开发中)`, icon: 'none' })
+    },
+    onNewsClick(n) {
+      // 可扩展：跳转资讯详情/H5落地页
+      uni.showToast({ title: n.title, icon: 'none' })
     }
   }
 }
@@ -335,7 +400,7 @@ export default {
 .tab-item { flex: none; padding: 16rpx 24rpx; background: #fff; border-radius: 999rpx; color: #333; }
 .tab-item.active { background: #2e7d32; color: #fff; font-weight: 700; }
 
-.content { height: calc(100vh - 480rpx); padding: 0 20rpx 30rpx; }
+.content { padding: 0 20rpx 30rpx; }
 
 .section-card { background: #fff; border-radius: 16rpx; padding: 24rpx; margin-bottom: 20rpx; box-shadow: 0 6rpx 20rpx rgba(0,0,0,0.04); }
 .section-card.highlight { background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%); }
@@ -393,4 +458,20 @@ export default {
 .tool-item { background: #fff; border-radius: 12rpx; padding: 20rpx 10rpx; text-align: center; border: 2rpx solid #f0f0f0; }
 .tool-icon { font-size: 40rpx; display: block; margin-bottom: 8rpx; }
 .tool-text { font-size: 24rpx; color: #333; }
+
+/* 热点资讯 */
+.news-list { display: flex; flex-direction: column; gap: 16rpx; }
+.news-item { display: flex; align-items: center; gap: 14rpx; background: #fff; border: 2rpx solid #f0f0f0; border-radius: 14rpx; padding: 14rpx; }
+.news-cover { width: 160rpx; height: 112rpx; border-radius: 10rpx; object-fit: cover; }
+.news-body { flex: 1; min-width: 0; }
+.news-title { font-size: 28rpx; font-weight: 700; color: #1f2d3d; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.news-meta { display: flex; align-items: center; gap: 12rpx; margin-top: 8rpx; }
+.news-tag { font-size: 20rpx; padding: 4rpx 10rpx; border-radius: 999rpx; color: #fff; background: #90a4ae; }
+.news-tag.tag-new { background: linear-gradient(135deg, #42a5f5, #1e88e5); }
+.news-tag.tag-rate { background: linear-gradient(135deg, #66bb6a, #43a047); }
+.news-tag.tag-wealth { background: linear-gradient(135deg, #ff7043, #f4511e); }
+.news-tag.tag-fx { background: linear-gradient(135deg, #ab47bc, #8e24aa); }
+.news-source { font-size: 22rpx; color: #607d8b; }
+.news-time { font-size: 22rpx; color: #90a4ae; }
+.news-arrow { font-size: 36rpx; color: #cfd8dc; padding-left: 8rpx; }
 </style>

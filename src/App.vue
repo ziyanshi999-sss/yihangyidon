@@ -292,13 +292,8 @@ export default {
 </script>
 
 <style>
-/**
- * 全局样式定义
- * 包含基础样式、通用组件样式和主题色彩
- */
-
-/* 重置默认样式 */
-* {
+/* 重置默认样式（WXSS兼容写法） */
+page, view {
   box-sizing: border-box;
 }
 
