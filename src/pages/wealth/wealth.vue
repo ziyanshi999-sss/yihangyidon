@@ -226,15 +226,24 @@
         </view>
       </view>
     </view>
+    
+    <!-- 客服选择弹窗 -->
+    <ServiceModal :visible="showServiceModal" @close="closeServiceModal" />
   </view>
 </template>
 
 <script>
+import ServiceModal from '@/components/common/ServiceModal.vue'
+
 export default {
+  components: {
+    ServiceModal
+  },
   data() {
     return {
       hideAmount: false,
       activeTab: 'deposit',
+      showServiceModal: false,
       tabs: [
         { key: 'deposit', name: '存款' },
         { key: 'product', name: '理财产品' },
@@ -323,7 +332,13 @@ export default {
       uni.showToast({ title: `轮播图第${idx + 1}张`, icon: 'none' })
     },
     onOnlineService() {
-      uni.navigateTo({ url: '/pages/service/chat' })
+      // 显示客服选择弹窗
+      this.showServiceModal = true
+    },
+    
+    // 关闭客服弹窗
+    closeServiceModal() {
+      this.showServiceModal = false
     },
     onCallHotline() {
       uni.makePhoneCall({ phoneNumber: this.serviceHotline })
@@ -411,7 +426,6 @@ export default {
 
 .deposit-stats { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; align-items: center; gap: 12rpx; }
 .divider { width: 2rpx; height: 60rpx; background: #eee; }
-.stat-item { }
 .stat-label { font-size: 24rpx; color: #666; }
 .stat-value { font-size: 32rpx; font-weight: 700; color: #222; margin-top: 6rpx; display: block; }
 
@@ -464,7 +478,7 @@ export default {
 .news-item { display: flex; align-items: center; gap: 14rpx; background: #fff; border: 2rpx solid #f0f0f0; border-radius: 14rpx; padding: 14rpx; }
 .news-cover { width: 160rpx; height: 112rpx; border-radius: 10rpx; object-fit: cover; }
 .news-body { flex: 1; min-width: 0; }
-.news-title { font-size: 28rpx; font-weight: 700; color: #1f2d3d; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.news-title { font-size: 28rpx; font-weight: 700; color: #1f2d3d; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .news-meta { display: flex; align-items: center; gap: 12rpx; margin-top: 8rpx; }
 .news-tag { font-size: 20rpx; padding: 4rpx 10rpx; border-radius: 999rpx; color: #fff; background: #90a4ae; }
 .news-tag.tag-new { background: linear-gradient(135deg, #42a5f5, #1e88e5); }

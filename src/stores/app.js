@@ -11,8 +11,6 @@ const state = reactive({
     networkType: 'unknown',
     // 是否在线
     isOnline: true,
-    // 应用主题
-    theme: 'light',
     // 语言设置
     language: 'zh-CN',
     // 字体大小
@@ -46,8 +44,6 @@ const getters = {
     }),
     // 获取平台信息
     platform: computed(() => state.systemInfo.platform || ''),
-    // 是否为暗色主题
-    isDarkTheme: computed(() => state.theme === 'dark'),
     // 是否有网络
     hasNetwork: computed(() => state.networkType !== 'none' && state.isOnline)
 }
@@ -105,38 +101,14 @@ const actions = {
     // 加载用户设置
     loadUserSettings() {
         try {
-            const theme = uni.getStorageSync('app_theme') || 'light'
             const language = uni.getStorageSync('app_language') || 'zh-CN'
             const fontSize = uni.getStorageSync('app_fontSize') || 'normal'
 
-            state.theme = theme
             state.language = language
             state.fontSize = fontSize
 
-            // 应用主题
-            this.applyTheme(theme)
-
         } catch (error) {
             console.error('加载用户设置失败:', error)
-        }
-    },
-
-    // 设置主题
-    setTheme(theme) {
-        state.theme = theme
-        uni.setStorageSync('app_theme', theme)
-        this.applyTheme(theme)
-    },
-
-    // 应用主题
-    applyTheme(theme) {
-        // 这里可以设置全局CSS变量或类名
-        const pages = getCurrentPages()
-        if (pages.length > 0) {
-            const currentPage = pages[pages.length - 1]
-            if (currentPage.$vm) {
-                currentPage.$vm.$el.setAttribute('data-theme', theme)
-            }
         }
     },
 

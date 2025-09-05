@@ -1,10 +1,10 @@
 <template>
-	<view class="user-page" :style="themeStyles.backgroundColor">
+	<view class="user-page">
 		<!-- 顶部背景 -->
-		<view class="header-bg" :style="themeStyles.primaryGradient"></view>
+		<view class="header-bg"></view>
 		
 		<!-- 用户信息卡片 -->
-		<view class="user-card" v-if="userInfo" :style="themeStyles.surface">
+		<view class="user-card" v-if="userInfo">
 			<view class="user-info">
 				<view class="avatar-section">
 					<view class="avatar" @click="viewAvatar">
@@ -26,7 +26,7 @@
 		</view>
 
 		<!-- 未登录状态 -->
-		<view class="login-card" v-else :style="themeStyles.surface">
+		<view class="login-card" v-else>
 			<view class="login-content">
 				<text class="login-title">欢迎使用农业银行</text>
 				<text class="login-subtitle">请登录您的账户</text>
@@ -35,7 +35,7 @@
 		</view>
 
 		<!-- 快捷功能 -->
-		<view class="quick-functions" v-if="userInfo" :style="themeStyles.surface">
+		<view class="quick-functions" v-if="userInfo">
 			<view class="function-grid">
 				<view class="function-item" @click="goToTransfer">
 					<view class="function-icon transfer-icon">💳</view>
@@ -59,7 +59,7 @@
 		<!-- 功能菜单 -->
 		<view class="menu-sections" v-if="userInfo">
 			<!-- 账户管理 -->
-			<view class="menu-section" :style="themeStyles.surface">
+			<view class="menu-section">
 				<view class="section-title">账户管理</view>
 				<view class="menu-list">
 					<view class="menu-item" @click="goToAccount">
@@ -87,7 +87,7 @@
 			</view>
 
 			<!-- 个人设置 -->
-			<view class="menu-section" :style="themeStyles.surface">
+			<view class="menu-section">
 				<view class="section-title">个人设置</view>
 				<view class="menu-list">
 					<view class="menu-item" @click="goToProfile">
@@ -104,21 +104,11 @@
 						</view>
 						<text class="arrow">></text>
 					</view>
-					<view class="menu-item theme-item" @click="toggleTheme">
-						<view class="menu-left">
-							<text class="menu-icon">🎨</text>
-							<text class="menu-text">主题切换</text>
-						</view>
-						<view class="theme-info">
-							<text class="theme-desc">{{ getThemeDisplayName(currentTheme) }}</text>
-							<text class="arrow">></text>
-						</view>
-					</view>
 				</view>
 			</view>
 
 			<!-- 客户服务 -->
-			<view class="menu-section" :style="themeStyles.surface">
+			<view class="menu-section">
 				<view class="section-title">客户服务</view>
 				<view class="menu-list">
 					<view class="menu-item" @click="goToHelp">
@@ -150,20 +140,24 @@
 				<button class="logout-btn" @click="handleLogout">退出登录</button>
 			</view>
 		</view>
+		
+		<!-- 客服选择弹窗 -->
+		<ServiceModal :visible="showServiceModal" @close="closeServiceModal" />
 	</view>
 </template>
 
 <script>
 import { checkLoginAndRedirect, getUserInfo, logout, quickLogout, forceLogout, forceCheckLogin } from '@/utils/auth.js'
-import themeManager from '@/utils/simple-theme.js'
-import { getThemeStyles } from '@/utils/theme-helper.js'
+import ServiceModal from '@/components/common/ServiceModal.vue'
 
 export default {
+	components: {
+		ServiceModal
+	},
 	data() {
 		return {
 			userInfo: null,
-			currentTheme: themeManager.getCurrentTheme(), // 获取当前主题
-			themeStyles: getThemeStyles() // 获取主题样式
+			showServiceModal: false
 		}
 	},
 	onShow() {
@@ -182,7 +176,6 @@ export default {
 			}
 			
 			this.checkLoginStatus()
-			this.loadTheme()
 		} catch (error) {
 			console.error('个人中心onShow检查失败:', error)
 			// 如果检查失败，跳转到登录页面
@@ -196,23 +189,9 @@ export default {
 	},
 	
 	mounted() {
-		// 监听主题变化
-		themeManager.addThemeListener(this.onThemeChanged)
-	},
-	
-	beforeDestroy() {
-		// 移除主题监听器
-		themeManager.removeThemeListener(this.onThemeChanged)
+		// 组件挂载完成
 	},
 	methods: {
-		// 主题变化回调
-		onThemeChanged(theme) {
-			console.log('主题变化回调:', theme)
-			this.currentTheme = theme
-			this.themeStyles = getThemeStyles() // 更新主题样式
-			// 强制更新页面
-			this.$forceUpdate()
-		},
 		
 		// 检查登录状态
 		checkLoginStatus() {
@@ -280,10 +259,13 @@ export default {
 			})
 		},
 		goToContact() {
-			uni.showToast({
-				title: '联系客服',
-				icon: 'none'
-			})
+			// 显示客服选择弹窗
+			this.showServiceModal = true
+		},
+		
+		// 关闭客服弹窗
+		closeServiceModal() {
+			this.showServiceModal = false
 		},
 
 		// 查看退出记录
@@ -450,82 +432,13 @@ export default {
 			})
 		},
 		goToHelp() {
-			uni.showToast({
-				title: '帮助中心',
-				icon: 'none'
+			// 跳转到帮助中心页面
+			uni.navigateTo({
+				url: '/pages/help/help-center'
 			})
 		},
 		
 
-		// 加载主题设置
-		loadTheme() {
-			this.currentTheme = themeManager.getCurrentTheme()
-		},
-
-		// 获取主题显示名称
-		getThemeDisplayName(theme) {
-			// 如果传入的是主题对象，直接返回名称
-			if (theme && typeof theme === 'object' && theme.name) {
-				return theme.name
-			}
-			
-			// 如果是主题ID字符串，返回对应的名称
-			const themeNames = {
-				'light': '浅色主题',
-				'dark': '深色主题',
-				'blue': '蓝色主题',
-				'purple': '紫色主题'
-			}
-			return themeNames[theme] || '浅色主题'
-		},
-
-		// 切换主题
-		toggleTheme() {
-			try {
-				console.log('开始切换主题...')
-				console.log('当前主题对象:', this.currentTheme)
-				
-				// 获取所有可用主题
-				const themes = themeManager.getAllThemes()
-				console.log('所有可用主题:', themes)
-				
-				const currentThemeId = this.currentTheme.id || this.currentTheme
-				console.log('当前主题ID:', currentThemeId)
-				
-				const currentIndex = themes.findIndex(theme => theme.id === currentThemeId)
-				console.log('当前主题索引:', currentIndex)
-				
-				const nextIndex = (currentIndex + 1) % themes.length
-				const newTheme = themes[nextIndex]
-				console.log('下一个主题:', newTheme)
-				
-				// 切换主题
-				themeManager.switchTheme(newTheme.id)
-				console.log('主题管理器切换完成')
-				
-				// 更新本地状态
-				this.currentTheme = newTheme
-				this.themeStyles = getThemeStyles()
-				console.log('本地状态更新完成')
-				
-				// 显示提示
-				uni.showToast({
-					title: `已切换到${newTheme.name}`,
-					icon: 'success',
-					duration: 1500
-				})
-				
-				// 强制更新页面
-				this.$forceUpdate()
-				console.log('页面强制更新完成')
-			} catch (error) {
-				console.error('主题切换失败:', error)
-				uni.showToast({
-					title: '主题切换失败',
-					icon: 'none'
-				})
-			}
-		},
 
 		// 查看头像
 		viewAvatar() {
@@ -833,17 +746,7 @@ export default {
 	color: var(--text-color, #999);
 }
 
-/* 主题切换样式 */
-.theme-item .theme-info {
-	display: flex;
-	align-items: center;
-}
 
-.theme-desc {
-	font-size: 24rpx;
-	color: var(--text-color, #666);
-	margin-right: 15rpx;
-}
 
 /* 退出登录 */
 .logout-section {

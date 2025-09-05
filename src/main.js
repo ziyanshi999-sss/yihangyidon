@@ -5,8 +5,6 @@
 
 import { createSSRApp } from "vue"
 import App from "./App.vue"
-import themeManager from "./utils/simple-theme.js"
-import "./styles/theme.css"
 
 // 环境检测函数
 function getEnvironment() {
@@ -57,8 +55,6 @@ export function createApp() {
 
 	// 全局属性
 	app.config.globalProperties.$app = {
-		// 主题管理器
-		theme: themeManager,
 		// 应用版本
 		version: '1.0.0',
 

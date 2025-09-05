@@ -43,6 +43,18 @@
 			}
 		},
 		{
+			"path": "pages/help/help-center",
+			"style": {
+				"navigationBarTitleText": "帮助中心"
+			}
+		},
+		{
+			"path": "pages/help/help-detail",
+			"style": {
+				"navigationBarTitleText": "帮助详情"
+			}
+		},
+		{
 			"path": "pages/transfer/transfer",
 			"style": {
 				"navigationBarTitleText": "转账",

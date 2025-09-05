@@ -72,6 +72,10 @@
           <view class="function-icon icon-topup">📱</view>
           <text class="function-text">手机充值</text>
         </view>
+        <view class="function-item" @click="handleServiceClick">
+          <view class="function-icon icon-service">💬</view>
+          <text class="function-text">在线客服</text>
+        </view>
         <view class="function-item" @click="toggleMoreFunctions">
           <view class="function-icon icon-more">•••</view>
           <text class="function-text">{{ showMoreFunctions ? '收起' : '全部' }}</text>
@@ -269,6 +273,14 @@ export default {
           url: '/pages/denglu/login'
         })
       }
+    },
+    
+    // 处理客服点击
+    handleServiceClick() {
+      // 直接跳转到AI客服页面，无需登录检查
+      uni.navigateTo({
+        url: '/pages/service/chat'
+      })
     },
     
     // 处理扫一扫点击 - 完善后的实现

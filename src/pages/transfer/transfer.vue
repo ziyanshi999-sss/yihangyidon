@@ -1,15 +1,14 @@
 <template>
   <view class="transfer-page">
     <!-- 顶部导航 -->
-    <view class="nav-bar" :style="themeStyles.primaryGradient">
+    <view class="nav-bar">
       <text class="nav-title">转账</text>
       <view class="nav-actions">
-        <SimpleThemeSwitcher />
       </view>
     </view>
 
     <!-- 账户余额显示 -->
-    <view class="balance-card" :style="themeStyles.primaryGradient">
+    <view class="balance-card">
       <view class="balance-info">
         <text class="balance-label">账户余额</text>
         <text class="balance-amount">¥{{ userBalance.toFixed(2) }}</text>
@@ -20,7 +19,7 @@
     </view>
 
     <!-- 转账类型选择 -->
-    <view class="transfer-types" :style="themeStyles.surface">
+    <view class="transfer-types">
       <view class="type-item" :class="{ active: currentTab === 'account' }" @click="switchTab('account')">
         <text class="type-text">账号转账</text>
       </view>
@@ -102,14 +101,10 @@ import { forceCheckLogin } from '@/utils/auth.js'
 import { transfer, phoneTransfer, validatePayee, getTransferLimit } from '@/api/transfer.js'
 import { deductBalance, checkBalanceSufficient, getUserBalance } from '@/api/balance.js'
 import PaymentPasswordModal from '@/components/common/PaymentPasswordModal.vue'
-import SimpleThemeSwitcher from '@/components/common/SimpleThemeSwitcher.vue'
-import themeManager from '@/utils/simple-theme.js'
-import { getThemeStyles, getThemeGradient } from '@/utils/theme-helper.js'
 
 export default {
   components: {
-    PaymentPasswordModal,
-    SimpleThemeSwitcher
+    PaymentPasswordModal
   },
   data() {
     return {
@@ -131,20 +126,12 @@ export default {
       showPasswordModal: false, // 显示交易密码弹窗
       transferAmount: 0, // 转账金额
       transferPayee: '', // 收款方
-      transferDescription: '', // 转账说明
-      currentTheme: themeManager.getCurrentTheme(),
-      themeStyles: getThemeStyles()
+      transferDescription: '' // 转账说明
     }
   },
   
   mounted() {
-    // 监听主题变化
-    themeManager.addThemeListener(this.onThemeChanged)
-  },
-  
-  beforeDestroy() {
-    // 移除主题监听器
-    themeManager.removeThemeListener(this.onThemeChanged)
+    // 页面加载完成
   },
   
   onShow() {
@@ -172,11 +159,6 @@ export default {
   },
   
   methods: {
-    // 主题变化回调
-    onThemeChanged(theme) {
-      this.currentTheme = theme
-      this.themeStyles = getThemeStyles()
-    },
     
     // 切换转账类型
     switchTab(tab) {

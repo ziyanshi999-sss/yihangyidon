@@ -1,6 +1,5 @@
 <script>
 import { checkLoginAndRedirect, forceCheckLogin } from '@/utils/auth.js'
-import themeManager from '@/utils/theme.js'
 
 /**
  * 中国农业银行应用主入口
@@ -11,9 +10,6 @@ export default {
 
   onLaunch(options) {
     console.log('App Launch', options)
-
-    // 初始化主题
-    themeManager.init()
 
     // 检查更新
     this.checkUpdate()
