@@ -4,13 +4,58 @@
     "username": null,
     "phone": "13888888888",
     "password": "123456",
+    "transactionPassword": "123456",
+    "balance": 50000.00,
     "nickname": "手机用户",
     "email": "phone@example.com",
     "idCard": "110101199001011234",
-    "avatar": "",
+    "avatar": "/static/avatars/phone_user_avatar.jpg",
     "status": "active",
     "createTime": "2024-01-01T08:00:00.000Z",
     "lastLoginTime": "2024-01-15T10:30:00.000Z",
+    "realName": "张三",
+    "gender": "男",
+    "birthDate": "1990-01-01",
+    "address": "北京市朝阳区建国门外大街1号",
+    "avatarUpdateTime": "2024-01-15T10:30:00.000Z",
+    "lastUpdateTime": "2024-01-15T10:30:00.000Z",
+    "securitySettings": {
+      "biometricEnabled": true,
+      "smsVerificationEnabled": true,
+      "accountLockEnabled": true,
+      "twoFactorEnabled": false,
+      "securityNotificationsEnabled": true,
+      "transactionLimit": 50000,
+      "passwordUpdateTime": "2024-01-01T00:00:00.000Z",
+      "transactionPasswordUpdateTime": "2024-01-01T00:00:00.000Z",
+      "securityQuestionsSet": false,
+      "emergencyContactSet": false,
+      "loginDevices": [
+        {
+          "id": 1,
+          "name": "iPhone 14",
+          "lastLogin": "2024-01-15T14:30:00.000Z",
+          "location": "北京市",
+          "status": "active",
+          "ip": "192.168.1.100",
+          "deviceType": "mobile"
+        }
+      ],
+      "securityEvents": [
+        {
+          "id": 1,
+          "type": "login",
+          "description": "账户登录",
+          "timestamp": "2024-01-15T14:30:00.000Z",
+          "location": "北京市",
+          "ip": "192.168.1.100",
+          "status": "success"
+        }
+      ],
+      "securityQuestions": [],
+      "emergencyContact": null,
+      "twoFactorSecret": null
+    },
     "creditCards": [
       {
         "cardNumber": "6222 8888 8888 8888",
@@ -40,13 +85,93 @@
     "username": "张小明",
     "phone": "13999999999",
     "password": "abc123",
+    "transactionPassword": "654321",
+    "balance": 120000.00,
     "nickname": "小明",
     "email": "zhangxiaoming@example.com",
     "idCard": "110101199202021456",
-    "avatar": "",
+    "avatar": "/static/avatars/zhangxiaoming_avatar.jpg",
     "status": "active",
     "createTime": "2024-01-02T09:15:00.000Z",
     "lastLoginTime": "2024-01-15T14:20:00.000Z",
+    "realName": "张小明",
+    "gender": "男",
+    "birthDate": "1992-02-02",
+    "address": "上海市浦东新区陆家嘴环路1000号",
+    "avatarUpdateTime": "2024-01-15T14:20:00.000Z",
+    "lastUpdateTime": "2024-01-15T14:20:00.000Z",
+    "securitySettings": {
+      "biometricEnabled": true,
+      "smsVerificationEnabled": true,
+      "accountLockEnabled": true,
+      "twoFactorEnabled": true,
+      "securityNotificationsEnabled": true,
+      "transactionLimit": 100000,
+      "passwordUpdateTime": "2024-01-10T00:00:00.000Z",
+      "transactionPasswordUpdateTime": "2024-01-10T00:00:00.000Z",
+      "securityQuestionsSet": true,
+      "emergencyContactSet": true,
+      "loginDevices": [
+        {
+          "id": 1,
+          "name": "iPhone 15 Pro",
+          "lastLogin": "2024-01-15T14:20:00.000Z",
+          "location": "上海市",
+          "status": "active",
+          "ip": "192.168.1.200",
+          "deviceType": "mobile"
+        },
+        {
+          "id": 2,
+          "name": "MacBook Pro",
+          "lastLogin": "2024-01-14T09:15:00.000Z",
+          "location": "上海市",
+          "status": "active",
+          "ip": "192.168.1.201",
+          "deviceType": "desktop"
+        }
+      ],
+      "securityEvents": [
+        {
+          "id": 1,
+          "type": "login",
+          "description": "账户登录",
+          "timestamp": "2024-01-15T14:20:00.000Z",
+          "location": "上海市",
+          "ip": "192.168.1.200",
+          "status": "success"
+        },
+        {
+          "id": 2,
+          "type": "password_change",
+          "description": "修改登录密码",
+          "timestamp": "2024-01-10T10:30:00.000Z",
+          "location": "上海市",
+          "ip": "192.168.1.201",
+          "status": "success"
+        }
+      ],
+      "securityQuestions": [
+        {
+          "question": "您的小学名称是什么？",
+          "answer": "实验小学"
+        },
+        {
+          "question": "您的第一个宠物的名字是什么？",
+          "answer": "小白"
+        },
+        {
+          "question": "您最喜欢的颜色是什么？",
+          "answer": "蓝色"
+        }
+      ],
+      "emergencyContact": {
+        "name": "张大明",
+        "phone": "13800138000",
+        "relationship": "父亲"
+      },
+      "twoFactorSecret": "JBSWY3DPEHPK3PXP"
+    },
     "creditCards": [
       {
         "cardNumber": "6222 9999 9999 9999",
@@ -97,13 +222,85 @@
     "username": "李小红",
     "phone": "13777777777", 
     "password": "password123",
+    "transactionPassword": "789012",
+    "balance": 80000.00,
     "nickname": "小红",
     "email": "lixiaohong@example.com",
     "idCard": "110101199303031789",
-    "avatar": "",
+    "avatar": "/static/avatars/lixiaohong_avatar.jpg",
     "status": "active",
     "createTime": "2024-01-03T16:45:00.000Z",
     "lastLoginTime": "2024-01-14T11:10:00.000Z",
+    "realName": "李小红",
+    "gender": "女",
+    "birthDate": "1993-03-03",
+    "address": "广州市天河区珠江新城花城大道85号",
+    "avatarUpdateTime": "2024-01-14T11:10:00.000Z",
+    "lastUpdateTime": "2024-01-14T11:10:00.000Z",
+    "securitySettings": {
+      "biometricEnabled": false,
+      "smsVerificationEnabled": true,
+      "accountLockEnabled": false,
+      "twoFactorEnabled": false,
+      "securityNotificationsEnabled": false,
+      "transactionLimit": 200000,
+      "passwordUpdateTime": "2023-12-01T00:00:00.000Z",
+      "transactionPasswordUpdateTime": "2023-12-01T00:00:00.000Z",
+      "securityQuestionsSet": false,
+      "emergencyContactSet": false,
+      "loginDevices": [
+        {
+          "id": 1,
+          "name": "Samsung Galaxy S24",
+          "lastLogin": "2024-01-14T11:10:00.000Z",
+          "location": "广州市",
+          "status": "active",
+          "ip": "192.168.1.300",
+          "deviceType": "mobile"
+        },
+        {
+          "id": 2,
+          "name": "iPad Pro",
+          "lastLogin": "2024-01-13T16:45:00.000Z",
+          "location": "广州市",
+          "status": "active",
+          "ip": "192.168.1.301",
+          "deviceType": "tablet"
+        },
+        {
+          "id": 3,
+          "name": "Dell Laptop",
+          "lastLogin": "2024-01-12T08:30:00.000Z",
+          "location": "广州市",
+          "status": "active",
+          "ip": "192.168.1.302",
+          "deviceType": "desktop"
+        }
+      ],
+      "securityEvents": [
+        {
+          "id": 1,
+          "type": "login",
+          "description": "账户登录",
+          "timestamp": "2024-01-14T11:10:00.000Z",
+          "location": "广州市",
+          "ip": "192.168.1.300",
+          "status": "success"
+        },
+        {
+          "id": 2,
+          "type": "failed_login",
+          "description": "登录失败",
+          "timestamp": "2024-01-13T20:15:00.000Z",
+          "location": "广州市",
+          "ip": "192.168.1.303",
+          "status": "failed"
+        }
+      ],
+      "securityQuestions": [],
+      "emergencyContact": null,
+      "twoFactorSecret": null
+    },
     "creditCards": [
       {
         "cardNumber": "6222 6666 6666 6666",

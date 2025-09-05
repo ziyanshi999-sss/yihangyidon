@@ -1,12 +1,26 @@
 <template>
   <view class="transfer-page">
     <!-- 顶部导航 -->
-    <view class="nav-bar">
+    <view class="nav-bar" :style="themeStyles.primaryGradient">
       <text class="nav-title">转账</text>
+      <view class="nav-actions">
+        <SimpleThemeSwitcher />
+      </view>
+    </view>
+
+    <!-- 账户余额显示 -->
+    <view class="balance-card" :style="themeStyles.primaryGradient">
+      <view class="balance-info">
+        <text class="balance-label">账户余额</text>
+        <text class="balance-amount">¥{{ userBalance.toFixed(2) }}</text>
+      </view>
+      <view class="balance-tip">
+        <text class="tip-text">单笔转账限额：¥{{ transferLimit.toLocaleString() }}</text>
+      </view>
     </view>
 
     <!-- 转账类型选择 -->
-    <view class="transfer-types">
+    <view class="transfer-types" :style="themeStyles.surface">
       <view class="type-item" :class="{ active: currentTab === 'account' }" @click="switchTab('account')">
         <text class="type-text">账号转账</text>
       </view>
@@ -70,14 +84,33 @@
         <text class="arrow-right">➡️</text>
       </view>
     </view>
+
+    <!-- 交易密码验证弹窗 -->
+    <PaymentPasswordModal
+      :visible="showPasswordModal"
+      :amount="transferAmount"
+      :payee="transferPayee"
+      :description="transferDescription"
+      @payment-confirmed="onPaymentConfirmed"
+      @close="closePasswordModal"
+    />
   </view>
 </template>
 
 <script>
 import { forceCheckLogin } from '@/utils/auth.js'
 import { transfer, phoneTransfer, validatePayee, getTransferLimit } from '@/api/transfer.js'
+import { deductBalance, checkBalanceSufficient, getUserBalance } from '@/api/balance.js'
+import PaymentPasswordModal from '@/components/common/PaymentPasswordModal.vue'
+import SimpleThemeSwitcher from '@/components/common/SimpleThemeSwitcher.vue'
+import themeManager from '@/utils/simple-theme.js'
+import { getThemeStyles, getThemeGradient } from '@/utils/theme-helper.js'
 
 export default {
+  components: {
+    PaymentPasswordModal,
+    SimpleThemeSwitcher
+  },
   data() {
     return {
       currentTab: 'account', // 默认选择账号转账
@@ -94,8 +127,24 @@ export default {
       },
       isProcessing: false, // 转账处理状态
       transferLimit: 50000, // 默认转账限额
-      userBalance: 100000 // 模拟用户余额
+      userBalance: 0, // 用户余额
+      showPasswordModal: false, // 显示交易密码弹窗
+      transferAmount: 0, // 转账金额
+      transferPayee: '', // 收款方
+      transferDescription: '', // 转账说明
+      currentTheme: themeManager.getCurrentTheme(),
+      themeStyles: getThemeStyles()
     }
+  },
+  
+  mounted() {
+    // 监听主题变化
+    themeManager.addThemeListener(this.onThemeChanged)
+  },
+  
+  beforeDestroy() {
+    // 移除主题监听器
+    themeManager.removeThemeListener(this.onThemeChanged)
   },
   
   onShow() {
@@ -123,6 +172,12 @@ export default {
   },
   
   methods: {
+    // 主题变化回调
+    onThemeChanged(theme) {
+      this.currentTheme = theme
+      this.themeStyles = getThemeStyles()
+    },
+    
     // 切换转账类型
     switchTab(tab) {
       this.currentTab = tab
@@ -142,17 +197,20 @@ export default {
       }, 300)
     },
     
-    // 获取用户余额（模拟）
-    getUserBalance() {
-      // 在实际环境中调用API，这里使用模拟数据
-      const savedBalance = uni.getStorageSync('userBalance')
-      if (savedBalance) {
-        this.userBalance = savedBalance
+    // 获取用户余额
+    async getUserBalance() {
+      try {
+        const balance = await getUserBalance()
+        this.userBalance = balance
+        console.log('获取用户余额成功:', balance)
+      } catch (error) {
+        console.error('获取用户余额失败:', error)
+        this.userBalance = 0
       }
     },
     
     // 验证转账金额
-    validateAmount(amount) {
+    async validateAmount(amount) {
       const numAmount = parseFloat(amount)
       
       // 检查是否为有效数字
@@ -173,10 +231,20 @@ export default {
         return false
       }
       
-      // 检查余额是否充足
-      if (numAmount > this.userBalance) {
+      // 检查余额是否足够
+      try {
+        const isSufficient = await checkBalanceSufficient(numAmount)
+        if (!isSufficient) {
+          uni.showToast({
+            title: '余额不足，请检查账户余额',
+            icon: 'none'
+          })
+          return false
+        }
+      } catch (error) {
+        console.error('检查余额失败:', error)
         uni.showToast({
-          title: '余额不足',
+          title: '检查余额失败，请重试',
           icon: 'none'
         })
         return false
@@ -202,24 +270,17 @@ export default {
           }
           
           // 验证转账金额
-          if (!this.validateAmount(this.accountForm.amount)) {
+          const isValidAmount = await this.validateAmount(this.accountForm.amount)
+          if (!isValidAmount) {
             this.isProcessing = false
             return
           }
           
-          // 显示转账确认弹窗
-          uni.showModal({
-            title: '转账确认',
-            content: `向 ${this.accountForm.name}（账号：${this.accountForm.account}）转账 ${this.accountForm.amount} 元`,
-            success: async (res) => {
-              if (res.confirm) {
-                // 先验证收款人信息
-                await this.verifyPayeeInfo(this.accountForm.account, this.accountForm.name)
-              } else {
-                this.isProcessing = false
-              }
-            }
-          })
+          // 显示交易密码验证弹窗
+          this.transferAmount = parseFloat(this.accountForm.amount)
+          this.transferPayee = this.accountForm.name
+          this.transferDescription = `向账号${this.accountForm.account}转账`
+          this.showPasswordModal = true
         } else {
           if (!this.phoneForm.phone || !this.phoneForm.amount) {
             uni.showToast({
@@ -231,24 +292,17 @@ export default {
           }
           
           // 验证转账金额
-          if (!this.validateAmount(this.phoneForm.amount)) {
+          const isValidAmount = await this.validateAmount(this.phoneForm.amount)
+          if (!isValidAmount) {
             this.isProcessing = false
             return
           }
           
-          // 显示转账确认弹窗
-          uni.showModal({
-            title: '转账确认',
-            content: `向手机号 ${this.phoneForm.phone} 转账 ${this.phoneForm.amount} 元`,
-            success: async (res) => {
-              if (res.confirm) {
-                // 执行手机号转账
-                await this.processPhoneTransfer()
-              } else {
-                this.isProcessing = false
-              }
-            }
-          })
+          // 显示交易密码验证弹窗
+          this.transferAmount = parseFloat(this.phoneForm.amount)
+          this.transferPayee = this.phoneForm.phone
+          this.transferDescription = `向手机号${this.phoneForm.phone}转账`
+          this.showPasswordModal = true
         }
       } catch (error) {
         console.error('转账过程中出错:', error)
@@ -455,6 +509,80 @@ export default {
         title: '跳转到转账设置页面',
         icon: 'none'
       })
+    },
+    
+    // 交易密码验证成功
+    async onPaymentConfirmed(paymentData) {
+      try {
+        this.isProcessing = true
+        
+        // 扣除余额
+        const deductResult = await deductBalance(
+          this.transferAmount, 
+          this.transferDescription
+        )
+        
+        if (!deductResult.success) {
+          uni.showToast({
+            title: deductResult.message,
+            icon: 'none'
+          })
+          this.isProcessing = false
+          return
+        }
+        
+        // 更新本地余额显示
+        this.userBalance = deductResult.newBalance
+        
+        // 执行转账记录保存
+        if (this.currentTab === 'account') {
+          await this.processAccountTransfer()
+        } else {
+          await this.processPhoneTransfer()
+        }
+        
+        this.isProcessing = false
+        this.closePasswordModal()
+        
+        // 显示转账成功提示
+        uni.showToast({
+          title: `转账成功，余额：¥${deductResult.newBalance.toFixed(2)}`,
+          icon: 'success',
+          duration: 3000
+        })
+        
+        // 清空表单
+        this.clearForms()
+        
+      } catch (error) {
+        console.error('转账处理失败:', error)
+        this.isProcessing = false
+        uni.showToast({
+          title: '转账失败，请重试',
+          icon: 'none'
+        })
+      }
+    },
+    
+    // 关闭交易密码弹窗
+    closePasswordModal() {
+      this.showPasswordModal = false
+      this.isProcessing = false
+    },
+    
+    // 清空表单
+    clearForms() {
+      this.accountForm = {
+        account: '',
+        name: '',
+        amount: '',
+        remark: ''
+      }
+      this.phoneForm = {
+        phone: '',
+        amount: '',
+        remark: ''
+      }
     }
   }
 }
@@ -462,41 +590,95 @@ export default {
 
 <style scoped>
 .transfer-page {
-  background-color: #f8f8f8;
+  background-color: #f5f5f5;
   min-height: 100vh;
+  padding-bottom: 20rpx;
 }
 
 /* 顶部导航 */
 .nav-bar {
-  background-color: #fff;
-  padding: 15px;
-  text-align: center;
-  border-bottom: 1px solid #e0e0e0;
+  background: var(--gradient-primary);
+  padding: 20rpx 30rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .nav-title {
-  font-size: 18px;
+  font-size: 36rpx;
   font-weight: bold;
-  color: #333;
+  flex: 1;
+  text-align: center;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+}
+
+/* 账户余额卡片 */
+.balance-card {
+  background: var(--gradient-primary);
+  margin: 20rpx;
+  padding: 30rpx;
+  border-radius: 20rpx;
+  color: white;
+  box-shadow: 0 8rpx 24rpx var(--color-shadowDark);
+}
+
+.balance-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15rpx;
+}
+
+.balance-label {
+  font-size: 28rpx;
+  opacity: 0.9;
+}
+
+.balance-amount {
+  font-size: 48rpx;
+  font-weight: bold;
+}
+
+.balance-tip {
+  text-align: right;
+}
+
+.tip-text {
+  font-size: 24rpx;
+  opacity: 0.8;
 }
 
 /* 转账类型选择 */
 .transfer-types {
   display: flex;
-  background-color: #fff;
-  margin-bottom: 10px;
-  border-bottom: 1px solid #e0e0e0;
+  background-color: var(--color-surface);
+  margin: 0 20rpx 20rpx 20rpx;
+  border-radius: 16rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 12rpx var(--color-shadow);
 }
 
 .type-item {
   flex: 1;
-  padding: 15px;
+  padding: 30rpx 20rpx;
   text-align: center;
   position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: var(--color-surface);
 }
 
 .type-item.active {
-  color: #ff6b00;
+  color: var(--color-primary);
+  background-color: var(--color-surfaceVariant);
 }
 
 .type-item.active::after {
@@ -505,78 +687,111 @@ export default {
   bottom: 0;
   left: 30%;
   width: 40%;
-  height: 2px;
-  background-color: #ff6b00;
+  height: 4rpx;
+  background-color: var(--color-primary);
+  border-radius: 2rpx;
 }
 
 .type-text {
-  font-size: 16px;
+  font-size: 28rpx;
+  font-weight: 500;
 }
 
 /* 转账表单 */
 .transfer-form {
-  background-color: #fff;
-  padding: 15px;
-  margin-bottom: 10px;
+  background-color: var(--color-surface);
+  margin: 0 20rpx 20rpx 20rpx;
+  border-radius: 20rpx;
+  padding: 40rpx;
+  box-shadow: 0 4rpx 12rpx var(--color-shadow);
 }
 
 .form-content {
-  margin-bottom: 20px;
+  margin-bottom: 40rpx;
 }
 
 .form-item {
-  margin-bottom: 20px;
+  margin-bottom: 30rpx;
 }
 
 .form-label {
   display: block;
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 8px;
+  font-size: 28rpx;
+  color: var(--color-text);
+  margin-bottom: 15rpx;
+  font-weight: 500;
 }
 
 .form-input {
   width: 100%;
-  height: 45px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  padding: 0 15px;
-  font-size: 16px;
+  height: 80rpx;
+  border: 2rpx solid var(--color-border);
+  border-radius: 12rpx;
+  padding: 0 20rpx;
+  font-size: 28rpx;
+  background-color: var(--color-surface);
+  color: var(--color-text);
 }
 
 .transfer-btn {
   width: 100%;
-  height: 45px;
-  background-color: #ff6b00;
+  height: 80rpx;
+  background: var(--gradient-primary);
   color: #fff;
-  border-radius: 25px;
-  font-size: 16px;
-  line-height: 45px;
+  border: none;
+  border-radius: 40rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-top: 20rpx;
+  box-shadow: 0 4rpx 12rpx var(--color-shadowDark);
+  transition: all 0.3s ease;
+}
+
+.transfer-btn:active {
+  transform: scale(0.98);
+}
+
+.transfer-btn:disabled {
+  background: #cccccc;
+  color: #666666;
+  box-shadow: none;
 }
 
 /* 其他功能 */
 .other-functions {
-  background-color: #fff;
+  background-color: var(--color-surface);
+  margin: 0 20rpx;
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 12rpx var(--color-shadow);
 }
 
 .function-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px;
-  border-bottom: 1px solid #e0e0e0;
+  padding: 30rpx 40rpx;
+  border-bottom: 1rpx solid var(--color-borderLight);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.function-item:last-child {
+  border-bottom: none;
+}
+
+.function-item:active {
+  background-color: var(--color-surfaceVariant);
 }
 
 .function-text {
-  font-size: 16px;
-  color: #333;
+  font-size: 28rpx;
+  color: var(--color-text);
+  font-weight: 500;
 }
 
 .arrow-right {
   color: #ccc;
-}
-.transfer-btn:disabled {
-  background-color: #cccccc;
-  color: #666666;
+  font-size: 24rpx;
 }
 </style>

@@ -22,7 +22,7 @@
 						<text class="edit-icon">📷</text>
 					</view>
 				</view>
-				<text class="avatar-tip">点击更换头像</text>
+				<text class="avatar-tip">点击更换头像（支持拍照和相册选择）</text>
 			</view>
 
 			<view class="form-section">
@@ -130,6 +130,8 @@
 </template>
 
 <script>
+import syncManager from '@/utils/sync.js'
+
 export default {
 	data() {
 		return {
@@ -150,6 +152,8 @@ export default {
 	},
 	onLoad() {
 		this.loadProfileData()
+		// 初始化同步管理器
+		syncManager.init()
 	},
 	methods: {
 		goBack() {
@@ -173,15 +177,262 @@ export default {
 		},
 
 		changeAvatar() {
-			uni.chooseImage({
-				count: 1,
-				sizeType: ['compressed'],
-				sourceType: ['album', 'camera'],
+			// 显示选择方式
+			uni.showActionSheet({
+				itemList: ['拍照', '从相册选择'],
 				success: (res) => {
-					this.profileData.avatar = res.tempFilePaths[0]
+					if (res.tapIndex === 0) {
+						// 拍照
+						this.takePhoto()
+					} else if (res.tapIndex === 1) {
+						// 从相册选择
+						this.chooseFromAlbum()
+					}
 				}
 			})
 		},
+
+		// 拍照功能
+		takePhoto() {
+			uni.chooseImage({
+				count: 1,
+				sizeType: ['compressed'],
+				sourceType: ['camera'],
+				success: (res) => {
+					this.handleImageSelected(res.tempFilePaths[0])
+				},
+				fail: (error) => {
+					console.error('拍照失败:', error)
+					uni.showToast({
+						title: '拍照失败，请重试',
+						icon: 'none'
+					})
+				}
+			})
+		},
+
+		// 从相册选择
+		chooseFromAlbum() {
+			uni.chooseImage({
+				count: 1,
+				sizeType: ['compressed'],
+				sourceType: ['album'],
+				success: (res) => {
+					this.handleImageSelected(res.tempFilePaths[0])
+				},
+				fail: (error) => {
+					console.error('选择图片失败:', error)
+					uni.showToast({
+						title: '选择图片失败，请重试',
+						icon: 'none'
+					})
+				}
+			})
+		},
+
+		// 处理选中的图片
+		async handleImageSelected(imagePath) {
+			// 显示加载提示
+			uni.showLoading({
+				title: '上传中...'
+			})
+
+			try {
+				// 上传头像到服务器
+				const uploadResult = await this.uploadAvatarToServer(imagePath)
+				
+				if (uploadResult.success) {
+					// 更新头像路径为服务器返回的URL
+					this.profileData.avatar = uploadResult.avatarUrl
+					
+					// 保存到本地存储和数据库
+					await this.saveAvatarToStorage(uploadResult.avatarUrl)
+					
+					// 隐藏加载提示
+					uni.hideLoading()
+					
+					// 显示成功提示
+					uni.showToast({
+						title: '头像更新成功',
+						icon: 'success',
+						duration: 1500
+					})
+				} else {
+					throw new Error(uploadResult.message || '上传失败')
+				}
+			} catch (error) {
+				console.error('头像上传失败:', error)
+				uni.hideLoading()
+				uni.showToast({
+					title: error.message || '头像上传失败',
+					icon: 'none'
+				})
+			}
+		},
+
+		// 上传头像到服务器
+		uploadAvatarToServer(imagePath) {
+			return new Promise((resolve, reject) => {
+				// 检查网络连接
+				uni.getNetworkType({
+					success: (networkRes) => {
+						if (networkRes.networkType === 'none') {
+							// 离线模式，先保存到本地，稍后同步
+							resolve({
+								success: true,
+								avatarUrl: imagePath,
+								isOffline: true
+							})
+							return
+						}
+
+						// 在线模式，上传到服务器
+						uni.uploadFile({
+							url: 'https://api.abchina.com/user/avatar',
+							filePath: imagePath,
+							name: 'avatar',
+							header: {
+								'Authorization': `Bearer ${uni.getStorageSync('token') || ''}`
+							},
+							success: (res) => {
+								try {
+									const data = JSON.parse(res.data)
+									if (data.code === 0) {
+										resolve({
+											success: true,
+											avatarUrl: data.data.avatarUrl,
+											isOffline: false
+										})
+									} else {
+										reject(new Error(data.message || '上传失败'))
+									}
+								} catch (parseError) {
+									reject(new Error('服务器响应格式错误'))
+								}
+							},
+							fail: (error) => {
+								console.error('上传失败:', error)
+								// 上传失败时，先保存到本地
+								resolve({
+									success: true,
+									avatarUrl: imagePath,
+									isOffline: true,
+									message: '网络异常，已保存到本地'
+								})
+							}
+						})
+					},
+					fail: () => {
+						// 无法获取网络状态，先保存到本地
+						resolve({
+							success: true,
+							avatarUrl: imagePath,
+							isOffline: true
+						})
+					}
+				})
+			})
+		},
+
+		// 保存头像到本地存储和数据库
+		async saveAvatarToStorage(avatarUrl) {
+			try {
+				// 获取当前用户信息
+				let userInfo = uni.getStorageSync('userInfo') || uni.getStorageSync('currentUser')
+				if (userInfo) {
+					// 更新头像路径
+					userInfo.avatar = avatarUrl
+					userInfo.avatarUpdateTime = new Date().toISOString()
+					
+					// 保存到本地存储
+					uni.setStorageSync('userInfo', userInfo)
+					uni.setStorageSync('currentUser', userInfo)
+					
+					// 更新本地数据库文件
+					await this.updateLocalDatabase(userInfo)
+					
+					// 如果在线，同步到服务器
+					if (!this.isOfflineMode) {
+						await this.syncToServer(userInfo)
+					}
+				}
+			} catch (error) {
+				console.error('保存头像失败:', error)
+				throw error
+			}
+		},
+
+		// 更新本地数据库
+		async updateLocalDatabase(userInfo) {
+			try {
+				// 读取本地用户数据库
+				const users = uni.getStorageSync('users') || []
+				
+				// 找到当前用户并更新头像
+				const userIndex = users.findIndex(user => 
+					user.id === userInfo.id || 
+					user.phone === userInfo.phone ||
+					user.username === userInfo.username
+				)
+				
+				if (userIndex !== -1) {
+					users[userIndex].avatar = userInfo.avatar
+					users[userIndex].avatarUpdateTime = userInfo.avatarUpdateTime
+					
+					// 保存更新后的用户数据
+					uni.setStorageSync('users', users)
+					
+					console.log('本地数据库更新成功:', userInfo.avatar)
+				}
+			} catch (error) {
+				console.error('更新本地数据库失败:', error)
+				throw error
+			}
+		},
+
+		// 同步到服务器
+		async syncToServer(userInfo) {
+			try {
+				// 调用API更新服务器端的用户信息
+				const response = await this.updateUserInfoAPI(userInfo)
+				if (response.success) {
+					console.log('服务器同步成功')
+				}
+			} catch (error) {
+				console.error('服务器同步失败:', error)
+				// 将同步失败的任务加入同步队列，稍后重试
+				syncManager.addSyncTask('updateAvatar', userInfo)
+			}
+		},
+
+		// 更新用户信息API
+		updateUserInfoAPI(userInfo) {
+			return new Promise((resolve, reject) => {
+				uni.request({
+					url: 'https://api.abchina.com/user/info',
+					method: 'PUT',
+					header: {
+						'Content-Type': 'application/json',
+						'Authorization': `Bearer ${uni.getStorageSync('token') || ''}`
+					},
+					data: {
+						avatar: userInfo.avatar,
+						avatarUpdateTime: userInfo.avatarUpdateTime
+					},
+					success: (res) => {
+						if (res.data.code === 0) {
+							resolve({ success: true, data: res.data.data })
+						} else {
+							reject(new Error(res.data.message || '更新失败'))
+						}
+					},
+					fail: (error) => {
+						reject(error)
+					}
+				})
+			})
+		},
+
 
 		onGenderChange(e) {
 			this.genderIndex = e.detail.value
@@ -192,15 +443,39 @@ export default {
 			this.profileData.birthDate = e.detail.value
 		},
 
-		saveProfile() {
+		async saveProfile() {
 			try {
+				uni.showLoading({
+					title: '保存中...'
+				})
+
 				let userInfo = uni.getStorageSync('userInfo') || uni.getStorageSync('currentUser')
 				if (userInfo) {
-					userInfo = { ...userInfo, ...this.profileData }
+					// 更新用户信息
+					userInfo = { 
+						...userInfo, 
+						...this.profileData,
+						lastUpdateTime: new Date().toISOString()
+					}
+					
+					// 保存到本地存储
 					uni.setStorageSync('userInfo', userInfo)
 					uni.setStorageSync('currentUser', userInfo)
+					
+					// 更新本地数据库
+					await this.updateLocalDatabase(userInfo)
+					
+					// 同步到服务器
+					try {
+						await this.syncProfileToServer(userInfo)
+						console.log('个人资料同步成功')
+					} catch (syncError) {
+						console.error('同步失败，已加入同步队列:', syncError)
+						syncManager.addSyncTask('updateProfile', userInfo)
+					}
 				}
 
+				uni.hideLoading()
 				uni.showToast({
 					title: '保存成功',
 					icon: 'success'
@@ -212,10 +487,24 @@ export default {
 
 			} catch (error) {
 				console.error('保存个人资料失败:', error)
+				uni.hideLoading()
 				uni.showToast({
 					title: '保存失败',
 					icon: 'none'
 				})
+			}
+		},
+
+		// 同步个人资料到服务器
+		async syncProfileToServer(userInfo) {
+			try {
+				const response = await this.updateUserInfoAPI(userInfo)
+				if (!response.success) {
+					throw new Error('同步失败')
+				}
+			} catch (error) {
+				console.error('同步个人资料失败:', error)
+				throw error
 			}
 		}
 	}

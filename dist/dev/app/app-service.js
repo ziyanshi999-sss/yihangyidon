@@ -44,13 +44,58 @@ if (uni.restoreGlobal) {
       username: null,
       phone: "13888888888",
       password: "123456",
+      transactionPassword: "123456",
+      balance: 5e4,
       nickname: "手机用户",
       email: "phone@example.com",
       idCard: "110101199001011234",
-      avatar: "",
+      avatar: "/static/avatars/phone_user_avatar.jpg",
       status: "active",
       createTime: "2024-01-01T08:00:00.000Z",
       lastLoginTime: "2024-01-15T10:30:00.000Z",
+      realName: "张三",
+      gender: "男",
+      birthDate: "1990-01-01",
+      address: "北京市朝阳区建国门外大街1号",
+      avatarUpdateTime: "2024-01-15T10:30:00.000Z",
+      lastUpdateTime: "2024-01-15T10:30:00.000Z",
+      securitySettings: {
+        biometricEnabled: true,
+        smsVerificationEnabled: true,
+        accountLockEnabled: true,
+        twoFactorEnabled: false,
+        securityNotificationsEnabled: true,
+        transactionLimit: 5e4,
+        passwordUpdateTime: "2024-01-01T00:00:00.000Z",
+        transactionPasswordUpdateTime: "2024-01-01T00:00:00.000Z",
+        securityQuestionsSet: false,
+        emergencyContactSet: false,
+        loginDevices: [
+          {
+            id: 1,
+            name: "iPhone 14",
+            lastLogin: "2024-01-15T14:30:00.000Z",
+            location: "北京市",
+            status: "active",
+            ip: "192.168.1.100",
+            deviceType: "mobile"
+          }
+        ],
+        securityEvents: [
+          {
+            id: 1,
+            type: "login",
+            description: "账户登录",
+            timestamp: "2024-01-15T14:30:00.000Z",
+            location: "北京市",
+            ip: "192.168.1.100",
+            status: "success"
+          }
+        ],
+        securityQuestions: [],
+        emergencyContact: null,
+        twoFactorSecret: null
+      },
       creditCards: [
         {
           cardNumber: "6222 8888 8888 8888",
@@ -80,13 +125,93 @@ if (uni.restoreGlobal) {
       username: "张小明",
       phone: "13999999999",
       password: "abc123",
+      transactionPassword: "654321",
+      balance: 12e4,
       nickname: "小明",
       email: "zhangxiaoming@example.com",
       idCard: "110101199202021456",
-      avatar: "",
+      avatar: "/static/avatars/zhangxiaoming_avatar.jpg",
       status: "active",
       createTime: "2024-01-02T09:15:00.000Z",
       lastLoginTime: "2024-01-15T14:20:00.000Z",
+      realName: "张小明",
+      gender: "男",
+      birthDate: "1992-02-02",
+      address: "上海市浦东新区陆家嘴环路1000号",
+      avatarUpdateTime: "2024-01-15T14:20:00.000Z",
+      lastUpdateTime: "2024-01-15T14:20:00.000Z",
+      securitySettings: {
+        biometricEnabled: true,
+        smsVerificationEnabled: true,
+        accountLockEnabled: true,
+        twoFactorEnabled: true,
+        securityNotificationsEnabled: true,
+        transactionLimit: 1e5,
+        passwordUpdateTime: "2024-01-10T00:00:00.000Z",
+        transactionPasswordUpdateTime: "2024-01-10T00:00:00.000Z",
+        securityQuestionsSet: true,
+        emergencyContactSet: true,
+        loginDevices: [
+          {
+            id: 1,
+            name: "iPhone 15 Pro",
+            lastLogin: "2024-01-15T14:20:00.000Z",
+            location: "上海市",
+            status: "active",
+            ip: "192.168.1.200",
+            deviceType: "mobile"
+          },
+          {
+            id: 2,
+            name: "MacBook Pro",
+            lastLogin: "2024-01-14T09:15:00.000Z",
+            location: "上海市",
+            status: "active",
+            ip: "192.168.1.201",
+            deviceType: "desktop"
+          }
+        ],
+        securityEvents: [
+          {
+            id: 1,
+            type: "login",
+            description: "账户登录",
+            timestamp: "2024-01-15T14:20:00.000Z",
+            location: "上海市",
+            ip: "192.168.1.200",
+            status: "success"
+          },
+          {
+            id: 2,
+            type: "password_change",
+            description: "修改登录密码",
+            timestamp: "2024-01-10T10:30:00.000Z",
+            location: "上海市",
+            ip: "192.168.1.201",
+            status: "success"
+          }
+        ],
+        securityQuestions: [
+          {
+            question: "您的小学名称是什么？",
+            answer: "实验小学"
+          },
+          {
+            question: "您的第一个宠物的名字是什么？",
+            answer: "小白"
+          },
+          {
+            question: "您最喜欢的颜色是什么？",
+            answer: "蓝色"
+          }
+        ],
+        emergencyContact: {
+          name: "张大明",
+          phone: "13800138000",
+          relationship: "父亲"
+        },
+        twoFactorSecret: "JBSWY3DPEHPK3PXP"
+      },
       creditCards: [
         {
           cardNumber: "6222 9999 9999 9999",
@@ -137,13 +262,85 @@ if (uni.restoreGlobal) {
       username: "李小红",
       phone: "13777777777",
       password: "password123",
+      transactionPassword: "789012",
+      balance: 8e4,
       nickname: "小红",
       email: "lixiaohong@example.com",
       idCard: "110101199303031789",
-      avatar: "",
+      avatar: "/static/avatars/lixiaohong_avatar.jpg",
       status: "active",
       createTime: "2024-01-03T16:45:00.000Z",
       lastLoginTime: "2024-01-14T11:10:00.000Z",
+      realName: "李小红",
+      gender: "女",
+      birthDate: "1993-03-03",
+      address: "广州市天河区珠江新城花城大道85号",
+      avatarUpdateTime: "2024-01-14T11:10:00.000Z",
+      lastUpdateTime: "2024-01-14T11:10:00.000Z",
+      securitySettings: {
+        biometricEnabled: false,
+        smsVerificationEnabled: true,
+        accountLockEnabled: false,
+        twoFactorEnabled: false,
+        securityNotificationsEnabled: false,
+        transactionLimit: 2e5,
+        passwordUpdateTime: "2023-12-01T00:00:00.000Z",
+        transactionPasswordUpdateTime: "2023-12-01T00:00:00.000Z",
+        securityQuestionsSet: false,
+        emergencyContactSet: false,
+        loginDevices: [
+          {
+            id: 1,
+            name: "Samsung Galaxy S24",
+            lastLogin: "2024-01-14T11:10:00.000Z",
+            location: "广州市",
+            status: "active",
+            ip: "192.168.1.300",
+            deviceType: "mobile"
+          },
+          {
+            id: 2,
+            name: "iPad Pro",
+            lastLogin: "2024-01-13T16:45:00.000Z",
+            location: "广州市",
+            status: "active",
+            ip: "192.168.1.301",
+            deviceType: "tablet"
+          },
+          {
+            id: 3,
+            name: "Dell Laptop",
+            lastLogin: "2024-01-12T08:30:00.000Z",
+            location: "广州市",
+            status: "active",
+            ip: "192.168.1.302",
+            deviceType: "desktop"
+          }
+        ],
+        securityEvents: [
+          {
+            id: 1,
+            type: "login",
+            description: "账户登录",
+            timestamp: "2024-01-14T11:10:00.000Z",
+            location: "广州市",
+            ip: "192.168.1.300",
+            status: "success"
+          },
+          {
+            id: 2,
+            type: "failed_login",
+            description: "登录失败",
+            timestamp: "2024-01-13T20:15:00.000Z",
+            location: "广州市",
+            ip: "192.168.1.303",
+            status: "failed"
+          }
+        ],
+        securityQuestions: [],
+        emergencyContact: null,
+        twoFactorSecret: null
+      },
       creditCards: [
         {
           cardNumber: "6222 6666 6666 6666",
@@ -623,7 +820,7 @@ if (uni.restoreGlobal) {
     }
     return target;
   };
-  const _sfc_main$l = {
+  const _sfc_main$o = {
     data() {
       return {
         loginType: "password",
@@ -740,7 +937,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$k(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$n(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "login-container" }, [
       vue.createCommentVNode(" 标题 "),
       vue.createElementVNode("view", { class: "title" }, "中国农业银行"),
@@ -802,7 +999,8 @@ if (uni.restoreGlobal) {
               {
                 type: "password",
                 "onUpdate:modelValue": _cache[3] || (_cache[3] = ($event) => $data.password = $event),
-                placeholder: "请输入登录密码",
+                placeholder: "请输入密码",
+                maxlength: "20",
                 required: ""
               },
               null,
@@ -810,8 +1008,7 @@ if (uni.restoreGlobal) {
               /* NEED_PATCH */
             ), [
               [vue.vModelText, $data.password]
-            ]),
-            vue.createElementVNode("view", { class: "password-placeholder" })
+            ])
           ])) : vue.createCommentVNode("v-if", true),
           $data.loginType === "code" ? (vue.openBlock(), vue.createElementBlock("view", {
             key: 1,
@@ -871,8 +1068,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesDengluLogin = /* @__PURE__ */ _export_sfc(_sfc_main$l, [["render", _sfc_render$k], ["__scopeId", "data-v-6f56e16f"], ["__file", "E:/项目/yihangyidon/src/pages/denglu/login.vue"]]);
-  const _sfc_main$k = {
+  const PagesDengluLogin = /* @__PURE__ */ _export_sfc(_sfc_main$o, [["render", _sfc_render$n], ["__scopeId", "data-v-6f56e16f"], ["__file", "E:/项目/yihangyidon/src/pages/denglu/login.vue"]]);
+  const _sfc_main$n = {
     data() {
       return {
         form: {
@@ -1066,7 +1263,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$j(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$m(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "register-container" }, [
       vue.createCommentVNode(" 标题 "),
       vue.createElementVNode("view", { class: "title" }, "注册账户"),
@@ -1259,8 +1456,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesRegisterRegister = /* @__PURE__ */ _export_sfc(_sfc_main$k, [["render", _sfc_render$j], ["__scopeId", "data-v-97bb96ad"], ["__file", "E:/项目/yihangyidon/src/pages/register/register.vue"]]);
-  const _sfc_main$j = {
+  const PagesRegisterRegister = /* @__PURE__ */ _export_sfc(_sfc_main$n, [["render", _sfc_render$m], ["__scopeId", "data-v-97bb96ad"], ["__file", "E:/项目/yihangyidon/src/pages/register/register.vue"]]);
+  const _sfc_main$m = {
     data() {
       return {
         isLoggedIn: false,
@@ -1440,7 +1637,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$i(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$l(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "home-container" }, [
       vue.createCommentVNode(" 顶部搜索栏 "),
       vue.createElementVNode("view", { class: "search-header" }, [
@@ -1643,7 +1840,7 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesIndexIndex = /* @__PURE__ */ _export_sfc(_sfc_main$j, [["render", _sfc_render$i], ["__scopeId", "data-v-83a5a03c"], ["__file", "E:/项目/yihangyidon/src/pages/index/index.vue"]]);
+  const PagesIndexIndex = /* @__PURE__ */ _export_sfc(_sfc_main$m, [["render", _sfc_render$l], ["__scopeId", "data-v-83a5a03c"], ["__file", "E:/项目/yihangyidon/src/pages/index/index.vue"]]);
   const scriptRel = "modulepreload";
   const assetsURL = function(dep) {
     return "/" + dep;
@@ -1693,229 +1890,169 @@ if (uni.restoreGlobal) {
       }
     });
   };
-  class ThemeManager {
-    constructor() {
-      this.currentTheme = "light";
-      this.themeList = [
-        "light",
-        "dark",
-        "blue",
-        "green",
-        "purple",
-        "orange",
-        "pink",
-        "red",
-        "teal",
-        "indigo",
-        "amber",
-        "cyan"
-      ];
-      this.themes = {
-        light: {
-          "--bg-color": "#f5f5f5",
-          "--text-color": "#333333",
-          "--card-bg": "#ffffff",
-          "--border-color": "#eeeeee",
-          "--primary-color": "#2e7d32",
-          "--secondary-color": "#4caf50",
-          "--danger-color": "#e74c3c",
-          "--warning-color": "#f39c12",
-          "--success-color": "#27ae60"
-        },
-        dark: {
-          "--bg-color": "#1a1a1a",
-          "--text-color": "#ffffff",
-          "--card-bg": "#2d2d2d",
-          "--border-color": "#404040",
-          "--primary-color": "#4caf50",
-          "--secondary-color": "#66bb6a",
-          "--danger-color": "#ef5350",
-          "--warning-color": "#ffa726",
-          "--success-color": "#66bb6a"
-        },
-        blue: {
-          "--bg-color": "#e3f2fd",
-          "--text-color": "#1565c0",
-          "--card-bg": "#ffffff",
-          "--border-color": "#bbdefb",
-          "--primary-color": "#1976d2",
-          "--secondary-color": "#42a5f5",
-          "--danger-color": "#f44336",
-          "--warning-color": "#ff9800",
-          "--success-color": "#4caf50"
-        },
-        green: {
-          "--bg-color": "#e8f5e8",
-          "--text-color": "#2e7d32",
-          "--card-bg": "#ffffff",
-          "--border-color": "#c8e6c9",
-          "--primary-color": "#4caf50",
-          "--secondary-color": "#66bb6a",
-          "--danger-color": "#f44336",
-          "--warning-color": "#ff9800",
-          "--success-color": "#4caf50"
-        },
-        purple: {
-          "--bg-color": "#f3e5f5",
-          "--text-color": "#7b1fa2",
-          "--card-bg": "#ffffff",
-          "--border-color": "#e1bee7",
-          "--primary-color": "#9c27b0",
-          "--secondary-color": "#ba68c8",
-          "--danger-color": "#f44336",
-          "--warning-color": "#ff9800",
-          "--success-color": "#4caf50"
-        },
-        orange: {
-          "--bg-color": "#fff3e0",
-          "--text-color": "#e65100",
-          "--card-bg": "#ffffff",
-          "--border-color": "#ffcc02",
-          "--primary-color": "#ff9800",
-          "--secondary-color": "#ffb74d",
-          "--danger-color": "#f44336",
-          "--warning-color": "#ff9800",
-          "--success-color": "#4caf50"
-        },
-        pink: {
-          "--bg-color": "#fce4ec",
-          "--text-color": "#c2185b",
-          "--card-bg": "#ffffff",
-          "--border-color": "#f8bbd9",
-          "--primary-color": "#e91e63",
-          "--secondary-color": "#f06292",
-          "--danger-color": "#f44336",
-          "--warning-color": "#ff9800",
-          "--success-color": "#4caf50"
-        },
-        red: {
-          "--bg-color": "#ffebee",
-          "--text-color": "#c62828",
-          "--card-bg": "#ffffff",
-          "--border-color": "#ffcdd2",
-          "--primary-color": "#f44336",
-          "--secondary-color": "#ef5350",
-          "--danger-color": "#d32f2f",
-          "--warning-color": "#ff9800",
-          "--success-color": "#4caf50"
-        },
-        teal: {
-          "--bg-color": "#e0f2f1",
-          "--text-color": "#00695c",
-          "--card-bg": "#ffffff",
-          "--border-color": "#b2dfdb",
-          "--primary-color": "#009688",
-          "--secondary-color": "#4db6ac",
-          "--danger-color": "#f44336",
-          "--warning-color": "#ff9800",
-          "--success-color": "#4caf50"
-        },
-        indigo: {
-          "--bg-color": "#e8eaf6",
-          "--text-color": "#283593",
-          "--card-bg": "#ffffff",
-          "--border-color": "#c5cae9",
-          "--primary-color": "#3f51b5",
-          "--secondary-color": "#7986cb",
-          "--danger-color": "#f44336",
-          "--warning-color": "#ff9800",
-          "--success-color": "#4caf50"
-        },
-        amber: {
-          "--bg-color": "#fff8e1",
-          "--text-color": "#f57f17",
-          "--card-bg": "#ffffff",
-          "--border-color": "#ffecb3",
-          "--primary-color": "#ffc107",
-          "--secondary-color": "#ffd54f",
-          "--danger-color": "#f44336",
-          "--warning-color": "#ff9800",
-          "--success-color": "#4caf50"
-        },
-        cyan: {
-          "--bg-color": "#e0f7fa",
-          "--text-color": "#006064",
-          "--card-bg": "#ffffff",
-          "--border-color": "#b2ebf2",
-          "--primary-color": "#00bcd4",
-          "--secondary-color": "#4dd0e1",
-          "--danger-color": "#f44336",
-          "--warning-color": "#ff9800",
-          "--success-color": "#4caf50"
-        }
-      };
+  const THEME_KEY = "app_theme";
+  const themes$1 = {
+    light: {
+      id: "light",
+      name: "浅色主题",
+      colors: {
+        primary: "#4caf50",
+        primaryDark: "#2e7d32",
+        background: "#f5f5f5",
+        surface: "#ffffff",
+        surfaceVariant: "#f8f9fa",
+        text: "#333333",
+        textSecondary: "#666666",
+        border: "#e0e0e0",
+        borderLight: "#f0f0f0",
+        success: "#4caf50",
+        warning: "#ff9800",
+        error: "#f44336",
+        info: "#2196f3"
+      }
+    },
+    dark: {
+      id: "dark",
+      name: "深色主题",
+      colors: {
+        primary: "#66bb6a",
+        primaryDark: "#4caf50",
+        background: "#121212",
+        surface: "#1e1e1e",
+        surfaceVariant: "#2d2d2d",
+        text: "#ffffff",
+        textSecondary: "#b3b3b3",
+        border: "#333333",
+        borderLight: "#2d2d2d",
+        success: "#66bb6a",
+        warning: "#ffb74d",
+        error: "#f44336",
+        info: "#42a5f5"
+      }
+    },
+    blue: {
+      id: "blue",
+      name: "蓝色主题",
+      colors: {
+        primary: "#2196f3",
+        primaryDark: "#1976d2",
+        background: "#f3f7ff",
+        surface: "#ffffff",
+        surfaceVariant: "#f8faff",
+        text: "#333333",
+        textSecondary: "#666666",
+        border: "#e3f2fd",
+        borderLight: "#f0f7ff",
+        success: "#4caf50",
+        warning: "#ff9800",
+        error: "#f44336",
+        info: "#2196f3"
+      }
+    },
+    purple: {
+      id: "purple",
+      name: "紫色主题",
+      colors: {
+        primary: "#9c27b0",
+        primaryDark: "#7b1fa2",
+        background: "#faf5ff",
+        surface: "#ffffff",
+        surfaceVariant: "#f8f4ff",
+        text: "#333333",
+        textSecondary: "#666666",
+        border: "#e1bee7",
+        borderLight: "#f3e5f5",
+        success: "#4caf50",
+        warning: "#ff9800",
+        error: "#f44336",
+        info: "#2196f3"
+      }
     }
-    // 初始化主题
-    init() {
+  };
+  class SimpleThemeManager {
+    constructor() {
+      this.currentTheme = this.getStoredTheme();
+      this.listeners = [];
+    }
+    // 获取存储的主题
+    getStoredTheme() {
       try {
-        const savedTheme = uni.getStorageSync("appTheme");
-        if (savedTheme && this.themes[savedTheme]) {
-          this.currentTheme = savedTheme;
-          this.applyTheme(savedTheme);
-        }
+        return uni.getStorageSync(THEME_KEY) || "light";
       } catch (error) {
-        formatAppLog("error", "at utils/theme.js:154", "初始化主题失败:", error);
+        formatAppLog("error", "at utils/simple-theme.js:96", "获取主题失败:", error);
+        return "light";
+      }
+    }
+    // 存储主题
+    setStoredTheme(themeId) {
+      try {
+        uni.setStorageSync(THEME_KEY, themeId);
+      } catch (error) {
+        formatAppLog("error", "at utils/simple-theme.js:106", "存储主题失败:", error);
       }
     }
     // 获取当前主题
     getCurrentTheme() {
+      return themes$1[this.currentTheme] || themes$1.light;
+    }
+    // 获取当前主题ID
+    getCurrentThemeId() {
       return this.currentTheme;
     }
     // 切换主题
-    toggleTheme() {
-      const currentIndex = this.themeList.indexOf(this.currentTheme);
-      const nextIndex = (currentIndex + 1) % this.themeList.length;
-      const newTheme = this.themeList[nextIndex];
-      this.setTheme(newTheme);
-      return newTheme;
-    }
-    // 设置主题
-    setTheme(theme) {
-      if (!this.themes[theme]) {
-        formatAppLog("error", "at utils/theme.js:175", "不支持的主题:", theme);
-        return false;
+    switchTheme(themeId) {
+      if (themes$1[themeId]) {
+        this.currentTheme = themeId;
+        this.setStoredTheme(themeId);
+        this.notifyListeners(themes$1[themeId]);
+        formatAppLog("log", "at utils/simple-theme.js:126", "主题已切换为:", themes$1[themeId].name);
+      } else {
+        formatAppLog("error", "at utils/simple-theme.js:128", "主题不存在:", themeId);
       }
-      this.currentTheme = theme;
-      try {
-        uni.setStorageSync("appTheme", theme);
-      } catch (error) {
-        formatAppLog("error", "at utils/theme.js:185", "保存主题失败:", error);
+    }
+    // 获取所有主题
+    getAllThemes() {
+      return Object.values(themes$1);
+    }
+    // 添加监听器
+    addThemeListener(callback) {
+      this.listeners.push(callback);
+    }
+    // 移除监听器
+    removeThemeListener(callback) {
+      const index = this.listeners.indexOf(callback);
+      if (index > -1) {
+        this.listeners.splice(index, 1);
       }
-      this.applyTheme(theme);
-      uni.$emit("themeChanged", theme);
-      return true;
     }
-    // 应用主题
-    applyTheme(theme) {
-      this.themes[theme];
-    }
-    // 获取主题变量
-    getThemeVar(varName) {
-      const themeVars = this.themes[this.currentTheme];
-      return themeVars[varName] || "";
-    }
-    // 获取所有主题变量
-    getThemeVars() {
-      return this.themes[this.currentTheme];
+    // 通知监听器
+    notifyListeners(theme) {
+      this.listeners.forEach((callback) => {
+        try {
+          callback(theme);
+        } catch (error) {
+          formatAppLog("error", "at utils/simple-theme.js:156", "主题监听器执行失败:", error);
+        }
+      });
     }
   }
-  const themeManager = new ThemeManager();
-  const _sfc_main$i = {
+  const themeManager$1 = new SimpleThemeManager();
+  const _sfc_main$l = {
     data() {
       return {
         userInfo: null,
-        currentTheme: "light"
-        // 默认浅色主题
+        currentTheme: themeManager$1.getCurrentTheme()
+        // 获取当前主题
       };
     },
     onShow() {
       try {
         if (!forceCheckLogin()) {
-          formatAppLog("log", "at pages/user/user.vue:168", "个人中心：用户未登录，跳转到登录页面");
+          formatAppLog("log", "at pages/user/user.vue:171", "个人中心：用户未登录，跳转到登录页面");
           uni.reLaunch({
             url: "/pages/denglu/login",
             fail: (error) => {
-              formatAppLog("error", "at pages/user/user.vue:172", "个人中心跳转失败:", error);
+              formatAppLog("error", "at pages/user/user.vue:175", "个人中心跳转失败:", error);
               uni.navigateTo({ url: "/pages/denglu/login" });
             }
           });
@@ -1924,7 +2061,7 @@ if (uni.restoreGlobal) {
         this.checkLoginStatus();
         this.loadTheme();
       } catch (error) {
-        formatAppLog("error", "at pages/user/user.vue:182", "个人中心onShow检查失败:", error);
+        formatAppLog("error", "at pages/user/user.vue:185", "个人中心onShow检查失败:", error);
         uni.reLaunch({
           url: "/pages/denglu/login",
           fail: () => {
@@ -1933,7 +2070,17 @@ if (uni.restoreGlobal) {
         });
       }
     },
+    mounted() {
+      themeManager$1.addThemeListener(this.onThemeChanged);
+    },
+    beforeDestroy() {
+      themeManager$1.removeThemeListener(this.onThemeChanged);
+    },
     methods: {
+      // 主题变化回调
+      onThemeChanged(theme) {
+        this.currentTheme = theme;
+      },
       // 检查登录状态
       checkLoginStatus() {
         const userInfo = getUserInfo();
@@ -2026,7 +2173,7 @@ if (uni.restoreGlobal) {
             confirmText: "确定"
           });
         } catch (error) {
-          formatAppLog("error", "at pages/user/user.vue:291", "查看退出记录失败:", error);
+          formatAppLog("error", "at pages/user/user.vue:309", "查看退出记录失败:", error);
           uni.showToast({
             title: "查看记录失败",
             icon: "none"
@@ -2049,7 +2196,7 @@ if (uni.restoreGlobal) {
               const { users: importedUsers } = module;
               this.displayCreditCards(importedUsers);
             }).catch((error) => {
-              formatAppLog("error", "at pages/user/user.vue:321", "导入用户数据失败:", error);
+              formatAppLog("error", "at pages/user/user.vue:339", "导入用户数据失败:", error);
               uni.showToast({
                 title: "获取数据失败",
                 icon: "none"
@@ -2059,7 +2206,7 @@ if (uni.restoreGlobal) {
           }
           this.displayCreditCards(users2);
         } catch (error) {
-          formatAppLog("error", "at pages/user/user.vue:332", "获取信用卡信息失败:", error);
+          formatAppLog("error", "at pages/user/user.vue:350", "获取信用卡信息失败:", error);
           uni.showToast({
             title: "获取数据失败",
             icon: "none"
@@ -2149,40 +2296,59 @@ if (uni.restoreGlobal) {
       },
       // 加载主题设置
       loadTheme() {
-        themeManager.init();
-        this.currentTheme = themeManager.getCurrentTheme();
+        this.currentTheme = themeManager$1.getCurrentTheme();
       },
       // 获取主题显示名称
       getThemeDisplayName(theme) {
+        if (theme && typeof theme === "object" && theme.name) {
+          return theme.name;
+        }
         const themeNames = {
           "light": "浅色主题",
           "dark": "深色主题",
           "blue": "蓝色主题",
-          "green": "绿色主题",
-          "purple": "紫色主题",
-          "orange": "橙色主题",
-          "pink": "粉色主题",
-          "red": "红色主题",
-          "teal": "青色主题",
-          "indigo": "靛蓝主题",
-          "amber": "琥珀主题",
-          "cyan": "青色主题"
+          "purple": "紫色主题"
         };
-        return themeNames[theme] || theme;
+        return themeNames[theme] || "浅色主题";
       },
       // 切换主题
       toggleTheme() {
-        const newTheme = themeManager.toggleTheme();
+        const themes2 = themeManager$1.getAllThemes();
+        const currentIndex = themes2.findIndex((theme) => theme.id === this.currentTheme.id);
+        const nextIndex = (currentIndex + 1) % themes2.length;
+        const newTheme = themes2[nextIndex];
+        themeManager$1.switchTheme(newTheme.id);
         this.currentTheme = newTheme;
         uni.showToast({
-          title: `已切换到${this.getThemeDisplayName(newTheme)}`,
+          title: `已切换到${newTheme.name}`,
           icon: "success",
           duration: 1500
+        });
+      },
+      // 查看头像
+      viewAvatar() {
+        if (!this.userInfo || !this.userInfo.avatar) {
+          uni.showToast({
+            title: "暂无头像",
+            icon: "none"
+          });
+          return;
+        }
+        uni.previewImage({
+          urls: [this.userInfo.avatar],
+          current: this.userInfo.avatar,
+          fail: (error) => {
+            formatAppLog("error", "at pages/user/user.vue:510", "预览头像失败:", error);
+            uni.showToast({
+              title: "预览失败",
+              icon: "none"
+            });
+          }
         });
       }
     }
   };
-  function _sfc_render$h(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$k(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "user-page" }, [
       vue.createCommentVNode(" 顶部背景 "),
       vue.createElementVNode("view", { class: "header-bg" }),
@@ -2193,11 +2359,17 @@ if (uni.restoreGlobal) {
       }, [
         vue.createElementVNode("view", { class: "user-info" }, [
           vue.createElementVNode("view", { class: "avatar-section" }, [
-            vue.createElementVNode("view", { class: "avatar" }, [
+            vue.createElementVNode("view", {
+              class: "avatar",
+              onClick: _cache[0] || (_cache[0] = (...args) => $options.viewAvatar && $options.viewAvatar(...args))
+            }, [
               vue.createElementVNode("image", {
                 src: $data.userInfo.avatar || "/static/default-avatar.png",
                 mode: "aspectFill"
-              }, null, 8, ["src"])
+              }, null, 8, ["src"]),
+              vue.createElementVNode("view", { class: "avatar-view-overlay" }, [
+                vue.createElementVNode("text", { class: "view-icon" }, "👁️")
+              ])
             ]),
             vue.createElementVNode("view", { class: "user-details" }, [
               vue.createElementVNode(
@@ -2226,7 +2398,7 @@ if (uni.restoreGlobal) {
               vue.createElementVNode("text", { class: "login-subtitle" }, "请登录您的账户"),
               vue.createElementVNode("button", {
                 class: "login-btn",
-                onClick: _cache[0] || (_cache[0] = (...args) => $options.goToLogin && $options.goToLogin(...args))
+                onClick: _cache[1] || (_cache[1] = (...args) => $options.goToLogin && $options.goToLogin(...args))
               }, "立即登录")
             ])
           ])
@@ -2242,28 +2414,28 @@ if (uni.restoreGlobal) {
         vue.createElementVNode("view", { class: "function-grid" }, [
           vue.createElementVNode("view", {
             class: "function-item",
-            onClick: _cache[1] || (_cache[1] = (...args) => $options.goToTransfer && $options.goToTransfer(...args))
+            onClick: _cache[2] || (_cache[2] = (...args) => $options.goToTransfer && $options.goToTransfer(...args))
           }, [
             vue.createElementVNode("view", { class: "function-icon transfer-icon" }, "💳"),
             vue.createElementVNode("text", { class: "function-text" }, "转账")
           ]),
           vue.createElementVNode("view", {
             class: "function-item",
-            onClick: _cache[2] || (_cache[2] = (...args) => $options.goToPayment && $options.goToPayment(...args))
+            onClick: _cache[3] || (_cache[3] = (...args) => $options.goToPayment && $options.goToPayment(...args))
           }, [
             vue.createElementVNode("view", { class: "function-icon payment-icon" }, "💰"),
             vue.createElementVNode("text", { class: "function-text" }, "缴费")
           ]),
           vue.createElementVNode("view", {
             class: "function-item",
-            onClick: _cache[3] || (_cache[3] = (...args) => $options.goToInvestment && $options.goToInvestment(...args))
+            onClick: _cache[4] || (_cache[4] = (...args) => $options.goToInvestment && $options.goToInvestment(...args))
           }, [
             vue.createElementVNode("view", { class: "function-icon investment-icon" }, "📈"),
             vue.createElementVNode("text", { class: "function-text" }, "理财")
           ]),
           vue.createElementVNode("view", {
             class: "function-item",
-            onClick: _cache[4] || (_cache[4] = (...args) => $options.goToCredit && $options.goToCredit(...args))
+            onClick: _cache[5] || (_cache[5] = (...args) => $options.goToCredit && $options.goToCredit(...args))
           }, [
             vue.createElementVNode("view", { class: "function-icon credit-icon" }, "💳"),
             vue.createElementVNode("text", { class: "function-text" }, "信用卡")
@@ -2281,7 +2453,7 @@ if (uni.restoreGlobal) {
           vue.createElementVNode("view", { class: "menu-list" }, [
             vue.createElementVNode("view", {
               class: "menu-item",
-              onClick: _cache[5] || (_cache[5] = (...args) => $options.goToAccount && $options.goToAccount(...args))
+              onClick: _cache[6] || (_cache[6] = (...args) => $options.goToAccount && $options.goToAccount(...args))
             }, [
               vue.createElementVNode("view", { class: "menu-left" }, [
                 vue.createElementVNode("text", { class: "menu-icon" }, "🏦"),
@@ -2291,7 +2463,7 @@ if (uni.restoreGlobal) {
             ]),
             vue.createElementVNode("view", {
               class: "menu-item",
-              onClick: _cache[6] || (_cache[6] = (...args) => $options.goToCards && $options.goToCards(...args))
+              onClick: _cache[7] || (_cache[7] = (...args) => $options.goToCards && $options.goToCards(...args))
             }, [
               vue.createElementVNode("view", { class: "menu-left" }, [
                 vue.createElementVNode("text", { class: "menu-icon" }, "💳"),
@@ -2301,7 +2473,7 @@ if (uni.restoreGlobal) {
             ]),
             vue.createElementVNode("view", {
               class: "menu-item",
-              onClick: _cache[7] || (_cache[7] = (...args) => $options.goToTransactions && $options.goToTransactions(...args))
+              onClick: _cache[8] || (_cache[8] = (...args) => $options.goToTransactions && $options.goToTransactions(...args))
             }, [
               vue.createElementVNode("view", { class: "menu-left" }, [
                 vue.createElementVNode("text", { class: "menu-icon" }, "📊"),
@@ -2317,7 +2489,7 @@ if (uni.restoreGlobal) {
           vue.createElementVNode("view", { class: "menu-list" }, [
             vue.createElementVNode("view", {
               class: "menu-item",
-              onClick: _cache[8] || (_cache[8] = (...args) => $options.goToProfile && $options.goToProfile(...args))
+              onClick: _cache[9] || (_cache[9] = (...args) => $options.goToProfile && $options.goToProfile(...args))
             }, [
               vue.createElementVNode("view", { class: "menu-left" }, [
                 vue.createElementVNode("text", { class: "menu-icon" }, "👤"),
@@ -2327,7 +2499,7 @@ if (uni.restoreGlobal) {
             ]),
             vue.createElementVNode("view", {
               class: "menu-item",
-              onClick: _cache[9] || (_cache[9] = (...args) => $options.goToSecurity && $options.goToSecurity(...args))
+              onClick: _cache[10] || (_cache[10] = (...args) => $options.goToSecurity && $options.goToSecurity(...args))
             }, [
               vue.createElementVNode("view", { class: "menu-left" }, [
                 vue.createElementVNode("text", { class: "menu-icon" }, "🔒"),
@@ -2337,7 +2509,7 @@ if (uni.restoreGlobal) {
             ]),
             vue.createElementVNode("view", {
               class: "menu-item theme-item",
-              onClick: _cache[10] || (_cache[10] = (...args) => $options.toggleTheme && $options.toggleTheme(...args))
+              onClick: _cache[11] || (_cache[11] = (...args) => $options.toggleTheme && $options.toggleTheme(...args))
             }, [
               vue.createElementVNode("view", { class: "menu-left" }, [
                 vue.createElementVNode("text", { class: "menu-icon" }, "🎨"),
@@ -2362,7 +2534,7 @@ if (uni.restoreGlobal) {
           vue.createElementVNode("view", { class: "menu-list" }, [
             vue.createElementVNode("view", {
               class: "menu-item",
-              onClick: _cache[11] || (_cache[11] = (...args) => $options.goToHelp && $options.goToHelp(...args))
+              onClick: _cache[12] || (_cache[12] = (...args) => $options.goToHelp && $options.goToHelp(...args))
             }, [
               vue.createElementVNode("view", { class: "menu-left" }, [
                 vue.createElementVNode("text", { class: "menu-icon" }, "❓"),
@@ -2372,7 +2544,7 @@ if (uni.restoreGlobal) {
             ]),
             vue.createElementVNode("view", {
               class: "menu-item",
-              onClick: _cache[12] || (_cache[12] = (...args) => $options.goToContact && $options.goToContact(...args))
+              onClick: _cache[13] || (_cache[13] = (...args) => $options.goToContact && $options.goToContact(...args))
             }, [
               vue.createElementVNode("view", { class: "menu-left" }, [
                 vue.createElementVNode("text", { class: "menu-icon" }, "📞"),
@@ -2382,7 +2554,7 @@ if (uni.restoreGlobal) {
             ]),
             vue.createElementVNode("view", {
               class: "menu-item",
-              onClick: _cache[13] || (_cache[13] = (...args) => $options.viewLogoutHistory && $options.viewLogoutHistory(...args))
+              onClick: _cache[14] || (_cache[14] = (...args) => $options.viewLogoutHistory && $options.viewLogoutHistory(...args))
             }, [
               vue.createElementVNode("view", { class: "menu-left" }, [
                 vue.createElementVNode("text", { class: "menu-icon" }, "📋"),
@@ -2396,15 +2568,15 @@ if (uni.restoreGlobal) {
         vue.createElementVNode("view", { class: "logout-section" }, [
           vue.createElementVNode("button", {
             class: "logout-btn",
-            onClick: _cache[14] || (_cache[14] = (...args) => $options.handleLogout && $options.handleLogout(...args))
+            onClick: _cache[15] || (_cache[15] = (...args) => $options.handleLogout && $options.handleLogout(...args))
           }, "退出登录")
         ])
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesUserUser = /* @__PURE__ */ _export_sfc(_sfc_main$i, [["render", _sfc_render$h], ["__scopeId", "data-v-99b0ba47"], ["__file", "E:/项目/yihangyidon/src/pages/user/user.vue"]]);
+  const PagesUserUser = /* @__PURE__ */ _export_sfc(_sfc_main$l, [["render", _sfc_render$k], ["__scopeId", "data-v-99b0ba47"], ["__file", "E:/项目/yihangyidon/src/pages/user/user.vue"]]);
   const _imports_0$1 = "/static/tabbar/service.png";
-  const _sfc_main$h = {
+  const _sfc_main$k = {
     data() {
       return {
         hideAmount: false,
@@ -2541,7 +2713,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$g(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$j(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "wealth-container" }, [
       vue.createCommentVNode(" 资产概览轮播（图片版） "),
       vue.createElementVNode("view", { class: "asset-swiper-wrap" }, [
@@ -3046,8 +3218,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesWealthWealth = /* @__PURE__ */ _export_sfc(_sfc_main$h, [["render", _sfc_render$g], ["__scopeId", "data-v-a00d3a3e"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/wealth.vue"]]);
-  const _sfc_main$g = {
+  const PagesWealthWealth = /* @__PURE__ */ _export_sfc(_sfc_main$k, [["render", _sfc_render$j], ["__scopeId", "data-v-a00d3a3e"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/wealth.vue"]]);
+  const _sfc_main$j = {
     name: "LifePage",
     data() {
       return {
@@ -3564,7 +3736,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$f(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$i(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "life-page" }, [
       vue.createCommentVNode(" 头部标题区域 "),
       vue.createElementVNode("view", { class: "header-section" }, [
@@ -3875,7 +4047,7 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesLifeLife = /* @__PURE__ */ _export_sfc(_sfc_main$g, [["render", _sfc_render$f], ["__scopeId", "data-v-980f0516"], ["__file", "E:/项目/yihangyidon/src/pages/life/life.vue"]]);
+  const PagesLifeLife = /* @__PURE__ */ _export_sfc(_sfc_main$j, [["render", _sfc_render$i], ["__scopeId", "data-v-980f0516"], ["__file", "E:/项目/yihangyidon/src/pages/life/life.vue"]]);
   const SILICONFLOW_API_KEY = "sk-fkzxlpblcjigbzitanooofmnfmvvedobfdvvxqdbbdodntdt";
   const API_BASE_URL = "https://api.siliconflow.cn/v1";
   const sessionHistory = {};
@@ -4057,7 +4229,7 @@ if (uni.restoreGlobal) {
   };
   const _imports_0 = "/static/wealth/aiavatar.png";
   const _imports_1 = "/static/wealth/useravatar.jpg";
-  const _sfc_main$f = {
+  const _sfc_main$i = {
     data() {
       return {
         draft: "",
@@ -4506,7 +4678,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$e(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$h(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "chat-page" }, [
       vue.createElementVNode("view", { class: "chat-header" }, [
         vue.createElementVNode("text", { class: "title" }, "AI 智能客服"),
@@ -4688,7 +4860,7 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesServiceChat = /* @__PURE__ */ _export_sfc(_sfc_main$f, [["render", _sfc_render$e], ["__scopeId", "data-v-e19cce9b"], ["__file", "E:/项目/yihangyidon/src/pages/service/chat.vue"]]);
+  const PagesServiceChat = /* @__PURE__ */ _export_sfc(_sfc_main$i, [["render", _sfc_render$h], ["__scopeId", "data-v-e19cce9b"], ["__file", "E:/项目/yihangyidon/src/pages/service/chat.vue"]]);
   const BASE_URL = "https://api.abchina.com";
   const TIMEOUT = 1e4;
   const requestInterceptor = (config) => {
@@ -4792,7 +4964,613 @@ if (uni.restoreGlobal) {
       });
     }
   };
-  const _sfc_main$e = {
+  function getUserBalance() {
+    return new Promise((resolve, reject) => {
+      try {
+        const userInfo = getUserInfo();
+        if (!userInfo) {
+          reject(new Error("用户未登录"));
+          return;
+        }
+        const balance = userInfo.balance || 0;
+        formatAppLog("log", "at api/balance.js:18", "获取用户余额:", balance);
+        resolve(balance);
+      } catch (error) {
+        formatAppLog("error", "at api/balance.js:21", "获取用户余额失败:", error);
+        reject(error);
+      }
+    });
+  }
+  function deductBalance(amount, description = "转账支出") {
+    return new Promise((resolve, reject) => {
+      try {
+        const userInfo = getUserInfo();
+        if (!userInfo) {
+          reject(new Error("用户未登录"));
+          return;
+        }
+        const currentBalance = userInfo.balance || 0;
+        if (currentBalance < amount) {
+          resolve({
+            success: false,
+            newBalance: currentBalance,
+            message: "余额不足，无法完成转账"
+          });
+          return;
+        }
+        const newBalance = currentBalance - amount;
+        userInfo.balance = newBalance;
+        userInfo.lastUpdateTime = (/* @__PURE__ */ new Date()).toISOString();
+        uni.setStorageSync("userInfo", userInfo);
+        uni.setStorageSync("currentUser", userInfo);
+        updateUserBalanceInDatabase(userInfo);
+        addTransactionRecord({
+          type: "expense",
+          amount,
+          description,
+          balance: newBalance,
+          timestamp: (/* @__PURE__ */ new Date()).toISOString()
+        });
+        formatAppLog("log", "at api/balance.js:75", `余额扣除成功: ${amount}元，剩余余额: ${newBalance}元`);
+        resolve({
+          success: true,
+          newBalance,
+          message: "转账成功"
+        });
+      } catch (error) {
+        formatAppLog("error", "at api/balance.js:84", "扣除余额失败:", error);
+        reject(error);
+      }
+    });
+  }
+  function checkBalanceSufficient(amount) {
+    return new Promise((resolve, reject) => {
+      try {
+        const userInfo = getUserInfo();
+        if (!userInfo) {
+          reject(new Error("用户未登录"));
+          return;
+        }
+        const currentBalance = userInfo.balance || 0;
+        const isSufficient = currentBalance >= amount;
+        formatAppLog("log", "at api/balance.js:159", `余额检查: 当前余额${currentBalance}元，需要${amount}元，是否足够: ${isSufficient}`);
+        resolve(isSufficient);
+      } catch (error) {
+        formatAppLog("error", "at api/balance.js:163", "检查余额失败:", error);
+        reject(error);
+      }
+    });
+  }
+  function updateUserBalanceInDatabase(userInfo) {
+    try {
+      const users2 = uni.getStorageSync("users") || [];
+      const userIndex = users2.findIndex((user) => user.id === userInfo.id);
+      if (userIndex !== -1) {
+        users2[userIndex] = { ...users2[userIndex], ...userInfo };
+        uni.setStorageSync("users", users2);
+        formatAppLog("log", "at api/balance.js:181", "本地数据库余额更新成功");
+      }
+    } catch (error) {
+      formatAppLog("error", "at api/balance.js:184", "更新本地数据库余额失败:", error);
+    }
+  }
+  function addTransactionRecord(transaction) {
+    try {
+      const userInfo = getUserInfo();
+      if (!userInfo) {
+        return;
+      }
+      if (!userInfo.transactionRecords) {
+        userInfo.transactionRecords = [];
+      }
+      const newRecord = {
+        id: Date.now(),
+        ...transaction
+      };
+      userInfo.transactionRecords.unshift(newRecord);
+      if (userInfo.transactionRecords.length > 100) {
+        userInfo.transactionRecords = userInfo.transactionRecords.slice(0, 100);
+      }
+      uni.setStorageSync("userInfo", userInfo);
+      uni.setStorageSync("currentUser", userInfo);
+      formatAppLog("log", "at api/balance.js:218", "交易记录添加成功:", newRecord);
+    } catch (error) {
+      formatAppLog("error", "at api/balance.js:221", "添加交易记录失败:", error);
+    }
+  }
+  const _sfc_main$h = {
+    name: "PaymentPasswordModal",
+    props: {
+      visible: {
+        type: Boolean,
+        default: false
+      },
+      amount: {
+        type: Number,
+        required: true
+      },
+      payee: {
+        type: String,
+        required: true
+      },
+      description: {
+        type: String,
+        default: ""
+      }
+    },
+    data() {
+      return {
+        currentPassword: "",
+        passwordDots: [1, 2, 3, 4, 5, 6],
+        // 6个密码点
+        errorMessage: "",
+        loading: false,
+        userInfo: null
+      };
+    },
+    watch: {
+      visible(newVal) {
+        if (newVal) {
+          this.resetModal();
+          this.loadUserInfo();
+          this.$nextTick(() => {
+            this.focusInput();
+          });
+        }
+      }
+    },
+    methods: {
+      loadUserInfo() {
+        this.userInfo = getUserInfo();
+      },
+      resetModal() {
+        this.currentPassword = "";
+        this.errorMessage = "";
+        this.loading = false;
+      },
+      focusInput() {
+        if (this.$refs.passwordInput) {
+          this.$refs.passwordInput.focus();
+        }
+      },
+      onInputFocus() {
+      },
+      onInputBlur() {
+      },
+      onPasswordInput() {
+        this.errorMessage = "";
+        if (this.currentPassword.length === 6) {
+          this.verifyPassword();
+        }
+      },
+      async verifyPassword() {
+        if (!this.userInfo || !this.userInfo.transactionPassword) {
+          this.errorMessage = "未设置交易密码，请先设置";
+          return false;
+        }
+        if (this.currentPassword === this.userInfo.transactionPassword) {
+          return true;
+        } else {
+          this.errorMessage = "交易密码错误，请重新输入";
+          this.currentPassword = "";
+          return false;
+        }
+      },
+      async confirmPayment() {
+        if (this.currentPassword.length !== 6) {
+          this.errorMessage = "请输入6位交易密码";
+          return;
+        }
+        this.loading = true;
+        try {
+          const isValid = await this.verifyPassword();
+          if (isValid) {
+            this.$emit("payment-confirmed", {
+              amount: this.amount,
+              payee: this.payee,
+              description: this.description,
+              password: this.currentPassword
+            });
+            this.addSecurityEvent("payment", `支付¥${this.amount.toFixed(2)}给${this.payee}`);
+            this.closeModal();
+          } else {
+            this.loading = false;
+          }
+        } catch (error) {
+          formatAppLog("error", "at components/common/PaymentPasswordModal.vue:198", "支付验证失败:", error);
+          this.errorMessage = "验证失败，请重试";
+          this.loading = false;
+        }
+      },
+      closeModal() {
+        this.$emit("close");
+      },
+      handleMaskClick() {
+        this.closeModal();
+      },
+      addSecurityEvent(type, description) {
+        const userInfo = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
+        if (userInfo && userInfo.securitySettings) {
+          if (!userInfo.securitySettings.securityEvents) {
+            userInfo.securitySettings.securityEvents = [];
+          }
+          const newEvent = {
+            id: Date.now(),
+            type,
+            description,
+            timestamp: (/* @__PURE__ */ new Date()).toISOString(),
+            location: "当前位置",
+            ip: "192.168.1.100",
+            status: "success"
+          };
+          userInfo.securitySettings.securityEvents.unshift(newEvent);
+          if (userInfo.securitySettings.securityEvents.length > 50) {
+            userInfo.securitySettings.securityEvents = userInfo.securitySettings.securityEvents.slice(0, 50);
+          }
+          uni.setStorageSync("userInfo", userInfo);
+          uni.setStorageSync("currentUser", userInfo);
+        }
+      }
+    }
+  };
+  function _sfc_render$g(_ctx, _cache, $props, $setup, $data, $options) {
+    return $props.visible ? (vue.openBlock(), vue.createElementBlock("view", {
+      key: 0,
+      class: "payment-password-modal",
+      onClick: _cache[8] || (_cache[8] = (...args) => $options.handleMaskClick && $options.handleMaskClick(...args))
+    }, [
+      vue.createElementVNode("view", {
+        class: "modal-content",
+        onClick: _cache[7] || (_cache[7] = vue.withModifiers(() => {
+        }, ["stop"]))
+      }, [
+        vue.createCommentVNode(" 弹窗头部 "),
+        vue.createElementVNode("view", { class: "modal-header" }, [
+          vue.createElementVNode("view", { class: "header-left" }, [
+            vue.createElementVNode("text", {
+              class: "close-btn",
+              onClick: _cache[0] || (_cache[0] = (...args) => $options.closeModal && $options.closeModal(...args))
+            }, "×")
+          ]),
+          vue.createElementVNode("view", { class: "header-title" }, "交易密码验证"),
+          vue.createElementVNode("view", { class: "header-right" })
+        ]),
+        vue.createCommentVNode(" 弹窗内容 "),
+        vue.createElementVNode("view", { class: "modal-body" }, [
+          vue.createElementVNode("view", { class: "payment-info" }, [
+            vue.createElementVNode("view", { class: "info-item" }, [
+              vue.createElementVNode("text", { class: "info-label" }, "支付金额："),
+              vue.createElementVNode(
+                "text",
+                { class: "info-value amount" },
+                "¥" + vue.toDisplayString($props.amount.toFixed(2)),
+                1
+                /* TEXT */
+              )
+            ]),
+            vue.createElementVNode("view", { class: "info-item" }, [
+              vue.createElementVNode("text", { class: "info-label" }, "收款方："),
+              vue.createElementVNode(
+                "text",
+                { class: "info-value" },
+                vue.toDisplayString($props.payee),
+                1
+                /* TEXT */
+              )
+            ]),
+            $props.description ? (vue.openBlock(), vue.createElementBlock("view", {
+              key: 0,
+              class: "info-item"
+            }, [
+              vue.createElementVNode("text", { class: "info-label" }, "交易说明："),
+              vue.createElementVNode(
+                "text",
+                { class: "info-value" },
+                vue.toDisplayString($props.description),
+                1
+                /* TEXT */
+              )
+            ])) : vue.createCommentVNode("v-if", true)
+          ]),
+          vue.createCommentVNode(" 密码输入区域 "),
+          vue.createElementVNode("view", { class: "password-input-section" }, [
+            vue.createElementVNode("view", { class: "input-label" }, "请输入交易密码"),
+            vue.createElementVNode("view", { class: "password-dots" }, [
+              (vue.openBlock(true), vue.createElementBlock(
+                vue.Fragment,
+                null,
+                vue.renderList($data.passwordDots, (dot, index) => {
+                  return vue.openBlock(), vue.createElementBlock(
+                    "view",
+                    {
+                      key: index,
+                      class: vue.normalizeClass(["password-dot", { "filled": index < $data.currentPassword.length }])
+                    },
+                    [
+                      index < $data.currentPassword.length ? (vue.openBlock(), vue.createElementBlock("text", { key: 0 }, "●")) : vue.createCommentVNode("v-if", true)
+                    ],
+                    2
+                    /* CLASS */
+                  );
+                }),
+                128
+                /* KEYED_FRAGMENT */
+              ))
+            ]),
+            vue.createCommentVNode(" 隐藏的输入框 "),
+            vue.withDirectives(vue.createElementVNode(
+              "input",
+              {
+                ref: "passwordInput",
+                type: "password",
+                "onUpdate:modelValue": _cache[1] || (_cache[1] = ($event) => $data.currentPassword = $event),
+                maxlength: "6",
+                class: "hidden-input",
+                onInput: _cache[2] || (_cache[2] = (...args) => $options.onPasswordInput && $options.onPasswordInput(...args)),
+                onFocus: _cache[3] || (_cache[3] = (...args) => $options.onInputFocus && $options.onInputFocus(...args)),
+                onBlur: _cache[4] || (_cache[4] = (...args) => $options.onInputBlur && $options.onInputBlur(...args))
+              },
+              null,
+              544
+              /* NEED_HYDRATION, NEED_PATCH */
+            ), [
+              [vue.vModelText, $data.currentPassword]
+            ])
+          ]),
+          vue.createCommentVNode(" 错误提示 "),
+          $data.errorMessage ? (vue.openBlock(), vue.createElementBlock("view", {
+            key: 0,
+            class: "error-message"
+          }, [
+            vue.createElementVNode(
+              "text",
+              { class: "error-text" },
+              vue.toDisplayString($data.errorMessage),
+              1
+              /* TEXT */
+            )
+          ])) : vue.createCommentVNode("v-if", true),
+          vue.createCommentVNode(" 操作按钮 "),
+          vue.createElementVNode("view", { class: "modal-actions" }, [
+            vue.createElementVNode("button", {
+              class: "cancel-btn",
+              onClick: _cache[5] || (_cache[5] = (...args) => $options.closeModal && $options.closeModal(...args))
+            }, "取消"),
+            vue.createElementVNode("button", {
+              class: "confirm-btn",
+              onClick: _cache[6] || (_cache[6] = (...args) => $options.confirmPayment && $options.confirmPayment(...args)),
+              disabled: $data.currentPassword.length !== 6 || $data.loading
+            }, vue.toDisplayString($data.loading ? "验证中..." : "确认支付"), 9, ["disabled"])
+          ])
+        ])
+      ])
+    ])) : vue.createCommentVNode("v-if", true);
+  }
+  const PaymentPasswordModal = /* @__PURE__ */ _export_sfc(_sfc_main$h, [["render", _sfc_render$g], ["__scopeId", "data-v-c92603ac"], ["__file", "E:/项目/yihangyidon/src/components/common/PaymentPasswordModal.vue"]]);
+  const _sfc_main$g = {
+    name: "SimpleThemeSwitcher",
+    data() {
+      return {
+        showSelector: false,
+        selectedThemeId: null,
+        currentThemeId: themeManager$1.getCurrentThemeId(),
+        availableThemes: Object.values(themes$1)
+      };
+    },
+    mounted() {
+      themeManager$1.addThemeListener(this.onThemeChanged);
+    },
+    beforeDestroy() {
+      themeManager$1.removeThemeListener(this.onThemeChanged);
+    },
+    methods: {
+      onThemeChanged(theme) {
+        this.currentThemeId = theme.id;
+      },
+      selectTheme(themeId) {
+        this.selectedThemeId = themeId;
+      },
+      applyTheme() {
+        if (this.selectedThemeId) {
+          themeManager$1.switchTheme(this.selectedThemeId);
+          uni.showToast({
+            title: "主题已切换",
+            icon: "success",
+            duration: 1500
+          });
+        }
+        this.closeModal();
+      },
+      closeModal() {
+        this.showSelector = false;
+        this.selectedThemeId = null;
+      }
+    }
+  };
+  function _sfc_render$f(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("view", { class: "theme-switcher" }, [
+      vue.createCommentVNode(" 主题切换按钮 "),
+      vue.createElementVNode("view", {
+        class: "theme-button",
+        onClick: _cache[0] || (_cache[0] = ($event) => $data.showSelector = true)
+      }, [
+        vue.createElementVNode("text", { class: "theme-icon" }, "🎨"),
+        vue.createElementVNode("text", { class: "theme-text" }, "主题")
+      ]),
+      vue.createCommentVNode(" 主题选择弹窗 "),
+      $data.showSelector ? (vue.openBlock(), vue.createElementBlock("view", {
+        key: 0,
+        class: "theme-modal",
+        onClick: _cache[5] || (_cache[5] = (...args) => $options.closeModal && $options.closeModal(...args))
+      }, [
+        vue.createElementVNode("view", {
+          class: "modal-content",
+          onClick: _cache[4] || (_cache[4] = vue.withModifiers(() => {
+          }, ["stop"]))
+        }, [
+          vue.createCommentVNode(" 弹窗头部 "),
+          vue.createElementVNode("view", { class: "modal-header" }, [
+            vue.createElementVNode("text", { class: "modal-title" }, "选择主题"),
+            vue.createElementVNode("text", {
+              class: "close-btn",
+              onClick: _cache[1] || (_cache[1] = (...args) => $options.closeModal && $options.closeModal(...args))
+            }, "×")
+          ]),
+          vue.createCommentVNode(" 主题列表 "),
+          vue.createElementVNode("view", { class: "theme-list" }, [
+            (vue.openBlock(true), vue.createElementBlock(
+              vue.Fragment,
+              null,
+              vue.renderList($data.availableThemes, (theme) => {
+                return vue.openBlock(), vue.createElementBlock("view", {
+                  key: theme.id,
+                  class: vue.normalizeClass(["theme-item", { active: $data.currentThemeId === theme.id }]),
+                  onClick: ($event) => $options.selectTheme(theme.id)
+                }, [
+                  vue.createElementVNode("view", { class: "theme-preview" }, [
+                    vue.createElementVNode("view", { class: "preview-colors" }, [
+                      vue.createElementVNode(
+                        "view",
+                        {
+                          class: "color-dot",
+                          style: vue.normalizeStyle({ backgroundColor: theme.colors.primary })
+                        },
+                        null,
+                        4
+                        /* STYLE */
+                      ),
+                      vue.createElementVNode(
+                        "view",
+                        {
+                          class: "color-dot",
+                          style: vue.normalizeStyle({ backgroundColor: theme.colors.background })
+                        },
+                        null,
+                        4
+                        /* STYLE */
+                      ),
+                      vue.createElementVNode(
+                        "view",
+                        {
+                          class: "color-dot",
+                          style: vue.normalizeStyle({ backgroundColor: theme.colors.surface })
+                        },
+                        null,
+                        4
+                        /* STYLE */
+                      )
+                    ])
+                  ]),
+                  vue.createElementVNode("view", { class: "theme-info" }, [
+                    vue.createElementVNode(
+                      "text",
+                      { class: "theme-name" },
+                      vue.toDisplayString(theme.name),
+                      1
+                      /* TEXT */
+                    ),
+                    $data.currentThemeId === theme.id ? (vue.openBlock(), vue.createElementBlock("text", {
+                      key: 0,
+                      class: "theme-status"
+                    }, "当前")) : vue.createCommentVNode("v-if", true)
+                  ]),
+                  $data.currentThemeId === theme.id ? (vue.openBlock(), vue.createElementBlock("view", {
+                    key: 0,
+                    class: "theme-check"
+                  }, [
+                    vue.createElementVNode("text", { class: "check-icon" }, "✓")
+                  ])) : vue.createCommentVNode("v-if", true)
+                ], 10, ["onClick"]);
+              }),
+              128
+              /* KEYED_FRAGMENT */
+            ))
+          ]),
+          vue.createCommentVNode(" 操作按钮 "),
+          vue.createElementVNode("view", { class: "modal-actions" }, [
+            vue.createElementVNode("button", {
+              class: "cancel-btn",
+              onClick: _cache[2] || (_cache[2] = (...args) => $options.closeModal && $options.closeModal(...args))
+            }, "取消"),
+            vue.createElementVNode("button", {
+              class: "apply-btn",
+              onClick: _cache[3] || (_cache[3] = (...args) => $options.applyTheme && $options.applyTheme(...args))
+            }, "应用")
+          ])
+        ])
+      ])) : vue.createCommentVNode("v-if", true)
+    ]);
+  }
+  const SimpleThemeSwitcher = /* @__PURE__ */ _export_sfc(_sfc_main$g, [["render", _sfc_render$f], ["__scopeId", "data-v-f10fce89"], ["__file", "E:/项目/yihangyidon/src/components/common/SimpleThemeSwitcher.vue"]]);
+  function getThemeStyles() {
+    const theme = themeManager$1.getCurrentTheme();
+    return {
+      // 背景色
+      background: {
+        backgroundColor: theme.colors.background
+      },
+      surface: {
+        backgroundColor: theme.colors.surface
+      },
+      surfaceVariant: {
+        backgroundColor: theme.colors.surfaceVariant
+      },
+      // 文字颜色
+      text: {
+        color: theme.colors.text
+      },
+      textSecondary: {
+        color: theme.colors.textSecondary
+      },
+      // 边框
+      border: {
+        borderColor: theme.colors.border
+      },
+      borderLight: {
+        borderColor: theme.colors.borderLight
+      },
+      // 主色调
+      primary: {
+        color: theme.colors.primary
+      },
+      primaryBg: {
+        backgroundColor: theme.colors.primary
+      },
+      primaryGradient: {
+        background: `linear-gradient(135deg, ${theme.colors.primaryDark} 0%, ${theme.colors.primary} 100%)`
+      },
+      // 状态颜色
+      success: {
+        color: theme.colors.success
+      },
+      successBg: {
+        backgroundColor: theme.colors.success
+      },
+      warning: {
+        color: theme.colors.warning
+      },
+      warningBg: {
+        backgroundColor: theme.colors.warning
+      },
+      error: {
+        color: theme.colors.error
+      },
+      errorBg: {
+        backgroundColor: theme.colors.error
+      },
+      info: {
+        color: theme.colors.info
+      },
+      infoBg: {
+        backgroundColor: theme.colors.info
+      }
+    };
+  }
+  const _sfc_main$f = {
+    components: {
+      PaymentPasswordModal,
+      SimpleThemeSwitcher
+    },
     data() {
       return {
         currentTab: "account",
@@ -4812,14 +5590,30 @@ if (uni.restoreGlobal) {
         // 转账处理状态
         transferLimit: 5e4,
         // 默认转账限额
-        userBalance: 1e5
-        // 模拟用户余额
+        userBalance: 0,
+        // 用户余额
+        showPasswordModal: false,
+        // 显示交易密码弹窗
+        transferAmount: 0,
+        // 转账金额
+        transferPayee: "",
+        // 收款方
+        transferDescription: "",
+        // 转账说明
+        currentTheme: themeManager$1.getCurrentTheme(),
+        themeStyles: getThemeStyles()
       };
+    },
+    mounted() {
+      themeManager$1.addThemeListener(this.onThemeChanged);
+    },
+    beforeDestroy() {
+      themeManager$1.removeThemeListener(this.onThemeChanged);
     },
     onShow() {
       try {
         if (!forceCheckLogin()) {
-          formatAppLog("log", "at pages/transfer/transfer.vue:105", "转账页面：用户未登录，跳转到登录页面");
+          formatAppLog("log", "at pages/transfer/transfer.vue:154", "转账页面：用户未登录，跳转到登录页面");
           uni.reLaunch({
             url: "/pages/denglu/login"
           });
@@ -4828,13 +5622,18 @@ if (uni.restoreGlobal) {
         this.getTransferLimit();
         this.getUserBalance();
       } catch (error) {
-        formatAppLog("error", "at pages/transfer/transfer.vue:118", "转账页面onShow检查失败:", error);
+        formatAppLog("error", "at pages/transfer/transfer.vue:167", "转账页面onShow检查失败:", error);
         uni.reLaunch({
           url: "/pages/denglu/login"
         });
       }
     },
     methods: {
+      // 主题变化回调
+      onThemeChanged(theme) {
+        this.currentTheme = theme;
+        this.themeStyles = getThemeStyles();
+      },
       // 切换转账类型
       switchTab(tab) {
         this.currentTab = tab;
@@ -4846,18 +5645,22 @@ if (uni.restoreGlobal) {
           if (savedLimit) {
             this.transferLimit = savedLimit;
           }
-          formatAppLog("log", "at pages/transfer/transfer.vue:141", "转账限额:", this.transferLimit);
+          formatAppLog("log", "at pages/transfer/transfer.vue:196", "转账限额:", this.transferLimit);
         }, 300);
       },
-      // 获取用户余额（模拟）
-      getUserBalance() {
-        const savedBalance = uni.getStorageSync("userBalance");
-        if (savedBalance) {
-          this.userBalance = savedBalance;
+      // 获取用户余额
+      async getUserBalance() {
+        try {
+          const balance = await getUserBalance();
+          this.userBalance = balance;
+          formatAppLog("log", "at pages/transfer/transfer.vue:205", "获取用户余额成功:", balance);
+        } catch (error) {
+          formatAppLog("error", "at pages/transfer/transfer.vue:207", "获取用户余额失败:", error);
+          this.userBalance = 0;
         }
       },
       // 验证转账金额
-      validateAmount(amount) {
+      async validateAmount(amount) {
         const numAmount = parseFloat(amount);
         if (isNaN(numAmount) || numAmount <= 0) {
           uni.showToast({
@@ -4873,9 +5676,19 @@ if (uni.restoreGlobal) {
           });
           return false;
         }
-        if (numAmount > this.userBalance) {
+        try {
+          const isSufficient = await checkBalanceSufficient(numAmount);
+          if (!isSufficient) {
+            uni.showToast({
+              title: "余额不足，请检查账户余额",
+              icon: "none"
+            });
+            return false;
+          }
+        } catch (error) {
+          formatAppLog("error", "at pages/transfer/transfer.vue:245", "检查余额失败:", error);
           uni.showToast({
-            title: "余额不足",
+            title: "检查余额失败，请重试",
             icon: "none"
           });
           return false;
@@ -4895,21 +5708,15 @@ if (uni.restoreGlobal) {
               this.isProcessing = false;
               return;
             }
-            if (!this.validateAmount(this.accountForm.amount)) {
+            const isValidAmount = await this.validateAmount(this.accountForm.amount);
+            if (!isValidAmount) {
               this.isProcessing = false;
               return;
             }
-            uni.showModal({
-              title: "转账确认",
-              content: `向 ${this.accountForm.name}（账号：${this.accountForm.account}）转账 ${this.accountForm.amount} 元`,
-              success: async (res) => {
-                if (res.confirm) {
-                  await this.verifyPayeeInfo(this.accountForm.account, this.accountForm.name);
-                } else {
-                  this.isProcessing = false;
-                }
-              }
-            });
+            this.transferAmount = parseFloat(this.accountForm.amount);
+            this.transferPayee = this.accountForm.name;
+            this.transferDescription = `向账号${this.accountForm.account}转账`;
+            this.showPasswordModal = true;
           } else {
             if (!this.phoneForm.phone || !this.phoneForm.amount) {
               uni.showToast({
@@ -4919,24 +5726,18 @@ if (uni.restoreGlobal) {
               this.isProcessing = false;
               return;
             }
-            if (!this.validateAmount(this.phoneForm.amount)) {
+            const isValidAmount = await this.validateAmount(this.phoneForm.amount);
+            if (!isValidAmount) {
               this.isProcessing = false;
               return;
             }
-            uni.showModal({
-              title: "转账确认",
-              content: `向手机号 ${this.phoneForm.phone} 转账 ${this.phoneForm.amount} 元`,
-              success: async (res) => {
-                if (res.confirm) {
-                  await this.processPhoneTransfer();
-                } else {
-                  this.isProcessing = false;
-                }
-              }
-            });
+            this.transferAmount = parseFloat(this.phoneForm.amount);
+            this.transferPayee = this.phoneForm.phone;
+            this.transferDescription = `向手机号${this.phoneForm.phone}转账`;
+            this.showPasswordModal = true;
           }
         } catch (error) {
-          formatAppLog("error", "at pages/transfer/transfer.vue:254", "转账过程中出错:", error);
+          formatAppLog("error", "at pages/transfer/transfer.vue:308", "转账过程中出错:", error);
           uni.showToast({
             title: "转账失败，请重试",
             icon: "none"
@@ -4948,10 +5749,10 @@ if (uni.restoreGlobal) {
       async verifyPayeeInfo(account, name) {
         try {
           await new Promise((resolve) => setTimeout(resolve, 1e3));
-          formatAppLog("log", "at pages/transfer/transfer.vue:273", "收款人信息验证成功");
+          formatAppLog("log", "at pages/transfer/transfer.vue:327", "收款人信息验证成功");
           await this.processAccountTransfer();
         } catch (error) {
-          formatAppLog("error", "at pages/transfer/transfer.vue:278", "验证收款人信息失败:", error);
+          formatAppLog("error", "at pages/transfer/transfer.vue:332", "验证收款人信息失败:", error);
           uni.showToast({
             title: "收款人信息验证失败",
             icon: "none"
@@ -4988,7 +5789,7 @@ if (uni.restoreGlobal) {
             remark: ""
           };
         } catch (error) {
-          formatAppLog("error", "at pages/transfer/transfer.vue:330", "账号转账失败:", error);
+          formatAppLog("error", "at pages/transfer/transfer.vue:384", "账号转账失败:", error);
           this.saveTransferRecord({
             type: "account",
             account: this.accountForm.account,
@@ -5035,7 +5836,7 @@ if (uni.restoreGlobal) {
             remark: ""
           };
         } catch (error) {
-          formatAppLog("error", "at pages/transfer/transfer.vue:394", "手机号转账失败:", error);
+          formatAppLog("error", "at pages/transfer/transfer.vue:448", "手机号转账失败:", error);
           this.saveTransferRecord({
             type: "phone",
             phone: this.phoneForm.phone,
@@ -5068,9 +5869,9 @@ if (uni.restoreGlobal) {
             records.splice(100);
           }
           uni.setStorageSync("transferRecords", records);
-          formatAppLog("log", "at pages/transfer/transfer.vue:436", "转账记录已保存");
+          formatAppLog("log", "at pages/transfer/transfer.vue:490", "转账记录已保存");
         } catch (error) {
-          formatAppLog("error", "at pages/transfer/transfer.vue:438", "保存转账记录失败:", error);
+          formatAppLog("error", "at pages/transfer/transfer.vue:492", "保存转账记录失败:", error);
         }
       },
       // 跳转到转账记录
@@ -5086,42 +5887,154 @@ if (uni.restoreGlobal) {
           title: "跳转到转账设置页面",
           icon: "none"
         });
+      },
+      // 交易密码验证成功
+      async onPaymentConfirmed(paymentData) {
+        try {
+          this.isProcessing = true;
+          const deductResult = await deductBalance(
+            this.transferAmount,
+            this.transferDescription
+          );
+          if (!deductResult.success) {
+            uni.showToast({
+              title: deductResult.message,
+              icon: "none"
+            });
+            this.isProcessing = false;
+            return;
+          }
+          this.userBalance = deductResult.newBalance;
+          if (this.currentTab === "account") {
+            await this.processAccountTransfer();
+          } else {
+            await this.processPhoneTransfer();
+          }
+          this.isProcessing = false;
+          this.closePasswordModal();
+          uni.showToast({
+            title: `转账成功，余额：¥${deductResult.newBalance.toFixed(2)}`,
+            icon: "success",
+            duration: 3e3
+          });
+          this.clearForms();
+        } catch (error) {
+          formatAppLog("error", "at pages/transfer/transfer.vue:558", "转账处理失败:", error);
+          this.isProcessing = false;
+          uni.showToast({
+            title: "转账失败，请重试",
+            icon: "none"
+          });
+        }
+      },
+      // 关闭交易密码弹窗
+      closePasswordModal() {
+        this.showPasswordModal = false;
+        this.isProcessing = false;
+      },
+      // 清空表单
+      clearForms() {
+        this.accountForm = {
+          account: "",
+          name: "",
+          amount: "",
+          remark: ""
+        };
+        this.phoneForm = {
+          phone: "",
+          amount: "",
+          remark: ""
+        };
       }
     }
   };
-  function _sfc_render$d(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$e(_ctx, _cache, $props, $setup, $data, $options) {
+    const _component_SimpleThemeSwitcher = vue.resolveComponent("SimpleThemeSwitcher");
+    const _component_PaymentPasswordModal = vue.resolveComponent("PaymentPasswordModal");
     return vue.openBlock(), vue.createElementBlock("view", { class: "transfer-page" }, [
       vue.createCommentVNode(" 顶部导航 "),
-      vue.createElementVNode("view", { class: "nav-bar" }, [
-        vue.createElementVNode("text", { class: "nav-title" }, "转账")
-      ]),
+      vue.createElementVNode(
+        "view",
+        {
+          class: "nav-bar",
+          style: vue.normalizeStyle($data.themeStyles.primaryGradient)
+        },
+        [
+          vue.createElementVNode("text", { class: "nav-title" }, "转账"),
+          vue.createElementVNode("view", { class: "nav-actions" }, [
+            vue.createVNode(_component_SimpleThemeSwitcher)
+          ])
+        ],
+        4
+        /* STYLE */
+      ),
+      vue.createCommentVNode(" 账户余额显示 "),
+      vue.createElementVNode(
+        "view",
+        {
+          class: "balance-card",
+          style: vue.normalizeStyle($data.themeStyles.primaryGradient)
+        },
+        [
+          vue.createElementVNode("view", { class: "balance-info" }, [
+            vue.createElementVNode("text", { class: "balance-label" }, "账户余额"),
+            vue.createElementVNode(
+              "text",
+              { class: "balance-amount" },
+              "¥" + vue.toDisplayString($data.userBalance.toFixed(2)),
+              1
+              /* TEXT */
+            )
+          ]),
+          vue.createElementVNode("view", { class: "balance-tip" }, [
+            vue.createElementVNode(
+              "text",
+              { class: "tip-text" },
+              "单笔转账限额：¥" + vue.toDisplayString($data.transferLimit.toLocaleString()),
+              1
+              /* TEXT */
+            )
+          ])
+        ],
+        4
+        /* STYLE */
+      ),
       vue.createCommentVNode(" 转账类型选择 "),
-      vue.createElementVNode("view", { class: "transfer-types" }, [
-        vue.createElementVNode(
-          "view",
-          {
-            class: vue.normalizeClass(["type-item", { active: $data.currentTab === "account" }]),
-            onClick: _cache[0] || (_cache[0] = ($event) => $options.switchTab("account"))
-          },
-          [
-            vue.createElementVNode("text", { class: "type-text" }, "账号转账")
-          ],
-          2
-          /* CLASS */
-        ),
-        vue.createElementVNode(
-          "view",
-          {
-            class: vue.normalizeClass(["type-item", { active: $data.currentTab === "phone" }]),
-            onClick: _cache[1] || (_cache[1] = ($event) => $options.switchTab("phone"))
-          },
-          [
-            vue.createElementVNode("text", { class: "type-text" }, "手机号转账")
-          ],
-          2
-          /* CLASS */
-        )
-      ]),
+      vue.createElementVNode(
+        "view",
+        {
+          class: "transfer-types",
+          style: vue.normalizeStyle($data.themeStyles.surface)
+        },
+        [
+          vue.createElementVNode(
+            "view",
+            {
+              class: vue.normalizeClass(["type-item", { active: $data.currentTab === "account" }]),
+              onClick: _cache[0] || (_cache[0] = ($event) => $options.switchTab("account"))
+            },
+            [
+              vue.createElementVNode("text", { class: "type-text" }, "账号转账")
+            ],
+            2
+            /* CLASS */
+          ),
+          vue.createElementVNode(
+            "view",
+            {
+              class: vue.normalizeClass(["type-item", { active: $data.currentTab === "phone" }]),
+              onClick: _cache[1] || (_cache[1] = ($event) => $options.switchTab("phone"))
+            },
+            [
+              vue.createElementVNode("text", { class: "type-text" }, "手机号转账")
+            ],
+            2
+            /* CLASS */
+          )
+        ],
+        4
+        /* STYLE */
+      ),
       vue.createCommentVNode(" 转账表单 "),
       vue.createElementVNode("view", { class: "transfer-form" }, [
         vue.createCommentVNode(" 账号转账表单 "),
@@ -5276,11 +6189,20 @@ if (uni.restoreGlobal) {
           vue.createElementVNode("text", { class: "function-text" }, "转账设置"),
           vue.createElementVNode("text", { class: "arrow-right" }, "➡️")
         ])
-      ])
+      ]),
+      vue.createCommentVNode(" 交易密码验证弹窗 "),
+      vue.createVNode(_component_PaymentPasswordModal, {
+        visible: $data.showPasswordModal,
+        amount: $data.transferAmount,
+        payee: $data.transferPayee,
+        description: $data.transferDescription,
+        onPaymentConfirmed: $options.onPaymentConfirmed,
+        onClose: $options.closePasswordModal
+      }, null, 8, ["visible", "amount", "payee", "description", "onPaymentConfirmed", "onClose"])
     ]);
   }
-  const PagesTransferTransfer = /* @__PURE__ */ _export_sfc(_sfc_main$e, [["render", _sfc_render$d], ["__scopeId", "data-v-d303ad3d"], ["__file", "E:/项目/yihangyidon/src/pages/transfer/transfer.vue"]]);
-  const _sfc_main$d = {
+  const PagesTransferTransfer = /* @__PURE__ */ _export_sfc(_sfc_main$f, [["render", _sfc_render$e], ["__scopeId", "data-v-d303ad3d"], ["__file", "E:/项目/yihangyidon/src/pages/transfer/transfer.vue"]]);
+  const _sfc_main$e = {
     data() {
       return {
         isLoginNeeded: false,
@@ -5497,7 +6419,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$c(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$d(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "account-page" }, [
       vue.createCommentVNode(" 顶部导航 "),
       vue.createElementVNode("view", { class: "nav-bar" }, [
@@ -5724,14 +6646,14 @@ if (uni.restoreGlobal) {
       ))
     ]);
   }
-  const PagesAccountAccount = /* @__PURE__ */ _export_sfc(_sfc_main$d, [["render", _sfc_render$c], ["__scopeId", "data-v-f7e9057f"], ["__file", "E:/项目/yihangyidon/src/pages/account/account.vue"]]);
+  const PagesAccountAccount = /* @__PURE__ */ _export_sfc(_sfc_main$e, [["render", _sfc_render$d], ["__scopeId", "data-v-f7e9057f"], ["__file", "E:/项目/yihangyidon/src/pages/account/account.vue"]]);
   const mobileRecharge = (rechargeInfo) => {
     return http.post("/life/recharge", rechargeInfo);
   };
   const getPaymentHistory = (params) => {
     return http.get("/life/payment-history", params);
   };
-  const _sfc_main$c = {
+  const _sfc_main$d = {
     name: "PaymentPage",
     data() {
       return {
@@ -6148,7 +7070,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       }
     }
   };
-  function _sfc_render$b(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$c(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "payment-page" }, [
       vue.createCommentVNode(" 页面头部 "),
       vue.createElementVNode("view", { class: "page-header" }, [
@@ -6468,8 +7390,8 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       ])
     ]);
   }
-  const PagesPaymentPayment = /* @__PURE__ */ _export_sfc(_sfc_main$c, [["render", _sfc_render$b], ["__scopeId", "data-v-6e0fac4f"], ["__file", "E:/项目/yihangyidon/src/pages/payment/payment.vue"]]);
-  const _sfc_main$b = {
+  const PagesPaymentPayment = /* @__PURE__ */ _export_sfc(_sfc_main$d, [["render", _sfc_render$c], ["__scopeId", "data-v-6e0fac4f"], ["__file", "E:/项目/yihangyidon/src/pages/payment/payment.vue"]]);
+  const _sfc_main$c = {
     name: "RechargePage",
     data() {
       return {
@@ -6616,7 +7538,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       }
     }
   };
-  function _sfc_render$a(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$b(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "recharge-page" }, [
       vue.createCommentVNode(" 页面头部 "),
       vue.createElementVNode("view", { class: "page-header" }, [
@@ -6831,8 +7753,8 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       ])
     ]);
   }
-  const PagesRechargeRecharge = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["render", _sfc_render$a], ["__scopeId", "data-v-d370def1"], ["__file", "E:/项目/yihangyidon/src/pages/recharge/recharge.vue"]]);
-  const _sfc_main$a = {
+  const PagesRechargeRecharge = /* @__PURE__ */ _export_sfc(_sfc_main$c, [["render", _sfc_render$b], ["__scopeId", "data-v-d370def1"], ["__file", "E:/项目/yihangyidon/src/pages/recharge/recharge.vue"]]);
+  const _sfc_main$b = {
     name: "GovernmentPage",
     data() {
       return {
@@ -7050,7 +7972,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       }
     }
   };
-  function _sfc_render$9(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$a(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "government-page" }, [
       vue.createElementVNode("view", { class: "page-header" }, [
         vue.createElementVNode("text", { class: "header-title" }, "政务民生"),
@@ -7237,8 +8159,8 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       ])
     ]);
   }
-  const PagesGovernmentGovernment = /* @__PURE__ */ _export_sfc(_sfc_main$a, [["render", _sfc_render$9], ["__scopeId", "data-v-55002ac7"], ["__file", "E:/项目/yihangyidon/src/pages/government/government.vue"]]);
-  const _sfc_main$9 = {
+  const PagesGovernmentGovernment = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["render", _sfc_render$a], ["__scopeId", "data-v-55002ac7"], ["__file", "E:/项目/yihangyidon/src/pages/government/government.vue"]]);
+  const _sfc_main$a = {
     name: "GamesPage",
     data() {
       return {
@@ -7483,7 +8405,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       }
     }
   };
-  function _sfc_render$8(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$9(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "games-page" }, [
       vue.createElementVNode("view", { class: "page-header" }, [
         vue.createElementVNode("text", { class: "header-title" }, "小豆乐园"),
@@ -7730,8 +8652,8 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       ])
     ]);
   }
-  const PagesGamesGames = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["render", _sfc_render$8], ["__scopeId", "data-v-5e0e9dd0"], ["__file", "E:/项目/yihangyidon/src/pages/games/games.vue"]]);
-  const _sfc_main$8 = {
+  const PagesGamesGames = /* @__PURE__ */ _export_sfc(_sfc_main$a, [["render", _sfc_render$9], ["__scopeId", "data-v-5e0e9dd0"], ["__file", "E:/项目/yihangyidon/src/pages/games/games.vue"]]);
+  const _sfc_main$9 = {
     data() {
       return {
         transferRecords: []
@@ -7824,7 +8746,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       }
     }
   };
-  function _sfc_render$7(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$8(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "history-page" }, [
       vue.createCommentVNode(" 顶部导航 "),
       vue.createElementVNode("view", { class: "nav-bar" }, [
@@ -7908,7 +8830,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       ])
     ]);
   }
-  const PagesTransferHistory = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["render", _sfc_render$7], ["__scopeId", "data-v-c9706b1b"], ["__file", "E:/项目/yihangyidon/src/pages/transfer/history.vue"]]);
+  const PagesTransferHistory = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["render", _sfc_render$8], ["__scopeId", "data-v-c9706b1b"], ["__file", "E:/项目/yihangyidon/src/pages/transfer/history.vue"]]);
   const formatBankCard = (cardNumber, separator = " ") => {
     if (!cardNumber)
       return "";
@@ -7925,7 +8847,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
     const middle = "*".repeat(card.length - showStart - showEnd);
     return formatBankCard(start + middle + end);
   };
-  const _sfc_main$7 = {
+  const _sfc_main$8 = {
     name: "BankCard",
     props: {
       cardInfo: {
@@ -8000,7 +8922,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       }
     }
   };
-  function _sfc_render$6(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$7(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock(
       "view",
       {
@@ -8088,7 +9010,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       /* CLASS */
     );
   }
-  const BankCard = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["render", _sfc_render$6], ["__scopeId", "data-v-2f14f5e9"], ["__file", "E:/项目/yihangyidon/src/components/common/BankCard.vue"]]);
+  const BankCard = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["render", _sfc_render$7], ["__scopeId", "data-v-2f14f5e9"], ["__file", "E:/项目/yihangyidon/src/components/common/BankCard.vue"]]);
   const getCreditCards = () => {
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -8110,7 +9032,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       }, 300);
     });
   };
-  const _sfc_main$6 = {
+  const _sfc_main$7 = {
     components: {
       BankCard
     },
@@ -8276,7 +9198,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       }
     }
   };
-  function _sfc_render$5(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$6(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_BankCard = vue.resolveComponent("BankCard");
     return vue.openBlock(), vue.createElementBlock("view", { class: "credit-card-container" }, [
       vue.createCommentVNode(" 页面头部 "),
@@ -8473,8 +9395,8 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesCreditCardCreditCard = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["render", _sfc_render$5], ["__scopeId", "data-v-03264d9b"], ["__file", "E:/项目/yihangyidon/src/pages/credit-card/credit-card.vue"]]);
-  const _sfc_main$5 = {
+  const PagesCreditCardCreditCard = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["render", _sfc_render$6], ["__scopeId", "data-v-03264d9b"], ["__file", "E:/项目/yihangyidon/src/pages/credit-card/credit-card.vue"]]);
+  const _sfc_main$6 = {
     data() {
       return {
         type: "normal",
@@ -8698,7 +9620,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       }
     }
   };
-  function _sfc_render$4(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$5(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "balance-container" }, [
       vue.createCommentVNode(" 页面头部 "),
       vue.createElementVNode("view", { class: "page-header" }, [
@@ -8882,8 +9804,8 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesBalanceBalance = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["render", _sfc_render$4], ["__scopeId", "data-v-a05d65b8"], ["__file", "E:/项目/yihangyidon/src/pages/balance/balance.vue"]]);
-  const _sfc_main$4 = {
+  const PagesBalanceBalance = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["render", _sfc_render$5], ["__scopeId", "data-v-a05d65b8"], ["__file", "E:/项目/yihangyidon/src/pages/balance/balance.vue"]]);
+  const _sfc_main$5 = {
     data() {
       return {
         hasLoan: true,
@@ -9076,7 +9998,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       }
     }
   };
-  function _sfc_render$3(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$4(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "loan-container" }, [
       vue.createCommentVNode(" 页面头部 "),
       vue.createElementVNode("view", { class: "page-header" }, [
@@ -9323,8 +10245,8 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       ])
     ]);
   }
-  const PagesLoanLoan = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["render", _sfc_render$3], ["__scopeId", "data-v-2fe4ed24"], ["__file", "E:/项目/yihangyidon/src/pages/loan/loan.vue"]]);
-  const _sfc_main$3 = {
+  const PagesLoanLoan = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["render", _sfc_render$4], ["__scopeId", "data-v-2fe4ed24"], ["__file", "E:/项目/yihangyidon/src/pages/loan/loan.vue"]]);
+  const _sfc_main$4 = {
     data() {
       return {
         creditCards: [],
@@ -9954,7 +10876,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       }
     }
   };
-  function _sfc_render$2(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$3(_ctx, _cache, $props, $setup, $data, $options) {
     var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _A, _B, _C, _D, _E, _F, _G, _H, _I, _J, _K, _L, _M, _N, _O;
     return vue.openBlock(), vue.createElementBlock("view", { class: "credit-cards-page" }, [
       vue.createCommentVNode(" 顶部导航栏 "),
@@ -11349,8 +12271,300 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesCreditCardsCreditCards = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["render", _sfc_render$2], ["__scopeId", "data-v-a750c574"], ["__file", "E:/项目/yihangyidon/src/pages/credit-cards/credit-cards.vue"]]);
-  const _sfc_main$2 = {
+  const PagesCreditCardsCreditCards = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["render", _sfc_render$3], ["__scopeId", "data-v-a750c574"], ["__file", "E:/项目/yihangyidon/src/pages/credit-cards/credit-cards.vue"]]);
+  class SyncManager {
+    constructor() {
+      this.maxRetryCount = 3;
+      this.retryInterval = 5e3;
+      this.syncQueue = [];
+      this.isSyncing = false;
+    }
+    /**
+     * 初始化同步管理器
+     */
+    init() {
+      this.loadSyncQueue();
+      this.startSyncTimer();
+    }
+    /**
+     * 加载同步队列
+     */
+    loadSyncQueue() {
+      try {
+        this.syncQueue = uni.getStorageSync("syncQueue") || [];
+        formatAppLog("log", "at utils/sync.js:28", "加载同步队列:", this.syncQueue.length, "个任务");
+      } catch (error) {
+        formatAppLog("error", "at utils/sync.js:30", "加载同步队列失败:", error);
+        this.syncQueue = [];
+      }
+    }
+    /**
+     * 保存同步队列
+     */
+    saveSyncQueue() {
+      try {
+        uni.setStorageSync("syncQueue", this.syncQueue);
+      } catch (error) {
+        formatAppLog("error", "at utils/sync.js:42", "保存同步队列失败:", error);
+      }
+    }
+    /**
+     * 添加同步任务
+     * @param {string} type 任务类型
+     * @param {object} data 任务数据
+     */
+    addSyncTask(type, data) {
+      const task = {
+        id: this.generateTaskId(),
+        type,
+        data,
+        timestamp: Date.now(),
+        retryCount: 0,
+        status: "pending"
+      };
+      this.syncQueue.push(task);
+      this.saveSyncQueue();
+      formatAppLog("log", "at utils/sync.js:64", "添加同步任务:", type, task.id);
+      this.processSyncQueue();
+    }
+    /**
+     * 生成任务ID
+     */
+    generateTaskId() {
+      return Date.now().toString(36) + Math.random().toString(36).substr(2);
+    }
+    /**
+     * 开始同步定时器
+     */
+    startSyncTimer() {
+      setInterval(() => {
+        this.processSyncQueue();
+      }, 3e4);
+    }
+    /**
+     * 处理同步队列
+     */
+    async processSyncQueue() {
+      if (this.isSyncing || this.syncQueue.length === 0) {
+        return;
+      }
+      this.isSyncing = true;
+      try {
+        const networkType = await this.getNetworkType();
+        if (networkType === "none") {
+          formatAppLog("log", "at utils/sync.js:101", "网络不可用，跳过同步");
+          return;
+        }
+        const pendingTasks = this.syncQueue.filter((task) => task.status === "pending");
+        for (const task of pendingTasks) {
+          await this.processTask(task);
+        }
+        this.cleanupCompletedTasks();
+      } catch (error) {
+        formatAppLog("error", "at utils/sync.js:116", "处理同步队列失败:", error);
+      } finally {
+        this.isSyncing = false;
+      }
+    }
+    /**
+     * 处理单个任务
+     * @param {object} task 任务对象
+     */
+    async processTask(task) {
+      try {
+        formatAppLog("log", "at utils/sync.js:128", "处理同步任务:", task.type, task.id);
+        let success = false;
+        switch (task.type) {
+          case "updateAvatar":
+            success = await this.syncAvatar(task.data);
+            break;
+          case "updateProfile":
+            success = await this.syncProfile(task.data);
+            break;
+          case "updateUserInfo":
+            success = await this.syncUserInfo(task.data);
+            break;
+          default:
+            formatAppLog("warn", "at utils/sync.js:143", "未知的同步任务类型:", task.type);
+            task.status = "failed";
+            break;
+        }
+        if (success) {
+          task.status = "completed";
+          formatAppLog("log", "at utils/sync.js:150", "同步任务完成:", task.id);
+        } else {
+          task.retryCount++;
+          if (task.retryCount >= this.maxRetryCount) {
+            task.status = "failed";
+            formatAppLog("error", "at utils/sync.js:155", "同步任务失败，已达到最大重试次数:", task.id);
+          } else {
+            formatAppLog("log", "at utils/sync.js:157", "同步任务失败，将重试:", task.id, "重试次数:", task.retryCount);
+          }
+        }
+      } catch (error) {
+        formatAppLog("error", "at utils/sync.js:162", "处理同步任务失败:", task.id, error);
+        task.retryCount++;
+        if (task.retryCount >= this.maxRetryCount) {
+          task.status = "failed";
+        }
+      }
+      this.saveSyncQueue();
+    }
+    /**
+     * 同步头像
+     * @param {object} userInfo 用户信息
+     */
+    async syncAvatar(userInfo) {
+      try {
+        const response = await this.request({
+          url: "https://api.abchina.com/user/avatar",
+          method: "PUT",
+          data: {
+            avatar: userInfo.avatar,
+            avatarUpdateTime: userInfo.avatarUpdateTime
+          }
+        });
+        return response.success;
+      } catch (error) {
+        formatAppLog("error", "at utils/sync.js:189", "同步头像失败:", error);
+        return false;
+      }
+    }
+    /**
+     * 同步用户资料
+     * @param {object} profileData 资料数据
+     */
+    async syncProfile(profileData) {
+      try {
+        const response = await this.request({
+          url: "https://api.abchina.com/user/profile",
+          method: "PUT",
+          data: profileData
+        });
+        return response.success;
+      } catch (error) {
+        formatAppLog("error", "at utils/sync.js:208", "同步用户资料失败:", error);
+        return false;
+      }
+    }
+    /**
+     * 同步用户信息
+     * @param {object} userInfo 用户信息
+     */
+    async syncUserInfo(userInfo) {
+      try {
+        const response = await this.request({
+          url: "https://api.abchina.com/user/info",
+          method: "PUT",
+          data: userInfo
+        });
+        return response.success;
+      } catch (error) {
+        formatAppLog("error", "at utils/sync.js:227", "同步用户信息失败:", error);
+        return false;
+      }
+    }
+    /**
+     * 发送请求
+     * @param {object} options 请求选项
+     */
+    request(options) {
+      return new Promise((resolve, reject) => {
+        uni.request({
+          ...options,
+          header: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${uni.getStorageSync("token") || ""}`,
+            ...options.header
+          },
+          success: (res) => {
+            if (res.data.code === 0) {
+              resolve({ success: true, data: res.data.data });
+            } else {
+              reject(new Error(res.data.message || "请求失败"));
+            }
+          },
+          fail: reject
+        });
+      });
+    }
+    /**
+     * 获取网络类型
+     */
+    getNetworkType() {
+      return new Promise((resolve) => {
+        uni.getNetworkType({
+          success: (res) => resolve(res.networkType),
+          fail: () => resolve("unknown")
+        });
+      });
+    }
+    /**
+     * 清理已完成的任务
+     */
+    cleanupCompletedTasks() {
+      const beforeCount = this.syncQueue.length;
+      this.syncQueue = this.syncQueue.filter((task) => task.status === "pending");
+      const afterCount = this.syncQueue.length;
+      if (beforeCount !== afterCount) {
+        this.saveSyncQueue();
+        formatAppLog("log", "at utils/sync.js:279", "清理已完成的任务:", beforeCount - afterCount, "个");
+      }
+    }
+    /**
+     * 获取同步状态
+     */
+    getSyncStatus() {
+      const pending = this.syncQueue.filter((task) => task.status === "pending").length;
+      const failed = this.syncQueue.filter((task) => task.status === "failed").length;
+      return {
+        pending,
+        failed,
+        total: this.syncQueue.length,
+        isSyncing: this.isSyncing
+      };
+    }
+    /**
+     * 手动触发同步
+     */
+    async manualSync() {
+      if (this.isSyncing) {
+        uni.showToast({
+          title: "正在同步中...",
+          icon: "none"
+        });
+        return;
+      }
+      uni.showLoading({
+        title: "同步中..."
+      });
+      try {
+        await this.processSyncQueue();
+        const status = this.getSyncStatus();
+        if (status.pending === 0) {
+          uni.showToast({
+            title: "同步完成",
+            icon: "success"
+          });
+        } else {
+          uni.showToast({
+            title: `还有${status.pending}个任务待同步`,
+            icon: "none"
+          });
+        }
+      } catch (error) {
+        formatAppLog("error", "at utils/sync.js:330", "手动同步失败:", error);
+        uni.showToast({
+          title: "同步失败",
+          icon: "none"
+        });
+      } finally {
+        uni.hideLoading();
+      }
+    }
+  }
+  const syncManager = new SyncManager();
+  const _sfc_main$3 = {
     data() {
       return {
         profileData: {
@@ -11370,6 +12584,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
     },
     onLoad() {
       this.loadProfileData();
+      syncManager.init();
     },
     methods: {
       goBack() {
@@ -11383,20 +12598,219 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
             this.setPickerIndexes();
           }
         } catch (error) {
-          formatAppLog("error", "at pages/user/profile.vue:167", "加载个人资料失败:", error);
+          formatAppLog("error", "at pages/user/profile.vue:171", "加载个人资料失败:", error);
         }
       },
       setPickerIndexes() {
         this.genderIndex = this.genderOptions.indexOf(this.profileData.gender) || 0;
       },
       changeAvatar() {
+        uni.showActionSheet({
+          itemList: ["拍照", "从相册选择"],
+          success: (res) => {
+            if (res.tapIndex === 0) {
+              this.takePhoto();
+            } else if (res.tapIndex === 1) {
+              this.chooseFromAlbum();
+            }
+          }
+        });
+      },
+      // 拍照功能
+      takePhoto() {
         uni.chooseImage({
           count: 1,
           sizeType: ["compressed"],
-          sourceType: ["album", "camera"],
+          sourceType: ["camera"],
           success: (res) => {
-            this.profileData.avatar = res.tempFilePaths[0];
+            this.handleImageSelected(res.tempFilePaths[0]);
+          },
+          fail: (error) => {
+            formatAppLog("error", "at pages/user/profile.vue:205", "拍照失败:", error);
+            uni.showToast({
+              title: "拍照失败，请重试",
+              icon: "none"
+            });
           }
+        });
+      },
+      // 从相册选择
+      chooseFromAlbum() {
+        uni.chooseImage({
+          count: 1,
+          sizeType: ["compressed"],
+          sourceType: ["album"],
+          success: (res) => {
+            this.handleImageSelected(res.tempFilePaths[0]);
+          },
+          fail: (error) => {
+            formatAppLog("error", "at pages/user/profile.vue:224", "选择图片失败:", error);
+            uni.showToast({
+              title: "选择图片失败，请重试",
+              icon: "none"
+            });
+          }
+        });
+      },
+      // 处理选中的图片
+      async handleImageSelected(imagePath) {
+        uni.showLoading({
+          title: "上传中..."
+        });
+        try {
+          const uploadResult = await this.uploadAvatarToServer(imagePath);
+          if (uploadResult.success) {
+            this.profileData.avatar = uploadResult.avatarUrl;
+            await this.saveAvatarToStorage(uploadResult.avatarUrl);
+            uni.hideLoading();
+            uni.showToast({
+              title: "头像更新成功",
+              icon: "success",
+              duration: 1500
+            });
+          } else {
+            throw new Error(uploadResult.message || "上传失败");
+          }
+        } catch (error) {
+          formatAppLog("error", "at pages/user/profile.vue:264", "头像上传失败:", error);
+          uni.hideLoading();
+          uni.showToast({
+            title: error.message || "头像上传失败",
+            icon: "none"
+          });
+        }
+      },
+      // 上传头像到服务器
+      uploadAvatarToServer(imagePath) {
+        return new Promise((resolve, reject) => {
+          uni.getNetworkType({
+            success: (networkRes) => {
+              if (networkRes.networkType === "none") {
+                resolve({
+                  success: true,
+                  avatarUrl: imagePath,
+                  isOffline: true
+                });
+                return;
+              }
+              uni.uploadFile({
+                url: "https://api.abchina.com/user/avatar",
+                filePath: imagePath,
+                name: "avatar",
+                header: {
+                  "Authorization": `Bearer ${uni.getStorageSync("token") || ""}`
+                },
+                success: (res) => {
+                  try {
+                    const data = JSON.parse(res.data);
+                    if (data.code === 0) {
+                      resolve({
+                        success: true,
+                        avatarUrl: data.data.avatarUrl,
+                        isOffline: false
+                      });
+                    } else {
+                      reject(new Error(data.message || "上传失败"));
+                    }
+                  } catch (parseError) {
+                    reject(new Error("服务器响应格式错误"));
+                  }
+                },
+                fail: (error) => {
+                  formatAppLog("error", "at pages/user/profile.vue:314", "上传失败:", error);
+                  resolve({
+                    success: true,
+                    avatarUrl: imagePath,
+                    isOffline: true,
+                    message: "网络异常，已保存到本地"
+                  });
+                }
+              });
+            },
+            fail: () => {
+              resolve({
+                success: true,
+                avatarUrl: imagePath,
+                isOffline: true
+              });
+            }
+          });
+        });
+      },
+      // 保存头像到本地存储和数据库
+      async saveAvatarToStorage(avatarUrl) {
+        try {
+          let userInfo = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
+          if (userInfo) {
+            userInfo.avatar = avatarUrl;
+            userInfo.avatarUpdateTime = (/* @__PURE__ */ new Date()).toISOString();
+            uni.setStorageSync("userInfo", userInfo);
+            uni.setStorageSync("currentUser", userInfo);
+            await this.updateLocalDatabase(userInfo);
+            if (!this.isOfflineMode) {
+              await this.syncToServer(userInfo);
+            }
+          }
+        } catch (error) {
+          formatAppLog("error", "at pages/user/profile.vue:360", "保存头像失败:", error);
+          throw error;
+        }
+      },
+      // 更新本地数据库
+      async updateLocalDatabase(userInfo) {
+        try {
+          const users2 = uni.getStorageSync("users") || [];
+          const userIndex = users2.findIndex(
+            (user) => user.id === userInfo.id || user.phone === userInfo.phone || user.username === userInfo.username
+          );
+          if (userIndex !== -1) {
+            users2[userIndex].avatar = userInfo.avatar;
+            users2[userIndex].avatarUpdateTime = userInfo.avatarUpdateTime;
+            uni.setStorageSync("users", users2);
+            formatAppLog("log", "at pages/user/profile.vue:385", "本地数据库更新成功:", userInfo.avatar);
+          }
+        } catch (error) {
+          formatAppLog("error", "at pages/user/profile.vue:388", "更新本地数据库失败:", error);
+          throw error;
+        }
+      },
+      // 同步到服务器
+      async syncToServer(userInfo) {
+        try {
+          const response = await this.updateUserInfoAPI(userInfo);
+          if (response.success) {
+            formatAppLog("log", "at pages/user/profile.vue:399", "服务器同步成功");
+          }
+        } catch (error) {
+          formatAppLog("error", "at pages/user/profile.vue:402", "服务器同步失败:", error);
+          syncManager.addSyncTask("updateAvatar", userInfo);
+        }
+      },
+      // 更新用户信息API
+      updateUserInfoAPI(userInfo) {
+        return new Promise((resolve, reject) => {
+          uni.request({
+            url: "https://api.abchina.com/user/info",
+            method: "PUT",
+            header: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${uni.getStorageSync("token") || ""}`
+            },
+            data: {
+              avatar: userInfo.avatar,
+              avatarUpdateTime: userInfo.avatarUpdateTime
+            },
+            success: (res) => {
+              if (res.data.code === 0) {
+                resolve({ success: true, data: res.data.data });
+              } else {
+                reject(new Error(res.data.message || "更新失败"));
+              }
+            },
+            fail: (error) => {
+              reject(error);
+            }
+          });
         });
       },
       onGenderChange(e) {
@@ -11406,14 +12820,30 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       onBirthDateChange(e) {
         this.profileData.birthDate = e.detail.value;
       },
-      saveProfile() {
+      async saveProfile() {
         try {
+          uni.showLoading({
+            title: "保存中..."
+          });
           let userInfo = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
           if (userInfo) {
-            userInfo = { ...userInfo, ...this.profileData };
+            userInfo = {
+              ...userInfo,
+              ...this.profileData,
+              lastUpdateTime: (/* @__PURE__ */ new Date()).toISOString()
+            };
             uni.setStorageSync("userInfo", userInfo);
             uni.setStorageSync("currentUser", userInfo);
+            await this.updateLocalDatabase(userInfo);
+            try {
+              await this.syncProfileToServer(userInfo);
+              formatAppLog("log", "at pages/user/profile.vue:471", "个人资料同步成功");
+            } catch (syncError) {
+              formatAppLog("error", "at pages/user/profile.vue:473", "同步失败，已加入同步队列:", syncError);
+              syncManager.addSyncTask("updateProfile", userInfo);
+            }
           }
+          uni.hideLoading();
           uni.showToast({
             title: "保存成功",
             icon: "success"
@@ -11422,16 +12852,29 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
             this.goBack();
           }, 1500);
         } catch (error) {
-          formatAppLog("error", "at pages/user/profile.vue:214", "保存个人资料失败:", error);
+          formatAppLog("error", "at pages/user/profile.vue:489", "保存个人资料失败:", error);
+          uni.hideLoading();
           uni.showToast({
             title: "保存失败",
             icon: "none"
           });
         }
+      },
+      // 同步个人资料到服务器
+      async syncProfileToServer(userInfo) {
+        try {
+          const response = await this.updateUserInfoAPI(userInfo);
+          if (!response.success) {
+            throw new Error("同步失败");
+          }
+        } catch (error) {
+          formatAppLog("error", "at pages/user/profile.vue:506", "同步个人资料失败:", error);
+          throw error;
+        }
       }
     }
   };
-  function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$2(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "profile-page" }, [
       vue.createElementVNode("view", { class: "nav-bar" }, [
         vue.createElementVNode("view", {
@@ -11463,7 +12906,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
               vue.createElementVNode("text", { class: "edit-icon" }, "📷")
             ])
           ]),
-          vue.createElementVNode("text", { class: "avatar-tip" }, "点击更换头像")
+          vue.createElementVNode("text", { class: "avatar-tip" }, "点击更换头像（支持拍照和相册选择）")
         ]),
         vue.createElementVNode("view", { class: "form-section" }, [
           vue.createElementVNode("view", { class: "section-title" }, "基本信息"),
@@ -11626,8 +13069,8 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       ])
     ]);
   }
-  const PagesUserProfile = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["render", _sfc_render$1], ["__scopeId", "data-v-f6b4f04d"], ["__file", "E:/项目/yihangyidon/src/pages/user/profile.vue"]]);
-  const _sfc_main$1 = {
+  const PagesUserProfile = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["render", _sfc_render$2], ["__scopeId", "data-v-f6b4f04d"], ["__file", "E:/项目/yihangyidon/src/pages/user/profile.vue"]]);
+  const _sfc_main$2 = {
     data() {
       return {
         securityScore: 85,
@@ -11683,9 +13126,18 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       }
     },
     onLoad() {
-      this.loadSecuritySettings();
-      this.calculateSecurityScore();
-      this.generateSecurityRecommendations();
+      try {
+        this.loadSecuritySettings();
+        this.calculateSecurityScore();
+        this.generateSecurityRecommendations();
+      } catch (error) {
+        formatAppLog("error", "at pages/user/security.vue:397", "安全设置页面初始化失败:", error);
+        uni.showToast({
+          title: "页面加载失败，请重试",
+          icon: "none",
+          duration: 2e3
+        });
+      }
     },
     methods: {
       // 返回上一页
@@ -11709,11 +13161,46 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       loadSecuritySettings() {
         try {
           const settings = uni.getStorageSync("securitySettings");
-          if (settings) {
+          if (settings && typeof settings === "object") {
             Object.assign(this, settings);
           }
+          const userInfo = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
+          if (userInfo && userInfo.securitySettings && typeof userInfo.securitySettings === "object") {
+            const securitySettings = userInfo.securitySettings;
+            this.biometricEnabled = Boolean(securitySettings.biometricEnabled);
+            this.smsVerificationEnabled = Boolean(securitySettings.smsVerificationEnabled);
+            this.accountLockEnabled = Boolean(securitySettings.accountLockEnabled);
+            this.twoFactorEnabled = Boolean(securitySettings.twoFactorEnabled);
+            this.securityNotificationsEnabled = Boolean(securitySettings.securityNotificationsEnabled);
+            this.transactionLimit = Number(securitySettings.transactionLimit) || 5e4;
+            this.passwordUpdateTime = securitySettings.passwordUpdateTime || "2024-01-01";
+            this.transactionPasswordUpdateTime = securitySettings.transactionPasswordUpdateTime || "2024-01-01";
+            this.securityQuestionsSet = Boolean(securitySettings.securityQuestionsSet);
+            this.emergencyContactSet = Boolean(securitySettings.emergencyContactSet);
+            this.loginDevices = Array.isArray(securitySettings.loginDevices) ? securitySettings.loginDevices : [];
+            this.securityEventsCount = Array.isArray(securitySettings.securityEvents) ? securitySettings.securityEvents.length : 0;
+            if (Array.isArray(securitySettings.securityEvents) && securitySettings.securityEvents.length > 0) {
+              const lastLoginEvent = securitySettings.securityEvents.filter((event) => event && event.type === "login" && event.status === "success").sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))[0];
+              if (lastLoginEvent && lastLoginEvent.timestamp) {
+                this.lastLoginTime = new Date(lastLoginEvent.timestamp).toLocaleString();
+              }
+            }
+          }
+          formatAppLog("log", "at pages/user/security.vue:466", "安全设置加载成功");
         } catch (error) {
-          formatAppLog("error", "at pages/user/security.vue:425", "加载安全设置失败:", error);
+          formatAppLog("error", "at pages/user/security.vue:468", "加载安全设置失败:", error);
+          this.biometricEnabled = false;
+          this.smsVerificationEnabled = false;
+          this.accountLockEnabled = false;
+          this.twoFactorEnabled = false;
+          this.securityNotificationsEnabled = false;
+          this.transactionLimit = 5e4;
+          this.passwordUpdateTime = "2024-01-01";
+          this.transactionPasswordUpdateTime = "2024-01-01";
+          this.securityQuestionsSet = false;
+          this.emergencyContactSet = false;
+          this.loginDevices = [];
+          this.securityEventsCount = 0;
         }
       },
       // 保存安全设置
@@ -11725,13 +13212,45 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
             accountLockEnabled: this.accountLockEnabled,
             twoFactorEnabled: this.twoFactorEnabled,
             securityNotificationsEnabled: this.securityNotificationsEnabled,
-            transactionLimit: this.transactionLimit
+            transactionLimit: this.transactionLimit,
+            passwordUpdateTime: this.passwordUpdateTime,
+            transactionPasswordUpdateTime: this.transactionPasswordUpdateTime,
+            securityQuestionsSet: this.securityQuestionsSet,
+            emergencyContactSet: this.emergencyContactSet,
+            loginDevices: this.loginDevices
           };
           uni.setStorageSync("securitySettings", settings);
+          const userInfo = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
+          if (userInfo) {
+            userInfo.securitySettings = {
+              ...userInfo.securitySettings,
+              ...settings,
+              lastUpdateTime: (/* @__PURE__ */ new Date()).toISOString()
+            };
+            uni.setStorageSync("userInfo", userInfo);
+            uni.setStorageSync("currentUser", userInfo);
+            this.updateUserSecurityInDatabase(userInfo);
+          }
           this.lastUpdateTime = (/* @__PURE__ */ new Date()).toLocaleDateString();
           this.calculateSecurityScore();
         } catch (error) {
-          formatAppLog("error", "at pages/user/security.vue:448", "保存安全设置失败:", error);
+          formatAppLog("error", "at pages/user/security.vue:527", "保存安全设置失败:", error);
+        }
+      },
+      // 更新数据库中的用户安全设置
+      updateUserSecurityInDatabase(userInfo) {
+        try {
+          const users2 = uni.getStorageSync("users") || [];
+          const userIndex = users2.findIndex(
+            (user) => user.id === userInfo.id || user.phone === userInfo.phone || user.username === userInfo.username
+          );
+          if (userIndex !== -1) {
+            users2[userIndex].securitySettings = userInfo.securitySettings;
+            uni.setStorageSync("users", users2);
+            formatAppLog("log", "at pages/user/security.vue:550", "用户安全设置数据库更新成功");
+          }
+        } catch (error) {
+          formatAppLog("error", "at pages/user/security.vue:553", "更新用户安全设置数据库失败:", error);
         }
       },
       // 计算安全评分
@@ -11881,23 +13400,83 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       },
       // 修改登录密码
       changeLoginPassword() {
+        uni.navigateTo({
+          url: "/pages/user/change-password?type=login"
+        });
+      },
+      // 显示密码输入界面
+      showPasswordInput(type) {
         uni.showModal({
-          title: "修改登录密码",
-          content: "为了账户安全，建议您定期更换密码。新密码应包含字母、数字和特殊字符。",
-          confirmText: "立即修改",
-          cancelText: "稍后再说",
+          title: type === "login" ? "修改登录密码" : "修改交易密码",
+          editable: true,
+          placeholderText: "请输入新密码（6-20位，包含字母和数字）",
+          confirmText: "确认修改",
+          cancelText: "取消",
           success: (res) => {
-            if (res.confirm) {
-              this.passwordUpdateTime = (/* @__PURE__ */ new Date()).toLocaleDateString();
-              this.calculateSecurityScore();
-              this.generateSecurityRecommendations();
-              uni.showToast({
-                title: "密码已更新",
-                icon: "success"
-              });
+            if (res.confirm && res.content) {
+              this.validateAndUpdatePassword(res.content, type);
             }
           }
         });
+      },
+      // 验证并更新密码
+      validateAndUpdatePassword(newPassword, type) {
+        if (newPassword.length < 6 || newPassword.length > 20) {
+          uni.showToast({
+            title: "密码长度应为6-20位",
+            icon: "none"
+          });
+          return;
+        }
+        if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]/.test(newPassword)) {
+          uni.showToast({
+            title: "密码必须包含字母和数字",
+            icon: "none"
+          });
+          return;
+        }
+        const updateTime = (/* @__PURE__ */ new Date()).toISOString();
+        if (type === "login") {
+          this.passwordUpdateTime = updateTime;
+        } else {
+          this.transactionPasswordUpdateTime = updateTime;
+        }
+        this.addSecurityEvent(
+          type === "login" ? "password_change" : "transaction_password_change",
+          `修改${type === "login" ? "登录" : "交易"}密码`
+        );
+        this.saveSecuritySettings();
+        this.calculateSecurityScore();
+        this.generateSecurityRecommendations();
+        uni.showToast({
+          title: `${type === "login" ? "登录" : "交易"}密码已更新`,
+          icon: "success"
+        });
+      },
+      // 添加安全事件
+      addSecurityEvent(type, description) {
+        const userInfo = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
+        if (userInfo && userInfo.securitySettings) {
+          if (!userInfo.securitySettings.securityEvents) {
+            userInfo.securitySettings.securityEvents = [];
+          }
+          const newEvent = {
+            id: Date.now(),
+            type,
+            description,
+            timestamp: (/* @__PURE__ */ new Date()).toISOString(),
+            location: "当前位置",
+            ip: "192.168.1.100",
+            status: "success"
+          };
+          userInfo.securitySettings.securityEvents.unshift(newEvent);
+          if (userInfo.securitySettings.securityEvents.length > 50) {
+            userInfo.securitySettings.securityEvents = userInfo.securitySettings.securityEvents.slice(0, 50);
+          }
+          uni.setStorageSync("userInfo", userInfo);
+          uni.setStorageSync("currentUser", userInfo);
+          this.updateUserSecurityInDatabase(userInfo);
+        }
       },
       // 生物识别开关变化
       onBiometricChange(e) {
@@ -11939,22 +13518,8 @@ IP：${device.ip}`
       },
       // 修改交易密码
       changeTransactionPassword() {
-        uni.showModal({
-          title: "修改交易密码",
-          content: "交易密码用于重要交易验证，建议与登录密码不同。",
-          confirmText: "立即修改",
-          cancelText: "稍后再说",
-          success: (res) => {
-            if (res.confirm) {
-              this.transactionPasswordUpdateTime = (/* @__PURE__ */ new Date()).toLocaleDateString();
-              this.calculateSecurityScore();
-              this.generateSecurityRecommendations();
-              uni.showToast({
-                title: "交易密码已更新",
-                icon: "success"
-              });
-            }
-          }
+        uni.navigateTo({
+          url: "/pages/user/change-password?type=transaction"
         });
       },
       // 设置交易限额
@@ -11993,16 +13558,71 @@ IP：${device.ip}`
           cancelText: "稍后再说",
           success: (res) => {
             if (res.confirm) {
-              this.securityQuestionsSet = true;
-              this.calculateSecurityScore();
-              this.generateSecurityRecommendations();
-              uni.showToast({
-                title: "安全问题已设置",
-                icon: "success"
-              });
+              this.showSecurityQuestionsSetup();
             }
           }
         });
+      },
+      // 显示安全问题设置界面
+      showSecurityQuestionsSetup() {
+        const questions = [
+          "您的小学名称是什么？",
+          "您的第一个宠物的名字是什么？",
+          "您最喜欢的颜色是什么？",
+          "您的出生地是哪里？",
+          "您最喜欢的食物是什么？",
+          "您的第一个老师的姓名是什么？"
+        ];
+        uni.showActionSheet({
+          itemList: questions,
+          success: (res) => {
+            const selectedQuestion = questions[res.tapIndex];
+            this.setSecurityQuestionAnswer(selectedQuestion);
+          }
+        });
+      },
+      // 设置安全问题答案
+      setSecurityQuestionAnswer(question) {
+        uni.showModal({
+          title: "设置安全问题",
+          content: `问题：${question}`,
+          editable: true,
+          placeholderText: "请输入答案",
+          confirmText: "确认",
+          cancelText: "取消",
+          success: (res) => {
+            if (res.confirm && res.content) {
+              this.saveSecurityQuestion(question, res.content);
+            }
+          }
+        });
+      },
+      // 保存安全问题
+      saveSecurityQuestion(question, answer) {
+        const userInfo = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
+        if (userInfo && userInfo.securitySettings) {
+          if (!userInfo.securitySettings.securityQuestions) {
+            userInfo.securitySettings.securityQuestions = [];
+          }
+          userInfo.securitySettings.securityQuestions.push({
+            question,
+            answer
+          });
+          if (userInfo.securitySettings.securityQuestions.length >= 3) {
+            userInfo.securitySettings.securityQuestionsSet = true;
+            this.securityQuestionsSet = true;
+          }
+          uni.setStorageSync("userInfo", userInfo);
+          uni.setStorageSync("currentUser", userInfo);
+          this.updateUserSecurityInDatabase(userInfo);
+          this.addSecurityEvent("security_question_set", "设置安全问题");
+          this.calculateSecurityScore();
+          this.generateSecurityRecommendations();
+          uni.showToast({
+            title: "安全问题已设置",
+            icon: "success"
+          });
+        }
       },
       // 设置紧急联系人
       setEmergencyContact() {
@@ -12013,16 +13633,83 @@ IP：${device.ip}`
           cancelText: "稍后再说",
           success: (res) => {
             if (res.confirm) {
-              this.emergencyContactSet = true;
-              this.calculateSecurityScore();
-              this.generateSecurityRecommendations();
-              uni.showToast({
-                title: "紧急联系人已设置",
-                icon: "success"
-              });
+              this.showEmergencyContactSetup();
             }
           }
         });
+      },
+      // 显示紧急联系人设置界面
+      showEmergencyContactSetup() {
+        uni.showModal({
+          title: "设置紧急联系人",
+          content: "请输入紧急联系人信息",
+          editable: true,
+          placeholderText: "请输入联系人姓名",
+          confirmText: "下一步",
+          cancelText: "取消",
+          success: (res) => {
+            if (res.confirm && res.content) {
+              this.setEmergencyContactPhone(res.content);
+            }
+          }
+        });
+      },
+      // 设置紧急联系人电话
+      setEmergencyContactPhone(name) {
+        uni.showModal({
+          title: "设置紧急联系人",
+          content: `联系人：${name}`,
+          editable: true,
+          placeholderText: "请输入手机号码",
+          confirmText: "下一步",
+          cancelText: "取消",
+          success: (res) => {
+            if (res.confirm && res.content) {
+              this.setEmergencyContactRelationship(name, res.content);
+            }
+          }
+        });
+      },
+      // 设置紧急联系人关系
+      setEmergencyContactRelationship(name, phone) {
+        const relationships = ["父亲", "母亲", "配偶", "子女", "兄弟姐妹", "朋友", "其他"];
+        uni.showActionSheet({
+          itemList: relationships,
+          success: (res) => {
+            const relationship = relationships[res.tapIndex];
+            this.saveEmergencyContact(name, phone, relationship);
+          }
+        });
+      },
+      // 保存紧急联系人
+      saveEmergencyContact(name, phone, relationship) {
+        if (!/^1[3-9]\d{9}$/.test(phone)) {
+          uni.showToast({
+            title: "请输入正确的手机号码",
+            icon: "none"
+          });
+          return;
+        }
+        const userInfo = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
+        if (userInfo && userInfo.securitySettings) {
+          userInfo.securitySettings.emergencyContact = {
+            name,
+            phone,
+            relationship
+          };
+          userInfo.securitySettings.emergencyContactSet = true;
+          this.emergencyContactSet = true;
+          uni.setStorageSync("userInfo", userInfo);
+          uni.setStorageSync("currentUser", userInfo);
+          this.updateUserSecurityInDatabase(userInfo);
+          this.addSecurityEvent("emergency_contact_set", "设置紧急联系人");
+          this.calculateSecurityScore();
+          this.generateSecurityRecommendations();
+          uni.showToast({
+            title: "紧急联系人已设置",
+            icon: "success"
+          });
+        }
       },
       // 账户锁定开关变化
       onAccountLockChange(e) {
@@ -12086,21 +13773,73 @@ IP：${device.ip}`
       },
       // 查看登录记录
       viewLoginHistory() {
-        uni.showToast({
-          title: "功能开发中",
-          icon: "none"
-        });
+        const userInfo = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
+        if (userInfo && userInfo.securitySettings && userInfo.securitySettings.securityEvents) {
+          const loginEvents = userInfo.securitySettings.securityEvents.filter((event) => event.type === "login").slice(0, 10);
+          if (loginEvents.length === 0) {
+            uni.showToast({
+              title: "暂无登录记录",
+              icon: "none"
+            });
+            return;
+          }
+          const loginHistory = loginEvents.map((event) => {
+            const date = new Date(event.timestamp).toLocaleString();
+            const status = event.status === "success" ? "成功" : "失败";
+            return `${date}
+位置：${event.location}
+IP：${event.ip}
+状态：${status}`;
+          }).join("\n\n");
+          uni.showModal({
+            title: "登录记录",
+            content: loginHistory,
+            showCancel: false,
+            confirmText: "确定"
+          });
+        } else {
+          uni.showToast({
+            title: "暂无登录记录",
+            icon: "none"
+          });
+        }
       },
       // 查看安全事件
       viewSecurityEvents() {
-        uni.showToast({
-          title: "功能开发中",
-          icon: "none"
-        });
+        const userInfo = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
+        if (userInfo && userInfo.securitySettings && userInfo.securitySettings.securityEvents) {
+          const securityEvents = userInfo.securitySettings.securityEvents.slice(0, 15);
+          if (securityEvents.length === 0) {
+            uni.showToast({
+              title: "暂无安全事件",
+              icon: "none"
+            });
+            return;
+          }
+          const eventsList = securityEvents.map((event) => {
+            const date = new Date(event.timestamp).toLocaleString();
+            const status = event.status === "success" ? "成功" : "失败";
+            return `${date}
+事件：${event.description}
+位置：${event.location}
+状态：${status}`;
+          }).join("\n\n");
+          uni.showModal({
+            title: "安全事件记录",
+            content: eventsList,
+            showCancel: false,
+            confirmText: "确定"
+          });
+        } else {
+          uni.showToast({
+            title: "暂无安全事件",
+            icon: "none"
+          });
+        }
       }
     }
   };
-  function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "security-page" }, [
       vue.createCommentVNode(" 顶部导航栏 "),
       vue.createElementVNode("view", { class: "nav-bar" }, [
@@ -12666,7 +14405,333 @@ IP：${device.ip}`
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesUserSecurity = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["render", _sfc_render], ["__scopeId", "data-v-b74f3c40"], ["__file", "E:/项目/yihangyidon/src/pages/user/security.vue"]]);
+  const PagesUserSecurity = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["render", _sfc_render$1], ["__scopeId", "data-v-b74f3c40"], ["__file", "E:/项目/yihangyidon/src/pages/user/security.vue"]]);
+  const _sfc_main$1 = {
+    data() {
+      return {
+        type: "login",
+        // 'login' or 'transaction'
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+        passwordStrengthText: "很弱",
+        passwordStrengthClass: "weak",
+        userInfo: null,
+        canSave: false
+      };
+    },
+    computed: {
+      pageTitle() {
+        return this.type === "login" ? "修改登录密码" : "修改交易密码";
+      }
+    },
+    onLoad(options) {
+      if (options.type) {
+        this.type = options.type;
+      }
+      this.loadUserInfo();
+    },
+    watch: {
+      currentPassword() {
+        this.checkCanSave();
+      },
+      newPassword() {
+        this.checkPasswordStrength();
+        this.checkCanSave();
+      },
+      confirmPassword() {
+        this.checkCanSave();
+      }
+    },
+    methods: {
+      goBack() {
+        uni.navigateBack();
+      },
+      loadUserInfo() {
+        this.userInfo = getUserInfo();
+      },
+      checkPasswordStrength() {
+        const password = this.newPassword;
+        let strength = 0;
+        if (password.length >= 6)
+          strength++;
+        if (/[a-zA-Z]/.test(password))
+          strength++;
+        if (/\d/.test(password))
+          strength++;
+        if (/[^a-zA-Z0-9]/.test(password))
+          strength++;
+        if (password.length < 6) {
+          this.passwordStrengthText = "很弱";
+          this.passwordStrengthClass = "very-weak";
+        } else if (strength <= 2) {
+          this.passwordStrengthText = "弱";
+          this.passwordStrengthClass = "weak";
+        } else if (strength === 3) {
+          this.passwordStrengthText = "中";
+          this.passwordStrengthClass = "medium";
+        } else {
+          this.passwordStrengthText = "强";
+          this.passwordStrengthClass = "strong";
+        }
+      },
+      validateCurrentPassword() {
+        if (!this.currentPassword) {
+          uni.showToast({ title: "请输入当前密码", icon: "none" });
+          return false;
+        }
+        return true;
+      },
+      validateNewPasswords() {
+        if (!this.newPassword) {
+          uni.showToast({ title: "请输入新密码", icon: "none" });
+          return false;
+        }
+        if (this.newPassword.length < 6 || this.newPassword.length > 20) {
+          uni.showToast({ title: "新密码长度应为6-20位", icon: "none" });
+          return false;
+        }
+        if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]/.test(this.newPassword)) {
+          uni.showToast({ title: "新密码必须包含字母和数字", icon: "none" });
+          return false;
+        }
+        if (this.newPassword !== this.confirmPassword) {
+          uni.showToast({ title: "两次输入的新密码不一致", icon: "none" });
+          return false;
+        }
+        if (this.newPassword === this.currentPassword) {
+          uni.showToast({ title: "新密码不能与当前密码相同", icon: "none" });
+          return false;
+        }
+        return true;
+      },
+      checkCanSave() {
+        this.canSave = this.currentPassword && this.newPassword && this.confirmPassword && this.newPassword === this.confirmPassword && this.newPassword.length >= 6 && this.newPassword.length <= 20 && /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]/.test(this.newPassword) && this.newPassword !== this.currentPassword;
+      },
+      async saveNewPassword() {
+        if (!this.validateCurrentPassword() || !this.validateNewPasswords()) {
+          return;
+        }
+        uni.showLoading({ title: "修改中..." });
+        try {
+          const currentPasswordField = this.type === "login" ? "password" : "transactionPassword";
+          if (this.userInfo[currentPasswordField] !== this.currentPassword) {
+            uni.hideLoading();
+            uni.showToast({ title: "当前密码错误", icon: "none" });
+            return;
+          }
+          let updatedUserInfo = { ...this.userInfo };
+          if (!updatedUserInfo.securitySettings) {
+            updatedUserInfo.securitySettings = {};
+          }
+          if (this.type === "login") {
+            updatedUserInfo.password = this.newPassword;
+            updatedUserInfo.securitySettings.passwordUpdateTime = (/* @__PURE__ */ new Date()).toISOString();
+            this.addSecurityEvent("password_change", "修改登录密码");
+          } else {
+            updatedUserInfo.transactionPassword = this.newPassword;
+            updatedUserInfo.securitySettings.transactionPasswordUpdateTime = (/* @__PURE__ */ new Date()).toISOString();
+            this.addSecurityEvent("transaction_password_change", "修改交易密码");
+          }
+          uni.setStorageSync("userInfo", updatedUserInfo);
+          uni.setStorageSync("currentUser", updatedUserInfo);
+          await this.updateLocalDatabase(updatedUserInfo);
+          this.userInfo = updatedUserInfo;
+          this.currentPassword = "";
+          this.newPassword = "";
+          this.confirmPassword = "";
+          this.canSave = false;
+          uni.hideLoading();
+          uni.showToast({ title: `${this.pageTitle}成功`, icon: "success" });
+          setTimeout(() => {
+            this.goBack();
+          }, 1500);
+        } catch (error) {
+          formatAppLog("error", "at pages/user/change-password.vue:237", "修改密码失败:", error);
+          uni.hideLoading();
+          uni.showToast({ title: `修改${this.pageTitle}失败`, icon: "none" });
+        }
+      },
+      async updateLocalDatabase(userInfo) {
+        try {
+          const response = await uni.request({
+            url: "/db/user.json",
+            method: "GET"
+          });
+          if (response.data && Array.isArray(response.data)) {
+            const users2 = response.data;
+            const userIndex = users2.findIndex((user) => user.id === userInfo.id);
+            if (userIndex !== -1) {
+              users2[userIndex] = { ...users2[userIndex], ...userInfo };
+              uni.setStorageSync("users_backup", users2);
+              formatAppLog("log", "at pages/user/change-password.vue:260", "本地数据库密码更新成功");
+            }
+          } else {
+            const users2 = uni.getStorageSync("users") || [];
+            const userIndex = users2.findIndex((user) => user.id === userInfo.id);
+            if (userIndex !== -1) {
+              users2[userIndex] = { ...users2[userIndex], ...userInfo };
+              uni.setStorageSync("users", users2);
+              formatAppLog("log", "at pages/user/change-password.vue:269", "本地存储密码更新成功");
+            }
+          }
+        } catch (error) {
+          formatAppLog("error", "at pages/user/change-password.vue:273", "更新本地数据库失败:", error);
+          try {
+            const users2 = uni.getStorageSync("users") || [];
+            const userIndex = users2.findIndex((user) => user.id === userInfo.id);
+            if (userIndex !== -1) {
+              users2[userIndex] = { ...users2[userIndex], ...userInfo };
+              uni.setStorageSync("users", users2);
+              formatAppLog("log", "at pages/user/change-password.vue:281", "降级到本地存储更新成功");
+            }
+          } catch (fallbackError) {
+            formatAppLog("error", "at pages/user/change-password.vue:284", "本地存储更新也失败:", fallbackError);
+            throw fallbackError;
+          }
+        }
+      },
+      addSecurityEvent(type, description) {
+        const userInfo = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
+        if (userInfo && userInfo.securitySettings) {
+          if (!userInfo.securitySettings.securityEvents) {
+            userInfo.securitySettings.securityEvents = [];
+          }
+          const newEvent = {
+            id: Date.now(),
+            type,
+            description,
+            timestamp: (/* @__PURE__ */ new Date()).toISOString(),
+            location: "当前位置",
+            ip: "192.168.1.100",
+            status: "success"
+          };
+          userInfo.securitySettings.securityEvents.unshift(newEvent);
+          if (userInfo.securitySettings.securityEvents.length > 50) {
+            userInfo.securitySettings.securityEvents = userInfo.securitySettings.securityEvents.slice(0, 50);
+          }
+          uni.setStorageSync("userInfo", userInfo);
+          uni.setStorageSync("currentUser", userInfo);
+          this.updateLocalDatabase(userInfo);
+        }
+      }
+    }
+  };
+  function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("view", { class: "change-password-page" }, [
+      vue.createCommentVNode(" 顶部导航栏 "),
+      vue.createElementVNode("view", { class: "nav-bar" }, [
+        vue.createElementVNode("view", {
+          class: "nav-left",
+          onClick: _cache[0] || (_cache[0] = (...args) => $options.goBack && $options.goBack(...args))
+        }, [
+          vue.createElementVNode("text", { class: "back-icon" }, "‹")
+        ]),
+        vue.createElementVNode(
+          "view",
+          { class: "nav-title" },
+          vue.toDisplayString($options.pageTitle),
+          1
+          /* TEXT */
+        ),
+        vue.createElementVNode("view", { class: "nav-right" })
+      ]),
+      vue.createCommentVNode(" 密码修改表单 "),
+      vue.createElementVNode("view", { class: "password-form" }, [
+        vue.createElementVNode("view", { class: "form-section" }, [
+          vue.createElementVNode("view", { class: "section-title" }, "当前密码"),
+          vue.createElementVNode("view", { class: "input-group" }, [
+            vue.withDirectives(vue.createElementVNode(
+              "input",
+              {
+                ref: "currentPasswordInput",
+                type: "password",
+                "onUpdate:modelValue": _cache[1] || (_cache[1] = ($event) => $data.currentPassword = $event),
+                placeholder: "请输入当前密码",
+                maxlength: "20",
+                class: "password-input"
+              },
+              null,
+              512
+              /* NEED_PATCH */
+            ), [
+              [vue.vModelText, $data.currentPassword]
+            ])
+          ])
+        ]),
+        vue.createElementVNode("view", { class: "form-section" }, [
+          vue.createElementVNode("view", { class: "section-title" }, "新密码"),
+          vue.createElementVNode("view", { class: "input-group" }, [
+            vue.withDirectives(vue.createElementVNode(
+              "input",
+              {
+                ref: "newPasswordInput",
+                type: "password",
+                "onUpdate:modelValue": _cache[2] || (_cache[2] = ($event) => $data.newPassword = $event),
+                placeholder: "请输入新密码（6-20位，包含字母和数字）",
+                maxlength: "20",
+                class: "password-input",
+                onInput: _cache[3] || (_cache[3] = (...args) => $options.checkPasswordStrength && $options.checkPasswordStrength(...args))
+              },
+              null,
+              544
+              /* NEED_HYDRATION, NEED_PATCH */
+            ), [
+              [vue.vModelText, $data.newPassword]
+            ]),
+            vue.createElementVNode("view", { class: "password-strength" }, [
+              vue.createTextVNode(" 密码强度： "),
+              vue.createElementVNode(
+                "text",
+                {
+                  class: vue.normalizeClass(["strength-text", $data.passwordStrengthClass])
+                },
+                vue.toDisplayString($data.passwordStrengthText),
+                3
+                /* TEXT, CLASS */
+              )
+            ])
+          ])
+        ]),
+        vue.createElementVNode("view", { class: "form-section" }, [
+          vue.createElementVNode("view", { class: "section-title" }, "确认新密码"),
+          vue.createElementVNode("view", { class: "input-group" }, [
+            vue.withDirectives(vue.createElementVNode(
+              "input",
+              {
+                ref: "confirmPasswordInput",
+                type: "password",
+                "onUpdate:modelValue": _cache[4] || (_cache[4] = ($event) => $data.confirmPassword = $event),
+                placeholder: "请再次输入新密码",
+                maxlength: "20",
+                class: "password-input",
+                onInput: _cache[5] || (_cache[5] = (...args) => $options.validateNewPasswords && $options.validateNewPasswords(...args))
+              },
+              null,
+              544
+              /* NEED_HYDRATION, NEED_PATCH */
+            ), [
+              [vue.vModelText, $data.confirmPassword]
+            ])
+          ])
+        ]),
+        vue.createElementVNode("button", {
+          class: "save-button",
+          onClick: _cache[6] || (_cache[6] = (...args) => $options.saveNewPassword && $options.saveNewPassword(...args)),
+          disabled: !$data.canSave
+        }, " 确认修改 ", 8, ["disabled"])
+      ]),
+      vue.createElementVNode("view", { class: "password-tips" }, [
+        vue.createElementVNode("text", { class: "tips-title" }, "密码设置建议："),
+        vue.createElementVNode("text", { class: "tip-item" }, "• 密码长度应为6-20位"),
+        vue.createElementVNode("text", { class: "tip-item" }, "• 必须包含字母和数字"),
+        vue.createElementVNode("text", { class: "tip-item" }, "• 建议包含特殊字符（如@$!%*#?&）"),
+        vue.createElementVNode("text", { class: "tip-item" }, "• 请勿使用与个人信息相关的简单密码"),
+        vue.createElementVNode("text", { class: "tip-item" }, "• 定期更换密码，提高账户安全性")
+      ])
+    ]);
+  }
+  const PagesUserChangePassword = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["render", _sfc_render], ["__scopeId", "data-v-df75db25"], ["__file", "E:/项目/yihangyidon/src/pages/user/change-password.vue"]]);
   __definePage("pages/denglu/login", PagesDengluLogin);
   __definePage("pages/register/register", PagesRegisterRegister);
   __definePage("pages/index/index", PagesIndexIndex);
@@ -12687,6 +14752,7 @@ IP：${device.ip}`
   __definePage("pages/credit-cards/credit-cards", PagesCreditCardsCreditCards);
   __definePage("pages/user/profile", PagesUserProfile);
   __definePage("pages/user/security", PagesUserSecurity);
+  __definePage("pages/user/change-password", PagesUserChangePassword);
   function initPushNotification() {
     if (typeof plus !== "undefined" && plus.push) {
       plus.globalEvent.addEventListener("newPath", ({ path }) => {
@@ -12723,6 +14789,274 @@ IP：${device.ip}`
   Promise.resolve().then(() => {
     initPushNotification();
   });
+  const THEME_STORAGE_KEY = "app_theme";
+  const themes = {
+    light: {
+      name: "浅色主题",
+      id: "light",
+      colors: {
+        primary: "#4caf50",
+        primaryDark: "#2e7d32",
+        primaryLight: "#81c784",
+        secondary: "#ff9800",
+        secondaryDark: "#f57c00",
+        background: "#f5f5f5",
+        surface: "#ffffff",
+        surfaceVariant: "#f8f9fa",
+        text: "#333333",
+        textSecondary: "#666666",
+        textDisabled: "#999999",
+        border: "#e0e0e0",
+        borderLight: "#f0f0f0",
+        success: "#4caf50",
+        warning: "#ff9800",
+        error: "#f44336",
+        info: "#2196f3",
+        shadow: "rgba(0, 0, 0, 0.1)",
+        shadowDark: "rgba(0, 0, 0, 0.2)"
+      },
+      gradients: {
+        primary: "linear-gradient(135deg, #2e7d32 0%, #4caf50 100%)",
+        secondary: "linear-gradient(135deg, #f57c00 0%, #ff9800 100%)",
+        success: "linear-gradient(135deg, #388e3c 0%, #4caf50 100%)",
+        warning: "linear-gradient(135deg, #f57c00 0%, #ff9800 100%)",
+        error: "linear-gradient(135deg, #d32f2f 0%, #f44336 100%)"
+      }
+    },
+    dark: {
+      name: "深色主题",
+      id: "dark",
+      colors: {
+        primary: "#66bb6a",
+        primaryDark: "#4caf50",
+        primaryLight: "#81c784",
+        secondary: "#ffb74d",
+        secondaryDark: "#ff9800",
+        background: "#121212",
+        surface: "#1e1e1e",
+        surfaceVariant: "#2d2d2d",
+        text: "#ffffff",
+        textSecondary: "#b3b3b3",
+        textDisabled: "#666666",
+        border: "#333333",
+        borderLight: "#2d2d2d",
+        success: "#66bb6a",
+        warning: "#ffb74d",
+        error: "#f44336",
+        info: "#42a5f5",
+        shadow: "rgba(0, 0, 0, 0.3)",
+        shadowDark: "rgba(0, 0, 0, 0.5)"
+      },
+      gradients: {
+        primary: "linear-gradient(135deg, #4caf50 0%, #66bb6a 100%)",
+        secondary: "linear-gradient(135deg, #ff9800 0%, #ffb74d 100%)",
+        success: "linear-gradient(135deg, #4caf50 0%, #66bb6a 100%)",
+        warning: "linear-gradient(135deg, #ff9800 0%, #ffb74d 100%)",
+        error: "linear-gradient(135deg, #f44336 0%, #e57373 100%)"
+      }
+    },
+    blue: {
+      name: "蓝色主题",
+      id: "blue",
+      colors: {
+        primary: "#2196f3",
+        primaryDark: "#1976d2",
+        primaryLight: "#64b5f6",
+        secondary: "#ff9800",
+        secondaryDark: "#f57c00",
+        background: "#f3f7ff",
+        surface: "#ffffff",
+        surfaceVariant: "#f8faff",
+        text: "#333333",
+        textSecondary: "#666666",
+        textDisabled: "#999999",
+        border: "#e3f2fd",
+        borderLight: "#f0f7ff",
+        success: "#4caf50",
+        warning: "#ff9800",
+        error: "#f44336",
+        info: "#2196f3",
+        shadow: "rgba(33, 150, 243, 0.1)",
+        shadowDark: "rgba(33, 150, 243, 0.2)"
+      },
+      gradients: {
+        primary: "linear-gradient(135deg, #1976d2 0%, #2196f3 100%)",
+        secondary: "linear-gradient(135deg, #f57c00 0%, #ff9800 100%)",
+        success: "linear-gradient(135deg, #388e3c 0%, #4caf50 100%)",
+        warning: "linear-gradient(135deg, #f57c00 0%, #ff9800 100%)",
+        error: "linear-gradient(135deg, #d32f2f 0%, #f44336 100%)"
+      }
+    },
+    purple: {
+      name: "紫色主题",
+      id: "purple",
+      colors: {
+        primary: "#9c27b0",
+        primaryDark: "#7b1fa2",
+        primaryLight: "#ba68c8",
+        secondary: "#ff9800",
+        secondaryDark: "#f57c00",
+        background: "#faf5ff",
+        surface: "#ffffff",
+        surfaceVariant: "#f8f4ff",
+        text: "#333333",
+        textSecondary: "#666666",
+        textDisabled: "#999999",
+        border: "#e1bee7",
+        borderLight: "#f3e5f5",
+        success: "#4caf50",
+        warning: "#ff9800",
+        error: "#f44336",
+        info: "#2196f3",
+        shadow: "rgba(156, 39, 176, 0.1)",
+        shadowDark: "rgba(156, 39, 176, 0.2)"
+      },
+      gradients: {
+        primary: "linear-gradient(135deg, #7b1fa2 0%, #9c27b0 100%)",
+        secondary: "linear-gradient(135deg, #f57c00 0%, #ff9800 100%)",
+        success: "linear-gradient(135deg, #388e3c 0%, #4caf50 100%)",
+        warning: "linear-gradient(135deg, #f57c00 0%, #ff9800 100%)",
+        error: "linear-gradient(135deg, #d32f2f 0%, #f44336 100%)"
+      }
+    }
+  };
+  class ThemeManager {
+    constructor() {
+      this.currentTheme = this.getStoredTheme() || "light";
+      this.listeners = [];
+      this.init();
+    }
+    // 初始化主题
+    init() {
+      setTimeout(() => {
+        this.applyTheme(this.currentTheme);
+        this.setupSystemThemeListener();
+      }, 100);
+    }
+    // 获取存储的主题
+    getStoredTheme() {
+      try {
+        return uni.getStorageSync(THEME_STORAGE_KEY);
+      } catch (error) {
+        formatAppLog("error", "at utils/theme.js:158", "获取主题失败:", error);
+        return "light";
+      }
+    }
+    // 存储主题
+    setStoredTheme(themeId) {
+      try {
+        uni.setStorageSync(THEME_STORAGE_KEY, themeId);
+      } catch (error) {
+        formatAppLog("error", "at utils/theme.js:168", "存储主题失败:", error);
+      }
+    }
+    // 应用主题
+    applyTheme(themeId) {
+      const theme = themes[themeId];
+      if (!theme) {
+        formatAppLog("error", "at utils/theme.js:176", "主题不存在:", themeId);
+        return;
+      }
+      this.currentTheme = themeId;
+      this.setStoredTheme(themeId);
+      this.applyCSSVariables(theme);
+      this.notifyListeners(theme);
+      formatAppLog("log", "at utils/theme.js:189", "主题已切换为:", theme.name);
+    }
+    // 应用CSS变量
+    applyCSSVariables(theme) {
+      if (typeof document === "undefined") {
+        formatAppLog("warn", "at utils/theme.js:196", "Document not available, skipping CSS variable application");
+        return;
+      }
+      try {
+        const root = document.documentElement || document.body;
+        if (!root) {
+          formatAppLog("warn", "at utils/theme.js:204", "Root element not available, skipping CSS variable application");
+          return;
+        }
+        Object.entries(theme.colors).forEach(([key, value]) => {
+          root.style.setProperty(`--color-${key}`, value);
+        });
+        Object.entries(theme.gradients).forEach(([key, value]) => {
+          root.style.setProperty(`--gradient-${key}`, value);
+        });
+        if (document.body) {
+          document.body.className = document.body.className.replace(/theme-\w+/g, "");
+          document.body.classList.add(`theme-${theme.id}`);
+        }
+      } catch (error) {
+        formatAppLog("warn", "at utils/theme.js:224", "Failed to apply CSS variables:", error);
+      }
+    }
+    // 获取当前主题
+    getCurrentTheme() {
+      return themes[this.currentTheme];
+    }
+    // 获取当前主题ID
+    getCurrentThemeId() {
+      return this.currentTheme;
+    }
+    // 切换主题
+    switchTheme(themeId) {
+      if (themes[themeId]) {
+        this.applyTheme(themeId);
+      } else {
+        formatAppLog("error", "at utils/theme.js:243", "主题不存在:", themeId);
+      }
+    }
+    // 切换到下一个主题
+    switchToNextTheme() {
+      const themeIds = Object.keys(themes);
+      const currentIndex = themeIds.indexOf(this.currentTheme);
+      const nextIndex = (currentIndex + 1) % themeIds.length;
+      this.switchTheme(themeIds[nextIndex]);
+    }
+    // 添加主题变化监听器
+    addThemeListener(callback) {
+      this.listeners.push(callback);
+    }
+    // 移除主题变化监听器
+    removeThemeListener(callback) {
+      const index = this.listeners.indexOf(callback);
+      if (index > -1) {
+        this.listeners.splice(index, 1);
+      }
+    }
+    // 通知监听器
+    notifyListeners(theme) {
+      this.listeners.forEach((callback) => {
+        try {
+          callback(theme);
+        } catch (error) {
+          formatAppLog("error", "at utils/theme.js:274", "主题监听器执行失败:", error);
+        }
+      });
+    }
+    // 设置系统主题监听
+    setupSystemThemeListener() {
+      if (typeof window === "undefined" || !window.matchMedia) {
+        formatAppLog("warn", "at utils/theme.js:283", "Window or matchMedia not available, skipping system theme listener");
+        return;
+      }
+      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+      mediaQuery.addListener((e) => {
+        const storedTheme = this.getStoredTheme();
+        if (!storedTheme || storedTheme === "auto") {
+          this.applyTheme(e.matches ? "dark" : "light");
+        }
+      });
+    }
+    // 获取所有可用主题
+    getAllThemes() {
+      return Object.values(themes);
+    }
+    // 检查主题是否存在
+    hasTheme(themeId) {
+      return themes.hasOwnProperty(themeId);
+    }
+  }
+  const themeManager = new ThemeManager();
   const _sfc_main = {
     name: "App",
     onLaunch(options) {
@@ -12950,8 +15284,8 @@ IP：${device.ip}`
     const app = vue.createVueApp(App);
     const currentEnv = getEnvironment();
     app.config.errorHandler = (err, vm, info) => {
-      formatAppLog("error", "at main.js:36", "Vue Error:", err);
-      formatAppLog("error", "at main.js:37", "Error Info:", info);
+      formatAppLog("error", "at main.js:38", "Vue Error:", err);
+      formatAppLog("error", "at main.js:39", "Error Info:", info);
       reportError(err, info);
       uni.showToast({
         title: "应用出现错误，请重试",
@@ -12960,10 +15294,12 @@ IP：${device.ip}`
       });
     };
     app.config.warnHandler = (msg, vm, trace) => {
-      formatAppLog("warn", "at main.js:52", "Vue Warning:", msg);
-      formatAppLog("warn", "at main.js:53", "Warning Trace:", trace);
+      formatAppLog("warn", "at main.js:54", "Vue Warning:", msg);
+      formatAppLog("warn", "at main.js:55", "Warning Trace:", trace);
     };
     app.config.globalProperties.$app = {
+      // 主题管理器
+      theme: themeManager$1,
       // 应用版本
       version: "1.0.0",
       // 环境信息
@@ -13060,12 +15396,12 @@ IP：${device.ip}`
             };
           }
           config.url += (config.url.includes("?") ? "&" : "?") + `_t=${Date.now()}`;
-          formatAppLog("log", "at main.js:176", "Request:", config);
+          formatAppLog("log", "at main.js:180", "Request:", config);
           return config;
         },
         // 响应拦截器
         afterResponse(response) {
-          formatAppLog("log", "at main.js:182", "Response:", response);
+          formatAppLog("log", "at main.js:186", "Response:", response);
           if (response.statusCode === 401) {
             uni.removeStorageSync("token");
             uni.removeStorageSync("userInfo");
@@ -13095,7 +15431,7 @@ IP：${device.ip}`
             });
             return this.afterResponse(response);
           } catch (error) {
-            formatAppLog("error", "at main.js:218", "Request Error:", error);
+            formatAppLog("error", "at main.js:222", "Request Error:", error);
             if (error.errMsg && error.errMsg.includes("request:fail")) {
               uni.showToast({
                 title: "网络连接失败，请检查网络设置",
@@ -13151,7 +15487,7 @@ IP：${device.ip}`
           try {
             uni.setStorageSync(key, JSON.stringify(data));
           } catch (error) {
-            formatAppLog("error", "at main.js:284", "Storage Set Error:", error);
+            formatAppLog("error", "at main.js:288", "Storage Set Error:", error);
           }
         },
         // 获取存储
@@ -13167,7 +15503,7 @@ IP：${device.ip}`
             }
             return parsed.value;
           } catch (error) {
-            formatAppLog("error", "at main.js:304", "Storage Get Error:", error);
+            formatAppLog("error", "at main.js:308", "Storage Get Error:", error);
             return defaultValue;
           }
         },
@@ -13176,7 +15512,7 @@ IP：${device.ip}`
           try {
             uni.removeStorageSync(key);
           } catch (error) {
-            formatAppLog("error", "at main.js:314", "Storage Remove Error:", error);
+            formatAppLog("error", "at main.js:318", "Storage Remove Error:", error);
           }
         },
         // 清空存储
@@ -13184,7 +15520,7 @@ IP：${device.ip}`
           try {
             uni.clearStorageSync();
           } catch (error) {
-            formatAppLog("error", "at main.js:323", "Storage Clear Error:", error);
+            formatAppLog("error", "at main.js:327", "Storage Clear Error:", error);
           }
         }
       }
@@ -13192,25 +15528,25 @@ IP：${device.ip}`
     app.mixin({
       // 页面生命周期
       onLoad(options) {
-        formatAppLog("log", "at main.js:333", "Page Load:", this.$options.name, options);
+        formatAppLog("log", "at main.js:337", "Page Load:", this.$options.name, options);
         this.pageStartTime = Date.now();
       },
       onShow() {
-        formatAppLog("log", "at main.js:340", "Page Show:", this.$options.name);
+        formatAppLog("log", "at main.js:344", "Page Show:", this.$options.name);
       },
       onHide() {
-        formatAppLog("log", "at main.js:344", "Page Hide:", this.$options.name);
+        formatAppLog("log", "at main.js:348", "Page Hide:", this.$options.name);
         if (this.pageStartTime) {
           const duration = Date.now() - this.pageStartTime;
-          formatAppLog("log", "at main.js:349", "Page Duration:", this.$options.name, duration + "ms");
+          formatAppLog("log", "at main.js:353", "Page Duration:", this.$options.name, duration + "ms");
         }
       },
       onUnload() {
-        formatAppLog("log", "at main.js:354", "Page Unload:", this.$options.name);
+        formatAppLog("log", "at main.js:358", "Page Unload:", this.$options.name);
       },
       // 错误处理
       onError(error) {
-        formatAppLog("error", "at main.js:359", "Page Error:", this.$options.name, error);
+        formatAppLog("error", "at main.js:363", "Page Error:", this.$options.name, error);
         reportError(error, `Page: ${this.$options.name}`);
       }
     });
@@ -13228,15 +15564,15 @@ IP：${device.ip}`
       userAgent: uni.getSystemInfoSync(),
       url: ((_a = getCurrentPages().pop()) == null ? void 0 : _a.route) || "unknown"
     };
-    formatAppLog("error", "at main.js:385", "Error Report:", errorData);
+    formatAppLog("error", "at main.js:389", "Error Report:", errorData);
   }
   if (typeof window !== "undefined") {
     window.addEventListener("error", (event) => {
-      formatAppLog("error", "at main.js:398", "Global Error:", event.error);
+      formatAppLog("error", "at main.js:402", "Global Error:", event.error);
       reportError(event.error, "Global Error");
     });
     window.addEventListener("unhandledrejection", (event) => {
-      formatAppLog("error", "at main.js:403", "Unhandled Promise Rejection:", event.reason);
+      formatAppLog("error", "at main.js:407", "Unhandled Promise Rejection:", event.reason);
       reportError(event.reason, "Unhandled Promise Rejection");
     });
   }

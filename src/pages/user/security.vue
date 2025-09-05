@@ -389,9 +389,18 @@ export default {
 		}
 	},
 	onLoad() {
-		this.loadSecuritySettings()
-		this.calculateSecurityScore()
-		this.generateSecurityRecommendations()
+		try {
+			this.loadSecuritySettings()
+			this.calculateSecurityScore()
+			this.generateSecurityRecommendations()
+		} catch (error) {
+			console.error('安全设置页面初始化失败:', error)
+			uni.showToast({
+				title: '页面加载失败，请重试',
+				icon: 'none',
+				duration: 2000
+			})
+		}
 	},
 	methods: {
 		// 返回上一页
@@ -417,27 +426,97 @@ export default {
 		// 加载安全设置
 		loadSecuritySettings() {
 			try {
+				// 从本地存储加载
 				const settings = uni.getStorageSync('securitySettings')
-				if (settings) {
+				if (settings && typeof settings === 'object') {
 					Object.assign(this, settings)
 				}
+				
+				// 从用户数据加载安全设置
+				const userInfo = uni.getStorageSync('userInfo') || uni.getStorageSync('currentUser')
+				if (userInfo && userInfo.securitySettings && typeof userInfo.securitySettings === 'object') {
+					const securitySettings = userInfo.securitySettings
+					
+					// 安全地更新安全设置数据
+					this.biometricEnabled = Boolean(securitySettings.biometricEnabled)
+					this.smsVerificationEnabled = Boolean(securitySettings.smsVerificationEnabled)
+					this.accountLockEnabled = Boolean(securitySettings.accountLockEnabled)
+					this.twoFactorEnabled = Boolean(securitySettings.twoFactorEnabled)
+					this.securityNotificationsEnabled = Boolean(securitySettings.securityNotificationsEnabled)
+					this.transactionLimit = Number(securitySettings.transactionLimit) || 50000
+					this.passwordUpdateTime = securitySettings.passwordUpdateTime || '2024-01-01'
+					this.transactionPasswordUpdateTime = securitySettings.transactionPasswordUpdateTime || '2024-01-01'
+					this.securityQuestionsSet = Boolean(securitySettings.securityQuestionsSet)
+					this.emergencyContactSet = Boolean(securitySettings.emergencyContactSet)
+					this.loginDevices = Array.isArray(securitySettings.loginDevices) ? securitySettings.loginDevices : []
+					this.securityEventsCount = Array.isArray(securitySettings.securityEvents) ? securitySettings.securityEvents.length : 0
+					
+					// 更新最后登录时间
+					if (Array.isArray(securitySettings.securityEvents) && securitySettings.securityEvents.length > 0) {
+						const lastLoginEvent = securitySettings.securityEvents
+							.filter(event => event && event.type === 'login' && event.status === 'success')
+							.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))[0]
+						
+						if (lastLoginEvent && lastLoginEvent.timestamp) {
+							this.lastLoginTime = new Date(lastLoginEvent.timestamp).toLocaleString()
+						}
+					}
+				}
+				
+				console.log('安全设置加载成功')
 			} catch (error) {
 				console.error('加载安全设置失败:', error)
+				// 设置默认值
+				this.biometricEnabled = false
+				this.smsVerificationEnabled = false
+				this.accountLockEnabled = false
+				this.twoFactorEnabled = false
+				this.securityNotificationsEnabled = false
+				this.transactionLimit = 50000
+				this.passwordUpdateTime = '2024-01-01'
+				this.transactionPasswordUpdateTime = '2024-01-01'
+				this.securityQuestionsSet = false
+				this.emergencyContactSet = false
+				this.loginDevices = []
+				this.securityEventsCount = 0
 			}
 		},
 
 		// 保存安全设置
 		saveSecuritySettings() {
 			try {
+				// 保存到本地存储
 				const settings = {
 					biometricEnabled: this.biometricEnabled,
 					smsVerificationEnabled: this.smsVerificationEnabled,
 					accountLockEnabled: this.accountLockEnabled,
 					twoFactorEnabled: this.twoFactorEnabled,
 					securityNotificationsEnabled: this.securityNotificationsEnabled,
-					transactionLimit: this.transactionLimit
+					transactionLimit: this.transactionLimit,
+					passwordUpdateTime: this.passwordUpdateTime,
+					transactionPasswordUpdateTime: this.transactionPasswordUpdateTime,
+					securityQuestionsSet: this.securityQuestionsSet,
+					emergencyContactSet: this.emergencyContactSet,
+					loginDevices: this.loginDevices
 				}
 				uni.setStorageSync('securitySettings', settings)
+				
+				// 更新用户数据中的安全设置
+				const userInfo = uni.getStorageSync('userInfo') || uni.getStorageSync('currentUser')
+				if (userInfo) {
+					userInfo.securitySettings = {
+						...userInfo.securitySettings,
+						...settings,
+						lastUpdateTime: new Date().toISOString()
+					}
+					
+					// 保存更新后的用户信息
+					uni.setStorageSync('userInfo', userInfo)
+					uni.setStorageSync('currentUser', userInfo)
+					
+					// 更新数据库
+					this.updateUserSecurityInDatabase(userInfo)
+				}
 				
 				// 更新最后更新时间
 				this.lastUpdateTime = new Date().toLocaleDateString()
@@ -446,6 +525,32 @@ export default {
 				this.calculateSecurityScore()
 			} catch (error) {
 				console.error('保存安全设置失败:', error)
+			}
+		},
+
+		// 更新数据库中的用户安全设置
+		updateUserSecurityInDatabase(userInfo) {
+			try {
+				// 读取本地用户数据库
+				const users = uni.getStorageSync('users') || []
+				
+				// 找到当前用户并更新安全设置
+				const userIndex = users.findIndex(user => 
+					user.id === userInfo.id || 
+					user.phone === userInfo.phone ||
+					user.username === userInfo.username
+				)
+				
+				if (userIndex !== -1) {
+					users[userIndex].securitySettings = userInfo.securitySettings
+					
+					// 保存更新后的用户数据
+					uni.setStorageSync('users', users)
+					
+					console.log('用户安全设置数据库更新成功')
+				}
+			} catch (error) {
+				console.error('更新用户安全设置数据库失败:', error)
 			}
 		},
 
@@ -607,25 +712,102 @@ export default {
 
 		// 修改登录密码
 		changeLoginPassword() {
+			uni.navigateTo({
+				url: '/pages/user/change-password?type=login'
+			})
+		},
+
+		// 显示密码输入界面
+		showPasswordInput(type) {
 			uni.showModal({
-				title: '修改登录密码',
-				content: '为了账户安全，建议您定期更换密码。新密码应包含字母、数字和特殊字符。',
-				confirmText: '立即修改',
-				cancelText: '稍后再说',
+				title: type === 'login' ? '修改登录密码' : '修改交易密码',
+				editable: true,
+				placeholderText: '请输入新密码（6-20位，包含字母和数字）',
+				confirmText: '确认修改',
+				cancelText: '取消',
 				success: (res) => {
-					if (res.confirm) {
-						// 模拟密码修改
-						this.passwordUpdateTime = new Date().toLocaleDateString()
-						this.calculateSecurityScore()
-						this.generateSecurityRecommendations()
-						
-						uni.showToast({
-							title: '密码已更新',
-							icon: 'success'
-						})
+					if (res.confirm && res.content) {
+						this.validateAndUpdatePassword(res.content, type)
 					}
 				}
 			})
+		},
+
+		// 验证并更新密码
+		validateAndUpdatePassword(newPassword, type) {
+			// 密码强度验证
+			if (newPassword.length < 6 || newPassword.length > 20) {
+				uni.showToast({
+					title: '密码长度应为6-20位',
+					icon: 'none'
+				})
+				return
+			}
+
+			if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]/.test(newPassword)) {
+				uni.showToast({
+					title: '密码必须包含字母和数字',
+					icon: 'none'
+				})
+				return
+			}
+
+			// 更新密码
+			const updateTime = new Date().toISOString()
+			
+			if (type === 'login') {
+				this.passwordUpdateTime = updateTime
+			} else {
+				this.transactionPasswordUpdateTime = updateTime
+			}
+
+			// 添加安全事件
+			this.addSecurityEvent(type === 'login' ? 'password_change' : 'transaction_password_change', 
+				`修改${type === 'login' ? '登录' : '交易'}密码`)
+
+			// 保存设置
+			this.saveSecuritySettings()
+			this.calculateSecurityScore()
+			this.generateSecurityRecommendations()
+			
+			uni.showToast({
+				title: `${type === 'login' ? '登录' : '交易'}密码已更新`,
+				icon: 'success'
+			})
+		},
+
+		// 添加安全事件
+		addSecurityEvent(type, description) {
+			const userInfo = uni.getStorageSync('userInfo') || uni.getStorageSync('currentUser')
+			if (userInfo && userInfo.securitySettings) {
+				if (!userInfo.securitySettings.securityEvents) {
+					userInfo.securitySettings.securityEvents = []
+				}
+				
+				const newEvent = {
+					id: Date.now(),
+					type: type,
+					description: description,
+					timestamp: new Date().toISOString(),
+					location: '当前位置',
+					ip: '192.168.1.100',
+					status: 'success'
+				}
+				
+				userInfo.securitySettings.securityEvents.unshift(newEvent)
+				
+				// 限制事件数量，只保留最近50个
+				if (userInfo.securitySettings.securityEvents.length > 50) {
+					userInfo.securitySettings.securityEvents = userInfo.securitySettings.securityEvents.slice(0, 50)
+				}
+				
+				// 保存用户信息
+				uni.setStorageSync('userInfo', userInfo)
+				uni.setStorageSync('currentUser', userInfo)
+				
+				// 更新数据库
+				this.updateUserSecurityInDatabase(userInfo)
+			}
 		},
 
 		// 生物识别开关变化
@@ -670,24 +852,8 @@ export default {
 
 		// 修改交易密码
 		changeTransactionPassword() {
-			uni.showModal({
-				title: '修改交易密码',
-				content: '交易密码用于重要交易验证，建议与登录密码不同。',
-				confirmText: '立即修改',
-				cancelText: '稍后再说',
-				success: (res) => {
-					if (res.confirm) {
-						// 模拟交易密码修改
-						this.transactionPasswordUpdateTime = new Date().toLocaleDateString()
-						this.calculateSecurityScore()
-						this.generateSecurityRecommendations()
-						
-						uni.showToast({
-							title: '交易密码已更新',
-							icon: 'success'
-						})
-					}
-				}
+			uni.navigateTo({
+				url: '/pages/user/change-password?type=transaction'
 			})
 		},
 
@@ -729,18 +895,88 @@ export default {
 				cancelText: '稍后再说',
 				success: (res) => {
 					if (res.confirm) {
-						// 模拟设置安全问题
-						this.securityQuestionsSet = true
-						this.calculateSecurityScore()
-						this.generateSecurityRecommendations()
-						
-						uni.showToast({
-							title: '安全问题已设置',
-							icon: 'success'
-						})
+						this.showSecurityQuestionsSetup()
 					}
 				}
 			})
+		},
+
+		// 显示安全问题设置界面
+		showSecurityQuestionsSetup() {
+			const questions = [
+				'您的小学名称是什么？',
+				'您的第一个宠物的名字是什么？',
+				'您最喜欢的颜色是什么？',
+				'您的出生地是哪里？',
+				'您最喜欢的食物是什么？',
+				'您的第一个老师的姓名是什么？'
+			]
+
+			uni.showActionSheet({
+				itemList: questions,
+				success: (res) => {
+					const selectedQuestion = questions[res.tapIndex]
+					this.setSecurityQuestionAnswer(selectedQuestion)
+				}
+			})
+		},
+
+		// 设置安全问题答案
+		setSecurityQuestionAnswer(question) {
+			uni.showModal({
+				title: '设置安全问题',
+				content: `问题：${question}`,
+				editable: true,
+				placeholderText: '请输入答案',
+				confirmText: '确认',
+				cancelText: '取消',
+				success: (res) => {
+					if (res.confirm && res.content) {
+						this.saveSecurityQuestion(question, res.content)
+					}
+				}
+			})
+		},
+
+		// 保存安全问题
+		saveSecurityQuestion(question, answer) {
+			const userInfo = uni.getStorageSync('userInfo') || uni.getStorageSync('currentUser')
+			if (userInfo && userInfo.securitySettings) {
+				if (!userInfo.securitySettings.securityQuestions) {
+					userInfo.securitySettings.securityQuestions = []
+				}
+				
+				// 添加安全问题
+				userInfo.securitySettings.securityQuestions.push({
+					question: question,
+					answer: answer
+				})
+				
+				// 如果设置了3个问题，标记为已设置
+				if (userInfo.securitySettings.securityQuestions.length >= 3) {
+					userInfo.securitySettings.securityQuestionsSet = true
+					this.securityQuestionsSet = true
+				}
+				
+				// 保存用户信息
+				uni.setStorageSync('userInfo', userInfo)
+				uni.setStorageSync('currentUser', userInfo)
+				
+				// 更新数据库
+				this.updateUserSecurityInDatabase(userInfo)
+				
+				// 添加安全事件
+				this.addSecurityEvent('security_question_set', '设置安全问题')
+				
+				// 重新计算安全评分
+				this.calculateSecurityScore()
+				this.generateSecurityRecommendations()
+				
+				uni.showToast({
+					title: '安全问题已设置',
+					icon: 'success'
+				})
+			}
 		},
 
 		// 设置紧急联系人
@@ -752,18 +988,101 @@ export default {
 				cancelText: '稍后再说',
 				success: (res) => {
 					if (res.confirm) {
-						// 模拟设置紧急联系人
-						this.emergencyContactSet = true
-						this.calculateSecurityScore()
-						this.generateSecurityRecommendations()
-						
-						uni.showToast({
-							title: '紧急联系人已设置',
-							icon: 'success'
-						})
+						this.showEmergencyContactSetup()
 					}
 				}
 			})
+		},
+
+		// 显示紧急联系人设置界面
+		showEmergencyContactSetup() {
+			uni.showModal({
+				title: '设置紧急联系人',
+				content: '请输入紧急联系人信息',
+				editable: true,
+				placeholderText: '请输入联系人姓名',
+				confirmText: '下一步',
+				cancelText: '取消',
+				success: (res) => {
+					if (res.confirm && res.content) {
+						this.setEmergencyContactPhone(res.content)
+					}
+				}
+			})
+		},
+
+		// 设置紧急联系人电话
+		setEmergencyContactPhone(name) {
+			uni.showModal({
+				title: '设置紧急联系人',
+				content: `联系人：${name}`,
+				editable: true,
+				placeholderText: '请输入手机号码',
+				confirmText: '下一步',
+				cancelText: '取消',
+				success: (res) => {
+					if (res.confirm && res.content) {
+						this.setEmergencyContactRelationship(name, res.content)
+					}
+				}
+			})
+		},
+
+		// 设置紧急联系人关系
+		setEmergencyContactRelationship(name, phone) {
+			const relationships = ['父亲', '母亲', '配偶', '子女', '兄弟姐妹', '朋友', '其他']
+			
+			uni.showActionSheet({
+				itemList: relationships,
+				success: (res) => {
+					const relationship = relationships[res.tapIndex]
+					this.saveEmergencyContact(name, phone, relationship)
+				}
+			})
+		},
+
+		// 保存紧急联系人
+		saveEmergencyContact(name, phone, relationship) {
+			// 验证手机号格式
+			if (!/^1[3-9]\d{9}$/.test(phone)) {
+				uni.showToast({
+					title: '请输入正确的手机号码',
+					icon: 'none'
+				})
+				return
+			}
+
+			const userInfo = uni.getStorageSync('userInfo') || uni.getStorageSync('currentUser')
+			if (userInfo && userInfo.securitySettings) {
+				// 设置紧急联系人
+				userInfo.securitySettings.emergencyContact = {
+					name: name,
+					phone: phone,
+					relationship: relationship
+				}
+				
+				userInfo.securitySettings.emergencyContactSet = true
+				this.emergencyContactSet = true
+				
+				// 保存用户信息
+				uni.setStorageSync('userInfo', userInfo)
+				uni.setStorageSync('currentUser', userInfo)
+				
+				// 更新数据库
+				this.updateUserSecurityInDatabase(userInfo)
+				
+				// 添加安全事件
+				this.addSecurityEvent('emergency_contact_set', '设置紧急联系人')
+				
+				// 重新计算安全评分
+				this.calculateSecurityScore()
+				this.generateSecurityRecommendations()
+				
+				uni.showToast({
+					title: '紧急联系人已设置',
+					icon: 'success'
+				})
+			}
 		},
 
 		// 账户锁定开关变化
@@ -836,18 +1155,72 @@ export default {
 
 		// 查看登录记录
 		viewLoginHistory() {
-			uni.showToast({
-				title: '功能开发中',
-				icon: 'none'
-			})
+			const userInfo = uni.getStorageSync('userInfo') || uni.getStorageSync('currentUser')
+			if (userInfo && userInfo.securitySettings && userInfo.securitySettings.securityEvents) {
+				const loginEvents = userInfo.securitySettings.securityEvents
+					.filter(event => event.type === 'login')
+					.slice(0, 10) // 只显示最近10条
+				
+				if (loginEvents.length === 0) {
+					uni.showToast({
+						title: '暂无登录记录',
+						icon: 'none'
+					})
+					return
+				}
+				
+				const loginHistory = loginEvents.map(event => {
+					const date = new Date(event.timestamp).toLocaleString()
+					const status = event.status === 'success' ? '成功' : '失败'
+					return `${date}\n位置：${event.location}\nIP：${event.ip}\n状态：${status}`
+				}).join('\n\n')
+				
+				uni.showModal({
+					title: '登录记录',
+					content: loginHistory,
+					showCancel: false,
+					confirmText: '确定'
+				})
+			} else {
+				uni.showToast({
+					title: '暂无登录记录',
+					icon: 'none'
+				})
+			}
 		},
 
 		// 查看安全事件
 		viewSecurityEvents() {
-			uni.showToast({
-				title: '功能开发中',
-				icon: 'none'
-			})
+			const userInfo = uni.getStorageSync('userInfo') || uni.getStorageSync('currentUser')
+			if (userInfo && userInfo.securitySettings && userInfo.securitySettings.securityEvents) {
+				const securityEvents = userInfo.securitySettings.securityEvents.slice(0, 15) // 只显示最近15条
+				
+				if (securityEvents.length === 0) {
+					uni.showToast({
+						title: '暂无安全事件',
+						icon: 'none'
+					})
+					return
+				}
+				
+				const eventsList = securityEvents.map(event => {
+					const date = new Date(event.timestamp).toLocaleString()
+					const status = event.status === 'success' ? '成功' : '失败'
+					return `${date}\n事件：${event.description}\n位置：${event.location}\n状态：${status}`
+				}).join('\n\n')
+				
+				uni.showModal({
+					title: '安全事件记录',
+					content: eventsList,
+					showCancel: false,
+					confirmText: '确定'
+				})
+			} else {
+				uni.showToast({
+					title: '暂无安全事件',
+					icon: 'none'
+				})
+			}
 		}
 	}
 }

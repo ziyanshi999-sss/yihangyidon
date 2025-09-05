@@ -37,10 +37,10 @@
         <input 
           type="password" 
           v-model="password" 
-          placeholder="请输入登录密码" 
+          placeholder="请输入密码" 
+          maxlength="20"
           required
         />
-        <view class="password-placeholder"></view>
       </view>
       <view class="input-item" v-if="loginType === 'code'">
         <input 
@@ -118,6 +118,7 @@ export default {
   },
   
   methods: {
+    
     // 获取验证码
     getCode() {
       if (!/^1[3-9]\d{9}$/.test(this.phone)) {
@@ -495,4 +496,5 @@ export default {
   border: none;
   margin-top: 10rpx;
 }
+
 </style>

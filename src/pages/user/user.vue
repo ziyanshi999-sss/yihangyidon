@@ -1,14 +1,17 @@
 <template>
-	<view class="user-page">
+	<view class="user-page" :style="themeStyles.backgroundColor">
 		<!-- 顶部背景 -->
-		<view class="header-bg"></view>
+		<view class="header-bg" :style="themeStyles.primaryGradient"></view>
 		
 		<!-- 用户信息卡片 -->
-		<view class="user-card" v-if="userInfo">
+		<view class="user-card" v-if="userInfo" :style="themeStyles.surface">
 			<view class="user-info">
 				<view class="avatar-section">
-					<view class="avatar">
+					<view class="avatar" @click="viewAvatar">
 						<image :src="userInfo.avatar || '/static/default-avatar.png'" mode="aspectFill"></image>
+						<view class="avatar-view-overlay">
+							<text class="view-icon">👁️</text>
+						</view>
 					</view>
 					<view class="user-details">
 						<text class="username">{{ userInfo.nickname || userInfo.username }}</text>
@@ -23,7 +26,7 @@
 		</view>
 
 		<!-- 未登录状态 -->
-		<view class="login-card" v-else>
+		<view class="login-card" v-else :style="themeStyles.surface">
 			<view class="login-content">
 				<text class="login-title">欢迎使用农业银行</text>
 				<text class="login-subtitle">请登录您的账户</text>
@@ -32,7 +35,7 @@
 		</view>
 
 		<!-- 快捷功能 -->
-		<view class="quick-functions" v-if="userInfo">
+		<view class="quick-functions" v-if="userInfo" :style="themeStyles.surface">
 			<view class="function-grid">
 				<view class="function-item" @click="goToTransfer">
 					<view class="function-icon transfer-icon">💳</view>
@@ -56,7 +59,7 @@
 		<!-- 功能菜单 -->
 		<view class="menu-sections" v-if="userInfo">
 			<!-- 账户管理 -->
-			<view class="menu-section">
+			<view class="menu-section" :style="themeStyles.surface">
 				<view class="section-title">账户管理</view>
 				<view class="menu-list">
 					<view class="menu-item" @click="goToAccount">
@@ -84,7 +87,7 @@
 			</view>
 
 			<!-- 个人设置 -->
-			<view class="menu-section">
+			<view class="menu-section" :style="themeStyles.surface">
 				<view class="section-title">个人设置</view>
 				<view class="menu-list">
 					<view class="menu-item" @click="goToProfile">
@@ -115,7 +118,7 @@
 			</view>
 
 			<!-- 客户服务 -->
-			<view class="menu-section">
+			<view class="menu-section" :style="themeStyles.surface">
 				<view class="section-title">客户服务</view>
 				<view class="menu-list">
 					<view class="menu-item" @click="goToHelp">
@@ -152,13 +155,15 @@
 
 <script>
 import { checkLoginAndRedirect, getUserInfo, logout, quickLogout, forceLogout, forceCheckLogin } from '@/utils/auth.js'
-import themeManager from '@/utils/theme.js'
+import themeManager from '@/utils/simple-theme.js'
+import { getThemeStyles } from '@/utils/theme-helper.js'
 
 export default {
 	data() {
 		return {
 			userInfo: null,
-			currentTheme: 'light' // 默认浅色主题
+			currentTheme: themeManager.getCurrentTheme(), // 获取当前主题
+			themeStyles: getThemeStyles() // 获取主题样式
 		}
 	},
 	onShow() {
@@ -189,7 +194,26 @@ export default {
 			})
 		}
 	},
+	
+	mounted() {
+		// 监听主题变化
+		themeManager.addThemeListener(this.onThemeChanged)
+	},
+	
+	beforeDestroy() {
+		// 移除主题监听器
+		themeManager.removeThemeListener(this.onThemeChanged)
+	},
 	methods: {
+		// 主题变化回调
+		onThemeChanged(theme) {
+			console.log('主题变化回调:', theme)
+			this.currentTheme = theme
+			this.themeStyles = getThemeStyles() // 更新主题样式
+			// 强制更新页面
+			this.$forceUpdate()
+		},
+		
 		// 检查登录状态
 		checkLoginStatus() {
 			const userInfo = getUserInfo()
@@ -431,42 +455,99 @@ export default {
 				icon: 'none'
 			})
 		},
+		
 
 		// 加载主题设置
 		loadTheme() {
-			themeManager.init()
 			this.currentTheme = themeManager.getCurrentTheme()
 		},
 
 		// 获取主题显示名称
 		getThemeDisplayName(theme) {
+			// 如果传入的是主题对象，直接返回名称
+			if (theme && typeof theme === 'object' && theme.name) {
+				return theme.name
+			}
+			
+			// 如果是主题ID字符串，返回对应的名称
 			const themeNames = {
 				'light': '浅色主题',
 				'dark': '深色主题',
 				'blue': '蓝色主题',
-				'green': '绿色主题',
-				'purple': '紫色主题',
-				'orange': '橙色主题',
-				'pink': '粉色主题',
-				'red': '红色主题',
-				'teal': '青色主题',
-				'indigo': '靛蓝主题',
-				'amber': '琥珀主题',
-				'cyan': '青色主题'
+				'purple': '紫色主题'
 			}
-			return themeNames[theme] || theme
+			return themeNames[theme] || '浅色主题'
 		},
 
 		// 切换主题
 		toggleTheme() {
-			const newTheme = themeManager.toggleTheme()
-			this.currentTheme = newTheme
-			
-			// 显示提示
-			uni.showToast({
-				title: `已切换到${this.getThemeDisplayName(newTheme)}`,
-				icon: 'success',
-				duration: 1500
+			try {
+				console.log('开始切换主题...')
+				console.log('当前主题对象:', this.currentTheme)
+				
+				// 获取所有可用主题
+				const themes = themeManager.getAllThemes()
+				console.log('所有可用主题:', themes)
+				
+				const currentThemeId = this.currentTheme.id || this.currentTheme
+				console.log('当前主题ID:', currentThemeId)
+				
+				const currentIndex = themes.findIndex(theme => theme.id === currentThemeId)
+				console.log('当前主题索引:', currentIndex)
+				
+				const nextIndex = (currentIndex + 1) % themes.length
+				const newTheme = themes[nextIndex]
+				console.log('下一个主题:', newTheme)
+				
+				// 切换主题
+				themeManager.switchTheme(newTheme.id)
+				console.log('主题管理器切换完成')
+				
+				// 更新本地状态
+				this.currentTheme = newTheme
+				this.themeStyles = getThemeStyles()
+				console.log('本地状态更新完成')
+				
+				// 显示提示
+				uni.showToast({
+					title: `已切换到${newTheme.name}`,
+					icon: 'success',
+					duration: 1500
+				})
+				
+				// 强制更新页面
+				this.$forceUpdate()
+				console.log('页面强制更新完成')
+			} catch (error) {
+				console.error('主题切换失败:', error)
+				uni.showToast({
+					title: '主题切换失败',
+					icon: 'none'
+				})
+			}
+		},
+
+		// 查看头像
+		viewAvatar() {
+			if (!this.userInfo || !this.userInfo.avatar) {
+				uni.showToast({
+					title: '暂无头像',
+					icon: 'none'
+				})
+				return
+			}
+
+			// 显示头像预览
+			uni.previewImage({
+				urls: [this.userInfo.avatar],
+				current: this.userInfo.avatar,
+				fail: (error) => {
+					console.error('预览头像失败:', error)
+					uni.showToast({
+						title: '预览失败',
+						icon: 'none'
+					})
+				}
 			})
 		}
 	}
@@ -521,11 +602,43 @@ export default {
 	overflow: hidden;
 	margin-right: 30rpx;
 	border: 4rpx solid #4caf50;
+	position: relative;
+	cursor: pointer;
+	transition: all 0.3s ease;
+}
+
+.avatar:active {
+	transform: scale(0.95);
 }
 
 .avatar image {
 	width: 100%;
 	height: 100%;
+}
+
+.avatar-view-overlay {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	width: 36rpx;
+	height: 36rpx;
+	background: rgba(0, 0, 0, 0.6);
+	border-radius: 18rpx;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	opacity: 0;
+	transition: opacity 0.3s ease;
+}
+
+.avatar:hover .avatar-view-overlay,
+.avatar:active .avatar-view-overlay {
+	opacity: 1;
+}
+
+.view-icon {
+	font-size: 18rpx;
+	color: white;
 }
 
 .user-details {
