@@ -93,3 +93,4 @@ export function getUserLevelInfo(userInfo) {
 export function canAccessPlatinumHotline(userInfo) {
   return isPlatinumVip(userInfo)
 }
+

@@ -1,26 +1,58 @@
 <template>
-  <view class="home-container">
+  <view class="home-container" @click="closeSearchSuggestions">
     <!-- 顶部搜索栏 -->
     <view class="search-header">
-      <view class="search-bar">
+      <view class="search-bar" @click.stop="handleSearchClick">
         <text class="icon-search">🔍</text>
         <text class="search-text">热门资讯</text>
       </view>
       <view class="header-icons">
-        <text class="icon">📱</text>
-        <text class="icon">👥</text>
-        <text class="icon">✉️</text>
+        <text class="icon" @click.stop="showFeatureTip('消息')">📱</text>
+        <text class="icon" @click.stop="showFeatureTip('联系人')">👥</text>
+        <text class="icon" @click.stop="showFeatureTip('通知')">✉️</text>
+      </view>
+    </view>
+
+    <!-- 搜索建议弹窗 -->
+    <view v-if="showSearchSuggestions" class="search-suggestions" @click.stop>
+      <view class="suggestion-item" @click="handleAccountClick">
+        <text>我的账户</text>
+        <text class="arrow-right">→</text>
+      </view>
+      <view class="suggestion-item" @click="handleTransferClick">
+        <text>转账</text>
+        <text class="arrow-right">→</text>
+      </view>
+      <view class="suggestion-item" @click="handleBalanceClick">
+        <text>收支</text>
+        <text class="arrow-right">→</text>
+      </view>
+      <view class="suggestion-item" @click="handleCreditCardClick">
+        <text>信用卡</text>
+        <text class="arrow-right">→</text>
+      </view>
+      <view class="suggestion-item" @click="handleLoanClick">
+        <text>贷款</text>
+        <text class="arrow-right">→</text>
+      </view>
+      <view class="suggestion-item" @click="handleScanClick">
+        <text>扫一扫</text>
+        <text class="arrow-right">→</text>
+      </view>
+      <view class="suggestion-item" @click="handleRechargeClick">
+        <text>手机充值</text>
+        <text class="arrow-right">→</text>
       </view>
     </view>
 
     <!-- 广告横幅 -->
     <view class="banner">
-      <text class="banner-text">您有5元掌银支付立减金</text>
-      <button class="banner-btn">去查看</button>
+      <text class="banner-text">欢迎来到农业银行</text>
     </view>
 
-    <!-- 主要功能区 -->
+    <!-- 主要功能区 - 优化后的布局 -->
     <view class="function-area">
+      <!-- 第一行：3个按钮 -->
       <view class="function-grid">
         <view class="function-item" @click="handleAccountClick">
           <view class="function-icon icon-account">👤</view>
@@ -34,64 +66,71 @@
           <view class="function-icon icon-balance">📊</view>
           <text class="function-text">收支</text>
         </view>
-        <view class="function-item" v-if="showMoreFunctions" @click="handleScanClick">
-          <view class="function-icon icon-scan">🔍</view>
-          <text class="function-text">扫一扫</text>
-        </view>
       </view>
 
+      <!-- 第二行：3个按钮 -->
       <view class="function-grid">
-        <view class="function-item" v-if="showMoreFunctions" @click="handleCreditCardClick">
+        <view class="function-item" @click="handleCreditCardClick">
           <view class="function-icon icon-card">💳</view>
           <text class="function-text">信用卡</text>
-        </view>
-        <view class="function-item" v-if="showMoreFunctions">
-          <view class="function-icon icon-deposit">💰</view>
-          <text class="function-text">存款</text>
         </view>
         <view class="function-item" @click="scrollToHotActivities">
           <view class="function-icon icon-activity">🎉</view>
           <text class="function-text">热门活动</text>
-        </view>
-        <view class="function-item" v-if="showMoreFunctions">
-          <view class="function-icon icon-branch">🏦</view>
-          <text class="function-text">网点查询</text>
-        </view>
-        <view class="function-item" v-if="showMoreFunctions">
-          <view class="function-icon icon-electronic">📱</view>
-          <text class="function-text">开通电子</text>
-        </view>
-      </view>
-
-      <view class="function-grid">
-        <view class="function-item" v-if="showMoreFunctions" @click="handleLoanClick">
-          <view class="function-icon icon-loan">💸</view>
-          <text class="function-text">贷款</text>
-        </view>
-        <view class="function-item" @click="handleRechargeClick">
-          <view class="function-icon icon-topup">📱</view>
-          <text class="function-text">手机充值</text>
-        </view>
-        <view class="function-item" @click="handleServiceClick">
-          <view class="function-icon icon-service">💬</view>
-          <text class="function-text">在线客服</text>
         </view>
         <view class="function-item" @click="toggleMoreFunctions">
           <view class="function-icon icon-more">•••</view>
           <text class="function-text">{{ showMoreFunctions ? '收起' : '全部' }}</text>
         </view>
       </view>
+
+      <!-- 点击全部后显示的按钮区域 -->
+      <view class="more-functions" v-if="showMoreFunctions">
+        <view class="function-grid">
+          <view class="function-item" @click="handleScanClick">
+            <view class="function-icon icon-scan">🔍</view>
+            <text class="function-text">扫一扫</text>
+          </view>
+          <view class="function-item" @click="showFeatureTip('存款')">
+            <view class="function-icon icon-deposit">💰</view>
+            <text class="function-text">存款</text>
+          </view>
+          <view class="function-item" @click="showFeatureTip('网点查询')">
+            <view class="function-icon icon-branch">🏦</view>
+            <text class="function-text">网点查询</text>
+          </view>
+        </view>
+        
+        <view class="function-grid">
+          <view class="function-item" @click="handleLoanClick">
+            <view class="function-icon icon-loan">💸</view>
+            <text class="function-text">贷款</text>
+          </view>
+          <view class="function-item" @click="handleRechargeClick">
+            <view class="function-icon icon-topup">📱</view>
+            <text class="function-text">手机充值</text>
+          </view>
+        <view class="function-item" @click="handleServiceClick">
+          <view class="function-icon icon-service">💬</view>
+          <text class="function-text">在线客服</text>
+        </view>
+          <view class="function-item" @click="showFeatureTip('纪念币预约')">
+            <view class="function-icon icon-coin">🪙</view>
+            <text class="function-text">纪念币预约</text>
+          </view>
+        </view>
+      </view>
     </view>
 
-    <!-- 待办事项 -->
-    <view class="todo-section">
+    <!-- 其余内容保持不变 -->
+    <view class="todo-section" @click="showFeatureTip('待办')">
       <text class="section-title">待办</text>
       <text class="todo-content">快来试试智能提醒吧~</text>
       <text class="arrow-right">➡️</text>
     </view>
 
     <!-- 头条新闻 -->
-    <view class="news-section">
+    <view class="news-section" @click="showFeatureTip('新闻')">
       <text class="section-title">头条</text>
       <text class="news-content">中信建投：REITs市场拐点已至 看好后...</text>
       <text class="arrow-right">➡️</text>
@@ -102,19 +141,19 @@
       <swiper class="swiper" indicator-dots="true" autoplay="true" interval="3000" duration="500">
         <swiper-item>
           <view class="swiper-item">
-            <image src="https://thafd.bing.com/th/id/OIP.h5Dnm2eV7jzm2z8-1ig0iAHaDJ?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3" class="swiper-image" mode="aspectFill"></image>
+            <image src="https://img95.699pic.com/xsj/0s/zy/o6.jpg!/fh/300" class="swiper-image" mode="aspectFill"></image>
             <text class="swiper-desc">信用卡优惠活动</text>
           </view>
         </swiper-item>
         <swiper-item>
           <view class="swiper-item">
-            <image src="https://thafd.bing.com/th/id/OIP.ShhOt-72lWZa7qJGwxoRBwHaDs?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3" class="swiper-image" mode="aspectFill"></image>
+            <image src="https://img95.699pic.com/xsj/0s/4k/2x.jpg!/fh/300" class="swiper-image" mode="aspectFill"></image>
             <text class="swiper-desc">新客专享礼遇</text>
           </view>
         </swiper-item>
         <swiper-item>
           <view class="swiper-item">
-            <image src="https://thafd.bing.com/th/id/OIP.Qasbo_B7CgQZgQbJZQs43QHaCI?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3" class="swiper-image" mode="aspectFill"></image>
+            <image src="https://img95.699pic.com/xsj/0s/2p/t4.jpg!/fh/300" class="swiper-image" mode="aspectFill"></image>
             <text class="swiper-desc">理财知识讲座</text>
           </view>
         </swiper-item>
@@ -122,7 +161,7 @@
     </view>
 
     <!-- 广告区域 -->
-    <view class="ad-section">
+    <view class="ad-section" @click="showFeatureTip('一键绑卡')">
       <view class="ad-content">
         <text class="ad-title">一键绑卡</text>
         <text class="ad-desc">美好生活 乐享便捷支付</text>
@@ -138,11 +177,11 @@
     
     <!-- 活动卡片 -->
     <view class="activity-cards">
-      <view class="activity-card">
+      <view class="activity-card" @click="showFeatureTip('星级福利')">
         <text class="card-title">星级福利</text>
         <text class="card-desc">月度福利领取活动</text>
       </view>
-      <view class="activity-card">
+      <view class="activity-card" @click="showFeatureTip('品牌优惠券')">
         <text class="card-title">超多彩品牌优惠券</text>
         <text class="card-desc">折扣低至5.5折</text>
       </view>
@@ -157,7 +196,8 @@ export default {
   data() {
     return {
       isLoggedIn: false,
-      showMoreFunctions: false // 控制更多功能按钮的显示/隐藏
+      showMoreFunctions: false,
+      showSearchSuggestions: false // 控制搜索建议的显示/隐藏
     }
   },
   
@@ -184,7 +224,26 @@ export default {
       }
       this.isLoggedIn = true
     },
-
+    
+    // 新增：处理搜索框点击事件
+    handleSearchClick() {
+      this.showSearchSuggestions = true
+    },
+    
+    // 新增：点击其他区域关闭搜索建议
+    closeSearchSuggestions() {
+      this.showSearchSuggestions = false
+    },
+    
+    // 新增：显示功能开发提示
+    showFeatureTip(featureName) {
+      uni.showToast({
+        title: `${featureName}功能开发中`,
+        icon: 'none',
+        duration: 2000
+      })
+    },
+    
     // 处理转账按钮点击事件
     handleTransferClick() {
       if (this.isLoggedIn) {
@@ -436,18 +495,9 @@ export default {
 }
 
 .banner-text {
-  font-size: 16px;
   color: #fff;
+  font-size: 16px;
   font-weight: bold;
-}
-
-.banner-btn {
-  background-color: #fff;
-  color: #f9a825;
-  border-radius: 20px;
-  margin-top: 10px;
-  padding: 5px 20px;
-  font-size: 14px;
 }
 
 /* 功能区域 */
@@ -455,18 +505,32 @@ export default {
   background-color: #fff;
   padding: 20px 15px;
   margin-bottom: 10px;
+  border-bottom: 1px solid #e0e0e0;
 }
 
 .function-grid {
   display: flex;
+  justify-content: space-between;
   margin-bottom: 20px;
 }
 
+.function-grid:last-child {
+  margin-bottom: 0;
+}
+
 .function-item {
-  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 30%; /* 确保一行显示3个按钮 */
+  padding: 10px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.function-item:active {
+  background-color: #f5f5f5;
+  transform: scale(0.95);
 }
 
 .function-icon {
@@ -474,105 +538,136 @@ export default {
   height: 50px;
   border-radius: 50%;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   font-size: 24px;
   margin-bottom: 8px;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
-.icon-account {
-  background-color: #4caf50;
-}
-
-.icon-transfer {
-  background-color: #ff9800;
-}
-
-.icon-balance {
-  background-color: #4caf50;
-}
-
-.icon-scan {
-  background-color: #ff9800;
-}
-
-.icon-card {
-  background-color: #2196f3;
-}
-
-.icon-deposit {
-  background-color: #ffeb3b;
-}
-
-.icon-activity {
-  background-color: #e91e63;
-}
-
-.icon-branch {
-  background-color: #9c27b0;
-}
-
-.icon-electronic {
-  background-color: #00bcd4;
-}
-
-.icon-loan {
-  background-color: #f44336;
-}
-
-.icon-topup {
-  background-color: #03a9f4;
-}
-
-.icon-more {
-  background-color: #795548;
-}
+/* 优化各个图标背景色 */
+.icon-account { background-color: #2196f3; }
+.icon-transfer { background-color: #4caf50; }
+.icon-balance { background-color: #ff9800; }
+.icon-scan { background-color: #9c27b0; }
+.icon-card { background-color: #f44336; }
+.icon-deposit { background-color: #00bcd4; }
+.icon-activity { background-color: #ffeb3b; color: #333; }
+.icon-branch { background-color: #795548; }
+.icon-electronic { background-color: #673ab7; }
+.icon-loan { background-color: #e91e63; }
+.icon-topup { background-color: #009688; }
+.icon-more { background-color: #607d8b; }
+.icon-coin { background-color: #ff9800; }
 
 .function-text {
   font-size: 14px;
   color: #333;
-  margin-top: 5px;
+  margin-top: 8px;
+  font-weight: 500;
 }
 
-/* 待办和新闻区域 */
-.todo-section, .news-section {
+/* 优化广告横幅样式 */
+.banner {
+  background: linear-gradient(135deg, #f9a825 0%, #ffb74d 100%);
+  padding: 20px 15px;
+  text-align: center;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.banner-text {
+  font-size: 18px;
+  color: #fff;
+  font-weight: bold;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* 优化搜索栏样式 */
+.search-bar {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 25px;
+  padding: 8px 15px;
+  margin-right: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.search-bar:active {
+  background-color: #f5f5f5;
+}
+
+/* 优化搜索建议样式 */
+.search-suggestions {
+  position: absolute;
+  top: 60px;
+  left: 15px;
+  right: 15px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  overflow: hidden;
+}
+
+.suggestion-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.arrow-right {
+  color: #999;
+  font-size: 14px;
+}
+
+/* 其他样式保持不变 */
+.todo-section,
+.news-section {
   background-color: #fff;
   padding: 15px;
   margin-bottom: 10px;
   display: flex;
+  justify-content: space-between;
   align-items: center;
 }
 
 .section-title {
+  font-size: 16px;
   font-weight: bold;
-  margin-right: 10px;
   color: #333;
 }
 
-.todo-content, .news-content {
+.todo-content,
+.news-content {
   flex: 1;
+  margin: 0 10px;
   color: #666;
-  font-size: 14px;
 }
 
-.arrow-right {
-  color: #ccc;
-}
-
-/* 轮播图样式 */
 .swiper-container {
   background-color: #fff;
-  padding: 15px;
   margin-bottom: 10px;
+  padding: 10px;
 }
 
 .swiper {
-  height: 200px;
-  border-radius: 10px;
+  height: 150px;
+  border-radius: 8px;
   overflow: hidden;
 }
 
 .swiper-item {
+  width: 100%;
   height: 100%;
   position: relative;
 }
@@ -580,7 +675,6 @@ export default {
 .swiper-image {
   width: 100%;
   height: 100%;
-  border-radius: 10px;
 }
 
 .swiper-desc {
@@ -590,55 +684,53 @@ export default {
   color: #fff;
   background-color: rgba(0, 0, 0, 0.5);
   padding: 5px 10px;
-  border-radius: 5px;
-  font-size: 14px;
+  border-radius: 4px;
 }
 
-/* 广告区域 */
 .ad-section {
   background-color: #fff;
-  padding: 15px;
   margin-bottom: 10px;
-  border-radius: 10px;
+  padding: 15px;
 }
 
 .ad-content {
-  background-color: #f9f0e0;
-  padding: 20px;
-  border-radius: 10px;
+  background-color: #e3f2fd;
+  padding: 15px;
+  border-radius: 8px;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
 }
 
 .ad-title {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
-  color: #333;
+  color: #1976d2;
+  margin-bottom: 5px;
 }
 
 .ad-desc {
   font-size: 14px;
-  color: #666;
-  margin-top: 5px;
+  color: #64b5f6;
+  margin-bottom: 10px;
 }
 
 .ad-btn {
-  background-color: #ff6b00;
+  background-color: #1976d2;
   color: #fff;
-  border-radius: 5px;
-  padding: 5px 15px;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 20px;
   font-size: 14px;
 }
 
-/* 热门活动 */
 .hot-activities {
   background-color: #fff;
   padding: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .activities-title {
@@ -647,30 +739,37 @@ export default {
   color: #333;
 }
 
-/* 活动卡片 */
 .activity-cards {
   display: flex;
+  justify-content: space-between;
   padding: 0 15px 15px;
-  gap: 10px;
 }
 
 .activity-card {
-  flex: 1;
+  width: 48%;
   background-color: #fff;
   padding: 15px;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .card-title {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: bold;
   color: #333;
   margin-bottom: 5px;
+  display: block;
 }
 
 .card-desc {
-  font-size: 12px;
+  font-size: 14px;
   color: #666;
+}
+
+/* 更多功能区域 */
+.more-functions {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #f0f0f0;
 }
 </style>
