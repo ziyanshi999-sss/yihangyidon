@@ -1,109 +1,120 @@
 <template>
   <view class="recharge-page">
-    <!-- 页面头部 -->
-    <view class="page-header">
-      <text class="header-title">手机充值</text>
-      <text class="header-subtitle">话费流量一键充值</text>
-    </view>
-
-    <!-- 充值表单 -->
-    <view class="recharge-form">
-      <view class="form-section">
-        <view class="phone-input-section">
-          <view class="input-row">
-            <input 
-              class="phone-input" 
-              v-model="rechargeForm.phone"
-              placeholder="请输入手机号码"
-              type="number"
-              maxlength="11"
-              @input="onPhoneInput"
-            />
-            <button class="contacts-btn" @tap="selectFromContacts">📞</button>
-          </view>
-          
-          <view class="carrier-info" v-if="carrierInfo.name">
-            <text class="carrier-name">{{ carrierInfo.name }}</text>
-            <text class="carrier-location">{{ carrierInfo.location }}</text>
-          </view>
-        </view>
-
-        <!-- 充值类型选择 -->
-        <view class="recharge-types">
-          <view class="type-tabs">
-            <view 
-              class="tab-item" 
-              v-for="(type, index) in rechargeTypes" 
-              :key="index"
-              :class="{ active: activeType === index }"
-              @tap="switchType(index)"
-            >
-              <text class="tab-text">{{ type.label }}</text>
-            </view>
-          </view>
-        </view>
-
-        <!-- 金额选择 -->
-        <view class="amount-section">
-          <view class="amount-grid">
-            <view 
-              class="amount-item" 
-              v-for="(amount, index) in currentAmounts" 
-              :key="index"
-              :class="{ selected: selectedAmount === amount.value }"
-              @tap="selectAmount(amount)"
-            >
-              <text class="amount-value">¥{{ amount.value }}</text>
-              <text class="amount-desc" v-if="amount.desc">{{ amount.desc }}</text>
-              <view class="discount-tag" v-if="amount.discount">
-                <text class="discount-text">{{ amount.discount }}</text>
-              </view>
-            </view>
-          </view>
-        </view>
-
-        <!-- 自定义金额 -->
-        <view class="custom-amount">
-          <text class="custom-label">自定义金额</text>
-          <input 
-            class="custom-input" 
-            v-model="customAmount"
-            placeholder="输入其他金额"
-            type="digit"
-            @input="onCustomAmountInput"
-          />
+    <!-- 手机号码区域 -->
+    <view class="phone-section">
+      <view class="phone-display">
+        <text class="phone-number">{{ formattedPhoneNumber }}</text>
+        <view class="contact-btn" @tap="selectFromContacts">
+          <text class="contact-icon">👤</text>
         </view>
       </view>
-
-      <!-- 充值按钮 -->
-      <view class="recharge-actions">
-        <button class="recharge-btn" @tap="submitRecharge" :disabled="!canSubmit">
-          立即充值 ¥{{ finalAmount }}
-        </button>
+      <view class="carrier-info" v-if="carrierInfo.name">
+        <text class="carrier-text">{{ carrierInfo.name }}</text>
       </view>
     </view>
 
-    <!-- 充值记录 -->
-    <view class="recharge-history">
-      <view class="history-header">
-        <text class="history-title">最近充值记录</text>
-        <text class="view-all" @tap="viewAllHistory">查看全部</text>
+    <!-- 充值类型选项卡 -->
+    <view class="recharge-tabs">
+      <view
+        class="tab-item"
+        :class="{ active: activeTab === 0 }"
+        @tap="switchTab(0)"
+      >
+        <text class="tab-text">充话费</text>
+        <view class="tab-underline" v-if="activeTab === 0"></view>
       </view>
-      
-      <view class="history-list">
-        <view 
-          class="history-item" 
-          v-for="(record, index) in rechargeHistory" 
+      <view
+        class="tab-item"
+        :class="{ active: activeTab === 1 }"
+        @tap="switchTab(1)"
+      >
+        <text class="tab-text">自动充值</text>
+        <view class="tab-underline" v-if="activeTab === 1"></view>
+      </view>
+    </view>
+
+    <!-- 充值金额选择 -->
+    <view class="amount-section">
+      <view class="amount-grid">
+        <view
+          class="amount-card"
+          v-for="(amount, index) in rechargeAmounts"
           :key="index"
+          :class="{ selected: selectedAmount === amount.value }"
+          @tap="selectAmount(amount)"
         >
-          <view class="record-info">
-            <text class="record-phone">{{ record.phone }}</text>
-            <text class="record-time">{{ record.time }}</text>
+          <text class="amount-value">{{ amount.value }}元</text>
+          <text class="amount-price">售价{{ amount.price }}元</text>
+          <view class="discount-badge" v-if="amount.discount">
+            <text class="discount-text">{{ amount.discount }}</text>
           </view>
-          <view class="record-amount">
-            <text class="amount">¥{{ record.amount }}</text>
-            <text class="status">{{ record.status }}</text>
-          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 充值按钮 -->
+    <view class="recharge-button-container">
+      <button
+        class="recharge-button"
+        :class="{ disabled: !canRecharge }"
+        @tap="handleRecharge"
+        :disabled="!canRecharge"
+      >
+        ¥ {{ selectedPrice }} 立即充值
+      </button>
+    </view>
+
+    <!-- 温馨提示 -->
+    <view class="notice-section">
+      <text class="notice-title">温馨提示</text>
+      <text class="notice-content">
+        1.手机充值正常30分钟内到账，月初、月末属于充值高峰期时段，到账时间可能延迟，请您耐心等待。
+      </text>
+      <text class="notice-content">
+        2.本服务由充值服务商提供，若不提供月结发票，如需增值税普通发票请联系服务商客服电话：圣科瑞（北京）科技有限公司
+        4001-8888-52，北京掌乐科技有限公司 010-62764933。
+      </text>
+    </view>
+
+    <!-- 底部导航 -->
+    <view class="bottom-nav">
+      <view class="nav-item" @tap="goToStream">
+        <text class="nav-link">国内流量</text>
+      </view>
+      <text class="nav-separator">|</text>
+      <view class="nav-item" @tap="goToFaq">
+        <text class="nav-link">常见问题</text>
+      </view>
+      <text class="nav-separator">|</text>
+      <view class="nav-item" @tap="goToRecord">
+        <text class="nav-link">充值记录</text>
+      </view>
+    </view>
+
+    <!-- 手机号码输入弹窗 -->
+    <view class="phone-modal" v-if="showPhoneModal" @tap="hidePhoneModal">
+      <view class="modal-content" @tap.stop>
+        <view class="modal-header">
+          <text class="modal-title">输入手机号码</text>
+          <text class="modal-close" @tap="hidePhoneModal">×</text>
+        </view>
+        <view class="modal-body">
+          <input
+            class="phone-input"
+            v-model="inputPhoneNumber"
+            placeholder="请输入11位手机号码"
+            type="number"
+            maxlength="11"
+            @input="onPhoneInput"
+          />
+          <button
+            class="confirm-btn"
+            :class="{ disabled: !isValidPhone }"
+            @tap="confirmPhone"
+            :disabled="!isValidPhone"
+          >
+            确认
+          </button>
         </view>
       </view>
     </view>
@@ -111,484 +122,624 @@
 </template>
 
 <script>
-import { mobileRecharge } from '@/api/life'
+import { forceCheckLogin } from "@/utils/auth.js";
 
 export default {
-  name: 'RechargePage',
+  name: "RechargePage",
   data() {
     return {
-      activeType: 0,
-      selectedAmount: null,
-      customAmount: '',
-      rechargeForm: {
-        phone: ''
-      },
+      activeTab: 0,
+      selectedAmount: 50,
+      phoneNumber: "15903724152",
+      inputPhoneNumber: "",
+      showPhoneModal: false,
       carrierInfo: {
-        name: '',
-        location: ''
+        name: "中国移动",
+        location: "黑龙江 牡丹江",
       },
-      rechargeTypes: [
-        { label: '话费充值', type: 'phone' },
-        { label: '流量充值', type: 'data' }
+      rechargeAmounts: [
+        { value: 50, price: 47.77, discount: null, selected: true },
+        { value: 100, price: 97.78, discount: null, selected: false },
+        { value: 200, price: 197.78, discount: null, selected: false },
+        { value: 300, price: 297.78, discount: null, selected: false },
+        { value: 500, price: 497.78, discount: null, selected: false },
+        { value: 30, price: 29.7, discount: null, selected: false },
       ],
-      phoneAmounts: [
-        { value: 10, desc: '话费' },
-        { value: 20, desc: '话费' },
-        { value: 30, desc: '话费' },
-        { value: 50, desc: '话费', discount: '95折' },
-        { value: 100, desc: '话费', discount: '95折' },
-        { value: 200, desc: '话费', discount: '9折' }
-      ],
-      dataAmounts: [
-        { value: 10, desc: '1GB流量包' },
-        { value: 20, desc: '3GB流量包' },
-        { value: 30, desc: '5GB流量包' },
-        { value: 50, desc: '10GB流量包', discount: '送2GB' },
-        { value: 100, desc: '30GB流量包', discount: '送10GB' },
-        { value: 150, desc: '50GB流量包', discount: '送20GB' }
-      ],
-      rechargeHistory: [
-        {
-          phone: '138****8888',
-          amount: '50',
-          time: '2024-01-15 14:30',
-          status: '成功'
-        },
-        {
-          phone: '139****9999',
-          amount: '100',
-          time: '2024-01-10 09:15',
-          status: '成功'
-        }
-      ]
-    }
+    };
   },
-  
+
   computed: {
-    currentAmounts() {
-      return this.activeType === 0 ? this.phoneAmounts : this.dataAmounts
+    formattedPhoneNumber() {
+      if (!this.phoneNumber) return "点击输入手机号";
+      return this.phoneNumber.replace(/(\d{3})(\d{4})(\d{4})/, "$1 $2 $3");
     },
-    
-    finalAmount() {
-      return this.selectedAmount || this.customAmount || 0
+
+    selectedPrice() {
+      const selected = this.rechargeAmounts.find(
+        (item) => item.value === this.selectedAmount
+      );
+      return selected ? selected.price : 0;
     },
-    
-    canSubmit() {
-      return this.rechargeForm.phone.length === 11 && this.finalAmount > 0
+
+    canRecharge() {
+      return (
+        this.phoneNumber &&
+        this.phoneNumber.length === 11 &&
+        this.selectedAmount > 0
+      );
+    },
+
+    isValidPhone() {
+      return this.inputPhoneNumber && this.inputPhoneNumber.length === 11;
+    },
+  },
+
+  onLoad(options) {
+    this.initPage();
+    // 如果从其他页面传递了手机号码
+    if (options.phone) {
+      this.phoneNumber = options.phone;
+      this.getCarrierInfo();
     }
   },
-  
+
+  onShow() {
+    try {
+      if (!forceCheckLogin()) {
+        console.log("手机充值页面：用户未登录，跳转到登录页面");
+        uni.reLaunch({
+          url: "/pages/denglu/login",
+        });
+        return;
+      }
+      console.log("手机充值页面显示");
+    } catch (error) {
+      console.error("手机充值页面onShow检查失败:", error);
+      uni.reLaunch({
+        url: "/pages/denglu/login",
+      });
+    }
+  },
+
   methods: {
-    onPhoneInput() {
-      if (this.rechargeForm.phone.length === 11) {
-        this.getCarrierInfo()
-      } else {
-        this.carrierInfo = { name: '', location: '' }
+    initPage() {
+      console.log("手机充值页面初始化");
+      // 设置默认选中第一个金额
+      if (!this.phoneNumber) {
+        this.showPhoneModal = true;
       }
     },
-    
-    getCarrierInfo() {
-      // 模拟获取运营商信息
-      const phone = this.rechargeForm.phone
-      const prefix = phone.substring(0, 3)
-      
-      let carrier = ''
-      if (['130', '131', '132', '155', '156', '185', '186'].includes(prefix)) {
-        carrier = '中国联通'
-      } else if (['134', '135', '136', '137', '138', '139', '150', '151', '152', '157', '158', '159', '182', '183', '184', '187', '188'].includes(prefix)) {
-        carrier = '中国移动'
-      } else if (['133', '153', '180', '181', '189'].includes(prefix)) {
-        carrier = '中国电信'
+
+    switchTab(index) {
+      this.activeTab = index;
+      console.log("切换到标签:", index === 0 ? "充话费" : "自动充值");
+    },
+
+    selectAmount(amount) {
+      this.selectedAmount = amount.value;
+      console.log("选择充值金额:", amount);
+    },
+
+    selectFromContacts() {
+      this.showPhoneModal = true;
+    },
+
+    hidePhoneModal() {
+      this.showPhoneModal = false;
+      this.inputPhoneNumber = "";
+    },
+
+    onPhoneInput() {
+      // 限制只能输入数字，最多11位
+      this.inputPhoneNumber = this.inputPhoneNumber
+        .replace(/\D/g, "")
+        .substring(0, 11);
+    },
+
+    confirmPhone() {
+      if (this.isValidPhone) {
+        this.phoneNumber = this.inputPhoneNumber;
+        this.getCarrierInfo();
+        this.hidePhoneModal();
       }
-      
+    },
+
+    getCarrierInfo() {
+      if (this.phoneNumber.length !== 11) return;
+
+      const prefix = this.phoneNumber.substring(0, 3);
+      let carrier = "";
+
+      if (
+        [
+          "130",
+          "131",
+          "132",
+          "155",
+          "156",
+          "166",
+          "167",
+          "185",
+          "186",
+        ].includes(prefix)
+      ) {
+        carrier = "中国联通";
+      } else if (
+        [
+          "134",
+          "135",
+          "136",
+          "137",
+          "138",
+          "139",
+          "147",
+          "150",
+          "151",
+          "152",
+          "157",
+          "158",
+          "159",
+          "178",
+          "182",
+          "183",
+          "184",
+          "187",
+          "188",
+          "198",
+        ].includes(prefix)
+      ) {
+        carrier = "中国移动";
+      } else if (
+        [
+          "133",
+          "149",
+          "153",
+          "173",
+          "177",
+          "180",
+          "181",
+          "189",
+          "199",
+        ].includes(prefix)
+      ) {
+        carrier = "中国电信";
+      } else {
+        carrier = "未知运营商";
+      }
+
       this.carrierInfo = {
         name: carrier,
-        location: '黑龙江 牡丹江'
+        location: "黑龙江 牡丹江",
+      };
+    },
+
+    async handleRecharge() {
+      if (!this.canRecharge) {
+        uni.showToast({
+          title: "请检查手机号码和充值金额",
+          icon: "none",
+        });
+        return;
       }
-    },
-    
-    switchType(index) {
-      this.activeType = index
-      this.selectedAmount = null
-      this.customAmount = ''
-    },
-    
-    selectAmount(amount) {
-      this.selectedAmount = amount.value
-      this.customAmount = ''
-    },
-    
-    onCustomAmountInput() {
-      this.selectedAmount = null
-    },
-    
-    selectFromContacts() {
-      // 模拟从通讯录选择
-      uni.showActionSheet({
-        itemList: ['138****8888', '139****9999', '137****7777'],
-        success: (res) => {
-          const phones = ['13812348888', '13912349999', '13712347777']
-          this.rechargeForm.phone = phones[res.tapIndex]
-          this.getCarrierInfo()
-        }
-      })
-    },
-    
-    async submitRecharge() {
-      if (!this.canSubmit) return
-      
+
       try {
-        uni.showLoading({ title: '充值中...' })
-        
-        await mobileRecharge({
-          phone: this.rechargeForm.phone,
-          amount: this.finalAmount,
-          type: this.rechargeTypes[this.activeType].type
-        })
-        
+        uni.showLoading({ title: "充值中..." });
+
+        // 模拟充值API调用
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+
+        uni.hideLoading();
         uni.showToast({
-          title: '充值成功',
-          icon: 'success'
-        })
-        
-        // 添加到充值记录
-        this.rechargeHistory.unshift({
-          phone: this.rechargeForm.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2'),
-          amount: this.finalAmount.toString(),
-          time: new Date().toLocaleString(),
-          status: '成功'
-        })
-        
-        // 清空表单
-        this.rechargeForm.phone = ''
-        this.selectedAmount = null
-        this.customAmount = ''
-        this.carrierInfo = { name: '', location: '' }
-        
+          title: "充值成功",
+          icon: "success",
+        });
+
+        // 跳转到充值成功页面或返回
+        setTimeout(() => {
+          uni.navigateBack();
+        }, 1500);
       } catch (error) {
+        uni.hideLoading();
         uni.showToast({
-          title: '充值失败，请稍后重试',
-          icon: 'none'
-        })
-      } finally {
-        uni.hideLoading()
+          title: "充值失败，请稍后重试",
+          icon: "none",
+        });
+        console.error("充值失败:", error);
       }
     },
-    
-    viewAllHistory() {
-      uni.navigateTo({
-        url: '/pages/recharge-history/recharge-history'
-      })
-    }
-  }
-}
+
+    goToStream() {
+      uni.showToast({
+        title: "国内流量功能开发中",
+        icon: "none",
+      });
+    },
+
+    goToFaq() {
+      uni.showToast({
+        title: "常见问题功能开发中",
+        icon: "none",
+      });
+    },
+
+    goToRecord() {
+      uni.showToast({
+        title: "充值记录功能开发中",
+        icon: "none",
+      });
+    },
+  },
+};
 </script>
 
 <style scoped>
 .recharge-page {
   min-height: 100vh;
-  background: #F5F5F5;
+  background: #f5f5f5;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-.page-header {
-  background: linear-gradient(135deg, #FF9500 0%, #FF7A00 100%);
-  padding: 60rpx 30rpx 40rpx;
-  text-align: center;
-}
-
-.header-title {
-  color: #fff;
-  font-size: 36rpx;
-  font-weight: bold;
-  display: block;
-  margin-bottom: 10rpx;
-}
-
-.header-subtitle {
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 24rpx;
-}
-
-.recharge-form {
+/* 手机号码区域 */
+.phone-section {
   background: #fff;
-  margin: 30rpx;
-  border-radius: 20rpx;
-  overflow: hidden;
-  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.1);
-}
-
-.form-section {
   padding: 40rpx 30rpx;
-}
-
-.phone-input-section {
-  margin-bottom: 40rpx;
-}
-
-.input-row {
-  display: flex;
-  align-items: center;
-  gap: 20rpx;
   margin-bottom: 20rpx;
 }
 
-.phone-input {
-  flex: 1;
-  padding: 28rpx;
-  border: 2rpx solid #E0E0E0;
-  border-radius: 12rpx;
-  font-size: 32rpx;
-  text-align: center;
-  font-weight: 600;
+.phone-display {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
 }
 
-.phone-input:focus {
-  border-color: #FF9500;
+.phone-number {
+  font-size: 48rpx;
+  font-weight: 500;
+  color: #333;
+  font-style: italic;
 }
 
-.contacts-btn {
-  width: 80rpx;
-  height: 80rpx;
-  border-radius: 12rpx;
-  background: #F0F0F0;
-  border: none;
-  font-size: 32rpx;
+.contact-btn {
+  width: 60rpx;
+  height: 60rpx;
+  background: #20c997;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.contact-btn:active {
+  transform: scale(0.95);
+  background: #1db584;
+}
+
+.contact-icon {
+  font-size: 28rpx;
+  color: #fff;
 }
 
 .carrier-info {
-  text-align: center;
-  padding: 20rpx;
-  background: #F8F8F8;
-  border-radius: 12rpx;
-}
-
-.carrier-name {
-  font-size: 28rpx;
-  font-weight: 600;
-  color: #333;
-  margin-right: 20rpx;
-}
-
-.carrier-location {
-  font-size: 24rpx;
-  color: #999;
-}
-
-.recharge-types {
-  margin-bottom: 40rpx;
-}
-
-.type-tabs {
   display: flex;
-  background: #F0F0F0;
-  border-radius: 12rpx;
-  padding: 6rpx;
+  align-items: center;
+}
+
+.carrier-text {
+  font-size: 28rpx;
+  color: #666;
+}
+
+/* 充值类型选项卡 */
+.recharge-tabs {
+  display: flex;
+  background: #fff;
+  padding: 0 30rpx;
+  margin-bottom: 20rpx;
 }
 
 .tab-item {
   flex: 1;
+  padding: 30rpx 0;
   text-align: center;
-  padding: 20rpx;
-  border-radius: 8rpx;
+  position: relative;
   transition: all 0.3s ease;
 }
 
-.tab-item.active {
-  background: #FF9500;
-}
-
 .tab-text {
-  font-size: 28rpx;
+  font-size: 32rpx;
   color: #666;
   font-weight: 500;
 }
 
 .tab-item.active .tab-text {
-  color: #fff;
+  color: #20c997;
+  font-weight: 600;
 }
 
+.tab-underline {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60rpx;
+  height: 6rpx;
+  background: #20c997;
+  border-radius: 3rpx;
+  animation: slideIn 0.3s ease;
+}
+
+/* 充值金额网格 */
 .amount-section {
+  background: #fff;
+  padding: 30rpx;
   margin-bottom: 40rpx;
 }
 
 .amount-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20rpx;
+  gap: 16rpx;
 }
 
-.amount-item {
+.amount-card {
   position: relative;
-  padding: 30rpx 20rpx;
-  border: 2rpx solid #E0E0E0;
-  border-radius: 12rpx;
+  border: 2rpx solid #e8e8e8;
+  border-radius: 8rpx;
+  padding: 32rpx 16rpx;
   text-align: center;
-  background: #FAFAFA;
+  background: #fff;
   transition: all 0.3s ease;
+  overflow: hidden;
+  min-height: 120rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.amount-item.selected {
-  border-color: #FF9500;
-  background: #FFF8F0;
+.amount-card:active {
+  transform: scale(0.98);
+}
+
+.amount-card.selected {
+  border-color: #ff6b35;
+  background: #fff;
+  box-shadow: 0 0 0 2rpx #ff6b35;
 }
 
 .amount-value {
   display: block;
   font-size: 32rpx;
-  font-weight: bold;
+  font-weight: 600;
   color: #333;
-  margin-bottom: 8rpx;
+  margin-bottom: 6rpx;
+  font-style: normal;
 }
 
-.amount-desc {
+.amount-price {
+  display: block;
   font-size: 22rpx;
-  color: #999;
+  color: #ff4757;
+  font-weight: 400;
 }
 
-.discount-tag {
+.discount-badge {
   position: absolute;
-  top: -8rpx;
-  right: -8rpx;
-  background: #FF3B30;
-  border-radius: 20rpx;
-  padding: 4rpx 12rpx;
+  top: -2rpx;
+  right: -2rpx;
+  background: linear-gradient(135deg, #ff4757 0%, #ff3742 100%);
+  color: #fff;
+  font-size: 20rpx;
+  padding: 6rpx 12rpx;
+  border-radius: 0 12rpx 0 12rpx;
+  font-weight: 600;
+  box-shadow: 0 2rpx 8rpx rgba(255, 71, 87, 0.3);
 }
 
 .discount-text {
-  font-size: 20rpx;
   color: #fff;
-  font-weight: bold;
 }
 
-.custom-amount {
+/* 充值按钮 */
+.recharge-button-container {
+  padding: 0 30rpx 40rpx;
+}
+
+.recharge-button {
+  width: 100%;
+  padding: 36rpx;
+  background: linear-gradient(135deg, #ff9500 0%, #ff8400 100%);
+  color: #fff;
+  font-size: 34rpx;
+  font-weight: 600;
+  border: none;
+  border-radius: 12rpx;
+  box-shadow: 0 4rpx 16rpx rgba(255, 149, 0, 0.3);
+  transition: all 0.3s ease;
+  letter-spacing: 1rpx;
+}
+
+.recharge-button:active {
+  transform: translateY(2rpx);
+  box-shadow: 0 2rpx 8rpx rgba(255, 149, 0, 0.4);
+}
+
+.recharge-button.disabled {
+  background: #ccc;
+  box-shadow: none;
+  color: #999;
+}
+
+/* 温馨提示 */
+.notice-section {
+  background: #fff;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+}
+
+.notice-title {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+
+.notice-content {
+  display: block;
+  font-size: 24rpx;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 16rpx;
+}
+
+/* 底部导航 */
+.bottom-nav {
   display: flex;
   align-items: center;
+  justify-content: center;
+  background: #fff;
+  padding: 30rpx;
   gap: 20rpx;
 }
 
-.custom-label {
+.nav-item {
+  transition: all 0.3s ease;
+}
+
+.nav-item:active {
+  opacity: 0.7;
+}
+
+.nav-link {
   font-size: 28rpx;
-  color: #666;
-  white-space: nowrap;
+  color: #20c997;
+  font-weight: 500;
 }
 
-.custom-input {
-  flex: 1;
-  padding: 24rpx;
-  border: 2rpx solid #E0E0E0;
-  border-radius: 12rpx;
-  font-size: 28rpx;
-  text-align: center;
+.nav-separator {
+  font-size: 24rpx;
+  color: #ccc;
 }
 
-.custom-input:focus {
-  border-color: #FF9500;
+/* 手机号码输入弹窗 */
+.phone-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
 }
 
-.recharge-actions {
+.modal-content {
+  background: #fff;
+  border-radius: 20rpx;
+  width: 600rpx;
+  overflow: hidden;
+  animation: slideUp 0.3s ease;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 30rpx;
-  background: #F8F8F8;
+  border-bottom: 1rpx solid #e5e5e5;
 }
 
-.recharge-btn {
+.modal-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.modal-close {
+  font-size: 40rpx;
+  color: #999;
+  font-weight: 300;
+}
+
+.modal-body {
+  padding: 40rpx 30rpx;
+}
+
+.phone-input {
   width: 100%;
-  padding: 32rpx;
+  padding: 28rpx;
+  border: 2rpx solid #e5e5e5;
   border-radius: 12rpx;
-  background: #FF9500;
+  font-size: 32rpx;
+  text-align: center;
+  margin-bottom: 30rpx;
+  font-weight: 500;
+}
+
+.phone-input:focus {
+  border-color: #20c997;
+  outline: none;
+}
+
+.confirm-btn {
+  width: 100%;
+  padding: 28rpx;
+  background: #20c997;
   color: #fff;
   font-size: 32rpx;
   font-weight: 600;
   border: none;
-}
-
-.recharge-btn[disabled] {
-  background: #CCCCCC;
-  color: #999;
-}
-
-.recharge-history {
-  background: #fff;
-  margin: 0 30rpx 100rpx;
-  border-radius: 20rpx;
-  padding: 40rpx 30rpx;
-  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.1);
-}
-
-.history-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30rpx;
-  padding-bottom: 20rpx;
-  border-bottom: 2rpx solid #F0F0F0;
-}
-
-.history-title {
-  font-size: 32rpx;
-  font-weight: 600;
-  color: #333;
-}
-
-.view-all {
-  font-size: 26rpx;
-  color: #FF9500;
-}
-
-.history-list {
-  display: flex;
-  flex-direction: column;
-  gap: 24rpx;
-}
-
-.history-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 24rpx;
   border-radius: 12rpx;
-  background: #FAFAFA;
+  transition: all 0.3s ease;
 }
 
-.record-info {
-  display: flex;
-  flex-direction: column;
+.confirm-btn:active {
+  background: #1db584;
 }
 
-.record-phone {
-  font-size: 28rpx;
-  color: #333;
-  font-weight: 500;
-  margin-bottom: 8rpx;
-}
-
-.record-time {
-  font-size: 24rpx;
+.confirm-btn.disabled {
+  background: #ccc;
   color: #999;
 }
 
-.record-amount {
-  text-align: right;
+/* 动画效果 */
+@keyframes slideIn {
+  from {
+    width: 0;
+  }
+  to {
+    width: 60rpx;
+  }
 }
 
-.amount {
-  display: block;
-  font-size: 28rpx;
-  color: #333;
-  font-weight: 600;
-  margin-bottom: 4rpx;
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(100rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.status {
-  font-size: 22rpx;
-  color: #FF9500;
-}
+/* 响应式适配 */
+@media (max-width: 750rpx) {
+  .amount-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 
-/* 点击效果 */
-.amount-item:active,
-.recharge-btn:active,
-.contacts-btn:active {
-  opacity: 0.8;
-  transform: scale(0.98);
-  transition: all 0.1s ease;
+  .phone-number {
+    font-size: 40rpx;
+  }
+
+  .modal-content {
+    width: 90%;
+    margin: 0 5%;
+  }
 }
 </style>

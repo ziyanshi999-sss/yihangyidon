@@ -1068,7 +1068,7 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesDengluLogin = /* @__PURE__ */ _export_sfc(_sfc_main$o, [["render", _sfc_render$n], ["__scopeId", "data-v-6f56e16f"], ["__file", "E:/项目/yihangyidon/src/pages/denglu/login.vue"]]);
+  const PagesDengluLogin = /* @__PURE__ */ _export_sfc(_sfc_main$o, [["render", _sfc_render$n], ["__scopeId", "data-v-6f56e16f"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/denglu/login.vue"]]);
   const _sfc_main$n = {
     data() {
       return {
@@ -1456,7 +1456,7 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesRegisterRegister = /* @__PURE__ */ _export_sfc(_sfc_main$n, [["render", _sfc_render$m], ["__scopeId", "data-v-97bb96ad"], ["__file", "E:/项目/yihangyidon/src/pages/register/register.vue"]]);
+  const PagesRegisterRegister = /* @__PURE__ */ _export_sfc(_sfc_main$n, [["render", _sfc_render$m], ["__scopeId", "data-v-97bb96ad"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/register/register.vue"]]);
   const _sfc_main$m = {
     data() {
       return {
@@ -1840,7 +1840,7 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesIndexIndex = /* @__PURE__ */ _export_sfc(_sfc_main$m, [["render", _sfc_render$l], ["__scopeId", "data-v-83a5a03c"], ["__file", "E:/项目/yihangyidon/src/pages/index/index.vue"]]);
+  const PagesIndexIndex = /* @__PURE__ */ _export_sfc(_sfc_main$m, [["render", _sfc_render$l], ["__scopeId", "data-v-83a5a03c"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/index/index.vue"]]);
   const scriptRel = "modulepreload";
   const assetsURL = function(dep) {
     return "/" + dep;
@@ -1909,6 +1909,9 @@ if (uni.restoreGlobal) {
         warning: "#ff9800",
         error: "#f44336",
         info: "#2196f3"
+      },
+      gradients: {
+        primary: "linear-gradient(135deg, #4caf50 0%, #2e7d32 100%)"
       }
     },
     dark: {
@@ -1928,6 +1931,9 @@ if (uni.restoreGlobal) {
         warning: "#ffb74d",
         error: "#f44336",
         info: "#42a5f5"
+      },
+      gradients: {
+        primary: "linear-gradient(135deg, #66bb6a 0%, #4caf50 100%)"
       }
     },
     blue: {
@@ -1947,6 +1953,9 @@ if (uni.restoreGlobal) {
         warning: "#ff9800",
         error: "#f44336",
         info: "#2196f3"
+      },
+      gradients: {
+        primary: "linear-gradient(135deg, #2196f3 0%, #1976d2 100%)"
       }
     },
     purple: {
@@ -1966,6 +1975,9 @@ if (uni.restoreGlobal) {
         warning: "#ff9800",
         error: "#f44336",
         info: "#2196f3"
+      },
+      gradients: {
+        primary: "linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%)"
       }
     }
   };
@@ -1979,7 +1991,7 @@ if (uni.restoreGlobal) {
       try {
         return uni.getStorageSync(THEME_KEY) || "light";
       } catch (error) {
-        formatAppLog("error", "at utils/simple-theme.js:96", "获取主题失败:", error);
+        formatAppLog("error", "at utils/simple-theme.js:108", "获取主题失败:", error);
         return "light";
       }
     }
@@ -1988,7 +2000,7 @@ if (uni.restoreGlobal) {
       try {
         uni.setStorageSync(THEME_KEY, themeId);
       } catch (error) {
-        formatAppLog("error", "at utils/simple-theme.js:106", "存储主题失败:", error);
+        formatAppLog("error", "at utils/simple-theme.js:118", "存储主题失败:", error);
       }
     }
     // 获取当前主题
@@ -2005,9 +2017,9 @@ if (uni.restoreGlobal) {
         this.currentTheme = themeId;
         this.setStoredTheme(themeId);
         this.notifyListeners(themes$1[themeId]);
-        formatAppLog("log", "at utils/simple-theme.js:126", "主题已切换为:", themes$1[themeId].name);
+        formatAppLog("log", "at utils/simple-theme.js:138", "主题已切换为:", themes$1[themeId].name);
       } else {
-        formatAppLog("error", "at utils/simple-theme.js:128", "主题不存在:", themeId);
+        formatAppLog("error", "at utils/simple-theme.js:140", "主题不存在:", themeId);
       }
     }
     // 获取所有主题
@@ -2031,28 +2043,94 @@ if (uni.restoreGlobal) {
         try {
           callback(theme);
         } catch (error) {
-          formatAppLog("error", "at utils/simple-theme.js:156", "主题监听器执行失败:", error);
+          formatAppLog("error", "at utils/simple-theme.js:168", "主题监听器执行失败:", error);
         }
       });
     }
   }
   const themeManager$1 = new SimpleThemeManager();
+  function getThemeStyles() {
+    const theme = themeManager$1.getCurrentTheme();
+    return {
+      // 背景色
+      background: {
+        backgroundColor: theme.colors.background
+      },
+      surface: {
+        backgroundColor: theme.colors.surface
+      },
+      surfaceVariant: {
+        backgroundColor: theme.colors.surfaceVariant
+      },
+      // 文字颜色
+      text: {
+        color: theme.colors.text
+      },
+      textSecondary: {
+        color: theme.colors.textSecondary
+      },
+      // 边框
+      border: {
+        borderColor: theme.colors.border
+      },
+      borderLight: {
+        borderColor: theme.colors.borderLight
+      },
+      // 主色调
+      primary: {
+        color: theme.colors.primary
+      },
+      primaryBg: {
+        backgroundColor: theme.colors.primary
+      },
+      primaryGradient: {
+        background: `linear-gradient(135deg, ${theme.colors.primaryDark} 0%, ${theme.colors.primary} 100%)`
+      },
+      // 状态颜色
+      success: {
+        color: theme.colors.success
+      },
+      successBg: {
+        backgroundColor: theme.colors.success
+      },
+      warning: {
+        color: theme.colors.warning
+      },
+      warningBg: {
+        backgroundColor: theme.colors.warning
+      },
+      error: {
+        color: theme.colors.error
+      },
+      errorBg: {
+        backgroundColor: theme.colors.error
+      },
+      info: {
+        color: theme.colors.info
+      },
+      infoBg: {
+        backgroundColor: theme.colors.info
+      }
+    };
+  }
   const _sfc_main$l = {
     data() {
       return {
         userInfo: null,
-        currentTheme: themeManager$1.getCurrentTheme()
+        currentTheme: themeManager$1.getCurrentTheme(),
         // 获取当前主题
+        themeStyles: getThemeStyles()
+        // 获取主题样式
       };
     },
     onShow() {
       try {
         if (!forceCheckLogin()) {
-          formatAppLog("log", "at pages/user/user.vue:171", "个人中心：用户未登录，跳转到登录页面");
+          formatAppLog("log", "at pages/user/user.vue:173", "个人中心：用户未登录，跳转到登录页面");
           uni.reLaunch({
             url: "/pages/denglu/login",
             fail: (error) => {
-              formatAppLog("error", "at pages/user/user.vue:175", "个人中心跳转失败:", error);
+              formatAppLog("error", "at pages/user/user.vue:177", "个人中心跳转失败:", error);
               uni.navigateTo({ url: "/pages/denglu/login" });
             }
           });
@@ -2061,7 +2139,7 @@ if (uni.restoreGlobal) {
         this.checkLoginStatus();
         this.loadTheme();
       } catch (error) {
-        formatAppLog("error", "at pages/user/user.vue:185", "个人中心onShow检查失败:", error);
+        formatAppLog("error", "at pages/user/user.vue:187", "个人中心onShow检查失败:", error);
         uni.reLaunch({
           url: "/pages/denglu/login",
           fail: () => {
@@ -2079,7 +2157,10 @@ if (uni.restoreGlobal) {
     methods: {
       // 主题变化回调
       onThemeChanged(theme) {
+        formatAppLog("log", "at pages/user/user.vue:210", "主题变化回调:", theme);
         this.currentTheme = theme;
+        this.themeStyles = getThemeStyles();
+        this.$forceUpdate();
       },
       // 检查登录状态
       checkLoginStatus() {
@@ -2173,7 +2254,7 @@ if (uni.restoreGlobal) {
             confirmText: "确定"
           });
         } catch (error) {
-          formatAppLog("error", "at pages/user/user.vue:309", "查看退出记录失败:", error);
+          formatAppLog("error", "at pages/user/user.vue:315", "查看退出记录失败:", error);
           uni.showToast({
             title: "查看记录失败",
             icon: "none"
@@ -2196,7 +2277,7 @@ if (uni.restoreGlobal) {
               const { users: importedUsers } = module;
               this.displayCreditCards(importedUsers);
             }).catch((error) => {
-              formatAppLog("error", "at pages/user/user.vue:339", "导入用户数据失败:", error);
+              formatAppLog("error", "at pages/user/user.vue:345", "导入用户数据失败:", error);
               uni.showToast({
                 title: "获取数据失败",
                 icon: "none"
@@ -2206,7 +2287,7 @@ if (uni.restoreGlobal) {
           }
           this.displayCreditCards(users2);
         } catch (error) {
-          formatAppLog("error", "at pages/user/user.vue:350", "获取信用卡信息失败:", error);
+          formatAppLog("error", "at pages/user/user.vue:356", "获取信用卡信息失败:", error);
           uni.showToast({
             title: "获取数据失败",
             icon: "none"
@@ -2313,17 +2394,37 @@ if (uni.restoreGlobal) {
       },
       // 切换主题
       toggleTheme() {
-        const themes2 = themeManager$1.getAllThemes();
-        const currentIndex = themes2.findIndex((theme) => theme.id === this.currentTheme.id);
-        const nextIndex = (currentIndex + 1) % themes2.length;
-        const newTheme = themes2[nextIndex];
-        themeManager$1.switchTheme(newTheme.id);
-        this.currentTheme = newTheme;
-        uni.showToast({
-          title: `已切换到${newTheme.name}`,
-          icon: "success",
-          duration: 1500
-        });
+        try {
+          formatAppLog("log", "at pages/user/user.vue:485", "开始切换主题...");
+          formatAppLog("log", "at pages/user/user.vue:486", "当前主题对象:", this.currentTheme);
+          const themes2 = themeManager$1.getAllThemes();
+          formatAppLog("log", "at pages/user/user.vue:490", "所有可用主题:", themes2);
+          const currentThemeId = this.currentTheme.id || this.currentTheme;
+          formatAppLog("log", "at pages/user/user.vue:493", "当前主题ID:", currentThemeId);
+          const currentIndex = themes2.findIndex((theme) => theme.id === currentThemeId);
+          formatAppLog("log", "at pages/user/user.vue:496", "当前主题索引:", currentIndex);
+          const nextIndex = (currentIndex + 1) % themes2.length;
+          const newTheme = themes2[nextIndex];
+          formatAppLog("log", "at pages/user/user.vue:500", "下一个主题:", newTheme);
+          themeManager$1.switchTheme(newTheme.id);
+          formatAppLog("log", "at pages/user/user.vue:504", "主题管理器切换完成");
+          this.currentTheme = newTheme;
+          this.themeStyles = getThemeStyles();
+          formatAppLog("log", "at pages/user/user.vue:509", "本地状态更新完成");
+          uni.showToast({
+            title: `已切换到${newTheme.name}`,
+            icon: "success",
+            duration: 1500
+          });
+          this.$forceUpdate();
+          formatAppLog("log", "at pages/user/user.vue:520", "页面强制更新完成");
+        } catch (error) {
+          formatAppLog("error", "at pages/user/user.vue:522", "主题切换失败:", error);
+          uni.showToast({
+            title: "主题切换失败",
+            icon: "none"
+          });
+        }
       },
       // 查看头像
       viewAvatar() {
@@ -2338,7 +2439,7 @@ if (uni.restoreGlobal) {
           urls: [this.userInfo.avatar],
           current: this.userInfo.avatar,
           fail: (error) => {
-            formatAppLog("error", "at pages/user/user.vue:510", "预览头像失败:", error);
+            formatAppLog("error", "at pages/user/user.vue:545", "预览头像失败:", error);
             uni.showToast({
               title: "预览失败",
               icon: "none"
@@ -2349,232 +2450,300 @@ if (uni.restoreGlobal) {
     }
   };
   function _sfc_render$k(_ctx, _cache, $props, $setup, $data, $options) {
-    return vue.openBlock(), vue.createElementBlock("view", { class: "user-page" }, [
-      vue.createCommentVNode(" 顶部背景 "),
-      vue.createElementVNode("view", { class: "header-bg" }),
-      vue.createCommentVNode(" 用户信息卡片 "),
-      $data.userInfo ? (vue.openBlock(), vue.createElementBlock("view", {
-        key: 0,
-        class: "user-card"
-      }, [
-        vue.createElementVNode("view", { class: "user-info" }, [
-          vue.createElementVNode("view", { class: "avatar-section" }, [
-            vue.createElementVNode("view", {
-              class: "avatar",
-              onClick: _cache[0] || (_cache[0] = (...args) => $options.viewAvatar && $options.viewAvatar(...args))
-            }, [
-              vue.createElementVNode("image", {
-                src: $data.userInfo.avatar || "/static/default-avatar.png",
-                mode: "aspectFill"
-              }, null, 8, ["src"]),
-              vue.createElementVNode("view", { class: "avatar-view-overlay" }, [
-                vue.createElementVNode("text", { class: "view-icon" }, "👁️")
-              ])
-            ]),
-            vue.createElementVNode("view", { class: "user-details" }, [
-              vue.createElementVNode(
-                "text",
-                { class: "username" },
-                vue.toDisplayString($data.userInfo.nickname || $data.userInfo.username),
-                1
-                /* TEXT */
-              ),
-              vue.createElementVNode("text", { class: "user-level" }, "VIP客户")
-            ])
-          ]),
-          vue.createElementVNode("view", { class: "account-info" }, [
-            vue.createElementVNode("text", { class: "account-label" }, "账户余额"),
-            vue.createElementVNode("text", { class: "account-balance" }, "¥ 12,580.00")
-          ])
-        ])
-      ])) : (vue.openBlock(), vue.createElementBlock(
-        vue.Fragment,
-        { key: 1 },
-        [
-          vue.createCommentVNode(" 未登录状态 "),
-          vue.createElementVNode("view", { class: "login-card" }, [
-            vue.createElementVNode("view", { class: "login-content" }, [
-              vue.createElementVNode("text", { class: "login-title" }, "欢迎使用农业银行"),
-              vue.createElementVNode("text", { class: "login-subtitle" }, "请登录您的账户"),
-              vue.createElementVNode("button", {
-                class: "login-btn",
-                onClick: _cache[1] || (_cache[1] = (...args) => $options.goToLogin && $options.goToLogin(...args))
-              }, "立即登录")
-            ])
-          ])
-        ],
-        2112
-        /* STABLE_FRAGMENT, DEV_ROOT_FRAGMENT */
-      )),
-      vue.createCommentVNode(" 快捷功能 "),
-      $data.userInfo ? (vue.openBlock(), vue.createElementBlock("view", {
-        key: 2,
-        class: "quick-functions"
-      }, [
-        vue.createElementVNode("view", { class: "function-grid" }, [
-          vue.createElementVNode("view", {
-            class: "function-item",
-            onClick: _cache[2] || (_cache[2] = (...args) => $options.goToTransfer && $options.goToTransfer(...args))
-          }, [
-            vue.createElementVNode("view", { class: "function-icon transfer-icon" }, "💳"),
-            vue.createElementVNode("text", { class: "function-text" }, "转账")
-          ]),
-          vue.createElementVNode("view", {
-            class: "function-item",
-            onClick: _cache[3] || (_cache[3] = (...args) => $options.goToPayment && $options.goToPayment(...args))
-          }, [
-            vue.createElementVNode("view", { class: "function-icon payment-icon" }, "💰"),
-            vue.createElementVNode("text", { class: "function-text" }, "缴费")
-          ]),
-          vue.createElementVNode("view", {
-            class: "function-item",
-            onClick: _cache[4] || (_cache[4] = (...args) => $options.goToInvestment && $options.goToInvestment(...args))
-          }, [
-            vue.createElementVNode("view", { class: "function-icon investment-icon" }, "📈"),
-            vue.createElementVNode("text", { class: "function-text" }, "理财")
-          ]),
-          vue.createElementVNode("view", {
-            class: "function-item",
-            onClick: _cache[5] || (_cache[5] = (...args) => $options.goToCredit && $options.goToCredit(...args))
-          }, [
-            vue.createElementVNode("view", { class: "function-icon credit-icon" }, "💳"),
-            vue.createElementVNode("text", { class: "function-text" }, "信用卡")
-          ])
-        ])
-      ])) : vue.createCommentVNode("v-if", true),
-      vue.createCommentVNode(" 功能菜单 "),
-      $data.userInfo ? (vue.openBlock(), vue.createElementBlock("view", {
-        key: 3,
-        class: "menu-sections"
-      }, [
-        vue.createCommentVNode(" 账户管理 "),
-        vue.createElementVNode("view", { class: "menu-section" }, [
-          vue.createElementVNode("view", { class: "section-title" }, "账户管理"),
-          vue.createElementVNode("view", { class: "menu-list" }, [
-            vue.createElementVNode("view", {
-              class: "menu-item",
-              onClick: _cache[6] || (_cache[6] = (...args) => $options.goToAccount && $options.goToAccount(...args))
-            }, [
-              vue.createElementVNode("view", { class: "menu-left" }, [
-                vue.createElementVNode("text", { class: "menu-icon" }, "🏦"),
-                vue.createElementVNode("text", { class: "menu-text" }, "我的账户")
+    return vue.openBlock(), vue.createElementBlock(
+      "view",
+      {
+        class: "user-page",
+        style: vue.normalizeStyle($data.themeStyles.backgroundColor)
+      },
+      [
+        vue.createCommentVNode(" 顶部背景 "),
+        vue.createElementVNode(
+          "view",
+          {
+            class: "header-bg",
+            style: vue.normalizeStyle($data.themeStyles.primaryGradient)
+          },
+          null,
+          4
+          /* STYLE */
+        ),
+        vue.createCommentVNode(" 用户信息卡片 "),
+        $data.userInfo ? (vue.openBlock(), vue.createElementBlock(
+          "view",
+          {
+            key: 0,
+            class: "user-card",
+            style: vue.normalizeStyle($data.themeStyles.surface)
+          },
+          [
+            vue.createElementVNode("view", { class: "user-info" }, [
+              vue.createElementVNode("view", { class: "avatar-section" }, [
+                vue.createElementVNode("view", {
+                  class: "avatar",
+                  onClick: _cache[0] || (_cache[0] = (...args) => $options.viewAvatar && $options.viewAvatar(...args))
+                }, [
+                  vue.createElementVNode("image", {
+                    src: $data.userInfo.avatar || "/static/default-avatar.png",
+                    mode: "aspectFill"
+                  }, null, 8, ["src"]),
+                  vue.createElementVNode("view", { class: "avatar-view-overlay" }, [
+                    vue.createElementVNode("text", { class: "view-icon" }, "👁️")
+                  ])
+                ]),
+                vue.createElementVNode("view", { class: "user-details" }, [
+                  vue.createElementVNode(
+                    "text",
+                    { class: "username" },
+                    vue.toDisplayString($data.userInfo.nickname || $data.userInfo.username),
+                    1
+                    /* TEXT */
+                  ),
+                  vue.createElementVNode("text", { class: "user-level" }, "VIP客户")
+                ])
               ]),
-              vue.createElementVNode("text", { class: "arrow" }, ">")
-            ]),
-            vue.createElementVNode("view", {
-              class: "menu-item",
-              onClick: _cache[7] || (_cache[7] = (...args) => $options.goToCards && $options.goToCards(...args))
-            }, [
-              vue.createElementVNode("view", { class: "menu-left" }, [
-                vue.createElementVNode("text", { class: "menu-icon" }, "💳"),
-                vue.createElementVNode("text", { class: "menu-text" }, "我的卡片")
-              ]),
-              vue.createElementVNode("text", { class: "arrow" }, ">")
-            ]),
-            vue.createElementVNode("view", {
-              class: "menu-item",
-              onClick: _cache[8] || (_cache[8] = (...args) => $options.goToTransactions && $options.goToTransactions(...args))
-            }, [
-              vue.createElementVNode("view", { class: "menu-left" }, [
-                vue.createElementVNode("text", { class: "menu-icon" }, "📊"),
-                vue.createElementVNode("text", { class: "menu-text" }, "交易记录")
-              ]),
-              vue.createElementVNode("text", { class: "arrow" }, ">")
-            ])
-          ])
-        ]),
-        vue.createCommentVNode(" 个人设置 "),
-        vue.createElementVNode("view", { class: "menu-section" }, [
-          vue.createElementVNode("view", { class: "section-title" }, "个人设置"),
-          vue.createElementVNode("view", { class: "menu-list" }, [
-            vue.createElementVNode("view", {
-              class: "menu-item",
-              onClick: _cache[9] || (_cache[9] = (...args) => $options.goToProfile && $options.goToProfile(...args))
-            }, [
-              vue.createElementVNode("view", { class: "menu-left" }, [
-                vue.createElementVNode("text", { class: "menu-icon" }, "👤"),
-                vue.createElementVNode("text", { class: "menu-text" }, "个人资料")
-              ]),
-              vue.createElementVNode("text", { class: "arrow" }, ">")
-            ]),
-            vue.createElementVNode("view", {
-              class: "menu-item",
-              onClick: _cache[10] || (_cache[10] = (...args) => $options.goToSecurity && $options.goToSecurity(...args))
-            }, [
-              vue.createElementVNode("view", { class: "menu-left" }, [
-                vue.createElementVNode("text", { class: "menu-icon" }, "🔒"),
-                vue.createElementVNode("text", { class: "menu-text" }, "安全设置")
-              ]),
-              vue.createElementVNode("text", { class: "arrow" }, ">")
-            ]),
-            vue.createElementVNode("view", {
-              class: "menu-item theme-item",
-              onClick: _cache[11] || (_cache[11] = (...args) => $options.toggleTheme && $options.toggleTheme(...args))
-            }, [
-              vue.createElementVNode("view", { class: "menu-left" }, [
-                vue.createElementVNode("text", { class: "menu-icon" }, "🎨"),
-                vue.createElementVNode("text", { class: "menu-text" }, "主题切换")
-              ]),
-              vue.createElementVNode("view", { class: "theme-info" }, [
-                vue.createElementVNode(
-                  "text",
-                  { class: "theme-desc" },
-                  vue.toDisplayString($options.getThemeDisplayName($data.currentTheme)),
-                  1
-                  /* TEXT */
-                ),
-                vue.createElementVNode("text", { class: "arrow" }, ">")
+              vue.createElementVNode("view", { class: "account-info" }, [
+                vue.createElementVNode("text", { class: "account-label" }, "账户余额"),
+                vue.createElementVNode("text", { class: "account-balance" }, "¥ 12,580.00")
               ])
             ])
-          ])
-        ]),
-        vue.createCommentVNode(" 客户服务 "),
-        vue.createElementVNode("view", { class: "menu-section" }, [
-          vue.createElementVNode("view", { class: "section-title" }, "客户服务"),
-          vue.createElementVNode("view", { class: "menu-list" }, [
-            vue.createElementVNode("view", {
-              class: "menu-item",
-              onClick: _cache[12] || (_cache[12] = (...args) => $options.goToHelp && $options.goToHelp(...args))
-            }, [
-              vue.createElementVNode("view", { class: "menu-left" }, [
-                vue.createElementVNode("text", { class: "menu-icon" }, "❓"),
-                vue.createElementVNode("text", { class: "menu-text" }, "帮助中心")
+          ],
+          4
+          /* STYLE */
+        )) : (vue.openBlock(), vue.createElementBlock(
+          vue.Fragment,
+          { key: 1 },
+          [
+            vue.createCommentVNode(" 未登录状态 "),
+            vue.createElementVNode(
+              "view",
+              {
+                class: "login-card",
+                style: vue.normalizeStyle($data.themeStyles.surface)
+              },
+              [
+                vue.createElementVNode("view", { class: "login-content" }, [
+                  vue.createElementVNode("text", { class: "login-title" }, "欢迎使用农业银行"),
+                  vue.createElementVNode("text", { class: "login-subtitle" }, "请登录您的账户"),
+                  vue.createElementVNode("button", {
+                    class: "login-btn",
+                    onClick: _cache[1] || (_cache[1] = (...args) => $options.goToLogin && $options.goToLogin(...args))
+                  }, "立即登录")
+                ])
+              ],
+              4
+              /* STYLE */
+            )
+          ],
+          2112
+          /* STABLE_FRAGMENT, DEV_ROOT_FRAGMENT */
+        )),
+        vue.createCommentVNode(" 快捷功能 "),
+        $data.userInfo ? (vue.openBlock(), vue.createElementBlock(
+          "view",
+          {
+            key: 2,
+            class: "quick-functions",
+            style: vue.normalizeStyle($data.themeStyles.surface)
+          },
+          [
+            vue.createElementVNode("view", { class: "function-grid" }, [
+              vue.createElementVNode("view", {
+                class: "function-item",
+                onClick: _cache[2] || (_cache[2] = (...args) => $options.goToTransfer && $options.goToTransfer(...args))
+              }, [
+                vue.createElementVNode("view", { class: "function-icon transfer-icon" }, "💳"),
+                vue.createElementVNode("text", { class: "function-text" }, "转账")
               ]),
-              vue.createElementVNode("text", { class: "arrow" }, ">")
-            ]),
-            vue.createElementVNode("view", {
-              class: "menu-item",
-              onClick: _cache[13] || (_cache[13] = (...args) => $options.goToContact && $options.goToContact(...args))
-            }, [
-              vue.createElementVNode("view", { class: "menu-left" }, [
-                vue.createElementVNode("text", { class: "menu-icon" }, "📞"),
-                vue.createElementVNode("text", { class: "menu-text" }, "联系客服")
+              vue.createElementVNode("view", {
+                class: "function-item",
+                onClick: _cache[3] || (_cache[3] = (...args) => $options.goToPayment && $options.goToPayment(...args))
+              }, [
+                vue.createElementVNode("view", { class: "function-icon payment-icon" }, "💰"),
+                vue.createElementVNode("text", { class: "function-text" }, "缴费")
               ]),
-              vue.createElementVNode("text", { class: "arrow" }, ">")
-            ]),
-            vue.createElementVNode("view", {
-              class: "menu-item",
-              onClick: _cache[14] || (_cache[14] = (...args) => $options.viewLogoutHistory && $options.viewLogoutHistory(...args))
-            }, [
-              vue.createElementVNode("view", { class: "menu-left" }, [
-                vue.createElementVNode("text", { class: "menu-icon" }, "📋"),
-                vue.createElementVNode("text", { class: "menu-text" }, "退出记录")
+              vue.createElementVNode("view", {
+                class: "function-item",
+                onClick: _cache[4] || (_cache[4] = (...args) => $options.goToInvestment && $options.goToInvestment(...args))
+              }, [
+                vue.createElementVNode("view", { class: "function-icon investment-icon" }, "📈"),
+                vue.createElementVNode("text", { class: "function-text" }, "理财")
               ]),
-              vue.createElementVNode("text", { class: "arrow" }, ">")
+              vue.createElementVNode("view", {
+                class: "function-item",
+                onClick: _cache[5] || (_cache[5] = (...args) => $options.goToCredit && $options.goToCredit(...args))
+              }, [
+                vue.createElementVNode("view", { class: "function-icon credit-icon" }, "💳"),
+                vue.createElementVNode("text", { class: "function-text" }, "信用卡")
+              ])
             ])
+          ],
+          4
+          /* STYLE */
+        )) : vue.createCommentVNode("v-if", true),
+        vue.createCommentVNode(" 功能菜单 "),
+        $data.userInfo ? (vue.openBlock(), vue.createElementBlock("view", {
+          key: 3,
+          class: "menu-sections"
+        }, [
+          vue.createCommentVNode(" 账户管理 "),
+          vue.createElementVNode(
+            "view",
+            {
+              class: "menu-section",
+              style: vue.normalizeStyle($data.themeStyles.surface)
+            },
+            [
+              vue.createElementVNode("view", { class: "section-title" }, "账户管理"),
+              vue.createElementVNode("view", { class: "menu-list" }, [
+                vue.createElementVNode("view", {
+                  class: "menu-item",
+                  onClick: _cache[6] || (_cache[6] = (...args) => $options.goToAccount && $options.goToAccount(...args))
+                }, [
+                  vue.createElementVNode("view", { class: "menu-left" }, [
+                    vue.createElementVNode("text", { class: "menu-icon" }, "🏦"),
+                    vue.createElementVNode("text", { class: "menu-text" }, "我的账户")
+                  ]),
+                  vue.createElementVNode("text", { class: "arrow" }, ">")
+                ]),
+                vue.createElementVNode("view", {
+                  class: "menu-item",
+                  onClick: _cache[7] || (_cache[7] = (...args) => $options.goToCards && $options.goToCards(...args))
+                }, [
+                  vue.createElementVNode("view", { class: "menu-left" }, [
+                    vue.createElementVNode("text", { class: "menu-icon" }, "💳"),
+                    vue.createElementVNode("text", { class: "menu-text" }, "我的卡片")
+                  ]),
+                  vue.createElementVNode("text", { class: "arrow" }, ">")
+                ]),
+                vue.createElementVNode("view", {
+                  class: "menu-item",
+                  onClick: _cache[8] || (_cache[8] = (...args) => $options.goToTransactions && $options.goToTransactions(...args))
+                }, [
+                  vue.createElementVNode("view", { class: "menu-left" }, [
+                    vue.createElementVNode("text", { class: "menu-icon" }, "📊"),
+                    vue.createElementVNode("text", { class: "menu-text" }, "交易记录")
+                  ]),
+                  vue.createElementVNode("text", { class: "arrow" }, ">")
+                ])
+              ])
+            ],
+            4
+            /* STYLE */
+          ),
+          vue.createCommentVNode(" 个人设置 "),
+          vue.createElementVNode(
+            "view",
+            {
+              class: "menu-section",
+              style: vue.normalizeStyle($data.themeStyles.surface)
+            },
+            [
+              vue.createElementVNode("view", { class: "section-title" }, "个人设置"),
+              vue.createElementVNode("view", { class: "menu-list" }, [
+                vue.createElementVNode("view", {
+                  class: "menu-item",
+                  onClick: _cache[9] || (_cache[9] = (...args) => $options.goToProfile && $options.goToProfile(...args))
+                }, [
+                  vue.createElementVNode("view", { class: "menu-left" }, [
+                    vue.createElementVNode("text", { class: "menu-icon" }, "👤"),
+                    vue.createElementVNode("text", { class: "menu-text" }, "个人资料")
+                  ]),
+                  vue.createElementVNode("text", { class: "arrow" }, ">")
+                ]),
+                vue.createElementVNode("view", {
+                  class: "menu-item",
+                  onClick: _cache[10] || (_cache[10] = (...args) => $options.goToSecurity && $options.goToSecurity(...args))
+                }, [
+                  vue.createElementVNode("view", { class: "menu-left" }, [
+                    vue.createElementVNode("text", { class: "menu-icon" }, "🔒"),
+                    vue.createElementVNode("text", { class: "menu-text" }, "安全设置")
+                  ]),
+                  vue.createElementVNode("text", { class: "arrow" }, ">")
+                ]),
+                vue.createElementVNode("view", {
+                  class: "menu-item theme-item",
+                  onClick: _cache[11] || (_cache[11] = (...args) => $options.toggleTheme && $options.toggleTheme(...args))
+                }, [
+                  vue.createElementVNode("view", { class: "menu-left" }, [
+                    vue.createElementVNode("text", { class: "menu-icon" }, "🎨"),
+                    vue.createElementVNode("text", { class: "menu-text" }, "主题切换")
+                  ]),
+                  vue.createElementVNode("view", { class: "theme-info" }, [
+                    vue.createElementVNode(
+                      "text",
+                      { class: "theme-desc" },
+                      vue.toDisplayString($options.getThemeDisplayName($data.currentTheme)),
+                      1
+                      /* TEXT */
+                    ),
+                    vue.createElementVNode("text", { class: "arrow" }, ">")
+                  ])
+                ])
+              ])
+            ],
+            4
+            /* STYLE */
+          ),
+          vue.createCommentVNode(" 客户服务 "),
+          vue.createElementVNode(
+            "view",
+            {
+              class: "menu-section",
+              style: vue.normalizeStyle($data.themeStyles.surface)
+            },
+            [
+              vue.createElementVNode("view", { class: "section-title" }, "客户服务"),
+              vue.createElementVNode("view", { class: "menu-list" }, [
+                vue.createElementVNode("view", {
+                  class: "menu-item",
+                  onClick: _cache[12] || (_cache[12] = (...args) => $options.goToHelp && $options.goToHelp(...args))
+                }, [
+                  vue.createElementVNode("view", { class: "menu-left" }, [
+                    vue.createElementVNode("text", { class: "menu-icon" }, "❓"),
+                    vue.createElementVNode("text", { class: "menu-text" }, "帮助中心")
+                  ]),
+                  vue.createElementVNode("text", { class: "arrow" }, ">")
+                ]),
+                vue.createElementVNode("view", {
+                  class: "menu-item",
+                  onClick: _cache[13] || (_cache[13] = (...args) => $options.goToContact && $options.goToContact(...args))
+                }, [
+                  vue.createElementVNode("view", { class: "menu-left" }, [
+                    vue.createElementVNode("text", { class: "menu-icon" }, "📞"),
+                    vue.createElementVNode("text", { class: "menu-text" }, "联系客服")
+                  ]),
+                  vue.createElementVNode("text", { class: "arrow" }, ">")
+                ]),
+                vue.createElementVNode("view", {
+                  class: "menu-item",
+                  onClick: _cache[14] || (_cache[14] = (...args) => $options.viewLogoutHistory && $options.viewLogoutHistory(...args))
+                }, [
+                  vue.createElementVNode("view", { class: "menu-left" }, [
+                    vue.createElementVNode("text", { class: "menu-icon" }, "📋"),
+                    vue.createElementVNode("text", { class: "menu-text" }, "退出记录")
+                  ]),
+                  vue.createElementVNode("text", { class: "arrow" }, ">")
+                ])
+              ])
+            ],
+            4
+            /* STYLE */
+          ),
+          vue.createCommentVNode(" 退出登录 "),
+          vue.createElementVNode("view", { class: "logout-section" }, [
+            vue.createElementVNode("button", {
+              class: "logout-btn",
+              onClick: _cache[15] || (_cache[15] = (...args) => $options.handleLogout && $options.handleLogout(...args))
+            }, "退出登录")
           ])
-        ]),
-        vue.createCommentVNode(" 退出登录 "),
-        vue.createElementVNode("view", { class: "logout-section" }, [
-          vue.createElementVNode("button", {
-            class: "logout-btn",
-            onClick: _cache[15] || (_cache[15] = (...args) => $options.handleLogout && $options.handleLogout(...args))
-          }, "退出登录")
-        ])
-      ])) : vue.createCommentVNode("v-if", true)
-    ]);
+        ])) : vue.createCommentVNode("v-if", true)
+      ],
+      4
+      /* STYLE */
+    );
   }
-  const PagesUserUser = /* @__PURE__ */ _export_sfc(_sfc_main$l, [["render", _sfc_render$k], ["__scopeId", "data-v-99b0ba47"], ["__file", "E:/项目/yihangyidon/src/pages/user/user.vue"]]);
+  const PagesUserUser = /* @__PURE__ */ _export_sfc(_sfc_main$l, [["render", _sfc_render$k], ["__scopeId", "data-v-99b0ba47"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/user/user.vue"]]);
   const _imports_0$1 = "/static/tabbar/service.png";
   const _sfc_main$k = {
     data() {
@@ -3218,7 +3387,7 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesWealthWealth = /* @__PURE__ */ _export_sfc(_sfc_main$k, [["render", _sfc_render$j], ["__scopeId", "data-v-a00d3a3e"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/wealth.vue"]]);
+  const PagesWealthWealth = /* @__PURE__ */ _export_sfc(_sfc_main$k, [["render", _sfc_render$j], ["__scopeId", "data-v-a00d3a3e"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/wealth/wealth.vue"]]);
   const _sfc_main$j = {
     name: "LifePage",
     data() {
@@ -3324,8 +3493,7 @@ if (uni.restoreGlobal) {
               title: "积分当钱花",
               subtitle: "至高抵现50%",
               desc: "积分当钱花优惠手不停",
-              buttonText: "立即使用",
-              icon: "🎁"
+              buttonText: "立即使用"
             },
             small: [
               {
@@ -3384,8 +3552,7 @@ if (uni.restoreGlobal) {
               title: "限时秒杀",
               subtitle: "每日10点开抢",
               desc: "超值商品限量抢购",
-              buttonText: "立即抢购",
-              icon: "⚡"
+              buttonText: "立即抢购"
             },
             small: [
               {
@@ -3444,8 +3611,7 @@ if (uni.restoreGlobal) {
               title: "超级折扣日",
               subtitle: "全场最低3折",
               desc: "品牌商品超低折扣",
-              buttonText: "查看折扣",
-              icon: "💰"
+              buttonText: "查看折扣"
             },
             small: [
               {
@@ -3504,8 +3670,7 @@ if (uni.restoreGlobal) {
               title: "品牌联盟",
               subtitle: "知名品牌集结",
               desc: "精选品牌特惠专区",
-              buttonText: "进入专区",
-              icon: "⭐"
+              buttonText: "进入专区"
             },
             small: [
               {
@@ -3573,15 +3738,15 @@ if (uni.restoreGlobal) {
     onShow() {
       try {
         if (!forceCheckLogin()) {
-          formatAppLog("log", "at pages/life/life.vue:525", "生活页面：用户未登录，跳转到登录页面");
+          formatAppLog("log", "at pages/life/life.vue:518", "生活页面：用户未登录，跳转到登录页面");
           uni.reLaunch({
             url: "/pages/denglu/login"
           });
           return;
         }
-        formatAppLog("log", "at pages/life/life.vue:533", "生活页面显示");
+        formatAppLog("log", "at pages/life/life.vue:526", "生活页面显示");
       } catch (error) {
-        formatAppLog("error", "at pages/life/life.vue:535", "生活页面onShow检查失败:", error);
+        formatAppLog("error", "at pages/life/life.vue:528", "生活页面onShow检查失败:", error);
         uni.reLaunch({
           url: "/pages/denglu/login"
         });
@@ -3589,10 +3754,10 @@ if (uni.restoreGlobal) {
     },
     methods: {
       initPage() {
-        formatAppLog("log", "at pages/life/life.vue:545", "生活页面初始化");
+        formatAppLog("log", "at pages/life/life.vue:538", "生活页面初始化");
       },
       handleServiceTap(service) {
-        formatAppLog("log", "at pages/life/life.vue:549", "点击服务:", service);
+        formatAppLog("log", "at pages/life/life.vue:542", "点击服务:", service);
         switch (service.action) {
           case "payment":
             this.goToPayment();
@@ -3615,7 +3780,7 @@ if (uni.restoreGlobal) {
       },
       switchCategory(index) {
         this.activeCategory = index;
-        formatAppLog("log", "at pages/life/life.vue:574", "切换分类:", this.categories[index]);
+        formatAppLog("log", "at pages/life/life.vue:567", "切换分类:", this.categories[index]);
         uni.showToast({
           title: `切换到${this.categories[index]}`,
           icon: "none",
@@ -3639,7 +3804,7 @@ if (uni.restoreGlobal) {
       // 处理主卡片点击
       handleMainCardTap() {
         const currentCard = this.currentPromotionData.main;
-        formatAppLog("log", "at pages/life/life.vue:601", "点击主卡片:", currentCard);
+        formatAppLog("log", "at pages/life/life.vue:594", "点击主卡片:", currentCard);
         uni.showToast({
           title: `点击了${currentCard.title}`,
           icon: "none"
@@ -3647,7 +3812,7 @@ if (uni.restoreGlobal) {
       },
       // 处理小卡片点击
       handleSmallCardTap(card, index) {
-        formatAppLog("log", "at pages/life/life.vue:610", "点击小卡片:", card, index);
+        formatAppLog("log", "at pages/life/life.vue:603", "点击小卡片:", card, index);
         uni.showToast({
           title: `点击了${card.title}`,
           icon: "none"
@@ -3655,7 +3820,7 @@ if (uni.restoreGlobal) {
       },
       // 处理轮播图点击
       handleBannerTap(banner) {
-        formatAppLog("log", "at pages/life/life.vue:619", "点击轮播图:", banner);
+        formatAppLog("log", "at pages/life/life.vue:612", "点击轮播图:", banner);
         switch (banner.action) {
           case "payment":
             this.goToPayment();
@@ -3674,10 +3839,10 @@ if (uni.restoreGlobal) {
               uni.navigateTo({
                 url: banner.url,
                 success: () => {
-                  formatAppLog("log", "at pages/life/life.vue:641", `成功跳转到: ${banner.url}`);
+                  formatAppLog("log", "at pages/life/life.vue:634", `成功跳转到: ${banner.url}`);
                 },
                 fail: (err) => {
-                  formatAppLog("error", "at pages/life/life.vue:644", "跳转失败:", err);
+                  formatAppLog("error", "at pages/life/life.vue:637", "跳转失败:", err);
                   uni.showToast({
                     title: "页面跳转失败",
                     icon: "none"
@@ -3693,14 +3858,14 @@ if (uni.restoreGlobal) {
         }
       },
       goToPayment() {
-        formatAppLog("log", "at pages/life/life.vue:661", "跳转到生活缴费页面");
+        formatAppLog("log", "at pages/life/life.vue:654", "跳转到生活缴费页面");
         uni.navigateTo({
           url: "/pages/payment/payment",
           success: () => {
-            formatAppLog("log", "at pages/life/life.vue:665", "成功跳转到生活缴费页面");
+            formatAppLog("log", "at pages/life/life.vue:658", "成功跳转到生活缴费页面");
           },
           fail: (err) => {
-            formatAppLog("error", "at pages/life/life.vue:668", "跳转失败:", err);
+            formatAppLog("error", "at pages/life/life.vue:661", "跳转失败:", err);
             uni.showToast({
               title: "页面跳转失败",
               icon: "none"
@@ -3709,14 +3874,14 @@ if (uni.restoreGlobal) {
         });
       },
       goToRecharge() {
-        formatAppLog("log", "at pages/life/life.vue:678", "跳转到手机充值页面");
+        formatAppLog("log", "at pages/life/life.vue:671", "跳转到手机充值页面");
         uni.navigateTo({
           url: "/pages/recharge/recharge",
           success: () => {
-            formatAppLog("log", "at pages/life/life.vue:682", "成功跳转到手机充值页面");
+            formatAppLog("log", "at pages/life/life.vue:675", "成功跳转到手机充值页面");
           },
           fail: (err) => {
-            formatAppLog("error", "at pages/life/life.vue:685", "跳转失败:", err);
+            formatAppLog("error", "at pages/life/life.vue:678", "跳转失败:", err);
             uni.showToast({
               title: "页面跳转失败",
               icon: "none"
@@ -3744,9 +3909,6 @@ if (uni.restoreGlobal) {
           vue.createElementVNode("view", { class: "greeting-section" }, [
             vue.createElementVNode("text", { class: "greeting-text" }, "你好，欢迎使用"),
             vue.createElementVNode("text", { class: "app-name" }, "生活服务")
-          ]),
-          vue.createElementVNode("view", { class: "user-avatar" }, [
-            vue.createElementVNode("text", { class: "avatar-icon" }, "👤")
           ])
         ]),
         vue.createElementVNode("view", { class: "header-decoration" }, [
@@ -4047,7 +4209,7 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesLifeLife = /* @__PURE__ */ _export_sfc(_sfc_main$j, [["render", _sfc_render$i], ["__scopeId", "data-v-980f0516"], ["__file", "E:/项目/yihangyidon/src/pages/life/life.vue"]]);
+  const PagesLifeLife = /* @__PURE__ */ _export_sfc(_sfc_main$j, [["render", _sfc_render$i], ["__scopeId", "data-v-980f0516"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/life/life.vue"]]);
   const SILICONFLOW_API_KEY = "sk-fkzxlpblcjigbzitanooofmnfmvvedobfdvvxqdbbdodntdt";
   const API_BASE_URL = "https://api.siliconflow.cn/v1";
   const sessionHistory = {};
@@ -4860,7 +5022,7 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesServiceChat = /* @__PURE__ */ _export_sfc(_sfc_main$i, [["render", _sfc_render$h], ["__scopeId", "data-v-e19cce9b"], ["__file", "E:/项目/yihangyidon/src/pages/service/chat.vue"]]);
+  const PagesServiceChat = /* @__PURE__ */ _export_sfc(_sfc_main$i, [["render", _sfc_render$h], ["__scopeId", "data-v-e19cce9b"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/service/chat.vue"]]);
   const BASE_URL = "https://api.abchina.com";
   const TIMEOUT = 1e4;
   const requestInterceptor = (config) => {
@@ -5346,7 +5508,7 @@ if (uni.restoreGlobal) {
       ])
     ])) : vue.createCommentVNode("v-if", true);
   }
-  const PaymentPasswordModal = /* @__PURE__ */ _export_sfc(_sfc_main$h, [["render", _sfc_render$g], ["__scopeId", "data-v-c92603ac"], ["__file", "E:/项目/yihangyidon/src/components/common/PaymentPasswordModal.vue"]]);
+  const PaymentPasswordModal = /* @__PURE__ */ _export_sfc(_sfc_main$h, [["render", _sfc_render$g], ["__scopeId", "data-v-c92603ac"], ["__file", "E:/Vue项目/专高六/1/项目/src/components/common/PaymentPasswordModal.vue"]]);
   const _sfc_main$g = {
     name: "SimpleThemeSwitcher",
     data() {
@@ -5501,71 +5663,7 @@ if (uni.restoreGlobal) {
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const SimpleThemeSwitcher = /* @__PURE__ */ _export_sfc(_sfc_main$g, [["render", _sfc_render$f], ["__scopeId", "data-v-f10fce89"], ["__file", "E:/项目/yihangyidon/src/components/common/SimpleThemeSwitcher.vue"]]);
-  function getThemeStyles() {
-    const theme = themeManager$1.getCurrentTheme();
-    return {
-      // 背景色
-      background: {
-        backgroundColor: theme.colors.background
-      },
-      surface: {
-        backgroundColor: theme.colors.surface
-      },
-      surfaceVariant: {
-        backgroundColor: theme.colors.surfaceVariant
-      },
-      // 文字颜色
-      text: {
-        color: theme.colors.text
-      },
-      textSecondary: {
-        color: theme.colors.textSecondary
-      },
-      // 边框
-      border: {
-        borderColor: theme.colors.border
-      },
-      borderLight: {
-        borderColor: theme.colors.borderLight
-      },
-      // 主色调
-      primary: {
-        color: theme.colors.primary
-      },
-      primaryBg: {
-        backgroundColor: theme.colors.primary
-      },
-      primaryGradient: {
-        background: `linear-gradient(135deg, ${theme.colors.primaryDark} 0%, ${theme.colors.primary} 100%)`
-      },
-      // 状态颜色
-      success: {
-        color: theme.colors.success
-      },
-      successBg: {
-        backgroundColor: theme.colors.success
-      },
-      warning: {
-        color: theme.colors.warning
-      },
-      warningBg: {
-        backgroundColor: theme.colors.warning
-      },
-      error: {
-        color: theme.colors.error
-      },
-      errorBg: {
-        backgroundColor: theme.colors.error
-      },
-      info: {
-        color: theme.colors.info
-      },
-      infoBg: {
-        backgroundColor: theme.colors.info
-      }
-    };
-  }
+  const SimpleThemeSwitcher = /* @__PURE__ */ _export_sfc(_sfc_main$g, [["render", _sfc_render$f], ["__scopeId", "data-v-f10fce89"], ["__file", "E:/Vue项目/专高六/1/项目/src/components/common/SimpleThemeSwitcher.vue"]]);
   const _sfc_main$f = {
     components: {
       PaymentPasswordModal,
@@ -6201,7 +6299,7 @@ if (uni.restoreGlobal) {
       }, null, 8, ["visible", "amount", "payee", "description", "onPaymentConfirmed", "onClose"])
     ]);
   }
-  const PagesTransferTransfer = /* @__PURE__ */ _export_sfc(_sfc_main$f, [["render", _sfc_render$e], ["__scopeId", "data-v-d303ad3d"], ["__file", "E:/项目/yihangyidon/src/pages/transfer/transfer.vue"]]);
+  const PagesTransferTransfer = /* @__PURE__ */ _export_sfc(_sfc_main$f, [["render", _sfc_render$e], ["__scopeId", "data-v-d303ad3d"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/transfer/transfer.vue"]]);
   const _sfc_main$e = {
     data() {
       return {
@@ -6646,7 +6744,7 @@ if (uni.restoreGlobal) {
       ))
     ]);
   }
-  const PagesAccountAccount = /* @__PURE__ */ _export_sfc(_sfc_main$e, [["render", _sfc_render$d], ["__scopeId", "data-v-f7e9057f"], ["__file", "E:/项目/yihangyidon/src/pages/account/account.vue"]]);
+  const PagesAccountAccount = /* @__PURE__ */ _export_sfc(_sfc_main$e, [["render", _sfc_render$d], ["__scopeId", "data-v-f7e9057f"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/account/account.vue"]]);
   const mobileRecharge = (rechargeInfo) => {
     return http.post("/life/recharge", rechargeInfo);
   };
@@ -7390,7 +7488,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       ])
     ]);
   }
-  const PagesPaymentPayment = /* @__PURE__ */ _export_sfc(_sfc_main$d, [["render", _sfc_render$c], ["__scopeId", "data-v-6e0fac4f"], ["__file", "E:/项目/yihangyidon/src/pages/payment/payment.vue"]]);
+  const PagesPaymentPayment = /* @__PURE__ */ _export_sfc(_sfc_main$d, [["render", _sfc_render$c], ["__scopeId", "data-v-6e0fac4f"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/payment/payment.vue"]]);
   const _sfc_main$c = {
     name: "RechargePage",
     data() {
@@ -7753,7 +7851,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       ])
     ]);
   }
-  const PagesRechargeRecharge = /* @__PURE__ */ _export_sfc(_sfc_main$c, [["render", _sfc_render$b], ["__scopeId", "data-v-d370def1"], ["__file", "E:/项目/yihangyidon/src/pages/recharge/recharge.vue"]]);
+  const PagesRechargeRecharge = /* @__PURE__ */ _export_sfc(_sfc_main$c, [["render", _sfc_render$b], ["__scopeId", "data-v-d370def1"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/recharge/recharge.vue"]]);
   const _sfc_main$b = {
     name: "GovernmentPage",
     data() {
@@ -8159,7 +8257,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       ])
     ]);
   }
-  const PagesGovernmentGovernment = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["render", _sfc_render$a], ["__scopeId", "data-v-55002ac7"], ["__file", "E:/项目/yihangyidon/src/pages/government/government.vue"]]);
+  const PagesGovernmentGovernment = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["render", _sfc_render$a], ["__scopeId", "data-v-55002ac7"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/government/government.vue"]]);
   const _sfc_main$a = {
     name: "GamesPage",
     data() {
@@ -8652,7 +8750,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       ])
     ]);
   }
-  const PagesGamesGames = /* @__PURE__ */ _export_sfc(_sfc_main$a, [["render", _sfc_render$9], ["__scopeId", "data-v-5e0e9dd0"], ["__file", "E:/项目/yihangyidon/src/pages/games/games.vue"]]);
+  const PagesGamesGames = /* @__PURE__ */ _export_sfc(_sfc_main$a, [["render", _sfc_render$9], ["__scopeId", "data-v-5e0e9dd0"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/games/games.vue"]]);
   const _sfc_main$9 = {
     data() {
       return {
@@ -8830,7 +8928,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       ])
     ]);
   }
-  const PagesTransferHistory = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["render", _sfc_render$8], ["__scopeId", "data-v-c9706b1b"], ["__file", "E:/项目/yihangyidon/src/pages/transfer/history.vue"]]);
+  const PagesTransferHistory = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["render", _sfc_render$8], ["__scopeId", "data-v-c9706b1b"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/transfer/history.vue"]]);
   const formatBankCard = (cardNumber, separator = " ") => {
     if (!cardNumber)
       return "";
@@ -9010,7 +9108,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       /* CLASS */
     );
   }
-  const BankCard = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["render", _sfc_render$7], ["__scopeId", "data-v-2f14f5e9"], ["__file", "E:/项目/yihangyidon/src/components/common/BankCard.vue"]]);
+  const BankCard = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["render", _sfc_render$7], ["__scopeId", "data-v-2f14f5e9"], ["__file", "E:/Vue项目/专高六/1/项目/src/components/common/BankCard.vue"]]);
   const getCreditCards = () => {
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -9395,7 +9493,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesCreditCardCreditCard = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["render", _sfc_render$6], ["__scopeId", "data-v-03264d9b"], ["__file", "E:/项目/yihangyidon/src/pages/credit-card/credit-card.vue"]]);
+  const PagesCreditCardCreditCard = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["render", _sfc_render$6], ["__scopeId", "data-v-03264d9b"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/credit-card/credit-card.vue"]]);
   const _sfc_main$6 = {
     data() {
       return {
@@ -9804,7 +9902,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesBalanceBalance = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["render", _sfc_render$5], ["__scopeId", "data-v-a05d65b8"], ["__file", "E:/项目/yihangyidon/src/pages/balance/balance.vue"]]);
+  const PagesBalanceBalance = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["render", _sfc_render$5], ["__scopeId", "data-v-a05d65b8"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/balance/balance.vue"]]);
   const _sfc_main$5 = {
     data() {
       return {
@@ -10245,7 +10343,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       ])
     ]);
   }
-  const PagesLoanLoan = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["render", _sfc_render$4], ["__scopeId", "data-v-2fe4ed24"], ["__file", "E:/项目/yihangyidon/src/pages/loan/loan.vue"]]);
+  const PagesLoanLoan = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["render", _sfc_render$4], ["__scopeId", "data-v-2fe4ed24"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/loan/loan.vue"]]);
   const _sfc_main$4 = {
     data() {
       return {
@@ -12271,7 +12369,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesCreditCardsCreditCards = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["render", _sfc_render$3], ["__scopeId", "data-v-a750c574"], ["__file", "E:/项目/yihangyidon/src/pages/credit-cards/credit-cards.vue"]]);
+  const PagesCreditCardsCreditCards = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["render", _sfc_render$3], ["__scopeId", "data-v-a750c574"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/credit-cards/credit-cards.vue"]]);
   class SyncManager {
     constructor() {
       this.maxRetryCount = 3;
@@ -13069,7 +13167,7 @@ ${this.selectedType.numberLabel}：${this.paymentForm.number}
       ])
     ]);
   }
-  const PagesUserProfile = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["render", _sfc_render$2], ["__scopeId", "data-v-f6b4f04d"], ["__file", "E:/项目/yihangyidon/src/pages/user/profile.vue"]]);
+  const PagesUserProfile = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["render", _sfc_render$2], ["__scopeId", "data-v-f6b4f04d"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/user/profile.vue"]]);
   const _sfc_main$2 = {
     data() {
       return {
@@ -14405,7 +14503,7 @@ IP：${event.ip}
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesUserSecurity = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["render", _sfc_render$1], ["__scopeId", "data-v-b74f3c40"], ["__file", "E:/项目/yihangyidon/src/pages/user/security.vue"]]);
+  const PagesUserSecurity = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["render", _sfc_render$1], ["__scopeId", "data-v-b74f3c40"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/user/security.vue"]]);
   const _sfc_main$1 = {
     data() {
       return {
@@ -14731,7 +14829,7 @@ IP：${event.ip}
       ])
     ]);
   }
-  const PagesUserChangePassword = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["render", _sfc_render], ["__scopeId", "data-v-df75db25"], ["__file", "E:/项目/yihangyidon/src/pages/user/change-password.vue"]]);
+  const PagesUserChangePassword = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["render", _sfc_render], ["__scopeId", "data-v-df75db25"], ["__file", "E:/Vue项目/专高六/1/项目/src/pages/user/change-password.vue"]]);
   __definePage("pages/denglu/login", PagesDengluLogin);
   __definePage("pages/register/register", PagesRegisterRegister);
   __definePage("pages/index/index", PagesIndexIndex);
@@ -15266,7 +15364,7 @@ IP：${event.ip}
       isConnected: true
     }
   };
-  const App = /* @__PURE__ */ _export_sfc(_sfc_main, [["__file", "E:/项目/yihangyidon/src/App.vue"]]);
+  const App = /* @__PURE__ */ _export_sfc(_sfc_main, [["__file", "E:/Vue项目/专高六/1/项目/src/App.vue"]]);
   var define_process_env_default = {};
   function getEnvironment() {
     if (typeof uni !== "undefined" && uni.getSystemInfoSync) {

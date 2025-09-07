@@ -4,17 +4,31 @@
     <view class="header-section">
       <view class="header-content">
         <view class="greeting-section">
-          <text class="greeting-text">你好，欢迎使用</text>
+          <view class="time-greeting">
+            <text class="greeting-time">{{ currentTimeGreeting }}</text>
+            <text class="greeting-emoji">{{ greetingEmoji }}</text>
+          </view>
+          <text class="greeting-text">欢迎使用</text>
           <text class="app-name">生活服务</text>
+          <text class="app-subtitle">让生活更简单便捷</text>
         </view>
-        <view class="user-avatar">
-          <text class="avatar-icon">👤</text>
+        <view class="user-section">
+          <view class="weather-info">
+            <text class="weather-icon">🌤️</text>
+            <text class="weather-text">{{ weatherInfo }}</text>
+          </view>
+          <view class="user-avatar" @tap="goToProfile">
+            <text class="avatar-icon">👤</text>
+            <view class="avatar-status"></view>
+          </view>
         </view>
       </view>
       <view class="header-decoration">
         <view class="decoration-circle circle-1"></view>
         <view class="decoration-circle circle-2"></view>
         <view class="decoration-circle circle-3"></view>
+        <view class="decoration-line line-1"></view>
+        <view class="decoration-line line-2"></view>
       </view>
     </view>
 
@@ -54,7 +68,10 @@
     <!-- 快捷服务 -->
     <view class="quick-services">
       <view class="section-header">
-        <text class="section-title">快捷服务</text>
+        <view class="section-title-wrapper">
+          <text class="section-icon">⚡</text>
+          <text class="section-title">快捷服务</text>
+        </view>
         <text class="section-subtitle">常用功能一键直达</text>
       </view>
       <view class="services-grid">
@@ -70,8 +87,12 @@
           >
             <text class="icon-text">{{ service.icon }}</text>
             <view class="icon-glow"></view>
+            <view class="icon-shimmer"></view>
           </view>
           <text class="service-label">{{ service.label }}</text>
+          <view class="service-badge" v-if="service.badge">
+            <text class="badge-text">{{ service.badge }}</text>
+          </view>
         </view>
       </view>
     </view>
@@ -79,7 +100,10 @@
     <!-- 全部服务 -->
     <view class="all-services">
       <view class="section-header">
-        <text class="section-title">全部服务</text>
+        <view class="section-title-wrapper">
+          <text class="section-icon">🎯</text>
+          <text class="section-title">全部服务</text>
+        </view>
         <text class="section-subtitle">更多精彩功能等你发现</text>
       </view>
       <view class="services-grid-large">
@@ -95,29 +119,41 @@
           >
             <text class="icon-text-large">{{ service.icon }}</text>
             <view class="icon-glow-large"></view>
+            <view class="icon-shimmer-large"></view>
           </view>
           <text class="service-label-large">{{ service.label }}</text>
+          <view class="service-status" v-if="service.status">
+            <text class="status-dot"></text>
+            <text class="status-text">{{ service.status }}</text>
+          </view>
         </view>
       </view>
     </view>
 
     <!-- 分类导航 -->
     <view class="category-nav">
-      <view
-        class="nav-item"
-        v-for="(category, index) in categories"
-        :key="index"
-        :class="{ active: activeCategory === index }"
-        @tap="switchCategory(index)"
-      >
-        <text class="nav-text">{{ category }}</text>
+      <view class="nav-container">
+        <view
+          class="nav-item"
+          v-for="(category, index) in categories"
+          :key="index"
+          :class="{ active: activeCategory === index }"
+          @tap="switchCategory(index)"
+        >
+          <text class="nav-text">{{ category }}</text>
+          <view class="nav-indicator" v-if="activeCategory === index"></view>
+        </view>
       </view>
+      <view class="nav-background"></view>
     </view>
 
     <!-- 优惠活动卡片 -->
     <view class="promotion-section">
       <view class="section-header">
-        <text class="section-title">精选优惠</text>
+        <view class="section-title-wrapper">
+          <text class="section-icon">🎁</text>
+          <text class="section-title">精选优惠</text>
+        </view>
         <text class="section-subtitle">专享福利等你来领</text>
       </view>
       <view class="promotion-cards">
@@ -174,6 +210,9 @@ export default {
     return {
       activeCategory: 0,
       categories: ["精选", "活动", "折扣", "品牌"],
+      currentTimeGreeting: "",
+      greetingEmoji: "",
+      weatherInfo: "22°C 晴",
       // 轮播图数据
       bannerData: [
         {
@@ -219,12 +258,14 @@ export default {
           label: "生活缴费",
           bgColor: "#00D4AA",
           action: "payment",
+          badge: "热门",
         },
         {
           icon: "📱",
           label: "手机充值",
           bgColor: "#FF9500",
           action: "recharge",
+          badge: "优惠",
         },
         {
           icon: "🏛️",
@@ -232,10 +273,22 @@ export default {
           bgColor: "#34C759",
           action: "government",
         },
-        { icon: "🎮", label: "小豆乐园", bgColor: "#FF6B35", action: "games" },
+        {
+          icon: "🎮",
+          label: "小豆乐园",
+          bgColor: "#FF6B35",
+          action: "games",
+          badge: "新",
+        },
       ],
       allServices: [
-        { icon: "🏫", label: "校园", bgColor: "#5AC8FA", action: "campus" },
+        {
+          icon: "🏫",
+          label: "校园",
+          bgColor: "#5AC8FA",
+          action: "campus",
+          status: "在线",
+        },
         { icon: "⚡", label: "食堂", bgColor: "#30D158", action: "canteen" },
         { icon: "🎉", label: "党费", bgColor: "#FF3B30", action: "party" },
         {
@@ -243,6 +296,7 @@ export default {
           label: "养老服务",
           bgColor: "#007AFF",
           action: "elderly",
+          status: "热门",
         },
         {
           icon: "📄",
@@ -250,16 +304,34 @@ export default {
           bgColor: "#34C759",
           action: "insurance",
         },
-        { icon: "🌿", label: "低碳空间", bgColor: "#32D74B", action: "carbon" },
+        {
+          icon: "🌿",
+          label: "低碳空间",
+          bgColor: "#32D74B",
+          action: "carbon",
+          status: "新",
+        },
         {
           icon: "🎫",
           label: "优惠卡券",
           bgColor: "#AF52DE",
           action: "coupons",
         },
-        { icon: "🎁", label: "京东特惠", bgColor: "#FF9500", action: "jd" },
+        {
+          icon: "🎁",
+          label: "京东特惠",
+          bgColor: "#FF9500",
+          action: "jd",
+          status: "限时",
+        },
         { icon: "🏪", label: "城市专区", bgColor: "#5856D6", action: "city" },
-        { icon: "🎊", label: "热门活动", bgColor: "#FF2D92", action: "events" },
+        {
+          icon: "🎊",
+          label: "热门活动",
+          bgColor: "#FF2D92",
+          action: "events",
+          status: "火爆",
+        },
       ],
       // 不同分类的卡片数据
       promotionCards: {
@@ -270,7 +342,6 @@ export default {
             subtitle: "至高抵现50%",
             desc: "积分当钱花优惠手不停",
             buttonText: "立即使用",
-            icon: "🎁",
           },
           small: [
             {
@@ -330,7 +401,6 @@ export default {
             subtitle: "每日10点开抢",
             desc: "超值商品限量抢购",
             buttonText: "立即抢购",
-            icon: "⚡",
           },
           small: [
             {
@@ -390,7 +460,6 @@ export default {
             subtitle: "全场最低3折",
             desc: "品牌商品超低折扣",
             buttonText: "查看折扣",
-            icon: "💰",
           },
           small: [
             {
@@ -450,7 +519,6 @@ export default {
             subtitle: "知名品牌集结",
             desc: "精选品牌特惠专区",
             buttonText: "进入专区",
-            icon: "⭐",
           },
           small: [
             {
@@ -543,6 +611,32 @@ export default {
     initPage() {
       // 页面初始化
       console.log("生活页面初始化");
+      this.updateTimeGreeting();
+    },
+
+    // 更新时间问候语
+    updateTimeGreeting() {
+      const hour = new Date().getHours();
+      if (hour < 6) {
+        this.currentTimeGreeting = "深夜好";
+        this.greetingEmoji = "🌙";
+      } else if (hour < 12) {
+        this.currentTimeGreeting = "早上好";
+        this.greetingEmoji = "🌅";
+      } else if (hour < 18) {
+        this.currentTimeGreeting = "下午好";
+        this.greetingEmoji = "☀️";
+      } else {
+        this.currentTimeGreeting = "晚上好";
+        this.greetingEmoji = "🌆";
+      }
+    },
+
+    // 跳转到个人资料
+    goToProfile() {
+      uni.navigateTo({
+        url: "/pages/user/profile",
+      });
     },
 
     handleServiceTap(service) {
@@ -714,22 +808,40 @@ export default {
 
 /* 头部区域 */
 .header-section {
-  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-  padding: 60rpx 30rpx 40rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 80rpx 30rpx 50rpx;
   position: relative;
   overflow: hidden;
+  min-height: 320rpx;
 }
 
 .header-content {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   position: relative;
   z-index: 2;
 }
 
 .greeting-section {
   flex: 1;
+}
+
+.time-greeting {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.greeting-time {
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 32rpx;
+  font-weight: 600;
+  margin-right: 12rpx;
+}
+
+.greeting-emoji {
+  font-size: 36rpx;
 }
 
 .greeting-text {
@@ -741,25 +853,79 @@ export default {
 
 .app-name {
   color: #fff;
-  font-size: 42rpx;
+  font-size: 48rpx;
   font-weight: bold;
+  display: block;
+  margin-bottom: 8rpx;
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.2);
+}
+
+.app-subtitle {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 26rpx;
   display: block;
 }
 
+.user-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 20rpx;
+}
+
+.weather-info {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 12rpx 20rpx;
+  border-radius: 24rpx;
+  backdrop-filter: blur(10rpx);
+}
+
+.weather-icon {
+  font-size: 24rpx;
+  margin-right: 8rpx;
+}
+
+.weather-text {
+  color: #fff;
+  font-size: 24rpx;
+  font-weight: 500;
+}
+
 .user-avatar {
-  width: 80rpx;
-  height: 80rpx;
+  width: 88rpx;
+  height: 88rpx;
   background: rgba(255, 255, 255, 0.2);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   backdrop-filter: blur(10rpx);
+  position: relative;
+  border: 3rpx solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.user-avatar:active {
+  transform: scale(0.95);
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .avatar-icon {
-  font-size: 36rpx;
+  font-size: 40rpx;
   color: #fff;
+}
+
+.avatar-status {
+  position: absolute;
+  bottom: 4rpx;
+  right: 4rpx;
+  width: 20rpx;
+  height: 20rpx;
+  background: #28a745;
+  border-radius: 50%;
+  border: 2rpx solid #fff;
 }
 
 .header-decoration {
@@ -774,7 +940,36 @@ export default {
 .decoration-circle {
   position: absolute;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20rpx);
+}
+
+.decoration-line {
+  position: absolute;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 100%
+  );
+  border-radius: 2rpx;
+}
+
+.line-1 {
+  width: 300rpx;
+  height: 4rpx;
+  top: 100rpx;
+  right: -100rpx;
+  transform: rotate(15deg);
+  animation: slideIn 4s ease-in-out infinite;
+}
+
+.line-2 {
+  width: 200rpx;
+  height: 3rpx;
+  bottom: 80rpx;
+  right: -50rpx;
+  transform: rotate(-20deg);
+  animation: slideIn 6s ease-in-out infinite reverse;
 }
 
 .circle-1 {
@@ -808,6 +1003,20 @@ export default {
   }
   50% {
     transform: translateY(-20rpx);
+  }
+}
+
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateX(-100rpx) rotate(15deg);
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(100rpx) rotate(15deg);
   }
 }
 
@@ -941,11 +1150,22 @@ export default {
   text-align: center;
 }
 
+.section-title-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12rpx;
+}
+
+.section-icon {
+  font-size: 32rpx;
+  margin-right: 12rpx;
+}
+
 .section-title {
   color: #333;
   font-size: 36rpx;
   font-weight: bold;
-  margin-bottom: 8rpx;
   display: block;
 }
 
@@ -983,16 +1203,22 @@ export default {
 }
 
 .service-icon {
-  width: 88rpx;
-  height: 88rpx;
-  border-radius: 22rpx;
+  width: 92rpx;
+  height: 92rpx;
+  border-radius: 24rpx;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 20rpx;
   position: relative;
-  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.15);
-  transition: all 0.3s ease;
+  box-shadow: 0 6rpx 24rpx rgba(0, 0, 0, 0.15);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.service-item:hover .service-icon {
+  transform: translateY(-8rpx) scale(1.05);
+  box-shadow: 0 12rpx 32rpx rgba(0, 0, 0, 0.25);
 }
 
 .service-item:active .service-icon {
@@ -1001,15 +1227,32 @@ export default {
 
 .icon-glow {
   position: absolute;
-  top: -4rpx;
-  left: -4rpx;
-  right: -4rpx;
-  bottom: -4rpx;
-  border-radius: 26rpx;
+  top: -6rpx;
+  left: -6rpx;
+  right: -6rpx;
+  bottom: -6rpx;
+  border-radius: 30rpx;
   background: inherit;
-  opacity: 0.3;
-  filter: blur(8rpx);
+  opacity: 0.4;
+  filter: blur(12rpx);
   z-index: -1;
+  animation: glowPulse 3s ease-in-out infinite;
+}
+
+.icon-shimmer {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 70%
+  );
+  transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  animation: shimmer 4s ease-in-out infinite;
 }
 
 .icon-text {
@@ -1024,6 +1267,25 @@ export default {
   color: #333;
   line-height: 1.2;
   font-weight: 500;
+}
+
+.service-badge {
+  position: absolute;
+  top: -8rpx;
+  right: -8rpx;
+  background: linear-gradient(135deg, #ff416c 0%, #ff4757 100%);
+  color: #fff;
+  font-size: 20rpx;
+  padding: 4rpx 8rpx;
+  border-radius: 10rpx;
+  transform: scale(0.9);
+  box-shadow: 0 2rpx 8rpx rgba(255, 65, 108, 0.4);
+  animation: badgeBounce 2s ease-in-out infinite;
+}
+
+.badge-text {
+  font-weight: 600;
+  color: #fff;
 }
 
 /* 全部服务 */
@@ -1054,16 +1316,22 @@ export default {
 }
 
 .service-icon-large {
-  width: 80rpx;
-  height: 80rpx;
-  border-radius: 20rpx;
+  width: 84rpx;
+  height: 84rpx;
+  border-radius: 22rpx;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 16rpx;
   position: relative;
-  box-shadow: 0 3rpx 15rpx rgba(0, 0, 0, 0.12);
-  transition: all 0.3s ease;
+  box-shadow: 0 4rpx 18rpx rgba(0, 0, 0, 0.12);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.service-item-large:hover .service-icon-large {
+  transform: translateY(-4rpx) scale(1.03);
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.18);
 }
 
 .service-item-large:active .service-icon-large {
@@ -1072,15 +1340,32 @@ export default {
 
 .icon-glow-large {
   position: absolute;
-  top: -3rpx;
-  left: -3rpx;
-  right: -3rpx;
-  bottom: -3rpx;
-  border-radius: 23rpx;
+  top: -4rpx;
+  left: -4rpx;
+  right: -4rpx;
+  bottom: -4rpx;
+  border-radius: 26rpx;
   background: inherit;
-  opacity: 0.25;
-  filter: blur(6rpx);
+  opacity: 0.3;
+  filter: blur(8rpx);
   z-index: -1;
+  animation: glowPulse 4s ease-in-out infinite;
+}
+
+.icon-shimmer-large {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.25) 50%,
+    transparent 70%
+  );
+  transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  animation: shimmer 5s ease-in-out infinite;
 }
 
 .icon-text-large {
@@ -1097,36 +1382,100 @@ export default {
   font-weight: 500;
 }
 
+.service-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 8rpx;
+}
+
+.status-dot {
+  width: 8rpx;
+  height: 8rpx;
+  background: #28a745;
+  border-radius: 50%;
+  margin-right: 6rpx;
+  animation: statusPulse 2s ease-in-out infinite;
+}
+
+.status-text {
+  font-size: 20rpx;
+  color: #28a745;
+  font-weight: 500;
+}
+
 /* 分类导航 */
 .category-nav {
-  display: flex;
+  position: relative;
   background: #fff;
   margin: 0 30rpx 30rpx;
-  border-radius: 16rpx;
-  padding: 10rpx;
-  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+  border-radius: 20rpx;
+  padding: 8rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.nav-container {
+  display: flex;
+  position: relative;
+  z-index: 2;
+}
+
+.nav-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(102, 126, 234, 0.05) 0%,
+    rgba(118, 75, 162, 0.05) 100%
+  );
+  z-index: 1;
 }
 
 .nav-item {
   flex: 1;
   text-align: center;
-  padding: 20rpx;
-  border-radius: 12rpx;
-  transition: all 0.3s ease;
+  padding: 24rpx 16rpx;
+  border-radius: 16rpx;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-item:active {
+  transform: scale(0.98);
 }
 
 .nav-item.active {
-  background: #28a745;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  box-shadow: 0 4rpx 12rpx rgba(102, 126, 234, 0.3);
 }
 
 .nav-text {
   font-size: 28rpx;
   color: #666;
-  font-weight: 500;
+  font-weight: 600;
+  transition: all 0.3s ease;
 }
 
 .nav-item.active .nav-text {
   color: #fff;
+  text-shadow: 0 1rpx 3rpx rgba(0, 0, 0, 0.2);
+}
+
+.nav-indicator {
+  position: absolute;
+  bottom: 8rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20rpx;
+  height: 4rpx;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 2rpx;
+  animation: indicatorGlow 2s ease-in-out infinite;
 }
 
 /* 优惠活动卡片 */
@@ -1358,6 +1707,62 @@ export default {
   margin-top: 12rpx;
 }
 
+/* 新增动画效果 */
+@keyframes glowPulse {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(200%) translateY(200%) rotate(45deg);
+  }
+}
+
+@keyframes badgeBounce {
+  0%,
+  100% {
+    transform: scale(0.9);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes statusPulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes indicatorGlow {
+  0%,
+  100% {
+    opacity: 0.8;
+    box-shadow: 0 0 0 rgba(255, 255, 255, 0.3);
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 12rpx rgba(255, 255, 255, 0.6);
+  }
+}
+
 /* 点击效果 */
 .service-item:active,
 .service-item-large:active,
@@ -1366,5 +1771,45 @@ export default {
   opacity: 0.8;
   transform: scale(0.95);
   transition: all 0.1s ease;
+}
+
+/* 页面加载动画 */
+.life-page {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 响应式适配 */
+@media (max-width: 750rpx) {
+  .services-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30rpx;
+  }
+
+  .services-grid-large {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30rpx 15rpx;
+  }
+
+  .promotion-cards {
+    flex-direction: column;
+    height: auto;
+    gap: 20rpx;
+  }
+
+  .promotion-cards-right {
+    width: 100%;
+    height: 300rpx;
+  }
 }
 </style>
