@@ -6,39 +6,27 @@
     </view>
 
     <scroll-view scroll-y class="chat-body" :scroll-into-view="scrollIntoId" scroll-with-animation="true">
+      <!-- 预设问答区：猜你想了解 -->
+      <view v-if="showFaqSuggestions" class="faq-card">
+        <view class="faq-card-header">
+          <image class="faq-avatar" src="/static/wealth/aiavatar.png" mode="aspectFit" />
+          <text class="faq-title">猜您想要了解以下内容</text>
+        </view>
+        <view class="faq-list">
+          <view class="faq-item" v-for="(q,idx) in faqSuggestions" :key="idx" @click="selectFaq(q)">
+            <text class="faq-text">{{ q.title }}</text>
+            <text class="faq-arrow">›</text>
+          </view>
+        </view>
+      </view>
       <view v-for="(m, i) in messages" :key="m.id" :id="'msg-' + i" class="msg-row" :class="m.role">
         <image v-if="m.role==='bot'" class="avatar" src="/static/wealth/aiavatar.png" mode="aspectFit" />
         <view class="bubble">
           <rich-text v-if="m.html" :nodes="m.html"></rich-text>
-          <image v-if="m.image" :src="m.image" class="message-img" mode="widthFix" />
+          <image v-if="m.image" :src="m.image" class="message-img" mode="aspectFit" :style="{ width: '200rpx', height: '160rpx' }" />
           <text v-if="m.time" class="time">{{ m.time }}</text>
         </view>
-        <!-- AI回复的播放按钮（仅在存在音频时显示） -->
-        <view v-if="m.role === 'bot' && m.audio" class="play-btn-container">
-                     <button 
-             class="play-btn" 
-             :class="{ 'playing': m.isPlaying }"
-             @click="togglePlayAudio(m)"
-             :disabled="!m.audio"
-           >
-             <view v-if="!m.isPlaying" class="speaker-icon">
-               <view class="speaker-body"></view>
-               <view class="speaker-waves">
-                 <view class="wave"></view>
-                 <view class="wave"></view>
-                 <view class="wave"></view>
-               </view>
-             </view>
-             <view v-else class="speaker-icon playing">
-               <view class="speaker-body"></view>
-               <view class="speaker-waves">
-                 <view class="wave active"></view>
-                 <view class="wave active"></view>
-                 <view class="wave active"></view>
-               </view>
-             </view>
-           </button>
-        </view>
+        
         <image v-if="m.role==='user'" class="avatar" src="/static/wealth/useravatar.jpg" mode="aspectFit" />
       </view>
       <!-- 底部锚点用于自动滚动 -->
@@ -52,7 +40,7 @@
     </view>
 
     <!-- 表情面板（与 mobile.html 一致：图片表情选择） -->
-    <view v-if="showEmoji" class="emoji-panel">
+    <view v-show="showEmoji" class="emoji-panel">
       <view
         class="emoji-item"
         v-for="(item, idx) in EMOJI_ITEMS"
@@ -60,7 +48,8 @@
         @click="appendEmoji(item)"
         :title="item.code"
       >
-        <image :src="item.url" :alt="item.code" style="width:24px;height:24px" mode="aspectFit" />
+        <image v-if="item.url" :src="item.url" :alt="item.code" style="width:24px;height:24px" mode="aspectFit" :lazy-load="false" @error="item.url=''" />
+        <text v-else style="font-size:24px;line-height:24px">{{ item.char }}</text>
       </view>
     </view>
 
@@ -114,6 +103,26 @@ export default {
         { code: ':ok_hand:', char: '👌', url: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f44c.png' },
         { code: ':heart:', char: '❤️', url: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2764.png' }
       ],
+      // 预设问答
+      showFaqSuggestions: true,
+      faqSuggestions: [
+        {
+          title: '交易限额',
+          answer: '我行渠道常见交易限额：\n- 微信银行单笔/单日可能存在额度限制，视账户与安全控件而定；\n- 手机银行按认证等级与设备控件不同；\n- 网银/U盾通常额度更高。\n如需提升额度：进入 设置-限额设置 或前往网点升级身份核验。'
+        },
+        {
+          title: '个人消费贷款贴息范围',
+          answer: '个人消费贷款贴息范围一般涵盖教育培训、家装家电、耐用消费品购置等合规消费用途，具体以当地贴息政策与银行审核为准。可咨询本地营业网点或致电95599。'
+        },
+        {
+          title: '如何申请个人消费贷款贴息',
+          answer: '申请流程：\n1) 确认是否在贴息活动覆盖区域及名单；\n2) 通过手机银行/网点提交贷款申请与相关材料；\n3) 审批后按合同发放；\n4) 贴息按政策周期与比例执行，系统自动核算抵扣。'
+        },
+        {
+          title: '抗战胜利80周年普通纪念币',
+          answer: '该纪念币发行与预约以人民银行公告为准。预约、兑换时间、额度及网点安排以公告为准，请关注人民银行与我行官方渠道通知。'
+        }
+      ],
       messages: [
         {
           id: 'hello',
@@ -153,6 +162,24 @@ export default {
     }
   },
   methods: {
+    async selectFaq(item) {
+      const renderedQ = this.renderMarkdownAndEmojis(item.title)
+      const userMsg = { id: Date.now() + '-u', role: 'user', html: renderedQ, time: this.nowTime() }
+      this.messages.push(userMsg)
+      const botIndex = this.showThinking('思考中…')
+      const answer = item.answer || '稍后为您补充详细说明。'
+      await this.typeOut(answer, botIndex, 1, 30)
+      // 生成并绑定TTS音频，显示播放按钮
+      try {
+        const tts = await textToSpeech(answer)
+        if (tts && tts.success && this.messages[botIndex] && this.messages[botIndex].role === 'bot') {
+          this.$set(this.messages[botIndex], 'audio', tts.audioPath)
+        }
+      } catch (e) {
+        console.warn('预设问答TTS失败:', e)
+      }
+      this.toBottom()
+    },
     showThinking(text = '思考中…') {
       const botId = Date.now() + '-thinking'
       const msg = { id: botId, role: 'bot', html: text, time: '' }
@@ -191,25 +218,22 @@ export default {
     async requestOnceText(content, botIndexToReuse = null, imageData = null) {
       // 使用前端API进行一次性请求，统一采用打字机效果展示（所有平台）
       try {
-        const result = await chat(content, this.sessionId, imageData != null ? imageData : this.pendingImageBase64)
+        // 使用不同会话隔离图片对话与纯文本对话，避免历史含图片与纯文本模型不匹配
+        const sid = imageData ? `${this.sessionId}-vision` : this.sessionId
+        const result = await chat(content, sid, imageData != null ? imageData : this.pendingImageBase64)
         
         if (result.success) {
           const replyText = result.reply || ''
           const targetIndex = botIndexToReuse != null ? botIndexToReuse : this.showThinking()
           await this.typeOut(replyText, targetIndex, 1, 50)
           
-          // TTS
-          const ttsResult = await textToSpeech(replyText)
-          console.log('TTS结果:', ttsResult)
-          if (ttsResult.success) {
-            if (targetIndex >= 0 && this.messages[targetIndex].role === 'bot') {
-              console.log('设置音频路径:', ttsResult.audioPath)
-              this.$set(this.messages[targetIndex], 'audio', ttsResult.audioPath)
-              console.log('消息对象:', this.messages[targetIndex])
-            }
-          } else {
-            console.error('TTS失败:', ttsResult.error)
-          }
+          // 取消自动TTS
+          // const ttsResult = await textToSpeech(replyText)
+          // if (ttsResult.success) {
+          //   if (targetIndex >= 0 && this.messages[targetIndex].role === 'bot') {
+          //     this.$set(this.messages[targetIndex], 'audio', ttsResult.audioPath)
+          //   }
+          // }
         } else {
           throw new Error(result.error || 'AI服务请求失败')
         }
@@ -231,135 +255,9 @@ export default {
       }
     },
     togglePlayAudio(message) {
-      console.log('点击播放按钮，消息对象:', message)
-      console.log('音频路径:', message.audio)
-      console.log('播放状态:', message.isPlaying)
-      console.log('音频数据前100字符:', message.audio ? message.audio.substring(0, 100) : '无')
-      
-      if (!message.audio) {
-        uni.showToast({ title: '没有语音内容', icon: 'none' })
-        return
-      }
-      
-      // 如果当前消息正在播放，则停止
-      if (message.isPlaying) {
-        this.stopCurrentAudio()
-        return
-      }
-      
-      // 停止其他正在播放的音频
-      this.stopCurrentAudio()
-      
-      // 确保音频上下文存在
-      if (!this.audioCtx) {
-        console.log('音频上下文不存在，重新初始化')
-        this.initAudioContext()
-      }
-      
-      // 开始播放当前消息的音频
-      try {
-        console.log('设置音频源:', message.audio)
-        
-        // 直接使用临时文件方式播放（避免base64兼容性问题）
-        try {
-          // 将base64转换为临时文件
-          const base64Data = message.audio.replace('data:audio/mp3;base64,', '')
-          console.log('base64数据长度:', base64Data.length)
-          
-          const arrayBuffer = this.base64ToArrayBuffer(base64Data)
-          console.log('ArrayBuffer长度:', arrayBuffer.byteLength)
-          
-          // 根据平台选择不同的文件系统API
-          // #ifdef MP-WEIXIN
-          // 微信小程序环境
-          const fs = uni.getFileSystemManager()
-          const tempFilePath = `${uni.env.USER_DATA_PATH}/temp_audio_${Date.now()}.mp3`
-          
-          console.log('开始保存临时文件(小程序):', tempFilePath)
-          
-          fs.writeFile({
-            filePath: tempFilePath,
-            data: arrayBuffer,
-            encoding: 'binary',
-            success: () => {
-              console.log('临时文件保存成功(小程序):', tempFilePath)
-              this.audioCtx.src = tempFilePath
-              this.audioCtx.play()
-              
-              // 设置播放状态
-              this.$set(message, 'isPlaying', true)
-              this.currentPlayingMessage = message
-            },
-            fail: (err) => {
-              console.error('保存临时文件失败(小程序):', err)
-              console.error('错误详情:', JSON.stringify(err))
-              uni.showToast({ title: '音频格式不支持', icon: 'none' })
-            }
-          })
-          // #endif
-          
-          // #ifdef APP-PLUS || APP-NVUE
-          // App-Plus环境（HBuilderX手机基座）优先使用安卓原生写文件再播放
-          try {
-            console.log('App-Plus环境：使用Android原生写入文件后播放')
-            const tempFileName = `temp_audio_${Date.now()}.mp3`
-            const appPlusTempPath = `_doc/${tempFileName}`
-            const nativePath = plus.io.convertLocalFileSystemURL(appPlusTempPath)
-
-            // 使用 Android 原生 API 写文件
-            const Base64 = plus.android.importClass('android.util.Base64')
-            const FileOutputStream = plus.android.importClass('java.io.FileOutputStream')
-            const File = plus.android.importClass('java.io.File')
-            const bytes = Base64.decode(base64Data, Base64.DEFAULT)
-            const file = new File(nativePath)
-            const fos = new FileOutputStream(file)
-            fos.write(bytes)
-            fos.flush()
-            fos.close()
-            console.log('原生写入完成:', nativePath)
-
-            this.audioCtx.src = appPlusTempPath
-            this.audioCtx.play()
-            // 设置播放状态
-            this.$set(message, 'isPlaying', true)
-            this.currentPlayingMessage = message
-          } catch (appPlusNativeErr) {
-            console.error('App-Plus 原生写入失败，回退尝试base64播放:', appPlusNativeErr)
-            try {
-              this.audioCtx.src = message.audio
-              this.audioCtx.play()
-              // 设置播放状态
-              this.$set(message, 'isPlaying', true)
-              this.currentPlayingMessage = message
-            } catch (fallbackErr) {
-              console.error('App-Plus base64播放仍失败:', fallbackErr)
-              uni.showToast({ title: '播放失败', icon: 'none' })
-            }
-          }
-          // #endif
-          
-          // #ifndef MP-WEIXIN || APP-PLUS || APP-NVUE
-          // H5或其他环境，尝试直接播放base64
-          console.log('H5环境，尝试直接播放base64')
-          this.audioCtx.src = message.audio
-          this.audioCtx.play()
-          
-          // 设置播放状态
-          this.$set(message, 'isPlaying', true)
-          this.currentPlayingMessage = message
-          // #endif
-          
-        } catch (convertError) {
-          console.error('音频转换失败:', convertError)
-          console.error('转换错误堆栈:', convertError.stack)
-          uni.showToast({ title: '音频格式不支持', icon: 'none' })
-        }
-        
-      } catch (e) {
-        console.error('播放音频失败:', e)
-        console.error('错误堆栈:', e.stack)
-        uni.showToast({ title: '无法播放语音', icon: 'none' })
-      }
+      // 功能已停用：不再响应播放
+      uni.showToast({ title: '已关闭语音播放', icon: 'none' })
+      return
     },
     stopCurrentAudio() {
       if (this.audioCtx) {
@@ -611,7 +509,7 @@ export default {
           console.error('音频播放错误:', err)
           console.error('错误详情:', JSON.stringify(err))
           this.stopCurrentAudio()
-          uni.showToast({ title: '播放失败', icon: 'none' })
+          // 已关闭语音播放按钮，这里仅兜底
         })
         
         // 监听播放开始
@@ -624,14 +522,12 @@ export default {
           console.log('音频加载完成')
         })
         
-        // 监听加载中（仅在支持时添加）
         if (this.audioCtx.onLoadstart) {
           this.audioCtx.onLoadstart(() => {
             console.log('音频开始加载')
           })
         }
         
-        // 监听加载失败（仅在支持时添加）
         if (this.audioCtx.onLoaderror) {
           this.audioCtx.onLoaderror((err) => {
             console.error('音频加载失败:', err)
@@ -657,6 +553,7 @@ export default {
   --text: #1f2d3d;
   --muted: #7b8a8e;
   display: flex; flex-direction: column; min-height: 100vh; background: var(--bg);
+  overflow-x: hidden; /* 防止横向溢出导致抖动 */
 }
 .chat-header { 
   padding: 20rpx; 
@@ -667,28 +564,35 @@ export default {
 .title { font-size: 32rpx; font-weight: 700; }
 .sub { display: block; font-size: 22rpx; opacity: 0.9; margin-top: 6rpx; }
 
-.chat-body { flex: 1; padding: 16rpx 20rpx; padding-bottom: 320rpx; }
+.chat-body { flex: 1; padding: 16rpx 20rpx; padding-bottom: 320rpx; width: 100%; overflow-x: hidden; }
 .msg-row { display: flex; align-items: flex-end; margin: 16rpx 0; gap: 12rpx; }
 .msg-row.user { justify-content: flex-end; padding-right: 40rpx; }
 .avatar { width: 64rpx; height: 64rpx; border-radius: 50%; flex-shrink: 0; }
-.bubble { max-width: 72%; padding: 16rpx 20rpx; border-radius: 16rpx; box-shadow: 0 6rpx 20rpx rgba(0,0,0,0.04); }
+.bubble { max-width: 72%; padding: 16rpx 20rpx; border-radius: 16rpx; box-shadow: 0 6rpx 20rpx rgba(0,0,0,0.04); word-break: break-word; overflow-wrap: anywhere; }
 .msg-row.bot .bubble { background: #ffffff; color: var(--text); border: 2rpx solid var(--line); }
 .msg-row.user .bubble { background: var(--primary); color: #fff; }
 
 /* 消息中的图片样式 */
 .message-img {
-  max-width: 200rpx;
-  max-height: 200rpx;
+  width: 80rpx;              /* 固定宽度，不依赖气泡宽度 */
+  height: 160rpx;            /* 固定高度 */
   border-radius: 8rpx;
   margin-top: 8rpx;
   object-fit: cover;
+}
+/* 富文本或消息内图片在气泡内不超过容器宽度 */
+.bubble image,
+.bubble img,
+.bubble rich-text image {
+  max-width: 100%;
+  height: auto;
 }
 
 .time { display: block; font-size: 20rpx; opacity: 0.85; margin-top: 6rpx; text-align: right; }
 .audio-row { margin-top: 10rpx; }
 
 /* 表情面板 */
-.emoji-panel { position: fixed; left: 0; right: 0; bottom: 120rpx; background: #fff; border-top: 2rpx solid var(--line); padding: 12rpx; display: flex; flex-wrap: wrap; gap: 12rpx; z-index: 999; }
+.emoji-panel { position: fixed; left: 0; right: 0; bottom: 120rpx; background: #fff; border-top: 2rpx solid var(--line); padding: 12rpx; display: flex; flex-wrap: wrap; gap: 12rpx; z-index: 999; min-height: 220rpx; max-height: 40vh; overflow-y: auto; }
 .emoji-item { font-size: 40rpx; padding: 8rpx 12rpx; }
 
 /* 输入区 */
@@ -761,125 +665,25 @@ export default {
   box-shadow: 0 2rpx 8rpx rgba(255, 107, 107, 0.3);
 }
 
-/* 播放按钮样式 */
-.play-btn-container {
-  display: flex;
-  align-items: center;
-  margin-left: 12rpx;
-}
+/* 预设问答卡片样式 */
+.faq-card { background: #e9f7f2; border: 2rpx solid var(--line); border-radius: 16rpx; padding: 20rpx; margin: 8rpx 32rpx 16rpx 0; box-sizing: border-box; }
+.faq-card-header { display: flex; align-items: center; gap: 12rpx; margin-bottom: 8rpx; }
+.faq-avatar { width: 72rpx; height: 72rpx; border-radius: 50%; }
+.faq-title { font-size: 28rpx; color: var(--text); font-weight: 600; }
+.faq-list { display: flex; flex-direction: column; }
+.faq-item { display: flex; align-items: center; justify-content: space-between; background: #fff; border: 2rpx solid var(--line); border-radius: 12rpx; padding: 18rpx 20rpx; margin-top: 12rpx; box-sizing: border-box; }
+.faq-text { font-size: 28rpx; color: var(--text); }
+.faq-arrow { color: var(--muted); font-size: 32rpx; }
 
-.play-btn {
-  width: 64rpx;
-  height: 64rpx;
-  border-radius: 50%;
-  border: 2rpx solid var(--primary);
-  background: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  position: relative;
-}
+/* 播放按钮样式（保留但不再使用，避免布局抖动） */
+.play-btn-container { display: none; }
 
-.play-btn:active {
-  transform: scale(0.95);
-}
-
-.play-btn.playing {
-  background: var(--primary);
-  border-color: var(--primary);
-}
-
-.play-btn:disabled {
-  opacity: 0.5;
-  border-color: var(--muted);
-}
-
-/* 喇叭图标样式 */
-.speaker-icon {
-  position: relative;
-  width: 32rpx;
-  height: 32rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.speaker-body {
-  width: 16rpx;
-  height: 20rpx;
-  background: var(--primary);
-  border-radius: 8rpx 0 0 8rpx;
-  position: relative;
-}
-
-.speaker-body::before {
-  content: '';
-  position: absolute;
-  left: -4rpx;
-  top: 6rpx;
-  width: 6rpx;
-  height: 8rpx;
-  background: var(--primary);
-  border-radius: 3rpx;
-}
-
-.speaker-waves {
-  position: absolute;
-  right: -8rpx;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  align-items: center;
-  gap: 2rpx;
-}
-
-.wave {
-  width: 3rpx;
-  height: 8rpx;
-  background: var(--primary);
-  border-radius: 2rpx;
-  opacity: 0.3;
-  transition: all 0.3s ease;
-}
-
-.wave.active {
-  opacity: 1;
-  animation: wavePulse 1.2s ease-in-out infinite;
-}
-
-.wave:nth-child(1) {
-  animation-delay: 0s;
-}
-
-.wave:nth-child(2) {
-  animation-delay: 0.2s;
-}
-
-.wave:nth-child(3) {
-  animation-delay: 0.4s;
-}
-
-@keyframes wavePulse {
-  0%, 40%, 100% {
-    height: 8rpx;
-    opacity: 0.3;
-  }
-  20% {
-    height: 16rpx;
-    opacity: 1;
-  }
-}
-
-/* 播放状态下的喇叭样式 */
-.speaker-icon.playing .speaker-body,
-.speaker-icon.playing .speaker-body::before {
-  background: #fff;
-}
-
-.speaker-icon.playing .wave {
-  background: #fff;
-}
-
-
+/* 喇叭图标样式（保留以兼容旧结构） */
+.speaker-icon { position: relative; width: 32rpx; height: 32rpx; display: flex; align-items: center; justify-content: center; }
+.speaker-body { width: 16rpx; height: 20rpx; background: var(--primary); border-radius: 8rpx 0 0 8rpx; position: relative; }
+.speaker-body::before { content: ''; position: absolute; left: -4rpx; top: 6rpx; width: 6rpx; height: 8rpx; background: var(--primary); border-radius: 3rpx; }
+.speaker-waves { position: absolute; right: -8rpx; top: 50%; transform: translateY(-50%); display: flex; align-items: center; gap: 2rpx; }
+.wave { width: 3rpx; height: 8rpx; background: var(--primary); border-radius: 2rpx; opacity: 0.3; transition: all 0.3s ease; }
+.wave.active { opacity: 1; animation: wavePulse 1.2s ease-in-out infinite; }
+@keyframes wavePulse { 0%, 40%, 100% { height: 8rpx; opacity: 0.3; } 20% { height: 16rpx; opacity: 1; } }
 </style>

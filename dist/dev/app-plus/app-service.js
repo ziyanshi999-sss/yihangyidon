@@ -4432,6 +4432,26 @@ if (uni.restoreGlobal) {
           { code: ":ok_hand:", char: "👌", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f44c.png" },
           { code: ":heart:", char: "❤️", url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2764.png" }
         ],
+        // 预设问答
+        showFaqSuggestions: true,
+        faqSuggestions: [
+          {
+            title: "交易限额",
+            answer: "我行渠道常见交易限额：\n- 微信银行单笔/单日可能存在额度限制，视账户与安全控件而定；\n- 手机银行按认证等级与设备控件不同；\n- 网银/U盾通常额度更高。\n如需提升额度：进入 设置-限额设置 或前往网点升级身份核验。"
+          },
+          {
+            title: "个人消费贷款贴息范围",
+            answer: "个人消费贷款贴息范围一般涵盖教育培训、家装家电、耐用消费品购置等合规消费用途，具体以当地贴息政策与银行审核为准。可咨询本地营业网点或致电95599。"
+          },
+          {
+            title: "如何申请个人消费贷款贴息",
+            answer: "申请流程：\n1) 确认是否在贴息活动覆盖区域及名单；\n2) 通过手机银行/网点提交贷款申请与相关材料；\n3) 审批后按合同发放；\n4) 贴息按政策周期与比例执行，系统自动核算抵扣。"
+          },
+          {
+            title: "抗战胜利80周年普通纪念币",
+            answer: "该纪念币发行与预约以人民银行公告为准。预约、兑换时间、额度及网点安排以公告为准，请关注人民银行与我行官方渠道通知。"
+          }
+        ],
         messages: [
           {
             id: "hello",
@@ -4457,7 +4477,7 @@ if (uni.restoreGlobal) {
         }
         this.initAudioContext();
       } catch (e) {
-        formatAppLog("error", "at pages/service/chat.vue:144", "onLoad初始化失败:", e);
+        formatAppLog("error", "at pages/service/chat.vue:153", "onLoad初始化失败:", e);
       }
     },
     onUnload() {
@@ -4468,6 +4488,23 @@ if (uni.restoreGlobal) {
       }
     },
     methods: {
+      async selectFaq(item) {
+        const renderedQ = this.renderMarkdownAndEmojis(item.title);
+        const userMsg = { id: Date.now() + "-u", role: "user", html: renderedQ, time: this.nowTime() };
+        this.messages.push(userMsg);
+        const botIndex = this.showThinking("思考中…");
+        const answer = item.answer || "稍后为您补充详细说明。";
+        await this.typeOut(answer, botIndex, 1, 30);
+        try {
+          const tts = await textToSpeech(answer);
+          if (tts && tts.success && this.messages[botIndex] && this.messages[botIndex].role === "bot") {
+            this.$set(this.messages[botIndex], "audio", tts.audioPath);
+          }
+        } catch (e) {
+          formatAppLog("warn", "at pages/service/chat.vue:179", "预设问答TTS失败:", e);
+        }
+        this.toBottom();
+      },
       showThinking(text = "思考中…") {
         const botId = Date.now() + "-thinking";
         const msg = { id: botId, role: "bot", html: text, time: "" };
@@ -4504,27 +4541,17 @@ if (uni.restoreGlobal) {
       // 已移除流式实现，统一走一次性请求
       async requestOnceText(content, botIndexToReuse = null, imageData = null) {
         try {
-          const result = await chat(content, this.sessionId, imageData != null ? imageData : this.pendingImageBase64);
+          const sid = imageData ? `${this.sessionId}-vision` : this.sessionId;
+          const result = await chat(content, sid, imageData != null ? imageData : this.pendingImageBase64);
           if (result.success) {
             const replyText = result.reply || "";
             const targetIndex = botIndexToReuse != null ? botIndexToReuse : this.showThinking();
             await this.typeOut(replyText, targetIndex, 1, 50);
-            const ttsResult = await textToSpeech(replyText);
-            formatAppLog("log", "at pages/service/chat.vue:203", "TTS结果:", ttsResult);
-            if (ttsResult.success) {
-              if (targetIndex >= 0 && this.messages[targetIndex].role === "bot") {
-                formatAppLog("log", "at pages/service/chat.vue:206", "设置音频路径:", ttsResult.audioPath);
-                this.$set(this.messages[targetIndex], "audio", ttsResult.audioPath);
-                formatAppLog("log", "at pages/service/chat.vue:208", "消息对象:", this.messages[targetIndex]);
-              }
-            } else {
-              formatAppLog("error", "at pages/service/chat.vue:211", "TTS失败:", ttsResult.error);
-            }
           } else {
             throw new Error(result.error || "AI服务请求失败");
           }
         } catch (e) {
-          formatAppLog("error", "at pages/service/chat.vue:217", "AI request error:", e);
+          formatAppLog("error", "at pages/service/chat.vue:241", "AI request error:", e);
           const fallback = this.generateReply(content);
           if (botIndexToReuse != null)
             this.updateBotMessage(botIndexToReuse, fallback);
@@ -4544,71 +4571,8 @@ if (uni.restoreGlobal) {
         }
       },
       togglePlayAudio(message) {
-        formatAppLog("log", "at pages/service/chat.vue:234", "点击播放按钮，消息对象:", message);
-        formatAppLog("log", "at pages/service/chat.vue:235", "音频路径:", message.audio);
-        formatAppLog("log", "at pages/service/chat.vue:236", "播放状态:", message.isPlaying);
-        formatAppLog("log", "at pages/service/chat.vue:237", "音频数据前100字符:", message.audio ? message.audio.substring(0, 100) : "无");
-        if (!message.audio) {
-          uni.showToast({ title: "没有语音内容", icon: "none" });
-          return;
-        }
-        if (message.isPlaying) {
-          this.stopCurrentAudio();
-          return;
-        }
-        this.stopCurrentAudio();
-        if (!this.audioCtx) {
-          formatAppLog("log", "at pages/service/chat.vue:255", "音频上下文不存在，重新初始化");
-          this.initAudioContext();
-        }
-        try {
-          formatAppLog("log", "at pages/service/chat.vue:261", "设置音频源:", message.audio);
-          try {
-            const base64Data = message.audio.replace("data:audio/mp3;base64,", "");
-            formatAppLog("log", "at pages/service/chat.vue:267", "base64数据长度:", base64Data.length);
-            const arrayBuffer = this.base64ToArrayBuffer(base64Data);
-            formatAppLog("log", "at pages/service/chat.vue:270", "ArrayBuffer长度:", arrayBuffer.byteLength);
-            try {
-              formatAppLog("log", "at pages/service/chat.vue:304", "App-Plus环境：使用Android原生写入文件后播放");
-              const tempFileName = `temp_audio_${Date.now()}.mp3`;
-              const appPlusTempPath = `_doc/${tempFileName}`;
-              const nativePath = plus.io.convertLocalFileSystemURL(appPlusTempPath);
-              const Base64 = plus.android.importClass("android.util.Base64");
-              const FileOutputStream = plus.android.importClass("java.io.FileOutputStream");
-              const File = plus.android.importClass("java.io.File");
-              const bytes = Base64.decode(base64Data, Base64.DEFAULT);
-              const file = new File(nativePath);
-              const fos = new FileOutputStream(file);
-              fos.write(bytes);
-              fos.flush();
-              fos.close();
-              formatAppLog("log", "at pages/service/chat.vue:319", "原生写入完成:", nativePath);
-              this.audioCtx.src = appPlusTempPath;
-              this.audioCtx.play();
-              this.$set(message, "isPlaying", true);
-              this.currentPlayingMessage = message;
-            } catch (appPlusNativeErr) {
-              formatAppLog("error", "at pages/service/chat.vue:327", "App-Plus 原生写入失败，回退尝试base64播放:", appPlusNativeErr);
-              try {
-                this.audioCtx.src = message.audio;
-                this.audioCtx.play();
-                this.$set(message, "isPlaying", true);
-                this.currentPlayingMessage = message;
-              } catch (fallbackErr) {
-                formatAppLog("error", "at pages/service/chat.vue:335", "App-Plus base64播放仍失败:", fallbackErr);
-                uni.showToast({ title: "播放失败", icon: "none" });
-              }
-            }
-          } catch (convertError) {
-            formatAppLog("error", "at pages/service/chat.vue:353", "音频转换失败:", convertError);
-            formatAppLog("error", "at pages/service/chat.vue:354", "转换错误堆栈:", convertError.stack);
-            uni.showToast({ title: "音频格式不支持", icon: "none" });
-          }
-        } catch (e) {
-          formatAppLog("error", "at pages/service/chat.vue:359", "播放音频失败:", e);
-          formatAppLog("error", "at pages/service/chat.vue:360", "错误堆栈:", e.stack);
-          uni.showToast({ title: "无法播放语音", icon: "none" });
-        }
+        uni.showToast({ title: "已关闭语音播放", icon: "none" });
+        return;
       },
       stopCurrentAudio() {
         if (this.audioCtx) {
@@ -4704,13 +4668,13 @@ if (uni.restoreGlobal) {
                   };
                   reader.readAsDataURL(file);
                 }, (err) => {
-                  formatAppLog("warn", "at pages/service/chat.vue:477", "读取文件失败:", err);
+                  formatAppLog("warn", "at pages/service/chat.vue:375", "读取文件失败:", err);
                 });
               }, (err) => {
-                formatAppLog("warn", "at pages/service/chat.vue:480", "路径解析失败:", err);
+                formatAppLog("warn", "at pages/service/chat.vue:378", "路径解析失败:", err);
               });
             } catch (e) {
-              formatAppLog("warn", "at pages/service/chat.vue:489", "图片转base64失败:", e);
+              formatAppLog("warn", "at pages/service/chat.vue:387", "图片转base64失败:", e);
               this.pendingImageBase64 = "";
               this.pendingImageLocalPath = "";
             }
@@ -4813,36 +4777,35 @@ if (uni.restoreGlobal) {
             this.audioCtx.destroy();
           }
           this.audioCtx = uni.createInnerAudioContext();
-          formatAppLog("log", "at pages/service/chat.vue:601", "音频上下文初始化成功");
+          formatAppLog("log", "at pages/service/chat.vue:499", "音频上下文初始化成功");
           this.audioCtx.onEnded(() => {
-            formatAppLog("log", "at pages/service/chat.vue:605", "音频播放结束");
+            formatAppLog("log", "at pages/service/chat.vue:503", "音频播放结束");
             this.stopCurrentAudio();
           });
           this.audioCtx.onError((err) => {
-            formatAppLog("error", "at pages/service/chat.vue:611", "音频播放错误:", err);
-            formatAppLog("error", "at pages/service/chat.vue:612", "错误详情:", JSON.stringify(err));
+            formatAppLog("error", "at pages/service/chat.vue:509", "音频播放错误:", err);
+            formatAppLog("error", "at pages/service/chat.vue:510", "错误详情:", JSON.stringify(err));
             this.stopCurrentAudio();
-            uni.showToast({ title: "播放失败", icon: "none" });
           });
           this.audioCtx.onPlay(() => {
-            formatAppLog("log", "at pages/service/chat.vue:619", "音频开始播放");
+            formatAppLog("log", "at pages/service/chat.vue:517", "音频开始播放");
           });
           this.audioCtx.onCanplay(() => {
-            formatAppLog("log", "at pages/service/chat.vue:624", "音频加载完成");
+            formatAppLog("log", "at pages/service/chat.vue:522", "音频加载完成");
           });
           if (this.audioCtx.onLoadstart) {
             this.audioCtx.onLoadstart(() => {
-              formatAppLog("log", "at pages/service/chat.vue:630", "音频开始加载");
+              formatAppLog("log", "at pages/service/chat.vue:527", "音频开始加载");
             });
           }
           if (this.audioCtx.onLoaderror) {
             this.audioCtx.onLoaderror((err) => {
-              formatAppLog("error", "at pages/service/chat.vue:637", "音频加载失败:", err);
-              formatAppLog("error", "at pages/service/chat.vue:638", "加载错误详情:", JSON.stringify(err));
+              formatAppLog("error", "at pages/service/chat.vue:533", "音频加载失败:", err);
+              formatAppLog("error", "at pages/service/chat.vue:534", "加载错误详情:", JSON.stringify(err));
             });
           }
         } catch (e) {
-          formatAppLog("error", "at pages/service/chat.vue:643", "音频上下文初始化失败:", e);
+          formatAppLog("error", "at pages/service/chat.vue:539", "音频上下文初始化失败:", e);
         }
       }
     }
@@ -4859,6 +4822,44 @@ if (uni.restoreGlobal) {
         "scroll-into-view": $data.scrollIntoId,
         "scroll-with-animation": "true"
       }, [
+        vue.createCommentVNode(" 预设问答区：猜你想了解 "),
+        $data.showFaqSuggestions ? (vue.openBlock(), vue.createElementBlock("view", {
+          key: 0,
+          class: "faq-card"
+        }, [
+          vue.createElementVNode("view", { class: "faq-card-header" }, [
+            vue.createElementVNode("image", {
+              class: "faq-avatar",
+              src: _imports_0,
+              mode: "aspectFit"
+            }),
+            vue.createElementVNode("text", { class: "faq-title" }, "猜您想要了解以下内容")
+          ]),
+          vue.createElementVNode("view", { class: "faq-list" }, [
+            (vue.openBlock(true), vue.createElementBlock(
+              vue.Fragment,
+              null,
+              vue.renderList($data.faqSuggestions, (q, idx) => {
+                return vue.openBlock(), vue.createElementBlock("view", {
+                  class: "faq-item",
+                  key: idx,
+                  onClick: ($event) => $options.selectFaq(q)
+                }, [
+                  vue.createElementVNode(
+                    "text",
+                    { class: "faq-text" },
+                    vue.toDisplayString(q.title),
+                    1
+                    /* TEXT */
+                  ),
+                  vue.createElementVNode("text", { class: "faq-arrow" }, "›")
+                ], 8, ["onClick"]);
+              }),
+              128
+              /* KEYED_FRAGMENT */
+            ))
+          ])
+        ])) : vue.createCommentVNode("v-if", true),
         (vue.openBlock(true), vue.createElementBlock(
           vue.Fragment,
           null,
@@ -4883,7 +4884,8 @@ if (uni.restoreGlobal) {
                   key: 1,
                   src: m.image,
                   class: "message-img",
-                  mode: "widthFix"
+                  mode: "aspectFit",
+                  style: { width: "200rpx", height: "160rpx" }
                 }, null, 8, ["src"])) : vue.createCommentVNode("v-if", true),
                 m.time ? (vue.openBlock(), vue.createElementBlock(
                   "text",
@@ -4896,41 +4898,8 @@ if (uni.restoreGlobal) {
                   /* TEXT */
                 )) : vue.createCommentVNode("v-if", true)
               ]),
-              vue.createCommentVNode(" AI回复的播放按钮（仅在存在音频时显示） "),
-              m.role === "bot" && m.audio ? (vue.openBlock(), vue.createElementBlock("view", {
-                key: 1,
-                class: "play-btn-container"
-              }, [
-                vue.createElementVNode("button", {
-                  class: vue.normalizeClass(["play-btn", { "playing": m.isPlaying }]),
-                  onClick: ($event) => $options.togglePlayAudio(m),
-                  disabled: !m.audio
-                }, [
-                  !m.isPlaying ? (vue.openBlock(), vue.createElementBlock("view", {
-                    key: 0,
-                    class: "speaker-icon"
-                  }, [
-                    vue.createElementVNode("view", { class: "speaker-body" }),
-                    vue.createElementVNode("view", { class: "speaker-waves" }, [
-                      vue.createElementVNode("view", { class: "wave" }),
-                      vue.createElementVNode("view", { class: "wave" }),
-                      vue.createElementVNode("view", { class: "wave" })
-                    ])
-                  ])) : (vue.openBlock(), vue.createElementBlock("view", {
-                    key: 1,
-                    class: "speaker-icon playing"
-                  }, [
-                    vue.createElementVNode("view", { class: "speaker-body" }),
-                    vue.createElementVNode("view", { class: "speaker-waves" }, [
-                      vue.createElementVNode("view", { class: "wave active" }),
-                      vue.createElementVNode("view", { class: "wave active" }),
-                      vue.createElementVNode("view", { class: "wave active" })
-                    ])
-                  ]))
-                ], 10, ["onClick", "disabled"])
-              ])) : vue.createCommentVNode("v-if", true),
               m.role === "user" ? (vue.openBlock(), vue.createElementBlock("image", {
-                key: 2,
+                key: 1,
                 class: "avatar",
                 src: _imports_1,
                 mode: "aspectFit"
@@ -4959,32 +4928,49 @@ if (uni.restoreGlobal) {
         }, "移除")
       ])) : vue.createCommentVNode("v-if", true),
       vue.createCommentVNode(" 表情面板（与 mobile.html 一致：图片表情选择） "),
-      $data.showEmoji ? (vue.openBlock(), vue.createElementBlock("view", {
-        key: 1,
-        class: "emoji-panel"
-      }, [
-        (vue.openBlock(true), vue.createElementBlock(
-          vue.Fragment,
-          null,
-          vue.renderList($data.EMOJI_ITEMS, (item, idx) => {
-            return vue.openBlock(), vue.createElementBlock("view", {
-              class: "emoji-item",
-              key: idx,
-              onClick: ($event) => $options.appendEmoji(item),
-              title: item.code
-            }, [
-              vue.createElementVNode("image", {
-                src: item.url,
-                alt: item.code,
-                style: { "width": "24px", "height": "24px" },
-                mode: "aspectFit"
-              }, null, 8, ["src", "alt"])
-            ], 8, ["onClick", "title"]);
-          }),
-          128
-          /* KEYED_FRAGMENT */
-        ))
-      ])) : vue.createCommentVNode("v-if", true),
+      vue.withDirectives(vue.createElementVNode(
+        "view",
+        { class: "emoji-panel" },
+        [
+          (vue.openBlock(true), vue.createElementBlock(
+            vue.Fragment,
+            null,
+            vue.renderList($data.EMOJI_ITEMS, (item, idx) => {
+              return vue.openBlock(), vue.createElementBlock("view", {
+                class: "emoji-item",
+                key: idx,
+                onClick: ($event) => $options.appendEmoji(item),
+                title: item.code
+              }, [
+                item.url ? (vue.openBlock(), vue.createElementBlock("image", {
+                  key: 0,
+                  src: item.url,
+                  alt: item.code,
+                  style: { "width": "24px", "height": "24px" },
+                  mode: "aspectFit",
+                  "lazy-load": false,
+                  onError: ($event) => item.url = ""
+                }, null, 40, ["src", "alt", "onError"])) : (vue.openBlock(), vue.createElementBlock(
+                  "text",
+                  {
+                    key: 1,
+                    style: { "font-size": "24px", "line-height": "24px" }
+                  },
+                  vue.toDisplayString(item.char),
+                  1
+                  /* TEXT */
+                ))
+              ], 8, ["onClick", "title"]);
+            }),
+            128
+            /* KEYED_FRAGMENT */
+          ))
+        ],
+        512
+        /* NEED_PATCH */
+      ), [
+        [vue.vShow, $data.showEmoji]
+      ]),
       vue.createElementVNode("view", { class: "chat-input" }, [
         vue.createElementVNode("view", { class: "tools" }, [
           vue.createElementVNode("button", {
