@@ -135,11 +135,19 @@
       <text class="notice-item">• 手机号用于接收验证码和安全提醒</text>
       <text class="notice-item">• 注册即表示同意相关服务条款和隐私政策</text>
     </view>
+
+    <!-- 调试信息（开发环境） -->
+    <view class="debug-info" v-if="showDebug">
+      <text class="debug-title">调试信息：</text>
+      <text class="debug-item">当前用户总数：{{ userCount }}</text>
+      <button class="debug-btn" @click="refreshUserCount">刷新用户数</button>
+      <button class="debug-btn" @click="showAllUsers">查看所有用户</button>
+    </view>
   </view>
 </template>
 
 <script>
-import { generateVerificationCode, verifyCode, registerUser, checkUserExists } from '@/data/users.js'
+import { generateVerificationCode, verifyCode, registerUser, checkUserExists, getUsersData } from '@/data/users.js'
 import { handleLoginSuccess } from '@/utils/auth.js'
 
 export default {
@@ -158,12 +166,15 @@ export default {
       countdown: 0,
       loading: false,
       showPassword: false,
-      showConfirmPassword: false
+      showConfirmPassword: false,
+      showDebug: true, // 开发环境显示调试信息
+      userCount: 0
     };
   },
   
   onLoad() {
     console.log('注册页面加载完成');
+    this.refreshUserCount();
   },
   
   methods: {
@@ -246,13 +257,20 @@ export default {
           uni.showToast({
             title: '注册成功！',
             icon: 'success',
-            duration: 1500
+            duration: 2000
           });
+          
+          // 显示用户信息
+          console.log('注册成功，用户信息:', user);
+          console.log('当前系统用户总数:', getUsersData().length);
+          
+          // 更新用户数量显示
+          this.refreshUserCount();
           
           // 自动登录
           setTimeout(() => {
             handleLoginSuccess(user);
-          }, 1500);
+          }, 2000);
           
         } catch (error) {
           uni.showToast({ title: '注册失败，请重试', icon: 'none' });
@@ -384,6 +402,22 @@ export default {
       }
       
       return true;
+    },
+    
+    // 刷新用户数量
+    refreshUserCount() {
+      this.userCount = getUsersData().length;
+    },
+    
+    // 显示所有用户
+    showAllUsers() {
+      const users = getUsersData();
+      console.log('所有用户数据:', users);
+      uni.showModal({
+        title: '用户数据',
+        content: `当前共有 ${users.length} 个用户\n最新用户: ${users[users.length - 1]?.username || '无'}`,
+        showCancel: false
+      });
     }
   }
 };
@@ -556,5 +590,42 @@ export default {
   font-size: 28rpx;
   margin-bottom: 10rpx;
   line-height: 1.5;
+}
+
+/* 调试信息样式 */
+.debug-info {
+  margin-top: 30rpx;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 12rpx;
+  padding: 20rpx;
+  width: 100%;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+  border: 2rpx solid #ff9800;
+}
+
+.debug-title {
+  display: block;
+  color: #ff9800;
+  font-size: 28rpx;
+  font-weight: bold;
+  margin-bottom: 15rpx;
+}
+
+.debug-item {
+  display: block;
+  color: #666;
+  font-size: 24rpx;
+  margin-bottom: 10rpx;
+}
+
+.debug-btn {
+  background: #ff9800;
+  color: white;
+  padding: 10rpx 20rpx;
+  border-radius: 8rpx;
+  font-size: 24rpx;
+  border: none;
+  margin: 5rpx 10rpx 5rpx 0;
+  display: inline-block;
 }
 </style>
