@@ -3,9 +3,9 @@
     <!-- 位置选择 -->
     <view class="location-section">
       <view class="location-bar">
-        <view class="location-info">
+        <view class="location-info" @tap="goToCitySelect">
           <text class="location-icon">📍</text>
-          <text class="location-text">保定市</text>
+          <text class="location-text">{{ selectedCity }}</text>
         </view>
         <view class="search-bar">
           <text class="search-icon">🔍</text>
@@ -125,6 +125,9 @@ export default {
   name: "PaymentPage",
   data() {
     return {
+      // 选中的城市
+      selectedCity: "保定市",
+
       // 第一行服务项目
       firstRowItems: [
         {
@@ -196,6 +199,19 @@ export default {
 
   onLoad() {
     console.log("生活缴费页面加载");
+    // 从本地存储获取选中的城市
+    const city = uni.getStorageSync("selectedCity");
+    if (city) {
+      this.selectedCity = city;
+    }
+  },
+
+  onShow() {
+    // 页面显示时检查是否有新选择的城市
+    const city = uni.getStorageSync("selectedCity");
+    if (city && city !== this.selectedCity) {
+      this.selectedCity = city;
+    }
   },
 
   methods: {
@@ -351,6 +367,13 @@ export default {
     // 跳转到水费页面
     goToWaterPage() {
       console.log("跳转到水费页面");
+
+      // 确保当前选中的城市已保存到本地存储
+      if (this.selectedCity) {
+        uni.setStorageSync("selectedCity", this.selectedCity);
+        console.log(`水费页面将同步城市: ${this.selectedCity}`);
+      }
+
       uni.navigateTo({
         url: "/pages/water/water",
         success: () => {
@@ -373,6 +396,24 @@ export default {
         url: "/pages/payment-management/payment-management",
         success: () => {
           console.log("成功跳转到缴费管理页面");
+        },
+        fail: (err) => {
+          console.error("跳转失败:", err);
+          uni.showToast({
+            title: "页面跳转失败",
+            icon: "none",
+          });
+        },
+      });
+    },
+
+    // 跳转到城市选择页面
+    goToCitySelect() {
+      console.log("跳转到城市选择页面");
+      uni.navigateTo({
+        url: "/pages/city-select/city-select",
+        success: () => {
+          console.log("成功跳转到城市选择页面");
         },
         fail: (err) => {
           console.error("跳转失败:", err);
@@ -425,6 +466,15 @@ export default {
   display: flex;
   align-items: center;
   gap: 8rpx;
+  padding: 8rpx 16rpx;
+  border-radius: 20rpx;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.location-info:active {
+  background: rgba(0, 0, 0, 0.05);
+  transform: scale(0.98);
 }
 
 .location-icon {

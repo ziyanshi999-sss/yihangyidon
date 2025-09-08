@@ -19,6 +19,14 @@
   display: flex;
   align-items: center;
   gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.625rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+.location-info[data-v-6e0fac4f]:active {
+  background: rgba(0, 0, 0, 0.05);
+  transform: scale(0.98);
 }
 .location-icon[data-v-6e0fac4f] {
   font-size: 0.75rem;

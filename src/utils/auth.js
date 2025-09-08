@@ -8,7 +8,9 @@ const WHITE_LIST = [
   '/pages/denglu/login',
   '/pages/denglu/register',
   '/pages/common/404',
-  '/pages/common/error'
+  '/pages/common/error',
+  '/pages/city-select/city-select',
+  '/pages/water/water' // 水费页面
 ]
 
 /**
@@ -51,12 +53,12 @@ export function isWhiteListPage(pagePath = '') {
       console.log('无法获取页面路径，默认允许访问')
       return true
     }
-    
+
     const isWhiteList = WHITE_LIST.some(whitePath => {
       // 精确匹配或包含匹配
       return path === whitePath || path.includes(whitePath.replace('/pages/', ''))
     })
-    
+
     console.log(`页面路径: ${path}, 是否在白名单: ${isWhiteList}`)
     return isWhiteList
   } catch (error) {
@@ -71,17 +73,17 @@ export function isWhiteListPage(pagePath = '') {
  */
 export function redirectToLogin(redirectUrl = '') {
   const currentPath = getCurrentPagePath()
-  
+
   // 如果当前页面不在白名单中，将其设为登录后的跳转目标
   if (!isWhiteListPage(currentPath)) {
     redirectUrl = currentPath
   }
-  
+
   // 保存跳转目标
   if (redirectUrl) {
     uni.setStorageSync('redirectUrl', redirectUrl)
   }
-  
+
   // 跳转到登录页面
   uni.navigateTo({
     url: '/pages/denglu/login',
@@ -120,7 +122,7 @@ export function forceCheckLogin() {
   try {
     const isLoggedIn = uni.getStorageSync('isLoggedIn')
     const userInfo = uni.getStorageSync('userInfo')
-    
+
     if (!isLoggedIn || !userInfo) {
       console.log('强制检查：用户未登录，清除所有状态')
       // 清除所有可能的登录状态
@@ -148,14 +150,14 @@ export function handleLoginSuccess(userInfo) {
   // 保存用户信息和登录状态
   uni.setStorageSync('userInfo', userInfo)
   uni.setStorageSync('isLoggedIn', true)
-  
+
   // 获取登录前的跳转目标
   const redirectUrl = uni.getStorageSync('redirectUrl')
-  
+
   if (redirectUrl) {
     // 清除跳转目标
     uni.removeStorageSync('redirectUrl')
-    
+
     // 跳转到目标页面
     if (redirectUrl.includes('/pages/')) {
       // 如果是tabBar页面，使用switchTab
@@ -194,14 +196,14 @@ export function logout(options = {}) {
   const performLogout = async () => {
     try {
       console.log('开始退出登录流程')
-      
+
       // 记录退出日志
       logLogoutEvent(reason)
-      
+
       // 清除所有用户相关数据
       clearAllUserData()
       console.log('用户数据已清除')
-      
+
       // 同步到服务器（如果启用）
       if (syncToServer) {
         try {
@@ -211,14 +213,14 @@ export function logout(options = {}) {
           console.warn('服务器同步失败，但继续退出流程:', syncError)
         }
       }
-      
+
       // 显示退出成功提示
       uni.showToast({
         title: '已安全退出登录',
         icon: 'success',
         duration: 1500
       })
-      
+
       // 直接跳转到登录页面
       console.log('跳转到登录页面')
       uni.reLaunch({
@@ -241,24 +243,24 @@ export function logout(options = {}) {
           })
         }
       })
-      
+
     } catch (error) {
       console.error('退出登录过程中发生错误:', error)
-      
+
       // 确保清除本地数据
       try {
         clearAllUserData()
       } catch (clearError) {
         console.error('清除数据失败:', clearError)
       }
-      
+
       // 显示错误提示
       uni.showToast({
         title: '退出登录失败，请重试',
         icon: 'none',
         duration: 2000
       })
-      
+
       // 尝试跳转到登录页面
       setTimeout(() => {
         uni.reLaunch({
@@ -307,7 +309,7 @@ function clearAllUserData() {
     'lastLoginTime',
     'sessionData'
   ]
-  
+
   keysToRemove.forEach(key => {
     try {
       uni.removeStorageSync(key)
@@ -315,7 +317,7 @@ function clearAllUserData() {
       console.warn(`清除存储键 ${key} 失败:`, error)
     }
   })
-  
+
   // 清除可能存在的其他用户相关数据
   try {
     const allKeys = uni.getStorageInfoSync().keys
@@ -340,19 +342,19 @@ function logLogoutEvent(reason) {
     platform: uni.getSystemInfoSync().platform,
     version: '1.0.0'
   }
-  
+
   try {
     // 保存退出日志到本地
     const logoutLogs = uni.getStorageSync('logoutLogs') || []
     logoutLogs.push(logoutData)
-    
+
     // 只保留最近10条记录
     if (logoutLogs.length > 10) {
       logoutLogs.splice(0, logoutLogs.length - 10)
     }
-    
+
     uni.setStorageSync('logoutLogs', logoutLogs)
-    
+
     // 输出到控制台
     console.log('用户退出登录:', logoutData)
   } catch (error) {
@@ -372,7 +374,7 @@ async function syncLogoutToServer(reason) {
       console.log('用户信息不存在，跳过服务器同步')
       return
     }
-    
+
     // 构建退出请求数据
     const logoutData = {
       userId: userInfo.id,
@@ -383,10 +385,10 @@ async function syncLogoutToServer(reason) {
       platform: uni.getSystemInfoSync().platform,
       deviceId: getDeviceId()
     }
-    
+
     // 这里可以调用服务器API，通知服务器用户已退出
     // 例如：清除服务器端的session、token等
-    
+
     // 模拟API调用
     await new Promise((resolve, reject) => {
       setTimeout(() => {
@@ -399,12 +401,12 @@ async function syncLogoutToServer(reason) {
         }
       }, 500)
     })
-    
+
     console.log('退出登录已同步到服务器:', logoutData)
-    
+
     // 保存退出记录到本地，用于多端同步
     saveLogoutRecord(logoutData)
-    
+
   } catch (error) {
     console.warn('同步退出到服务器失败:', error)
     // 不抛出错误，避免影响本地退出流程
@@ -432,12 +434,12 @@ function saveLogoutRecord(logoutData) {
   try {
     const logoutRecords = uni.getStorageSync('logoutRecords') || []
     logoutRecords.push(logoutData)
-    
+
     // 只保留最近20条记录
     if (logoutRecords.length > 20) {
       logoutRecords.splice(0, logoutRecords.length - 20)
     }
-    
+
     uni.setStorageSync('logoutRecords', logoutRecords)
   } catch (error) {
     console.error('保存退出记录失败:', error)
@@ -465,7 +467,7 @@ function isTabBarPage(pagePath) {
  * @returns {Function} 装饰后的方法
  */
 export function requireLogin(pageMethod) {
-  return function(...args) {
+  return function (...args) {
     if (!checkLoginAndRedirect()) {
       return
     }

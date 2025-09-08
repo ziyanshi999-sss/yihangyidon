@@ -90,6 +90,13 @@
 			}
 		},
 		{
+			"path": "pages/city-select/city-select",
+			"style": {
+				"navigationBarTitleText": "选择城市",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
 			"path": "pages/recharge/recharge",
 			"style": {
 				"navigationBarTitleText": "手机充值",
