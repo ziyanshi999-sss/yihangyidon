@@ -66,79 +66,12 @@ export default {
     return {
       searchKeyword: "",
       isExpanded: false,
-      allCompanies: [
-        {
-          id: 1,
-          name: "保定市荣投水务有限公司",
-          desc: "水费",
-          area: "保定市",
-          type: "municipal",
-        },
-        {
-          id: 2,
-          name: "保定徐水智享物业管理有限公司",
-          desc: "徐水凯郡丽城小区水费",
-          area: "徐水区",
-          type: "property",
-        },
-        {
-          id: 3,
-          name: "定兴县自来水公司",
-          desc: "水费",
-          area: "定兴县",
-          type: "municipal",
-        },
-        {
-          id: 4,
-          name: "定州市东亭物业服务有限公司",
-          desc: "东亭水电费-金城颂园",
-          area: "定州市",
-          type: "property",
-        },
-        {
-          id: 5,
-          name: "定州市东亭物业服务有限公司",
-          desc: "东亭水电费-宝塔花园",
-          area: "定州市",
-          type: "property",
-        },
-        {
-          id: 6,
-          name: "涿州市供水有限公司",
-          desc: "水费",
-          area: "涿州市",
-          type: "municipal",
-        },
-        {
-          id: 7,
-          name: "高碑店市自来水公司",
-          desc: "水费",
-          area: "高碑店市",
-          type: "municipal",
-        },
-        {
-          id: 8,
-          name: "安国市自来水公司",
-          desc: "水费",
-          area: "安国市",
-          type: "municipal",
-        },
-        {
-          id: 9,
-          name: "易县自来水公司",
-          desc: "水费",
-          area: "易县",
-          type: "municipal",
-        },
-        {
-          id: 10,
-          name: "曲阳县自来水公司",
-          desc: "水费",
-          area: "曲阳县",
-          type: "municipal",
-        },
-      ],
+      allCompanies: [],
     };
+  },
+
+  onLoad() {
+    this.loadWaterCompaniesData()
   },
 
   computed: {
@@ -177,10 +110,104 @@ export default {
   },
 
   onLoad() {
+    this.loadWaterCompaniesData()
     console.log("水费区域选择页面加载");
   },
 
   methods: {
+    // 加载水费公司数据
+    loadWaterCompaniesData() {
+      try {
+        const users = uni.getStorageSync('users') || []
+        const currentUser = users.find(user => user.isLoggedIn)
+        
+        if (currentUser && currentUser.waterCompanies) {
+          this.allCompanies = currentUser.waterCompanies
+        } else {
+          // 如果没有水费公司数据，使用默认数据
+          this.allCompanies = [
+            {
+              id: 1,
+              name: "保定市荣投水务有限公司",
+              desc: "水费",
+              area: "保定市",
+              type: "municipal",
+            },
+            {
+              id: 2,
+              name: "保定徐水智享物业管理有限公司",
+              desc: "徐水凯郡丽城小区水费",
+              area: "徐水区",
+              type: "property",
+            },
+            {
+              id: 3,
+              name: "定兴县自来水公司",
+              desc: "水费",
+              area: "定兴县",
+              type: "municipal",
+            },
+            {
+              id: 4,
+              name: "定州市东亭物业服务有限公司",
+              desc: "东亭水电费-金城颂园",
+              area: "定州市",
+              type: "property",
+            },
+            {
+              id: 5,
+              name: "定州市东亭物业服务有限公司",
+              desc: "东亭水电费-宝塔花园",
+              area: "定州市",
+              type: "property",
+            },
+            {
+              id: 6,
+              name: "涿州市供水有限公司",
+              desc: "水费",
+              area: "涿州市",
+              type: "municipal",
+            },
+            {
+              id: 7,
+              name: "高碑店市自来水公司",
+              desc: "水费",
+              area: "高碑店市",
+              type: "municipal",
+            },
+            {
+              id: 8,
+              name: "安国市自来水公司",
+              desc: "水费",
+              area: "安国市",
+              type: "municipal",
+            },
+            {
+              id: 9,
+              name: "易县自来水公司",
+              desc: "水费",
+              area: "易县",
+              type: "municipal",
+            },
+            {
+              id: 10,
+              name: "曲阳县自来水公司",
+              desc: "水费",
+              area: "曲阳县",
+              type: "municipal",
+            },
+          ]
+          
+          // 保存到用户数据中
+          if (currentUser) {
+            currentUser.waterCompanies = this.allCompanies
+            uni.setStorageSync('users', users)
+          }
+        }
+      } catch (error) {
+        console.error('加载水费公司数据失败:', error)
+      }
+    },
     // 处理搜索
     handleSearch(e) {
       this.searchKeyword = e.detail.value;

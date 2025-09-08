@@ -248,3 +248,219 @@ export function getTransactionRecords(limit = 20) {
     }
   })
 }
+
+/**
+ * 验证支付密码
+ * @param {string} password 支付密码
+ * @returns {Promise<boolean>} 密码是否正确
+ */
+export function verifyPaymentPassword(password) {
+  return new Promise((resolve, reject) => {
+    try {
+      const userInfo = getUserInfo()
+      if (!userInfo) {
+        reject(new Error('用户未登录'))
+        return
+      }
+      
+      const isCorrect = userInfo.transactionPassword === password
+      console.log('支付密码验证:', isCorrect ? '正确' : '错误')
+      resolve(isCorrect)
+      
+    } catch (error) {
+      console.error('验证支付密码失败:', error)
+      reject(error)
+    }
+  })
+}
+
+/**
+ * 信用卡还款
+ * @param {string} cardNumber 信用卡号
+ * @param {number} amount 还款金额
+ * @param {string} paymentPassword 支付密码
+ * @returns {Promise<{success: boolean, message: string, newBalance: number, newCardBalance: number}>}
+ */
+export function repayCreditCard(cardNumber, amount, paymentPassword) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const userInfo = getUserInfo()
+      if (!userInfo) {
+        reject(new Error('用户未登录'))
+        return
+      }
+      
+      // 验证支付密码
+      const isPasswordCorrect = await verifyPaymentPassword(paymentPassword)
+      if (!isPasswordCorrect) {
+        resolve({
+          success: false,
+          message: '支付密码错误',
+          newBalance: userInfo.balance,
+          newCardBalance: 0
+        })
+        return
+      }
+      
+      // 检查余额是否足够
+      const currentBalance = userInfo.balance || 0
+      if (currentBalance < amount) {
+        resolve({
+          success: false,
+          message: '账户余额不足，无法完成还款',
+          newBalance: currentBalance,
+          newCardBalance: 0
+        })
+        return
+      }
+      
+      // 查找信用卡
+      const creditCards = userInfo.creditCards || []
+      const cardIndex = creditCards.findIndex(card => card.cardNumber === cardNumber)
+      
+      if (cardIndex === -1) {
+        resolve({
+          success: false,
+          message: '未找到指定的信用卡',
+          newBalance: currentBalance,
+          newCardBalance: 0
+        })
+        return
+      }
+      
+      const card = creditCards[cardIndex]
+      const currentCardBalance = card.currentBalance || 0
+      
+      // 检查还款金额是否超过欠款
+      if (amount > currentCardBalance) {
+        resolve({
+          success: false,
+          message: '还款金额不能超过当前欠款',
+          newBalance: currentBalance,
+          newCardBalance: currentCardBalance
+        })
+        return
+      }
+      
+      // 执行还款操作
+      const newBalance = currentBalance - amount
+      const newCardBalance = currentCardBalance - amount
+      const newAvailableCredit = card.creditLimit - newCardBalance
+      
+      // 更新用户余额
+      userInfo.balance = newBalance
+      userInfo.lastUpdateTime = new Date().toISOString()
+      
+      // 更新信用卡信息
+      creditCards[cardIndex] = {
+        ...card,
+        currentBalance: newCardBalance,
+        availableCredit: newAvailableCredit,
+        lastStatementDate: new Date().toISOString().split('T')[0]
+      }
+      
+      userInfo.creditCards = creditCards
+      
+      // 更新本地存储
+      uni.setStorageSync('userInfo', userInfo)
+      uni.setStorageSync('currentUser', userInfo)
+      
+      // 更新本地数据库
+      updateUserBalanceInDatabase(userInfo)
+      
+      // 记录交易记录
+      addTransactionRecord({
+        type: 'expense',
+        amount: amount,
+        description: `信用卡还款 - ${card.cardType} ${cardNumber.slice(-4)}`,
+        balance: newBalance,
+        timestamp: new Date().toISOString(),
+        icon: '💳',
+        title: '信用卡还款',
+        time: new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })
+      })
+      
+      console.log(`信用卡还款成功: ${amount}元，剩余余额: ${newBalance}元，信用卡余额: ${newCardBalance}元`)
+      
+      resolve({
+        success: true,
+        message: '还款成功',
+        newBalance: newBalance,
+        newCardBalance: newCardBalance,
+        newAvailableCredit: newAvailableCredit
+      })
+      
+    } catch (error) {
+      console.error('信用卡还款失败:', error)
+      reject(error)
+    }
+  })
+}
+
+/**
+ * 获取信用卡信息
+ * @param {string} cardNumber 信用卡号（可选）
+ * @returns {Promise<Array|Object>} 信用卡信息
+ */
+export function getCreditCards(cardNumber = null) {
+  return new Promise((resolve, reject) => {
+    try {
+      const userInfo = getUserInfo()
+      if (!userInfo) {
+        reject(new Error('用户未登录'))
+        return
+      }
+      
+      const creditCards = userInfo.creditCards || []
+      
+      if (cardNumber) {
+        const card = creditCards.find(card => card.cardNumber === cardNumber)
+        resolve(card || null)
+      } else {
+        resolve(creditCards)
+      }
+      
+    } catch (error) {
+      console.error('获取信用卡信息失败:', error)
+      reject(error)
+    }
+  })
+}
+
+/**
+ * 获取信用卡还款记录
+ * @param {string} cardNumber 信用卡号（可选）
+ * @param {number} limit 限制条数，默认10条
+ * @returns {Promise<Array>} 还款记录列表
+ */
+export function getRepaymentRecords(cardNumber = null, limit = 10) {
+  return new Promise((resolve, reject) => {
+    try {
+      const userInfo = getUserInfo()
+      if (!userInfo) {
+        reject(new Error('用户未登录'))
+        return
+      }
+      
+      const records = userInfo.transactionRecords || []
+      let repaymentRecords = records.filter(record => 
+        record.description && record.description.includes('信用卡还款')
+      )
+      
+      if (cardNumber) {
+        repaymentRecords = repaymentRecords.filter(record => 
+          record.description && record.description.includes(cardNumber.slice(-4))
+        )
+      }
+      
+      const limitedRecords = repaymentRecords.slice(0, limit)
+      
+      console.log(`获取还款记录: ${limitedRecords.length}条`)
+      resolve(limitedRecords)
+      
+    } catch (error) {
+      console.error('获取还款记录失败:', error)
+      reject(error)
+    }
+  })
+}

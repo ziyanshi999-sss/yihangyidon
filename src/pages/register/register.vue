@@ -2,7 +2,7 @@
   <view class="register-container">
     <!-- 标题 -->
     <view class="title">注册账户</view>
-    <view class="subtitle">创建您的农业银行账户</view>
+    <view class="subtitle">创建您的账户</view>
     
     <!-- 注册表单 -->
     <form @submit="handleRegister">

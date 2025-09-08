@@ -108,74 +108,114 @@ export default {
     return {
       hasLoan: true, // 模拟用户有贷款
       loanInfo: {
-        amount: 100000,
-        status: '还款中',
-        type: '个人消费贷',
-        term: 36,
-        rate: 4.5,
-        paidInstallments: 12,
-        totalInstallments: 36,
-        nextPaymentDate: '2024-06-10',
-        nextPaymentAmount: 3200.50
+        amount: 0,
+        status: '',
+        type: '',
+        term: 0,
+        rate: 0,
+        paidInstallments: 0,
+        totalInstallments: 0,
+        nextPaymentDate: '',
+        nextPaymentAmount: 0
       },
-      loanProducts: [
-        {
-          id: '1',
-          name: '个人消费贷',
-          rate: 4.5,
-          amountRange: '1万-50万',
-          termRange: '6-60期',
-          features: '无需抵押，快速审批',
-          minRate: 4.2,
-          maxRate: 5.8
-        },
-        {
-          id: '2',
-          name: '房贷',
-          rate: 3.8,
-          amountRange: '50万-500万',
-          termRange: '12-360期',
-          features: '利率优惠，长期稳定',
-          minRate: 3.6,
-          maxRate: 4.8
-        },
-        {
-          id: '3',
-          name: '经营贷',
-          rate: 5.2,
-          amountRange: '10万-100万',
-          termRange: '12-60期',
-          features: '助力创业，灵活还款',
-          minRate: 4.8,
-          maxRate: 6.5
-        }
-      ],
-      loanNews: [
-        {
-          id: '1',
-          title: '央行降准0.5个百分点，贷款市场利率有望下行',
-          date: '2024-05-15',
-          content: '中国人民银行决定下调金融机构存款准备金率0.5个百分点，预计将释放长期资金约1万亿元，有助于降低社会融资成本...'
-        },
-        {
-          id: '2',
-          title: '个人消费贷新政策解读：这些变化你需要了解',
-          date: '2024-05-10',
-          content: '近日，银保监会发布了关于调整个人消费贷款政策的通知，新政策对贷款额度、期限、利率等方面做出了调整...'
-        },
-        {
-          id: '3',
-          title: '如何提高贷款审批通过率？这些技巧很重要',
-          date: '2024-05-05',
-          content: '在申请贷款时，很多人会遇到审批不通过的情况。本文将为您介绍几个提高贷款审批通过率的实用技巧...'
-        }
-      ]
+      loanProducts: [],
+      loanNews: []
     }
   },
   onLoad() {
     this.checkLoginStatus()
+    this.loadLoanData()
   },
   methods: {
+    // 加载贷款数据
+    loadLoanData() {
+      try {
+        const users = uni.getStorageSync('users') || []
+        const currentUser = users.find(user => user.isLoggedIn)
+        
+        if (currentUser && currentUser.loanInfo) {
+          this.loanInfo = currentUser.loanInfo
+        } else {
+          // 如果没有贷款数据，使用默认数据
+          this.loanInfo = {
+            amount: 100000,
+            status: '还款中',
+            type: '个人消费贷',
+            term: 36,
+            rate: 4.5,
+            paidInstallments: 12,
+            totalInstallments: 36,
+            nextPaymentDate: '2024-06-10',
+            nextPaymentAmount: 3200.50
+          }
+          
+          // 保存到用户数据中
+          if (currentUser) {
+            currentUser.loanInfo = this.loanInfo
+            uni.setStorageSync('users', users)
+          }
+        }
+        
+        // 加载贷款产品数据
+        this.loanProducts = [
+          {
+            id: '1',
+            name: '个人消费贷',
+            rate: 4.5,
+            amountRange: '1万-50万',
+            termRange: '6-60期',
+            features: '无需抵押，快速审批',
+            minRate: 4.2,
+            maxRate: 5.8
+          },
+          {
+            id: '2',
+            name: '房贷',
+            rate: 3.8,
+            amountRange: '50万-500万',
+            termRange: '12-360期',
+            features: '利率优惠，长期稳定',
+            minRate: 3.6,
+            maxRate: 4.8
+          },
+          {
+            id: '3',
+            name: '经营贷',
+            rate: 5.2,
+            amountRange: '10万-100万',
+            termRange: '12-60期',
+            features: '助力创业，灵活还款',
+            minRate: 4.8,
+            maxRate: 6.5
+          }
+        ]
+        
+        // 加载贷款新闻数据
+        this.loanNews = [
+          {
+            id: '1',
+            title: '央行降准0.5个百分点，贷款市场利率有望下行',
+            date: '2024-05-15',
+            content: '中国人民银行决定下调金融机构存款准备金率0.5个百分点，预计将释放长期资金约1万亿元，有助于降低社会融资成本...'
+          },
+          {
+            id: '2',
+            title: '个人消费贷新政策解读：这些变化你需要了解',
+            date: '2024-05-10',
+            content: '近日，银保监会发布了关于调整个人消费贷款政策的通知，新政策对贷款额度、期限、利率等方面做出了调整...'
+          },
+          {
+            id: '3',
+            title: '如何提高贷款审批通过率？这些技巧很重要',
+            date: '2024-05-05',
+            content: '在申请贷款时，很多人会遇到审批不通过的情况。本文将为您介绍几个提高贷款审批通过率的实用技巧...'
+          }
+        ]
+      } catch (error) {
+        console.error('加载贷款数据失败:', error)
+      }
+    },
+
     // 检查登录状态
     checkLoginStatus() {
       if (!forceCheckLogin()) {

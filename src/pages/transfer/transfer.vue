@@ -46,6 +46,28 @@
       </view>
     </view>
 
+    <!-- 常用联系人 -->
+    <view class="frequent-contacts" v-if="frequentContacts.length > 0">
+      <view class="section-header">
+        <text class="section-title">常用联系人</text>
+        <text class="section-more" @click="showAllContacts">查看全部</text>
+      </view>
+      <scroll-view class="contacts-scroll" scroll-x="true">
+        <view class="contacts-list">
+          <view 
+            class="contact-item" 
+            v-for="contact in frequentContacts.slice(0, 5)" 
+            :key="contact.id"
+            @click="selectContact(contact)"
+          >
+            <view class="contact-avatar">{{ contact.name.charAt(0) }}</view>
+            <text class="contact-name">{{ contact.name }}</text>
+            <text class="contact-bank">{{ contact.bank }}</text>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+
     <!-- 转账表单 -->
     <view class="transfer-form">
       <!-- 账号转账表单 -->
@@ -180,12 +202,16 @@ export default {
       showPasswordModal: false, // 显示交易密码弹窗
       transferAmount: 0, // 转账金额
       transferPayee: '', // 收款方
-      transferDescription: '' // 转账说明
+      transferDescription: '', // 转账说明
+      transferRecords: [], // 转账记录
+      frequentContacts: [], // 常用联系人
+      showHistory: false // 显示历史记录
     }
   },
   
   mounted() {
     // 页面加载完成
+    this.loadTransferData()
   },
   
   onShow() {
@@ -199,11 +225,11 @@ export default {
         return
       }
       
+      // 加载转账数据
+      this.loadTransferData()
+      
       // 获取转账限额
       this.getTransferLimit()
-      
-      // 获取用户余额（模拟数据）
-      this.getUserBalance()
     } catch (error) {
       console.error('转账页面onShow检查失败:', error)
       uni.reLaunch({
@@ -213,11 +239,45 @@ export default {
   },
   
   methods: {
+    // 加载转账数据
+    loadTransferData() {
+      try {
+        const users = uni.getStorageSync('users') || []
+        const currentUser = users.find(user => user.isLoggedIn)
+        
+        if (currentUser) {
+          this.userBalance = currentUser.balance || 0
+          this.transferRecords = currentUser.transferRecords || []
+          this.frequentContacts = currentUser.frequentContacts || []
+          this.transferLimit = currentUser.securitySettings?.transactionLimit || 50000
+        }
+      } catch (error) {
+        console.error('加载转账数据失败:', error)
+      }
+    },
+
     // 返回上一页
     goBack() {
       uni.navigateBack()
     },
     
+    // 选择常用联系人
+    selectContact(contact) {
+      this.accountForm.account = contact.account
+      this.accountForm.name = contact.name
+      uni.showToast({
+        title: `已选择${contact.name}`,
+        icon: 'success'
+      })
+    },
+
+    // 显示所有联系人
+    showAllContacts() {
+      uni.navigateTo({
+        url: '/pages/transfer/contacts'
+      })
+    },
+
     // 显示转账提示
     showTransferTips() {
       uni.showModal({
@@ -853,6 +913,78 @@ export default {
 .type-desc {
   font-size: 22rpx;
   opacity: 0.7;
+}
+
+/* 常用联系人 */
+.frequent-contacts {
+  background-color: #fff;
+  margin: 0 20rpx 20rpx 20rpx;
+  border-radius: 24rpx;
+  padding: 40rpx;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.1);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.section-more {
+  font-size: 28rpx;
+  color: #007AFF;
+}
+
+.contacts-scroll {
+  white-space: nowrap;
+}
+
+.contacts-list {
+  display: flex;
+  gap: 20rpx;
+}
+
+.contact-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20rpx;
+  background-color: #f8f9fa;
+  border-radius: 12rpx;
+  min-width: 120rpx;
+  cursor: pointer;
+}
+
+.contact-avatar {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 50%;
+  background-color: #007AFF;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  font-weight: 600;
+  margin-bottom: 10rpx;
+}
+
+.contact-name {
+  font-size: 24rpx;
+  color: #333;
+  margin-bottom: 5rpx;
+}
+
+.contact-bank {
+  font-size: 20rpx;
+  color: #666;
 }
 
 /* 转账表单 */

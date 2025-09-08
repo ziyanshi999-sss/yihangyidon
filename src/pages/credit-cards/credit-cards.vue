@@ -744,6 +744,7 @@ export default {
 			showDetailCardNumbers: false,
 			showDetailCVV: false,
 			showNewCardNumber: false,
+			creditCardTransactions: [], // 信用卡交易记录
 			showNewCVV: false,
 			showRepaymentModal: false,
 			showTransactionsModal: false,
@@ -883,60 +884,17 @@ export default {
 
 		loadCreditCards() {
 			try {
-				let users = uni.getStorageSync('users') || []
-				
-				// 如果本地存储没有用户数据，从文件加载
-				if (users.length === 0) {
-					try {
-						const userData = require('@/data/users.js')
-						users = userData.default || userData
-						uni.setStorageSync('users', users)
-					} catch (e) {
-						console.warn('无法加载用户数据文件，使用默认数据')
-						users = []
-					}
-				}
-				
-				// 查找当前登录用户
+				// 从user.json获取信用卡数据
+				const users = uni.getStorageSync('users') || []
 				const currentUser = users.find(user => user.isLoggedIn)
 				
 				if (currentUser && currentUser.creditCards && currentUser.creditCards.length > 0) {
 					this.creditCards = currentUser.creditCards
+					this.creditCardTransactions = currentUser.creditCardTransactions || []
 					console.log('加载用户信用卡数据:', this.creditCards)
 				} else {
-					// 创建默认信用卡数据
-					console.log('创建默认信用卡数据')
-					this.creditCards = [
-						{
-							id: 1,
-							cardNumber: '6222 6666 6666 6666',
-							cardType: '钻石卡',
-							cardBrand: '银联',
-							creditLimit: 100000,
-							availableCredit: 75000,
-							currentBalance: 25000,
-							minPayment: 2500,
-							statementDate: '15',
-							dueDate: '2024-02-15',
-							lastStatementDate: '2024-01-15',
-							cardStatus: 'active',
-							cardHolder: currentUser ? currentUser.username : '张三',
-							expiryDate: '2028-12',
-							cvv: '123',
-							annualFee: 2000,
-							interestRate: 0.0005,
-							cashAdvanceLimit: 50000,
-							rewardsPoints: 15000,
-							cardColor: '#4CAF50'
-						}
-					]
-					
-					// 保存到当前用户数据中
-					if (currentUser) {
-						currentUser.creditCards = this.creditCards
-						uni.setStorageSync('users', users)
-						console.log('保存信用卡数据到用户:', currentUser.username)
-					}
+					console.log('用户没有信用卡数据')
+					this.creditCards = []
 				}
 				
 				// 确保数据格式正确
@@ -956,32 +914,7 @@ export default {
 					icon: 'none',
 					duration: 3000
 				})
-				
-				// 即使出错也提供基本数据
-				this.creditCards = [
-					{
-						id: 1,
-						cardNumber: '6222 6666 6666 6666',
-						cardType: '钻石卡',
-						cardBrand: '银联',
-						creditLimit: 100000,
-						availableCredit: 75000,
-						currentBalance: 25000,
-						minPayment: 2500,
-						statementDate: '15',
-						dueDate: '2024-02-15',
-						lastStatementDate: '2024-01-15',
-						cardStatus: 'active',
-						cardHolder: '张三',
-						expiryDate: '2028-12',
-						cvv: '123',
-						annualFee: 2000,
-						interestRate: 0.0005,
-						cashAdvanceLimit: 50000,
-						rewardsPoints: 15000,
-						cardColor: '#4CAF50'
-					}
-				]
+				this.creditCards = []
 			}
 		},
 
@@ -1459,7 +1392,7 @@ export default {
 			}
 		},
 
-		showCardDetailModal() {
+		openCardDetailModal() {
 			this.showCardDetailModal = true
 		},
 

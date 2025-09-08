@@ -125,6 +125,13 @@
 			}
 		},
 		{
+			"path": "pages/credit-card/repayment",
+			"style": {
+				"navigationBarTitleText": "信用卡还款",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
 			"path": "pages/balance/balance",
 			"style": {
 				"navigationBarTitleText": "收支明细",

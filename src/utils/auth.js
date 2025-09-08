@@ -149,6 +149,25 @@ export function handleLoginSuccess(userInfo) {
   uni.setStorageSync('userInfo', userInfo)
   uni.setStorageSync('isLoggedIn', true)
   
+  // 更新user.json中的用户数据，添加isLoggedIn状态
+  try {
+    const users = uni.getStorageSync('users') || []
+    const userIndex = users.findIndex(user => user.id === userInfo.id)
+    if (userIndex !== -1) {
+      // 清除所有用户的登录状态
+      users.forEach(user => {
+        user.isLoggedIn = false
+      })
+      // 设置当前用户为登录状态
+      users[userIndex].isLoggedIn = true
+      users[userIndex].lastLoginTime = new Date().toISOString()
+      uni.setStorageSync('users', users)
+      console.log('用户登录状态已更新:', userInfo.username)
+    }
+  } catch (error) {
+    console.error('更新用户登录状态失败:', error)
+  }
+  
   // 获取登录前的跳转目标
   const redirectUrl = uni.getStorageSync('redirectUrl')
   

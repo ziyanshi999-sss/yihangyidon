@@ -130,7 +130,7 @@ export default {
     return {
       activeTab: 0,
       selectedAmount: 50,
-      phoneNumber: "15903724152",
+      phoneNumber: "",
       inputPhoneNumber: "",
       showPhoneModal: false,
       carrierInfo: {
@@ -176,6 +176,7 @@ export default {
 
   onLoad(options) {
     this.initPage();
+    this.loadUserPhoneNumber();
     // 如果从其他页面传递了手机号码
     if (options.phone) {
       this.phoneNumber = options.phone;
@@ -202,6 +203,24 @@ export default {
   },
 
   methods: {
+    // 加载用户手机号
+    loadUserPhoneNumber() {
+      try {
+        const users = uni.getStorageSync('users') || []
+        const currentUser = users.find(user => user.isLoggedIn)
+        
+        if (currentUser && currentUser.phone) {
+          this.phoneNumber = currentUser.phone
+          this.getCarrierInfo()
+        } else {
+          this.showPhoneModal = true
+        }
+      } catch (error) {
+        console.error('加载用户手机号失败:', error)
+        this.showPhoneModal = true
+      }
+    },
+
     initPage() {
       console.log("手机充值页面初始化");
       // 设置默认选中第一个金额

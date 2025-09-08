@@ -173,7 +173,7 @@ export default {
               id: "phone-001",
               type: "phone",
               title: "手机充值",
-              desc: "15703724152 | 50元",
+              desc: "手机充值",
               icon: "📱",
               bgColor: "#81C784",
             },

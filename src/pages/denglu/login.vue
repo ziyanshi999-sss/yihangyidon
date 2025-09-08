@@ -1,7 +1,7 @@
 <template>
   <view class="login-container">
     <!-- 标题 -->
-    <view class="title">中国农业银行</view>
+    <view class="title">银行系统</view>
     
     <!-- 登录方式切换 -->
     <view class="tab-bar">

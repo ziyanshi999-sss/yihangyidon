@@ -24,6 +24,33 @@
         </view>
       </view>
 
+      <!-- 缴费记录 -->
+      <view class="payment-records" v-if="paymentRecords.length > 0">
+        <view class="records-header">
+          <text class="records-title">最近缴费</text>
+          <text class="records-more" @click="showAllPaymentRecords">查看全部</text>
+        </view>
+        <view class="records-list">
+          <view 
+            class="record-item" 
+            v-for="record in paymentRecords.slice(0, 3)" 
+            :key="record.id"
+          >
+            <view class="record-left">
+              <view class="record-icon">{{ getPaymentIcon(record.type) }}</view>
+              <view class="record-info">
+                <text class="record-type">{{ record.type }}</text>
+                <text class="record-desc">{{ record.phoneNumber || record.account }}</text>
+              </view>
+            </view>
+            <view class="record-right">
+              <text class="record-amount">¥{{ record.amount }}</text>
+              <text class="record-time">{{ formatTime(record.timestamp) }}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
       <view class="payment-cards">
         <!-- 党费卡片 -->
         <view class="payment-card party-card" @tap="handleCardTap('party')">
@@ -126,79 +153,119 @@ export default {
   data() {
     return {
       // 第一行服务项目
-      firstRowItems: [
-        {
-          icon: "💧",
-          label: "水费",
-          bgColor: "linear-gradient(135deg, #64B5F6 0%, #42A5F5 100%)",
-          type: "water",
-        },
-        {
-          icon: "💡",
-          label: "电费",
-          bgColor: "linear-gradient(135deg, #FFB74D 0%, #FFA726 100%)",
-          type: "electric",
-        },
-        {
-          icon: "🔥",
-          label: "燃气费",
-          bgColor: "linear-gradient(135deg, #FF8A65 0%, #FF7043 100%)",
-          type: "gas",
-        },
-      ],
-
-      // 第二行服务项目
-      secondRowItems: [
-        {
-          icon: "🏠",
-          label: "供暖费",
-          bgColor: "linear-gradient(135deg, #A1887F 0%, #8D6E63 100%)",
-          type: "heating",
-        },
-        {
-          icon: "📺",
-          label: "有线电视费",
-          bgColor: "linear-gradient(135deg, #9575CD 0%, #7E57C2 100%)",
-          type: "tv",
-        },
-        {
-          icon: "📦",
-          label: "物业费",
-          bgColor: "linear-gradient(135deg, #4DB6AC 0%, #26A69A 100%)",
-          type: "property",
-        },
-      ],
-
-      // 底部导航
-      bottomNavs: [
-        { icon: "☭", text: "党费", class: "party-nav" },
-        { icon: "💰", text: "工会费", class: "union-nav" },
-        { icon: "💬", text: "更多", class: "more-nav" },
-      ],
-
-      // 我的缴费数据
-      myPayments: [
-        {
-          type: "party",
-          title: "党费",
-          number: "410******",
-          lastDigits: "5030",
-        },
-        {
-          type: "phone",
-          title: "手机充值",
-          number: "15703724132",
-          amount: "50元",
-        },
-      ],
+      firstRowItems: [],
+      secondRowItems: [],
+      bottomNavs: [],
+      myPayments: [],
+      paymentRecords: [], // 缴费记录
+      showPaymentHistory: false // 显示缴费历史
     };
   },
 
   onLoad() {
+    this.loadPaymentServicesData()
     console.log("生活缴费页面加载");
   },
 
+  onShow() {
+    // 页面显示时重新加载数据
+    this.loadPaymentServicesData()
+  },
+
   methods: {
+    // 加载支付服务数据
+    loadPaymentServicesData() {
+      try {
+        const users = uni.getStorageSync('users') || []
+        const currentUser = users.find(user => user.isLoggedIn)
+        
+        if (currentUser && currentUser.paymentServices) {
+          this.firstRowItems = currentUser.paymentServices.firstRowItems || []
+          this.secondRowItems = currentUser.paymentServices.secondRowItems || []
+          this.bottomNavs = currentUser.paymentServices.bottomNavs || []
+          this.myPayments = currentUser.paymentServices.myPayments || []
+          this.paymentRecords = currentUser.paymentRecords || []
+        } else {
+          // 如果没有支付服务数据，使用默认数据
+          this.firstRowItems = [
+            {
+              icon: "💧",
+              label: "水费",
+              bgColor: "linear-gradient(135deg, #64B5F6 0%, #42A5F5 100%)",
+              type: "water",
+            },
+            {
+              icon: "💡",
+              label: "电费",
+              bgColor: "linear-gradient(135deg, #FFB74D 0%, #FFA726 100%)",
+              type: "electric",
+            },
+            {
+              icon: "🔥",
+              label: "燃气费",
+              bgColor: "linear-gradient(135deg, #FF8A65 0%, #FF7043 100%)",
+              type: "gas",
+            },
+          ]
+          
+          this.secondRowItems = [
+            {
+              icon: "🏠",
+              label: "供暖费",
+              bgColor: "linear-gradient(135deg, #A1887F 0%, #8D6E63 100%)",
+              type: "heating",
+            },
+            {
+              icon: "📺",
+              label: "有线电视费",
+              bgColor: "linear-gradient(135deg, #9575CD 0%, #7E57C2 100%)",
+              type: "tv",
+            },
+            {
+              icon: "📦",
+              label: "物业费",
+              bgColor: "linear-gradient(135deg, #4DB6AC 0%, #26A69A 100%)",
+              type: "property",
+            },
+          ]
+          
+          this.bottomNavs = [
+            { icon: "☭", text: "党费", class: "party-nav" },
+            { icon: "💰", text: "工会费", class: "union-nav" },
+            { icon: "💬", text: "更多", class: "more-nav" },
+          ]
+          
+          this.myPayments = [
+            {
+              type: "party",
+              title: "党费",
+              number: "410******",
+              lastDigits: "5030",
+            },
+            {
+              type: "phone",
+              title: "手机充值",
+              number: "15703724132",
+              amount: "50元",
+            },
+          ]
+          
+          // 保存到用户数据中
+          if (currentUser) {
+            currentUser.paymentServices = {
+              firstRowItems: this.firstRowItems,
+              secondRowItems: this.secondRowItems,
+              bottomNavs: this.bottomNavs,
+              myPayments: this.myPayments
+            }
+            uni.setStorageSync('users', users)
+          }
+        }
+      } catch (error) {
+        console.error('加载支付服务数据失败:', error)
+      }
+    },
+    
     // 处理卡片点击
     handleCardTap(type) {
       console.log("点击卡片:", type);
@@ -366,6 +433,43 @@ export default {
       });
     },
 
+    // 获取缴费类型图标
+    getPaymentIcon(type) {
+      const icons = {
+        '手机充值': '📱',
+        '电费': '💡',
+        '水费': '💧',
+        '燃气费': '🔥',
+        '党费': '☭'
+      }
+      return icons[type] || '💰'
+    },
+
+    // 格式化时间
+    formatTime(timestamp) {
+      const date = new Date(timestamp)
+      const now = new Date()
+      const diff = now - date
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+      
+      if (days === 0) {
+        return '今天'
+      } else if (days === 1) {
+        return '昨天'
+      } else if (days < 7) {
+        return `${days}天前`
+      } else {
+        return date.toLocaleDateString('zh-CN')
+      }
+    },
+
+    // 显示所有缴费记录
+    showAllPaymentRecords() {
+      uni.navigateTo({
+        url: '/pages/payment/records'
+      })
+    },
+
     // 跳转到缴费管理页面
     goToPaymentManagement() {
       console.log("跳转到缴费管理页面");
@@ -471,6 +575,91 @@ export default {
   border-radius: 16rpx;
   padding: 30rpx;
   box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.08);
+}
+
+/* 缴费记录 */
+.payment-records {
+  margin-top: 20rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid #f0f0f0;
+}
+
+.records-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.records-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.records-more {
+  font-size: 24rpx;
+  color: #007AFF;
+}
+
+.records-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15rpx;
+}
+
+.record-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx;
+  background-color: #f8f9fa;
+  border-radius: 12rpx;
+}
+
+.record-left {
+  display: flex;
+  align-items: center;
+  gap: 15rpx;
+}
+
+.record-icon {
+  font-size: 32rpx;
+}
+
+.record-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5rpx;
+}
+
+.record-type {
+  font-size: 26rpx;
+  font-weight: 500;
+  color: #333;
+}
+
+.record-desc {
+  font-size: 22rpx;
+  color: #666;
+}
+
+.record-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5rpx;
+}
+
+.record-amount {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.record-time {
+  font-size: 20rpx;
+  color: #999;
 }
 
 .section-header {

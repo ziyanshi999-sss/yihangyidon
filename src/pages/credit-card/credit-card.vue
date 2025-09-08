@@ -104,20 +104,7 @@ import BankCard from '@/components/common/BankCard.vue'
 const getCreditCards = () => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      const cards = uni.getStorageSync('creditCards') || [
-        {
-          id: '1',
-          cardNumber: '6228481234567890123',
-          bankName: '中国农业银行',
-          bankType: 'abc',
-          cardType: 'credit',
-          holderName: '张三',
-          expiryDate: '06/26',
-          isDefault: true,
-          limit: 30000,
-          used: 12345.67
-        }
-      ]
+      const cards = uni.getStorageSync('creditCards') || []
       resolve(cards)
     }, 300)
   })
@@ -136,22 +123,7 @@ export default {
       paidAmount: 0,
       billDate: '每月10日',
       dueDate: '每月28日',
-      promotions: [
-        {
-          id: '1',
-          title: '餐饮消费满200减50',
-          desc: '指定餐厅刷卡消费享优惠',
-          image: 'https://thafd.bing.com/th/id/OIP.Qasbo_B7CgQZgQbJZQs43QHaCI?o=7rm=3&rs=1&pid=ImgDetMain',
-          endDate: '2024-12-31'
-        },
-        {
-          id: '2',
-          title: '周末加油9折优惠',
-          desc: '指定加油站刷卡加油享折扣',
-          image: 'https://thafd.bing.com/th/id/OIP.h5Dnm2eV7jzm2z8-1ig0iAHaDJ?o=7rm=3&rs=1&pid=ImgDetMain',
-          endDate: '2024-11-30'
-        }
-      ]
+      promotions: []
     }
   },
   onLoad() {
@@ -172,12 +144,45 @@ export default {
     async loadCreditCardInfo() {
       try {
         uni.showLoading({ title: '加载中...' })
-        this.creditCards = await getCreditCards()
         
-        // 模拟账单数据
-        this.billAmount = 12345.67
-        this.minPayment = this.billAmount * 0.1
-        this.paidAmount = 5000.00
+        // 从user.json获取信用卡数据
+        const users = uni.getStorageSync('users') || []
+        const currentUser = users.find(user => user.isLoggedIn)
+        
+        if (currentUser && currentUser.creditCards) {
+          this.creditCards = currentUser.creditCards
+          
+          // 计算账单数据
+          if (this.creditCards.length > 0) {
+            const firstCard = this.creditCards[0]
+            this.billAmount = firstCard.currentBalance || 0
+            this.minPayment = firstCard.minPayment || 0
+            this.paidAmount = 0
+          }
+        } else {
+          this.creditCards = []
+          this.billAmount = 0
+          this.minPayment = 0
+          this.paidAmount = 0
+        }
+        
+        // 加载促销活动数据
+        this.promotions = [
+          {
+            id: '1',
+            title: '餐饮消费满200减50',
+            desc: '指定餐厅刷卡消费享优惠',
+            image: 'https://thafd.bing.com/th/id/OIP.Qasbo_B7CgQZgQbJZQs43QHaCI?o=7rm=3&rs=1&pid=ImgDetMain',
+            endDate: '2024-12-31'
+          },
+          {
+            id: '2',
+            title: '周末加油9折优惠',
+            desc: '指定加油站刷卡加油享折扣',
+            image: 'https://thafd.bing.com/th/id/OIP.h5Dnm2eV7jzm2z8-1ig0iAHaDJ?o=7rm=3&rs=1&pid=ImgDetMain',
+            endDate: '2024-11-30'
+          }
+        ]
         
       } catch (error) {
         uni.showToast({
