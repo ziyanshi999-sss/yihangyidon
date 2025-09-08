@@ -321,7 +321,7 @@ export default {
 				if (users.length === 0) {
 					// 动态导入用户数据
 					import('@/data/users.js').then(module => {
-						const { users: importedUsers } = module
+						const importedUsers = module.users || module.getAllUsers()
 						this.displayCreditCards(importedUsers)
 					}).catch(error => {
 						console.error('导入用户数据失败:', error)
