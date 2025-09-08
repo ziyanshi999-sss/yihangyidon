@@ -820,7 +820,7 @@ if (uni.restoreGlobal) {
     }
     return target;
   };
-  const _sfc_main$o = {
+  const _sfc_main$q = {
     data() {
       return {
         loginType: "password",
@@ -937,7 +937,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$n(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$p(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "login-container" }, [
       vue.createCommentVNode(" 标题 "),
       vue.createElementVNode("view", { class: "title" }, "中国农业银行"),
@@ -1068,8 +1068,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesDengluLogin = /* @__PURE__ */ _export_sfc(_sfc_main$o, [["render", _sfc_render$n], ["__scopeId", "data-v-6f56e16f"], ["__file", "D:/项目/yihangyidon/src/pages/denglu/login.vue"]]);
-  const _sfc_main$n = {
+  const PagesDengluLogin = /* @__PURE__ */ _export_sfc(_sfc_main$q, [["render", _sfc_render$p], ["__scopeId", "data-v-6f56e16f"], ["__file", "D:/项目/yihangyidon/src/pages/denglu/login.vue"]]);
+  const _sfc_main$p = {
     data() {
       return {
         form: {
@@ -1263,7 +1263,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$m(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$o(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "register-container" }, [
       vue.createCommentVNode(" 标题 "),
       vue.createElementVNode("view", { class: "title" }, "注册账户"),
@@ -1456,13 +1456,14 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesRegisterRegister = /* @__PURE__ */ _export_sfc(_sfc_main$n, [["render", _sfc_render$m], ["__scopeId", "data-v-97bb96ad"], ["__file", "D:/项目/yihangyidon/src/pages/register/register.vue"]]);
-  const _sfc_main$m = {
+  const PagesRegisterRegister = /* @__PURE__ */ _export_sfc(_sfc_main$p, [["render", _sfc_render$o], ["__scopeId", "data-v-97bb96ad"], ["__file", "D:/项目/yihangyidon/src/pages/register/register.vue"]]);
+  const _sfc_main$o = {
     data() {
       return {
         isLoggedIn: false,
-        showMoreFunctions: false
-        // 控制更多功能按钮的显示/隐藏
+        showMoreFunctions: false,
+        showSearchSuggestions: false
+        // 控制搜索建议的显示/隐藏
       };
     },
     // 页面加载时检查登录状态
@@ -1478,13 +1479,29 @@ if (uni.restoreGlobal) {
       // 检查登录状态
       checkLoginStatus() {
         if (!forceCheckLogin()) {
-          formatAppLog("log", "at pages/index/index.vue:175", "首页：用户未登录，跳转到登录页面");
+          formatAppLog("log", "at pages/index/index.vue:215", "首页：用户未登录，跳转到登录页面");
           uni.reLaunch({
             url: "/pages/denglu/login"
           });
           return;
         }
         this.isLoggedIn = true;
+      },
+      // 新增：处理搜索框点击事件
+      handleSearchClick() {
+        this.showSearchSuggestions = true;
+      },
+      // 新增：点击其他区域关闭搜索建议
+      closeSearchSuggestions() {
+        this.showSearchSuggestions = false;
+      },
+      // 新增：显示功能开发提示
+      showFeatureTip(featureName) {
+        uni.showToast({
+          title: `${featureName}功能开发中`,
+          icon: "none",
+          duration: 2e3
+        });
       },
       // 处理转账按钮点击事件
       handleTransferClick() {
@@ -1573,7 +1590,7 @@ if (uni.restoreGlobal) {
           showFlash: true,
           // 成功扫码的回调
           success: (res) => {
-            formatAppLog("log", "at pages/index/index.vue:292", "扫码结果：", res);
+            formatAppLog("log", "at pages/index/index.vue:352", "扫码结果：", res);
             const result = res.result;
             if (result.startsWith("http")) {
               uni.showModal({
@@ -1610,7 +1627,7 @@ if (uni.restoreGlobal) {
           },
           // 扫码失败的回调
           fail: (err) => {
-            formatAppLog("error", "at pages/index/index.vue:340", "扫码失败：", err);
+            formatAppLog("error", "at pages/index/index.vue:400", "扫码失败：", err);
             if (err.errMsg !== "scanCode:fail cancel") {
               uni.showToast({
                 title: "扫码失败，请重试",
@@ -1637,115 +1654,141 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$l(_ctx, _cache, $props, $setup, $data, $options) {
-    return vue.openBlock(), vue.createElementBlock("view", { class: "home-container" }, [
+  function _sfc_render$n(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("view", {
+      class: "home-container",
+      onClick: _cache[29] || (_cache[29] = (...args) => $options.closeSearchSuggestions && $options.closeSearchSuggestions(...args))
+    }, [
       vue.createCommentVNode(" 顶部搜索栏 "),
       vue.createElementVNode("view", { class: "search-header" }, [
-        vue.createElementVNode("view", { class: "search-bar" }, [
+        vue.createElementVNode("view", {
+          class: "search-bar",
+          onClick: _cache[0] || (_cache[0] = vue.withModifiers((...args) => $options.handleSearchClick && $options.handleSearchClick(...args), ["stop"]))
+        }, [
           vue.createElementVNode("text", { class: "icon-search" }, "🔍"),
           vue.createElementVNode("text", { class: "search-text" }, "热门资讯")
         ]),
         vue.createElementVNode("view", { class: "header-icons" }, [
-          vue.createElementVNode("text", { class: "icon" }, "📱"),
-          vue.createElementVNode("text", { class: "icon" }, "👥"),
-          vue.createElementVNode("text", { class: "icon" }, "✉️")
+          vue.createElementVNode("text", {
+            class: "icon",
+            onClick: _cache[1] || (_cache[1] = vue.withModifiers(($event) => $options.showFeatureTip("消息"), ["stop"]))
+          }, "📱"),
+          vue.createElementVNode("text", {
+            class: "icon",
+            onClick: _cache[2] || (_cache[2] = vue.withModifiers(($event) => $options.showFeatureTip("联系人"), ["stop"]))
+          }, "👥"),
+          vue.createElementVNode("text", {
+            class: "icon",
+            onClick: _cache[3] || (_cache[3] = vue.withModifiers(($event) => $options.showFeatureTip("通知"), ["stop"]))
+          }, "✉️")
         ])
       ]),
+      vue.createCommentVNode(" 搜索建议弹窗 "),
+      $data.showSearchSuggestions ? (vue.openBlock(), vue.createElementBlock("view", {
+        key: 0,
+        class: "search-suggestions",
+        onClick: _cache[11] || (_cache[11] = vue.withModifiers(() => {
+        }, ["stop"]))
+      }, [
+        vue.createElementVNode("view", {
+          class: "suggestion-item",
+          onClick: _cache[4] || (_cache[4] = (...args) => $options.handleAccountClick && $options.handleAccountClick(...args))
+        }, [
+          vue.createElementVNode("text", null, "我的账户"),
+          vue.createElementVNode("text", { class: "arrow-right" }, "→")
+        ]),
+        vue.createElementVNode("view", {
+          class: "suggestion-item",
+          onClick: _cache[5] || (_cache[5] = (...args) => $options.handleTransferClick && $options.handleTransferClick(...args))
+        }, [
+          vue.createElementVNode("text", null, "转账"),
+          vue.createElementVNode("text", { class: "arrow-right" }, "→")
+        ]),
+        vue.createElementVNode("view", {
+          class: "suggestion-item",
+          onClick: _cache[6] || (_cache[6] = (...args) => $options.handleBalanceClick && $options.handleBalanceClick(...args))
+        }, [
+          vue.createElementVNode("text", null, "收支"),
+          vue.createElementVNode("text", { class: "arrow-right" }, "→")
+        ]),
+        vue.createElementVNode("view", {
+          class: "suggestion-item",
+          onClick: _cache[7] || (_cache[7] = (...args) => $options.handleCreditCardClick && $options.handleCreditCardClick(...args))
+        }, [
+          vue.createElementVNode("text", null, "信用卡"),
+          vue.createElementVNode("text", { class: "arrow-right" }, "→")
+        ]),
+        vue.createElementVNode("view", {
+          class: "suggestion-item",
+          onClick: _cache[8] || (_cache[8] = (...args) => $options.handleLoanClick && $options.handleLoanClick(...args))
+        }, [
+          vue.createElementVNode("text", null, "贷款"),
+          vue.createElementVNode("text", { class: "arrow-right" }, "→")
+        ]),
+        vue.createElementVNode("view", {
+          class: "suggestion-item",
+          onClick: _cache[9] || (_cache[9] = (...args) => $options.handleScanClick && $options.handleScanClick(...args))
+        }, [
+          vue.createElementVNode("text", null, "扫一扫"),
+          vue.createElementVNode("text", { class: "arrow-right" }, "→")
+        ]),
+        vue.createElementVNode("view", {
+          class: "suggestion-item",
+          onClick: _cache[10] || (_cache[10] = (...args) => $options.handleRechargeClick && $options.handleRechargeClick(...args))
+        }, [
+          vue.createElementVNode("text", null, "手机充值"),
+          vue.createElementVNode("text", { class: "arrow-right" }, "→")
+        ])
+      ])) : vue.createCommentVNode("v-if", true),
       vue.createCommentVNode(" 广告横幅 "),
       vue.createElementVNode("view", { class: "banner" }, [
-        vue.createElementVNode("text", { class: "banner-text" }, "您有5元掌银支付立减金"),
-        vue.createElementVNode("button", { class: "banner-btn" }, "去查看")
+        vue.createElementVNode("text", { class: "banner-text" }, "欢迎来到农业银行")
       ]),
-      vue.createCommentVNode(" 主要功能区 "),
+      vue.createCommentVNode(" 主要功能区 - 优化后的布局 "),
       vue.createElementVNode("view", { class: "function-area" }, [
+        vue.createCommentVNode(" 第一行：3个按钮 "),
         vue.createElementVNode("view", { class: "function-grid" }, [
           vue.createElementVNode("view", {
             class: "function-item",
-            onClick: _cache[0] || (_cache[0] = (...args) => $options.handleAccountClick && $options.handleAccountClick(...args))
+            onClick: _cache[12] || (_cache[12] = (...args) => $options.handleAccountClick && $options.handleAccountClick(...args))
           }, [
             vue.createElementVNode("view", { class: "function-icon icon-account" }, "👤"),
             vue.createElementVNode("text", { class: "function-text" }, "我的账户")
           ]),
           vue.createElementVNode("view", {
             class: "function-item",
-            onClick: _cache[1] || (_cache[1] = (...args) => $options.handleTransferClick && $options.handleTransferClick(...args))
+            onClick: _cache[13] || (_cache[13] = (...args) => $options.handleTransferClick && $options.handleTransferClick(...args))
           }, [
             vue.createElementVNode("view", { class: "function-icon icon-transfer" }, "↔️"),
             vue.createElementVNode("text", { class: "function-text" }, "转账")
           ]),
           vue.createElementVNode("view", {
             class: "function-item",
-            onClick: _cache[2] || (_cache[2] = (...args) => $options.handleBalanceClick && $options.handleBalanceClick(...args))
+            onClick: _cache[14] || (_cache[14] = (...args) => $options.handleBalanceClick && $options.handleBalanceClick(...args))
           }, [
             vue.createElementVNode("view", { class: "function-icon icon-balance" }, "📊"),
             vue.createElementVNode("text", { class: "function-text" }, "收支")
-          ]),
-          $data.showMoreFunctions ? (vue.openBlock(), vue.createElementBlock("view", {
-            key: 0,
-            class: "function-item",
-            onClick: _cache[3] || (_cache[3] = (...args) => $options.handleScanClick && $options.handleScanClick(...args))
-          }, [
-            vue.createElementVNode("view", { class: "function-icon icon-scan" }, "🔍"),
-            vue.createElementVNode("text", { class: "function-text" }, "扫一扫")
-          ])) : vue.createCommentVNode("v-if", true)
+          ])
         ]),
+        vue.createCommentVNode(" 第二行：3个按钮 "),
         vue.createElementVNode("view", { class: "function-grid" }, [
-          $data.showMoreFunctions ? (vue.openBlock(), vue.createElementBlock("view", {
-            key: 0,
+          vue.createElementVNode("view", {
             class: "function-item",
-            onClick: _cache[4] || (_cache[4] = (...args) => $options.handleCreditCardClick && $options.handleCreditCardClick(...args))
+            onClick: _cache[15] || (_cache[15] = (...args) => $options.handleCreditCardClick && $options.handleCreditCardClick(...args))
           }, [
             vue.createElementVNode("view", { class: "function-icon icon-card" }, "💳"),
             vue.createElementVNode("text", { class: "function-text" }, "信用卡")
-          ])) : vue.createCommentVNode("v-if", true),
-          $data.showMoreFunctions ? (vue.openBlock(), vue.createElementBlock("view", {
-            key: 1,
-            class: "function-item"
-          }, [
-            vue.createElementVNode("view", { class: "function-icon icon-deposit" }, "💰"),
-            vue.createElementVNode("text", { class: "function-text" }, "存款")
-          ])) : vue.createCommentVNode("v-if", true),
+          ]),
           vue.createElementVNode("view", {
             class: "function-item",
-            onClick: _cache[5] || (_cache[5] = (...args) => $options.scrollToHotActivities && $options.scrollToHotActivities(...args))
+            onClick: _cache[16] || (_cache[16] = (...args) => $options.scrollToHotActivities && $options.scrollToHotActivities(...args))
           }, [
             vue.createElementVNode("view", { class: "function-icon icon-activity" }, "🎉"),
             vue.createElementVNode("text", { class: "function-text" }, "热门活动")
           ]),
-          $data.showMoreFunctions ? (vue.openBlock(), vue.createElementBlock("view", {
-            key: 2,
-            class: "function-item"
-          }, [
-            vue.createElementVNode("view", { class: "function-icon icon-branch" }, "🏦"),
-            vue.createElementVNode("text", { class: "function-text" }, "网点查询")
-          ])) : vue.createCommentVNode("v-if", true),
-          $data.showMoreFunctions ? (vue.openBlock(), vue.createElementBlock("view", {
-            key: 3,
-            class: "function-item"
-          }, [
-            vue.createElementVNode("view", { class: "function-icon icon-electronic" }, "📱"),
-            vue.createElementVNode("text", { class: "function-text" }, "开通电子")
-          ])) : vue.createCommentVNode("v-if", true)
-        ]),
-        vue.createElementVNode("view", { class: "function-grid" }, [
-          $data.showMoreFunctions ? (vue.openBlock(), vue.createElementBlock("view", {
-            key: 0,
-            class: "function-item",
-            onClick: _cache[6] || (_cache[6] = (...args) => $options.handleLoanClick && $options.handleLoanClick(...args))
-          }, [
-            vue.createElementVNode("view", { class: "function-icon icon-loan" }, "💸"),
-            vue.createElementVNode("text", { class: "function-text" }, "贷款")
-          ])) : vue.createCommentVNode("v-if", true),
           vue.createElementVNode("view", {
             class: "function-item",
-            onClick: _cache[7] || (_cache[7] = (...args) => $options.handleRechargeClick && $options.handleRechargeClick(...args))
-          }, [
-            vue.createElementVNode("view", { class: "function-icon icon-topup" }, "📱"),
-            vue.createElementVNode("text", { class: "function-text" }, "手机充值")
-          ]),
-          vue.createElementVNode("view", {
-            class: "function-item",
-            onClick: _cache[8] || (_cache[8] = (...args) => $options.toggleMoreFunctions && $options.toggleMoreFunctions(...args))
+            onClick: _cache[17] || (_cache[17] = (...args) => $options.toggleMoreFunctions && $options.toggleMoreFunctions(...args))
           }, [
             vue.createElementVNode("view", { class: "function-icon icon-more" }, "•••"),
             vue.createElementVNode(
@@ -1756,16 +1799,74 @@ if (uni.restoreGlobal) {
               /* TEXT */
             )
           ])
-        ])
+        ]),
+        vue.createCommentVNode(" 点击全部后显示的按钮区域 "),
+        $data.showMoreFunctions ? (vue.openBlock(), vue.createElementBlock("view", {
+          key: 0,
+          class: "more-functions"
+        }, [
+          vue.createElementVNode("view", { class: "function-grid" }, [
+            vue.createElementVNode("view", {
+              class: "function-item",
+              onClick: _cache[18] || (_cache[18] = (...args) => $options.handleScanClick && $options.handleScanClick(...args))
+            }, [
+              vue.createElementVNode("view", { class: "function-icon icon-scan" }, "🔍"),
+              vue.createElementVNode("text", { class: "function-text" }, "扫一扫")
+            ]),
+            vue.createElementVNode("view", {
+              class: "function-item",
+              onClick: _cache[19] || (_cache[19] = ($event) => $options.showFeatureTip("存款"))
+            }, [
+              vue.createElementVNode("view", { class: "function-icon icon-deposit" }, "💰"),
+              vue.createElementVNode("text", { class: "function-text" }, "存款")
+            ]),
+            vue.createElementVNode("view", {
+              class: "function-item",
+              onClick: _cache[20] || (_cache[20] = ($event) => $options.showFeatureTip("网点查询"))
+            }, [
+              vue.createElementVNode("view", { class: "function-icon icon-branch" }, "🏦"),
+              vue.createElementVNode("text", { class: "function-text" }, "网点查询")
+            ])
+          ]),
+          vue.createElementVNode("view", { class: "function-grid" }, [
+            vue.createElementVNode("view", {
+              class: "function-item",
+              onClick: _cache[21] || (_cache[21] = (...args) => $options.handleLoanClick && $options.handleLoanClick(...args))
+            }, [
+              vue.createElementVNode("view", { class: "function-icon icon-loan" }, "💸"),
+              vue.createElementVNode("text", { class: "function-text" }, "贷款")
+            ]),
+            vue.createElementVNode("view", {
+              class: "function-item",
+              onClick: _cache[22] || (_cache[22] = (...args) => $options.handleRechargeClick && $options.handleRechargeClick(...args))
+            }, [
+              vue.createElementVNode("view", { class: "function-icon icon-topup" }, "📱"),
+              vue.createElementVNode("text", { class: "function-text" }, "手机充值")
+            ]),
+            vue.createElementVNode("view", {
+              class: "function-item",
+              onClick: _cache[23] || (_cache[23] = ($event) => $options.showFeatureTip("纪念币预约"))
+            }, [
+              vue.createElementVNode("view", { class: "function-icon icon-coin" }, "🪙"),
+              vue.createElementVNode("text", { class: "function-text" }, "纪念币预约")
+            ])
+          ])
+        ])) : vue.createCommentVNode("v-if", true)
       ]),
-      vue.createCommentVNode(" 待办事项 "),
-      vue.createElementVNode("view", { class: "todo-section" }, [
+      vue.createCommentVNode(" 其余内容保持不变 "),
+      vue.createElementVNode("view", {
+        class: "todo-section",
+        onClick: _cache[24] || (_cache[24] = ($event) => $options.showFeatureTip("待办"))
+      }, [
         vue.createElementVNode("text", { class: "section-title" }, "待办"),
         vue.createElementVNode("text", { class: "todo-content" }, "快来试试智能提醒吧~"),
         vue.createElementVNode("text", { class: "arrow-right" }, "➡️")
       ]),
       vue.createCommentVNode(" 头条新闻 "),
-      vue.createElementVNode("view", { class: "news-section" }, [
+      vue.createElementVNode("view", {
+        class: "news-section",
+        onClick: _cache[25] || (_cache[25] = ($event) => $options.showFeatureTip("新闻"))
+      }, [
         vue.createElementVNode("text", { class: "section-title" }, "头条"),
         vue.createElementVNode("text", { class: "news-content" }, "中信建投：REITs市场拐点已至 看好后..."),
         vue.createElementVNode("text", { class: "arrow-right" }, "➡️")
@@ -1782,7 +1883,7 @@ if (uni.restoreGlobal) {
           vue.createElementVNode("swiper-item", null, [
             vue.createElementVNode("view", { class: "swiper-item" }, [
               vue.createElementVNode("image", {
-                src: "https://thafd.bing.com/th/id/OIP.h5Dnm2eV7jzm2z8-1ig0iAHaDJ?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3",
+                src: "https://img95.699pic.com/xsj/0s/zy/o6.jpg!/fh/300",
                 class: "swiper-image",
                 mode: "aspectFill"
               }),
@@ -1792,7 +1893,7 @@ if (uni.restoreGlobal) {
           vue.createElementVNode("swiper-item", null, [
             vue.createElementVNode("view", { class: "swiper-item" }, [
               vue.createElementVNode("image", {
-                src: "https://thafd.bing.com/th/id/OIP.ShhOt-72lWZa7qJGwxoRBwHaDs?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3",
+                src: "https://img95.699pic.com/xsj/0s/4k/2x.jpg!/fh/300",
                 class: "swiper-image",
                 mode: "aspectFill"
               }),
@@ -1802,7 +1903,7 @@ if (uni.restoreGlobal) {
           vue.createElementVNode("swiper-item", null, [
             vue.createElementVNode("view", { class: "swiper-item" }, [
               vue.createElementVNode("image", {
-                src: "https://thafd.bing.com/th/id/OIP.Qasbo_B7CgQZgQbJZQs43QHaCI?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3",
+                src: "https://img95.699pic.com/xsj/0s/2p/t4.jpg!/fh/300",
                 class: "swiper-image",
                 mode: "aspectFill"
               }),
@@ -1812,7 +1913,10 @@ if (uni.restoreGlobal) {
         ])
       ]),
       vue.createCommentVNode(" 广告区域 "),
-      vue.createElementVNode("view", { class: "ad-section" }, [
+      vue.createElementVNode("view", {
+        class: "ad-section",
+        onClick: _cache[26] || (_cache[26] = ($event) => $options.showFeatureTip("一键绑卡"))
+      }, [
         vue.createElementVNode("view", { class: "ad-content" }, [
           vue.createElementVNode("text", { class: "ad-title" }, "一键绑卡"),
           vue.createElementVNode("text", { class: "ad-desc" }, "美好生活 乐享便捷支付"),
@@ -1829,18 +1933,24 @@ if (uni.restoreGlobal) {
       ]),
       vue.createCommentVNode(" 活动卡片 "),
       vue.createElementVNode("view", { class: "activity-cards" }, [
-        vue.createElementVNode("view", { class: "activity-card" }, [
+        vue.createElementVNode("view", {
+          class: "activity-card",
+          onClick: _cache[27] || (_cache[27] = ($event) => $options.showFeatureTip("星级福利"))
+        }, [
           vue.createElementVNode("text", { class: "card-title" }, "星级福利"),
           vue.createElementVNode("text", { class: "card-desc" }, "月度福利领取活动")
         ]),
-        vue.createElementVNode("view", { class: "activity-card" }, [
+        vue.createElementVNode("view", {
+          class: "activity-card",
+          onClick: _cache[28] || (_cache[28] = ($event) => $options.showFeatureTip("品牌优惠券"))
+        }, [
           vue.createElementVNode("text", { class: "card-title" }, "超多彩品牌优惠券"),
           vue.createElementVNode("text", { class: "card-desc" }, "折扣低至5.5折")
         ])
       ])
     ]);
   }
-  const PagesIndexIndex = /* @__PURE__ */ _export_sfc(_sfc_main$m, [["render", _sfc_render$l], ["__scopeId", "data-v-83a5a03c"], ["__file", "D:/项目/yihangyidon/src/pages/index/index.vue"]]);
+  const PagesIndexIndex = /* @__PURE__ */ _export_sfc(_sfc_main$o, [["render", _sfc_render$n], ["__scopeId", "data-v-83a5a03c"], ["__file", "D:/项目/yihangyidon/src/pages/index/index.vue"]]);
   const scriptRel = "modulepreload";
   const assetsURL = function(dep) {
     return "/" + dep;
@@ -1890,256 +2000,279 @@ if (uni.restoreGlobal) {
       }
     });
   };
-  const THEME_KEY = "app_theme";
-  const themes$1 = {
-    light: {
-      id: "light",
-      name: "浅色主题",
-      colors: {
-        primary: "#4caf50",
-        primaryDark: "#2e7d32",
-        background: "#f5f5f5",
-        surface: "#ffffff",
-        surfaceVariant: "#f8f9fa",
-        text: "#333333",
-        textSecondary: "#666666",
-        border: "#e0e0e0",
-        borderLight: "#f0f0f0",
-        success: "#4caf50",
-        warning: "#ff9800",
-        error: "#f44336",
-        info: "#2196f3"
-      },
-      gradients: {
-        primary: "linear-gradient(135deg, #4caf50 0%, #2e7d32 100%)"
+  function isPlatinumVip(userInfo) {
+    if (!userInfo || !userInfo.creditCards || !Array.isArray(userInfo.creditCards)) {
+      return false;
+    }
+    const hasPlatinumCard = userInfo.creditCards.some(
+      (card) => card.cardType === "白金卡" || card.cardType === "钻石卡"
+    );
+    const hasHighBalance = userInfo.balance >= 5e5;
+    const hasHighCreditLimit = userInfo.creditCards.some(
+      (card) => card.creditLimit >= 1e5
+    );
+    return hasPlatinumCard || hasHighBalance || hasHighCreditLimit;
+  }
+  function canAccessPlatinumHotline(userInfo) {
+    return isPlatinumVip(userInfo);
+  }
+  const _sfc_main$n = {
+    name: "ServiceModal",
+    props: {
+      visible: {
+        type: Boolean,
+        default: false
       }
     },
-    dark: {
-      id: "dark",
-      name: "深色主题",
-      colors: {
-        primary: "#66bb6a",
-        primaryDark: "#4caf50",
-        background: "#121212",
-        surface: "#1e1e1e",
-        surfaceVariant: "#2d2d2d",
-        text: "#ffffff",
-        textSecondary: "#b3b3b3",
-        border: "#333333",
-        borderLight: "#2d2d2d",
-        success: "#66bb6a",
-        warning: "#ffb74d",
-        error: "#f44336",
-        info: "#42a5f5"
-      },
-      gradients: {
-        primary: "linear-gradient(135deg, #66bb6a 0%, #4caf50 100%)"
+    data() {
+      return {
+        showPhoneList: false,
+        // 拖动相关
+        dragOffset: 0,
+        startY: 0,
+        isDragging: false,
+        dragThreshold: 100
+        // 拖动阈值，超过此距离关闭弹窗
+      };
+    },
+    computed: {
+      // 检查当前用户是否可以访问白金贵宾专线
+      canAccessPlatinum() {
+        const userInfo = getUserInfo();
+        return canAccessPlatinumHotline(userInfo);
       }
     },
-    blue: {
-      id: "blue",
-      name: "蓝色主题",
-      colors: {
-        primary: "#2196f3",
-        primaryDark: "#1976d2",
-        background: "#f3f7ff",
-        surface: "#ffffff",
-        surfaceVariant: "#f8faff",
-        text: "#333333",
-        textSecondary: "#666666",
-        border: "#e3f2fd",
-        borderLight: "#f0f7ff",
-        success: "#4caf50",
-        warning: "#ff9800",
-        error: "#f44336",
-        info: "#2196f3"
+    methods: {
+      // 关闭弹窗
+      closeModal() {
+        this.showPhoneList = false;
+        this.dragOffset = 0;
+        this.$emit("close");
       },
-      gradients: {
-        primary: "linear-gradient(135deg, #2196f3 0%, #1976d2 100%)"
-      }
-    },
-    purple: {
-      id: "purple",
-      name: "紫色主题",
-      colors: {
-        primary: "#9c27b0",
-        primaryDark: "#7b1fa2",
-        background: "#faf5ff",
-        surface: "#ffffff",
-        surfaceVariant: "#f8f4ff",
-        text: "#333333",
-        textSecondary: "#666666",
-        border: "#e1bee7",
-        borderLight: "#f3e5f5",
-        success: "#4caf50",
-        warning: "#ff9800",
-        error: "#f44336",
-        info: "#2196f3"
+      // 拖动开始
+      onTouchStart(e) {
+        this.startY = e.touches[0].clientY;
+        this.isDragging = true;
       },
-      gradients: {
-        primary: "linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%)"
+      // 拖动中
+      onTouchMove(e) {
+        if (!this.isDragging)
+          return;
+        const currentY = e.touches[0].clientY;
+        const deltaY = currentY - this.startY;
+        if (deltaY > 0) {
+          this.dragOffset = deltaY;
+        }
+      },
+      // 拖动结束
+      onTouchEnd() {
+        if (!this.isDragging)
+          return;
+        this.isDragging = false;
+        if (this.dragOffset > this.dragThreshold) {
+          this.closeModal();
+        } else {
+          this.dragOffset = 0;
+        }
+      },
+      // 跳转到AI客服
+      goToAIService() {
+        this.closeModal();
+        uni.navigateTo({
+          url: "/pages/service/chat"
+        });
+      },
+      // 显示电话选项
+      showPhoneOptions() {
+        this.showPhoneList = !this.showPhoneList;
+      },
+      // 拨打电话
+      callService(phoneNumber) {
+        if (phoneNumber === "4006195599" && !this.canAccessPlatinum) {
+          uni.showModal({
+            title: "权限不足",
+            content: "白金贵宾专线仅限白金卡或钻石卡用户使用。您可以通过申请白金卡来获得此服务。",
+            showCancel: false,
+            confirmText: "我知道了"
+          });
+          return;
+        }
+        uni.showModal({
+          title: "拨打电话",
+          content: `确定要拨打 ${phoneNumber} 吗？`,
+          success: (res) => {
+            if (res.confirm) {
+              uni.makePhoneCall({
+                phoneNumber,
+                success: () => {
+                  formatAppLog("log", "at components/common/ServiceModal.vue:196", "拨打电话成功");
+                },
+                fail: (err) => {
+                  formatAppLog("error", "at components/common/ServiceModal.vue:199", "拨打电话失败:", err);
+                  uni.showToast({
+                    title: "拨打电话失败",
+                    icon: "none"
+                  });
+                }
+              });
+            }
+          }
+        });
       }
     }
   };
-  class SimpleThemeManager {
-    constructor() {
-      this.currentTheme = this.getStoredTheme();
-      this.listeners = [];
-    }
-    // 获取存储的主题
-    getStoredTheme() {
-      try {
-        return uni.getStorageSync(THEME_KEY) || "light";
-      } catch (error) {
-        formatAppLog("error", "at utils/simple-theme.js:108", "获取主题失败:", error);
-        return "light";
-      }
-    }
-    // 存储主题
-    setStoredTheme(themeId) {
-      try {
-        uni.setStorageSync(THEME_KEY, themeId);
-      } catch (error) {
-        formatAppLog("error", "at utils/simple-theme.js:118", "存储主题失败:", error);
-      }
-    }
-    // 获取当前主题
-    getCurrentTheme() {
-      return themes$1[this.currentTheme] || themes$1.light;
-    }
-    // 获取当前主题ID
-    getCurrentThemeId() {
-      return this.currentTheme;
-    }
-    // 切换主题
-    switchTheme(themeId) {
-      if (themes$1[themeId]) {
-        this.currentTheme = themeId;
-        this.setStoredTheme(themeId);
-        this.notifyListeners(themes$1[themeId]);
-        formatAppLog("log", "at utils/simple-theme.js:138", "主题已切换为:", themes$1[themeId].name);
-      } else {
-        formatAppLog("error", "at utils/simple-theme.js:140", "主题不存在:", themeId);
-      }
-    }
-    // 获取所有主题
-    getAllThemes() {
-      return Object.values(themes$1);
-    }
-    // 添加监听器
-    addThemeListener(callback) {
-      this.listeners.push(callback);
-    }
-    // 移除监听器
-    removeThemeListener(callback) {
-      const index = this.listeners.indexOf(callback);
-      if (index > -1) {
-        this.listeners.splice(index, 1);
-      }
-    }
-    // 通知监听器
-    notifyListeners(theme) {
-      this.listeners.forEach((callback) => {
-        try {
-          callback(theme);
-        } catch (error) {
-          formatAppLog("error", "at utils/simple-theme.js:168", "主题监听器执行失败:", error);
-        }
-      });
-    }
+  function _sfc_render$m(_ctx, _cache, $props, $setup, $data, $options) {
+    return $props.visible ? (vue.openBlock(), vue.createElementBlock("view", {
+      key: 0,
+      class: "service-modal",
+      onClick: _cache[10] || (_cache[10] = (...args) => $options.closeModal && $options.closeModal(...args))
+    }, [
+      vue.createElementVNode(
+        "view",
+        {
+          class: "modal-content",
+          onClick: _cache[6] || (_cache[6] = vue.withModifiers(() => {
+          }, ["stop"])),
+          onTouchstart: _cache[7] || (_cache[7] = (...args) => $options.onTouchStart && $options.onTouchStart(...args)),
+          onTouchmove: _cache[8] || (_cache[8] = (...args) => $options.onTouchMove && $options.onTouchMove(...args)),
+          onTouchend: _cache[9] || (_cache[9] = (...args) => $options.onTouchEnd && $options.onTouchEnd(...args)),
+          style: vue.normalizeStyle({ transform: `translateY(${$data.dragOffset}px)` })
+        },
+        [
+          vue.createCommentVNode(" 拖动指示器 "),
+          vue.createElementVNode("view", { class: "drag-indicator" }),
+          vue.createElementVNode("view", { class: "modal-header" }, [
+            vue.createElementVNode("text", { class: "modal-title" }, "联系客服"),
+            vue.createElementVNode("text", {
+              class: "close-btn",
+              onClick: _cache[0] || (_cache[0] = (...args) => $options.closeModal && $options.closeModal(...args))
+            }, "×")
+          ]),
+          vue.createElementVNode("view", { class: "service-options" }, [
+            vue.createCommentVNode(" AI智能客服 "),
+            vue.createElementVNode("view", {
+              class: "service-item ai-service",
+              onClick: _cache[1] || (_cache[1] = (...args) => $options.goToAIService && $options.goToAIService(...args))
+            }, [
+              vue.createElementVNode("view", { class: "service-icon" }, "🤖"),
+              vue.createElementVNode("view", { class: "service-info" }, [
+                vue.createElementVNode("text", { class: "service-title" }, "AI智能客服"),
+                vue.createElementVNode("text", { class: "service-desc" }, "24小时在线，快速解答问题")
+              ]),
+              vue.createElementVNode("text", { class: "service-arrow" }, ">")
+            ]),
+            vue.createCommentVNode(" 电话客服 "),
+            vue.createElementVNode("view", {
+              class: "service-item phone-service",
+              onClick: _cache[2] || (_cache[2] = (...args) => $options.showPhoneOptions && $options.showPhoneOptions(...args))
+            }, [
+              vue.createElementVNode("view", { class: "service-icon" }, "📞"),
+              vue.createElementVNode("view", { class: "service-info" }, [
+                vue.createElementVNode("text", { class: "service-title" }, "电话客服"),
+                vue.createElementVNode("text", { class: "service-desc" }, "人工服务，专业解答")
+              ]),
+              vue.createElementVNode("text", { class: "service-arrow" }, ">")
+            ])
+          ]),
+          vue.createCommentVNode(" 电话客服选项 "),
+          $data.showPhoneList ? (vue.openBlock(), vue.createElementBlock("view", {
+            key: 0,
+            class: "phone-options"
+          }, [
+            vue.createElementVNode("view", { class: "phone-section" }, [
+              vue.createElementVNode("text", { class: "phone-section-title" }, "客服热线"),
+              vue.createElementVNode("view", { class: "phone-list" }, [
+                vue.createElementVNode("view", {
+                  class: "phone-item",
+                  onClick: _cache[3] || (_cache[3] = ($event) => $options.callService("95599"))
+                }, [
+                  vue.createElementVNode("view", { class: "phone-info" }, [
+                    vue.createElementVNode("text", { class: "phone-title" }, "全国客服热线"),
+                    vue.createElementVNode("text", { class: "phone-number" }, "95599"),
+                    vue.createElementVNode("text", { class: "phone-desc" }, "7×24小时全天候服务"),
+                    vue.createElementVNode("text", { class: "phone-feature" }, "支持智能语音识别")
+                  ]),
+                  vue.createElementVNode("view", { class: "call-btn" }, [
+                    vue.createElementVNode("text", { class: "call-icon" }, "📞")
+                  ])
+                ]),
+                vue.createElementVNode("view", {
+                  class: "phone-item",
+                  onClick: _cache[4] || (_cache[4] = ($event) => $options.callService("4006695599"))
+                }, [
+                  vue.createElementVNode("view", { class: "phone-info" }, [
+                    vue.createElementVNode("text", { class: "phone-title" }, "信用卡专线"),
+                    vue.createElementVNode("text", { class: "phone-number" }, "4006695599"),
+                    vue.createElementVNode("text", { class: "phone-desc" }, "账单分期、积分兑换等"),
+                    vue.createElementVNode("text", { class: "phone-feature" }, "专属信用卡服务")
+                  ]),
+                  vue.createElementVNode("view", { class: "call-btn" }, [
+                    vue.createElementVNode("text", { class: "call-icon" }, "📞")
+                  ])
+                ]),
+                vue.createCommentVNode(" 白金贵宾专线 - 所有用户都可见 "),
+                vue.createElementVNode("view", {
+                  class: "phone-item",
+                  onClick: _cache[5] || (_cache[5] = ($event) => $options.callService("4006195599"))
+                }, [
+                  vue.createElementVNode("view", { class: "phone-info" }, [
+                    vue.createElementVNode("text", { class: "phone-title" }, "白金贵宾专线"),
+                    vue.createElementVNode("text", { class: "phone-number" }, "4006195599"),
+                    vue.createElementVNode("text", { class: "phone-desc" }, "高端客户优先服务"),
+                    vue.createElementVNode("text", { class: "phone-feature" }, "VIP专属通道")
+                  ]),
+                  vue.createElementVNode("view", { class: "call-btn platinum-btn" }, [
+                    vue.createElementVNode("text", { class: "call-icon" }, "💎")
+                  ])
+                ])
+              ])
+            ]),
+            vue.createElementVNode("view", { class: "phone-tips" }, [
+              vue.createElementVNode("text", { class: "tips-title" }, "💡 使用提示"),
+              vue.createElementVNode("text", { class: "tips-text" }, '• 拨打95599后，可直接说出"投诉"或"人工服务"'),
+              vue.createElementVNode("text", { class: "tips-text" }, "• 支持按键转接，按0转人工客服"),
+              $options.canAccessPlatinum ? (vue.openBlock(), vue.createElementBlock("text", {
+                key: 0,
+                class: "tips-text"
+              }, "• 您已开通白金贵宾专线服务")) : (vue.openBlock(), vue.createElementBlock("text", {
+                key: 1,
+                class: "tips-text"
+              }, "• 白金贵宾专线需持有白金卡或钻石卡"))
+            ])
+          ])) : vue.createCommentVNode("v-if", true)
+        ],
+        36
+        /* STYLE, NEED_HYDRATION */
+      )
+    ])) : vue.createCommentVNode("v-if", true);
   }
-  const themeManager$1 = new SimpleThemeManager();
-  function getThemeStyles() {
-    const theme = themeManager$1.getCurrentTheme();
-    return {
-      // 背景色
-      background: {
-        backgroundColor: theme.colors.background
-      },
-      surface: {
-        backgroundColor: theme.colors.surface
-      },
-      surfaceVariant: {
-        backgroundColor: theme.colors.surfaceVariant
-      },
-      // 文字颜色
-      text: {
-        color: theme.colors.text
-      },
-      textSecondary: {
-        color: theme.colors.textSecondary
-      },
-      // 边框
-      border: {
-        borderColor: theme.colors.border
-      },
-      borderLight: {
-        borderColor: theme.colors.borderLight
-      },
-      // 主色调
-      primary: {
-        color: theme.colors.primary
-      },
-      primaryBg: {
-        backgroundColor: theme.colors.primary
-      },
-      primaryGradient: {
-        background: `linear-gradient(135deg, ${theme.colors.primaryDark} 0%, ${theme.colors.primary} 100%)`
-      },
-      // 状态颜色
-      success: {
-        color: theme.colors.success
-      },
-      successBg: {
-        backgroundColor: theme.colors.success
-      },
-      warning: {
-        color: theme.colors.warning
-      },
-      warningBg: {
-        backgroundColor: theme.colors.warning
-      },
-      error: {
-        color: theme.colors.error
-      },
-      errorBg: {
-        backgroundColor: theme.colors.error
-      },
-      info: {
-        color: theme.colors.info
-      },
-      infoBg: {
-        backgroundColor: theme.colors.info
-      }
-    };
-  }
-  const _sfc_main$l = {
+  const ServiceModal = /* @__PURE__ */ _export_sfc(_sfc_main$n, [["render", _sfc_render$m], ["__scopeId", "data-v-1f8e1b4e"], ["__file", "D:/项目/yihangyidon/src/components/common/ServiceModal.vue"]]);
+  const _sfc_main$m = {
+    components: {
+      ServiceModal
+    },
     data() {
       return {
         userInfo: null,
-        currentTheme: themeManager$1.getCurrentTheme(),
-        // 获取当前主题
-        themeStyles: getThemeStyles()
-        // 获取主题样式
+        showServiceModal: false
       };
     },
     onShow() {
       try {
         if (!forceCheckLogin()) {
-          formatAppLog("log", "at pages/user/user.vue:173", "个人中心：用户未登录，跳转到登录页面");
+          formatAppLog("log", "at pages/user/user.vue:167", "个人中心：用户未登录，跳转到登录页面");
           uni.reLaunch({
             url: "/pages/denglu/login",
             fail: (error) => {
-              formatAppLog("error", "at pages/user/user.vue:177", "个人中心跳转失败:", error);
+              formatAppLog("error", "at pages/user/user.vue:171", "个人中心跳转失败:", error);
               uni.navigateTo({ url: "/pages/denglu/login" });
             }
           });
           return;
         }
         this.checkLoginStatus();
-        this.loadTheme();
       } catch (error) {
-        formatAppLog("error", "at pages/user/user.vue:187", "个人中心onShow检查失败:", error);
+        formatAppLog("error", "at pages/user/user.vue:180", "个人中心onShow检查失败:", error);
         uni.reLaunch({
           url: "/pages/denglu/login",
           fail: () => {
@@ -2149,19 +2282,8 @@ if (uni.restoreGlobal) {
       }
     },
     mounted() {
-      themeManager$1.addThemeListener(this.onThemeChanged);
-    },
-    beforeDestroy() {
-      themeManager$1.removeThemeListener(this.onThemeChanged);
     },
     methods: {
-      // 主题变化回调
-      onThemeChanged(theme) {
-        formatAppLog("log", "at pages/user/user.vue:210", "主题变化回调:", theme);
-        this.currentTheme = theme;
-        this.themeStyles = getThemeStyles();
-        this.$forceUpdate();
-      },
       // 检查登录状态
       checkLoginStatus() {
         const userInfo = getUserInfo();
@@ -2225,10 +2347,11 @@ if (uni.restoreGlobal) {
         });
       },
       goToContact() {
-        uni.showToast({
-          title: "联系客服",
-          icon: "none"
-        });
+        this.showServiceModal = true;
+      },
+      // 关闭客服弹窗
+      closeServiceModal() {
+        this.showServiceModal = false;
       },
       // 查看退出记录
       viewLogoutHistory() {
@@ -2254,7 +2377,7 @@ if (uni.restoreGlobal) {
             confirmText: "确定"
           });
         } catch (error) {
-          formatAppLog("error", "at pages/user/user.vue:315", "查看退出记录失败:", error);
+          formatAppLog("error", "at pages/user/user.vue:297", "查看退出记录失败:", error);
           uni.showToast({
             title: "查看记录失败",
             icon: "none"
@@ -2277,7 +2400,7 @@ if (uni.restoreGlobal) {
               const { users: importedUsers } = module;
               this.displayCreditCards(importedUsers);
             }).catch((error) => {
-              formatAppLog("error", "at pages/user/user.vue:345", "导入用户数据失败:", error);
+              formatAppLog("error", "at pages/user/user.vue:327", "导入用户数据失败:", error);
               uni.showToast({
                 title: "获取数据失败",
                 icon: "none"
@@ -2287,7 +2410,7 @@ if (uni.restoreGlobal) {
           }
           this.displayCreditCards(users2);
         } catch (error) {
-          formatAppLog("error", "at pages/user/user.vue:356", "获取信用卡信息失败:", error);
+          formatAppLog("error", "at pages/user/user.vue:338", "获取信用卡信息失败:", error);
           uni.showToast({
             title: "获取数据失败",
             icon: "none"
@@ -2370,61 +2493,9 @@ if (uni.restoreGlobal) {
         });
       },
       goToHelp() {
-        uni.showToast({
-          title: "帮助中心",
-          icon: "none"
+        uni.navigateTo({
+          url: "/pages/help/help-center"
         });
-      },
-      // 加载主题设置
-      loadTheme() {
-        this.currentTheme = themeManager$1.getCurrentTheme();
-      },
-      // 获取主题显示名称
-      getThemeDisplayName(theme) {
-        if (theme && typeof theme === "object" && theme.name) {
-          return theme.name;
-        }
-        const themeNames = {
-          "light": "浅色主题",
-          "dark": "深色主题",
-          "blue": "蓝色主题",
-          "purple": "紫色主题"
-        };
-        return themeNames[theme] || "浅色主题";
-      },
-      // 切换主题
-      toggleTheme() {
-        try {
-          formatAppLog("log", "at pages/user/user.vue:485", "开始切换主题...");
-          formatAppLog("log", "at pages/user/user.vue:486", "当前主题对象:", this.currentTheme);
-          const themes2 = themeManager$1.getAllThemes();
-          formatAppLog("log", "at pages/user/user.vue:490", "所有可用主题:", themes2);
-          const currentThemeId = this.currentTheme.id || this.currentTheme;
-          formatAppLog("log", "at pages/user/user.vue:493", "当前主题ID:", currentThemeId);
-          const currentIndex = themes2.findIndex((theme) => theme.id === currentThemeId);
-          formatAppLog("log", "at pages/user/user.vue:496", "当前主题索引:", currentIndex);
-          const nextIndex = (currentIndex + 1) % themes2.length;
-          const newTheme = themes2[nextIndex];
-          formatAppLog("log", "at pages/user/user.vue:500", "下一个主题:", newTheme);
-          themeManager$1.switchTheme(newTheme.id);
-          formatAppLog("log", "at pages/user/user.vue:504", "主题管理器切换完成");
-          this.currentTheme = newTheme;
-          this.themeStyles = getThemeStyles();
-          formatAppLog("log", "at pages/user/user.vue:509", "本地状态更新完成");
-          uni.showToast({
-            title: `已切换到${newTheme.name}`,
-            icon: "success",
-            duration: 1500
-          });
-          this.$forceUpdate();
-          formatAppLog("log", "at pages/user/user.vue:520", "页面强制更新完成");
-        } catch (error) {
-          formatAppLog("error", "at pages/user/user.vue:522", "主题切换失败:", error);
-          uni.showToast({
-            title: "主题切换失败",
-            icon: "none"
-          });
-        }
       },
       // 查看头像
       viewAvatar() {
@@ -2439,7 +2510,7 @@ if (uni.restoreGlobal) {
           urls: [this.userInfo.avatar],
           current: this.userInfo.avatar,
           fail: (error) => {
-            formatAppLog("error", "at pages/user/user.vue:545", "预览头像失败:", error);
+            formatAppLog("error", "at pages/user/user.vue:458", "预览头像失败:", error);
             uni.showToast({
               title: "预览失败",
               icon: "none"
@@ -2449,307 +2520,230 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$k(_ctx, _cache, $props, $setup, $data, $options) {
-    return vue.openBlock(), vue.createElementBlock(
-      "view",
-      {
-        class: "user-page",
-        style: vue.normalizeStyle($data.themeStyles.backgroundColor)
-      },
-      [
-        vue.createCommentVNode(" 顶部背景 "),
-        vue.createElementVNode(
-          "view",
-          {
-            class: "header-bg",
-            style: vue.normalizeStyle($data.themeStyles.primaryGradient)
-          },
-          null,
-          4
-          /* STYLE */
-        ),
-        vue.createCommentVNode(" 用户信息卡片 "),
-        $data.userInfo ? (vue.openBlock(), vue.createElementBlock(
-          "view",
-          {
-            key: 0,
-            class: "user-card",
-            style: vue.normalizeStyle($data.themeStyles.surface)
-          },
-          [
-            vue.createElementVNode("view", { class: "user-info" }, [
-              vue.createElementVNode("view", { class: "avatar-section" }, [
-                vue.createElementVNode("view", {
-                  class: "avatar",
-                  onClick: _cache[0] || (_cache[0] = (...args) => $options.viewAvatar && $options.viewAvatar(...args))
-                }, [
-                  vue.createElementVNode("image", {
-                    src: $data.userInfo.avatar || "/static/default-avatar.png",
-                    mode: "aspectFill"
-                  }, null, 8, ["src"]),
-                  vue.createElementVNode("view", { class: "avatar-view-overlay" }, [
-                    vue.createElementVNode("text", { class: "view-icon" }, "👁️")
-                  ])
-                ]),
-                vue.createElementVNode("view", { class: "user-details" }, [
-                  vue.createElementVNode(
-                    "text",
-                    { class: "username" },
-                    vue.toDisplayString($data.userInfo.nickname || $data.userInfo.username),
-                    1
-                    /* TEXT */
-                  ),
-                  vue.createElementVNode("text", { class: "user-level" }, "VIP客户")
-                ])
-              ]),
-              vue.createElementVNode("view", { class: "account-info" }, [
-                vue.createElementVNode("text", { class: "account-label" }, "账户余额"),
-                vue.createElementVNode("text", { class: "account-balance" }, "¥ 12,580.00")
+  function _sfc_render$l(_ctx, _cache, $props, $setup, $data, $options) {
+    const _component_ServiceModal = vue.resolveComponent("ServiceModal");
+    return vue.openBlock(), vue.createElementBlock("view", { class: "user-page" }, [
+      vue.createCommentVNode(" 顶部背景 "),
+      vue.createElementVNode("view", { class: "header-bg" }),
+      vue.createCommentVNode(" 用户信息卡片 "),
+      $data.userInfo ? (vue.openBlock(), vue.createElementBlock("view", {
+        key: 0,
+        class: "user-card"
+      }, [
+        vue.createElementVNode("view", { class: "user-info" }, [
+          vue.createElementVNode("view", { class: "avatar-section" }, [
+            vue.createElementVNode("view", {
+              class: "avatar",
+              onClick: _cache[0] || (_cache[0] = (...args) => $options.viewAvatar && $options.viewAvatar(...args))
+            }, [
+              vue.createElementVNode("image", {
+                src: $data.userInfo.avatar || "/static/default-avatar.png",
+                mode: "aspectFill"
+              }, null, 8, ["src"]),
+              vue.createElementVNode("view", { class: "avatar-view-overlay" }, [
+                vue.createElementVNode("text", { class: "view-icon" }, "👁️")
               ])
+            ]),
+            vue.createElementVNode("view", { class: "user-details" }, [
+              vue.createElementVNode(
+                "text",
+                { class: "username" },
+                vue.toDisplayString($data.userInfo.nickname || $data.userInfo.username),
+                1
+                /* TEXT */
+              ),
+              vue.createElementVNode("text", { class: "user-level" }, "VIP客户")
             ])
-          ],
-          4
-          /* STYLE */
-        )) : (vue.openBlock(), vue.createElementBlock(
-          vue.Fragment,
-          { key: 1 },
-          [
-            vue.createCommentVNode(" 未登录状态 "),
-            vue.createElementVNode(
-              "view",
-              {
-                class: "login-card",
-                style: vue.normalizeStyle($data.themeStyles.surface)
-              },
-              [
-                vue.createElementVNode("view", { class: "login-content" }, [
-                  vue.createElementVNode("text", { class: "login-title" }, "欢迎使用农业银行"),
-                  vue.createElementVNode("text", { class: "login-subtitle" }, "请登录您的账户"),
-                  vue.createElementVNode("button", {
-                    class: "login-btn",
-                    onClick: _cache[1] || (_cache[1] = (...args) => $options.goToLogin && $options.goToLogin(...args))
-                  }, "立即登录")
-                ])
-              ],
-              4
-              /* STYLE */
-            )
-          ],
-          2112
-          /* STABLE_FRAGMENT, DEV_ROOT_FRAGMENT */
-        )),
-        vue.createCommentVNode(" 快捷功能 "),
-        $data.userInfo ? (vue.openBlock(), vue.createElementBlock(
-          "view",
-          {
-            key: 2,
-            class: "quick-functions",
-            style: vue.normalizeStyle($data.themeStyles.surface)
-          },
-          [
-            vue.createElementVNode("view", { class: "function-grid" }, [
-              vue.createElementVNode("view", {
-                class: "function-item",
-                onClick: _cache[2] || (_cache[2] = (...args) => $options.goToTransfer && $options.goToTransfer(...args))
-              }, [
-                vue.createElementVNode("view", { class: "function-icon transfer-icon" }, "💳"),
-                vue.createElementVNode("text", { class: "function-text" }, "转账")
-              ]),
-              vue.createElementVNode("view", {
-                class: "function-item",
-                onClick: _cache[3] || (_cache[3] = (...args) => $options.goToPayment && $options.goToPayment(...args))
-              }, [
-                vue.createElementVNode("view", { class: "function-icon payment-icon" }, "💰"),
-                vue.createElementVNode("text", { class: "function-text" }, "缴费")
-              ]),
-              vue.createElementVNode("view", {
-                class: "function-item",
-                onClick: _cache[4] || (_cache[4] = (...args) => $options.goToInvestment && $options.goToInvestment(...args))
-              }, [
-                vue.createElementVNode("view", { class: "function-icon investment-icon" }, "📈"),
-                vue.createElementVNode("text", { class: "function-text" }, "理财")
-              ]),
-              vue.createElementVNode("view", {
-                class: "function-item",
-                onClick: _cache[5] || (_cache[5] = (...args) => $options.goToCredit && $options.goToCredit(...args))
-              }, [
-                vue.createElementVNode("view", { class: "function-icon credit-icon" }, "💳"),
-                vue.createElementVNode("text", { class: "function-text" }, "信用卡")
-              ])
-            ])
-          ],
-          4
-          /* STYLE */
-        )) : vue.createCommentVNode("v-if", true),
-        vue.createCommentVNode(" 功能菜单 "),
-        $data.userInfo ? (vue.openBlock(), vue.createElementBlock("view", {
-          key: 3,
-          class: "menu-sections"
-        }, [
-          vue.createCommentVNode(" 账户管理 "),
-          vue.createElementVNode(
-            "view",
-            {
-              class: "menu-section",
-              style: vue.normalizeStyle($data.themeStyles.surface)
-            },
-            [
-              vue.createElementVNode("view", { class: "section-title" }, "账户管理"),
-              vue.createElementVNode("view", { class: "menu-list" }, [
-                vue.createElementVNode("view", {
-                  class: "menu-item",
-                  onClick: _cache[6] || (_cache[6] = (...args) => $options.goToAccount && $options.goToAccount(...args))
-                }, [
-                  vue.createElementVNode("view", { class: "menu-left" }, [
-                    vue.createElementVNode("text", { class: "menu-icon" }, "🏦"),
-                    vue.createElementVNode("text", { class: "menu-text" }, "我的账户")
-                  ]),
-                  vue.createElementVNode("text", { class: "arrow" }, ">")
-                ]),
-                vue.createElementVNode("view", {
-                  class: "menu-item",
-                  onClick: _cache[7] || (_cache[7] = (...args) => $options.goToCards && $options.goToCards(...args))
-                }, [
-                  vue.createElementVNode("view", { class: "menu-left" }, [
-                    vue.createElementVNode("text", { class: "menu-icon" }, "💳"),
-                    vue.createElementVNode("text", { class: "menu-text" }, "我的卡片")
-                  ]),
-                  vue.createElementVNode("text", { class: "arrow" }, ">")
-                ]),
-                vue.createElementVNode("view", {
-                  class: "menu-item",
-                  onClick: _cache[8] || (_cache[8] = (...args) => $options.goToTransactions && $options.goToTransactions(...args))
-                }, [
-                  vue.createElementVNode("view", { class: "menu-left" }, [
-                    vue.createElementVNode("text", { class: "menu-icon" }, "📊"),
-                    vue.createElementVNode("text", { class: "menu-text" }, "交易记录")
-                  ]),
-                  vue.createElementVNode("text", { class: "arrow" }, ">")
-                ])
-              ])
-            ],
-            4
-            /* STYLE */
-          ),
-          vue.createCommentVNode(" 个人设置 "),
-          vue.createElementVNode(
-            "view",
-            {
-              class: "menu-section",
-              style: vue.normalizeStyle($data.themeStyles.surface)
-            },
-            [
-              vue.createElementVNode("view", { class: "section-title" }, "个人设置"),
-              vue.createElementVNode("view", { class: "menu-list" }, [
-                vue.createElementVNode("view", {
-                  class: "menu-item",
-                  onClick: _cache[9] || (_cache[9] = (...args) => $options.goToProfile && $options.goToProfile(...args))
-                }, [
-                  vue.createElementVNode("view", { class: "menu-left" }, [
-                    vue.createElementVNode("text", { class: "menu-icon" }, "👤"),
-                    vue.createElementVNode("text", { class: "menu-text" }, "个人资料")
-                  ]),
-                  vue.createElementVNode("text", { class: "arrow" }, ">")
-                ]),
-                vue.createElementVNode("view", {
-                  class: "menu-item",
-                  onClick: _cache[10] || (_cache[10] = (...args) => $options.goToSecurity && $options.goToSecurity(...args))
-                }, [
-                  vue.createElementVNode("view", { class: "menu-left" }, [
-                    vue.createElementVNode("text", { class: "menu-icon" }, "🔒"),
-                    vue.createElementVNode("text", { class: "menu-text" }, "安全设置")
-                  ]),
-                  vue.createElementVNode("text", { class: "arrow" }, ">")
-                ]),
-                vue.createElementVNode("view", {
-                  class: "menu-item theme-item",
-                  onClick: _cache[11] || (_cache[11] = (...args) => $options.toggleTheme && $options.toggleTheme(...args))
-                }, [
-                  vue.createElementVNode("view", { class: "menu-left" }, [
-                    vue.createElementVNode("text", { class: "menu-icon" }, "🎨"),
-                    vue.createElementVNode("text", { class: "menu-text" }, "主题切换")
-                  ]),
-                  vue.createElementVNode("view", { class: "theme-info" }, [
-                    vue.createElementVNode(
-                      "text",
-                      { class: "theme-desc" },
-                      vue.toDisplayString($options.getThemeDisplayName($data.currentTheme)),
-                      1
-                      /* TEXT */
-                    ),
-                    vue.createElementVNode("text", { class: "arrow" }, ">")
-                  ])
-                ])
-              ])
-            ],
-            4
-            /* STYLE */
-          ),
-          vue.createCommentVNode(" 客户服务 "),
-          vue.createElementVNode(
-            "view",
-            {
-              class: "menu-section",
-              style: vue.normalizeStyle($data.themeStyles.surface)
-            },
-            [
-              vue.createElementVNode("view", { class: "section-title" }, "客户服务"),
-              vue.createElementVNode("view", { class: "menu-list" }, [
-                vue.createElementVNode("view", {
-                  class: "menu-item",
-                  onClick: _cache[12] || (_cache[12] = (...args) => $options.goToHelp && $options.goToHelp(...args))
-                }, [
-                  vue.createElementVNode("view", { class: "menu-left" }, [
-                    vue.createElementVNode("text", { class: "menu-icon" }, "❓"),
-                    vue.createElementVNode("text", { class: "menu-text" }, "帮助中心")
-                  ]),
-                  vue.createElementVNode("text", { class: "arrow" }, ">")
-                ]),
-                vue.createElementVNode("view", {
-                  class: "menu-item",
-                  onClick: _cache[13] || (_cache[13] = (...args) => $options.goToContact && $options.goToContact(...args))
-                }, [
-                  vue.createElementVNode("view", { class: "menu-left" }, [
-                    vue.createElementVNode("text", { class: "menu-icon" }, "📞"),
-                    vue.createElementVNode("text", { class: "menu-text" }, "联系客服")
-                  ]),
-                  vue.createElementVNode("text", { class: "arrow" }, ">")
-                ]),
-                vue.createElementVNode("view", {
-                  class: "menu-item",
-                  onClick: _cache[14] || (_cache[14] = (...args) => $options.viewLogoutHistory && $options.viewLogoutHistory(...args))
-                }, [
-                  vue.createElementVNode("view", { class: "menu-left" }, [
-                    vue.createElementVNode("text", { class: "menu-icon" }, "📋"),
-                    vue.createElementVNode("text", { class: "menu-text" }, "退出记录")
-                  ]),
-                  vue.createElementVNode("text", { class: "arrow" }, ">")
-                ])
-              ])
-            ],
-            4
-            /* STYLE */
-          ),
-          vue.createCommentVNode(" 退出登录 "),
-          vue.createElementVNode("view", { class: "logout-section" }, [
-            vue.createElementVNode("button", {
-              class: "logout-btn",
-              onClick: _cache[15] || (_cache[15] = (...args) => $options.handleLogout && $options.handleLogout(...args))
-            }, "退出登录")
+          ]),
+          vue.createElementVNode("view", { class: "account-info" }, [
+            vue.createElementVNode("text", { class: "account-label" }, "账户余额"),
+            vue.createElementVNode("text", { class: "account-balance" }, "¥ 12,580.00")
           ])
-        ])) : vue.createCommentVNode("v-if", true)
-      ],
-      4
-      /* STYLE */
-    );
+        ])
+      ])) : (vue.openBlock(), vue.createElementBlock(
+        vue.Fragment,
+        { key: 1 },
+        [
+          vue.createCommentVNode(" 未登录状态 "),
+          vue.createElementVNode("view", { class: "login-card" }, [
+            vue.createElementVNode("view", { class: "login-content" }, [
+              vue.createElementVNode("text", { class: "login-title" }, "欢迎使用农业银行"),
+              vue.createElementVNode("text", { class: "login-subtitle" }, "请登录您的账户"),
+              vue.createElementVNode("button", {
+                class: "login-btn",
+                onClick: _cache[1] || (_cache[1] = (...args) => $options.goToLogin && $options.goToLogin(...args))
+              }, "立即登录")
+            ])
+          ])
+        ],
+        2112
+        /* STABLE_FRAGMENT, DEV_ROOT_FRAGMENT */
+      )),
+      vue.createCommentVNode(" 快捷功能 "),
+      $data.userInfo ? (vue.openBlock(), vue.createElementBlock("view", {
+        key: 2,
+        class: "quick-functions"
+      }, [
+        vue.createElementVNode("view", { class: "function-grid" }, [
+          vue.createElementVNode("view", {
+            class: "function-item",
+            onClick: _cache[2] || (_cache[2] = (...args) => $options.goToTransfer && $options.goToTransfer(...args))
+          }, [
+            vue.createElementVNode("view", { class: "function-icon transfer-icon" }, "💳"),
+            vue.createElementVNode("text", { class: "function-text" }, "转账")
+          ]),
+          vue.createElementVNode("view", {
+            class: "function-item",
+            onClick: _cache[3] || (_cache[3] = (...args) => $options.goToPayment && $options.goToPayment(...args))
+          }, [
+            vue.createElementVNode("view", { class: "function-icon payment-icon" }, "💰"),
+            vue.createElementVNode("text", { class: "function-text" }, "缴费")
+          ]),
+          vue.createElementVNode("view", {
+            class: "function-item",
+            onClick: _cache[4] || (_cache[4] = (...args) => $options.goToInvestment && $options.goToInvestment(...args))
+          }, [
+            vue.createElementVNode("view", { class: "function-icon investment-icon" }, "📈"),
+            vue.createElementVNode("text", { class: "function-text" }, "理财")
+          ]),
+          vue.createElementVNode("view", {
+            class: "function-item",
+            onClick: _cache[5] || (_cache[5] = (...args) => $options.goToCredit && $options.goToCredit(...args))
+          }, [
+            vue.createElementVNode("view", { class: "function-icon credit-icon" }, "💳"),
+            vue.createElementVNode("text", { class: "function-text" }, "信用卡")
+          ])
+        ])
+      ])) : vue.createCommentVNode("v-if", true),
+      vue.createCommentVNode(" 功能菜单 "),
+      $data.userInfo ? (vue.openBlock(), vue.createElementBlock("view", {
+        key: 3,
+        class: "menu-sections"
+      }, [
+        vue.createCommentVNode(" 账户管理 "),
+        vue.createElementVNode("view", { class: "menu-section" }, [
+          vue.createElementVNode("view", { class: "section-title" }, "账户管理"),
+          vue.createElementVNode("view", { class: "menu-list" }, [
+            vue.createElementVNode("view", {
+              class: "menu-item",
+              onClick: _cache[6] || (_cache[6] = (...args) => $options.goToAccount && $options.goToAccount(...args))
+            }, [
+              vue.createElementVNode("view", { class: "menu-left" }, [
+                vue.createElementVNode("text", { class: "menu-icon" }, "🏦"),
+                vue.createElementVNode("text", { class: "menu-text" }, "我的账户")
+              ]),
+              vue.createElementVNode("text", { class: "arrow" }, ">")
+            ]),
+            vue.createElementVNode("view", {
+              class: "menu-item",
+              onClick: _cache[7] || (_cache[7] = (...args) => $options.goToCards && $options.goToCards(...args))
+            }, [
+              vue.createElementVNode("view", { class: "menu-left" }, [
+                vue.createElementVNode("text", { class: "menu-icon" }, "💳"),
+                vue.createElementVNode("text", { class: "menu-text" }, "我的卡片")
+              ]),
+              vue.createElementVNode("text", { class: "arrow" }, ">")
+            ]),
+            vue.createElementVNode("view", {
+              class: "menu-item",
+              onClick: _cache[8] || (_cache[8] = (...args) => $options.goToTransactions && $options.goToTransactions(...args))
+            }, [
+              vue.createElementVNode("view", { class: "menu-left" }, [
+                vue.createElementVNode("text", { class: "menu-icon" }, "📊"),
+                vue.createElementVNode("text", { class: "menu-text" }, "交易记录")
+              ]),
+              vue.createElementVNode("text", { class: "arrow" }, ">")
+            ])
+          ])
+        ]),
+        vue.createCommentVNode(" 个人设置 "),
+        vue.createElementVNode("view", { class: "menu-section" }, [
+          vue.createElementVNode("view", { class: "section-title" }, "个人设置"),
+          vue.createElementVNode("view", { class: "menu-list" }, [
+            vue.createElementVNode("view", {
+              class: "menu-item",
+              onClick: _cache[9] || (_cache[9] = (...args) => $options.goToProfile && $options.goToProfile(...args))
+            }, [
+              vue.createElementVNode("view", { class: "menu-left" }, [
+                vue.createElementVNode("text", { class: "menu-icon" }, "👤"),
+                vue.createElementVNode("text", { class: "menu-text" }, "个人资料")
+              ]),
+              vue.createElementVNode("text", { class: "arrow" }, ">")
+            ]),
+            vue.createElementVNode("view", {
+              class: "menu-item",
+              onClick: _cache[10] || (_cache[10] = (...args) => $options.goToSecurity && $options.goToSecurity(...args))
+            }, [
+              vue.createElementVNode("view", { class: "menu-left" }, [
+                vue.createElementVNode("text", { class: "menu-icon" }, "🔒"),
+                vue.createElementVNode("text", { class: "menu-text" }, "安全设置")
+              ]),
+              vue.createElementVNode("text", { class: "arrow" }, ">")
+            ])
+          ])
+        ]),
+        vue.createCommentVNode(" 客户服务 "),
+        vue.createElementVNode("view", { class: "menu-section" }, [
+          vue.createElementVNode("view", { class: "section-title" }, "客户服务"),
+          vue.createElementVNode("view", { class: "menu-list" }, [
+            vue.createElementVNode("view", {
+              class: "menu-item",
+              onClick: _cache[11] || (_cache[11] = (...args) => $options.goToHelp && $options.goToHelp(...args))
+            }, [
+              vue.createElementVNode("view", { class: "menu-left" }, [
+                vue.createElementVNode("text", { class: "menu-icon" }, "❓"),
+                vue.createElementVNode("text", { class: "menu-text" }, "帮助中心")
+              ]),
+              vue.createElementVNode("text", { class: "arrow" }, ">")
+            ]),
+            vue.createElementVNode("view", {
+              class: "menu-item",
+              onClick: _cache[12] || (_cache[12] = (...args) => $options.goToContact && $options.goToContact(...args))
+            }, [
+              vue.createElementVNode("view", { class: "menu-left" }, [
+                vue.createElementVNode("text", { class: "menu-icon" }, "📞"),
+                vue.createElementVNode("text", { class: "menu-text" }, "联系客服")
+              ]),
+              vue.createElementVNode("text", { class: "arrow" }, ">")
+            ]),
+            vue.createElementVNode("view", {
+              class: "menu-item",
+              onClick: _cache[13] || (_cache[13] = (...args) => $options.viewLogoutHistory && $options.viewLogoutHistory(...args))
+            }, [
+              vue.createElementVNode("view", { class: "menu-left" }, [
+                vue.createElementVNode("text", { class: "menu-icon" }, "📋"),
+                vue.createElementVNode("text", { class: "menu-text" }, "退出记录")
+              ]),
+              vue.createElementVNode("text", { class: "arrow" }, ">")
+            ])
+          ])
+        ]),
+        vue.createCommentVNode(" 退出登录 "),
+        vue.createElementVNode("view", { class: "logout-section" }, [
+          vue.createElementVNode("button", {
+            class: "logout-btn",
+            onClick: _cache[14] || (_cache[14] = (...args) => $options.handleLogout && $options.handleLogout(...args))
+          }, "退出登录")
+        ])
+      ])) : vue.createCommentVNode("v-if", true),
+      vue.createCommentVNode(" 客服选择弹窗 "),
+      vue.createVNode(_component_ServiceModal, {
+        visible: $data.showServiceModal,
+        onClose: $options.closeServiceModal
+      }, null, 8, ["visible", "onClose"])
+    ]);
   }
-  const PagesUserUser = /* @__PURE__ */ _export_sfc(_sfc_main$l, [["render", _sfc_render$k], ["__scopeId", "data-v-99b0ba47"], ["__file", "D:/项目/yihangyidon/src/pages/user/user.vue"]]);
+  const PagesUserUser = /* @__PURE__ */ _export_sfc(_sfc_main$m, [["render", _sfc_render$l], ["__scopeId", "data-v-99b0ba47"], ["__file", "D:/项目/yihangyidon/src/pages/user/user.vue"]]);
   const _imports_0$1 = "/static/tabbar/service.png";
-  const _sfc_main$k = {
+  const _sfc_main$l = {
+    components: {
+      ServiceModal
+    },
     data() {
       return {
         hideAmount: false,
         activeTab: "deposit",
+        showServiceModal: false,
         tabs: [
           { key: "deposit", name: "存款" },
           { key: "product", name: "理财产品" },
@@ -2838,7 +2832,11 @@ if (uni.restoreGlobal) {
         uni.showToast({ title: `轮播图第${idx + 1}张`, icon: "none" });
       },
       onOnlineService() {
-        uni.navigateTo({ url: "/pages/service/chat" });
+        this.showServiceModal = true;
+      },
+      // 关闭客服弹窗
+      closeServiceModal() {
+        this.showServiceModal = false;
       },
       onCallHotline() {
         uni.makePhoneCall({ phoneNumber: this.serviceHotline });
@@ -2882,7 +2880,8 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$j(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$k(_ctx, _cache, $props, $setup, $data, $options) {
+    const _component_ServiceModal = vue.resolveComponent("ServiceModal");
     return vue.openBlock(), vue.createElementBlock("view", { class: "wealth-container" }, [
       vue.createCommentVNode(" 资产概览轮播（图片版） "),
       vue.createElementVNode("view", { class: "asset-swiper-wrap" }, [
@@ -3384,11 +3383,16 @@ if (uni.restoreGlobal) {
             ))
           ])
         ])
-      ])
+      ]),
+      vue.createCommentVNode(" 客服选择弹窗 "),
+      vue.createVNode(_component_ServiceModal, {
+        visible: $data.showServiceModal,
+        onClose: $options.closeServiceModal
+      }, null, 8, ["visible", "onClose"])
     ]);
   }
-  const PagesWealthWealth = /* @__PURE__ */ _export_sfc(_sfc_main$k, [["render", _sfc_render$j], ["__scopeId", "data-v-a00d3a3e"], ["__file", "D:/项目/yihangyidon/src/pages/wealth/wealth.vue"]]);
-  const _sfc_main$j = {
+  const PagesWealthWealth = /* @__PURE__ */ _export_sfc(_sfc_main$l, [["render", _sfc_render$k], ["__scopeId", "data-v-a00d3a3e"], ["__file", "D:/项目/yihangyidon/src/pages/wealth/wealth.vue"]]);
+  const _sfc_main$k = {
     name: "LifePage",
     data() {
       return {
@@ -3905,7 +3909,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$i(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$j(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "life-page" }, [
       vue.createCommentVNode(" 头部标题区域 "),
       vue.createElementVNode("view", { class: "header-section" }, [
@@ -4216,7 +4220,7 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesLifeLife = /* @__PURE__ */ _export_sfc(_sfc_main$j, [["render", _sfc_render$i], ["__scopeId", "data-v-980f0516"], ["__file", "D:/项目/yihangyidon/src/pages/life/life.vue"]]);
+  const PagesLifeLife = /* @__PURE__ */ _export_sfc(_sfc_main$k, [["render", _sfc_render$j], ["__scopeId", "data-v-980f0516"], ["__file", "D:/项目/yihangyidon/src/pages/life/life.vue"]]);
   const SILICONFLOW_API_KEY = "sk-fkzxlpblcjigbzitanooofmnfmvvedobfdvvxqdbbdodntdt";
   const API_BASE_URL = "https://api.siliconflow.cn/v1";
   const sessionHistory = {};
@@ -4398,7 +4402,7 @@ if (uni.restoreGlobal) {
   };
   const _imports_0 = "/static/wealth/aiavatar.png";
   const _imports_1 = "/static/wealth/useravatar.jpg";
-  const _sfc_main$i = {
+  const _sfc_main$j = {
     data() {
       return {
         draft: "",
@@ -4810,7 +4814,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$h(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$i(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "chat-page" }, [
       vue.createElementVNode("view", { class: "chat-header" }, [
         vue.createElementVNode("text", { class: "title" }, "AI 智能客服"),
@@ -5015,7 +5019,660 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesServiceChat = /* @__PURE__ */ _export_sfc(_sfc_main$i, [["render", _sfc_render$h], ["__scopeId", "data-v-e19cce9b"], ["__file", "D:/项目/yihangyidon/src/pages/service/chat.vue"]]);
+  const PagesServiceChat = /* @__PURE__ */ _export_sfc(_sfc_main$j, [["render", _sfc_render$i], ["__scopeId", "data-v-e19cce9b"], ["__file", "D:/项目/yihangyidon/src/pages/service/chat.vue"]]);
+  const _sfc_main$i = {
+    data() {
+      return {
+        searchKeyword: "",
+        helpSections: [
+          { id: "account", title: "账户管理" },
+          { id: "transfer", title: "转账汇款" },
+          { id: "ebank", title: "电子银行" },
+          { id: "security", title: "安全设置" }
+        ]
+      };
+    },
+    methods: {
+      // 搜索功能
+      onSearch() {
+        formatAppLog("log", "at pages/help/help-center.vue:220", "搜索关键词:", this.searchKeyword);
+      },
+      // 跳转到指定章节
+      goToSection(sectionId) {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" });
+        }
+      },
+      // 打开帮助详情
+      openHelpDetail(helpId) {
+        uni.navigateTo({
+          url: `/pages/help/help-detail?helpId=${helpId}`
+        });
+      },
+      // 跳转到AI客服
+      goToAIService() {
+        uni.navigateTo({
+          url: "/pages/service/chat"
+        });
+      }
+    }
+  };
+  function _sfc_render$h(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("view", { class: "help-center" }, [
+      vue.createCommentVNode(" 顶部搜索栏 "),
+      vue.createElementVNode("view", { class: "search-header" }, [
+        vue.createElementVNode("view", { class: "search-bar" }, [
+          vue.createElementVNode("text", { class: "search-icon" }, "🔍"),
+          vue.withDirectives(vue.createElementVNode(
+            "input",
+            {
+              class: "search-input",
+              placeholder: "搜索帮助内容",
+              "onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => $data.searchKeyword = $event),
+              onInput: _cache[1] || (_cache[1] = (...args) => $options.onSearch && $options.onSearch(...args))
+            },
+            null,
+            544
+            /* NEED_HYDRATION, NEED_PATCH */
+          ), [
+            [vue.vModelText, $data.searchKeyword]
+          ])
+        ])
+      ]),
+      vue.createCommentVNode(" 快速入口 "),
+      vue.createElementVNode("view", { class: "quick-entries" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "快速入口"),
+        vue.createElementVNode("view", { class: "entry-grid" }, [
+          vue.createElementVNode("view", {
+            class: "entry-item",
+            onClick: _cache[2] || (_cache[2] = ($event) => $options.goToSection("account"))
+          }, [
+            vue.createElementVNode("view", { class: "entry-icon" }, "👤"),
+            vue.createElementVNode("text", { class: "entry-text" }, "账户管理")
+          ]),
+          vue.createElementVNode("view", {
+            class: "entry-item",
+            onClick: _cache[3] || (_cache[3] = ($event) => $options.goToSection("transfer"))
+          }, [
+            vue.createElementVNode("view", { class: "entry-icon" }, "↔️"),
+            vue.createElementVNode("text", { class: "entry-text" }, "转账汇款")
+          ]),
+          vue.createElementVNode("view", {
+            class: "entry-item",
+            onClick: _cache[4] || (_cache[4] = ($event) => $options.goToSection("ebank"))
+          }, [
+            vue.createElementVNode("view", { class: "entry-icon" }, "📱"),
+            vue.createElementVNode("text", { class: "entry-text" }, "电子银行")
+          ]),
+          vue.createElementVNode("view", {
+            class: "entry-item",
+            onClick: _cache[5] || (_cache[5] = ($event) => $options.goToSection("security"))
+          }, [
+            vue.createElementVNode("view", { class: "entry-icon" }, "🔒"),
+            vue.createElementVNode("text", { class: "entry-text" }, "安全设置")
+          ])
+        ])
+      ]),
+      vue.createCommentVNode(" 帮助内容列表 "),
+      vue.createElementVNode("view", { class: "help-content" }, [
+        vue.createCommentVNode(" 账户管理 "),
+        vue.createElementVNode("view", {
+          class: "help-section",
+          id: "account"
+        }, [
+          vue.createElementVNode("view", { class: "section-header" }, [
+            vue.createElementVNode("text", { class: "section-title" }, "账户管理"),
+            vue.createElementVNode("text", { class: "section-subtitle" }, "账户相关操作指南")
+          ]),
+          vue.createElementVNode("view", { class: "help-list" }, [
+            vue.createElementVNode("view", {
+              class: "help-item",
+              onClick: _cache[6] || (_cache[6] = ($event) => $options.openHelpDetail("account-loss"))
+            }, [
+              vue.createElementVNode("view", { class: "help-icon" }, "🚨"),
+              vue.createElementVNode("view", { class: "help-info" }, [
+                vue.createElementVNode("text", { class: "help-title" }, "银行卡挂失"),
+                vue.createElementVNode("text", { class: "help-desc" }, "如何快速挂失银行卡，保护资金安全")
+              ]),
+              vue.createElementVNode("text", { class: "help-arrow" }, ">")
+            ]),
+            vue.createElementVNode("view", {
+              class: "help-item",
+              onClick: _cache[7] || (_cache[7] = ($event) => $options.openHelpDetail("password-change"))
+            }, [
+              vue.createElementVNode("view", { class: "help-icon" }, "🔑"),
+              vue.createElementVNode("view", { class: "help-info" }, [
+                vue.createElementVNode("text", { class: "help-title" }, "密码修改"),
+                vue.createElementVNode("text", { class: "help-desc" }, "修改登录密码、支付密码操作步骤")
+              ]),
+              vue.createElementVNode("text", { class: "help-arrow" }, ">")
+            ]),
+            vue.createElementVNode("view", {
+              class: "help-item",
+              onClick: _cache[8] || (_cache[8] = ($event) => $options.openHelpDetail("account-query"))
+            }, [
+              vue.createElementVNode("view", { class: "help-icon" }, "📊"),
+              vue.createElementVNode("view", { class: "help-info" }, [
+                vue.createElementVNode("text", { class: "help-title" }, "账户查询"),
+                vue.createElementVNode("text", { class: "help-desc" }, "查询账户余额、交易明细等信息")
+              ]),
+              vue.createElementVNode("text", { class: "help-arrow" }, ">")
+            ])
+          ])
+        ]),
+        vue.createCommentVNode(" 转账汇款 "),
+        vue.createElementVNode("view", {
+          class: "help-section",
+          id: "transfer"
+        }, [
+          vue.createElementVNode("view", { class: "section-header" }, [
+            vue.createElementVNode("text", { class: "section-title" }, "转账汇款"),
+            vue.createElementVNode("text", { class: "section-subtitle" }, "资金转账操作指南")
+          ]),
+          vue.createElementVNode("view", { class: "help-list" }, [
+            vue.createElementVNode("view", {
+              class: "help-item",
+              onClick: _cache[9] || (_cache[9] = ($event) => $options.openHelpDetail("phone-transfer"))
+            }, [
+              vue.createElementVNode("view", { class: "help-icon" }, "📱"),
+              vue.createElementVNode("view", { class: "help-info" }, [
+                vue.createElementVNode("text", { class: "help-title" }, "手机号转账"),
+                vue.createElementVNode("text", { class: "help-desc" }, "通过手机号码快速转账操作流程")
+              ]),
+              vue.createElementVNode("text", { class: "help-arrow" }, ">")
+            ]),
+            vue.createElementVNode("view", {
+              class: "help-item",
+              onClick: _cache[10] || (_cache[10] = ($event) => $options.openHelpDetail("quick-transfer"))
+            }, [
+              vue.createElementVNode("view", { class: "help-icon" }, "⚡"),
+              vue.createElementVNode("view", { class: "help-info" }, [
+                vue.createElementVNode("text", { class: "help-title" }, "快捷转账"),
+                vue.createElementVNode("text", { class: "help-desc" }, "常用收款人快速转账设置")
+              ]),
+              vue.createElementVNode("text", { class: "help-arrow" }, ">")
+            ]),
+            vue.createElementVNode("view", {
+              class: "help-item",
+              onClick: _cache[11] || (_cache[11] = ($event) => $options.openHelpDetail("cross-bank"))
+            }, [
+              vue.createElementVNode("view", { class: "help-icon" }, "🏦"),
+              vue.createElementVNode("view", { class: "help-info" }, [
+                vue.createElementVNode("text", { class: "help-title" }, "跨行转账"),
+                vue.createElementVNode("text", { class: "help-desc" }, "跨行资金归集操作步骤")
+              ]),
+              vue.createElementVNode("text", { class: "help-arrow" }, ">")
+            ]),
+            vue.createElementVNode("view", {
+              class: "help-item",
+              onClick: _cache[12] || (_cache[12] = ($event) => $options.openHelpDetail("transfer-limit"))
+            }, [
+              vue.createElementVNode("view", { class: "help-icon" }, "📋"),
+              vue.createElementVNode("view", { class: "help-info" }, [
+                vue.createElementVNode("text", { class: "help-title" }, "转账限额"),
+                vue.createElementVNode("text", { class: "help-desc" }, "了解各类转账限额设置")
+              ]),
+              vue.createElementVNode("text", { class: "help-arrow" }, ">")
+            ])
+          ])
+        ]),
+        vue.createCommentVNode(" 电子银行 "),
+        vue.createElementVNode("view", {
+          class: "help-section",
+          id: "ebank"
+        }, [
+          vue.createElementVNode("view", { class: "section-header" }, [
+            vue.createElementVNode("text", { class: "section-title" }, "电子银行"),
+            vue.createElementVNode("text", { class: "section-subtitle" }, "网银和掌银操作指南")
+          ]),
+          vue.createElementVNode("view", { class: "help-list" }, [
+            vue.createElementVNode("view", {
+              class: "help-item",
+              onClick: _cache[13] || (_cache[13] = ($event) => $options.openHelpDetail("mobile-bank"))
+            }, [
+              vue.createElementVNode("view", { class: "help-icon" }, "📱"),
+              vue.createElementVNode("view", { class: "help-info" }, [
+                vue.createElementVNode("text", { class: "help-title" }, "掌上银行"),
+                vue.createElementVNode("text", { class: "help-desc" }, "掌上银行注册、登录、功能使用")
+              ]),
+              vue.createElementVNode("text", { class: "help-arrow" }, ">")
+            ]),
+            vue.createElementVNode("view", {
+              class: "help-item",
+              onClick: _cache[14] || (_cache[14] = ($event) => $options.openHelpDetail("online-bank"))
+            }, [
+              vue.createElementVNode("view", { class: "help-icon" }, "💻"),
+              vue.createElementVNode("view", { class: "help-info" }, [
+                vue.createElementVNode("text", { class: "help-title" }, "个人网银"),
+                vue.createElementVNode("text", { class: "help-desc" }, "网上银行开通和使用指南")
+              ]),
+              vue.createElementVNode("text", { class: "help-arrow" }, ">")
+            ]),
+            vue.createElementVNode("view", {
+              class: "help-item",
+              onClick: _cache[15] || (_cache[15] = ($event) => $options.openHelpDetail("electronic-receipt"))
+            }, [
+              vue.createElementVNode("view", { class: "help-icon" }, "📄"),
+              vue.createElementVNode("view", { class: "help-info" }, [
+                vue.createElementVNode("text", { class: "help-title" }, "电子回单"),
+                vue.createElementVNode("text", { class: "help-desc" }, "电子回单查询和验证方法")
+              ]),
+              vue.createElementVNode("text", { class: "help-arrow" }, ">")
+            ]),
+            vue.createElementVNode("view", {
+              class: "help-item",
+              onClick: _cache[16] || (_cache[16] = ($event) => $options.openHelpDetail("fund-collection"))
+            }, [
+              vue.createElementVNode("view", { class: "help-icon" }, "💰"),
+              vue.createElementVNode("view", { class: "help-info" }, [
+                vue.createElementVNode("text", { class: "help-title" }, "资金归集"),
+                vue.createElementVNode("text", { class: "help-desc" }, "跨行资金归集设置和操作")
+              ]),
+              vue.createElementVNode("text", { class: "help-arrow" }, ">")
+            ])
+          ])
+        ]),
+        vue.createCommentVNode(" 安全设置 "),
+        vue.createElementVNode("view", {
+          class: "help-section",
+          id: "security"
+        }, [
+          vue.createElementVNode("view", { class: "section-header" }, [
+            vue.createElementVNode("text", { class: "section-title" }, "安全设置"),
+            vue.createElementVNode("text", { class: "section-subtitle" }, "账户安全保护指南")
+          ]),
+          vue.createElementVNode("view", { class: "help-list" }, [
+            vue.createElementVNode("view", {
+              class: "help-item",
+              onClick: _cache[17] || (_cache[17] = ($event) => $options.openHelpDetail("fingerprint"))
+            }, [
+              vue.createElementVNode("view", { class: "help-icon" }, "👆"),
+              vue.createElementVNode("view", { class: "help-info" }, [
+                vue.createElementVNode("text", { class: "help-title" }, "指纹登录"),
+                vue.createElementVNode("text", { class: "help-desc" }, "设置和使用指纹登录功能")
+              ]),
+              vue.createElementVNode("text", { class: "help-arrow" }, ">")
+            ]),
+            vue.createElementVNode("view", {
+              class: "help-item",
+              onClick: _cache[18] || (_cache[18] = ($event) => $options.openHelpDetail("face-id"))
+            }, [
+              vue.createElementVNode("view", { class: "help-icon" }, "👤"),
+              vue.createElementVNode("view", { class: "help-info" }, [
+                vue.createElementVNode("text", { class: "help-title" }, "人脸识别"),
+                vue.createElementVNode("text", { class: "help-desc" }, "人脸识别登录设置方法")
+              ]),
+              vue.createElementVNode("text", { class: "help-arrow" }, ">")
+            ]),
+            vue.createElementVNode("view", {
+              class: "help-item",
+              onClick: _cache[19] || (_cache[19] = ($event) => $options.openHelpDetail("sms-verify"))
+            }, [
+              vue.createElementVNode("view", { class: "help-icon" }, "📲"),
+              vue.createElementVNode("view", { class: "help-info" }, [
+                vue.createElementVNode("text", { class: "help-title" }, "短信验证"),
+                vue.createElementVNode("text", { class: "help-desc" }, "短信验证码接收和验证")
+              ]),
+              vue.createElementVNode("text", { class: "help-arrow" }, ">")
+            ])
+          ])
+        ])
+      ]),
+      vue.createCommentVNode(" 联系客服 "),
+      vue.createElementVNode("view", { class: "contact-service" }, [
+        vue.createElementVNode("view", {
+          class: "contact-card",
+          onClick: _cache[20] || (_cache[20] = (...args) => $options.goToAIService && $options.goToAIService(...args))
+        }, [
+          vue.createElementVNode("view", { class: "contact-icon" }, "💬"),
+          vue.createElementVNode("view", { class: "contact-info" }, [
+            vue.createElementVNode("text", { class: "contact-title" }, "需要更多帮助？"),
+            vue.createElementVNode("text", { class: "contact-desc" }, "联系AI智能客服，24小时在线为您服务")
+          ]),
+          vue.createElementVNode("text", { class: "contact-arrow" }, ">")
+        ])
+      ])
+    ]);
+  }
+  const PagesHelpHelpCenter = /* @__PURE__ */ _export_sfc(_sfc_main$i, [["render", _sfc_render$h], ["__scopeId", "data-v-292cc293"], ["__file", "D:/项目/yihangyidon/src/pages/help/help-center.vue"]]);
+  const _sfc_main$h = {
+    data() {
+      return {
+        helpId: "",
+        helpDetail: {}
+      };
+    },
+    onLoad(options) {
+      this.helpId = options.helpId || "";
+      this.loadHelpDetail();
+    },
+    methods: {
+      // 加载帮助详情
+      loadHelpDetail() {
+        const helpData = this.getHelpData(this.helpId);
+        this.helpDetail = helpData;
+      },
+      // 获取帮助数据
+      getHelpData(helpId) {
+        const helpDatabase = {
+          "account-loss": {
+            title: "银行卡挂失",
+            subtitle: "快速挂失银行卡，保护资金安全",
+            sections: [
+              {
+                title: "挂失方式",
+                type: "text",
+                content: "您可以通过以下方式挂失银行卡：\n1. 掌上银行APP\n2. 网上银行\n3. 客服热线95599\n4. 银行网点"
+              },
+              {
+                title: "掌上银行挂失步骤",
+                type: "steps",
+                steps: [
+                  { title: "登录掌上银行", desc: "使用指纹或密码登录" },
+                  { title: "进入账户管理", desc: '点击"我的账户"→"账户管理"' },
+                  { title: "选择挂失", desc: '找到需要挂失的卡片，点击"挂失"' },
+                  { title: "确认挂失", desc: "阅读挂失说明，确认挂失操作" },
+                  { title: "挂失完成", desc: "系统将发送挂失成功短信" }
+                ]
+              },
+              {
+                title: "注意事项",
+                type: "tips",
+                tips: [
+                  "挂失后卡片将立即冻结，无法进行任何交易",
+                  "挂失手续费为10元/张，从账户余额中扣除",
+                  "如需补办新卡，请携带身份证到银行网点办理",
+                  "挂失期间如有资金损失，银行将承担相应责任"
+                ]
+              }
+            ],
+            related: [
+              { id: "password-change", title: "密码修改" },
+              { id: "account-query", title: "账户查询" }
+            ]
+          },
+          "phone-transfer": {
+            title: "手机号转账",
+            subtitle: "通过手机号码快速转账操作流程",
+            sections: [
+              {
+                title: "功能介绍",
+                type: "text",
+                content: "手机号转账是农业银行推出的便民服务，您只需输入收款人手机号码即可完成转账，无需记住复杂的银行卡号。"
+              },
+              {
+                title: "操作步骤",
+                type: "steps",
+                steps: [
+                  { title: "进入转账页面", desc: '在首页点击"转账"功能' },
+                  { title: "选择手机号转账", desc: '选择"手机号转账"选项' },
+                  { title: "输入收款信息", desc: "输入收款人手机号和姓名" },
+                  { title: "输入转账金额", desc: "输入转账金额和转账说明" },
+                  { title: "确认转账", desc: "输入支付密码完成转账" }
+                ]
+              },
+              {
+                title: "使用提示",
+                type: "tips",
+                tips: [
+                  "收款人手机号必须已开通手机号转账功能",
+                  "单笔转账限额为5万元，日累计限额为20万元",
+                  "转账手续费按标准收取，具体费率请咨询客服",
+                  "转账成功后，收款人将收到短信通知"
+                ]
+              }
+            ],
+            related: [
+              { id: "quick-transfer", title: "快捷转账" },
+              { id: "cross-bank", title: "跨行转账" }
+            ]
+          },
+          "electronic-receipt": {
+            title: "电子回单",
+            subtitle: "电子回单查询和验证方法",
+            sections: [
+              {
+                title: "什么是电子回单",
+                type: "text",
+                content: "电子回单是银行提供的电子化交易凭证，具有与纸质回单同等的法律效力，可用于财务记账、税务申报等用途。"
+              },
+              {
+                title: "查询步骤",
+                type: "steps",
+                steps: [
+                  { title: "登录掌上银行", desc: "使用指纹或密码登录" },
+                  { title: "进入交易明细", desc: '点击"我的账户"→"交易明细"' },
+                  { title: "选择交易记录", desc: "找到需要查询的交易记录" },
+                  { title: "生成电子回单", desc: '点击"电子回单"按钮' },
+                  { title: "下载或分享", desc: "可下载到手机或分享给他人" }
+                ]
+              },
+              {
+                title: "验证方法",
+                type: "tips",
+                tips: [
+                  "电子回单包含数字签名，确保真实性",
+                  "可通过银行官网验证回单真伪",
+                  "回单有效期为2年，请及时保存",
+                  "电子回单与纸质回单具有同等效力"
+                ]
+              }
+            ],
+            related: [
+              { id: "account-query", title: "账户查询" },
+              { id: "mobile-bank", title: "掌上银行" }
+            ]
+          }
+        };
+        return helpDatabase[helpId] || {
+          title: "帮助内容",
+          subtitle: "暂无详细内容",
+          sections: [
+            {
+              title: "提示",
+              type: "text",
+              content: "该帮助内容正在完善中，如有疑问请联系客服。"
+            }
+          ]
+        };
+      },
+      // 打开相关帮助
+      openRelatedHelp(helpId) {
+        uni.redirectTo({
+          url: `/pages/help/help-detail?helpId=${helpId}`
+        });
+      },
+      // 标记有帮助
+      markHelpful() {
+        uni.showToast({
+          title: "感谢您的反馈",
+          icon: "success"
+        });
+      },
+      // 跳转到AI客服
+      goToAIService() {
+        uni.navigateTo({
+          url: "/pages/service/chat"
+        });
+      }
+    }
+  };
+  function _sfc_render$g(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("view", { class: "help-detail" }, [
+      vue.createCommentVNode(" 顶部导航 "),
+      vue.createElementVNode("view", { class: "detail-header" }, [
+        vue.createElementVNode(
+          "text",
+          { class: "detail-title" },
+          vue.toDisplayString($data.helpDetail.title),
+          1
+          /* TEXT */
+        ),
+        vue.createElementVNode(
+          "text",
+          { class: "detail-subtitle" },
+          vue.toDisplayString($data.helpDetail.subtitle),
+          1
+          /* TEXT */
+        )
+      ]),
+      vue.createCommentVNode(" 帮助内容 "),
+      vue.createElementVNode("view", { class: "detail-content" }, [
+        (vue.openBlock(true), vue.createElementBlock(
+          vue.Fragment,
+          null,
+          vue.renderList($data.helpDetail.sections, (section, index) => {
+            return vue.openBlock(), vue.createElementBlock("view", {
+              class: "content-section",
+              key: index
+            }, [
+              vue.createElementVNode(
+                "view",
+                { class: "section-title" },
+                vue.toDisplayString(section.title),
+                1
+                /* TEXT */
+              ),
+              vue.createElementVNode("view", { class: "section-content" }, [
+                section.type === "text" ? (vue.openBlock(), vue.createElementBlock("view", {
+                  key: 0,
+                  class: "text-content"
+                }, [
+                  vue.createElementVNode(
+                    "text",
+                    { class: "content-text" },
+                    vue.toDisplayString(section.content),
+                    1
+                    /* TEXT */
+                  )
+                ])) : section.type === "steps" ? (vue.openBlock(), vue.createElementBlock("view", {
+                  key: 1,
+                  class: "steps-content"
+                }, [
+                  (vue.openBlock(true), vue.createElementBlock(
+                    vue.Fragment,
+                    null,
+                    vue.renderList(section.steps, (step, stepIndex) => {
+                      return vue.openBlock(), vue.createElementBlock("view", {
+                        class: "step-item",
+                        key: stepIndex
+                      }, [
+                        vue.createElementVNode(
+                          "view",
+                          { class: "step-number" },
+                          vue.toDisplayString(stepIndex + 1),
+                          1
+                          /* TEXT */
+                        ),
+                        vue.createElementVNode("view", { class: "step-content" }, [
+                          vue.createElementVNode(
+                            "text",
+                            { class: "step-title" },
+                            vue.toDisplayString(step.title),
+                            1
+                            /* TEXT */
+                          ),
+                          step.desc ? (vue.openBlock(), vue.createElementBlock(
+                            "text",
+                            {
+                              key: 0,
+                              class: "step-desc"
+                            },
+                            vue.toDisplayString(step.desc),
+                            1
+                            /* TEXT */
+                          )) : vue.createCommentVNode("v-if", true)
+                        ])
+                      ]);
+                    }),
+                    128
+                    /* KEYED_FRAGMENT */
+                  ))
+                ])) : section.type === "tips" ? (vue.openBlock(), vue.createElementBlock("view", {
+                  key: 2,
+                  class: "tips-content"
+                }, [
+                  (vue.openBlock(true), vue.createElementBlock(
+                    vue.Fragment,
+                    null,
+                    vue.renderList(section.tips, (tip, tipIndex) => {
+                      return vue.openBlock(), vue.createElementBlock("view", {
+                        class: "tip-item",
+                        key: tipIndex
+                      }, [
+                        vue.createElementVNode("text", { class: "tip-icon" }, "💡"),
+                        vue.createElementVNode(
+                          "text",
+                          { class: "tip-text" },
+                          vue.toDisplayString(tip),
+                          1
+                          /* TEXT */
+                        )
+                      ]);
+                    }),
+                    128
+                    /* KEYED_FRAGMENT */
+                  ))
+                ])) : vue.createCommentVNode("v-if", true)
+              ])
+            ]);
+          }),
+          128
+          /* KEYED_FRAGMENT */
+        ))
+      ]),
+      vue.createCommentVNode(" 相关帮助 "),
+      $data.helpDetail.related && $data.helpDetail.related.length > 0 ? (vue.openBlock(), vue.createElementBlock("view", {
+        key: 0,
+        class: "related-help"
+      }, [
+        vue.createElementVNode("view", { class: "related-title" }, "相关帮助"),
+        vue.createElementVNode("view", { class: "related-list" }, [
+          (vue.openBlock(true), vue.createElementBlock(
+            vue.Fragment,
+            null,
+            vue.renderList($data.helpDetail.related, (item, index) => {
+              return vue.openBlock(), vue.createElementBlock("view", {
+                class: "related-item",
+                key: index,
+                onClick: ($event) => $options.openRelatedHelp(item.id)
+              }, [
+                vue.createElementVNode(
+                  "text",
+                  { class: "related-text" },
+                  vue.toDisplayString(item.title),
+                  1
+                  /* TEXT */
+                ),
+                vue.createElementVNode("text", { class: "related-arrow" }, ">")
+              ], 8, ["onClick"]);
+            }),
+            128
+            /* KEYED_FRAGMENT */
+          ))
+        ])
+      ])) : vue.createCommentVNode("v-if", true),
+      vue.createCommentVNode(" 底部操作 "),
+      vue.createElementVNode("view", { class: "detail-footer" }, [
+        vue.createElementVNode("button", {
+          class: "helpful-btn",
+          onClick: _cache[0] || (_cache[0] = (...args) => $options.markHelpful && $options.markHelpful(...args))
+        }, [
+          vue.createElementVNode("text", { class: "btn-icon" }, "👍"),
+          vue.createElementVNode("text", { class: "btn-text" }, "有帮助")
+        ]),
+        vue.createElementVNode("button", {
+          class: "contact-btn",
+          onClick: _cache[1] || (_cache[1] = (...args) => $options.goToAIService && $options.goToAIService(...args))
+        }, [
+          vue.createElementVNode("text", { class: "btn-icon" }, "💬"),
+          vue.createElementVNode("text", { class: "btn-text" }, "联系客服")
+        ])
+      ])
+    ]);
+  }
+  const PagesHelpHelpDetail = /* @__PURE__ */ _export_sfc(_sfc_main$h, [["render", _sfc_render$g], ["__scopeId", "data-v-ba096d18"], ["__file", "D:/项目/yihangyidon/src/pages/help/help-detail.vue"]]);
   const BASE_URL = "https://api.abchina.com";
   const TIMEOUT = 1e4;
   const requestInterceptor = (config) => {
@@ -5233,7 +5890,7 @@ if (uni.restoreGlobal) {
       formatAppLog("error", "at api/balance.js:221", "添加交易记录失败:", error);
     }
   }
-  const _sfc_main$h = {
+  const _sfc_main$g = {
     name: "PaymentPasswordModal",
     props: {
       visible: {
@@ -5368,7 +6025,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$g(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$f(_ctx, _cache, $props, $setup, $data, $options) {
     return $props.visible ? (vue.openBlock(), vue.createElementBlock("view", {
       key: 0,
       class: "payment-password-modal",
@@ -5501,166 +6158,10 @@ if (uni.restoreGlobal) {
       ])
     ])) : vue.createCommentVNode("v-if", true);
   }
-  const PaymentPasswordModal = /* @__PURE__ */ _export_sfc(_sfc_main$h, [["render", _sfc_render$g], ["__scopeId", "data-v-c92603ac"], ["__file", "D:/项目/yihangyidon/src/components/common/PaymentPasswordModal.vue"]]);
-  const _sfc_main$g = {
-    name: "SimpleThemeSwitcher",
-    data() {
-      return {
-        showSelector: false,
-        selectedThemeId: null,
-        currentThemeId: themeManager$1.getCurrentThemeId(),
-        availableThemes: Object.values(themes$1)
-      };
-    },
-    mounted() {
-      themeManager$1.addThemeListener(this.onThemeChanged);
-    },
-    beforeDestroy() {
-      themeManager$1.removeThemeListener(this.onThemeChanged);
-    },
-    methods: {
-      onThemeChanged(theme) {
-        this.currentThemeId = theme.id;
-      },
-      selectTheme(themeId) {
-        this.selectedThemeId = themeId;
-      },
-      applyTheme() {
-        if (this.selectedThemeId) {
-          themeManager$1.switchTheme(this.selectedThemeId);
-          uni.showToast({
-            title: "主题已切换",
-            icon: "success",
-            duration: 1500
-          });
-        }
-        this.closeModal();
-      },
-      closeModal() {
-        this.showSelector = false;
-        this.selectedThemeId = null;
-      }
-    }
-  };
-  function _sfc_render$f(_ctx, _cache, $props, $setup, $data, $options) {
-    return vue.openBlock(), vue.createElementBlock("view", { class: "theme-switcher" }, [
-      vue.createCommentVNode(" 主题切换按钮 "),
-      vue.createElementVNode("view", {
-        class: "theme-button",
-        onClick: _cache[0] || (_cache[0] = ($event) => $data.showSelector = true)
-      }, [
-        vue.createElementVNode("text", { class: "theme-icon" }, "🎨"),
-        vue.createElementVNode("text", { class: "theme-text" }, "主题")
-      ]),
-      vue.createCommentVNode(" 主题选择弹窗 "),
-      $data.showSelector ? (vue.openBlock(), vue.createElementBlock("view", {
-        key: 0,
-        class: "theme-modal",
-        onClick: _cache[5] || (_cache[5] = (...args) => $options.closeModal && $options.closeModal(...args))
-      }, [
-        vue.createElementVNode("view", {
-          class: "modal-content",
-          onClick: _cache[4] || (_cache[4] = vue.withModifiers(() => {
-          }, ["stop"]))
-        }, [
-          vue.createCommentVNode(" 弹窗头部 "),
-          vue.createElementVNode("view", { class: "modal-header" }, [
-            vue.createElementVNode("text", { class: "modal-title" }, "选择主题"),
-            vue.createElementVNode("text", {
-              class: "close-btn",
-              onClick: _cache[1] || (_cache[1] = (...args) => $options.closeModal && $options.closeModal(...args))
-            }, "×")
-          ]),
-          vue.createCommentVNode(" 主题列表 "),
-          vue.createElementVNode("view", { class: "theme-list" }, [
-            (vue.openBlock(true), vue.createElementBlock(
-              vue.Fragment,
-              null,
-              vue.renderList($data.availableThemes, (theme) => {
-                return vue.openBlock(), vue.createElementBlock("view", {
-                  key: theme.id,
-                  class: vue.normalizeClass(["theme-item", { active: $data.currentThemeId === theme.id }]),
-                  onClick: ($event) => $options.selectTheme(theme.id)
-                }, [
-                  vue.createElementVNode("view", { class: "theme-preview" }, [
-                    vue.createElementVNode("view", { class: "preview-colors" }, [
-                      vue.createElementVNode(
-                        "view",
-                        {
-                          class: "color-dot",
-                          style: vue.normalizeStyle({ backgroundColor: theme.colors.primary })
-                        },
-                        null,
-                        4
-                        /* STYLE */
-                      ),
-                      vue.createElementVNode(
-                        "view",
-                        {
-                          class: "color-dot",
-                          style: vue.normalizeStyle({ backgroundColor: theme.colors.background })
-                        },
-                        null,
-                        4
-                        /* STYLE */
-                      ),
-                      vue.createElementVNode(
-                        "view",
-                        {
-                          class: "color-dot",
-                          style: vue.normalizeStyle({ backgroundColor: theme.colors.surface })
-                        },
-                        null,
-                        4
-                        /* STYLE */
-                      )
-                    ])
-                  ]),
-                  vue.createElementVNode("view", { class: "theme-info" }, [
-                    vue.createElementVNode(
-                      "text",
-                      { class: "theme-name" },
-                      vue.toDisplayString(theme.name),
-                      1
-                      /* TEXT */
-                    ),
-                    $data.currentThemeId === theme.id ? (vue.openBlock(), vue.createElementBlock("text", {
-                      key: 0,
-                      class: "theme-status"
-                    }, "当前")) : vue.createCommentVNode("v-if", true)
-                  ]),
-                  $data.currentThemeId === theme.id ? (vue.openBlock(), vue.createElementBlock("view", {
-                    key: 0,
-                    class: "theme-check"
-                  }, [
-                    vue.createElementVNode("text", { class: "check-icon" }, "✓")
-                  ])) : vue.createCommentVNode("v-if", true)
-                ], 10, ["onClick"]);
-              }),
-              128
-              /* KEYED_FRAGMENT */
-            ))
-          ]),
-          vue.createCommentVNode(" 操作按钮 "),
-          vue.createElementVNode("view", { class: "modal-actions" }, [
-            vue.createElementVNode("button", {
-              class: "cancel-btn",
-              onClick: _cache[2] || (_cache[2] = (...args) => $options.closeModal && $options.closeModal(...args))
-            }, "取消"),
-            vue.createElementVNode("button", {
-              class: "apply-btn",
-              onClick: _cache[3] || (_cache[3] = (...args) => $options.applyTheme && $options.applyTheme(...args))
-            }, "应用")
-          ])
-        ])
-      ])) : vue.createCommentVNode("v-if", true)
-    ]);
-  }
-  const SimpleThemeSwitcher = /* @__PURE__ */ _export_sfc(_sfc_main$g, [["render", _sfc_render$f], ["__scopeId", "data-v-f10fce89"], ["__file", "D:/项目/yihangyidon/src/components/common/SimpleThemeSwitcher.vue"]]);
+  const PaymentPasswordModal = /* @__PURE__ */ _export_sfc(_sfc_main$g, [["render", _sfc_render$f], ["__scopeId", "data-v-c92603ac"], ["__file", "D:/项目/yihangyidon/src/components/common/PaymentPasswordModal.vue"]]);
   const _sfc_main$f = {
     components: {
-      PaymentPasswordModal,
-      SimpleThemeSwitcher
+      PaymentPasswordModal
     },
     data() {
       return {
@@ -5689,22 +6190,16 @@ if (uni.restoreGlobal) {
         // 转账金额
         transferPayee: "",
         // 收款方
-        transferDescription: "",
+        transferDescription: ""
         // 转账说明
-        currentTheme: themeManager$1.getCurrentTheme(),
-        themeStyles: getThemeStyles()
       };
     },
     mounted() {
-      themeManager$1.addThemeListener(this.onThemeChanged);
-    },
-    beforeDestroy() {
-      themeManager$1.removeThemeListener(this.onThemeChanged);
     },
     onShow() {
       try {
         if (!forceCheckLogin()) {
-          formatAppLog("log", "at pages/transfer/transfer.vue:154", "转账页面：用户未登录，跳转到登录页面");
+          formatAppLog("log", "at pages/transfer/transfer.vue:195", "转账页面：用户未登录，跳转到登录页面");
           uni.reLaunch({
             url: "/pages/denglu/login"
           });
@@ -5713,17 +6208,43 @@ if (uni.restoreGlobal) {
         this.getTransferLimit();
         this.getUserBalance();
       } catch (error) {
-        formatAppLog("error", "at pages/transfer/transfer.vue:167", "转账页面onShow检查失败:", error);
+        formatAppLog("error", "at pages/transfer/transfer.vue:208", "转账页面onShow检查失败:", error);
         uni.reLaunch({
           url: "/pages/denglu/login"
         });
       }
     },
     methods: {
-      // 主题变化回调
-      onThemeChanged(theme) {
-        this.currentTheme = theme;
-        this.themeStyles = getThemeStyles();
+      // 返回上一页
+      goBack() {
+        uni.navigateBack();
+      },
+      // 显示转账提示
+      showTransferTips() {
+        uni.showModal({
+          title: "转账提示",
+          content: "请确保收款人信息准确无误，转账后无法撤销。建议先小额测试。",
+          showCancel: false,
+          confirmText: "我知道了"
+        });
+      },
+      // 刷新余额
+      async refreshBalance() {
+        uni.showLoading({ title: "刷新中..." });
+        try {
+          await this.getUserBalance();
+          uni.showToast({
+            title: "刷新成功",
+            icon: "success"
+          });
+        } catch (error) {
+          uni.showToast({
+            title: "刷新失败",
+            icon: "none"
+          });
+        } finally {
+          uni.hideLoading();
+        }
       },
       // 切换转账类型
       switchTab(tab) {
@@ -5736,7 +6257,7 @@ if (uni.restoreGlobal) {
           if (savedLimit) {
             this.transferLimit = savedLimit;
           }
-          formatAppLog("log", "at pages/transfer/transfer.vue:196", "转账限额:", this.transferLimit);
+          formatAppLog("log", "at pages/transfer/transfer.vue:265", "转账限额:", this.transferLimit);
         }, 300);
       },
       // 获取用户余额
@@ -5744,9 +6265,9 @@ if (uni.restoreGlobal) {
         try {
           const balance = await getUserBalance();
           this.userBalance = balance;
-          formatAppLog("log", "at pages/transfer/transfer.vue:205", "获取用户余额成功:", balance);
+          formatAppLog("log", "at pages/transfer/transfer.vue:274", "获取用户余额成功:", balance);
         } catch (error) {
-          formatAppLog("error", "at pages/transfer/transfer.vue:207", "获取用户余额失败:", error);
+          formatAppLog("error", "at pages/transfer/transfer.vue:276", "获取用户余额失败:", error);
           this.userBalance = 0;
         }
       },
@@ -5777,7 +6298,7 @@ if (uni.restoreGlobal) {
             return false;
           }
         } catch (error) {
-          formatAppLog("error", "at pages/transfer/transfer.vue:245", "检查余额失败:", error);
+          formatAppLog("error", "at pages/transfer/transfer.vue:314", "检查余额失败:", error);
           uni.showToast({
             title: "检查余额失败，请重试",
             icon: "none"
@@ -5828,7 +6349,7 @@ if (uni.restoreGlobal) {
             this.showPasswordModal = true;
           }
         } catch (error) {
-          formatAppLog("error", "at pages/transfer/transfer.vue:308", "转账过程中出错:", error);
+          formatAppLog("error", "at pages/transfer/transfer.vue:377", "转账过程中出错:", error);
           uni.showToast({
             title: "转账失败，请重试",
             icon: "none"
@@ -5840,10 +6361,10 @@ if (uni.restoreGlobal) {
       async verifyPayeeInfo(account, name) {
         try {
           await new Promise((resolve) => setTimeout(resolve, 1e3));
-          formatAppLog("log", "at pages/transfer/transfer.vue:327", "收款人信息验证成功");
+          formatAppLog("log", "at pages/transfer/transfer.vue:396", "收款人信息验证成功");
           await this.processAccountTransfer();
         } catch (error) {
-          formatAppLog("error", "at pages/transfer/transfer.vue:332", "验证收款人信息失败:", error);
+          formatAppLog("error", "at pages/transfer/transfer.vue:401", "验证收款人信息失败:", error);
           uni.showToast({
             title: "收款人信息验证失败",
             icon: "none"
@@ -5880,7 +6401,7 @@ if (uni.restoreGlobal) {
             remark: ""
           };
         } catch (error) {
-          formatAppLog("error", "at pages/transfer/transfer.vue:384", "账号转账失败:", error);
+          formatAppLog("error", "at pages/transfer/transfer.vue:453", "账号转账失败:", error);
           this.saveTransferRecord({
             type: "account",
             account: this.accountForm.account,
@@ -5927,7 +6448,7 @@ if (uni.restoreGlobal) {
             remark: ""
           };
         } catch (error) {
-          formatAppLog("error", "at pages/transfer/transfer.vue:448", "手机号转账失败:", error);
+          formatAppLog("error", "at pages/transfer/transfer.vue:517", "手机号转账失败:", error);
           this.saveTransferRecord({
             type: "phone",
             phone: this.phoneForm.phone,
@@ -5960,9 +6481,9 @@ if (uni.restoreGlobal) {
             records.splice(100);
           }
           uni.setStorageSync("transferRecords", records);
-          formatAppLog("log", "at pages/transfer/transfer.vue:490", "转账记录已保存");
+          formatAppLog("log", "at pages/transfer/transfer.vue:559", "转账记录已保存");
         } catch (error) {
-          formatAppLog("error", "at pages/transfer/transfer.vue:492", "保存转账记录失败:", error);
+          formatAppLog("error", "at pages/transfer/transfer.vue:561", "保存转账记录失败:", error);
         }
       },
       // 跳转到转账记录
@@ -6010,7 +6531,7 @@ if (uni.restoreGlobal) {
           });
           this.clearForms();
         } catch (error) {
-          formatAppLog("error", "at pages/transfer/transfer.vue:558", "转账处理失败:", error);
+          formatAppLog("error", "at pages/transfer/transfer.vue:627", "转账处理失败:", error);
           this.isProcessing = false;
           uni.showToast({
             title: "转账失败，请重试",
@@ -6040,92 +6561,90 @@ if (uni.restoreGlobal) {
     }
   };
   function _sfc_render$e(_ctx, _cache, $props, $setup, $data, $options) {
-    const _component_SimpleThemeSwitcher = vue.resolveComponent("SimpleThemeSwitcher");
     const _component_PaymentPasswordModal = vue.resolveComponent("PaymentPasswordModal");
     return vue.openBlock(), vue.createElementBlock("view", { class: "transfer-page" }, [
       vue.createCommentVNode(" 顶部导航 "),
-      vue.createElementVNode(
-        "view",
-        {
-          class: "nav-bar",
-          style: vue.normalizeStyle($data.themeStyles.primaryGradient)
-        },
-        [
-          vue.createElementVNode("text", { class: "nav-title" }, "转账"),
-          vue.createElementVNode("view", { class: "nav-actions" }, [
-            vue.createVNode(_component_SimpleThemeSwitcher)
-          ])
-        ],
-        4
-        /* STYLE */
-      ),
+      vue.createElementVNode("view", { class: "nav-bar" }, [
+        vue.createElementVNode("view", {
+          class: "nav-left",
+          onClick: _cache[0] || (_cache[0] = (...args) => $options.goBack && $options.goBack(...args))
+        }, [
+          vue.createElementVNode("text", { class: "back-icon" }, "←")
+        ]),
+        vue.createElementVNode("text", { class: "nav-title" }, "转账汇款"),
+        vue.createElementVNode("view", {
+          class: "nav-right",
+          onClick: _cache[1] || (_cache[1] = (...args) => $options.showTransferTips && $options.showTransferTips(...args))
+        }, [
+          vue.createElementVNode("text", { class: "help-icon" }, "?")
+        ])
+      ]),
       vue.createCommentVNode(" 账户余额显示 "),
-      vue.createElementVNode(
-        "view",
-        {
-          class: "balance-card",
-          style: vue.normalizeStyle($data.themeStyles.primaryGradient)
-        },
-        [
-          vue.createElementVNode("view", { class: "balance-info" }, [
-            vue.createElementVNode("text", { class: "balance-label" }, "账户余额"),
+      vue.createElementVNode("view", { class: "balance-card" }, [
+        vue.createElementVNode("view", { class: "balance-header" }, [
+          vue.createElementVNode("view", { class: "balance-icon" }, "💰"),
+          vue.createElementVNode("text", { class: "balance-label" }, "我的账户")
+        ]),
+        vue.createElementVNode("view", { class: "balance-info" }, [
+          vue.createElementVNode(
+            "text",
+            { class: "balance-amount" },
+            "¥" + vue.toDisplayString($data.userBalance.toFixed(2)),
+            1
+            /* TEXT */
+          ),
+          vue.createElementVNode("text", { class: "balance-subtitle" }, "可用余额")
+        ]),
+        vue.createElementVNode("view", { class: "balance-footer" }, [
+          vue.createElementVNode("view", { class: "limit-info" }, [
+            vue.createElementVNode("text", { class: "limit-label" }, "单笔限额"),
             vue.createElementVNode(
               "text",
-              { class: "balance-amount" },
-              "¥" + vue.toDisplayString($data.userBalance.toFixed(2)),
+              { class: "limit-amount" },
+              "¥" + vue.toDisplayString($data.transferLimit.toLocaleString()),
               1
               /* TEXT */
             )
           ]),
-          vue.createElementVNode("view", { class: "balance-tip" }, [
-            vue.createElementVNode(
-              "text",
-              { class: "tip-text" },
-              "单笔转账限额：¥" + vue.toDisplayString($data.transferLimit.toLocaleString()),
-              1
-              /* TEXT */
-            )
+          vue.createElementVNode("view", {
+            class: "refresh-btn",
+            onClick: _cache[2] || (_cache[2] = (...args) => $options.refreshBalance && $options.refreshBalance(...args))
+          }, [
+            vue.createElementVNode("text", { class: "refresh-icon" }, "🔄")
           ])
-        ],
-        4
-        /* STYLE */
-      ),
+        ])
+      ]),
       vue.createCommentVNode(" 转账类型选择 "),
-      vue.createElementVNode(
-        "view",
-        {
-          class: "transfer-types",
-          style: vue.normalizeStyle($data.themeStyles.surface)
-        },
-        [
-          vue.createElementVNode(
-            "view",
-            {
-              class: vue.normalizeClass(["type-item", { active: $data.currentTab === "account" }]),
-              onClick: _cache[0] || (_cache[0] = ($event) => $options.switchTab("account"))
-            },
-            [
-              vue.createElementVNode("text", { class: "type-text" }, "账号转账")
-            ],
-            2
-            /* CLASS */
-          ),
-          vue.createElementVNode(
-            "view",
-            {
-              class: vue.normalizeClass(["type-item", { active: $data.currentTab === "phone" }]),
-              onClick: _cache[1] || (_cache[1] = ($event) => $options.switchTab("phone"))
-            },
-            [
-              vue.createElementVNode("text", { class: "type-text" }, "手机号转账")
-            ],
-            2
-            /* CLASS */
-          )
-        ],
-        4
-        /* STYLE */
-      ),
+      vue.createElementVNode("view", { class: "transfer-types" }, [
+        vue.createElementVNode(
+          "view",
+          {
+            class: vue.normalizeClass(["type-item", { active: $data.currentTab === "account" }]),
+            onClick: _cache[3] || (_cache[3] = ($event) => $options.switchTab("account"))
+          },
+          [
+            vue.createElementVNode("view", { class: "type-icon" }, "🏦"),
+            vue.createElementVNode("text", { class: "type-text" }, "账号转账"),
+            vue.createElementVNode("text", { class: "type-desc" }, "输入银行账号")
+          ],
+          2
+          /* CLASS */
+        ),
+        vue.createElementVNode(
+          "view",
+          {
+            class: vue.normalizeClass(["type-item", { active: $data.currentTab === "phone" }]),
+            onClick: _cache[4] || (_cache[4] = ($event) => $options.switchTab("phone"))
+          },
+          [
+            vue.createElementVNode("view", { class: "type-icon" }, "📱"),
+            vue.createElementVNode("text", { class: "type-text" }, "手机号转账"),
+            vue.createElementVNode("text", { class: "type-desc" }, "输入手机号码")
+          ],
+          2
+          /* CLASS */
+        )
+      ]),
       vue.createCommentVNode(" 转账表单 "),
       vue.createElementVNode("view", { class: "transfer-form" }, [
         vue.createCommentVNode(" 账号转账表单 "),
@@ -6134,13 +6653,16 @@ if (uni.restoreGlobal) {
           class: "form-content"
         }, [
           vue.createElementVNode("view", { class: "form-item" }, [
-            vue.createElementVNode("text", { class: "form-label" }, "收款方账号"),
+            vue.createElementVNode("view", { class: "form-label-wrapper" }, [
+              vue.createElementVNode("text", { class: "form-icon" }, "🏦"),
+              vue.createElementVNode("text", { class: "form-label" }, "收款方账号")
+            ]),
             vue.withDirectives(vue.createElementVNode(
               "input",
               {
                 class: "form-input",
-                placeholder: "请输入收款方账号",
-                "onUpdate:modelValue": _cache[2] || (_cache[2] = ($event) => $data.accountForm.account = $event)
+                placeholder: "请输入收款方银行账号",
+                "onUpdate:modelValue": _cache[5] || (_cache[5] = ($event) => $data.accountForm.account = $event)
               },
               null,
               512
@@ -6150,13 +6672,16 @@ if (uni.restoreGlobal) {
             ])
           ]),
           vue.createElementVNode("view", { class: "form-item" }, [
-            vue.createElementVNode("text", { class: "form-label" }, "收款人姓名"),
+            vue.createElementVNode("view", { class: "form-label-wrapper" }, [
+              vue.createElementVNode("text", { class: "form-icon" }, "👤"),
+              vue.createElementVNode("text", { class: "form-label" }, "收款人姓名")
+            ]),
             vue.withDirectives(vue.createElementVNode(
               "input",
               {
                 class: "form-input",
-                placeholder: "请输入收款人姓名",
-                "onUpdate:modelValue": _cache[3] || (_cache[3] = ($event) => $data.accountForm.name = $event)
+                placeholder: "请输入收款人真实姓名",
+                "onUpdate:modelValue": _cache[6] || (_cache[6] = ($event) => $data.accountForm.name = $event)
               },
               null,
               512
@@ -6166,30 +6691,40 @@ if (uni.restoreGlobal) {
             ])
           ]),
           vue.createElementVNode("view", { class: "form-item" }, [
-            vue.createElementVNode("text", { class: "form-label" }, "转账金额"),
-            vue.withDirectives(vue.createElementVNode(
-              "input",
-              {
-                class: "form-input",
-                type: "digit",
-                placeholder: "请输入转账金额",
-                "onUpdate:modelValue": _cache[4] || (_cache[4] = ($event) => $data.accountForm.amount = $event)
-              },
-              null,
-              512
-              /* NEED_PATCH */
-            ), [
-              [vue.vModelText, $data.accountForm.amount]
+            vue.createElementVNode("view", { class: "form-label-wrapper" }, [
+              vue.createElementVNode("text", { class: "form-icon" }, "💰"),
+              vue.createElementVNode("text", { class: "form-label" }, "转账金额")
+            ]),
+            vue.createElementVNode("view", { class: "amount-input-wrapper" }, [
+              vue.createElementVNode("text", { class: "currency-symbol" }, "¥"),
+              vue.withDirectives(vue.createElementVNode(
+                "input",
+                {
+                  class: "form-input amount-input",
+                  type: "digit",
+                  placeholder: "0.00",
+                  "onUpdate:modelValue": _cache[7] || (_cache[7] = ($event) => $data.accountForm.amount = $event)
+                },
+                null,
+                512
+                /* NEED_PATCH */
+              ), [
+                [vue.vModelText, $data.accountForm.amount]
+              ])
             ])
           ]),
           vue.createElementVNode("view", { class: "form-item" }, [
-            vue.createElementVNode("text", { class: "form-label" }, "转账附言"),
+            vue.createElementVNode("view", { class: "form-label-wrapper" }, [
+              vue.createElementVNode("text", { class: "form-icon" }, "📝"),
+              vue.createElementVNode("text", { class: "form-label" }, "转账附言"),
+              vue.createElementVNode("text", { class: "form-optional" }, "（选填）")
+            ]),
             vue.withDirectives(vue.createElementVNode(
               "input",
               {
                 class: "form-input",
-                placeholder: "选填，不超过20个字",
-                "onUpdate:modelValue": _cache[5] || (_cache[5] = ($event) => $data.accountForm.remark = $event),
+                placeholder: "不超过20个字",
+                "onUpdate:modelValue": _cache[8] || (_cache[8] = ($event) => $data.accountForm.remark = $event),
                 maxlength: "20"
               },
               null,
@@ -6206,14 +6741,17 @@ if (uni.restoreGlobal) {
           class: "form-content"
         }, [
           vue.createElementVNode("view", { class: "form-item" }, [
-            vue.createElementVNode("text", { class: "form-label" }, "收款人手机号"),
+            vue.createElementVNode("view", { class: "form-label-wrapper" }, [
+              vue.createElementVNode("text", { class: "form-icon" }, "📱"),
+              vue.createElementVNode("text", { class: "form-label" }, "收款人手机号")
+            ]),
             vue.withDirectives(vue.createElementVNode(
               "input",
               {
                 class: "form-input",
                 type: "number",
-                placeholder: "请输入收款人手机号",
-                "onUpdate:modelValue": _cache[6] || (_cache[6] = ($event) => $data.phoneForm.phone = $event)
+                placeholder: "请输入11位手机号码",
+                "onUpdate:modelValue": _cache[9] || (_cache[9] = ($event) => $data.phoneForm.phone = $event)
               },
               null,
               512
@@ -6223,30 +6761,40 @@ if (uni.restoreGlobal) {
             ])
           ]),
           vue.createElementVNode("view", { class: "form-item" }, [
-            vue.createElementVNode("text", { class: "form-label" }, "转账金额"),
-            vue.withDirectives(vue.createElementVNode(
-              "input",
-              {
-                class: "form-input",
-                type: "digit",
-                placeholder: "请输入转账金额",
-                "onUpdate:modelValue": _cache[7] || (_cache[7] = ($event) => $data.phoneForm.amount = $event)
-              },
-              null,
-              512
-              /* NEED_PATCH */
-            ), [
-              [vue.vModelText, $data.phoneForm.amount]
+            vue.createElementVNode("view", { class: "form-label-wrapper" }, [
+              vue.createElementVNode("text", { class: "form-icon" }, "💰"),
+              vue.createElementVNode("text", { class: "form-label" }, "转账金额")
+            ]),
+            vue.createElementVNode("view", { class: "amount-input-wrapper" }, [
+              vue.createElementVNode("text", { class: "currency-symbol" }, "¥"),
+              vue.withDirectives(vue.createElementVNode(
+                "input",
+                {
+                  class: "form-input amount-input",
+                  type: "digit",
+                  placeholder: "0.00",
+                  "onUpdate:modelValue": _cache[10] || (_cache[10] = ($event) => $data.phoneForm.amount = $event)
+                },
+                null,
+                512
+                /* NEED_PATCH */
+              ), [
+                [vue.vModelText, $data.phoneForm.amount]
+              ])
             ])
           ]),
           vue.createElementVNode("view", { class: "form-item" }, [
-            vue.createElementVNode("text", { class: "form-label" }, "转账附言"),
+            vue.createElementVNode("view", { class: "form-label-wrapper" }, [
+              vue.createElementVNode("text", { class: "form-icon" }, "📝"),
+              vue.createElementVNode("text", { class: "form-label" }, "转账附言"),
+              vue.createElementVNode("text", { class: "form-optional" }, "（选填）")
+            ]),
             vue.withDirectives(vue.createElementVNode(
               "input",
               {
                 class: "form-input",
-                placeholder: "选填，不超过20个字",
-                "onUpdate:modelValue": _cache[8] || (_cache[8] = ($event) => $data.phoneForm.remark = $event),
+                placeholder: "不超过20个字",
+                "onUpdate:modelValue": _cache[11] || (_cache[11] = ($event) => $data.phoneForm.remark = $event),
                 maxlength: "20"
               },
               null,
@@ -6260,25 +6808,46 @@ if (uni.restoreGlobal) {
         vue.createCommentVNode(" 转账按钮 "),
         vue.createElementVNode("button", {
           class: "transfer-btn",
-          onClick: _cache[9] || (_cache[9] = (...args) => $options.submitTransfer && $options.submitTransfer(...args)),
+          onClick: _cache[12] || (_cache[12] = (...args) => $options.submitTransfer && $options.submitTransfer(...args)),
           disabled: $data.isProcessing
-        }, vue.toDisplayString($data.isProcessing ? "处理中..." : "确认转账"), 9, ["disabled"])
+        }, [
+          vue.createElementVNode(
+            "text",
+            { class: "btn-icon" },
+            vue.toDisplayString($data.isProcessing ? "⏳" : "💸"),
+            1
+            /* TEXT */
+          ),
+          vue.createElementVNode(
+            "text",
+            { class: "btn-text" },
+            vue.toDisplayString($data.isProcessing ? "处理中..." : "确认转账"),
+            1
+            /* TEXT */
+          )
+        ], 8, ["disabled"])
       ]),
       vue.createCommentVNode(" 其他功能 "),
       vue.createElementVNode("view", { class: "other-functions" }, [
         vue.createElementVNode("view", {
           class: "function-item",
-          onClick: _cache[10] || (_cache[10] = (...args) => $options.goToTransferHistory && $options.goToTransferHistory(...args))
+          onClick: _cache[13] || (_cache[13] = (...args) => $options.goToTransferHistory && $options.goToTransferHistory(...args))
         }, [
-          vue.createElementVNode("text", { class: "function-text" }, "转账记录"),
-          vue.createElementVNode("text", { class: "arrow-right" }, "➡️")
+          vue.createElementVNode("view", { class: "function-left" }, [
+            vue.createElementVNode("text", { class: "function-icon" }, "📋"),
+            vue.createElementVNode("text", { class: "function-text" }, "转账记录")
+          ]),
+          vue.createElementVNode("text", { class: "arrow-right" }, ">")
         ]),
         vue.createElementVNode("view", {
           class: "function-item",
-          onClick: _cache[11] || (_cache[11] = (...args) => $options.goToTransferSettings && $options.goToTransferSettings(...args))
+          onClick: _cache[14] || (_cache[14] = (...args) => $options.goToTransferSettings && $options.goToTransferSettings(...args))
         }, [
-          vue.createElementVNode("text", { class: "function-text" }, "转账设置"),
-          vue.createElementVNode("text", { class: "arrow-right" }, "➡️")
+          vue.createElementVNode("view", { class: "function-left" }, [
+            vue.createElementVNode("text", { class: "function-icon" }, "⚙️"),
+            vue.createElementVNode("text", { class: "function-text" }, "转账设置")
+          ]),
+          vue.createElementVNode("text", { class: "arrow-right" }, ">")
         ])
       ]),
       vue.createCommentVNode(" 交易密码验证弹窗 "),
@@ -14830,6 +15399,8 @@ IP：${event.ip}
   __definePage("pages/wealth/wealth", PagesWealthWealth);
   __definePage("pages/life/life", PagesLifeLife);
   __definePage("pages/service/chat", PagesServiceChat);
+  __definePage("pages/help/help-center", PagesHelpHelpCenter);
+  __definePage("pages/help/help-detail", PagesHelpHelpDetail);
   __definePage("pages/transfer/transfer", PagesTransferTransfer);
   __definePage("pages/account/account", PagesAccountAccount);
   __definePage("pages/payment/payment", PagesPaymentPayment);
@@ -14880,279 +15451,10 @@ IP：${event.ip}
   Promise.resolve().then(() => {
     initPushNotification();
   });
-  const THEME_STORAGE_KEY = "app_theme";
-  const themes = {
-    light: {
-      name: "浅色主题",
-      id: "light",
-      colors: {
-        primary: "#4caf50",
-        primaryDark: "#2e7d32",
-        primaryLight: "#81c784",
-        secondary: "#ff9800",
-        secondaryDark: "#f57c00",
-        background: "#f5f5f5",
-        surface: "#ffffff",
-        surfaceVariant: "#f8f9fa",
-        text: "#333333",
-        textSecondary: "#666666",
-        textDisabled: "#999999",
-        border: "#e0e0e0",
-        borderLight: "#f0f0f0",
-        success: "#4caf50",
-        warning: "#ff9800",
-        error: "#f44336",
-        info: "#2196f3",
-        shadow: "rgba(0, 0, 0, 0.1)",
-        shadowDark: "rgba(0, 0, 0, 0.2)"
-      },
-      gradients: {
-        primary: "linear-gradient(135deg, #2e7d32 0%, #4caf50 100%)",
-        secondary: "linear-gradient(135deg, #f57c00 0%, #ff9800 100%)",
-        success: "linear-gradient(135deg, #388e3c 0%, #4caf50 100%)",
-        warning: "linear-gradient(135deg, #f57c00 0%, #ff9800 100%)",
-        error: "linear-gradient(135deg, #d32f2f 0%, #f44336 100%)"
-      }
-    },
-    dark: {
-      name: "深色主题",
-      id: "dark",
-      colors: {
-        primary: "#66bb6a",
-        primaryDark: "#4caf50",
-        primaryLight: "#81c784",
-        secondary: "#ffb74d",
-        secondaryDark: "#ff9800",
-        background: "#121212",
-        surface: "#1e1e1e",
-        surfaceVariant: "#2d2d2d",
-        text: "#ffffff",
-        textSecondary: "#b3b3b3",
-        textDisabled: "#666666",
-        border: "#333333",
-        borderLight: "#2d2d2d",
-        success: "#66bb6a",
-        warning: "#ffb74d",
-        error: "#f44336",
-        info: "#42a5f5",
-        shadow: "rgba(0, 0, 0, 0.3)",
-        shadowDark: "rgba(0, 0, 0, 0.5)"
-      },
-      gradients: {
-        primary: "linear-gradient(135deg, #4caf50 0%, #66bb6a 100%)",
-        secondary: "linear-gradient(135deg, #ff9800 0%, #ffb74d 100%)",
-        success: "linear-gradient(135deg, #4caf50 0%, #66bb6a 100%)",
-        warning: "linear-gradient(135deg, #ff9800 0%, #ffb74d 100%)",
-        error: "linear-gradient(135deg, #f44336 0%, #e57373 100%)"
-      }
-    },
-    blue: {
-      name: "蓝色主题",
-      id: "blue",
-      colors: {
-        primary: "#2196f3",
-        primaryDark: "#1976d2",
-        primaryLight: "#64b5f6",
-        secondary: "#ff9800",
-        secondaryDark: "#f57c00",
-        background: "#f3f7ff",
-        surface: "#ffffff",
-        surfaceVariant: "#f8faff",
-        text: "#333333",
-        textSecondary: "#666666",
-        textDisabled: "#999999",
-        border: "#e3f2fd",
-        borderLight: "#f0f7ff",
-        success: "#4caf50",
-        warning: "#ff9800",
-        error: "#f44336",
-        info: "#2196f3",
-        shadow: "rgba(33, 150, 243, 0.1)",
-        shadowDark: "rgba(33, 150, 243, 0.2)"
-      },
-      gradients: {
-        primary: "linear-gradient(135deg, #1976d2 0%, #2196f3 100%)",
-        secondary: "linear-gradient(135deg, #f57c00 0%, #ff9800 100%)",
-        success: "linear-gradient(135deg, #388e3c 0%, #4caf50 100%)",
-        warning: "linear-gradient(135deg, #f57c00 0%, #ff9800 100%)",
-        error: "linear-gradient(135deg, #d32f2f 0%, #f44336 100%)"
-      }
-    },
-    purple: {
-      name: "紫色主题",
-      id: "purple",
-      colors: {
-        primary: "#9c27b0",
-        primaryDark: "#7b1fa2",
-        primaryLight: "#ba68c8",
-        secondary: "#ff9800",
-        secondaryDark: "#f57c00",
-        background: "#faf5ff",
-        surface: "#ffffff",
-        surfaceVariant: "#f8f4ff",
-        text: "#333333",
-        textSecondary: "#666666",
-        textDisabled: "#999999",
-        border: "#e1bee7",
-        borderLight: "#f3e5f5",
-        success: "#4caf50",
-        warning: "#ff9800",
-        error: "#f44336",
-        info: "#2196f3",
-        shadow: "rgba(156, 39, 176, 0.1)",
-        shadowDark: "rgba(156, 39, 176, 0.2)"
-      },
-      gradients: {
-        primary: "linear-gradient(135deg, #7b1fa2 0%, #9c27b0 100%)",
-        secondary: "linear-gradient(135deg, #f57c00 0%, #ff9800 100%)",
-        success: "linear-gradient(135deg, #388e3c 0%, #4caf50 100%)",
-        warning: "linear-gradient(135deg, #f57c00 0%, #ff9800 100%)",
-        error: "linear-gradient(135deg, #d32f2f 0%, #f44336 100%)"
-      }
-    }
-  };
-  class ThemeManager {
-    constructor() {
-      this.currentTheme = this.getStoredTheme() || "light";
-      this.listeners = [];
-      this.init();
-    }
-    // 初始化主题
-    init() {
-      setTimeout(() => {
-        this.applyTheme(this.currentTheme);
-        this.setupSystemThemeListener();
-      }, 100);
-    }
-    // 获取存储的主题
-    getStoredTheme() {
-      try {
-        return uni.getStorageSync(THEME_STORAGE_KEY);
-      } catch (error) {
-        formatAppLog("error", "at utils/theme.js:158", "获取主题失败:", error);
-        return "light";
-      }
-    }
-    // 存储主题
-    setStoredTheme(themeId) {
-      try {
-        uni.setStorageSync(THEME_STORAGE_KEY, themeId);
-      } catch (error) {
-        formatAppLog("error", "at utils/theme.js:168", "存储主题失败:", error);
-      }
-    }
-    // 应用主题
-    applyTheme(themeId) {
-      const theme = themes[themeId];
-      if (!theme) {
-        formatAppLog("error", "at utils/theme.js:176", "主题不存在:", themeId);
-        return;
-      }
-      this.currentTheme = themeId;
-      this.setStoredTheme(themeId);
-      this.applyCSSVariables(theme);
-      this.notifyListeners(theme);
-      formatAppLog("log", "at utils/theme.js:189", "主题已切换为:", theme.name);
-    }
-    // 应用CSS变量
-    applyCSSVariables(theme) {
-      if (typeof document === "undefined") {
-        formatAppLog("warn", "at utils/theme.js:196", "Document not available, skipping CSS variable application");
-        return;
-      }
-      try {
-        const root = document.documentElement || document.body;
-        if (!root) {
-          formatAppLog("warn", "at utils/theme.js:204", "Root element not available, skipping CSS variable application");
-          return;
-        }
-        Object.entries(theme.colors).forEach(([key, value]) => {
-          root.style.setProperty(`--color-${key}`, value);
-        });
-        Object.entries(theme.gradients).forEach(([key, value]) => {
-          root.style.setProperty(`--gradient-${key}`, value);
-        });
-        if (document.body) {
-          document.body.className = document.body.className.replace(/theme-\w+/g, "");
-          document.body.classList.add(`theme-${theme.id}`);
-        }
-      } catch (error) {
-        formatAppLog("warn", "at utils/theme.js:224", "Failed to apply CSS variables:", error);
-      }
-    }
-    // 获取当前主题
-    getCurrentTheme() {
-      return themes[this.currentTheme];
-    }
-    // 获取当前主题ID
-    getCurrentThemeId() {
-      return this.currentTheme;
-    }
-    // 切换主题
-    switchTheme(themeId) {
-      if (themes[themeId]) {
-        this.applyTheme(themeId);
-      } else {
-        formatAppLog("error", "at utils/theme.js:243", "主题不存在:", themeId);
-      }
-    }
-    // 切换到下一个主题
-    switchToNextTheme() {
-      const themeIds = Object.keys(themes);
-      const currentIndex = themeIds.indexOf(this.currentTheme);
-      const nextIndex = (currentIndex + 1) % themeIds.length;
-      this.switchTheme(themeIds[nextIndex]);
-    }
-    // 添加主题变化监听器
-    addThemeListener(callback) {
-      this.listeners.push(callback);
-    }
-    // 移除主题变化监听器
-    removeThemeListener(callback) {
-      const index = this.listeners.indexOf(callback);
-      if (index > -1) {
-        this.listeners.splice(index, 1);
-      }
-    }
-    // 通知监听器
-    notifyListeners(theme) {
-      this.listeners.forEach((callback) => {
-        try {
-          callback(theme);
-        } catch (error) {
-          formatAppLog("error", "at utils/theme.js:274", "主题监听器执行失败:", error);
-        }
-      });
-    }
-    // 设置系统主题监听
-    setupSystemThemeListener() {
-      if (typeof window === "undefined" || !window.matchMedia) {
-        formatAppLog("warn", "at utils/theme.js:283", "Window or matchMedia not available, skipping system theme listener");
-        return;
-      }
-      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-      mediaQuery.addListener((e) => {
-        const storedTheme = this.getStoredTheme();
-        if (!storedTheme || storedTheme === "auto") {
-          this.applyTheme(e.matches ? "dark" : "light");
-        }
-      });
-    }
-    // 获取所有可用主题
-    getAllThemes() {
-      return Object.values(themes);
-    }
-    // 检查主题是否存在
-    hasTheme(themeId) {
-      return themes.hasOwnProperty(themeId);
-    }
-  }
-  const themeManager = new ThemeManager();
   const _sfc_main = {
     name: "App",
     onLaunch(options) {
-      formatAppLog("log", "at App.vue:13", "App Launch", options);
-      themeManager.init();
+      formatAppLog("log", "at App.vue:12", "App Launch", options);
       this.checkUpdate();
       this.initUserInfo();
       this.setSystemInfo();
@@ -15160,21 +15462,21 @@ IP：${event.ip}
       this.initLoginInterceptor();
     },
     onShow(options) {
-      formatAppLog("log", "at App.vue:35", "App Show", options);
+      formatAppLog("log", "at App.vue:31", "App Show", options);
       this.checkLoginStatus();
       this.restoreAppState();
       this.globalLoginCheck();
     },
     onHide() {
-      formatAppLog("log", "at App.vue:48", "App Hide");
+      formatAppLog("log", "at App.vue:44", "App Hide");
       this.saveAppState();
     },
     onError(error) {
-      formatAppLog("error", "at App.vue:55", "App Error:", error);
+      formatAppLog("error", "at App.vue:51", "App Error:", error);
       this.reportError(error);
     },
     onPageNotFound(options) {
-      formatAppLog("log", "at App.vue:62", "Page Not Found:", options);
+      formatAppLog("log", "at App.vue:58", "Page Not Found:", options);
       uni.switchTab({
         url: "/pages/index/index"
       });
@@ -15185,7 +15487,7 @@ IP：${event.ip}
        */
       checkUpdate() {
         plus.runtime.getProperty(plus.runtime.appid, (widgetInfo) => {
-          formatAppLog("log", "at App.vue:77", "当前应用版本:", widgetInfo.version);
+          formatAppLog("log", "at App.vue:73", "当前应用版本:", widgetInfo.version);
         });
       },
       /**
@@ -15196,10 +15498,10 @@ IP：${event.ip}
           const userInfo = uni.getStorageSync("userInfo");
           if (userInfo) {
             this.globalData.userInfo = userInfo;
-            formatAppLog("log", "at App.vue:91", "用户信息已恢复:", userInfo);
+            formatAppLog("log", "at App.vue:87", "用户信息已恢复:", userInfo);
           }
         } catch (error) {
-          formatAppLog("error", "at App.vue:94", "恢复用户信息失败:", error);
+          formatAppLog("error", "at App.vue:90", "恢复用户信息失败:", error);
         }
       },
       /**
@@ -15209,9 +15511,9 @@ IP：${event.ip}
         try {
           const systemInfo = uni.getSystemInfoSync();
           this.globalData.systemInfo = systemInfo;
-          formatAppLog("log", "at App.vue:105", "系统信息:", systemInfo);
+          formatAppLog("log", "at App.vue:101", "系统信息:", systemInfo);
         } catch (error) {
-          formatAppLog("error", "at App.vue:107", "获取系统信息失败:", error);
+          formatAppLog("error", "at App.vue:103", "获取系统信息失败:", error);
         }
       },
       /**
@@ -15219,7 +15521,7 @@ IP：${event.ip}
        */
       initNetworkListener() {
         uni.onNetworkStatusChange((res) => {
-          formatAppLog("log", "at App.vue:116", "网络状态变化:", res);
+          formatAppLog("log", "at App.vue:112", "网络状态变化:", res);
           this.globalData.networkType = res.networkType;
           this.globalData.isConnected = res.isConnected;
           if (!res.isConnected) {
@@ -15238,7 +15540,7 @@ IP：${event.ip}
           const pages = getCurrentPages();
           const currentPage = pages[pages.length - 1];
           if (currentPage && !currentPage.route.includes("login")) {
-            formatAppLog("log", "at App.vue:139", "应用启动时检测到未登录，强制跳转到登录页面");
+            formatAppLog("log", "at App.vue:135", "应用启动时检测到未登录，强制跳转到登录页面");
             uni.reLaunch({
               url: "/pages/denglu/login"
             });
@@ -15251,13 +15553,13 @@ IP：${event.ip}
       initLoginInterceptor() {
         uni.addInterceptor("navigateTo", {
           invoke(e) {
-            formatAppLog("log", "at App.vue:154", "拦截 navigateTo:", e.url);
+            formatAppLog("log", "at App.vue:150", "拦截 navigateTo:", e.url);
             if (e.url.includes("/pages/denglu/login") || e.url.includes("/pages/register/register")) {
-              formatAppLog("log", "at App.vue:158", "跳转到登录页面或注册页面，允许");
+              formatAppLog("log", "at App.vue:154", "跳转到登录页面或注册页面，允许");
               return true;
             }
             if (!forceCheckLogin()) {
-              formatAppLog("log", "at App.vue:164", "用户未登录，阻止页面跳转");
+              formatAppLog("log", "at App.vue:160", "用户未登录，阻止页面跳转");
               return false;
             }
             return true;
@@ -15265,9 +15567,9 @@ IP：${event.ip}
         });
         uni.addInterceptor("switchTab", {
           invoke(e) {
-            formatAppLog("log", "at App.vue:175", "拦截 switchTab:", e.url);
+            formatAppLog("log", "at App.vue:171", "拦截 switchTab:", e.url);
             if (!forceCheckLogin()) {
-              formatAppLog("log", "at App.vue:179", "用户未登录，阻止tabBar跳转");
+              formatAppLog("log", "at App.vue:175", "用户未登录，阻止tabBar跳转");
               return false;
             }
             return true;
@@ -15275,13 +15577,13 @@ IP：${event.ip}
         });
         uni.addInterceptor("reLaunch", {
           invoke(e) {
-            formatAppLog("log", "at App.vue:190", "拦截 reLaunch:", e.url);
+            formatAppLog("log", "at App.vue:186", "拦截 reLaunch:", e.url);
             if (e.url.includes("/pages/denglu/login") || e.url.includes("/pages/register/register")) {
-              formatAppLog("log", "at App.vue:194", "重定向到登录页面或注册页面，允许");
+              formatAppLog("log", "at App.vue:190", "重定向到登录页面或注册页面，允许");
               return true;
             }
             if (!forceCheckLogin()) {
-              formatAppLog("log", "at App.vue:200", "用户未登录，阻止重定向");
+              formatAppLog("log", "at App.vue:196", "用户未登录，阻止重定向");
               return false;
             }
             return true;
@@ -15289,13 +15591,13 @@ IP：${event.ip}
         });
         uni.addInterceptor("redirectTo", {
           invoke(e) {
-            formatAppLog("log", "at App.vue:211", "拦截 redirectTo:", e.url);
+            formatAppLog("log", "at App.vue:207", "拦截 redirectTo:", e.url);
             if (e.url.includes("/pages/denglu/login") || e.url.includes("/pages/register/register")) {
-              formatAppLog("log", "at App.vue:215", "重定向到登录页面或注册页面，允许");
+              formatAppLog("log", "at App.vue:211", "重定向到登录页面或注册页面，允许");
               return true;
             }
             if (!forceCheckLogin()) {
-              formatAppLog("log", "at App.vue:221", "用户未登录，阻止重定向");
+              formatAppLog("log", "at App.vue:217", "用户未登录，阻止重定向");
               return false;
             }
             return true;
@@ -15321,7 +15623,7 @@ IP：${event.ip}
           };
           uni.setStorageSync("appState", appState);
         } catch (error) {
-          formatAppLog("error", "at App.vue:251", "保存应用状态失败:", error);
+          formatAppLog("error", "at App.vue:247", "保存应用状态失败:", error);
         }
       },
       /**
@@ -15337,14 +15639,14 @@ IP：${event.ip}
             }
           }
         } catch (error) {
-          formatAppLog("error", "at App.vue:269", "恢复应用状态失败:", error);
+          formatAppLog("error", "at App.vue:265", "恢复应用状态失败:", error);
         }
       },
       /**
        * 错误上报
        */
       reportError(error) {
-        formatAppLog("error", "at App.vue:278", "错误上报:", error);
+        formatAppLog("error", "at App.vue:274", "错误上报:", error);
       }
     },
     /**
@@ -15375,8 +15677,8 @@ IP：${event.ip}
     const app = vue.createVueApp(App);
     const currentEnv = getEnvironment();
     app.config.errorHandler = (err, vm, info) => {
-      formatAppLog("error", "at main.js:38", "Vue Error:", err);
-      formatAppLog("error", "at main.js:39", "Error Info:", info);
+      formatAppLog("error", "at main.js:36", "Vue Error:", err);
+      formatAppLog("error", "at main.js:37", "Error Info:", info);
       reportError(err, info);
       uni.showToast({
         title: "应用出现错误，请重试",
@@ -15385,12 +15687,10 @@ IP：${event.ip}
       });
     };
     app.config.warnHandler = (msg, vm, trace) => {
-      formatAppLog("warn", "at main.js:54", "Vue Warning:", msg);
-      formatAppLog("warn", "at main.js:55", "Warning Trace:", trace);
+      formatAppLog("warn", "at main.js:52", "Vue Warning:", msg);
+      formatAppLog("warn", "at main.js:53", "Warning Trace:", trace);
     };
     app.config.globalProperties.$app = {
-      // 主题管理器
-      theme: themeManager$1,
       // 应用版本
       version: "1.0.0",
       // 环境信息
@@ -15487,12 +15787,12 @@ IP：${event.ip}
             };
           }
           config.url += (config.url.includes("?") ? "&" : "?") + `_t=${Date.now()}`;
-          formatAppLog("log", "at main.js:180", "Request:", config);
+          formatAppLog("log", "at main.js:176", "Request:", config);
           return config;
         },
         // 响应拦截器
         afterResponse(response) {
-          formatAppLog("log", "at main.js:186", "Response:", response);
+          formatAppLog("log", "at main.js:182", "Response:", response);
           if (response.statusCode === 401) {
             uni.removeStorageSync("token");
             uni.removeStorageSync("userInfo");
@@ -15522,7 +15822,7 @@ IP：${event.ip}
             });
             return this.afterResponse(response);
           } catch (error) {
-            formatAppLog("error", "at main.js:222", "Request Error:", error);
+            formatAppLog("error", "at main.js:218", "Request Error:", error);
             if (error.errMsg && error.errMsg.includes("request:fail")) {
               uni.showToast({
                 title: "网络连接失败，请检查网络设置",
@@ -15578,7 +15878,7 @@ IP：${event.ip}
           try {
             uni.setStorageSync(key, JSON.stringify(data));
           } catch (error) {
-            formatAppLog("error", "at main.js:288", "Storage Set Error:", error);
+            formatAppLog("error", "at main.js:284", "Storage Set Error:", error);
           }
         },
         // 获取存储
@@ -15594,7 +15894,7 @@ IP：${event.ip}
             }
             return parsed.value;
           } catch (error) {
-            formatAppLog("error", "at main.js:308", "Storage Get Error:", error);
+            formatAppLog("error", "at main.js:304", "Storage Get Error:", error);
             return defaultValue;
           }
         },
@@ -15603,7 +15903,7 @@ IP：${event.ip}
           try {
             uni.removeStorageSync(key);
           } catch (error) {
-            formatAppLog("error", "at main.js:318", "Storage Remove Error:", error);
+            formatAppLog("error", "at main.js:314", "Storage Remove Error:", error);
           }
         },
         // 清空存储
@@ -15611,7 +15911,7 @@ IP：${event.ip}
           try {
             uni.clearStorageSync();
           } catch (error) {
-            formatAppLog("error", "at main.js:327", "Storage Clear Error:", error);
+            formatAppLog("error", "at main.js:323", "Storage Clear Error:", error);
           }
         }
       }
@@ -15619,25 +15919,25 @@ IP：${event.ip}
     app.mixin({
       // 页面生命周期
       onLoad(options) {
-        formatAppLog("log", "at main.js:337", "Page Load:", this.$options.name, options);
+        formatAppLog("log", "at main.js:333", "Page Load:", this.$options.name, options);
         this.pageStartTime = Date.now();
       },
       onShow() {
-        formatAppLog("log", "at main.js:344", "Page Show:", this.$options.name);
+        formatAppLog("log", "at main.js:340", "Page Show:", this.$options.name);
       },
       onHide() {
-        formatAppLog("log", "at main.js:348", "Page Hide:", this.$options.name);
+        formatAppLog("log", "at main.js:344", "Page Hide:", this.$options.name);
         if (this.pageStartTime) {
           const duration = Date.now() - this.pageStartTime;
-          formatAppLog("log", "at main.js:353", "Page Duration:", this.$options.name, duration + "ms");
+          formatAppLog("log", "at main.js:349", "Page Duration:", this.$options.name, duration + "ms");
         }
       },
       onUnload() {
-        formatAppLog("log", "at main.js:358", "Page Unload:", this.$options.name);
+        formatAppLog("log", "at main.js:354", "Page Unload:", this.$options.name);
       },
       // 错误处理
       onError(error) {
-        formatAppLog("error", "at main.js:363", "Page Error:", this.$options.name, error);
+        formatAppLog("error", "at main.js:359", "Page Error:", this.$options.name, error);
         reportError(error, `Page: ${this.$options.name}`);
       }
     });
@@ -15655,15 +15955,15 @@ IP：${event.ip}
       userAgent: uni.getSystemInfoSync(),
       url: ((_a = getCurrentPages().pop()) == null ? void 0 : _a.route) || "unknown"
     };
-    formatAppLog("error", "at main.js:389", "Error Report:", errorData);
+    formatAppLog("error", "at main.js:385", "Error Report:", errorData);
   }
   if (typeof window !== "undefined") {
     window.addEventListener("error", (event) => {
-      formatAppLog("error", "at main.js:402", "Global Error:", event.error);
+      formatAppLog("error", "at main.js:398", "Global Error:", event.error);
       reportError(event.error, "Global Error");
     });
     window.addEventListener("unhandledrejection", (event) => {
-      formatAppLog("error", "at main.js:407", "Unhandled Promise Rejection:", event.reason);
+      formatAppLog("error", "at main.js:403", "Unhandled Promise Rejection:", event.reason);
       reportError(event.reason, "Unhandled Promise Rejection");
     });
   }
