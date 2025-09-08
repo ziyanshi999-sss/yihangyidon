@@ -76,6 +76,20 @@
 			}
 		},
 		{
+			"path": "pages/water/water",
+			"style": {
+				"navigationBarTitleText": "水费",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/payment-management/payment-management",
+			"style": {
+				"navigationBarTitleText": "缴费管理",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
 			"path": "pages/recharge/recharge",
 			"style": {
 				"navigationBarTitleText": "手机充值",

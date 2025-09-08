@@ -1,8 +1,43 @@
 // 从JSON文件加载用户数据
 import userDataJson from '../../db/user.json'
+import { getStorage, setStorage } from '@/utils/storage'
 
 // 用户数据存储
-export const users = userDataJson || []
+let users = []
+
+// 初始化用户数据
+function initUsers() {
+  try {
+    // 首先尝试从本地存储获取用户数据
+    const storedUsers = getStorage('users', true)
+    if (storedUsers && storedUsers.length > 0) {
+      users = storedUsers
+      console.log('从本地存储加载用户数据:', users.length, '个用户')
+    } else {
+      // 如果本地存储没有数据，使用JSON文件数据
+      users = userDataJson || []
+      // 保存到本地存储
+      saveUsersToStorage()
+      console.log('从JSON文件加载用户数据:', users.length, '个用户')
+    }
+  } catch (error) {
+    console.error('初始化用户数据失败:', error)
+    users = userDataJson || []
+  }
+}
+
+// 保存用户数据到本地存储
+function saveUsersToStorage() {
+  try {
+    setStorage('users', users, true)
+    console.log('用户数据已保存到本地存储')
+  } catch (error) {
+    console.error('保存用户数据失败:', error)
+  }
+}
+
+// 初始化用户数据
+initUsers()
 
 // 模拟验证码存储
 const verificationCodes = new Map()
@@ -92,20 +127,50 @@ export function registerUser(userData) {
     id: newId,
     username: userData.username,
     password: userData.password,
+    transactionPassword: userData.password, // 默认交易密码与登录密码相同
     phone: userData.phone,
     nickname: userData.nickname || userData.username,
-    avatar: '',
     email: userData.email || '',
     idCard: userData.idCard || '',
+    avatar: '/static/wealth/useravatar.jpg', // 默认头像
+    balance: 0.00, // 初始余额
+    realName: userData.nickname || userData.username,
+    gender: '',
+    birthDate: '',
+    address: '',
+    avatarUpdateTime: new Date().toISOString(),
+    lastUpdateTime: new Date().toISOString(),
     createTime: new Date().toISOString(),
     lastLoginTime: null,
-    status: 'active'
+    status: 'active',
+    securitySettings: {
+      biometricEnabled: false,
+      smsVerificationEnabled: true,
+      accountLockEnabled: true,
+      twoFactorEnabled: false,
+      securityNotificationsEnabled: true,
+      transactionLimit: 10000,
+      passwordUpdateTime: new Date().toISOString(),
+      transactionPasswordUpdateTime: new Date().toISOString(),
+      securityQuestionsSet: false,
+      emergencyContactSet: false,
+      loginDevices: [],
+      securityEvents: [],
+      securityQuestions: [],
+      emergencyContact: null,
+      twoFactorSecret: null
+    },
+    creditCards: []
   }
   
+  // 添加到用户数组
   users.push(newUser)
   
-  // 在实际项目中，这里应该发送到后端API
+  // 保存到本地存储
+  saveUsersToStorage()
+  
   console.log('新用户注册成功:', newUser)
+  console.log('当前用户总数:', users.length)
   
   return newUser
 }
@@ -118,4 +183,30 @@ export function getAllUsers() {
 // 根据ID查找用户
 export function findUserById(id) {
   return users.find(user => user.id === id)
+}
+
+// 更新用户信息
+export function updateUser(userId, updateData) {
+  const userIndex = users.findIndex(user => user.id === userId)
+  if (userIndex !== -1) {
+    users[userIndex] = { ...users[userIndex], ...updateData, lastUpdateTime: new Date().toISOString() }
+    saveUsersToStorage()
+    return users[userIndex]
+  }
+  return null
+}
+
+// 获取用户数据（用于调试）
+export function getUsersData() {
+  return users
+}
+
+// 导出用户数组（兼容性）
+export { users }
+
+// 重置用户数据（用于测试）
+export function resetUsersData() {
+  users = userDataJson || []
+  saveUsersToStorage()
+  console.log('用户数据已重置')
 }
