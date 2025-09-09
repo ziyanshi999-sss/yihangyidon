@@ -1,46 +1,18 @@
 <template>
-  <view class="branch-container">
-    <view class="map-section">
-      <!-- 腾讯地图组件 -->
-      <map
-        id="myMap"
-        ref="mapRef"
-        :latitude="latitude"
-        :longitude="longitude"
-        :scale="14"
-        :markers="markers"
-        :show-location="true"
-        @markertap="handleMarkerTap"
-        style="width: 100%; height: 500rpx;"
-      ></map>
-    </view>
-    
-    <view class="search-section">
-      <view class="search-bar">
-        <text class="search-icon">🔍</text>
-        <input
-          class="search-input"
-          placeholder="请输入网点名称或地址"
-          v-model="searchKeyword"
-          @input="handleSearch"
-        />
-      </view>
-    </view>
-    
-    <view class="branches-section">
-      <view class="section-title">附近网点</view>
-      <view class="branches-list">
-        <view 
-          class="branch-item" 
-          v-for="branch in branches" 
-          :key="branch.id"
-          @tap="navigateToBranch(branch)"
-        >
-          <view class="branch-name">{{ branch.name }}</view>
-          <view class="branch-address">{{ branch.address }}</view>
-          <view class="branch-distance">{{ branch.distance }}米</view>
-        </view>
-      </view>
+  <view class="content">
+    <map 
+      id="myMap"
+      :latitude="latitude"
+      :longitude="longitude"
+      :markers="markers"
+      :scale="scale"
+      show-location
+      provider="tencent"
+      style="width: 100%; height: 80vh;"
+    ></map>
+    <view class="control-panel">
+      <button @tap="getLocation">定位</button> <!-- 修改为调用getLocation -->
+      <button @tap="searchNearby">搜索附近网点</button> <!-- 修改方法名避免混淆 -->
     </view>
   </view>
 </template>
@@ -49,12 +21,13 @@
 export default {
   data() {
     return {
-      latitude: 39.9042, // 默认北京纬度
-      longitude: 116.4074, // 默认北京经度
+      latitude: 0,
+      longitude: 0,
       scale: 14,
       markers: [],
       searchKeyword: '',
-      branches: []
+      branches: [],
+      mapKey: '3CSBZ-O4BY5-XFSIR-INBZY-OXQR5-WZFSZ' // 您的腾讯地图API Key
     }
   },
   onLoad() {
@@ -62,189 +35,150 @@ export default {
     this.getLocation();
   },
   methods: {
-    // 获取当前位置
+    // 合并原有的locate和getLocation方法
     getLocation() {
       uni.getLocation({
         type: 'gcj02',
         success: (res) => {
           this.latitude = res.latitude;
           this.longitude = res.longitude;
-          this.loadNearbyBranches();
+          // 清空旧标记点并添加新的当前位置标记
+          this.markers = [{
+            id: 0,
+            latitude: res.latitude,
+            longitude: res.longitude,
+            title: '当前位置',
+            iconPath: '/static/logo.png', // 可添加自定义图标
+            width: 30,
+            height: 30
+          }];
+          console.log('获取位置成功:', res.latitude, res.longitude);
         },
         fail: (err) => {
           console.error('获取位置失败:', err);
-          uni.showToast({
-            title: '获取位置失败，请检查定位权限',
-            icon: 'none'
-          });
+          // 如果用户拒绝授权，可以设置默认位置
+          this.setDefaultLocation();
         }
       });
     },
     
-    // 加载附近网点
-    loadNearbyBranches() {
-      // 这里应该调用API获取附近网点，现在使用模拟数据
-      this.branches = [
-        {
-          id: 1,
-          name: '中国农业银行北京市分行',
-          address: '北京市西城区金融大街甲27号',
-          latitude: this.latitude + 0.01,
-          longitude: this.longitude + 0.01,
-          distance: '500'
-        },
-        {
-          id: 2,
-          name: '中国农业银行北京西单支行',
-          address: '北京市西城区西单北大街109号',
-          latitude: this.latitude - 0.01,
-          longitude: this.longitude + 0.02,
-          distance: '800'
-        },
-        {
-          id: 3,
-          name: '中国农业银行北京王府井支行',
-          address: '北京市东城区王府井大街138号',
-          latitude: this.latitude + 0.02,
-          longitude: this.longitude - 0.01,
-          distance: '1200'
-        }
-      ];
-      
-      // 设置地图标记
-      this.setMarkers();
+    // 设置默认位置（当无法获取用户位置时使用）
+    setDefaultLocation() {
+      // 例如设置为北京的位置
+      this.latitude = 39.9042;
+      this.longitude = 116.4074;
+      this.markers = [{
+        id: 0,
+        latitude: this.latitude,
+        longitude: this.longitude,
+        title: '默认位置'
+      }];
+      uni.showToast({
+        title: '无法获取位置，使用默认位置',
+        icon: 'none'
+      });
     },
     
-    // 设置地图标记
+    // 搜索附近网点
+    searchNearby() {
+      if (!this.latitude || !this.longitude) {
+        uni.showToast({
+          title: '请先定位',
+          icon: 'none'
+        });
+        return;
+      }
+      
+      const location = `${this.latitude},${this.longitude}`;
+      const radius = 3000; // 搜索半径3公里
+      
+      uni.request({
+        url: `https://apis.map.qq.com/ws/place/v1/search`,
+        data: {
+          key: this.mapKey,
+          keyword: '农业银行', // 搜索关键词
+          boundary: `nearby(${location},${radius})`,
+          filter: 'category=银行',
+          page_size: 20
+        },
+        success: (res) => {
+          if (res.statusCode === 200 && res.data.status === 0) {
+            console.log('搜索成功:', res.data);
+            // 处理搜索结果
+            this.branches = res.data.data.map(item => ({
+              id: item.id,
+              name: item.title,
+              address: item.address,
+              latitude: item.location.lat,
+              longitude: item.location.lng,
+              distance: this.calculateDistance(
+                this.latitude, 
+                this.longitude, 
+                item.location.lat, 
+                item.location.lng
+              )
+            }));
+            this.setMarkers();
+          } else {
+            console.error('搜索失败:', res.data);
+            uni.showToast({ title: '搜索失败: ' + (res.data.message || '未知错误'), icon: 'none' });
+          }
+        },
+        fail: (err) => {
+          console.error('请求失败:', err);
+          uni.showToast({ title: '网络异常', icon: 'none' });
+        }
+      });
+    },
+    
+    // 设置地图标记点
     setMarkers() {
-      this.markers = this.branches.map((branch, index) => ({
-        id: branch.id,
+      // 先保留当前位置标记
+      const currentLocationMarker = this.markers[0];
+      // 添加网点标记
+      const branchMarkers = this.branches.map((branch, index) => ({
+        id: index + 1, // 确保id唯一
         latitude: branch.latitude,
         longitude: branch.longitude,
         title: branch.name,
-        iconPath: '/static/map-marker.png', // 可以使用自定义图标
-        width: 30,
-        height: 30
+        iconPath: '/static/logo.png', // 可自定义图标
+        width: 24,
+        height: 24
       }));
+      // 合并标记点
+      this.markers = [currentLocationMarker, ...branchMarkers];
     },
     
-    // 处理标记点点击
-    handleMarkerTap(e) {
-      const markerId = e.markerId;
-      const branch = this.branches.find(b => b.id === markerId);
-      if (branch) {
-        uni.showModal({
-          title: branch.name,
-          content: branch.address + '\n距离：' + branch.distance + '米',
-          confirmText: '导航',
-          success: (res) => {
-            if (res.confirm) {
-              this.navigateToBranch(branch);
-            }
-          }
-        });
-      }
+    // 计算两点间距离（简化版）
+    calculateDistance(lat1, lon1, lat2, lon2) {
+      const R = 6371; // 地球半径（公里）
+      const dLat = this.deg2rad(lat2 - lat1);
+      const dLon = this.deg2rad(lon2 - lon1);
+      const a = 
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) * 
+        Math.sin(dLon/2) * Math.sin(dLon/2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      const distance = R * c; // 距离（公里）
+      return (distance * 1000).toFixed(0); // 转换为米并取整
     },
     
-    // 导航到网点
-    navigateToBranch(branch) {
-      // 调用腾讯地图导航
-      uni.openLocation({
-        latitude: branch.latitude,
-        longitude: branch.longitude,
-        name: branch.name,
-        address: branch.address,
-        scale: 18
-      });
-    },
-    
-    // 处理搜索
-    handleSearch() {
-      // 这里应该实现搜索逻辑
-      console.log('搜索关键词:', this.searchKeyword);
-      // 实际项目中应该调用搜索API
+    // 角度转弧度
+    deg2rad(deg) {
+      return deg * (Math.PI/180);
     }
   }
 }
 </script>
 
 <style scoped>
-.branch-container {
-  background-color: #f8f8f8;
-  min-height: 100vh;
-}
-
-.map-section {
-  width: 100%;
-}
-
-.search-section {
+.control-panel {
+  display: flex;
+  justify-content: space-around;
   padding: 20rpx;
   background-color: #fff;
 }
-
-.search-bar {
-  display: flex;
-  align-items: center;
-  background-color: #f0f0f0;
-  border-radius: 60rpx;
-  padding: 0 24rpx;
-  height: 80rpx;
-}
-
-.search-icon {
-  font-size: 32rpx;
-  color: #999;
-  margin-right: 16rpx;
-}
-
-.search-input {
-  flex: 1;
-  height: 100%;
-  background-color: transparent;
-  font-size: 28rpx;
-}
-
-.branches-section {
-  margin-top: 20rpx;
-  background-color: #fff;
-  padding: 20rpx;
-}
-
-.section-title {
-  font-size: 32rpx;
-  font-weight: bold;
-  margin-bottom: 20rpx;
-  color: #333;
-}
-
-.branches-list {
-  display: flex;
-  flex-direction: column;
-  gap: 20rpx;
-}
-
-.branch-item {
-  padding: 20rpx;
-  background-color: #f9f9f9;
-  border-radius: 16rpx;
-}
-
-.branch-name {
-  font-size: 28rpx;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 8rpx;
-}
-
-.branch-address {
-  font-size: 24rpx;
-  color: #666;
-  margin-bottom: 8rpx;
-}
-
-.branch-distance {
-  font-size: 22rpx;
-  color: #999;
+.control-panel button {
+  margin: 0 10rpx;
 }
 </style>

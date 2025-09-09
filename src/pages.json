@@ -105,6 +105,13 @@
 				"navigationBarTitleText": "贷款服务",
 				"enablePullDownRefresh": false
 			}
+		},
+		{
+			"path": "pages/service/branch",
+			"style": {
+				"navigationBarTitleText": "网点查询",
+				"enablePullDownRefresh": false
+			}
 		}
 	],
 	"globalStyle": {

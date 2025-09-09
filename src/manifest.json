@@ -102,6 +102,9 @@
                     },
                     "baidu": {
                         "key": "your_baidu_key"
+                    },
+                    "tencent": {
+                        "key": "3CSBZ-O4BY5-XFSIR-INBZY-OXQR5-WZFSZ"
                     }
                 }
             }

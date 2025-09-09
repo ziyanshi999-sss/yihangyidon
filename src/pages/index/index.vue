@@ -95,7 +95,7 @@
             <view class="function-icon icon-deposit">💰</view>
             <text class="function-text">存款</text>
           </view>
-          <view class="function-item" @click="showFeatureTip('网点查询')">
+          <view class="function-item" @click="handleBranchClick">
             <view class="function-icon icon-branch">🏦</view>
             <text class="function-text">网点查询</text>
           </view>
@@ -238,6 +238,21 @@ export default {
         icon: 'none',
         duration: 2000
       })
+    },
+
+    // 添加到methods对象中
+    handleBranchClick() {
+      if (this.isLoggedIn) {
+        // 已登录，跳转到网点查询页面
+        uni.navigateTo({
+          url: '/pages/service/branch'
+        })
+      } else {
+        // 未登录，跳转到登录页面
+        uni.navigateTo({
+          url: '/pages/denglu/login'
+        })
+      }
     },
     
     // 处理转账按钮点击事件
