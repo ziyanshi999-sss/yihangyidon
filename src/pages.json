@@ -169,6 +169,38 @@
 				"enablePullDownRefresh": false,
 				"navigationStyle": "custom"
 			}
+		},
+		{
+			"path": "pages/wealth/deposit",
+			"style": {
+				"navigationBarTitleText": "存款产品",
+				"enablePullDownRefresh": true,
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/wealth/product",
+			"style": {
+				"navigationBarTitleText": "理财产品",
+				"enablePullDownRefresh": true,
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/wealth/insurance",
+			"style": {
+				"navigationBarTitleText": "保险产品",
+				"enablePullDownRefresh": true,
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/wealth/forex",
+			"style": {
+				"navigationBarTitleText": "外汇交易",
+				"enablePullDownRefresh": true,
+				"navigationStyle": "custom"
+			}
 		}
 	],
 	"globalStyle": {

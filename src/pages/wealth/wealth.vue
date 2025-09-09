@@ -24,19 +24,19 @@
 
     <!-- 四宫格入口 -->
     <view class="entry-grid">
-      <view class="entry-item" @click="activeTab = 'deposit'">
+      <view class="entry-item" @click="navigateToPage('deposit')">
         <view class="entry-icon">🏦</view>
         <text class="entry-text">存款</text>
       </view>
-      <view class="entry-item" @click="activeTab = 'product'">
+      <view class="entry-item" @click="navigateToPage('product')">
         <view class="entry-icon">📈</view>
         <text class="entry-text">理财产品</text>
       </view>
-      <view class="entry-item" @click="activeTab = 'insurance'">
+      <view class="entry-item" @click="navigateToPage('insurance')">
         <view class="entry-icon">🛡️</view>
         <text class="entry-text">保险</text>
       </view>
-      <view class="entry-item" @click="activeTab = 'forex'">
+      <view class="entry-item" @click="navigateToPage('forex')">
         <view class="entry-icon">💱</view>
         <text class="entry-text">外汇</text>
       </view>
@@ -380,6 +380,29 @@ export default {
     onNewsClick(n) {
       // 可扩展：跳转资讯详情/H5落地页
       uni.showToast({ title: n.title, icon: 'none' })
+    },
+    
+    // 页面跳转方法
+    navigateToPage(pageType) {
+      const pageMap = {
+        deposit: '/pages/wealth/deposit',
+        product: '/pages/wealth/product',
+        insurance: '/pages/wealth/insurance',
+        forex: '/pages/wealth/forex'
+      }
+      
+      const url = pageMap[pageType]
+      if (url) {
+        uni.navigateTo({
+          url: url,
+          fail: (err) => {
+            console.error('页面跳转失败:', err)
+            uni.showToast({ title: '页面跳转失败', icon: 'none' })
+          }
+        })
+      } else {
+        uni.showToast({ title: '页面不存在', icon: 'none' })
+      }
     }
   }
 }
