@@ -1,5 +1,7 @@
 <script>
 import { checkLoginAndRedirect, forceCheckLogin } from '@/utils/auth.js'
+import { initWealthDataSync } from '@/api/wealth.js'
+import { checkAndFixUserDataConsistency } from '@/utils/data-consistency.js'
 
 /**
  * 中国农业银行应用主入口
@@ -25,6 +27,9 @@ export default {
 
     // 初始化登录拦截
     this.initLoginInterceptor()
+    
+    // 初始化财富数据同步
+    initWealthDataSync()
   },
 
   onShow(options) {
@@ -81,10 +86,14 @@ export default {
      */
     initUserInfo() {
       try {
-        const userInfo = uni.getStorageSync('userInfo')
-        if (userInfo) {
-          this.globalData.userInfo = userInfo
-          console.log('用户信息已恢复:', userInfo)
+        // 使用数据一致性检查确保用户信息正确
+        const consistentUserInfo = checkAndFixUserDataConsistency()
+        
+        if (consistentUserInfo) {
+          this.globalData.userInfo = consistentUserInfo
+          console.log('用户信息已恢复并验证:', consistentUserInfo.username, '余额:', consistentUserInfo.balance)
+        } else {
+          console.warn('⚠️ 无法恢复用户信息')
         }
       } catch (error) {
         console.error('恢复用户信息失败:', error)
@@ -158,6 +167,11 @@ export default {
           // 检查登录状态
           if (!forceCheckLogin()) {
             console.log('用户未登录，阻止页面跳转')
+            // 如果是财富相关页面，允许跳转但显示登录提示
+            if (e.url.includes('/pages/wealth/')) {
+              console.log('财富页面，允许跳转但需要登录检查')
+              return true
+            }
             return false
           }
           

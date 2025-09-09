@@ -5,12 +5,12 @@
     "iPad"
   ],
   "id": "__UNI__ABC_BANK_APP",
-  "name": "中国农业银行",
+  "name": "银行APP",
   "version": {
     "name": "1.0.0",
     "code": "100"
   },
-  "description": "中国农业银行官方APP，提供全面的金融服务",
+  "description": "银行官方APP，提供全面的金融服务",
   "developer": {
     "name": "",
     "email": "",
@@ -120,6 +120,9 @@
           },
           "baidu": {
             "key": "your_baidu_key"
+          },
+          "tencent": {
+            "key": "3CSBZ-O4BY5-XFSIR-INBZY-OXQR5-WZFSZ"
           }
         },
         "audio": {
@@ -147,7 +150,7 @@
     "uni-app": {
       "control": "uni-v3",
       "vueVersion": "3",
-      "compilerVersion": "4.75",
+      "compilerVersion": "4.76",
       "nvueCompiler": "uni-app",
       "renderer": "auto",
       "nvue": {

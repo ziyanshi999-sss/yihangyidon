@@ -24,19 +24,19 @@
 
     <!-- 四宫格入口 -->
     <view class="entry-grid">
-      <view class="entry-item" @click="activeTab = 'deposit'">
+      <view class="entry-item" @click="navigateToPage('deposit')">
         <view class="entry-icon">🏦</view>
         <text class="entry-text">存款</text>
       </view>
-      <view class="entry-item" @click="activeTab = 'product'">
+      <view class="entry-item" @click="navigateToPage('product')">
         <view class="entry-icon">📈</view>
         <text class="entry-text">理财产品</text>
       </view>
-      <view class="entry-item" @click="activeTab = 'insurance'">
+      <view class="entry-item" @click="navigateToPage('insurance')">
         <view class="entry-icon">🛡️</view>
         <text class="entry-text">保险</text>
       </view>
-      <view class="entry-item" @click="activeTab = 'forex'">
+      <view class="entry-item" @click="navigateToPage('forex')">
         <view class="entry-icon">💱</view>
         <text class="entry-text">外汇</text>
       </view>
@@ -234,6 +234,8 @@
 
 <script>
 import ServiceModal from '@/components/common/ServiceModal.vue'
+import { getCurrentUserWealthData, initWealthDataSync, getCurrentUserId } from '@/api/wealth.js'
+import { checkAndFixUserDataConsistency } from '@/utils/data-consistency.js'
 
 export default {
   components: {
@@ -327,7 +329,51 @@ export default {
       ]
     }
   },
+  
+  onLoad() {
+    console.log('财富页面加载')
+    this.ensureLoginStatus()
+    this.initDataSync()
+  },
+  
   methods: {
+    // 确保登录状态
+    ensureLoginStatus() {
+      const isLoggedIn = uni.getStorageSync('isLoggedIn')
+      const userInfo = uni.getStorageSync('userInfo')
+      
+      if (!isLoggedIn || !userInfo) {
+        // 使用数据一致性检查确保用户信息正确
+        const consistentUserInfo = checkAndFixUserDataConsistency()
+        
+        if (consistentUserInfo) {
+          uni.setStorageSync('isLoggedIn', true)
+          console.log('已设置真实用户登录状态:', consistentUserInfo.username, '余额:', consistentUserInfo.balance)
+        } else {
+          // 如果数据库中没有用户，使用默认数据
+          const defaultUser = {
+            id: 'u001',
+            username: '张小明',
+            phone: '13999999999',
+            balance: 150000.00,
+            nickname: '小明'
+          }
+          
+          uni.setStorageSync('userInfo', defaultUser)
+          uni.setStorageSync('isLoggedIn', true)
+          uni.setStorageSync('currentUser', defaultUser)
+          
+          console.log('已设置默认用户登录状态用于测试')
+        }
+      } else {
+        // 即使已登录，也要检查数据一致性
+        const consistentUserInfo = checkAndFixUserDataConsistency()
+        if (consistentUserInfo) {
+          console.log('用户数据一致性检查完成:', consistentUserInfo.username, '余额:', consistentUserInfo.balance)
+        }
+      }
+    },
+    
     onSwiperClick(idx) {
       uni.showToast({ title: `轮播图第${idx + 1}张`, icon: 'none' })
     },
@@ -380,6 +426,77 @@ export default {
     onNewsClick(n) {
       // 可扩展：跳转资讯详情/H5落地页
       uni.showToast({ title: n.title, icon: 'none' })
+    },
+    
+    // 页面跳转方法
+    navigateToPage(pageType) {
+      // 检查登录状态
+      const isLoggedIn = uni.getStorageSync('isLoggedIn')
+      const userInfo = uni.getStorageSync('userInfo')
+      
+      if (!isLoggedIn || !userInfo) {
+        uni.showModal({
+          title: '需要登录',
+          content: '请先登录后再使用此功能',
+          confirmText: '去登录',
+          cancelText: '取消',
+          success: (res) => {
+            if (res.confirm) {
+              uni.navigateTo({
+                url: '/pages/denglu/login'
+              })
+            }
+          }
+        })
+        return
+      }
+      
+      const pageMap = {
+        deposit: '/pages/wealth/deposit',
+        product: '/pages/wealth/product',
+        insurance: '/pages/wealth/insurance',
+        forex: '/pages/wealth/forex'
+      }
+      
+      const url = pageMap[pageType]
+      if (url) {
+        uni.navigateTo({
+          url: url,
+          fail: (err) => {
+            console.error('页面跳转失败:', err)
+            uni.showToast({ title: '页面跳转失败', icon: 'none' })
+          }
+        })
+      } else {
+        uni.showToast({ title: '页面不存在', icon: 'none' })
+      }
+    },
+    
+    // 初始化数据同步
+    initDataSync() {
+      // 初始化财富数据同步
+      initWealthDataSync()
+      
+      // 监听各种数据更新事件
+      uni.$on('depositSuccess', (data) => {
+        console.log('财富页面收到存款成功事件:', data)
+        // 可以在这里更新页面显示或刷新数据
+      })
+      
+      uni.$on('purchaseSuccess', (data) => {
+        console.log('财富页面收到购买成功事件:', data)
+        // 可以在这里更新页面显示或刷新数据
+      })
+      
+      uni.$on('insurancePurchaseSuccess', (data) => {
+        console.log('财富页面收到保险购买成功事件:', data)
+        // 可以在这里更新页面显示或刷新数据
+      })
+      
+      uni.$on('balanceUpdated', (data) => {
+        console.log('财富页面收到余额更新事件:', data)
+        // 可以在这里更新页面显示
+      })
     }
   }
 }

@@ -204,6 +204,48 @@
 				"navigationBarTitleText": "网点查询",
 				"enablePullDownRefresh": false
 			}
+		},
+		{
+			"path": "pages/wealth/deposit",
+			"style": {
+				"navigationBarTitleText": "存款产品",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/wealth/product",
+			"style": {
+				"navigationBarTitleText": "理财产品",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/wealth/insurance",
+			"style": {
+				"navigationBarTitleText": "保险产品",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/wealth/forex",
+			"style": {
+				"navigationBarTitleText": "外汇交易",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/wealth/insurance-detail",
+			"style": {
+				"navigationBarTitleText": "保险详情",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/wealth/insurance-success",
+			"style": {
+				"navigationBarTitleText": "投保成功",
+				"enablePullDownRefresh": false
+			}
 		}
 	],
 	"globalStyle": {

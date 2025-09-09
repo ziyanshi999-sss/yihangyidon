@@ -177,6 +177,207 @@
         }
       ]
     },
+    "depositProducts": {
+      "current": {
+        "rate": 0.35,
+        "features": ["随时存取", "灵活方便", "安全可靠"],
+        "riskWarning": "存款保险保障，风险极低"
+      },
+      "fixed": [
+        {
+          "term": "3个月",
+          "rate": 1.85,
+          "minAmount": 1000,
+          "features": ["保本保息", "收益稳定", "期限灵活"],
+          "riskWarning": "存款保险保障，风险极低"
+        },
+        {
+          "term": "6个月",
+          "rate": 2.05,
+          "minAmount": 1000,
+          "features": ["保本保息", "收益稳定", "期限灵活"],
+          "riskWarning": "存款保险保障，风险极低"
+        },
+        {
+          "term": "1年",
+          "rate": 2.10,
+          "minAmount": 1000,
+          "features": ["保本保息", "收益稳定", "期限灵活"],
+          "riskWarning": "存款保险保障，风险极低"
+        },
+        {
+          "term": "2年",
+          "rate": 2.60,
+          "minAmount": 1000,
+          "features": ["保本保息", "收益稳定", "期限灵活"],
+          "riskWarning": "存款保险保障，风险极低"
+        },
+        {
+          "term": "3年",
+          "rate": 2.95,
+          "minAmount": 1000,
+          "features": ["保本保息", "收益稳定", "期限灵活"],
+          "riskWarning": "存款保险保障，风险极低"
+        },
+        {
+          "term": "5年",
+          "rate": 3.20,
+          "minAmount": 1000,
+          "features": ["保本保息", "收益稳定", "期限灵活"],
+          "riskWarning": "存款保险保障，风险极低"
+        }
+      ],
+      "smart": {
+        "rate": 2.8,
+        "features": ["智能计息", "灵活存取", "收益优化"],
+        "riskWarning": "存款保险保障，风险极低"
+      }
+    },
+    "insuranceProducts": {
+      "categories": [
+        {
+          "id": "life",
+          "name": "人寿保险",
+          "icon": "👨‍👩‍👧‍👦",
+          "color": "#FF6B35",
+          "products": [
+            {
+              "id": "life001",
+              "name": "终身寿险",
+              "type": "人寿保险",
+              "premium": 5000,
+              "coverage": 500000,
+              "term": "终身",
+              "features": ["终身保障", "现金价值", "分红收益"],
+              "riskLevel": "低风险",
+              "status": "在售"
+            },
+            {
+              "id": "life002",
+              "name": "定期寿险",
+              "type": "人寿保险",
+              "premium": 2000,
+              "coverage": 300000,
+              "term": "20年",
+              "features": ["高保障", "低保费", "灵活选择"],
+              "riskLevel": "低风险",
+              "status": "在售"
+            }
+          ]
+        },
+        {
+          "id": "health",
+          "name": "健康保险",
+          "icon": "🏥",
+          "color": "#34C759",
+          "products": [
+            {
+              "id": "health001",
+              "name": "重疾保险",
+              "type": "健康保险",
+              "premium": 3000,
+              "coverage": 200000,
+              "term": "终身",
+              "features": ["重疾保障", "轻症赔付", "豁免保费"],
+              "riskLevel": "中风险",
+              "status": "在售"
+            },
+            {
+              "id": "health002",
+              "name": "医疗保险",
+              "type": "健康保险",
+              "premium": 800,
+              "coverage": 100000,
+              "term": "1年",
+              "features": ["住院保障", "门诊报销", "无免赔额"],
+              "riskLevel": "低风险",
+              "status": "在售"
+            }
+          ]
+        },
+        {
+          "id": "accident",
+          "name": "意外保险",
+          "icon": "🛡️",
+          "color": "#FF9500",
+          "products": [
+            {
+              "id": "accident001",
+              "name": "综合意外险",
+              "type": "意外保险",
+              "premium": 200,
+              "coverage": 100000,
+              "term": "1年",
+              "features": ["意外身故", "意外伤残", "意外医疗"],
+              "riskLevel": "低风险",
+              "status": "在售"
+            }
+          ]
+        }
+      ]
+    },
+    "forexProducts": {
+      "majorPairs": [
+        {
+          "code": "USD/CNY",
+          "name": "美元/人民币",
+          "price": "7.2345",
+          "change": "+0.0123",
+          "changePercent": "+0.17%",
+          "trend": "up"
+        },
+        {
+          "code": "EUR/CNY",
+          "name": "欧元/人民币",
+          "price": "7.8901",
+          "change": "-0.0234",
+          "changePercent": "-0.30%",
+          "trend": "down"
+        },
+        {
+          "code": "GBP/CNY",
+          "name": "英镑/人民币",
+          "price": "9.1234",
+          "change": "+0.0456",
+          "changePercent": "+0.50%",
+          "trend": "up"
+        },
+        {
+          "code": "JPY/CNY",
+          "name": "日元/人民币",
+          "price": "0.0489",
+          "change": "-0.0001",
+          "changePercent": "-0.20%",
+          "trend": "down"
+        }
+      ],
+      "tradingPairs": [
+        {
+          "id": "forex001",
+          "pair": "USD/CNY",
+          "buyPrice": "7.2345",
+          "sellPrice": "7.2340",
+          "spread": "0.0005",
+          "status": "可交易"
+        },
+        {
+          "id": "forex002",
+          "pair": "EUR/CNY",
+          "buyPrice": "7.8901",
+          "sellPrice": "7.8896",
+          "spread": "0.0005",
+          "status": "可交易"
+        },
+        {
+          "id": "forex003",
+          "pair": "GBP/CNY",
+          "buyPrice": "9.1234",
+          "sellPrice": "9.1229",
+          "spread": "0.0005",
+          "status": "可交易"
+        }
+      ]
+    },
     "lifeServices": {
       "phoneRecharge": {
         "phoneNumber": "13999999999",
@@ -790,6 +991,207 @@
           "purchaseDate": "2024-01-01T00:00:00.000Z",
           "maturityDate": "2025-01-01T00:00:00.000Z",
           "status": "持有中"
+        }
+      ]
+    },
+    "depositProducts": {
+      "current": {
+        "rate": 0.35,
+        "features": ["随时存取", "灵活方便", "安全可靠"],
+        "riskWarning": "存款保险保障，风险极低"
+      },
+      "fixed": [
+        {
+          "term": "3个月",
+          "rate": 1.85,
+          "minAmount": 1000,
+          "features": ["保本保息", "收益稳定", "期限灵活"],
+          "riskWarning": "存款保险保障，风险极低"
+        },
+        {
+          "term": "6个月",
+          "rate": 2.05,
+          "minAmount": 1000,
+          "features": ["保本保息", "收益稳定", "期限灵活"],
+          "riskWarning": "存款保险保障，风险极低"
+        },
+        {
+          "term": "1年",
+          "rate": 2.10,
+          "minAmount": 1000,
+          "features": ["保本保息", "收益稳定", "期限灵活"],
+          "riskWarning": "存款保险保障，风险极低"
+        },
+        {
+          "term": "2年",
+          "rate": 2.60,
+          "minAmount": 1000,
+          "features": ["保本保息", "收益稳定", "期限灵活"],
+          "riskWarning": "存款保险保障，风险极低"
+        },
+        {
+          "term": "3年",
+          "rate": 2.95,
+          "minAmount": 1000,
+          "features": ["保本保息", "收益稳定", "期限灵活"],
+          "riskWarning": "存款保险保障，风险极低"
+        },
+        {
+          "term": "5年",
+          "rate": 3.20,
+          "minAmount": 1000,
+          "features": ["保本保息", "收益稳定", "期限灵活"],
+          "riskWarning": "存款保险保障，风险极低"
+        }
+      ],
+      "smart": {
+        "rate": 2.8,
+        "features": ["智能计息", "灵活存取", "收益优化"],
+        "riskWarning": "存款保险保障，风险极低"
+      }
+    },
+    "insuranceProducts": {
+      "categories": [
+        {
+          "id": "life",
+          "name": "人寿保险",
+          "icon": "👨‍👩‍👧‍👦",
+          "color": "#FF6B35",
+          "products": [
+            {
+              "id": "life001",
+              "name": "终身寿险",
+              "type": "人寿保险",
+              "premium": 5000,
+              "coverage": 500000,
+              "term": "终身",
+              "features": ["终身保障", "现金价值", "分红收益"],
+              "riskLevel": "低风险",
+              "status": "在售"
+            },
+            {
+              "id": "life002",
+              "name": "定期寿险",
+              "type": "人寿保险",
+              "premium": 2000,
+              "coverage": 300000,
+              "term": "20年",
+              "features": ["高保障", "低保费", "灵活选择"],
+              "riskLevel": "低风险",
+              "status": "在售"
+            }
+          ]
+        },
+        {
+          "id": "health",
+          "name": "健康保险",
+          "icon": "🏥",
+          "color": "#34C759",
+          "products": [
+            {
+              "id": "health001",
+              "name": "重疾保险",
+              "type": "健康保险",
+              "premium": 3000,
+              "coverage": 200000,
+              "term": "终身",
+              "features": ["重疾保障", "轻症赔付", "豁免保费"],
+              "riskLevel": "中风险",
+              "status": "在售"
+            },
+            {
+              "id": "health002",
+              "name": "医疗保险",
+              "type": "健康保险",
+              "premium": 800,
+              "coverage": 100000,
+              "term": "1年",
+              "features": ["住院保障", "门诊报销", "无免赔额"],
+              "riskLevel": "低风险",
+              "status": "在售"
+            }
+          ]
+        },
+        {
+          "id": "accident",
+          "name": "意外保险",
+          "icon": "🛡️",
+          "color": "#FF9500",
+          "products": [
+            {
+              "id": "accident001",
+              "name": "综合意外险",
+              "type": "意外保险",
+              "premium": 200,
+              "coverage": 100000,
+              "term": "1年",
+              "features": ["意外身故", "意外伤残", "意外医疗"],
+              "riskLevel": "低风险",
+              "status": "在售"
+            }
+          ]
+        }
+      ]
+    },
+    "forexProducts": {
+      "majorPairs": [
+        {
+          "code": "USD/CNY",
+          "name": "美元/人民币",
+          "price": "7.2345",
+          "change": "+0.0123",
+          "changePercent": "+0.17%",
+          "trend": "up"
+        },
+        {
+          "code": "EUR/CNY",
+          "name": "欧元/人民币",
+          "price": "7.8901",
+          "change": "-0.0234",
+          "changePercent": "-0.30%",
+          "trend": "down"
+        },
+        {
+          "code": "GBP/CNY",
+          "name": "英镑/人民币",
+          "price": "9.1234",
+          "change": "+0.0456",
+          "changePercent": "+0.50%",
+          "trend": "up"
+        },
+        {
+          "code": "JPY/CNY",
+          "name": "日元/人民币",
+          "price": "0.0489",
+          "change": "-0.0001",
+          "changePercent": "-0.20%",
+          "trend": "down"
+        }
+      ],
+      "tradingPairs": [
+        {
+          "id": "forex001",
+          "pair": "USD/CNY",
+          "buyPrice": "7.2345",
+          "sellPrice": "7.2340",
+          "spread": "0.0005",
+          "status": "可交易"
+        },
+        {
+          "id": "forex002",
+          "pair": "EUR/CNY",
+          "buyPrice": "7.8901",
+          "sellPrice": "7.8896",
+          "spread": "0.0005",
+          "status": "可交易"
+        },
+        {
+          "id": "forex003",
+          "pair": "GBP/CNY",
+          "buyPrice": "9.1234",
+          "sellPrice": "9.1229",
+          "spread": "0.0005",
+          "status": "可交易"
         }
       ]
     },
