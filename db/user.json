@@ -67,6 +67,7 @@
     },
     "creditCards": [
       {
+        "id": "cc001",
         "cardNumber": "6222 9999 9999 9999",
         "cardType": "白金卡",
         "cardBrand": "银联",
@@ -85,7 +86,51 @@
         "interestRate": 0.0004,
         "cashAdvanceLimit": 50000,
         "rewardsPoints": 3200,
-        "cardColor": "#C0C0C0"
+        "cardColor": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+        "createTime": "2023-01-15T00:00:00.000Z",
+        "lastUsedTime": "2024-01-15T14:20:00.000Z",
+        "monthlySpending": 8500,
+        "transactionCount": 23,
+        "topCategory": "餐饮",
+        "securityFeatures": {
+          "chipEnabled": true,
+          "contactlessEnabled": true,
+          "onlineShoppingEnabled": true,
+          "internationalEnabled": true
+        }
+      },
+      {
+        "id": "cc002",
+        "cardNumber": "6222 8888 8888 8888",
+        "cardType": "钻石卡",
+        "cardBrand": "Visa",
+        "creditLimit": 200000,
+        "availableCredit": 180000,
+        "currentBalance": 20000,
+        "minPayment": 2000,
+        "statementDate": "15",
+        "dueDate": "2024-02-15",
+        "lastStatementDate": "2024-01-15",
+        "cardStatus": "active",
+        "cardHolder": "张小明",
+        "expiryDate": "2030-12-31",
+        "cvv": "789",
+        "annualFee": 1000,
+        "interestRate": 0.0003,
+        "cashAdvanceLimit": 100000,
+        "rewardsPoints": 8500,
+        "cardColor": "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+        "createTime": "2023-06-01T00:00:00.000Z",
+        "lastUsedTime": "2024-01-14T16:30:00.000Z",
+        "monthlySpending": 12000,
+        "transactionCount": 18,
+        "topCategory": "购物",
+        "securityFeatures": {
+          "chipEnabled": true,
+          "contactlessEnabled": true,
+          "onlineShoppingEnabled": true,
+          "internationalEnabled": true
+        }
       }
     ],
     "transactionRecords": [

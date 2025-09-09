@@ -17,12 +17,18 @@
       >
         验证码登录
       </view>
+      <view 
+        :class="['tab-item', loginType === 'fingerprint' ? 'active' : '']" 
+        @click="loginType = 'fingerprint'"
+      >
+        指纹登录
+      </view>
     </view>
     
     <!-- 登录表单 -->
     <form @submit="handleLogin">
       <!-- 用户名/手机号输入 -->
-      <view class="input-item">
+      <view class="input-item" v-if="loginType !== 'fingerprint'">
         <input 
           type="text" 
           v-model="phone" 
@@ -30,6 +36,22 @@
           maxlength="20"
           required
         />
+      </view>
+      
+      <!-- 指纹登录区域 -->
+      <view class="fingerprint-section" v-if="loginType === 'fingerprint'">
+        <view class="fingerprint-icon" :class="{ 'scanning': isFingerprintScanning }">
+          <text class="fingerprint-symbol">👆</text>
+        </view>
+        <text class="fingerprint-title">指纹登录</text>
+        <text class="fingerprint-desc">请将手指放在指纹识别器上</text>
+        <view class="fingerprint-status">
+          <text v-if="fingerprintStatus === 'ready'" class="status-text ready">准备就绪</text>
+          <text v-if="fingerprintStatus === 'scanning'" class="status-text scanning">正在识别...</text>
+          <text v-if="fingerprintStatus === 'success'" class="status-text success">识别成功</text>
+          <text v-if="fingerprintStatus === 'failed'" class="status-text failed">识别失败，请重试</text>
+          <text v-if="fingerprintStatus === 'notSupport'" class="status-text not-support">设备不支持指纹识别</text>
+        </view>
       </view>
       
       <!-- 密码/验证码输入 -->
@@ -64,8 +86,20 @@
         class="login-btn" 
         form-type="submit"
         :loading="loading"
+        v-if="loginType !== 'fingerprint'"
       >
         登录
+      </button>
+      
+      <!-- 指纹登录按钮 -->
+      <button 
+        class="fingerprint-login-btn" 
+        @click="startFingerprintLogin"
+        :disabled="!fingerprintSupport || isFingerprintScanning"
+        v-if="loginType === 'fingerprint'"
+      >
+        <text class="btn-icon">👆</text>
+        <text class="btn-text">{{ fingerprintSupport ? '开始指纹识别' : '设备不支持指纹' }}</text>
       </button>
     </form>
     
@@ -101,12 +135,17 @@ import { handleLoginSuccess } from '@/utils/auth.js'
 export default {
   data() {
     return {
-      loginType: 'password', // 登录方式：password/code
+      loginType: 'password', // 登录方式：password/code/fingerprint
       phone: '',
       password: '',
       code: '',
       countdown: 0,
-      loading: false
+      loading: false,
+      // 指纹登录相关
+      fingerprintSupport: false,
+      isFingerprintScanning: false,
+      fingerprintStatus: 'ready', // ready/scanning/success/failed/notSupport
+      lastFingerprintUser: null // 上次使用指纹登录的用户
     };
   },
   
@@ -115,9 +154,154 @@ export default {
     // 测试用户数据加载
     console.log('加载的用户数据:', users);
     console.log('用户数量:', users.length);
+    
+    // 检查指纹支持情况
+    this.checkFingerprintSupport();
+    
+    // 获取上次使用指纹登录的用户
+    this.getLastFingerprintUser();
   },
   
   methods: {
+    
+    // 检查设备指纹支持情况
+    checkFingerprintSupport() {
+      uni.checkIsSupportSoterAuthentication({
+        success: (res) => {
+          console.log('指纹支持检查结果:', res);
+          if (res.supportMode && res.supportMode.includes('fingerPrint')) {
+            this.fingerprintSupport = true;
+            this.fingerprintStatus = 'ready';
+            console.log('设备支持指纹识别');
+          } else {
+            this.fingerprintSupport = false;
+            this.fingerprintStatus = 'notSupport';
+            console.log('设备不支持指纹识别');
+          }
+        },
+        fail: (err) => {
+          console.error('检查指纹支持失败:', err);
+          this.fingerprintSupport = false;
+          this.fingerprintStatus = 'notSupport';
+        }
+      });
+    },
+    
+    // 获取上次使用指纹登录的用户
+    getLastFingerprintUser() {
+      try {
+        const lastUser = uni.getStorageSync('lastFingerprintUser');
+        if (lastUser) {
+          this.lastFingerprintUser = lastUser;
+          console.log('上次指纹登录用户:', lastUser);
+        }
+      } catch (error) {
+        console.error('获取上次指纹登录用户失败:', error);
+      }
+    },
+    
+    // 开始指纹登录
+    startFingerprintLogin() {
+      if (!this.fingerprintSupport) {
+        uni.showToast({
+          title: '设备不支持指纹识别',
+          icon: 'none'
+        });
+        return;
+      }
+      
+      if (!this.lastFingerprintUser) {
+        uni.showToast({
+          title: '请先使用密码登录一次',
+          icon: 'none'
+        });
+        return;
+      }
+      
+      this.isFingerprintScanning = true;
+      this.fingerprintStatus = 'scanning';
+      
+      // 生成随机挑战字符串
+      const challenge = Math.random().toString(36).substring(2, 15);
+      
+      uni.startSoterAuthentication({
+        requestAuthModes: ['fingerPrint'],
+        challenge: challenge,
+        authContent: '请用指纹解锁',
+        success: (res) => {
+          console.log('指纹认证成功:', res);
+          this.fingerprintStatus = 'success';
+          this.isFingerprintScanning = false;
+          
+          // 指纹认证成功，使用上次登录的用户信息
+          this.handleFingerprintLoginSuccess();
+        },
+        fail: (err) => {
+          console.error('指纹认证失败:', err);
+          this.fingerprintStatus = 'failed';
+          this.isFingerprintScanning = false;
+          
+          if (err.errCode === 1) {
+            uni.showToast({
+              title: '指纹识别失败，请重试',
+              icon: 'none'
+            });
+          } else if (err.errCode === 2) {
+            uni.showToast({
+              title: '用户取消指纹识别',
+              icon: 'none'
+            });
+          } else {
+            uni.showToast({
+              title: '指纹识别失败',
+              icon: 'none'
+            });
+          }
+          
+          // 3秒后重置状态
+          setTimeout(() => {
+            this.fingerprintStatus = 'ready';
+          }, 3000);
+        }
+      });
+    },
+    
+    // 指纹登录成功处理
+    handleFingerprintLoginSuccess() {
+      if (!this.lastFingerprintUser) {
+        uni.showToast({
+          title: '用户信息错误',
+          icon: 'none'
+        });
+        return;
+      }
+      
+      // 显示成功提示
+      uni.showToast({
+        title: '指纹登录成功',
+        icon: 'success',
+        duration: 1500
+      });
+      
+      // 更新用户最后登录时间
+      this.lastFingerprintUser.lastLoginTime = new Date().toISOString();
+      
+      // 使用统一的登录成功处理函数
+      setTimeout(() => {
+        handleLoginSuccess(this.lastFingerprintUser);
+      }, 1500);
+    },
+    
+    // 保存用户信息用于指纹登录
+    saveUserForFingerprint(user) {
+      try {
+        // 保存用户信息到本地存储，用于下次指纹登录
+        uni.setStorageSync('lastFingerprintUser', user);
+        console.log('用户信息已保存用于指纹登录:', user.username);
+      } catch (error) {
+        console.error('保存用户信息失败:', error);
+      }
+    },
     
     // 获取验证码
     getCode() {
@@ -184,6 +368,9 @@ export default {
           // 记录设备信息
           // this.recordDeviceInfo(); // Removed as per edit hint
           
+          // 保存用户信息用于指纹登录
+          this.saveUserForFingerprint(user);
+          
           // 显示成功提示
           uni.showToast({
             title: '登录成功',
@@ -208,6 +395,11 @@ export default {
     
     // 表单验证
     validateForm() {
+      // 指纹登录不需要验证表单
+      if (this.loginType === 'fingerprint') {
+        return true;
+      }
+      
       if (!this.phone.trim()) {
         uni.showToast({ title: '请输入用户名或手机号', icon: 'none' });
         return false;
@@ -495,6 +687,178 @@ export default {
   font-size: 28rpx;
   border: none;
   margin-top: 10rpx;
+}
+
+/* 指纹登录样式 */
+.fingerprint-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60rpx 30rpx;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 20rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.1);
+}
+
+.fingerprint-icon {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30rpx;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.fingerprint-icon.scanning {
+  animation: fingerprintPulse 1.5s infinite;
+}
+
+.fingerprint-icon::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.3) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.fingerprint-icon.scanning::before {
+  animation: fingerprintScan 2s infinite;
+}
+
+@keyframes fingerprintPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(46, 125, 50, 0.4);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 20rpx rgba(46, 125, 50, 0);
+  }
+}
+
+@keyframes fingerprintScan {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.fingerprint-symbol {
+  font-size: 60rpx;
+  color: white;
+}
+
+.fingerprint-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #2e7d32;
+  margin-bottom: 15rpx;
+}
+
+.fingerprint-desc {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 30rpx;
+  text-align: center;
+}
+
+.fingerprint-status {
+  min-height: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.status-text {
+  font-size: 26rpx;
+  padding: 8rpx 16rpx;
+  border-radius: 20rpx;
+  font-weight: 500;
+}
+
+.status-text.ready {
+  color: #2e7d32;
+  background: rgba(46, 125, 50, 0.1);
+}
+
+.status-text.scanning {
+  color: #ff9800;
+  background: rgba(255, 152, 0, 0.1);
+  animation: statusBlink 1s infinite;
+}
+
+.status-text.success {
+  color: #4caf50;
+  background: rgba(76, 175, 80, 0.1);
+}
+
+.status-text.failed {
+  color: #f44336;
+  background: rgba(244, 67, 54, 0.1);
+}
+
+.status-text.not-support {
+  color: #9e9e9e;
+  background: rgba(158, 158, 158, 0.1);
+}
+
+@keyframes statusBlink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.fingerprint-login-btn {
+  width: 100%;
+  height: 80rpx;
+  background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+  color: white;
+  padding: 20rpx 30rpx;
+  border-radius: 12rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-top: 30rpx;
+  border: none;
+  box-shadow: 0 4rpx 12rpx rgba(46, 125, 50, 0.3);
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15rpx;
+}
+
+.fingerprint-login-btn:disabled {
+  background: #ccc;
+  color: #999;
+  box-shadow: none;
+}
+
+.fingerprint-login-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.btn-icon {
+  font-size: 32rpx;
+}
+
+.btn-text {
+  font-size: 32rpx;
 }
 
 </style>
