@@ -1,129 +1,181 @@
 <template>
   <view class="login-container">
-    <!-- 标题 -->
-    <view class="title">银行系统</view>
+    <!-- 背景装饰 -->
+    <view class="bg-decoration">
+      <view class="bg-circle circle-1"></view>
+      <view class="bg-circle circle-2"></view>
+      <view class="bg-circle circle-3"></view>
+      <view class="bg-wave wave-1"></view>
+      <view class="bg-wave wave-2"></view>
+    </view>
     
-    <!-- 登录方式切换 -->
-    <view class="tab-bar">
-      <view 
-        :class="['tab-item', loginType === 'password' ? 'active' : '']" 
-        @click="loginType = 'password'"
-      >
-        密码登录
+    <!-- 头部区域 -->
+    <view class="header-section">
+      <view class="logo-container">
+        <view class="logo-icon">🏦</view>
+        <view class="logo-text">
+          <text class="bank-name">中国农业银行</text>
+          <text class="bank-subtitle">Agricultural Bank of China</text>
+        </view>
       </view>
-      <view 
-        :class="['tab-item', loginType === 'code' ? 'active' : '']" 
-        @click="loginType = 'code'"
-      >
-        验证码登录
-      </view>
-      <view 
-        :class="['tab-item', loginType === 'fingerprint' ? 'active' : '']" 
-        @click="loginType = 'fingerprint'"
-      >
-        指纹登录
+      <view class="welcome-text">
+        <text class="welcome-title">欢迎使用</text>
+        <text class="welcome-desc">安全便捷的移动银行服务</text>
       </view>
     </view>
     
-    <!-- 登录表单 -->
-    <form @submit="handleLogin">
-      <!-- 用户名/手机号输入 -->
-      <view class="input-item" v-if="loginType !== 'fingerprint'">
-        <input 
-          type="text" 
-          v-model="phone" 
-          placeholder="请输入用户名（仅中文）或手机号" 
-          maxlength="20"
-          required
-        />
-      </view>
-      
-      <!-- 指纹登录区域 -->
-      <view class="fingerprint-section" v-if="loginType === 'fingerprint'">
-        <view class="fingerprint-icon" :class="{ 'scanning': isFingerprintScanning }">
-          <text class="fingerprint-symbol">👆</text>
-        </view>
-        <text class="fingerprint-title">指纹登录</text>
-        <text class="fingerprint-desc">请将手指放在指纹识别器上</text>
-        <view class="fingerprint-status">
-          <text v-if="fingerprintStatus === 'ready'" class="status-text ready">准备就绪</text>
-          <text v-if="fingerprintStatus === 'scanning'" class="status-text scanning">正在识别...</text>
-          <text v-if="fingerprintStatus === 'success'" class="status-text success">识别成功</text>
-          <text v-if="fingerprintStatus === 'failed'" class="status-text failed">识别失败，请重试</text>
-          <text v-if="fingerprintStatus === 'notSupport'" class="status-text not-support">设备不支持指纹识别</text>
-        </view>
-      </view>
-      
-      <!-- 密码/验证码输入 -->
-      <view class="input-item" v-if="loginType === 'password'">
-        <input 
-          type="password" 
-          v-model="password" 
-          placeholder="请输入密码" 
-          maxlength="20"
-          required
-        />
-      </view>
-      <view class="input-item" v-if="loginType === 'code'">
-        <input 
-          type="number" 
-          v-model="code" 
-          placeholder="请输入验证码" 
-          maxlength="6"
-          required
-        />
-        <button 
-          class="get-code-btn" 
-          @click.stop="getCode" 
-          :disabled="countdown > 0"
+    <!-- 登录卡片 -->
+    <view class="login-card">
+      <!-- 登录方式切换 -->
+      <view class="tab-container">
+        <view 
+          :class="['tab-item', loginType === 'password' ? 'active' : '']" 
+          @click="loginType = 'password'"
         >
-          {{ countdown > 0 ? `${countdown}s后重发` : '获取验证码' }}
+          <text class="tab-icon">🔐</text>
+          <text class="tab-text">密码登录</text>
+        </view>
+        <view 
+          :class="['tab-item', loginType === 'code' ? 'active' : '']" 
+          @click="loginType = 'code'"
+        >
+          <text class="tab-icon">📱</text>
+          <text class="tab-text">验证码登录</text>
+        </view>
+        <view 
+          :class="['tab-item', loginType === 'fingerprint' ? 'active' : '']" 
+          @click="loginType = 'fingerprint'"
+        >
+          <text class="tab-icon">👆</text>
+          <text class="tab-text">指纹登录</text>
+        </view>
+      </view>
+    
+      <!-- 登录表单 -->
+      <form @submit="handleLogin" class="login-form">
+        <!-- 用户名/手机号输入 -->
+        <view class="input-group" v-if="loginType !== 'fingerprint'">
+          <view class="input-wrapper">
+            <view class="input-icon">👤</view>
+            <input 
+              type="text" 
+              v-model="phone" 
+              placeholder="请输入用户名（仅中文）或手机号" 
+              maxlength="20"
+              required
+              class="modern-input"
+            />
+          </view>
+        </view>
+        
+        <!-- 指纹登录区域 -->
+        <view class="fingerprint-section" v-if="loginType === 'fingerprint'">
+          <view class="fingerprint-container">
+            <view class="fingerprint-icon" :class="{ 'scanning': isFingerprintScanning }">
+              <text class="fingerprint-symbol">👆</text>
+            </view>
+            <text class="fingerprint-title">指纹登录</text>
+            <text class="fingerprint-desc">请将手指放在指纹识别器上</text>
+            <view class="fingerprint-status">
+              <text v-if="fingerprintStatus === 'ready'" class="status-text ready">准备就绪</text>
+              <text v-if="fingerprintStatus === 'scanning'" class="status-text scanning">正在识别...</text>
+              <text v-if="fingerprintStatus === 'success'" class="status-text success">识别成功</text>
+              <text v-if="fingerprintStatus === 'failed'" class="status-text failed">识别失败，请重试</text>
+              <text v-if="fingerprintStatus === 'notSupport'" class="status-text not-support">设备不支持指纹识别</text>
+            </view>
+          </view>
+        </view>
+        
+        <!-- 密码/验证码输入 -->
+        <view class="input-group" v-if="loginType === 'password'">
+          <view class="input-wrapper">
+            <view class="input-icon">🔒</view>
+            <input 
+              type="password" 
+              v-model="password" 
+              placeholder="请输入密码" 
+              maxlength="20"
+              required
+              class="modern-input"
+            />
+          </view>
+        </view>
+        
+        <view class="input-group" v-if="loginType === 'code'">
+          <view class="input-wrapper">
+            <view class="input-icon">📱</view>
+            <input 
+              type="number" 
+              v-model="code" 
+              placeholder="请输入验证码" 
+              maxlength="6"
+              required
+              class="modern-input"
+            />
+            <button 
+              class="get-code-btn" 
+              @click.stop="getCode" 
+              :disabled="countdown > 0"
+            >
+              {{ countdown > 0 ? `${countdown}s后重发` : '获取验证码' }}
+            </button>
+          </view>
+        </view>
+        
+        <!-- 登录按钮 -->
+        <button 
+          class="modern-login-btn" 
+          form-type="submit"
+          :loading="loading"
+          v-if="loginType !== 'fingerprint'"
+        >
+          <text class="btn-text">立即登录</text>
+          <text class="btn-arrow">→</text>
         </button>
+        
+        <!-- 指纹登录按钮 -->
+        <button 
+          class="modern-fingerprint-btn" 
+          @click="startFingerprintLogin"
+          :disabled="!fingerprintSupport || isFingerprintScanning"
+          v-if="loginType === 'fingerprint'"
+        >
+          <text class="btn-icon">👆</text>
+          <text class="btn-text">{{ getFingerprintButtonText() }}</text>
+        </button>
+      </form>
+    </view>
+    
+    <!-- 底部操作区域 -->
+    <view class="bottom-section">
+      <!-- 快速注册 -->
+      <view class="register-section">
+        <navigator url="/pages/register/register" open-type="navigate">
+          <button class="register-btn">
+            <text class="register-text">还没有账户？</text>
+            <text class="register-link">立即注册</text>
+          </button>
+        </navigator>
       </view>
       
-      <!-- 登录按钮 -->
-      <button 
-        class="login-btn" 
-        form-type="submit"
-        :loading="loading"
-        v-if="loginType !== 'fingerprint'"
-      >
-        登录
-      </button>
+      <!-- 辅助链接 -->
+      <view class="help-links">
+        <navigator url="/pages/forget/forget" class="help-link">
+          <text class="link-text">忘记密码</text>
+        </navigator>
+        <text class="divider">|</text>
+        <navigator url="/pages/help/help" class="help-link">
+          <text class="link-text">帮助中心</text>
+        </navigator>
+      </view>
       
-      <!-- 指纹登录按钮 -->
-      <button 
-        class="fingerprint-login-btn" 
-        @click="startFingerprintLogin"
-        :disabled="!fingerprintSupport || isFingerprintScanning"
-        v-if="loginType === 'fingerprint'"
-      >
-        <text class="btn-icon">👆</text>
-        <text class="btn-text">{{ fingerprintSupport ? '开始指纹识别' : '设备不支持指纹' }}</text>
-      </button>
-    </form>
-    
-    <!-- 快速注册按钮 -->
-    <view class="quick-register">
-      <navigator url="/pages/register/register" open-type="navigate">
-        <button class="quick-register-btn">
-          还没有账户？立即注册
-        </button>
-      </navigator>
-    </view>
-    
-    <!-- 辅助链接 -->
-    <view class="links">
-      <navigator url="/pages/forget/forget">忘记密码</navigator>
-    </view>
-
-    <!-- 登录注意事项 -->
-    <view class="login-notice">
-      <text class="notice-title">登录注意事项：</text>
-      <text class="notice-item">• 请确保在安全环境下登录，避免在公共场所输入密码</text>
-      <text class="notice-item">• 密码登录支持用户名或手机号，验证码登录仅支持手机号</text>
-      <text class="notice-item">• 如遇登录问题，请联系客服热线：95599</text>
-      <text class="notice-item">• 为保障账户安全，建议定期更换登录密码</text>
+      <!-- 安全提示 -->
+      <view class="security-tips">
+        <text class="tips-title">🔒 安全提示</text>
+        <text class="tips-item">• 请确保在安全环境下登录</text>
+        <text class="tips-item">• 定期更换登录密码</text>
+        <text class="tips-item">• 客服热线：95599</text>
+      </view>
     </view>
   </view>
 </template>
@@ -166,6 +218,15 @@ export default {
     
     // 检查设备指纹支持情况
     checkFingerprintSupport() {
+      // 首先检查用户是否禁用了指纹登录
+      const fingerprintEnabled = uni.getStorageSync('fingerprintLoginEnabled');
+      if (fingerprintEnabled === false) {
+        this.fingerprintSupport = false;
+        this.fingerprintStatus = 'notSupport';
+        console.log('用户已禁用指纹登录');
+        return;
+      }
+
       uni.checkIsSupportSoterAuthentication({
         success: (res) => {
           console.log('指纹支持检查结果:', res);
@@ -202,6 +263,17 @@ export default {
     
     // 开始指纹登录
     startFingerprintLogin() {
+      // 检查用户是否禁用了指纹登录
+      const fingerprintEnabled = uni.getStorageSync('fingerprintLoginEnabled');
+      if (fingerprintEnabled === false) {
+        uni.showToast({
+          title: '指纹登录已被禁用，请在安全设置中开启',
+          icon: 'none',
+          duration: 3000
+        });
+        return;
+      }
+
       if (!this.fingerprintSupport) {
         uni.showToast({
           title: '设备不支持指纹识别',
@@ -301,6 +373,18 @@ export default {
       } catch (error) {
         console.error('保存用户信息失败:', error);
       }
+    },
+
+    // 获取指纹按钮文本
+    getFingerprintButtonText() {
+      const fingerprintEnabled = uni.getStorageSync('fingerprintLoginEnabled');
+      if (fingerprintEnabled === false) {
+        return '指纹登录已禁用';
+      }
+      if (!this.fingerprintSupport) {
+        return '设备不支持指纹';
+      }
+      return '开始指纹识别';
     },
     
     // 获取验证码
@@ -443,280 +527,339 @@ export default {
 </script>
 
 <style scoped>
+/* 现代化中国农业银行登录页面样式 */
+
 .login-container {
-  padding: 50rpx 30rpx;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #3b82f6 100%);
+  position: relative;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
 }
 
-.title {
-  font-size: 56rpx;
-  font-weight: bold;
-  margin-bottom: 60rpx;
-  color: #2e7d32; /* 深绿色 */
+/* 背景装饰 */
+.bg-decoration {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  z-index: 1;
 }
 
-.tab-bar {
+.bg-circle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  animation: float 6s ease-in-out infinite;
+}
+
+.circle-1 {
+  width: 200rpx;
+  height: 200rpx;
+  top: 10%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.circle-2 {
+  width: 150rpx;
+  height: 150rpx;
+  top: 60%;
+  right: 15%;
+  animation-delay: 2s;
+}
+
+.circle-3 {
+  width: 100rpx;
+  height: 100rpx;
+  top: 30%;
+  right: 30%;
+  animation-delay: 4s;
+}
+
+.bg-wave {
+  position: absolute;
+  width: 200%;
+  height: 100rpx;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  animation: wave 8s linear infinite;
+}
+
+.wave-1 {
+  top: 20%;
+  animation-delay: 0s;
+}
+
+.wave-2 {
+  top: 70%;
+  animation-delay: 4s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(180deg);
+  }
+}
+
+@keyframes wave {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* 头部区域 */
+.header-section {
+  padding: 80rpx 40rpx 60rpx;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+.logo-container {
   display: flex;
-  width: 100%;
+  align-items: center;
+  justify-content: center;
   margin-bottom: 40rpx;
-  border-bottom: 2px solid #eee;
-  background: #ffffff;
-  border-radius: 12rpx;
-  padding: 4rpx;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+}
+
+.logo-icon {
+  font-size: 80rpx;
+  margin-right: 20rpx;
+  animation: logoGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes logoGlow {
+  0% {
+    text-shadow: 0 0 20rpx rgba(255, 255, 255, 0.5);
+  }
+  100% {
+    text-shadow: 0 0 30rpx rgba(255, 255, 255, 0.8);
+  }
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.bank-name {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #ffffff;
+  line-height: 1.2;
+  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.3);
+}
+
+.bank-subtitle {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 300;
+  letter-spacing: 1rpx;
+}
+
+.welcome-text {
+  margin-top: 20rpx;
+}
+
+.welcome-title {
+  display: block;
+  font-size: 36rpx;
+  color: #ffffff;
+  font-weight: 500;
+  margin-bottom: 10rpx;
+}
+
+.welcome-desc {
+  display: block;
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 300;
+}
+
+/* 登录卡片 */
+.login-card {
+  background: rgba(255, 255, 255, 0.95);
+  margin: 0 30rpx;
+  border-radius: 24rpx;
+  padding: 40rpx;
+  box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10rpx);
+  position: relative;
+  z-index: 2;
+  margin-bottom: 40rpx;
+}
+
+/* 标签页容器 */
+.tab-container {
+  display: flex;
+  background: #f8f9fa;
+  border-radius: 16rpx;
+  padding: 8rpx;
+  margin-bottom: 40rpx;
+  box-shadow: inset 0 2rpx 4rpx rgba(0, 0, 0, 0.1);
 }
 
 .tab-item {
   flex: 1;
-  text-align: center;
-  padding: 25rpx 0;
-  font-size: 36rpx;
-  color: #666;
-  position: relative;
-  border-radius: 8rpx;
-  transition: all 0.3s ease;
-}
-
-.tab-item.active {
-  color: #2e7d32;
-  font-weight: bold;
-  background: rgba(46, 125, 50, 0.1);
-}
-
-.tab-item.active::after {
-  content: '';
-  position: absolute;
-  bottom: -4rpx;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60%;
-  height: 4rpx;
-  background-color: #2e7d32;
-  border-radius: 2rpx;
-}
-
-.input-item {
-  width: 100%;
-  height: 80rpx;
-  border: 2px solid #eee;
-  border-radius: 12rpx;
-  padding: 20rpx 30rpx;
-  margin-bottom: 25rpx;
-  display: flex;
-  align-items: center;
-  background: #ffffff;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
-  box-sizing: border-box;
-}
-
-.input-item:focus-within {
-  border-color: #2e7d32;
-  box-shadow: 0 0 0 4rpx rgba(46, 125, 50, 0.1);
-}
-
-.input-item input {
-  flex: 1;
-  font-size: 34rpx;
-  color: #333;
-  height: 40rpx;
-  line-height: 40rpx;
-  border: none;
-  outline: none;
-  background: transparent;
-}
-
-.get-code-btn {
-  background-color: #2e7d32;
-  color: white;
-  padding: 15rpx 20rpx;
-  border-radius: 8rpx;
-  font-size: 28rpx;
-  border: none;
-  margin-left: 20rpx;
-  transition: all 0.3s ease;
-  height: 40rpx;
-  line-height: 40rpx;
-  white-space: nowrap;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.get-code-btn:disabled {
-  background-color: #ccc;
-  color: #999;
-}
-
-.login-btn {
-  width: 100%;
-  height: 80rpx;
-  background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
-  color: white;
-  padding: 20rpx 30rpx;
-  border-radius: 12rpx;
-  font-size: 36rpx;
-  font-weight: bold;
-  margin-top: 30rpx;
-  border: none;
-  box-shadow: 0 4rpx 12rpx rgba(46, 125, 50, 0.3);
-  transition: all 0.3s ease;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.login-btn:active {
-  transform: scale(0.98);
-}
-
-.quick-register {
-  width: 100%;
-  margin-top: 20rpx;
-}
-
-.quick-register-btn {
-  width: 100%;
-  height: 80rpx;
-  background: transparent;
-  color: #2e7d32;
-  padding: 20rpx 30rpx;
-  border: 2rpx solid #2e7d32;
-  border-radius: 12rpx;
-  font-size: 32rpx;
-  font-weight: normal;
-  margin: 0;
-  box-shadow: none;
-  transition: all 0.3s ease;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.quick-register-btn:active {
-  background: rgba(46, 125, 50, 0.1);
-  transform: scale(0.98);
-}
-
-.links {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  margin-top: 40rpx;
-}
-
-.links navigator {
-  color: #666;
-  font-size: 32rpx;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.links navigator:hover {
-  color: #2e7d32;
-}
-
-.login-notice {
-  margin-top: 40rpx;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 12rpx;
-  padding: 30rpx;
-  width: 100%;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
-}
-
-.notice-title {
-  display: block;
-  color: #2e7d32;
-  font-size: 32rpx;
-  font-weight: bold;
-  margin-bottom: 20rpx;
-}
-
-.notice-item {
-  display: block;
-  color: #666;
-  font-size: 28rpx;
-  margin-bottom: 10rpx;
-  line-height: 1.5;
-}
-
-/* 密码占位符，保持与验证码按钮宽度一致 */
-.password-placeholder {
-  width: 90rpx;
-  height: 40rpx;
-  margin-left: 20rpx;
-  flex-shrink: 0;
-}
-
-.debug-info {
-  margin-top: 20rpx;
-  padding: 20rpx;
-  background-color: #f0f0f0;
-  border-radius: 12rpx;
-  border: 1px solid #eee;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.debug-title {
-  font-size: 28rpx;
-  font-weight: bold;
-  color: #2e7d32;
-  margin-bottom: 10rpx;
-}
-
-.debug-item {
-  font-size: 24rpx;
-  color: #666;
-  margin-bottom: 5rpx;
-}
-
-.debug-btn {
-  background-color: #2e7d32;
-  color: white;
-  padding: 10rpx 20rpx;
-  border-radius: 8rpx;
-  font-size: 28rpx;
-  border: none;
-  margin-top: 10rpx;
-}
-
-/* 指纹登录样式 */
-.fingerprint-section {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 60rpx 30rpx;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 20rpx;
+  padding: 20rpx 10rpx;
+  border-radius: 12rpx;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  position: relative;
+}
+
+.tab-item.active {
+  background: #ffffff;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+  transform: translateY(-2rpx);
+}
+
+.tab-icon {
+  font-size: 32rpx;
+  margin-bottom: 8rpx;
+  transition: all 0.3s ease;
+}
+
+.tab-item.active .tab-icon {
+  transform: scale(1.1);
+}
+
+.tab-text {
+  font-size: 24rpx;
+  color: #666;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.tab-item.active .tab-text {
+  color: #1e40af;
+  font-weight: 600;
+}
+
+/* 登录表单 */
+.login-form {
+  width: 100%;
+}
+
+.input-group {
   margin-bottom: 30rpx;
-  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.1);
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: #f8f9fa;
+  border-radius: 16rpx;
+  padding: 0 20rpx;
+  border: 2rpx solid transparent;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.input-wrapper:focus-within {
+  border-color: #3b82f6;
+  background: #ffffff;
+  box-shadow: 0 0 0 4rpx rgba(59, 130, 246, 0.1);
+  transform: translateY(-2rpx);
+}
+
+.input-icon {
+  font-size: 32rpx;
+  margin-right: 16rpx;
+  color: #6b7280;
+  transition: all 0.3s ease;
+}
+
+.input-wrapper:focus-within .input-icon {
+  color: #3b82f6;
+  transform: scale(1.1);
+}
+
+.modern-input {
+  flex: 1;
+  height: 88rpx;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 32rpx;
+  color: #1f2937;
+  font-weight: 400;
+}
+
+.modern-input::placeholder {
+  color: #9ca3af;
+  font-weight: 400;
+}
+
+.get-code-btn {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: #ffffff;
+  padding: 16rpx 24rpx;
+  border-radius: 12rpx;
+  font-size: 24rpx;
+  font-weight: 600;
+  border: none;
+  margin-left: 16rpx;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+  box-shadow: 0 4rpx 12rpx rgba(59, 130, 246, 0.3);
+}
+
+.get-code-btn:disabled {
+  background: #d1d5db;
+  color: #9ca3af;
+  box-shadow: none;
+  transform: none;
+}
+
+.get-code-btn:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+/* 指纹登录区域 */
+.fingerprint-section {
+  padding: 60rpx 0;
+  text-align: center;
+}
+
+.fingerprint-container {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border-radius: 20rpx;
+  padding: 60rpx 40rpx;
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.1);
 }
 
 .fingerprint-icon {
-  width: 120rpx;
-  height: 120rpx;
+  width: 140rpx;
+  height: 140rpx;
   border-radius: 50%;
-  background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 30rpx;
-  transition: all 0.3s ease;
+  margin: 0 auto 30rpx;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 8rpx 32rpx rgba(59, 130, 246, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .fingerprint-icon.scanning {
-  animation: fingerprintPulse 1.5s infinite;
+  animation: fingerprintPulse 2s ease-in-out infinite;
 }
 
 .fingerprint-icon::before {
@@ -726,7 +869,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.3) 50%, transparent 70%);
+  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.4) 50%, transparent 70%);
   transform: translateX(-100%);
   transition: transform 0.6s ease;
 }
@@ -738,11 +881,11 @@ export default {
 @keyframes fingerprintPulse {
   0%, 100% {
     transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(46, 125, 50, 0.4);
+    box-shadow: 0 8rpx 32rpx rgba(59, 130, 246, 0.3);
   }
   50% {
     transform: scale(1.05);
-    box-shadow: 0 0 0 20rpx rgba(46, 125, 50, 0);
+    box-shadow: 0 12rpx 40rpx rgba(59, 130, 246, 0.5);
   }
 }
 
@@ -756,26 +899,26 @@ export default {
 }
 
 .fingerprint-symbol {
-  font-size: 60rpx;
-  color: white;
+  font-size: 64rpx;
+  color: #ffffff;
 }
 
 .fingerprint-title {
   font-size: 36rpx;
-  font-weight: bold;
-  color: #2e7d32;
-  margin-bottom: 15rpx;
+  font-weight: 700;
+  color: #1e40af;
+  margin-bottom: 16rpx;
 }
 
 .fingerprint-desc {
   font-size: 28rpx;
-  color: #666;
+  color: #6b7280;
   margin-bottom: 30rpx;
-  text-align: center;
+  line-height: 1.5;
 }
 
 .fingerprint-status {
-  min-height: 40rpx;
+  min-height: 50rpx;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -783,35 +926,36 @@ export default {
 
 .status-text {
   font-size: 26rpx;
-  padding: 8rpx 16rpx;
-  border-radius: 20rpx;
-  font-weight: 500;
+  padding: 12rpx 24rpx;
+  border-radius: 25rpx;
+  font-weight: 600;
+  transition: all 0.3s ease;
 }
 
 .status-text.ready {
-  color: #2e7d32;
-  background: rgba(46, 125, 50, 0.1);
+  color: #059669;
+  background: rgba(5, 150, 105, 0.1);
 }
 
 .status-text.scanning {
-  color: #ff9800;
-  background: rgba(255, 152, 0, 0.1);
-  animation: statusBlink 1s infinite;
+  color: #d97706;
+  background: rgba(217, 119, 6, 0.1);
+  animation: statusBlink 1.5s infinite;
 }
 
 .status-text.success {
-  color: #4caf50;
-  background: rgba(76, 175, 80, 0.1);
+  color: #059669;
+  background: rgba(5, 150, 105, 0.1);
 }
 
 .status-text.failed {
-  color: #f44336;
-  background: rgba(244, 67, 54, 0.1);
+  color: #dc2626;
+  background: rgba(220, 38, 38, 0.1);
 }
 
 .status-text.not-support {
-  color: #9e9e9e;
-  background: rgba(158, 158, 158, 0.1);
+  color: #6b7280;
+  background: rgba(107, 114, 128, 0.1);
 }
 
 @keyframes statusBlink {
@@ -819,46 +963,247 @@ export default {
     opacity: 1;
   }
   50% {
-    opacity: 0.5;
+    opacity: 0.6;
   }
 }
 
-.fingerprint-login-btn {
+/* 登录按钮 */
+.modern-login-btn {
   width: 100%;
-  height: 80rpx;
-  background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
-  color: white;
-  padding: 20rpx 30rpx;
-  border-radius: 12rpx;
-  font-size: 32rpx;
-  font-weight: bold;
-  margin-top: 30rpx;
+  height: 96rpx;
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: #ffffff;
   border: none;
-  box-shadow: 0 4rpx 12rpx rgba(46, 125, 50, 0.3);
-  transition: all 0.3s ease;
-  box-sizing: border-box;
+  border-radius: 16rpx;
+  font-size: 32rpx;
+  font-weight: 700;
+  margin-top: 40rpx;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 15rpx;
+  gap: 16rpx;
+  box-shadow: 0 8rpx 32rpx rgba(59, 130, 246, 0.4);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
 }
 
-.fingerprint-login-btn:disabled {
-  background: #ccc;
-  color: #999;
-  box-shadow: none;
+.modern-login-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
 }
 
-.fingerprint-login-btn:active:not(:disabled) {
+.modern-login-btn:active::before {
+  left: 100%;
+}
+
+.modern-login-btn:active {
   transform: scale(0.98);
+  box-shadow: 0 4rpx 16rpx rgba(59, 130, 246, 0.3);
+}
+
+.btn-text {
+  font-size: 32rpx;
+  font-weight: 700;
+}
+
+.btn-arrow {
+  font-size: 28rpx;
+  transition: transform 0.3s ease;
+}
+
+.modern-login-btn:active .btn-arrow {
+  transform: translateX(4rpx);
+}
+
+/* 指纹登录按钮 */
+.modern-fingerprint-btn {
+  width: 100%;
+  height: 96rpx;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  font-weight: 700;
+  margin-top: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16rpx;
+  box-shadow: 0 8rpx 32rpx rgba(16, 185, 129, 0.4);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modern-fingerprint-btn:disabled {
+  background: #d1d5db;
+  color: #9ca3af;
+  box-shadow: none;
+  transform: none;
+}
+
+.modern-fingerprint-btn:active:not(:disabled) {
+  transform: scale(0.98);
+  box-shadow: 0 4rpx 16rpx rgba(16, 185, 129, 0.3);
 }
 
 .btn-icon {
   font-size: 32rpx;
 }
 
-.btn-text {
-  font-size: 32rpx;
+/* 底部区域 */
+.bottom-section {
+  padding: 0 30rpx 40rpx;
+  position: relative;
+  z-index: 2;
+}
+
+.register-section {
+  margin-bottom: 30rpx;
+}
+
+.register-btn {
+  width: 100%;
+  height: 80rpx;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border: 2rpx solid rgba(255, 255, 255, 0.3);
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10rpx);
+}
+
+.register-btn:active {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(0.98);
+}
+
+.register-text {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.register-link {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.help-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20rpx;
+  margin-bottom: 30rpx;
+}
+
+.help-link {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 26rpx;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.help-link:active {
+  color: #ffffff;
+  transform: scale(1.05);
+}
+
+.divider {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 24rpx;
+}
+
+.security-tips {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 16rpx;
+  padding: 30rpx;
+  backdrop-filter: blur(10rpx);
+  border: 1rpx solid rgba(255, 255, 255, 0.2);
+}
+
+.tips-title {
+  display: block;
+  color: #ffffff;
+  font-size: 28rpx;
+  font-weight: 700;
+  margin-bottom: 20rpx;
+  text-align: center;
+}
+
+.tips-item {
+  display: block;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 24rpx;
+  margin-bottom: 8rpx;
+  line-height: 1.5;
+  text-align: center;
+}
+
+/* 响应式设计 */
+@media (max-width: 750rpx) {
+  .login-card {
+    margin: 0 20rpx;
+    padding: 30rpx;
+  }
+  
+  .header-section {
+    padding: 60rpx 30rpx 40rpx;
+  }
+  
+  .bank-name {
+    font-size: 42rpx;
+  }
+  
+  .bank-subtitle {
+    font-size: 22rpx;
+  }
+}
+
+/* 深色模式支持 */
+@media (prefers-color-scheme: dark) {
+  .login-container {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+  }
+  
+  .login-card {
+    background: rgba(15, 23, 42, 0.95);
+    color: #f1f5f9;
+  }
+  
+  .tab-container {
+    background: #1e293b;
+  }
+  
+  .tab-item.active {
+    background: #334155;
+  }
+  
+  .input-wrapper {
+    background: #1e293b;
+  }
+  
+  .input-wrapper:focus-within {
+    background: #334155;
+  }
+  
+  .modern-input {
+    color: #f1f5f9;
+  }
+  
+  .modern-input::placeholder {
+    color: #94a3b8;
+  }
 }
 
 </style>

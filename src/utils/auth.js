@@ -145,27 +145,58 @@ export function forceCheckLogin() {
  * @param {Object} userInfo 用户信息
  */
 export function handleLoginSuccess(userInfo) {
-  // 保存用户信息和登录状态
-  uni.setStorageSync('userInfo', userInfo)
-  uni.setStorageSync('isLoggedIn', true)
-  
-  // 更新user.json中的用户数据，添加isLoggedIn状态
+  // 确保用户数据完整同步
   try {
     const users = uni.getStorageSync('users') || []
     const userIndex = users.findIndex(user => user.id === userInfo.id)
+    
     if (userIndex !== -1) {
       // 清除所有用户的登录状态
       users.forEach(user => {
         user.isLoggedIn = false
       })
-      // 设置当前用户为登录状态
-      users[userIndex].isLoggedIn = true
-      users[userIndex].lastLoginTime = new Date().toISOString()
+      
+      // 使用数据库中的完整用户数据，确保包含所有字段
+      const completeUserInfo = { ...users[userIndex], ...userInfo }
+      completeUserInfo.isLoggedIn = true
+      completeUserInfo.lastLoginTime = new Date().toISOString()
+      
+      // 更新数据库中的用户数据
+      users[userIndex] = completeUserInfo
       uni.setStorageSync('users', users)
-      console.log('用户登录状态已更新:', userInfo.username)
+      
+      // 保存完整的用户信息到本地存储
+      uni.setStorageSync('userInfo', completeUserInfo)
+      uni.setStorageSync('currentUser', completeUserInfo)
+      uni.setStorageSync('isLoggedIn', true)
+      
+      console.log('用户登录成功，完整数据已同步:', {
+        id: completeUserInfo.id,
+        username: completeUserInfo.username,
+        phone: completeUserInfo.phone,
+        hasTransactionPassword: !!completeUserInfo.transactionPassword,
+        transactionPassword: completeUserInfo.transactionPassword
+      })
+    } else {
+      // 如果数据库中没有找到用户，直接保存传入的用户信息
+      uni.setStorageSync('userInfo', userInfo)
+      uni.setStorageSync('currentUser', userInfo)
+      uni.setStorageSync('isLoggedIn', true)
+      
+      console.log('用户登录成功，使用传入数据:', {
+        id: userInfo.id,
+        username: userInfo.username,
+        phone: userInfo.phone,
+        hasTransactionPassword: !!userInfo.transactionPassword,
+        transactionPassword: userInfo.transactionPassword
+      })
     }
   } catch (error) {
     console.error('更新用户登录状态失败:', error)
+    // 出错时仍然保存基本用户信息
+    uni.setStorageSync('userInfo', userInfo)
+    uni.setStorageSync('currentUser', userInfo)
+    uni.setStorageSync('isLoggedIn', true)
   }
   
   // 获取登录前的跳转目标

@@ -263,8 +263,29 @@ export function verifyPaymentPassword(password) {
         return
       }
       
+      console.log('支付密码验证调试信息:', {
+        userId: userInfo.id,
+        username: userInfo.username,
+        phone: userInfo.phone,
+        storedPassword: userInfo.transactionPassword,
+        inputPassword: password,
+        passwordType: typeof userInfo.transactionPassword,
+        inputType: typeof password,
+        passwordLength: userInfo.transactionPassword?.length,
+        inputLength: password?.length
+      })
+      
       const isCorrect = userInfo.transactionPassword === password
-      console.log('支付密码验证:', isCorrect ? '正确' : '错误')
+      console.log('支付密码验证结果:', isCorrect ? '正确' : '错误')
+      
+      if (!isCorrect) {
+        console.log('密码不匹配详情:', {
+          stored: `"${userInfo.transactionPassword}"`,
+          input: `"${password}"`,
+          equal: userInfo.transactionPassword === password
+        })
+      }
+      
       resolve(isCorrect)
       
     } catch (error) {

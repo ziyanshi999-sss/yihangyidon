@@ -2048,8 +2048,6 @@ if (uni.restoreGlobal) {
     }
   }
   function handleLoginSuccess(userInfo) {
-    uni.setStorageSync("userInfo", userInfo);
-    uni.setStorageSync("isLoggedIn", true);
     try {
       const users2 = uni.getStorageSync("users") || [];
       const userIndex = users2.findIndex((user) => user.id === userInfo.id);
@@ -2057,13 +2055,38 @@ if (uni.restoreGlobal) {
         users2.forEach((user) => {
           user.isLoggedIn = false;
         });
-        users2[userIndex].isLoggedIn = true;
-        users2[userIndex].lastLoginTime = (/* @__PURE__ */ new Date()).toISOString();
+        const completeUserInfo = { ...users2[userIndex], ...userInfo };
+        completeUserInfo.isLoggedIn = true;
+        completeUserInfo.lastLoginTime = (/* @__PURE__ */ new Date()).toISOString();
+        users2[userIndex] = completeUserInfo;
         uni.setStorageSync("users", users2);
-        formatAppLog("log", "at utils/auth.js:165", "用户登录状态已更新:", userInfo.username);
+        uni.setStorageSync("userInfo", completeUserInfo);
+        uni.setStorageSync("currentUser", completeUserInfo);
+        uni.setStorageSync("isLoggedIn", true);
+        formatAppLog("log", "at utils/auth.js:173", "用户登录成功，完整数据已同步:", {
+          id: completeUserInfo.id,
+          username: completeUserInfo.username,
+          phone: completeUserInfo.phone,
+          hasTransactionPassword: !!completeUserInfo.transactionPassword,
+          transactionPassword: completeUserInfo.transactionPassword
+        });
+      } else {
+        uni.setStorageSync("userInfo", userInfo);
+        uni.setStorageSync("currentUser", userInfo);
+        uni.setStorageSync("isLoggedIn", true);
+        formatAppLog("log", "at utils/auth.js:186", "用户登录成功，使用传入数据:", {
+          id: userInfo.id,
+          username: userInfo.username,
+          phone: userInfo.phone,
+          hasTransactionPassword: !!userInfo.transactionPassword,
+          transactionPassword: userInfo.transactionPassword
+        });
       }
     } catch (error) {
-      formatAppLog("error", "at utils/auth.js:168", "更新用户登录状态失败:", error);
+      formatAppLog("error", "at utils/auth.js:195", "更新用户登录状态失败:", error);
+      uni.setStorageSync("userInfo", userInfo);
+      uni.setStorageSync("currentUser", userInfo);
+      uni.setStorageSync("isLoggedIn", true);
     }
     const redirectUrl = uni.getStorageSync("redirectUrl");
     if (redirectUrl) {
@@ -2093,16 +2116,16 @@ if (uni.restoreGlobal) {
     } = options;
     const performLogout = async () => {
       try {
-        formatAppLog("log", "at utils/auth.js:215", "开始退出登录流程");
+        formatAppLog("log", "at utils/auth.js:246", "开始退出登录流程");
         logLogoutEvent(reason);
         clearAllUserData();
-        formatAppLog("log", "at utils/auth.js:222", "用户数据已清除");
+        formatAppLog("log", "at utils/auth.js:253", "用户数据已清除");
         if (syncToServer) {
           try {
             await syncLogoutToServer(reason);
-            formatAppLog("log", "at utils/auth.js:228", "服务器同步完成");
+            formatAppLog("log", "at utils/auth.js:259", "服务器同步完成");
           } catch (syncError) {
-            formatAppLog("warn", "at utils/auth.js:230", "服务器同步失败，但继续退出流程:", syncError);
+            formatAppLog("warn", "at utils/auth.js:261", "服务器同步失败，但继续退出流程:", syncError);
           }
         }
         uni.showToast({
@@ -2110,18 +2133,18 @@ if (uni.restoreGlobal) {
           icon: "success",
           duration: 1500
         });
-        formatAppLog("log", "at utils/auth.js:242", "跳转到登录页面");
+        formatAppLog("log", "at utils/auth.js:273", "跳转到登录页面");
         uni.reLaunch({
           url: "/pages/denglu/login",
           success: () => {
-            formatAppLog("log", "at utils/auth.js:246", "已成功跳转到登录页面");
+            formatAppLog("log", "at utils/auth.js:277", "已成功跳转到登录页面");
           },
           fail: (error) => {
-            formatAppLog("error", "at utils/auth.js:249", "跳转失败:", error);
+            formatAppLog("error", "at utils/auth.js:280", "跳转失败:", error);
             uni.navigateTo({
               url: "/pages/denglu/login",
               fail: () => {
-                formatAppLog("error", "at utils/auth.js:254", "所有跳转方式都失败");
+                formatAppLog("error", "at utils/auth.js:285", "所有跳转方式都失败");
                 uni.showToast({
                   title: "跳转失败，请手动返回登录页面",
                   icon: "none"
@@ -2131,11 +2154,11 @@ if (uni.restoreGlobal) {
           }
         });
       } catch (error) {
-        formatAppLog("error", "at utils/auth.js:265", "退出登录过程中发生错误:", error);
+        formatAppLog("error", "at utils/auth.js:296", "退出登录过程中发生错误:", error);
         try {
           clearAllUserData();
         } catch (clearError) {
-          formatAppLog("error", "at utils/auth.js:271", "清除数据失败:", clearError);
+          formatAppLog("error", "at utils/auth.js:302", "清除数据失败:", clearError);
         }
         uni.showToast({
           title: "退出登录失败，请重试",
@@ -2186,7 +2209,7 @@ if (uni.restoreGlobal) {
       try {
         uni.removeStorageSync(key);
       } catch (error) {
-        formatAppLog("warn", "at utils/auth.js:334", `清除存储键 ${key} 失败:`, error);
+        formatAppLog("warn", "at utils/auth.js:365", `清除存储键 ${key} 失败:`, error);
       }
     });
     try {
@@ -2197,7 +2220,7 @@ if (uni.restoreGlobal) {
         }
       });
     } catch (error) {
-      formatAppLog("warn", "at utils/auth.js:347", "清除用户相关数据失败:", error);
+      formatAppLog("warn", "at utils/auth.js:378", "清除用户相关数据失败:", error);
     }
   }
   function logLogoutEvent(reason) {
@@ -2214,16 +2237,16 @@ if (uni.restoreGlobal) {
         logoutLogs.splice(0, logoutLogs.length - 10);
       }
       uni.setStorageSync("logoutLogs", logoutLogs);
-      formatAppLog("log", "at utils/auth.js:376", "用户退出登录:", logoutData);
+      formatAppLog("log", "at utils/auth.js:407", "用户退出登录:", logoutData);
     } catch (error) {
-      formatAppLog("error", "at utils/auth.js:378", "记录退出日志失败:", error);
+      formatAppLog("error", "at utils/auth.js:409", "记录退出日志失败:", error);
     }
   }
   async function syncLogoutToServer(reason) {
     try {
       const userInfo = getUserInfo();
       if (!userInfo) {
-        formatAppLog("log", "at utils/auth.js:391", "用户信息不存在，跳过服务器同步");
+        formatAppLog("log", "at utils/auth.js:422", "用户信息不存在，跳过服务器同步");
         return;
       }
       const logoutData = {
@@ -2245,10 +2268,10 @@ if (uni.restoreGlobal) {
           }
         }, 500);
       });
-      formatAppLog("log", "at utils/auth.js:422", "退出登录已同步到服务器:", logoutData);
+      formatAppLog("log", "at utils/auth.js:453", "退出登录已同步到服务器:", logoutData);
       saveLogoutRecord(logoutData);
     } catch (error) {
-      formatAppLog("warn", "at utils/auth.js:428", "同步退出到服务器失败:", error);
+      formatAppLog("warn", "at utils/auth.js:459", "同步退出到服务器失败:", error);
     }
   }
   function getDeviceId() {
@@ -2268,7 +2291,7 @@ if (uni.restoreGlobal) {
       }
       uni.setStorageSync("logoutRecords", logoutRecords);
     } catch (error) {
-      formatAppLog("error", "at utils/auth.js:462", "保存退出记录失败:", error);
+      formatAppLog("error", "at utils/auth.js:493", "保存退出记录失败:", error);
     }
   }
   function isTabBarPage(pagePath) {
@@ -2284,7 +2307,7 @@ if (uni.restoreGlobal) {
     try {
       return uni.getStorageSync("userInfo");
     } catch (error) {
-      formatAppLog("error", "at utils/auth.js:503", "获取用户信息失败:", error);
+      formatAppLog("error", "at utils/auth.js:534", "获取用户信息失败:", error);
       return null;
     }
   }
@@ -2315,30 +2338,37 @@ if (uni.restoreGlobal) {
       };
     },
     onLoad() {
-      formatAppLog("log", "at pages/denglu/login.vue:153", "页面加载完成");
-      formatAppLog("log", "at pages/denglu/login.vue:155", "加载的用户数据:", users);
-      formatAppLog("log", "at pages/denglu/login.vue:156", "用户数量:", users.length);
+      formatAppLog("log", "at pages/denglu/login.vue:205", "页面加载完成");
+      formatAppLog("log", "at pages/denglu/login.vue:207", "加载的用户数据:", users);
+      formatAppLog("log", "at pages/denglu/login.vue:208", "用户数量:", users.length);
       this.checkFingerprintSupport();
       this.getLastFingerprintUser();
     },
     methods: {
       // 检查设备指纹支持情况
       checkFingerprintSupport() {
+        const fingerprintEnabled = uni.getStorageSync("fingerprintLoginEnabled");
+        if (fingerprintEnabled === false) {
+          this.fingerprintSupport = false;
+          this.fingerprintStatus = "notSupport";
+          formatAppLog("log", "at pages/denglu/login.vue:226", "用户已禁用指纹登录");
+          return;
+        }
         uni.checkIsSupportSoterAuthentication({
           success: (res) => {
-            formatAppLog("log", "at pages/denglu/login.vue:171", "指纹支持检查结果:", res);
+            formatAppLog("log", "at pages/denglu/login.vue:232", "指纹支持检查结果:", res);
             if (res.supportMode && res.supportMode.includes("fingerPrint")) {
               this.fingerprintSupport = true;
               this.fingerprintStatus = "ready";
-              formatAppLog("log", "at pages/denglu/login.vue:175", "设备支持指纹识别");
+              formatAppLog("log", "at pages/denglu/login.vue:236", "设备支持指纹识别");
             } else {
               this.fingerprintSupport = false;
               this.fingerprintStatus = "notSupport";
-              formatAppLog("log", "at pages/denglu/login.vue:179", "设备不支持指纹识别");
+              formatAppLog("log", "at pages/denglu/login.vue:240", "设备不支持指纹识别");
             }
           },
           fail: (err) => {
-            formatAppLog("error", "at pages/denglu/login.vue:183", "检查指纹支持失败:", err);
+            formatAppLog("error", "at pages/denglu/login.vue:244", "检查指纹支持失败:", err);
             this.fingerprintSupport = false;
             this.fingerprintStatus = "notSupport";
           }
@@ -2350,14 +2380,23 @@ if (uni.restoreGlobal) {
           const lastUser = uni.getStorageSync("lastFingerprintUser");
           if (lastUser) {
             this.lastFingerprintUser = lastUser;
-            formatAppLog("log", "at pages/denglu/login.vue:196", "上次指纹登录用户:", lastUser);
+            formatAppLog("log", "at pages/denglu/login.vue:257", "上次指纹登录用户:", lastUser);
           }
         } catch (error) {
-          formatAppLog("error", "at pages/denglu/login.vue:199", "获取上次指纹登录用户失败:", error);
+          formatAppLog("error", "at pages/denglu/login.vue:260", "获取上次指纹登录用户失败:", error);
         }
       },
       // 开始指纹登录
       startFingerprintLogin() {
+        const fingerprintEnabled = uni.getStorageSync("fingerprintLoginEnabled");
+        if (fingerprintEnabled === false) {
+          uni.showToast({
+            title: "指纹登录已被禁用，请在安全设置中开启",
+            icon: "none",
+            duration: 3e3
+          });
+          return;
+        }
         if (!this.fingerprintSupport) {
           uni.showToast({
             title: "设备不支持指纹识别",
@@ -2380,13 +2419,13 @@ if (uni.restoreGlobal) {
           challenge,
           authContent: "请用指纹解锁",
           success: (res) => {
-            formatAppLog("log", "at pages/denglu/login.vue:232", "指纹认证成功:", res);
+            formatAppLog("log", "at pages/denglu/login.vue:304", "指纹认证成功:", res);
             this.fingerprintStatus = "success";
             this.isFingerprintScanning = false;
             this.handleFingerprintLoginSuccess();
           },
           fail: (err) => {
-            formatAppLog("error", "at pages/denglu/login.vue:240", "指纹认证失败:", err);
+            formatAppLog("error", "at pages/denglu/login.vue:312", "指纹认证失败:", err);
             this.fingerprintStatus = "failed";
             this.isFingerprintScanning = false;
             if (err.errCode === 1) {
@@ -2434,10 +2473,21 @@ if (uni.restoreGlobal) {
       saveUserForFingerprint(user) {
         try {
           uni.setStorageSync("lastFingerprintUser", user);
-          formatAppLog("log", "at pages/denglu/login.vue:300", "用户信息已保存用于指纹登录:", user.username);
+          formatAppLog("log", "at pages/denglu/login.vue:372", "用户信息已保存用于指纹登录:", user.username);
         } catch (error) {
-          formatAppLog("error", "at pages/denglu/login.vue:302", "保存用户信息失败:", error);
+          formatAppLog("error", "at pages/denglu/login.vue:374", "保存用户信息失败:", error);
         }
+      },
+      // 获取指纹按钮文本
+      getFingerprintButtonText() {
+        const fingerprintEnabled = uni.getStorageSync("fingerprintLoginEnabled");
+        if (fingerprintEnabled === false) {
+          return "指纹登录已禁用";
+        }
+        if (!this.fingerprintSupport) {
+          return "设备不支持指纹";
+        }
+        return "开始指纹识别";
       },
       // 获取验证码
       getCode() {
@@ -2544,203 +2594,270 @@ if (uni.restoreGlobal) {
   };
   function _sfc_render$u(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "login-container" }, [
-      vue.createCommentVNode(" 标题 "),
-      vue.createElementVNode("view", { class: "title" }, "银行系统"),
-      vue.createCommentVNode(" 登录方式切换 "),
-      vue.createElementVNode("view", { class: "tab-bar" }, [
-        vue.createElementVNode(
-          "view",
-          {
-            class: vue.normalizeClass(["tab-item", $data.loginType === "password" ? "active" : ""]),
-            onClick: _cache[0] || (_cache[0] = ($event) => $data.loginType = "password")
-          },
-          " 密码登录 ",
-          2
-          /* CLASS */
-        ),
-        vue.createElementVNode(
-          "view",
-          {
-            class: vue.normalizeClass(["tab-item", $data.loginType === "code" ? "active" : ""]),
-            onClick: _cache[1] || (_cache[1] = ($event) => $data.loginType = "code")
-          },
-          " 验证码登录 ",
-          2
-          /* CLASS */
-        ),
-        vue.createElementVNode(
-          "view",
-          {
-            class: vue.normalizeClass(["tab-item", $data.loginType === "fingerprint" ? "active" : ""]),
-            onClick: _cache[2] || (_cache[2] = ($event) => $data.loginType = "fingerprint")
-          },
-          " 指纹登录 ",
-          2
-          /* CLASS */
-        )
+      vue.createCommentVNode(" 背景装饰 "),
+      vue.createElementVNode("view", { class: "bg-decoration" }, [
+        vue.createElementVNode("view", { class: "bg-circle circle-1" }),
+        vue.createElementVNode("view", { class: "bg-circle circle-2" }),
+        vue.createElementVNode("view", { class: "bg-circle circle-3" }),
+        vue.createElementVNode("view", { class: "bg-wave wave-1" }),
+        vue.createElementVNode("view", { class: "bg-wave wave-2" })
       ]),
-      vue.createCommentVNode(" 登录表单 "),
-      vue.createElementVNode(
-        "form",
-        {
-          onSubmit: _cache[8] || (_cache[8] = (...args) => $options.handleLogin && $options.handleLogin(...args))
-        },
-        [
-          vue.createCommentVNode(" 用户名/手机号输入 "),
-          $data.loginType !== "fingerprint" ? (vue.openBlock(), vue.createElementBlock("view", {
-            key: 0,
-            class: "input-item"
-          }, [
-            vue.withDirectives(vue.createElementVNode(
-              "input",
-              {
-                type: "text",
-                "onUpdate:modelValue": _cache[3] || (_cache[3] = ($event) => $data.phone = $event),
-                placeholder: "请输入用户名（仅中文）或手机号",
-                maxlength: "20",
-                required: ""
-              },
-              null,
-              512
-              /* NEED_PATCH */
-            ), [
-              [vue.vModelText, $data.phone]
-            ])
-          ])) : vue.createCommentVNode("v-if", true),
-          vue.createCommentVNode(" 指纹登录区域 "),
-          $data.loginType === "fingerprint" ? (vue.openBlock(), vue.createElementBlock("view", {
-            key: 1,
-            class: "fingerprint-section"
-          }, [
-            vue.createElementVNode(
-              "view",
-              {
-                class: vue.normalizeClass(["fingerprint-icon", { "scanning": $data.isFingerprintScanning }])
-              },
-              [
-                vue.createElementVNode("text", { class: "fingerprint-symbol" }, "👆")
-              ],
-              2
-              /* CLASS */
-            ),
-            vue.createElementVNode("text", { class: "fingerprint-title" }, "指纹登录"),
-            vue.createElementVNode("text", { class: "fingerprint-desc" }, "请将手指放在指纹识别器上"),
-            vue.createElementVNode("view", { class: "fingerprint-status" }, [
-              $data.fingerprintStatus === "ready" ? (vue.openBlock(), vue.createElementBlock("text", {
-                key: 0,
-                class: "status-text ready"
-              }, "准备就绪")) : vue.createCommentVNode("v-if", true),
-              $data.fingerprintStatus === "scanning" ? (vue.openBlock(), vue.createElementBlock("text", {
-                key: 1,
-                class: "status-text scanning"
-              }, "正在识别...")) : vue.createCommentVNode("v-if", true),
-              $data.fingerprintStatus === "success" ? (vue.openBlock(), vue.createElementBlock("text", {
-                key: 2,
-                class: "status-text success"
-              }, "识别成功")) : vue.createCommentVNode("v-if", true),
-              $data.fingerprintStatus === "failed" ? (vue.openBlock(), vue.createElementBlock("text", {
-                key: 3,
-                class: "status-text failed"
-              }, "识别失败，请重试")) : vue.createCommentVNode("v-if", true),
-              $data.fingerprintStatus === "notSupport" ? (vue.openBlock(), vue.createElementBlock("text", {
-                key: 4,
-                class: "status-text not-support"
-              }, "设备不支持指纹识别")) : vue.createCommentVNode("v-if", true)
-            ])
-          ])) : vue.createCommentVNode("v-if", true),
-          vue.createCommentVNode(" 密码/验证码输入 "),
-          $data.loginType === "password" ? (vue.openBlock(), vue.createElementBlock("view", {
-            key: 2,
-            class: "input-item"
-          }, [
-            vue.withDirectives(vue.createElementVNode(
-              "input",
-              {
-                type: "password",
-                "onUpdate:modelValue": _cache[4] || (_cache[4] = ($event) => $data.password = $event),
-                placeholder: "请输入密码",
-                maxlength: "20",
-                required: ""
-              },
-              null,
-              512
-              /* NEED_PATCH */
-            ), [
-              [vue.vModelText, $data.password]
-            ])
-          ])) : vue.createCommentVNode("v-if", true),
-          $data.loginType === "code" ? (vue.openBlock(), vue.createElementBlock("view", {
-            key: 3,
-            class: "input-item"
-          }, [
-            vue.withDirectives(vue.createElementVNode(
-              "input",
-              {
-                type: "number",
-                "onUpdate:modelValue": _cache[5] || (_cache[5] = ($event) => $data.code = $event),
-                placeholder: "请输入验证码",
-                maxlength: "6",
-                required: ""
-              },
-              null,
-              512
-              /* NEED_PATCH */
-            ), [
-              [vue.vModelText, $data.code]
-            ]),
-            vue.createElementVNode("button", {
-              class: "get-code-btn",
-              onClick: _cache[6] || (_cache[6] = vue.withModifiers((...args) => $options.getCode && $options.getCode(...args), ["stop"])),
-              disabled: $data.countdown > 0
-            }, vue.toDisplayString($data.countdown > 0 ? `${$data.countdown}s后重发` : "获取验证码"), 9, ["disabled"])
-          ])) : vue.createCommentVNode("v-if", true),
-          vue.createCommentVNode(" 登录按钮 "),
-          $data.loginType !== "fingerprint" ? (vue.openBlock(), vue.createElementBlock("button", {
-            key: 4,
-            class: "login-btn",
-            "form-type": "submit",
-            loading: $data.loading
-          }, " 登录 ", 8, ["loading"])) : vue.createCommentVNode("v-if", true),
-          vue.createCommentVNode(" 指纹登录按钮 "),
-          $data.loginType === "fingerprint" ? (vue.openBlock(), vue.createElementBlock("button", {
-            key: 5,
-            class: "fingerprint-login-btn",
-            onClick: _cache[7] || (_cache[7] = (...args) => $options.startFingerprintLogin && $options.startFingerprintLogin(...args)),
-            disabled: !$data.fingerprintSupport || $data.isFingerprintScanning
-          }, [
-            vue.createElementVNode("text", { class: "btn-icon" }, "👆"),
-            vue.createElementVNode(
-              "text",
-              { class: "btn-text" },
-              vue.toDisplayString($data.fingerprintSupport ? "开始指纹识别" : "设备不支持指纹"),
-              1
-              /* TEXT */
-            )
-          ], 8, ["disabled"])) : vue.createCommentVNode("v-if", true)
-        ],
-        32
-        /* NEED_HYDRATION */
-      ),
-      vue.createCommentVNode(" 快速注册按钮 "),
-      vue.createElementVNode("view", { class: "quick-register" }, [
-        vue.createElementVNode("navigator", {
-          url: "/pages/register/register",
-          "open-type": "navigate"
-        }, [
-          vue.createElementVNode("button", { class: "quick-register-btn" }, " 还没有账户？立即注册 ")
+      vue.createCommentVNode(" 头部区域 "),
+      vue.createElementVNode("view", { class: "header-section" }, [
+        vue.createElementVNode("view", { class: "logo-container" }, [
+          vue.createElementVNode("view", { class: "logo-icon" }, "🏦"),
+          vue.createElementVNode("view", { class: "logo-text" }, [
+            vue.createElementVNode("text", { class: "bank-name" }, "中国农业银行"),
+            vue.createElementVNode("text", { class: "bank-subtitle" }, "Agricultural Bank of China")
+          ])
+        ]),
+        vue.createElementVNode("view", { class: "welcome-text" }, [
+          vue.createElementVNode("text", { class: "welcome-title" }, "欢迎使用"),
+          vue.createElementVNode("text", { class: "welcome-desc" }, "安全便捷的移动银行服务")
         ])
       ]),
-      vue.createCommentVNode(" 辅助链接 "),
-      vue.createElementVNode("view", { class: "links" }, [
-        vue.createElementVNode("navigator", { url: "/pages/forget/forget" }, "忘记密码")
+      vue.createCommentVNode(" 登录卡片 "),
+      vue.createElementVNode("view", { class: "login-card" }, [
+        vue.createCommentVNode(" 登录方式切换 "),
+        vue.createElementVNode("view", { class: "tab-container" }, [
+          vue.createElementVNode(
+            "view",
+            {
+              class: vue.normalizeClass(["tab-item", $data.loginType === "password" ? "active" : ""]),
+              onClick: _cache[0] || (_cache[0] = ($event) => $data.loginType = "password")
+            },
+            [
+              vue.createElementVNode("text", { class: "tab-icon" }, "🔐"),
+              vue.createElementVNode("text", { class: "tab-text" }, "密码登录")
+            ],
+            2
+            /* CLASS */
+          ),
+          vue.createElementVNode(
+            "view",
+            {
+              class: vue.normalizeClass(["tab-item", $data.loginType === "code" ? "active" : ""]),
+              onClick: _cache[1] || (_cache[1] = ($event) => $data.loginType = "code")
+            },
+            [
+              vue.createElementVNode("text", { class: "tab-icon" }, "📱"),
+              vue.createElementVNode("text", { class: "tab-text" }, "验证码登录")
+            ],
+            2
+            /* CLASS */
+          ),
+          vue.createElementVNode(
+            "view",
+            {
+              class: vue.normalizeClass(["tab-item", $data.loginType === "fingerprint" ? "active" : ""]),
+              onClick: _cache[2] || (_cache[2] = ($event) => $data.loginType = "fingerprint")
+            },
+            [
+              vue.createElementVNode("text", { class: "tab-icon" }, "👆"),
+              vue.createElementVNode("text", { class: "tab-text" }, "指纹登录")
+            ],
+            2
+            /* CLASS */
+          )
+        ]),
+        vue.createCommentVNode(" 登录表单 "),
+        vue.createElementVNode(
+          "form",
+          {
+            onSubmit: _cache[8] || (_cache[8] = (...args) => $options.handleLogin && $options.handleLogin(...args)),
+            class: "login-form"
+          },
+          [
+            vue.createCommentVNode(" 用户名/手机号输入 "),
+            $data.loginType !== "fingerprint" ? (vue.openBlock(), vue.createElementBlock("view", {
+              key: 0,
+              class: "input-group"
+            }, [
+              vue.createElementVNode("view", { class: "input-wrapper" }, [
+                vue.createElementVNode("view", { class: "input-icon" }, "👤"),
+                vue.withDirectives(vue.createElementVNode(
+                  "input",
+                  {
+                    type: "text",
+                    "onUpdate:modelValue": _cache[3] || (_cache[3] = ($event) => $data.phone = $event),
+                    placeholder: "请输入用户名（仅中文）或手机号",
+                    maxlength: "20",
+                    required: "",
+                    class: "modern-input"
+                  },
+                  null,
+                  512
+                  /* NEED_PATCH */
+                ), [
+                  [vue.vModelText, $data.phone]
+                ])
+              ])
+            ])) : vue.createCommentVNode("v-if", true),
+            vue.createCommentVNode(" 指纹登录区域 "),
+            $data.loginType === "fingerprint" ? (vue.openBlock(), vue.createElementBlock("view", {
+              key: 1,
+              class: "fingerprint-section"
+            }, [
+              vue.createElementVNode("view", { class: "fingerprint-container" }, [
+                vue.createElementVNode(
+                  "view",
+                  {
+                    class: vue.normalizeClass(["fingerprint-icon", { "scanning": $data.isFingerprintScanning }])
+                  },
+                  [
+                    vue.createElementVNode("text", { class: "fingerprint-symbol" }, "👆")
+                  ],
+                  2
+                  /* CLASS */
+                ),
+                vue.createElementVNode("text", { class: "fingerprint-title" }, "指纹登录"),
+                vue.createElementVNode("text", { class: "fingerprint-desc" }, "请将手指放在指纹识别器上"),
+                vue.createElementVNode("view", { class: "fingerprint-status" }, [
+                  $data.fingerprintStatus === "ready" ? (vue.openBlock(), vue.createElementBlock("text", {
+                    key: 0,
+                    class: "status-text ready"
+                  }, "准备就绪")) : vue.createCommentVNode("v-if", true),
+                  $data.fingerprintStatus === "scanning" ? (vue.openBlock(), vue.createElementBlock("text", {
+                    key: 1,
+                    class: "status-text scanning"
+                  }, "正在识别...")) : vue.createCommentVNode("v-if", true),
+                  $data.fingerprintStatus === "success" ? (vue.openBlock(), vue.createElementBlock("text", {
+                    key: 2,
+                    class: "status-text success"
+                  }, "识别成功")) : vue.createCommentVNode("v-if", true),
+                  $data.fingerprintStatus === "failed" ? (vue.openBlock(), vue.createElementBlock("text", {
+                    key: 3,
+                    class: "status-text failed"
+                  }, "识别失败，请重试")) : vue.createCommentVNode("v-if", true),
+                  $data.fingerprintStatus === "notSupport" ? (vue.openBlock(), vue.createElementBlock("text", {
+                    key: 4,
+                    class: "status-text not-support"
+                  }, "设备不支持指纹识别")) : vue.createCommentVNode("v-if", true)
+                ])
+              ])
+            ])) : vue.createCommentVNode("v-if", true),
+            vue.createCommentVNode(" 密码/验证码输入 "),
+            $data.loginType === "password" ? (vue.openBlock(), vue.createElementBlock("view", {
+              key: 2,
+              class: "input-group"
+            }, [
+              vue.createElementVNode("view", { class: "input-wrapper" }, [
+                vue.createElementVNode("view", { class: "input-icon" }, "🔒"),
+                vue.withDirectives(vue.createElementVNode(
+                  "input",
+                  {
+                    type: "password",
+                    "onUpdate:modelValue": _cache[4] || (_cache[4] = ($event) => $data.password = $event),
+                    placeholder: "请输入密码",
+                    maxlength: "20",
+                    required: "",
+                    class: "modern-input"
+                  },
+                  null,
+                  512
+                  /* NEED_PATCH */
+                ), [
+                  [vue.vModelText, $data.password]
+                ])
+              ])
+            ])) : vue.createCommentVNode("v-if", true),
+            $data.loginType === "code" ? (vue.openBlock(), vue.createElementBlock("view", {
+              key: 3,
+              class: "input-group"
+            }, [
+              vue.createElementVNode("view", { class: "input-wrapper" }, [
+                vue.createElementVNode("view", { class: "input-icon" }, "📱"),
+                vue.withDirectives(vue.createElementVNode(
+                  "input",
+                  {
+                    type: "number",
+                    "onUpdate:modelValue": _cache[5] || (_cache[5] = ($event) => $data.code = $event),
+                    placeholder: "请输入验证码",
+                    maxlength: "6",
+                    required: "",
+                    class: "modern-input"
+                  },
+                  null,
+                  512
+                  /* NEED_PATCH */
+                ), [
+                  [vue.vModelText, $data.code]
+                ]),
+                vue.createElementVNode("button", {
+                  class: "get-code-btn",
+                  onClick: _cache[6] || (_cache[6] = vue.withModifiers((...args) => $options.getCode && $options.getCode(...args), ["stop"])),
+                  disabled: $data.countdown > 0
+                }, vue.toDisplayString($data.countdown > 0 ? `${$data.countdown}s后重发` : "获取验证码"), 9, ["disabled"])
+              ])
+            ])) : vue.createCommentVNode("v-if", true),
+            vue.createCommentVNode(" 登录按钮 "),
+            $data.loginType !== "fingerprint" ? (vue.openBlock(), vue.createElementBlock("button", {
+              key: 4,
+              class: "modern-login-btn",
+              "form-type": "submit",
+              loading: $data.loading
+            }, [
+              vue.createElementVNode("text", { class: "btn-text" }, "立即登录"),
+              vue.createElementVNode("text", { class: "btn-arrow" }, "→")
+            ], 8, ["loading"])) : vue.createCommentVNode("v-if", true),
+            vue.createCommentVNode(" 指纹登录按钮 "),
+            $data.loginType === "fingerprint" ? (vue.openBlock(), vue.createElementBlock("button", {
+              key: 5,
+              class: "modern-fingerprint-btn",
+              onClick: _cache[7] || (_cache[7] = (...args) => $options.startFingerprintLogin && $options.startFingerprintLogin(...args)),
+              disabled: !$data.fingerprintSupport || $data.isFingerprintScanning
+            }, [
+              vue.createElementVNode("text", { class: "btn-icon" }, "👆"),
+              vue.createElementVNode(
+                "text",
+                { class: "btn-text" },
+                vue.toDisplayString($options.getFingerprintButtonText()),
+                1
+                /* TEXT */
+              )
+            ], 8, ["disabled"])) : vue.createCommentVNode("v-if", true)
+          ],
+          32
+          /* NEED_HYDRATION */
+        )
       ]),
-      vue.createCommentVNode(" 登录注意事项 "),
-      vue.createElementVNode("view", { class: "login-notice" }, [
-        vue.createElementVNode("text", { class: "notice-title" }, "登录注意事项："),
-        vue.createElementVNode("text", { class: "notice-item" }, "• 请确保在安全环境下登录，避免在公共场所输入密码"),
-        vue.createElementVNode("text", { class: "notice-item" }, "• 密码登录支持用户名或手机号，验证码登录仅支持手机号"),
-        vue.createElementVNode("text", { class: "notice-item" }, "• 如遇登录问题，请联系客服热线：95599"),
-        vue.createElementVNode("text", { class: "notice-item" }, "• 为保障账户安全，建议定期更换登录密码")
+      vue.createCommentVNode(" 底部操作区域 "),
+      vue.createElementVNode("view", { class: "bottom-section" }, [
+        vue.createCommentVNode(" 快速注册 "),
+        vue.createElementVNode("view", { class: "register-section" }, [
+          vue.createElementVNode("navigator", {
+            url: "/pages/register/register",
+            "open-type": "navigate"
+          }, [
+            vue.createElementVNode("button", { class: "register-btn" }, [
+              vue.createElementVNode("text", { class: "register-text" }, "还没有账户？"),
+              vue.createElementVNode("text", { class: "register-link" }, "立即注册")
+            ])
+          ])
+        ]),
+        vue.createCommentVNode(" 辅助链接 "),
+        vue.createElementVNode("view", { class: "help-links" }, [
+          vue.createElementVNode("navigator", {
+            url: "/pages/forget/forget",
+            class: "help-link"
+          }, [
+            vue.createElementVNode("text", { class: "link-text" }, "忘记密码")
+          ]),
+          vue.createElementVNode("text", { class: "divider" }, "|"),
+          vue.createElementVNode("navigator", {
+            url: "/pages/help/help",
+            class: "help-link"
+          }, [
+            vue.createElementVNode("text", { class: "link-text" }, "帮助中心")
+          ])
+        ]),
+        vue.createCommentVNode(" 安全提示 "),
+        vue.createElementVNode("view", { class: "security-tips" }, [
+          vue.createElementVNode("text", { class: "tips-title" }, "🔒 安全提示"),
+          vue.createElementVNode("text", { class: "tips-item" }, "• 请确保在安全环境下登录"),
+          vue.createElementVNode("text", { class: "tips-item" }, "• 定期更换登录密码"),
+          vue.createElementVNode("text", { class: "tips-item" }, "• 客服热线：95599")
+        ])
       ])
     ]);
   }
@@ -7788,17 +7905,36 @@ if (uni.restoreGlobal) {
   }
   function verifyPaymentPassword(password) {
     return new Promise((resolve, reject) => {
+      var _a;
       try {
         const userInfo = getUserInfo();
         if (!userInfo) {
           reject(new Error("用户未登录"));
           return;
         }
+        formatAppLog("log", "at api/balance.js:266", "支付密码验证调试信息:", {
+          userId: userInfo.id,
+          username: userInfo.username,
+          phone: userInfo.phone,
+          storedPassword: userInfo.transactionPassword,
+          inputPassword: password,
+          passwordType: typeof userInfo.transactionPassword,
+          inputType: typeof password,
+          passwordLength: (_a = userInfo.transactionPassword) == null ? void 0 : _a.length,
+          inputLength: password == null ? void 0 : password.length
+        });
         const isCorrect = userInfo.transactionPassword === password;
-        formatAppLog("log", "at api/balance.js:267", "支付密码验证:", isCorrect ? "正确" : "错误");
+        formatAppLog("log", "at api/balance.js:279", "支付密码验证结果:", isCorrect ? "正确" : "错误");
+        if (!isCorrect) {
+          formatAppLog("log", "at api/balance.js:282", "密码不匹配详情:", {
+            stored: `"${userInfo.transactionPassword}"`,
+            input: `"${password}"`,
+            equal: userInfo.transactionPassword === password
+          });
+        }
         resolve(isCorrect);
       } catch (error) {
-        formatAppLog("error", "at api/balance.js:271", "验证支付密码失败:", error);
+        formatAppLog("error", "at api/balance.js:292", "验证支付密码失败:", error);
         reject(error);
       }
     });
@@ -7878,7 +8014,7 @@ if (uni.restoreGlobal) {
           title: "信用卡还款",
           time: (/* @__PURE__ */ new Date()).toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" })
         });
-        formatAppLog("log", "at api/balance.js:383", `信用卡还款成功: ${amount}元，剩余余额: ${newBalance}元，信用卡余额: ${newCardBalance}元`);
+        formatAppLog("log", "at api/balance.js:404", `信用卡还款成功: ${amount}元，剩余余额: ${newBalance}元，信用卡余额: ${newCardBalance}元`);
         resolve({
           success: true,
           message: "还款成功",
@@ -7887,7 +8023,7 @@ if (uni.restoreGlobal) {
           newAvailableCredit
         });
       } catch (error) {
-        formatAppLog("error", "at api/balance.js:394", "信用卡还款失败:", error);
+        formatAppLog("error", "at api/balance.js:415", "信用卡还款失败:", error);
         reject(error);
       }
     });
@@ -7908,7 +8044,7 @@ if (uni.restoreGlobal) {
           resolve(creditCards);
         }
       } catch (error) {
-        formatAppLog("error", "at api/balance.js:424", "获取信用卡信息失败:", error);
+        formatAppLog("error", "at api/balance.js:445", "获取信用卡信息失败:", error);
         reject(error);
       }
     });
@@ -7931,10 +8067,10 @@ if (uni.restoreGlobal) {
           );
         }
         const limitedRecords = repaymentRecords.slice(0, limit);
-        formatAppLog("log", "at api/balance.js:458", `获取还款记录: ${limitedRecords.length}条`);
+        formatAppLog("log", "at api/balance.js:479", `获取还款记录: ${limitedRecords.length}条`);
         resolve(limitedRecords);
       } catch (error) {
-        formatAppLog("error", "at api/balance.js:462", "获取还款记录失败:", error);
+        formatAppLog("error", "at api/balance.js:483", "获取还款记录失败:", error);
         reject(error);
       }
     });
@@ -16322,6 +16458,18 @@ if (uni.restoreGlobal) {
           formatAppLog("error", "at pages/user/security.vue:553", "更新用户安全设置数据库失败:", error);
         }
       },
+      // 更新指纹登录状态
+      updateFingerprintLoginStatus(enabled) {
+        try {
+          uni.setStorageSync("fingerprintLoginEnabled", enabled);
+          if (!enabled) {
+            uni.removeStorageSync("lastFingerprintUser");
+          }
+          formatAppLog("log", "at pages/user/security.vue:568", "指纹登录状态已更新:", enabled);
+        } catch (error) {
+          formatAppLog("error", "at pages/user/security.vue:570", "更新指纹登录状态失败:", error);
+        }
+      },
       // 计算安全评分
       calculateSecurityScore() {
         let score = 0;
@@ -16549,12 +16697,34 @@ if (uni.restoreGlobal) {
       },
       // 生物识别开关变化
       onBiometricChange(e) {
-        this.biometricEnabled = e.detail.value;
-        this.saveSecuritySettings();
-        uni.showToast({
-          title: this.biometricEnabled ? "已开启生物识别" : "已关闭生物识别",
-          icon: "success"
-        });
+        const newValue = e.detail.value;
+        if (!newValue && this.biometricEnabled) {
+          uni.showModal({
+            title: "关闭生物识别登录",
+            content: "关闭后将无法使用指纹/面容登录，确定要关闭吗？",
+            confirmText: "确定关闭",
+            cancelText: "取消",
+            success: (res) => {
+              if (res.confirm) {
+                this.biometricEnabled = false;
+                this.saveSecuritySettings();
+                this.updateFingerprintLoginStatus(false);
+                uni.showToast({
+                  title: "已关闭生物识别登录",
+                  icon: "success"
+                });
+              }
+            }
+          });
+        } else if (newValue && !this.biometricEnabled) {
+          this.biometricEnabled = true;
+          this.saveSecuritySettings();
+          this.updateFingerprintLoginStatus(true);
+          uni.showToast({
+            title: "已开启生物识别登录",
+            icon: "success"
+          });
+        }
       },
       // 设置登录设备
       setLoginDevice() {
@@ -16587,9 +16757,89 @@ IP：${device.ip}`
       },
       // 修改交易密码
       changeTransactionPassword() {
-        uni.navigateTo({
-          url: "/pages/user/change-password?type=transaction"
+        this.showTransactionPasswordInput();
+      },
+      // 显示交易密码输入界面
+      showTransactionPasswordInput() {
+        uni.showModal({
+          title: "修改交易密码",
+          content: "请输入新的6位数字交易密码",
+          editable: true,
+          placeholderText: "请输入6位数字密码",
+          confirmText: "确认修改",
+          cancelText: "取消",
+          success: (res) => {
+            if (res.confirm && res.content) {
+              this.validateAndUpdateTransactionPassword(res.content);
+            }
+          }
         });
+      },
+      // 验证并更新交易密码
+      validateAndUpdateTransactionPassword(newPassword) {
+        if (!/^\d{6}$/.test(newPassword)) {
+          uni.showToast({
+            title: "交易密码必须是6位数字",
+            icon: "none"
+          });
+          return;
+        }
+        if (this.isSequentialNumbers(newPassword)) {
+          uni.showToast({
+            title: "密码不能是连续数字",
+            icon: "none"
+          });
+          return;
+        }
+        if (this.isRepeatedNumbers(newPassword)) {
+          uni.showToast({
+            title: "密码不能是重复数字",
+            icon: "none"
+          });
+          return;
+        }
+        this.updateTransactionPassword(newPassword);
+      },
+      // 检查是否为连续数字
+      isSequentialNumbers(password) {
+        const digits = password.split("").map(Number);
+        for (let i = 1; i < digits.length; i++) {
+          if (digits[i] !== digits[i - 1] + 1 && digits[i] !== digits[i - 1] - 1) {
+            return false;
+          }
+        }
+        return true;
+      },
+      // 检查是否为重复数字
+      isRepeatedNumbers(password) {
+        return /^(\d)\1{5}$/.test(password);
+      },
+      // 更新交易密码
+      updateTransactionPassword(newPassword) {
+        try {
+          const userInfo = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
+          if (userInfo) {
+            userInfo.transactionPassword = newPassword;
+            userInfo.securitySettings.transactionPasswordUpdateTime = (/* @__PURE__ */ new Date()).toISOString();
+            uni.setStorageSync("userInfo", userInfo);
+            uni.setStorageSync("currentUser", userInfo);
+            this.updateUserSecurityInDatabase(userInfo);
+            this.addSecurityEvent("transaction_password_change", "修改交易密码");
+            this.transactionPasswordUpdateTime = (/* @__PURE__ */ new Date()).toISOString();
+            this.calculateSecurityScore();
+            this.generateSecurityRecommendations();
+            uni.showToast({
+              title: "交易密码修改成功",
+              icon: "success"
+            });
+          }
+        } catch (error) {
+          formatAppLog("error", "at pages/user/security.vue:999", "更新交易密码失败:", error);
+          uni.showToast({
+            title: "密码修改失败，请重试",
+            icon: "none"
+          });
+        }
       },
       // 设置交易限额
       setTransactionLimit() {

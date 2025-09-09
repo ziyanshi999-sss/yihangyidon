@@ -1,12 +1,15 @@
 <template>
   <view v-if="visible" class="modal-overlay" @click="closeModal">
     <view class="modal-container" @click.stop>
+      <!-- 模态框头部 -->
       <view class="modal-header">
         <text class="modal-title">还款确认</text>
         <text class="close-btn" @click="closeModal">×</text>
       </view>
       
+      <!-- 模态框内容 -->
       <view class="modal-content">
+        <!-- 还款信息 -->
         <view class="repayment-info">
           <view class="card-info-header">
             <view class="card-icon">💳</view>
@@ -34,41 +37,57 @@
           </view>
         </view>
 
+        <!-- 密码输入区域 -->
         <view class="password-section">
           <text class="password-title">请输入支付密码</text>
-          <view class="password-input-container">
+          
+          <!-- 密码输入框 -->
+          <view class="password-input-wrapper">
             <input 
               ref="passwordInput"
               class="password-input" 
-              type="password" 
-              v-model="password" 
+              type="number"
+              v-model="passwordValue" 
               maxlength="6"
-              @input="onPasswordInput"
-              @focus="onPasswordFocus"
-              @blur="onPasswordBlur"
+              placeholder="请输入6位数字密码"
+              @input="handlePasswordInput"
+              @focus="handlePasswordFocus"
+              @blur="handlePasswordBlur"
             />
+            
+            <!-- 密码圆点显示 -->
             <view class="password-dots">
               <view 
                 v-for="(dot, index) in 6" 
                 :key="index"
                 class="password-dot"
-                :class="{ filled: index < password.length }"
+                :class="{ 
+                  filled: index < passwordValue.length,
+                  active: index === passwordValue.length
+                }"
               ></view>
             </view>
           </view>
           
+          <!-- 错误提示 -->
           <view v-if="errorMessage" class="error-message">
             <text class="error-text">{{ errorMessage }}</text>
+          </view>
+          
+          <!-- 密码提示 -->
+          <view class="password-hint">
+            <text class="hint-text">请输入6位数字支付密码</text>
           </view>
         </view>
       </view>
       
+      <!-- 模态框底部 -->
       <view class="modal-footer">
         <button class="btn-cancel" @click="closeModal">取消</button>
         <button 
           class="btn-confirm" 
-          :disabled="password.length !== 6 || isProcessing"
-          @click="confirmRepayment"
+          :disabled="!canConfirm || isProcessing"
+          @click="handleConfirmRepayment"
         >
           {{ isProcessing ? '处理中...' : '确认还款' }}
         </button>
@@ -78,7 +97,7 @@
 </template>
 
 <script>
-import { verifyPaymentPassword, repayCreditCard } from '@/api/balance'
+import { verifyPaymentPassword, executeCreditCardRepayment } from '@/api/payment'
 
 export default {
   name: 'RepaymentPasswordModal',
@@ -98,36 +117,57 @@ export default {
   },
   data() {
     return {
-      password: '',
-      errorMessage: '',
-      isProcessing: false,
+      passwordValue: '', // 密码输入值
+      errorMessage: '', // 错误信息
+      isProcessing: false, // 处理状态
       cardInfo: {
         currentBalance: 0
       },
       accountBalance: 0
     }
   },
+  computed: {
+    // 是否可以确认还款
+    canConfirm() {
+      return this.passwordValue && 
+             this.passwordValue.length === 6 && 
+             !this.isProcessing &&
+             !this.errorMessage
+    }
+  },
   watch: {
     visible(newVal) {
       if (newVal) {
-        this.resetForm()
-        this.loadCardInfo()
-        this.loadAccountBalance()
-        this.$nextTick(() => {
-          this.focusPasswordInput()
-        })
+        this.initModal()
+      } else {
+        this.resetModal()
       }
     }
   },
   methods: {
-    closeModal() {
-      this.$emit('close')
+    // 初始化模态框
+    initModal() {
+      console.log('初始化还款密码模态框')
+      this.resetModal()
+      this.loadCardInfo()
+      this.loadAccountBalance()
+      
+      // 延迟聚焦输入框
+      this.$nextTick(() => {
+        setTimeout(() => {
+          this.focusPasswordInput()
+        }, 300)
+      })
     },
-    resetForm() {
-      this.password = ''
+    
+    // 重置模态框
+    resetModal() {
+      this.passwordValue = ''
       this.errorMessage = ''
       this.isProcessing = false
     },
+    
+    // 加载卡片信息
     async loadCardInfo() {
       try {
         const users = uni.getStorageSync('users') || []
@@ -135,174 +175,319 @@ export default {
         if (currentUser && currentUser.creditCards) {
           const card = currentUser.creditCards.find(c => c.cardNumber === this.cardNumber)
           if (card) {
-            this.cardInfo = card
+            this.cardInfo = { ...card }
+            console.log('卡片信息加载成功:', this.cardInfo)
           }
         }
       } catch (error) {
         console.error('加载卡片信息失败:', error)
       }
     },
+    
+    // 加载账户余额
     async loadAccountBalance() {
       try {
         const users = uni.getStorageSync('users') || []
         const currentUser = users.find(user => user.isLoggedIn)
         if (currentUser) {
           this.accountBalance = currentUser.balance || 0
+          console.log('账户余额加载成功:', this.accountBalance)
         }
       } catch (error) {
         console.error('加载账户余额失败:', error)
       }
     },
+    
+    // 聚焦密码输入框
     focusPasswordInput() {
-      if (this.$refs.passwordInput) {
-        this.$refs.passwordInput.focus()
+      this.$nextTick(() => {
+        if (this.$refs.passwordInput) {
+          try {
+            this.$refs.passwordInput.focus()
+            console.log('密码输入框聚焦成功')
+          } catch (error) {
+            console.log('密码输入框聚焦失败:', error)
+          }
+        }
+      })
+    },
+    
+    // 处理密码输入
+    handlePasswordInput(e) {
+      console.log('密码输入事件:', e)
+      
+      // 获取输入值
+      let value = ''
+      if (e && e.detail && e.detail.value !== undefined) {
+        value = e.detail.value
+      } else if (e && e.target && e.target.value !== undefined) {
+        value = e.target.value
+      } else if (typeof e === 'string') {
+        value = e
       }
-    },
-    onPasswordInput(e) {
-      const value = e.detail.value
-      // 只允许数字
-      if (!/^\d*$/.test(value)) {
-        this.password = value.replace(/\D/g, '')
-        return
+      
+      console.log('原始输入值:', value, '类型:', typeof value)
+      
+      // 只保留数字
+      const numericValue = value.replace(/\D/g, '')
+      
+      // 限制长度为6位
+      if (numericValue.length > 6) {
+        this.passwordValue = numericValue.slice(0, 6)
+      } else {
+        this.passwordValue = numericValue
       }
-      this.password = value
-      this.errorMessage = ''
+      
+      // 清除错误信息
+      if (this.errorMessage) {
+        this.errorMessage = ''
+      }
+      
+      console.log('密码更新:', {
+        original: value,
+        numeric: numericValue,
+        final: this.passwordValue,
+        length: this.passwordValue.length
+      })
     },
-    onPasswordFocus() {
-      // 密码输入框获得焦点时的处理
+    
+    // 处理密码输入框获得焦点
+    handlePasswordFocus() {
+      console.log('密码输入框获得焦点')
     },
-    onPasswordBlur() {
-      // 密码输入框失去焦点时的处理
+    
+    // 处理密码输入框失去焦点
+    handlePasswordBlur() {
+      console.log('密码输入框失去焦点')
     },
-    async confirmRepayment() {
-      if (this.password.length !== 6) {
+    
+    // 处理确认还款
+    async handleConfirmRepayment() {
+      console.log('开始确认还款流程')
+      
+      // 验证密码长度
+      if (!this.passwordValue || this.passwordValue.length !== 6) {
         this.errorMessage = '请输入6位支付密码'
+        console.log('密码长度验证失败:', this.passwordValue?.length)
         return
       }
-
+      
+      // 验证密码格式（只允许数字）
+      if (!/^\d{6}$/.test(this.passwordValue)) {
+        this.errorMessage = '支付密码必须为6位数字'
+        console.log('密码格式验证失败:', this.passwordValue)
+        return
+      }
+      
       this.isProcessing = true
       this.errorMessage = ''
-
+      
+      console.log('开始验证支付密码:', {
+        password: this.passwordValue,
+        type: typeof this.passwordValue,
+        length: this.passwordValue.length
+      })
+      
       try {
         // 验证支付密码
-        const passwordValid = await verifyPaymentPassword(this.password)
+        const passwordValid = await this.verifyPassword(this.passwordValue)
+        console.log('支付密码验证结果:', passwordValid)
+        
         if (!passwordValid) {
           this.errorMessage = '支付密码错误'
           this.isProcessing = false
           return
         }
-
+        
         // 检查账户余额
         if (this.accountBalance < this.repaymentAmount) {
           this.errorMessage = '账户余额不足'
           this.isProcessing = false
           return
         }
-
+        
         // 执行还款
-        const result = await repayCreditCard({
+        const result = await executeCreditCardRepayment({
           cardNumber: this.cardNumber,
           amount: this.repaymentAmount,
-          password: this.password
+          password: this.passwordValue
         })
-
+        console.log('还款执行结果:', result)
+        
         if (result.success) {
           this.$emit('repayment-success', result)
           this.closeModal()
         } else {
           this.errorMessage = result.message || '还款失败'
         }
+        
       } catch (error) {
-        console.error('还款失败:', error)
+        console.error('还款处理失败:', error)
         this.errorMessage = '还款失败，请重试'
       } finally {
         this.isProcessing = false
       }
+    },
+    
+    // 验证支付密码
+    async verifyPassword(password) {
+      try {
+        console.log('开始验证支付密码:', password)
+        
+        // 获取用户信息
+        const userInfo = uni.getStorageSync('userInfo') || uni.getStorageSync('currentUser')
+        if (!userInfo) {
+          console.error('用户未登录')
+          return false
+        }
+        
+        console.log('用户信息:', {
+          id: userInfo.id,
+          username: userInfo.username,
+          phone: userInfo.phone,
+          hasTransactionPassword: !!userInfo.transactionPassword,
+          storedPassword: userInfo.transactionPassword
+        })
+        
+        // 验证密码
+        const isValid = userInfo.transactionPassword === password
+        console.log('密码验证结果:', {
+          stored: userInfo.transactionPassword,
+          input: password,
+          match: isValid
+        })
+        
+        return isValid
+        
+      } catch (error) {
+        console.error('验证支付密码失败:', error)
+        return false
+      }
+    },
+    
+    
+    // 关闭模态框
+    closeModal() {
+      console.log('关闭还款密码模态框')
+      this.$emit('close')
     }
   }
 }
 </script>
 
 <style scoped>
-/* 🎨 清新简约风设计 */
+/* 🎨 现代化设计风格 */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  backdrop-filter: blur(10rpx);
+  backdrop-filter: blur(8rpx);
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .modal-container {
-  background: rgba(255, 255, 255, 0.98);
-  backdrop-filter: blur(20rpx);
+  background: #ffffff;
   border-radius: 24rpx;
   width: 90%;
   max-width: 600rpx;
   max-height: 80vh;
   overflow: hidden;
-  border: 1rpx solid rgba(59, 130, 246, 0.2);
-  box-shadow: 0 20rpx 60rpx rgba(59, 130, 246, 0.2);
+  box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, 0.15);
+  animation: slideUp 0.3s ease-out;
 }
 
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(50rpx) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* 模态框头部 */
 .modal-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 30rpx;
-  border-bottom: 1rpx solid rgba(59, 130, 246, 0.1);
+  padding: 32rpx 32rpx 24rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
 }
 
 .modal-title {
-  font-size: 32rpx;
+  font-size: 36rpx;
   font-weight: 600;
-  color: #1e40af;
+  color: white;
 }
 
 .close-btn {
-  font-size: 40rpx;
-  color: #3b82f6;
+  font-size: 48rpx;
+  color: rgba(255, 255, 255, 0.8);
   cursor: pointer;
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
 }
 
+.close-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+/* 模态框内容 */
 .modal-content {
-  padding: 30rpx;
+  padding: 32rpx;
 }
 
+/* 还款信息 */
 .repayment-info {
-  background: rgba(240, 249, 255, 0.8);
-  border-radius: 16rpx;
-  padding: 24rpx;
-  margin-bottom: 30rpx;
-  border: 1rpx solid rgba(59, 130, 246, 0.1);
+  background: linear-gradient(135deg, #f8f9ff 0%, #e8f0ff 100%);
+  border-radius: 20rpx;
+  padding: 28rpx;
+  margin-bottom: 32rpx;
+  border: 1rpx solid #e0e7ff;
 }
 
 .card-info-header {
   display: flex;
   align-items: center;
   gap: 20rpx;
-  margin-bottom: 20rpx;
-  padding-bottom: 16rpx;
-  border-bottom: 1rpx solid rgba(59, 130, 246, 0.1);
+  margin-bottom: 24rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 1rpx solid #d0d7ff;
 }
 
 .card-icon {
-  font-size: 40rpx;
-  width: 60rpx;
-  height: 60rpx;
+  font-size: 48rpx;
+  width: 80rpx;
+  height: 80rpx;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-  border-radius: 12rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16rpx;
   color: white;
-  box-shadow: 0 4rpx 12rpx rgba(59, 130, 246, 0.3);
+  box-shadow: 0 8rpx 20rpx rgba(102, 126, 234, 0.3);
 }
 
 .card-details {
@@ -310,59 +495,63 @@ export default {
 }
 
 .card-type {
-  font-size: 26rpx;
+  font-size: 28rpx;
   font-weight: 600;
-  color: #1e40af;
+  color: #4a5568;
   display: block;
-  margin-bottom: 6rpx;
+  margin-bottom: 8rpx;
 }
 
 .card-number {
-  font-size: 22rpx;
-  color: #3b82f6;
+  font-size: 24rpx;
+  color: #667eea;
   font-family: 'Courier New', monospace;
+  letter-spacing: 2rpx;
 }
 
 .info-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12rpx;
+  margin-bottom: 16rpx;
 }
 
 .info-label {
-  font-size: 24rpx;
-  color: #3b82f6;
+  font-size: 26rpx;
+  color: #718096;
+  font-weight: 500;
 }
 
 .info-value {
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 600;
-  color: #1e40af;
+  color: #2d3748;
 }
 
 .info-value.amount {
-  font-size: 26rpx;
+  font-size: 28rpx;
 }
 
 .info-value.primary {
-  color: #3b82f6;
+  color: #667eea;
 }
 
+/* 密码输入区域 */
 .password-section {
-  margin-bottom: 30rpx;
+  margin-bottom: 32rpx;
 }
 
 .password-title {
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: 600;
-  color: #1e40af;
-  margin-bottom: 20rpx;
+  color: #2d3748;
+  margin-bottom: 24rpx;
   display: block;
 }
 
-.password-input-container {
+.password-input-wrapper {
   position: relative;
+  margin-bottom: 20rpx;
 }
 
 .password-input {
@@ -373,238 +562,146 @@ export default {
   height: 100%;
   opacity: 0;
   z-index: 1;
+  font-size: 32rpx;
+  letter-spacing: 8rpx;
 }
 
 .password-dots {
   display: flex;
   justify-content: space-between;
-  height: 80rpx;
-  background: rgba(240, 249, 255, 0.8);
+  height: 88rpx;
+  background: #f7fafc;
   border-radius: 16rpx;
-  padding: 0 20rpx;
-  border: 2rpx solid rgba(59, 130, 246, 0.2);
+  padding: 0 24rpx;
+  border: 2rpx solid #e2e8f0;
   transition: all 0.3s ease;
 }
 
 .password-dots:focus-within {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 4rpx rgba(59, 130, 246, 0.1);
+  border-color: #667eea;
+  box-shadow: 0 0 0 6rpx rgba(102, 126, 234, 0.1);
+  background: #ffffff;
 }
 
 .password-dot {
-  width: 20rpx;
-  height: 20rpx;
+  width: 24rpx;
+  height: 24rpx;
   border-radius: 50%;
-  background: rgba(59, 130, 246, 0.2);
+  background: #e2e8f0;
   margin: auto 0;
-  transition: all 0.3s ease;
-  border: 1rpx solid rgba(59, 130, 246, 0.3);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  border: 2rpx solid #cbd5e0;
 }
 
 .password-dot.filled {
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-  box-shadow: 0 4rpx 12rpx rgba(59, 130, 246, 0.3);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-color: #667eea;
+  box-shadow: 0 4rpx 12rpx rgba(102, 126, 234, 0.3);
   transform: scale(1.1);
 }
 
+.password-dot.active {
+  border-color: #667eea;
+  background: #f0f4ff;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.7;
+  }
+}
+
+/* 错误提示 */
 .error-message {
-  margin-top: 20rpx;
-  padding: 16rpx;
-  background: rgba(239, 68, 68, 0.1);
+  margin-top: 16rpx;
+  padding: 16rpx 20rpx;
+  background: #fed7d7;
   border-radius: 12rpx;
-  border: 1rpx solid rgba(239, 68, 68, 0.3);
+  border: 1rpx solid #feb2b2;
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5rpx); }
+  75% { transform: translateX(5rpx); }
 }
 
 .error-text {
   font-size: 24rpx;
-  color: #dc2626;
+  color: #c53030;
+  font-weight: 500;
 }
 
+/* 密码提示 */
+.password-hint {
+  margin-top: 12rpx;
+  text-align: center;
+}
+
+.hint-text {
+  font-size: 22rpx;
+  color: #a0aec0;
+}
+
+/* 模态框底部 */
 .modal-footer {
   display: flex;
   gap: 20rpx;
-  padding: 30rpx;
-  border-top: 1rpx solid rgba(59, 130, 246, 0.1);
+  padding: 24rpx 32rpx 32rpx;
+  border-top: 1rpx solid #f0f0f0;
+  background: #fafafa;
 }
 
 .btn-cancel, .btn-confirm {
   flex: 1;
-  height: 80rpx;
-  border-radius: 12rpx;
-  font-size: 28rpx;
+  height: 88rpx;
+  border-radius: 16rpx;
+  font-size: 30rpx;
   font-weight: 600;
   border: none;
   cursor: pointer;
   transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
 .btn-cancel {
-  background: rgba(107, 114, 128, 0.1);
-  color: #6b7280;
-  border: 1rpx solid rgba(107, 114, 128, 0.2);
+  background: #ffffff;
+  color: #718096;
+  border: 2rpx solid #e2e8f0;
 }
 
 .btn-cancel:hover {
-  background: rgba(107, 114, 128, 0.2);
+  background: #f7fafc;
+  border-color: #cbd5e0;
 }
 
 .btn-confirm {
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  box-shadow: 0 4rpx 12rpx rgba(59, 130, 246, 0.3);
+  box-shadow: 0 8rpx 20rpx rgba(102, 126, 234, 0.3);
 }
 
-.btn-confirm:hover {
-  box-shadow: 0 8rpx 20rpx rgba(59, 130, 246, 0.4);
+.btn-confirm:hover:not(:disabled) {
+  box-shadow: 0 12rpx 24rpx rgba(102, 126, 234, 0.4);
   transform: translateY(-2rpx);
 }
 
 .btn-confirm:disabled {
-  background: rgba(107, 114, 128, 0.1);
-  color: #6b7280;
+  background: #cbd5e0;
+  color: #a0aec0;
   box-shadow: none;
-  border: 1rpx solid rgba(107, 114, 128, 0.2);
+  cursor: not-allowed;
 }
 
-/* 🎨 新增样式内容 - 动画效果和交互增强 */
-
-/* 模态框进入动画 */
-.modal-container {
-  animation: modalSlideIn 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-@keyframes modalSlideIn {
-  0% {
-    opacity: 0;
-    transform: translateY(50rpx) scale(0.9);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-/* 还款信息区域进入动画 */
-.repayment-info {
-  animation: infoSlideIn 0.6s ease-out 0.1s both;
-}
-
-@keyframes infoSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(20rpx);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* 密码区域进入动画 */
-.password-section {
-  animation: passwordSlideIn 0.6s ease-out 0.2s both;
-}
-
-@keyframes passwordSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(20rpx);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* 卡片信息头部增强效果 */
-.card-info-header {
-  position: relative;
-  overflow: hidden;
-}
-
-.card-info-header::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
-  transition: left 0.6s ease;
-}
-
-.card-info-header:hover::before {
-  left: 100%;
-}
-
-/* 密码圆点增强效果 */
-.password-dot {
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-.password-dot.filled {
-  animation: dotFill 0.3s ease-out;
-}
-
-@keyframes dotFill {
-  0% {
-    transform: scale(0.8);
-    opacity: 0.5;
-  }
-  50% {
-    transform: scale(1.2);
-    opacity: 0.8;
-  }
-  100% {
-    transform: scale(1.1);
-    opacity: 1;
-  }
-}
-
-/* 密码输入框增强效果 */
-.password-dots {
-  transition: all 0.3s ease;
-}
-
-.password-dots:focus-within {
-  animation: inputFocus 0.3s ease-out;
-}
-
-@keyframes inputFocus {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.02);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-/* 错误消息增强效果 */
-.error-message {
-  animation: errorShake 0.5s ease-in-out;
-}
-
-@keyframes errorShake {
-  0%, 100% {
-    transform: translateX(0);
-  }
-  25% {
-    transform: translateX(-5rpx);
-  }
-  75% {
-    transform: translateX(5rpx);
-  }
-}
-
-/* 按钮增强效果 */
-.btn-confirm {
-  position: relative;
-  overflow: hidden;
-}
-
+/* 按钮光效 */
 .btn-confirm::before {
   content: '';
   position: absolute;
@@ -620,209 +717,51 @@ export default {
   left: 100%;
 }
 
-/* 脉冲效果 */
-.pulse {
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+/* 响应式设计 */
+@media (max-width: 750rpx) {
+  .modal-container {
+    width: 95%;
+    margin: 0 20rpx;
   }
-  70% {
-    box-shadow: 0 0 0 10rpx rgba(59, 130, 246, 0);
+  
+  .modal-content {
+    padding: 24rpx;
   }
-  100% {
-    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
-  }
-}
-
-/* 摇摆效果 */
-.shake {
-  animation: shake 0.5s ease-in-out;
-}
-
-@keyframes shake {
-  0%, 100% {
-    transform: translateX(0);
-  }
-  25% {
-    transform: translateX(-5rpx);
-  }
-  75% {
-    transform: translateX(5rpx);
-  }
-}
-
-/* 弹跳效果 */
-.bounce {
-  animation: bounce 0.6s ease;
-}
-
-@keyframes bounce {
-  0%, 20%, 53%, 80%, 100% {
-    transform: translateY(0);
-  }
-  40%, 43% {
-    transform: translateY(-10rpx);
-  }
-  70% {
-    transform: translateY(-5rpx);
-  }
-  90% {
-    transform: translateY(-2rpx);
-  }
-}
-
-/* 渐变文字效果 */
-.gradient-text {
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* 发光文字效果 */
-.glow-text {
-  text-shadow: 0 0 10rpx rgba(59, 130, 246, 0.5);
-}
-
-/* 3D效果 */
-.card-3d {
-  transform-style: preserve-3d;
-  transition: transform 0.3s ease;
-}
-
-.card-3d:hover {
-  transform: rotateY(5deg) rotateX(5deg);
-}
-
-/* 悬浮效果 */
-.float {
-  animation: float 3s ease-in-out infinite;
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10rpx);
-  }
-}
-
-/* 波浪效果 */
-.wave {
-  position: relative;
-  overflow: hidden;
-}
-
-.wave::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(45deg, transparent 30%, rgba(59, 130, 246, 0.1) 50%, transparent 70%);
-  transform: translateX(-100%);
-  animation: waveMove 2s infinite;
-}
-
-@keyframes waveMove {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
-  }
-}
-
-/* 粒子效果 */
-.particles {
-  position: relative;
-}
-
-.particles::before,
-.particles::after {
-  content: '';
-  position: absolute;
-  width: 4rpx;
-  height: 4rpx;
-  background: rgba(59, 130, 246, 0.6);
-  border-radius: 50%;
-  animation: particleFloat 4s infinite;
-}
-
-.particles::before {
-  top: 20%;
-  left: 20%;
-  animation-delay: 0s;
-}
-
-.particles::after {
-  top: 60%;
-  right: 20%;
-  animation-delay: 2s;
-}
-
-@keyframes particleFloat {
-  0%, 100% {
-    transform: translateY(0) scale(1);
-    opacity: 0.6;
-  }
-  50% {
-    transform: translateY(-20rpx) scale(1.2);
-    opacity: 1;
-  }
-}
-
-/* 加载状态效果 */
-.loading {
-  position: relative;
-  overflow: hidden;
-}
-
-.loading::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3), transparent);
-  animation: loadingShimmer 1.5s infinite;
-}
-
-@keyframes loadingShimmer {
-  0% {
-    left: -100%;
-  }
-  100% {
-    left: 100%;
+  
+  .repayment-info {
+    padding: 20rpx;
   }
 }
 
 /* 深色模式支持 */
 @media (prefers-color-scheme: dark) {
   .modal-container {
-    background: rgba(255, 255, 255, 0.98);
-    border: 1rpx solid rgba(59, 130, 246, 0.2);
+    background: #2d3748;
+    color: #e2e8f0;
   }
   
   .repayment-info {
-    background: rgba(30, 41, 59, 0.8);
-    border: 1rpx solid rgba(59, 130, 246, 0.2);
+    background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    border-color: #4a5568;
   }
   
   .password-dots {
-    background: rgba(30, 41, 59, 0.8);
-    border: 2rpx solid rgba(59, 130, 246, 0.3);
+    background: #4a5568;
+    border-color: #718096;
+  }
+  
+  .password-dots:focus-within {
+    background: #2d3748;
   }
   
   .error-message {
-    background: rgba(239, 68, 68, 0.2);
-    border: 1rpx solid rgba(239, 68, 68, 0.4);
+    background: #742a2a;
+    border-color: #9b2c2c;
+  }
+  
+  .modal-footer {
+    background: #1a202c;
+    border-color: #4a5568;
   }
 }
 </style>
