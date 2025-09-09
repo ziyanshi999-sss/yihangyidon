@@ -9,6 +9,49 @@
       </swiper>
     </view>
 
+    <!-- 投资组合概览 -->
+    <view class="portfolio-overview" v-if="investmentPortfolio">
+      <view class="portfolio-header">
+        <text class="portfolio-title">我的投资组合</text>
+        <text class="portfolio-more" @click="showPortfolioDetail">查看详情</text>
+      </view>
+      <view class="portfolio-stats">
+        <view class="stat-item">
+          <text class="stat-value">¥{{ formatNumber(investmentPortfolio.totalValue) }}</text>
+          <text class="stat-label">总价值</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-value profit">+¥{{ formatNumber(investmentPortfolio.totalReturn) }}</text>
+          <text class="stat-label">总收益</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-value profit">+{{ investmentPortfolio.returnRate }}%</text>
+          <text class="stat-label">收益率</text>
+        </view>
+      </view>
+      <view class="portfolio-holdings">
+        <text class="holdings-title">持仓产品</text>
+        <view class="holdings-list">
+          <view 
+            class="holding-item" 
+            v-for="holding in investmentPortfolio.holdings.slice(0, 3)" 
+            :key="holding.id"
+          >
+            <view class="holding-info">
+              <text class="holding-name">{{ holding.name }}</text>
+              <text class="holding-type">{{ holding.type }}</text>
+            </view>
+            <view class="holding-value">
+              <text class="holding-amount">¥{{ formatNumber(holding.currentValue) }}</text>
+              <text class="holding-return" :class="holding.currentValue > holding.amount ? 'profit' : 'loss'">
+                {{ holding.currentValue > holding.amount ? '+' : '' }}{{ ((holding.currentValue - holding.amount) / holding.amount * 100).toFixed(2) }}%
+              </text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
     <!-- 客服模块 -->
     <view class="service-card" @click="onOnlineService">
       <image class="service-icon" src="/static/tabbar/service.png" mode="aspectFit" />
@@ -244,6 +287,7 @@ export default {
       hideAmount: false,
       activeTab: 'deposit',
       showServiceModal: false,
+      investmentPortfolio: null, // 投资组合数据
       tabs: [
         { key: 'deposit', name: '存款' },
         { key: 'product', name: '理财产品' },
@@ -271,11 +315,7 @@ export default {
         { id: 'd2', name: '整存整取', term: '1年', minAmount: 1000, rate: 2.10 },
         { id: 'd3', name: '大额存单', term: '3年', minAmount: 200000, rate: 2.95 }
       ],
-      wealthProducts: [
-        { id: 'w1', name: '稳健优选第68期', risk: '低', term: '90天', minAmount: 10000, yield: 3.20 },
-        { id: 'w2', name: '灵活理财T+1', risk: '低', term: '开放式', minAmount: 1000, yield: 2.65 },
-        { id: 'w3', name: '进取增强半年期', risk: '中', term: '180天', minAmount: 10000, yield: 4.10 }
-      ],
+      wealthProducts: [],
       insuranceList: [
         { id: 'i1', name: '安心医疗险', type: 'health', typeText: '医疗险', desc: '百万保额·报销广', premium: 268 },
         { id: 'i2', name: '家庭意外险', type: 'accident', typeText: '意外险', desc: '全家保障·一年期', premium: 199 },
@@ -327,9 +367,61 @@ export default {
       ]
     }
   },
+  onLoad() {
+    this.loadWealthData()
+  },
+
+  onShow() {
+    // 页面显示时重新加载数据
+    this.loadWealthData()
+  },
   methods: {
+    // 加载财富数据
+    loadWealthData() {
+      try {
+        const users = uni.getStorageSync('users') || []
+        const currentUser = users.find(user => user.isLoggedIn)
+        
+        if (currentUser && currentUser.wealthProducts) {
+          this.wealthProducts = currentUser.wealthProducts
+          this.investmentPortfolio = currentUser.investmentPortfolio
+        } else {
+          // 如果没有理财产品数据，使用默认数据
+          this.wealthProducts = [
+            { id: 'w1', name: '稳健优选第68期', risk: '低', term: '90天', minAmount: 10000, yield: 3.20 },
+            { id: 'w2', name: '灵活理财T+1', risk: '低', term: '开放式', minAmount: 1000, yield: 2.65 },
+            { id: 'w3', name: '进取增强半年期', risk: '中', term: '180天', minAmount: 10000, yield: 4.10 }
+          ]
+          
+          // 保存到用户数据中
+          if (currentUser) {
+            currentUser.wealthProducts = this.wealthProducts
+            uni.setStorageSync('users', users)
+          }
+        }
+      } catch (error) {
+        console.error('加载财富数据失败:', error)
+      }
+    },
+    
     onSwiperClick(idx) {
       uni.showToast({ title: `轮播图第${idx + 1}张`, icon: 'none' })
+    },
+
+    // 格式化数字
+    formatNumber(num) {
+      if (!num) return '0'
+      return Number(num).toLocaleString('zh-CN', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+      })
+    },
+
+    // 显示投资组合详情
+    showPortfolioDetail() {
+      uni.navigateTo({
+        url: '/pages/wealth/portfolio'
+      })
     },
     onOnlineService() {
       // 显示客服选择弹窗
@@ -395,6 +487,132 @@ export default {
 .asset-swiper-wrap { padding: 20rpx; }
 .asset-swiper { height: 220rpx; border-radius: 20rpx; overflow: hidden; }
 .swiper-image { width: 100%; height: 100%; border-radius: 20rpx; }
+
+/* 投资组合概览 */
+.portfolio-overview {
+  background: #fff;
+  margin: 20rpx;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+}
+
+.portfolio-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25rpx;
+}
+
+.portfolio-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.portfolio-more {
+  font-size: 26rpx;
+  color: #007AFF;
+}
+
+.portfolio-stats {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 25rpx;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.stat-value {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.stat-value.profit {
+  color: #4CAF50;
+}
+
+.stat-label {
+  font-size: 22rpx;
+  color: #666;
+}
+
+.portfolio-holdings {
+  border-top: 1rpx solid #f0f0f0;
+  padding-top: 20rpx;
+}
+
+.holdings-title {
+  font-size: 26rpx;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 15rpx;
+}
+
+.holdings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15rpx;
+}
+
+.holding-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx;
+  background-color: #f8f9fa;
+  border-radius: 12rpx;
+}
+
+.holding-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5rpx;
+}
+
+.holding-name {
+  font-size: 26rpx;
+  font-weight: 500;
+  color: #333;
+}
+
+.holding-type {
+  font-size: 22rpx;
+  color: #666;
+}
+
+.holding-value {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5rpx;
+}
+
+.holding-amount {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.holding-return {
+  font-size: 22rpx;
+  font-weight: 500;
+}
+
+.holding-return.profit {
+  color: #4CAF50;
+}
+
+.holding-return.loss {
+  color: #F44336;
+}
 
 /* 客服模块 */
 .service-card { margin: 0 20rpx 16rpx; background: #fff; border-radius: 16rpx; padding: 16rpx; display: flex; align-items: center; gap: 16rpx; box-shadow: 0 6rpx 20rpx rgba(0,0,0,0.04); border: 2rpx solid #f0f0f0; }

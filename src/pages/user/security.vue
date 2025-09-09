@@ -554,6 +554,23 @@ export default {
 			}
 		},
 
+		// 更新指纹登录状态
+		updateFingerprintLoginStatus(enabled) {
+			try {
+				// 更新本地存储中的指纹登录状态
+				uni.setStorageSync('fingerprintLoginEnabled', enabled)
+				
+				// 如果禁用指纹登录，清除上次指纹登录用户信息
+				if (!enabled) {
+					uni.removeStorageSync('lastFingerprintUser')
+				}
+				
+				console.log('指纹登录状态已更新:', enabled)
+			} catch (error) {
+				console.error('更新指纹登录状态失败:', error)
+			}
+		},
+
 		// 计算安全评分
 		calculateSecurityScore() {
 			let score = 0
@@ -812,13 +829,39 @@ export default {
 
 		// 生物识别开关变化
 		onBiometricChange(e) {
-			this.biometricEnabled = e.detail.value
-			this.saveSecuritySettings()
+			const newValue = e.detail.value
 			
-			uni.showToast({
-				title: this.biometricEnabled ? '已开启生物识别' : '已关闭生物识别',
-				icon: 'success'
-			})
+			// 如果关闭生物识别，需要确认
+			if (!newValue && this.biometricEnabled) {
+				uni.showModal({
+					title: '关闭生物识别登录',
+					content: '关闭后将无法使用指纹/面容登录，确定要关闭吗？',
+					confirmText: '确定关闭',
+					cancelText: '取消',
+					success: (res) => {
+						if (res.confirm) {
+							this.biometricEnabled = false
+							this.saveSecuritySettings()
+							this.updateFingerprintLoginStatus(false)
+							
+							uni.showToast({
+								title: '已关闭生物识别登录',
+								icon: 'success'
+							})
+						}
+					}
+				})
+			} else if (newValue && !this.biometricEnabled) {
+				// 开启生物识别
+				this.biometricEnabled = true
+				this.saveSecuritySettings()
+				this.updateFingerprintLoginStatus(true)
+				
+				uni.showToast({
+					title: '已开启生物识别登录',
+					icon: 'success'
+				})
+			}
 		},
 
 		// 设置登录设备
@@ -852,9 +895,113 @@ export default {
 
 		// 修改交易密码
 		changeTransactionPassword() {
-			uni.navigateTo({
-				url: '/pages/user/change-password?type=transaction'
+			this.showTransactionPasswordInput()
+		},
+
+		// 显示交易密码输入界面
+		showTransactionPasswordInput() {
+			uni.showModal({
+				title: '修改交易密码',
+				content: '请输入新的6位数字交易密码',
+				editable: true,
+				placeholderText: '请输入6位数字密码',
+				confirmText: '确认修改',
+				cancelText: '取消',
+				success: (res) => {
+					if (res.confirm && res.content) {
+						this.validateAndUpdateTransactionPassword(res.content)
+					}
+				}
 			})
+		},
+
+		// 验证并更新交易密码
+		validateAndUpdateTransactionPassword(newPassword) {
+			// 验证密码格式：必须是6位数字
+			if (!/^\d{6}$/.test(newPassword)) {
+				uni.showToast({
+					title: '交易密码必须是6位数字',
+					icon: 'none'
+				})
+				return
+			}
+
+			// 验证密码不能是连续数字
+			if (this.isSequentialNumbers(newPassword)) {
+				uni.showToast({
+					title: '密码不能是连续数字',
+					icon: 'none'
+				})
+				return
+			}
+
+			// 验证密码不能是重复数字
+			if (this.isRepeatedNumbers(newPassword)) {
+				uni.showToast({
+					title: '密码不能是重复数字',
+					icon: 'none'
+				})
+				return
+			}
+
+			// 更新交易密码
+			this.updateTransactionPassword(newPassword)
+		},
+
+		// 检查是否为连续数字
+		isSequentialNumbers(password) {
+			const digits = password.split('').map(Number)
+			for (let i = 1; i < digits.length; i++) {
+				if (digits[i] !== digits[i-1] + 1 && digits[i] !== digits[i-1] - 1) {
+					return false
+				}
+			}
+			return true
+		},
+
+		// 检查是否为重复数字
+		isRepeatedNumbers(password) {
+			return /^(\d)\1{5}$/.test(password)
+		},
+
+		// 更新交易密码
+		updateTransactionPassword(newPassword) {
+			try {
+				const userInfo = uni.getStorageSync('userInfo') || uni.getStorageSync('currentUser')
+				if (userInfo) {
+					// 更新交易密码
+					userInfo.transactionPassword = newPassword
+					userInfo.securitySettings.transactionPasswordUpdateTime = new Date().toISOString()
+					
+					// 保存用户信息
+					uni.setStorageSync('userInfo', userInfo)
+					uni.setStorageSync('currentUser', userInfo)
+					
+					// 更新数据库
+					this.updateUserSecurityInDatabase(userInfo)
+					
+					// 添加安全事件
+					this.addSecurityEvent('transaction_password_change', '修改交易密码')
+					
+					// 更新本地状态
+					this.transactionPasswordUpdateTime = new Date().toISOString()
+					
+					// 重新计算安全评分
+					this.calculateSecurityScore()
+					this.generateSecurityRecommendations()
+					
+					uni.showToast({
+						title: '交易密码修改成功',
+						icon: 'success'
+					})
+				}
+			} catch (error) {
+				console.error('更新交易密码失败:', error)
+				uni.showToast({
+					title: '密码修改失败，请重试',
+					icon: 'none'
+				})
+			}
 		},
 
 		// 设置交易限额

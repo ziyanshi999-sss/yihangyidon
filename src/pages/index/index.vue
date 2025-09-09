@@ -45,10 +45,6 @@
       </view>
     </view>
 
-    <!-- 广告横幅 -->
-    <view class="banner">
-      <text class="banner-text">欢迎来到农业银行</text>
-    </view>
 
     <!-- 主要功能区 - 优化后的布局 -->
     <view class="function-area">

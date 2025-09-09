@@ -20,7 +20,7 @@
 				</view>
 				<view class="account-info">
 					<text class="account-label">账户余额</text>
-					<text class="account-balance">¥ 12,580.00</text>
+					<text class="account-balance">¥ {{ formatBalance(userInfo.balance) }}</text>
 				</view>
 			</view>
 		</view>
@@ -28,7 +28,7 @@
 		<!-- 未登录状态 -->
 		<view class="login-card" v-else>
 			<view class="login-content">
-				<text class="login-title">欢迎使用农业银行</text>
+				<text class="login-title">欢迎使用</text>
 				<text class="login-subtitle">请登录您的账户</text>
 				<button class="login-btn" @click="goToLogin">立即登录</button>
 			</view>
@@ -60,7 +60,6 @@
 		<view class="menu-sections" v-if="userInfo">
 			<!-- 账户管理 -->
 			<view class="menu-section">
-				<view class="section-title">账户管理</view>
 				<view class="menu-list">
 					<view class="menu-item" @click="goToAccount">
 						<view class="menu-left">
@@ -88,7 +87,6 @@
 
 			<!-- 个人设置 -->
 			<view class="menu-section">
-				<view class="section-title">个人设置</view>
 				<view class="menu-list">
 					<view class="menu-item" @click="goToProfile">
 						<view class="menu-left">
@@ -109,7 +107,6 @@
 
 			<!-- 客户服务 -->
 			<view class="menu-section">
-				<view class="section-title">客户服务</view>
 				<view class="menu-list">
 					<view class="menu-item" @click="goToHelp">
 						<view class="menu-left">
@@ -190,9 +187,24 @@ export default {
 	
 	mounted() {
 		// 组件挂载完成
+		this.checkLoginStatus()
 	},
+
+	onShow() {
+		this.checkLoginStatus()
+	},
+
 	methods: {
 		
+		// 格式化余额显示
+		formatBalance(balance) {
+			if (!balance) return '0.00'
+			return Number(balance).toLocaleString('zh-CN', {
+				minimumFractionDigits: 2,
+				maximumFractionDigits: 2
+			})
+		},
+
 		// 检查登录状态
 		checkLoginStatus() {
 			const userInfo = getUserInfo()
@@ -212,21 +224,18 @@ export default {
 
 		// 快捷功能
 		goToTransfer() {
-			uni.showToast({
-				title: '转账功能',
-				icon: 'none'
+			uni.navigateTo({
+				url: '/pages/transfer/transfer'
 			})
 		},
 		goToPayment() {
-			uni.showToast({
-				title: '缴费功能',
-				icon: 'none'
+			uni.navigateTo({
+				url: '/pages/payment/payment'
 			})
 		},
 		goToInvestment() {
-			uni.showToast({
-				title: '理财功能',
-				icon: 'none'
+			uni.switchTab({
+				url: '/pages/wealth/wealth'
 			})
 		},
 		goToCredit() {
@@ -237,9 +246,8 @@ export default {
 
 		// 菜单功能
 		goToAccount() {
-			uni.showToast({
-				title: '我的账户',
-				icon: 'none'
+			uni.navigateTo({
+				url: '/pages/account/account'
 			})
 		},
 		goToCards() {
@@ -248,9 +256,8 @@ export default {
 			})
 		},
 		goToTransactions() {
-			uni.showToast({
-				title: '交易记录',
-				icon: 'none'
+			uni.navigateTo({
+				url: '/pages/balance/balance'
 			})
 		},
 		goToSecurity() {
@@ -389,40 +396,11 @@ export default {
 
 		// 退出登录
 		handleLogout() {
-			// 显示退出选项
-			uni.showActionSheet({
-				itemList: ['普通退出', '快速退出', '强制退出'],
-				success: (res) => {
-					switch (res.tapIndex) {
-						case 0:
-							// 普通退出
-							logout({
-								showConfirm: true,
-								syncToServer: true,
-								reason: '用户从个人中心退出'
-							})
-							break
-						case 1:
-							// 快速退出
-							quickLogout('用户快速退出')
-							break
-						case 2:
-							// 强制退出
-							uni.showModal({
-								title: '强制退出确认',
-								content: '强制退出将清除所有数据且不同步服务器，确定继续吗？',
-								confirmText: '确定',
-								cancelText: '取消',
-								confirmColor: '#e74c3c',
-								success: (modalRes) => {
-									if (modalRes.confirm) {
-										forceLogout('用户强制退出')
-									}
-								}
-							})
-							break
-					}
-				}
+			// 直接执行普通退出
+			logout({
+				showConfirm: true,
+				syncToServer: true,
+				reason: '用户从个人中心退出'
 			})
 		},
 

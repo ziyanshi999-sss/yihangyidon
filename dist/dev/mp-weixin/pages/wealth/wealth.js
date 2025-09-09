@@ -1,16 +1,11 @@
 "use strict";
 const common_vendor = require("../../common/vendor.js");
 const common_assets = require("../../common/assets.js");
-const ServiceModal = () => "../../components/common/ServiceModal.js";
 const _sfc_main = {
-  components: {
-    ServiceModal
-  },
   data() {
     return {
       hideAmount: false,
       activeTab: "deposit",
-      showServiceModal: false,
       tabs: [
         { key: "deposit", name: "存款" },
         { key: "product", name: "理财产品" },
@@ -52,45 +47,6 @@ const _sfc_main = {
         { code: "USD/CNY", price: "7.2375", change: 0.12 },
         { code: "EUR/CNY", price: "7.8801", change: -0.08 },
         { code: "JPY/CNY", price: "0.0468", change: 0.02 }
-      ],
-      // 热点资讯（示例静态数据，可后续接入后端/抓取）
-      newsList: [
-        {
-          id: "n1",
-          title: "银行App上线智能投顾：个性化组合更省心",
-          source: "银行官方",
-          time: "今天 10:20",
-          tag: "产品上新",
-          tagClass: "tag-new",
-          cover: "https://images.unsplash.com/photo-1553729459-efe14ef6055d?q=80&w=800&auto=format&fit=crop"
-        },
-        {
-          id: "n2",
-          title: "人民币存款利率微调，稳中趋优助力财富增值",
-          source: "金融时报",
-          time: "今天 09:05",
-          tag: "利率",
-          tagClass: "tag-rate",
-          cover: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=800&auto=format&fit=crop"
-        },
-        {
-          id: "n3",
-          title: "净值型理财规模增长，风险匹配与长期主义成共识",
-          source: "理财早报",
-          time: "昨天 18:42",
-          tag: "理财",
-          tagClass: "tag-wealth",
-          cover: "https://images.unsplash.com/photo-1569025690938-a00729c9e1f9?q=80&w=1200&auto=format&fit=crop"
-        },
-        {
-          id: "n4",
-          title: "外汇市场波动加大，分散配置与风险对冲受关注",
-          source: "外汇观察",
-          time: "昨天 14:10",
-          tag: "外汇",
-          tagClass: "tag-fx",
-          cover: "https://img0.baidu.com/it/u=4159114734,4003708834&fm=253&fmt=auto&app=138&f=JPEG?w=739&h=500"
-        }
       ]
     };
   },
@@ -99,11 +55,7 @@ const _sfc_main = {
       common_vendor.index.showToast({ title: `轮播图第${idx + 1}张`, icon: "none" });
     },
     onOnlineService() {
-      this.showServiceModal = true;
-    },
-    // 关闭客服弹窗
-    closeServiceModal() {
-      this.showServiceModal = false;
+      common_vendor.index.navigateTo({ url: "/pages/service/chat" });
     },
     onCallHotline() {
       common_vendor.index.makePhoneCall({ phoneNumber: this.serviceHotline });
@@ -141,16 +93,9 @@ const _sfc_main = {
     onOpenTool(tool) {
       const map = { calc: "收益计算器", calendar: "产品日历", risk: "风险评测" };
       common_vendor.index.showToast({ title: `${map[tool]}(开发中)`, icon: "none" });
-    },
-    onNewsClick(n) {
-      common_vendor.index.showToast({ title: n.title, icon: "none" });
     }
   }
 };
-if (!Array) {
-  const _component_ServiceModal = common_vendor.resolveComponent("ServiceModal");
-  _component_ServiceModal();
-}
 function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
   return common_vendor.e({
     a: common_vendor.f($data.swiperImages, (img, idx, i0) => {
@@ -160,7 +105,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
         c: idx
       };
     }),
-    b: common_assets._imports_0,
+    b: common_assets._imports_0$1,
     c: common_vendor.t($data.serviceHours),
     d: common_vendor.o((...args) => $options.onOnlineService && $options.onOnlineService(...args)),
     e: common_vendor.t($data.serviceHotline),
@@ -245,24 +190,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     z: common_vendor.o(($event) => $options.onOpenTool("calc")),
     A: common_vendor.o(($event) => $options.onOpenTool("calendar")),
     B: common_vendor.o(($event) => $options.onOpenTool("risk"))
-  } : {}, {
-    C: common_vendor.f($data.newsList, (n, k0, i0) => {
-      return {
-        a: n.cover,
-        b: common_vendor.t(n.title),
-        c: common_vendor.t(n.tag),
-        d: common_vendor.n(n.tagClass),
-        e: common_vendor.t(n.source),
-        f: common_vendor.t(n.time),
-        g: n.id,
-        h: common_vendor.o(($event) => $options.onNewsClick(n), n.id)
-      };
-    }),
-    D: common_vendor.o($options.closeServiceModal),
-    E: common_vendor.p({
-      visible: $data.showServiceModal
-    })
-  });
+  } : {});
 }
 const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render], ["__scopeId", "data-v-a00d3a3e"]]);
 wx.createPage(MiniProgramPage);

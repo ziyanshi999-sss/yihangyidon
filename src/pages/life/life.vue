@@ -584,6 +584,7 @@ export default {
 
   onLoad() {
     this.initPage();
+    this.loadLifeServicesData();
   },
 
   onShow() {
@@ -612,6 +613,33 @@ export default {
       // 页面初始化
       console.log("生活页面初始化");
       this.updateTimeGreeting();
+    },
+
+    // 加载生活服务数据
+    loadLifeServicesData() {
+      try {
+        const users = uni.getStorageSync('users') || []
+        const currentUser = users.find(user => user.isLoggedIn)
+        
+        if (currentUser && currentUser.lifeServices) {
+          // 使用用户的生活服务数据
+          this.quickServices = currentUser.lifeServices.quickServices || this.quickServices
+          this.allServices = currentUser.lifeServices.allServices || this.allServices
+          this.bannerData = currentUser.lifeServices.bannerData || this.bannerData
+        } else {
+          // 如果没有生活服务数据，保存当前数据到用户
+          if (currentUser) {
+            currentUser.lifeServices = {
+              quickServices: this.quickServices,
+              allServices: this.allServices,
+              bannerData: this.bannerData
+            }
+            uni.setStorageSync('users', users)
+          }
+        }
+      } catch (error) {
+        console.error('加载生活服务数据失败:', error)
+      }
     },
 
     // 更新时间问候语

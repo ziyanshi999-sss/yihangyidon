@@ -1,222 +1,603 @@
 
+/* 现代化中国农业银行登录页面样式 */
 .login-container[data-v-6f56e16f] {
-  padding: 1.5625rem 0.9375rem;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #3b82f6 100%);
+  position: relative;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
 }
-.title[data-v-6f56e16f] {
-  font-size: 1.75rem;
-  font-weight: bold;
-  margin-bottom: 1.875rem;
-  color: #2e7d32; /* 深绿色 */
+
+/* 背景装饰 */
+.bg-decoration[data-v-6f56e16f] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  z-index: 1;
 }
-.tab-bar[data-v-6f56e16f] {
+.bg-circle[data-v-6f56e16f] {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  animation: float-6f56e16f 6s ease-in-out infinite;
+}
+.circle-1[data-v-6f56e16f] {
+  width: 6.25rem;
+  height: 6.25rem;
+  top: 10%;
+  left: 10%;
+  animation-delay: 0s;
+}
+.circle-2[data-v-6f56e16f] {
+  width: 4.6875rem;
+  height: 4.6875rem;
+  top: 60%;
+  right: 15%;
+  animation-delay: 2s;
+}
+.circle-3[data-v-6f56e16f] {
+  width: 3.125rem;
+  height: 3.125rem;
+  top: 30%;
+  right: 30%;
+  animation-delay: 4s;
+}
+.bg-wave[data-v-6f56e16f] {
+  position: absolute;
+  width: 200%;
+  height: 3.125rem;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  animation: wave-6f56e16f 8s linear infinite;
+}
+.wave-1[data-v-6f56e16f] {
+  top: 20%;
+  animation-delay: 0s;
+}
+.wave-2[data-v-6f56e16f] {
+  top: 70%;
+  animation-delay: 4s;
+}
+@keyframes float-6f56e16f {
+0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+}
+50% {
+    transform: translateY(-20px) rotate(180deg);
+}
+}
+@keyframes wave-6f56e16f {
+0% {
+    transform: translateX(-100%);
+}
+100% {
+    transform: translateX(100%);
+}
+}
+
+/* 头部区域 */
+.header-section[data-v-6f56e16f] {
+  padding: 2.5rem 1.25rem 1.875rem;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+.logo-container[data-v-6f56e16f] {
   display: flex;
-  width: 100%;
+  align-items: center;
+  justify-content: center;
   margin-bottom: 1.25rem;
-  border-bottom: 2px solid #eee;
-  background: #ffffff;
-  border-radius: 0.375rem;
-  padding: 0.125rem;
-  box-shadow: 0 0.125rem 0.375rem rgba(0, 0, 0, 0.1);
+}
+.logo-icon[data-v-6f56e16f] {
+  font-size: 2.5rem;
+  margin-right: 0.625rem;
+  animation: logoGlow-6f56e16f 2s ease-in-out infinite alternate;
+}
+@keyframes logoGlow-6f56e16f {
+0% {
+    text-shadow: 0 0 0.625rem rgba(255, 255, 255, 0.5);
+}
+100% {
+    text-shadow: 0 0 0.9375rem rgba(255, 255, 255, 0.8);
+}
+}
+.logo-text[data-v-6f56e16f] {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.bank-name[data-v-6f56e16f] {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ffffff;
+  line-height: 1.2;
+  text-shadow: 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.3);
+}
+.bank-subtitle[data-v-6f56e16f] {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 300;
+  letter-spacing: 0.03125rem;
+}
+.welcome-text[data-v-6f56e16f] {
+  margin-top: 0.625rem;
+}
+.welcome-title[data-v-6f56e16f] {
+  display: block;
+  font-size: 1.125rem;
+  color: #ffffff;
+  font-weight: 500;
+  margin-bottom: 0.3125rem;
+}
+.welcome-desc[data-v-6f56e16f] {
+  display: block;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 300;
+}
+
+/* 登录卡片 */
+.login-card[data-v-6f56e16f] {
+  background: rgba(255, 255, 255, 0.95);
+  margin: 0 0.9375rem;
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  box-shadow: 0 0.625rem 1.875rem rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(0.3125rem);
+  position: relative;
+  z-index: 2;
+  margin-bottom: 1.25rem;
+}
+
+/* 标签页容器 */
+.tab-container[data-v-6f56e16f] {
+  display: flex;
+  background: #f8f9fa;
+  border-radius: 0.5rem;
+  padding: 0.25rem;
+  margin-bottom: 1.25rem;
+  box-shadow: inset 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.1);
 }
 .tab-item[data-v-6f56e16f] {
   flex: 1;
-  text-align: center;
-  padding: 0.78125rem 0;
-  font-size: 1.125rem;
-  color: #666;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.625rem 0.3125rem;
+  border-radius: 0.375rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
   position: relative;
-  border-radius: 0.25rem;
-  transition: all 0.3s ease;
 }
 .tab-item.active[data-v-6f56e16f] {
-  color: #2e7d32;
-  font-weight: bold;
-  background: rgba(46, 125, 50, 0.1);
+  background: #ffffff;
+  box-shadow: 0 0.125rem 0.375rem rgba(0, 0, 0, 0.1);
+  transform: translateY(-0.0625rem);
 }
-.tab-item.active[data-v-6f56e16f]::after {
-  content: '';
-  position: absolute;
-  bottom: -0.125rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60%;
-  height: 0.125rem;
-  background-color: #2e7d32;
-  border-radius: 0.0625rem;
+.tab-icon[data-v-6f56e16f] {
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+  transition: all 0.3s ease;
 }
-.input-item[data-v-6f56e16f] {
+.tab-item.active .tab-icon[data-v-6f56e16f] {
+  transform: scale(1.1);
+}
+.tab-text[data-v-6f56e16f] {
+  font-size: 0.75rem;
+  color: #666;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+.tab-item.active .tab-text[data-v-6f56e16f] {
+  color: #1e40af;
+  font-weight: 600;
+}
+
+/* 登录表单 */
+.login-form[data-v-6f56e16f] {
   width: 100%;
-  height: 2.5rem;
-  border: 2px solid #eee;
-  border-radius: 0.375rem;
-  padding: 0.625rem 0.9375rem;
-  margin-bottom: 0.78125rem;
+}
+.input-group[data-v-6f56e16f] {
+  margin-bottom: 0.9375rem;
+}
+.input-wrapper[data-v-6f56e16f] {
+  position: relative;
   display: flex;
   align-items: center;
-  background: #ffffff;
+  background: #f8f9fa;
+  border-radius: 0.5rem;
+  padding: 0 0.625rem;
+  border: 0.0625rem solid transparent;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 0.0625rem 0.25rem rgba(0, 0, 0, 0.05);
+}
+.input-wrapper[data-v-6f56e16f]:focus-within {
+  border-color: #3b82f6;
+  background: #ffffff;
+  box-shadow: 0 0 0 0.125rem rgba(59, 130, 246, 0.1);
+  transform: translateY(-0.0625rem);
+}
+.input-icon[data-v-6f56e16f] {
+  font-size: 1rem;
+  margin-right: 0.5rem;
+  color: #6b7280;
   transition: all 0.3s ease;
-  box-sizing: border-box;
 }
-.input-item[data-v-6f56e16f]:focus-within {
-  border-color: #2e7d32;
-  box-shadow: 0 0 0 0.125rem rgba(46, 125, 50, 0.1);
+.input-wrapper:focus-within .input-icon[data-v-6f56e16f] {
+  color: #3b82f6;
+  transform: scale(1.1);
 }
-.input-item uni-input[data-v-6f56e16f] {
+.modern-input[data-v-6f56e16f] {
   flex: 1;
-  font-size: 1.0625rem;
-  color: #333;
-  height: 1.25rem;
-  line-height: 1.25rem;
+  height: 2.75rem;
   border: none;
   outline: none;
   background: transparent;
+  font-size: 1rem;
+  color: #1f2937;
+  font-weight: 400;
+}
+.modern-input[data-v-6f56e16f]::-moz-placeholder {
+  color: #9ca3af;
+  font-weight: 400;
+}
+.modern-input[data-v-6f56e16f]::placeholder {
+  color: #9ca3af;
+  font-weight: 400;
 }
 .get-code-btn[data-v-6f56e16f] {
-  background-color: #2e7d32;
-  color: white;
-  padding: 0.46875rem 0.625rem;
-  border-radius: 0.25rem;
-  font-size: 0.875rem;
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: #ffffff;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 600;
   border: none;
-  margin-left: 0.625rem;
-  transition: all 0.3s ease;
-  height: 1.25rem;
-  line-height: 1.25rem;
+  margin-left: 0.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  box-shadow: 0 0.125rem 0.375rem rgba(59, 130, 246, 0.3);
 }
 .get-code-btn[data-v-6f56e16f]:disabled {
-  background-color: #ccc;
-  color: #999;
-}
-.login-btn[data-v-6f56e16f] {
-  width: 100%;
-  height: 2.5rem;
-  background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
-  color: white;
-  padding: 0.625rem 0.9375rem;
-  border-radius: 0.375rem;
-  font-size: 1.125rem;
-  font-weight: bold;
-  margin-top: 0.9375rem;
-  border: none;
-  box-shadow: 0 0.125rem 0.375rem rgba(46, 125, 50, 0.3);
-  transition: all 0.3s ease;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.login-btn[data-v-6f56e16f]:active {
-  transform: scale(0.98);
-}
-.quick-register[data-v-6f56e16f] {
-  width: 100%;
-  margin-top: 0.625rem;
-}
-.quick-register-btn[data-v-6f56e16f] {
-  width: 100%;
-  height: 2.5rem;
-  background: transparent;
-  color: #2e7d32;
-  padding: 0.625rem 0.9375rem;
-  border: 0.0625rem solid #2e7d32;
-  border-radius: 0.375rem;
-  font-size: 1rem;
-  font-weight: normal;
-  margin: 0;
+  background: #d1d5db;
+  color: #9ca3af;
   box-shadow: none;
-  transition: all 0.3s ease;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  transform: none;
 }
-.quick-register-btn[data-v-6f56e16f]:active {
-  background: rgba(46, 125, 50, 0.1);
-  transform: scale(0.98);
-}
-.links[data-v-6f56e16f] {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  margin-top: 1.25rem;
-}
-.links uni-navigator[data-v-6f56e16f] {
-  color: #666;
-  font-size: 1rem;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-.links uni-navigator[data-v-6f56e16f]:hover {
-  color: #2e7d32;
-}
-.login-notice[data-v-6f56e16f] {
-  margin-top: 1.25rem;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 0.375rem;
-  padding: 0.9375rem;
-  width: 100%;
-  box-shadow: 0 0.125rem 0.375rem rgba(0, 0, 0, 0.1);
-}
-.notice-title[data-v-6f56e16f] {
-  display: block;
-  color: #2e7d32;
-  font-size: 1rem;
-  font-weight: bold;
-  margin-bottom: 0.625rem;
-}
-.notice-item[data-v-6f56e16f] {
-  display: block;
-  color: #666;
-  font-size: 0.875rem;
-  margin-bottom: 0.3125rem;
-  line-height: 1.5;
+.get-code-btn[data-v-6f56e16f]:active:not(:disabled) {
+  transform: scale(0.95);
 }
 
-/* 密码占位符，保持与验证码按钮宽度一致 */
-.password-placeholder[data-v-6f56e16f] {
-  width: 2.8125rem;
-  height: 1.25rem;
-  margin-left: 0.625rem;
-  flex-shrink: 0;
+/* 指纹登录区域 */
+.fingerprint-section[data-v-6f56e16f] {
+  padding: 1.875rem 0;
+  text-align: center;
 }
-.debug-info[data-v-6f56e16f] {
-  margin-top: 0.625rem;
-  padding: 0.625rem;
-  background-color: #f0f0f0;
-  border-radius: 0.375rem;
-  border: 1px solid #eee;
+.fingerprint-container[data-v-6f56e16f] {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border-radius: 0.625rem;
+  padding: 1.875rem 1.25rem;
+  box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.1);
+}
+.fingerprint-icon[data-v-6f56e16f] {
+  width: 4.375rem;
+  height: 4.375rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 0.9375rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0.25rem 1rem rgba(59, 130, 246, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.fingerprint-icon.scanning[data-v-6f56e16f] {
+  animation: fingerprintPulse-6f56e16f 2s ease-in-out infinite;
+}
+.fingerprint-icon[data-v-6f56e16f]::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.4) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+.fingerprint-icon.scanning[data-v-6f56e16f]::before {
+  animation: fingerprintScan-6f56e16f 2s infinite;
+}
+@keyframes fingerprintPulse-6f56e16f {
+0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0.25rem 1rem rgba(59, 130, 246, 0.3);
+}
+50% {
+    transform: scale(1.05);
+    box-shadow: 0 0.375rem 1.25rem rgba(59, 130, 246, 0.5);
+}
+}
+@keyframes fingerprintScan-6f56e16f {
+0% {
+    transform: translateX(-100%);
+}
+100% {
+    transform: translateX(100%);
+}
+}
+.fingerprint-symbol[data-v-6f56e16f] {
+  font-size: 2rem;
+  color: #ffffff;
+}
+.fingerprint-title[data-v-6f56e16f] {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #1e40af;
+  margin-bottom: 0.5rem;
+}
+.fingerprint-desc[data-v-6f56e16f] {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 0.9375rem;
+  line-height: 1.5;
+}
+.fingerprint-status[data-v-6f56e16f] {
+  min-height: 1.5625rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.status-text[data-v-6f56e16f] {
+  font-size: 0.8125rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.78125rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+.status-text.ready[data-v-6f56e16f] {
+  color: #059669;
+  background: rgba(5, 150, 105, 0.1);
+}
+.status-text.scanning[data-v-6f56e16f] {
+  color: #d97706;
+  background: rgba(217, 119, 6, 0.1);
+  animation: statusBlink-6f56e16f 1.5s infinite;
+}
+.status-text.success[data-v-6f56e16f] {
+  color: #059669;
+  background: rgba(5, 150, 105, 0.1);
+}
+.status-text.failed[data-v-6f56e16f] {
+  color: #dc2626;
+  background: rgba(220, 38, 38, 0.1);
+}
+.status-text.not-support[data-v-6f56e16f] {
+  color: #6b7280;
+  background: rgba(107, 114, 128, 0.1);
+}
+@keyframes statusBlink-6f56e16f {
+0%, 100% {
+    opacity: 1;
+}
+50% {
+    opacity: 0.6;
+}
+}
+
+/* 登录按钮 */
+.modern-login-btn[data-v-6f56e16f] {
   width: 100%;
-  box-sizing: border-box;
-}
-.debug-title[data-v-6f56e16f] {
-  font-size: 0.875rem;
-  font-weight: bold;
-  color: #2e7d32;
-  margin-bottom: 0.3125rem;
-}
-.debug-item[data-v-6f56e16f] {
-  font-size: 0.75rem;
-  color: #666;
-  margin-bottom: 0.15625rem;
-}
-.debug-btn[data-v-6f56e16f] {
-  background-color: #2e7d32;
-  color: white;
-  padding: 0.3125rem 0.625rem;
-  border-radius: 0.25rem;
-  font-size: 0.875rem;
+  height: 3rem;
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: #ffffff;
   border: none;
-  margin-top: 0.3125rem;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  margin-top: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 0.25rem 1rem rgba(59, 130, 246, 0.4);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+.modern-login-btn[data-v-6f56e16f]::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+.modern-login-btn[data-v-6f56e16f]:active::before {
+  left: 100%;
+}
+.modern-login-btn[data-v-6f56e16f]:active {
+  transform: scale(0.98);
+  box-shadow: 0 0.125rem 0.5rem rgba(59, 130, 246, 0.3);
+}
+.btn-text[data-v-6f56e16f] {
+  font-size: 1rem;
+  font-weight: 700;
+}
+.btn-arrow[data-v-6f56e16f] {
+  font-size: 0.875rem;
+  transition: transform 0.3s ease;
+}
+.modern-login-btn:active .btn-arrow[data-v-6f56e16f] {
+  transform: translateX(0.125rem);
+}
+
+/* 指纹登录按钮 */
+.modern-fingerprint-btn[data-v-6f56e16f] {
+  width: 100%;
+  height: 3rem;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin-top: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 0.25rem 1rem rgba(16, 185, 129, 0.4);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.modern-fingerprint-btn[data-v-6f56e16f]:disabled {
+  background: #d1d5db;
+  color: #9ca3af;
+  box-shadow: none;
+  transform: none;
+}
+.modern-fingerprint-btn[data-v-6f56e16f]:active:not(:disabled) {
+  transform: scale(0.98);
+  box-shadow: 0 0.125rem 0.5rem rgba(16, 185, 129, 0.3);
+}
+.btn-icon[data-v-6f56e16f] {
+  font-size: 1rem;
+}
+
+/* 底部区域 */
+.bottom-section[data-v-6f56e16f] {
+  padding: 0 0.9375rem 1.25rem;
+  position: relative;
+  z-index: 2;
+}
+.register-section[data-v-6f56e16f] {
+  margin-bottom: 0.9375rem;
+}
+.register-btn[data-v-6f56e16f] {
+  width: 100%;
+  height: 2.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border: 0.0625rem solid rgba(255, 255, 255, 0.3);
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(0.3125rem);
+}
+.register-btn[data-v-6f56e16f]:active {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(0.98);
+}
+.register-text[data-v-6f56e16f] {
+  color: rgba(255, 255, 255, 0.8);
+}
+.register-link[data-v-6f56e16f] {
+  color: #ffffff;
+  font-weight: 600;
+}
+.help-links[data-v-6f56e16f] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  margin-bottom: 0.9375rem;
+}
+.help-link[data-v-6f56e16f] {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.8125rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+.help-link[data-v-6f56e16f]:active {
+  color: #ffffff;
+  transform: scale(1.05);
+}
+.divider[data-v-6f56e16f] {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.75rem;
+}
+.security-tips[data-v-6f56e16f] {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 0.5rem;
+  padding: 0.9375rem;
+  backdrop-filter: blur(0.3125rem);
+  border: 0.03125rem solid rgba(255, 255, 255, 0.2);
+}
+.tips-title[data-v-6f56e16f] {
+  display: block;
+  color: #ffffff;
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin-bottom: 0.625rem;
+  text-align: center;
+}
+.tips-item[data-v-6f56e16f] {
+  display: block;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.75rem;
+  margin-bottom: 0.25rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+/* 响应式设计 */
+@media (max-width: 750rpx) {
+.login-card[data-v-6f56e16f] {
+    margin: 0 0.625rem;
+    padding: 0.9375rem;
+}
+.header-section[data-v-6f56e16f] {
+    padding: 1.875rem 0.9375rem 1.25rem;
+}
+.bank-name[data-v-6f56e16f] {
+    font-size: 1.3125rem;
+}
+.bank-subtitle[data-v-6f56e16f] {
+    font-size: 0.6875rem;
+}
+}
+
+/* 深色模式支持 */
+@media (prefers-color-scheme: dark) {
+.login-container[data-v-6f56e16f] {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+}
+.login-card[data-v-6f56e16f] {
+    background: rgba(15, 23, 42, 0.95);
+    color: #f1f5f9;
+}
+.tab-container[data-v-6f56e16f] {
+    background: #1e293b;
+}
+.tab-item.active[data-v-6f56e16f] {
+    background: #334155;
+}
+.input-wrapper[data-v-6f56e16f] {
+    background: #1e293b;
+}
+.input-wrapper[data-v-6f56e16f]:focus-within {
+    background: #334155;
+}
+.modern-input[data-v-6f56e16f] {
+    color: #f1f5f9;
+}
+.modern-input[data-v-6f56e16f]::-moz-placeholder {
+    color: #94a3b8;
+}
+.modern-input[data-v-6f56e16f]::placeholder {
+    color: #94a3b8;
+}
 }
 

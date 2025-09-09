@@ -219,22 +219,7 @@ export default {
           badge: "",
         },
       ],
-      activities: [
-        {
-          title: "新春积分翻倍",
-          desc: "春节期间所有游戏积分翻倍",
-          status: "进行中",
-          time: "2024.01.01-2024.02.15",
-          reward: "双倍积分",
-        },
-        {
-          title: "理财达人挑战",
-          desc: "连续30天完成理财任务",
-          status: "即将开始",
-          time: "2024.02.01-2024.02.29",
-          reward: "1000积分+理财券",
-        },
-      ],
+      activities: [],
       exchangeItems: [
         {
           icon: "☕",

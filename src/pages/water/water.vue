@@ -1,64 +1,60 @@
 <template>
   <view class="water-page">
-    <!-- 地区选择 -->
+    <!-- 位置选择 -->
     <view class="location-section">
-      <view class="location-header">
-        <text class="location-title">选择地区</text>
-        <text class="location-tip">请选择您的缴费地区</text>
-      </view>
-
-      <view class="current-location" @tap="goToCitySelect">
+      <view class="location-bar">
         <view class="location-info">
           <text class="location-icon">📍</text>
-          <view class="location-text-wrapper">
-            <text class="location-text">{{ selectedCity }}</text>
-            <text class="location-status">当前定位</text>
-          </view>
+          <text class="location-text">保定市</text>
         </view>
-        <text class="change-text">更换</text>
-      </view>
-    </view>
-
-    <!-- 水费公司选择 -->
-    <view class="company-section" v-if="waterCompanies.length > 0">
-      <view class="section-header">
-        <text class="section-title">选择供水公司</text>
-        <text class="company-count">{{ waterCompanies.length }}家公司</text>
-      </view>
-
-      <view class="company-list">
-        <view
-          class="company-item"
-          v-for="(company, index) in waterCompanies"
-          :key="index"
-          @tap="selectCompany(company)"
-        >
-          <view class="company-info">
-            <text class="company-name">{{ company.name }}</text>
-            <text class="company-desc">{{ company.description }}</text>
-          </view>
-          <view class="company-arrow">
-            <text class="arrow-icon">→</text>
-          </view>
+        <view class="search-bar">
+          <text class="search-icon">🔍</text>
+          <input
+            class="search-input"
+            placeholder="请输入水费公司名称或小区名称"
+            v-model="searchKeyword"
+            @input="handleSearch"
+          />
         </view>
       </view>
     </view>
 
-    <!-- 暂无服务提示 -->
-    <view class="no-service" v-if="waterCompanies.length === 0">
-      <view class="no-service-icon">🚰</view>
-      <text class="no-service-title">暂无水费服务</text>
-      <text class="no-service-desc"
-        >{{ selectedCity }}暂未开通水费缴费服务</text
+    <!-- 新增缴费标题 -->
+    <view class="section-title-container">
+      <text class="section-title">新增缴费</text>
+    </view>
+
+    <!-- 水费公司列表 -->
+    <view class="company-list">
+      <view
+        class="company-item"
+        v-for="(company, index) in filteredCompanies"
+        :key="index"
+        @tap="selectCompany(company)"
       >
-      <text class="no-service-tip">请联系当地供水公司或稍后再试</text>
+        <view class="company-info">
+          <text class="company-name">{{ company.name }}</text>
+          <text class="company-desc">{{ company.desc }}</text>
+        </view>
+        <view class="company-arrow">
+          <text class="arrow-icon">→</text>
+        </view>
+      </view>
     </view>
 
-    <!-- 底部说明 -->
-    <view class="footer-info">
-      <text class="info-text">• 缴费成功后，请保留缴费凭证</text>
-      <text class="info-text">• 如有疑问，请联系供水公司客服</text>
-      <text class="info-text">• 缴费到账时间：实时到账</text>
+    <!-- 展开更多按钮 -->
+    <view class="expand-more" @tap="toggleExpand" v-if="hasMore">
+      <text class="expand-text">{{ isExpanded ? "收起" : "展开更多" }}</text>
+      <text class="expand-icon">{{ isExpanded ? "↑" : "↓" }}</text>
+    </view>
+
+    <!-- 没有搜索结果时显示 -->
+    <view
+      class="no-result"
+      v-if="searchKeyword && filteredCompanies.length === 0"
+    >
+      <text class="no-result-text">未找到相关水费公司</text>
+      <text class="no-result-desc">请尝试输入其他关键词</text>
     </view>
   </view>
 </template>
@@ -68,270 +64,234 @@ export default {
   name: "WaterPage",
   data() {
     return {
-      selectedCity: "保定市", // 默认城市
-
-      // 不同城市的水费公司数据
-      cityWaterCompanies: {
-        保定市: [
-          {
-            name: "保定市自来水公司",
-            description: "保定市主城区供水服务",
-            code: "baoding_water",
-            serviceArea: "主城区、高新区",
-          },
-          {
-            name: "保定市北部水务公司",
-            description: "保定市北部地区供水服务",
-            code: "baoding_north_water",
-            serviceArea: "徐水区、满城区",
-          },
-        ],
-        北京: [
-          {
-            name: "北京自来水集团",
-            description: "北京市主要供水服务商",
-            code: "beijing_water",
-            serviceArea: "全市范围",
-          },
-          {
-            name: "北京市郊区水务公司",
-            description: "北京市郊区供水服务",
-            code: "beijing_suburb_water",
-            serviceArea: "郊区县域",
-          },
-        ],
-        上海: [
-          {
-            name: "上海城投水务集团",
-            description: "上海市主要供水服务商",
-            code: "shanghai_water",
-            serviceArea: "全市范围",
-          },
-        ],
-        广州市: [
-          {
-            name: "广州市自来水公司",
-            description: "广州市主城区供水服务",
-            code: "guangzhou_water",
-            serviceArea: "主城区",
-          },
-          {
-            name: "广州市番禺水务公司",
-            description: "番禺区供水服务",
-            code: "guangzhou_panyu_water",
-            serviceArea: "番禺区",
-          },
-        ],
-        深圳: [
-          {
-            name: "深圳市水务集团",
-            description: "深圳市主要供水服务商",
-            code: "shenzhen_water",
-            serviceArea: "全市范围",
-          },
-        ],
-        杭州市: [
-          {
-            name: "杭州市自来水公司",
-            description: "杭州市主城区供水服务",
-            code: "hangzhou_water",
-            serviceArea: "主城区、西湖区",
-          },
-        ],
-      },
+      searchKeyword: "",
+      isExpanded: false,
+      allCompanies: [],
     };
   },
 
+  onLoad() {
+    this.loadWaterCompaniesData()
+  },
+
   computed: {
-    // 当前城市的水费公司
-    waterCompanies() {
-      return this.cityWaterCompanies[this.selectedCity] || [];
+    // 过滤后的公司列表
+    filteredCompanies() {
+      let companies = this.allCompanies;
+
+      // 如果有搜索关键词，进行过滤
+      if (this.searchKeyword.trim()) {
+        companies = companies.filter(
+          (company) =>
+            company.name
+              .toLowerCase()
+              .includes(this.searchKeyword.toLowerCase()) ||
+            company.desc
+              .toLowerCase()
+              .includes(this.searchKeyword.toLowerCase()) ||
+            company.area
+              .toLowerCase()
+              .includes(this.searchKeyword.toLowerCase())
+        );
+      }
+
+      // 如果没有展开，只显示前5个
+      if (!this.isExpanded && !this.searchKeyword) {
+        return companies.slice(0, 5);
+      }
+
+      return companies;
+    },
+
+    // 是否有更多数据
+    hasMore() {
+      return !this.searchKeyword && this.allCompanies.length > 5;
     },
   },
 
   onLoad() {
-    console.log("水费页面加载");
-    this.initializeLocation();
-  },
-
-  onShow() {
-    // 页面显示时检查城市是否有变化
-    this.syncLocationFromStorage();
-  },
-
-  onReady() {
-    // 监听城市选择事件
-    uni.$on("citySelected", (city) => {
-      console.log("水费页面接收到城市选择:", city);
-      if (city && city !== this.selectedCity) {
-        this.selectedCity = city;
-        uni.showToast({
-          title: `已切换到${city}`,
-          icon: "none",
-          duration: 1500,
-        });
-      }
-    });
-  },
-
-  onUnload() {
-    // 移除事件监听
-    uni.$off("citySelected");
+    this.loadWaterCompaniesData()
+    console.log("水费区域选择页面加载");
   },
 
   methods: {
-    // 初始化位置信息
-    initializeLocation() {
-      const city = uni.getStorageSync("selectedCity");
-      if (city) {
-        this.selectedCity = city;
-        console.log(`水费页面同步城市: ${city}`);
+    // 加载水费公司数据
+    loadWaterCompaniesData() {
+      try {
+        const users = uni.getStorageSync('users') || []
+        const currentUser = users.find(user => user.isLoggedIn)
+        
+        if (currentUser && currentUser.waterCompanies) {
+          this.allCompanies = currentUser.waterCompanies
+        } else {
+          // 如果没有水费公司数据，使用默认数据
+          this.allCompanies = [
+            {
+              id: 1,
+              name: "保定市荣投水务有限公司",
+              desc: "水费",
+              area: "保定市",
+              type: "municipal",
+            },
+            {
+              id: 2,
+              name: "保定徐水智享物业管理有限公司",
+              desc: "徐水凯郡丽城小区水费",
+              area: "徐水区",
+              type: "property",
+            },
+            {
+              id: 3,
+              name: "定兴县自来水公司",
+              desc: "水费",
+              area: "定兴县",
+              type: "municipal",
+            },
+            {
+              id: 4,
+              name: "定州市东亭物业服务有限公司",
+              desc: "东亭水电费-金城颂园",
+              area: "定州市",
+              type: "property",
+            },
+            {
+              id: 5,
+              name: "定州市东亭物业服务有限公司",
+              desc: "东亭水电费-宝塔花园",
+              area: "定州市",
+              type: "property",
+            },
+            {
+              id: 6,
+              name: "涿州市供水有限公司",
+              desc: "水费",
+              area: "涿州市",
+              type: "municipal",
+            },
+            {
+              id: 7,
+              name: "高碑店市自来水公司",
+              desc: "水费",
+              area: "高碑店市",
+              type: "municipal",
+            },
+            {
+              id: 8,
+              name: "安国市自来水公司",
+              desc: "水费",
+              area: "安国市",
+              type: "municipal",
+            },
+            {
+              id: 9,
+              name: "易县自来水公司",
+              desc: "水费",
+              area: "易县",
+              type: "municipal",
+            },
+            {
+              id: 10,
+              name: "曲阳县自来水公司",
+              desc: "水费",
+              area: "曲阳县",
+              type: "municipal",
+            },
+          ]
+          
+          // 保存到用户数据中
+          if (currentUser) {
+            currentUser.waterCompanies = this.allCompanies
+            uni.setStorageSync('users', users)
+          }
+        }
+      } catch (error) {
+        console.error('加载水费公司数据失败:', error)
       }
     },
-
-    // 从存储同步位置信息
-    syncLocationFromStorage() {
-      const city = uni.getStorageSync("selectedCity");
-      if (city && city !== this.selectedCity) {
-        this.selectedCity = city;
-        console.log(`水费页面城市已更新: ${city}`);
-
-        // 显示城市变更提示
-        uni.showToast({
-          title: `已切换到${city}`,
-          icon: "none",
-          duration: 1500,
-        });
-      }
+    // 处理搜索
+    handleSearch(e) {
+      this.searchKeyword = e.detail.value;
+      console.log("搜索关键词:", this.searchKeyword);
     },
 
-    // 跳转到城市选择页面
-    goToCitySelect() {
-      console.log("从水费页面跳转到城市选择");
-      uni.navigateTo({
-        url: "/pages/city-select/city-select",
-        success: () => {
-          console.log("成功跳转到城市选择页面");
-        },
-        fail: (err) => {
-          console.error("跳转失败:", err);
-          uni.showToast({
-            title: "页面跳转失败",
-            icon: "none",
-          });
-        },
-      });
+    // 切换展开状态
+    toggleExpand() {
+      this.isExpanded = !this.isExpanded;
+      console.log("展开状态:", this.isExpanded);
     },
 
-    // 选择供水公司
+    // 选择水费公司
     selectCompany(company) {
-      console.log("选择供水公司:", company);
+      console.log("选择水费公司:", company);
 
+      // 显示选择确认
       uni.showModal({
-        title: company.name,
-        content: `服务区域：${company.serviceArea}\n\n即将进入${company.name}缴费页面，请准备好您的用户编号。`,
-        confirmText: "进入缴费",
-        cancelText: "取消",
+        title: "确认选择",
+        content: `您选择了：${company.name}\n服务区域：${company.area}\n是否继续进行水费缴费？`,
+        confirmText: "继续缴费",
+        cancelText: "重新选择",
         success: (res) => {
           if (res.confirm) {
-            this.enterPaymentFlow(company);
+            this.proceedToPayment(company);
           }
         },
       });
     },
 
     // 进入缴费流程
-    enterPaymentFlow(company) {
-      // 跳转到新的水费缴费页面
-      uni.navigateTo({
-        url: `/pages/water-payment/water-payment?city=${encodeURIComponent(
-          this.selectedCity
-        )}&company=${encodeURIComponent(JSON.stringify(company))}`,
-        success: () => {
-          console.log("成功跳转到水费缴费页面");
-        },
-        fail: (err) => {
-          console.error("跳转失败:", err);
-          uni.showToast({
-            title: "页面跳转失败",
-            icon: "none",
-          });
-        },
-      });
+    proceedToPayment(company) {
+      console.log("进入缴费流程:", company);
+
+      // 创建缴费页面或跳转到缴费表单
+      this.showPaymentForm(company);
     },
 
     // 显示缴费表单
     showPaymentForm(company) {
+      // 显示输入户号的对话框
       uni.showModal({
-        title: `${company.name}缴费`,
+        title: `${company.name}`,
+        content: "请输入您的水费户号",
         editable: true,
-        placeholderText: "请输入用户编号",
+        placeholderText: "请输入户号",
         success: (res) => {
           if (res.confirm && res.content) {
             this.processWaterPayment(company, res.content);
-          } else if (res.confirm && !res.content) {
-            uni.showToast({
-              title: "请输入用户编号",
-              icon: "none",
-            });
           }
         },
       });
     },
 
     // 处理水费缴费
-    processWaterPayment(company, userNumber) {
+    processWaterPayment(company, accountNumber) {
       uni.showLoading({
         title: "查询中...",
       });
 
-      // 模拟查询用户信息和账单
+      // 模拟查询过程
       setTimeout(() => {
         uni.hideLoading();
 
-        const mockBill = {
-          userNumber: userNumber,
-          userName: "张三",
-          address: "某某小区某某号",
-          lastReading: 145,
-          currentReading: 167,
-          usage: 22,
-          amount: this.calculateWaterBill(22),
-          dueDate: "2024-02-15",
-        };
+        // 生成模拟数据
+        const mockData = this.generateMockWaterBill(company, accountNumber);
 
-        this.showBillDetails(company, mockBill);
-      }, 2000);
-    },
-
-    // 显示账单详情
-    showBillDetails(company, bill) {
-      const content = `用户编号：${bill.userNumber}
-用户姓名：${bill.userName}
-用水地址：${bill.address}
-上期读数：${bill.lastReading}吨
-本期读数：${bill.currentReading}吨
-本期用量：${bill.usage}吨
-应缴费用：¥${bill.amount}元
-缴费期限：${bill.dueDate}
-
-是否立即缴费？`;
-
-      uni.showModal({
-        title: "水费账单",
-        content: content,
-        confirmText: "立即缴费",
-        cancelText: "取消",
-        success: (res) => {
-          if (res.confirm) {
-            this.completeWaterPayment(company, bill);
-          }
-        },
-      });
+        // 显示查询结果
+        uni.showModal({
+          title: "水费查询结果",
+          content: `缴费单位：${company.name}\n户号：${accountNumber}\n用户地址：${mockData.address}\n当前欠费：¥${mockData.amount}元\n账期：${mockData.period}\n\n是否立即缴费？`,
+          confirmText: "立即缴费",
+          cancelText: "取消",
+          success: (res) => {
+            if (res.confirm) {
+              this.completeWaterPayment(company, accountNumber, mockData);
+            }
+          },
+        });
+      }, 1500);
     },
 
     // 完成水费缴费
-    completeWaterPayment(company, bill) {
+    completeWaterPayment(company, accountNumber, billData) {
       uni.showLoading({
         title: "缴费中...",
       });
@@ -341,45 +301,45 @@ export default {
 
         uni.showModal({
           title: "缴费成功",
-          content: `恭喜您！水费缴费成功
-          
-缴费金额：¥${bill.amount}元
-缴费时间：${new Date().toLocaleString()}
-流水号：${this.generateTransactionId()}
-
-请保留好缴费凭证，如有疑问请联系供水公司。`,
+          content: `恭喜您！水费缴费成功\n\n缴费单位：${
+            company.name
+          }\n户号：${accountNumber}\n缴费金额：¥${
+            billData.amount
+          }元\n交易时间：${new Date().toLocaleString()}\n\n感谢您的使用！`,
+          confirmText: "完成",
           showCancel: false,
-          confirmText: "确定",
           success: () => {
-            // 可以跳回上一页或主页
-            console.log(`水费缴费成功 - ${company.name}: ¥${bill.amount}`);
+            // 缴费成功后返回上一页
+            uni.navigateBack({
+              delta: 2, // 返回到缴费主页
+            });
           },
         });
-      }, 2500);
+      }, 2000);
     },
 
-    // 计算水费（模拟计算）
-    calculateWaterBill(usage) {
-      // 阶梯水价计算
-      let amount = 0;
-      if (usage <= 15) {
-        amount = usage * 2.8; // 第一阶梯：2.8元/吨
-      } else if (usage <= 25) {
-        amount = 15 * 2.8 + (usage - 15) * 4.2; // 第二阶梯：4.2元/吨
-      } else {
-        amount = 15 * 2.8 + 10 * 4.2 + (usage - 25) * 6.0; // 第三阶梯：6.0元/吨
-      }
-      return amount.toFixed(2);
-    },
+    // 生成模拟账单数据
+    generateMockWaterBill(company, accountNumber) {
+      const amounts = [45.5, 67.8, 89.3, 123.6, 156.2, 78.9, 92.4];
+      const addresses = [
+        "XX小区1号楼2单元301",
+        "XX花园3号楼1单元201",
+        "XX家园5号楼3单元401",
+        "XX公寓2号楼2单元101",
+        "XX新城4号楼1单元501",
+      ];
 
-    // 生成交易流水号
-    generateTransactionId() {
-      const now = new Date();
-      const timestamp = now.getTime().toString();
-      const random = Math.floor(Math.random() * 1000)
-        .toString()
-        .padStart(3, "0");
-      return `WF${timestamp.slice(-8)}${random}`;
+      const currentDate = new Date();
+      const period = `${currentDate.getFullYear()}年${
+        currentDate.getMonth() + 1
+      }月`;
+
+      return {
+        amount: amounts[Math.floor(Math.random() * amounts.length)],
+        address: addresses[Math.floor(Math.random() * addresses.length)],
+        period: period,
+        usage: Math.floor(Math.random() * 50) + 10 + "吨",
+      };
     },
   },
 };
@@ -391,218 +351,207 @@ export default {
   background: #f5f7fa;
 }
 
-/* 地区选择 */
+/* 位置选择 */
 .location-section {
   background: #fff;
-  margin: 60rpx 30rpx 20rpx; /* 增加顶部间距 */
-  border-radius: 16rpx;
-  padding: 30rpx;
-  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.08);
+  padding: 60rpx 30rpx 20rpx;
+  border-bottom: 8rpx solid #f5f7fa;
 }
 
-.location-header {
-  margin-bottom: 24rpx;
-}
-
-.location-title {
-  font-size: 28rpx;
-  font-weight: 600;
-  color: #333;
-  display: block;
-  margin-bottom: 8rpx;
-}
-
-.location-tip {
-  font-size: 24rpx;
-  color: #666;
-}
-
-.current-location {
+.location-bar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 20rpx;
-  background: #f8f9fa;
-  border-radius: 12rpx;
-  border: 2rpx solid #e9ecef;
-  transition: all 0.3s ease;
-}
-
-.current-location:active {
-  background: #e9ecef;
-  transform: scale(0.98);
+  gap: 20rpx;
 }
 
 .location-info {
   display: flex;
   align-items: center;
-  gap: 16rpx;
-  flex: 1;
+  gap: 8rpx;
 }
 
 .location-icon {
-  font-size: 32rpx;
-  color: #1890ff;
-}
-
-.location-text-wrapper {
-  flex: 1;
+  font-size: 24rpx;
 }
 
 .location-text {
-  font-size: 30rpx;
-  font-weight: 600;
+  font-size: 28rpx;
   color: #333;
-  display: block;
-  margin-bottom: 4rpx;
 }
 
-.location-status {
-  font-size: 22rpx;
-  color: #1890ff;
-  background: #e6f7ff;
-  padding: 4rpx 12rpx;
-  border-radius: 8rpx;
-  display: inline-block;
-}
-
-.change-text {
-  font-size: 26rpx;
-  color: #1890ff;
-  font-weight: 500;
-}
-
-/* 供水公司选择 */
-.company-section {
-  background: #fff;
-  margin: 20rpx 30rpx;
-  border-radius: 16rpx;
-  padding: 30rpx;
-  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.08);
-}
-
-.section-header {
+.search-bar {
+  flex: 1;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 24rpx;
+  background: #f5f5f5;
+  border-radius: 24rpx;
+  padding: 12rpx 20rpx;
+  gap: 10rpx;
+}
+
+.search-icon {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.search-input {
+  flex: 1;
+  font-size: 26rpx;
+  color: #333;
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: #999;
+}
+
+/* 标题区域 */
+.section-title-container {
+  background: #fff;
+  padding: 30rpx;
+  border-bottom: 1rpx solid #eee;
 }
 
 .section-title {
-  font-size: 28rpx;
+  font-size: 32rpx;
   font-weight: 600;
   color: #333;
 }
 
-.company-count {
-  font-size: 24rpx;
-  color: #666;
-}
-
+/* 公司列表 */
 .company-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16rpx;
+  background: #fff;
 }
 
 .company-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 24rpx;
-  background: #f8f9fa;
-  border-radius: 12rpx;
-  border: 2rpx solid #e9ecef;
+  padding: 32rpx 30rpx;
+  border-bottom: 1rpx solid #f0f0f0;
   transition: all 0.3s ease;
+  position: relative;
+}
+
+.company-item:last-child {
+  border-bottom: none;
 }
 
 .company-item:active {
-  background: #e9ecef;
-  transform: scale(0.98);
+  background: #f8f9fa;
+  transform: scale(0.99);
+}
+
+.company-item::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 30rpx;
+  right: 30rpx;
+  height: 1rpx;
+  background: #f0f0f0;
+}
+
+.company-item:last-child::after {
+  display: none;
 }
 
 .company-info {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
 }
 
 .company-name {
-  font-size: 28rpx;
-  font-weight: 600;
+  font-size: 30rpx;
+  font-weight: 500;
   color: #333;
-  display: block;
-  margin-bottom: 8rpx;
+  line-height: 1.4;
 }
 
 .company-desc {
-  font-size: 24rpx;
+  font-size: 26rpx;
   color: #666;
+  line-height: 1.3;
 }
 
 .company-arrow {
-  margin-left: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40rpx;
+  height: 40rpx;
 }
 
 .arrow-icon {
-  font-size: 24rpx;
+  font-size: 28rpx;
   color: #999;
+  transform: rotate(0deg);
+  transition: transform 0.3s ease;
 }
 
-/* 暂无服务 */
-.no-service {
+.company-item:active .arrow-icon {
+  transform: rotate(15deg);
+}
+
+/* 展开更多按钮 */
+.expand-more {
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  padding: 32rpx;
+  margin-top: 20rpx;
+  border-radius: 16rpx;
+  margin: 20rpx 30rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.expand-more:active {
+  background: #f8f9fa;
+  transform: scale(0.98);
+}
+
+.expand-text {
+  font-size: 28rpx;
+  color: #666;
+  font-weight: 500;
+}
+
+.expand-icon {
+  font-size: 24rpx;
+  color: #999;
+  transition: transform 0.3s ease;
+}
+
+.expand-more:active .expand-icon {
+  transform: scale(1.2);
+}
+
+/* 无搜索结果 */
+.no-result {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  padding: 100rpx 30rpx;
   text-align: center;
-  padding: 80rpx 30rpx;
-  margin: 40rpx 30rpx;
-  background: #fff;
-  border-radius: 16rpx;
-  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.08);
 }
 
-.no-service-icon {
-  font-size: 120rpx;
-  margin-bottom: 30rpx;
-  opacity: 0.6;
-}
-
-.no-service-title {
+.no-result-text {
   font-size: 32rpx;
-  font-weight: 600;
-  color: #333;
+  color: #999;
   margin-bottom: 16rpx;
 }
 
-.no-service-desc {
+.no-result-desc {
   font-size: 26rpx;
-  color: #666;
-  margin-bottom: 12rpx;
-}
-
-.no-service-tip {
-  font-size: 24rpx;
-  color: #999;
-}
-
-/* 底部说明 */
-.footer-info {
-  margin: 40rpx 30rpx;
-  padding: 30rpx;
-  background: #fff;
-  border-radius: 16rpx;
-  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.08);
-}
-
-.info-text {
-  font-size: 24rpx;
-  color: #666;
-  line-height: 1.6;
-  display: block;
-  margin-bottom: 12rpx;
-}
-
-.info-text:last-child {
-  margin-bottom: 0;
+  color: #ccc;
 }
 
 /* 页面加载动画 */
@@ -623,15 +572,42 @@ export default {
 
 /* 响应式适配 */
 @media (max-width: 750rpx) {
-  .location-section,
-  .company-section,
-  .footer-info {
-    margin: 20rpx 20rpx;
-    padding: 24rpx;
+  .company-name {
+    font-size: 28rpx;
   }
 
-  .company-item {
-    padding: 20rpx;
+  .company-desc {
+    font-size: 24rpx;
   }
+
+  .nav-title {
+    font-size: 32rpx;
+  }
+}
+
+/* 列表项悬停效果 */
+.company-item:hover {
+  background: #f8f9fa;
+}
+
+.company-item:hover .arrow-icon {
+  color: #666;
+  transform: translateX(4rpx);
+}
+
+/* 搜索框焦点效果 */
+.search-bar:focus-within {
+  background: #fff;
+  box-shadow: 0 0 0 2rpx rgba(64, 181, 246, 0.2);
+}
+
+/* 加载状态 */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60rpx;
+  color: #999;
+  font-size: 28rpx;
 }
 </style>

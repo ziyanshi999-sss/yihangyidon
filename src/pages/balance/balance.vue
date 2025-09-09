@@ -118,17 +118,24 @@ export default {
       try {
         uni.showLoading({ title: '加载中...' })
         
-        // 模拟API调用
-        // const res = await getTransactionHistory({
-        //   page: this.currentPage,
-        //   pageSize: this.pageSize,
-        //   dateRange: this.selectedDateRange,
-        //   type: this.selectedType
-        // })
+        // 从user.json获取交易记录
+        const users = uni.getStorageSync('users') || []
+        const currentUser = users.find(user => user.isLoggedIn)
         
-        // 使用模拟数据
-        const mockTransactions = this.generateMockTransactions()
-        this.transactions = mockTransactions
+        if (currentUser && currentUser.transactionRecords) {
+          this.transactions = currentUser.transactionRecords
+        } else {
+          // 如果没有交易记录，使用模拟数据
+          const mockTransactions = this.generateMockTransactions()
+          this.transactions = mockTransactions
+          
+          // 保存到用户数据中
+          if (currentUser) {
+            currentUser.transactionRecords = mockTransactions
+            uni.setStorageSync('users', users)
+          }
+        }
+        
         this.groupTransactionsByDate()
         this.calculateSummary()
         

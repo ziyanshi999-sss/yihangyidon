@@ -1,96 +1,15 @@
 [
   {
     "id": "u001",
-    "username": null,
-    "phone": "13888888888",
-    "password": "123456",
-    "transactionPassword": "123456",
-    "balance": 50000.00,
-    "nickname": "手机用户",
-    "email": "phone@example.com",
-    "idCard": "110101199001011234",
-    "avatar": "/static/avatars/phone_user_avatar.jpg",
-    "status": "active",
-    "createTime": "2024-01-01T08:00:00.000Z",
-    "lastLoginTime": "2024-01-15T10:30:00.000Z",
-    "realName": "张三",
-    "gender": "男",
-    "birthDate": "1990-01-01",
-    "address": "北京市朝阳区建国门外大街1号",
-    "avatarUpdateTime": "2024-01-15T10:30:00.000Z",
-    "lastUpdateTime": "2024-01-15T10:30:00.000Z",
-    "securitySettings": {
-      "biometricEnabled": true,
-      "smsVerificationEnabled": true,
-      "accountLockEnabled": true,
-      "twoFactorEnabled": false,
-      "securityNotificationsEnabled": true,
-      "transactionLimit": 50000,
-      "passwordUpdateTime": "2024-01-01T00:00:00.000Z",
-      "transactionPasswordUpdateTime": "2024-01-01T00:00:00.000Z",
-      "securityQuestionsSet": false,
-      "emergencyContactSet": false,
-      "loginDevices": [
-        {
-          "id": 1,
-          "name": "iPhone 14",
-          "lastLogin": "2024-01-15T14:30:00.000Z",
-          "location": "北京市",
-          "status": "active",
-          "ip": "192.168.1.100",
-          "deviceType": "mobile"
-        }
-      ],
-      "securityEvents": [
-        {
-          "id": 1,
-          "type": "login",
-          "description": "账户登录",
-          "timestamp": "2024-01-15T14:30:00.000Z",
-          "location": "北京市",
-          "ip": "192.168.1.100",
-          "status": "success"
-        }
-      ],
-      "securityQuestions": [],
-      "emergencyContact": null,
-      "twoFactorSecret": null
-    },
-    "creditCards": [
-      {
-        "cardNumber": "6222 8888 8888 8888",
-        "cardType": "金卡",
-        "cardBrand": "银联",
-        "creditLimit": 50000,
-        "availableCredit": 45000,
-        "currentBalance": 5000,
-        "minPayment": 500,
-        "statementDate": "15",
-        "dueDate": "2024-02-05",
-        "lastStatementDate": "2024-01-15",
-        "cardStatus": "active",
-        "cardHolder": "手机用户",
-        "expiryDate": "2028-12-31",
-        "cvv": "123",
-        "annualFee": 200,
-        "interestRate": 0.0005,
-        "cashAdvanceLimit": 25000,
-        "rewardsPoints": 1250,
-        "cardColor": "#FFD700"
-      }
-    ]
-  },
-  {
-    "id": "u002", 
     "username": "张小明",
     "phone": "13999999999",
     "password": "abc123",
     "transactionPassword": "654321",
-    "balance": 120000.00,
+    "balance": 150000.00,
     "nickname": "小明",
     "email": "zhangxiaoming@example.com",
     "idCard": "110101199202021456",
-    "avatar": "/static/avatars/zhangxiaoming_avatar.jpg",
+    "avatar": "/static/wealth/useravatar.jpg",
     "status": "active",
     "createTime": "2024-01-02T09:15:00.000Z",
     "lastLoginTime": "2024-01-15T14:20:00.000Z",
@@ -120,15 +39,6 @@
           "status": "active",
           "ip": "192.168.1.200",
           "deviceType": "mobile"
-        },
-        {
-          "id": 2,
-          "name": "MacBook Pro",
-          "lastLogin": "2024-01-14T09:15:00.000Z",
-          "location": "上海市",
-          "status": "active",
-          "ip": "192.168.1.201",
-          "deviceType": "desktop"
         }
       ],
       "securityEvents": [
@@ -140,29 +50,12 @@
           "location": "上海市",
           "ip": "192.168.1.200",
           "status": "success"
-        },
-        {
-          "id": 2,
-          "type": "password_change",
-          "description": "修改登录密码",
-          "timestamp": "2024-01-10T10:30:00.000Z",
-          "location": "上海市",
-          "ip": "192.168.1.201",
-          "status": "success"
         }
       ],
       "securityQuestions": [
         {
           "question": "您的小学名称是什么？",
           "answer": "实验小学"
-        },
-        {
-          "question": "您的第一个宠物的名字是什么？",
-          "answer": "小白"
-        },
-        {
-          "question": "您最喜欢的颜色是什么？",
-          "answer": "蓝色"
         }
       ],
       "emergencyContact": {
@@ -174,6 +67,7 @@
     },
     "creditCards": [
       {
+        "id": "cc001",
         "cardNumber": "6222 9999 9999 9999",
         "cardType": "白金卡",
         "cardBrand": "银联",
@@ -192,33 +86,301 @@
         "interestRate": 0.0004,
         "cashAdvanceLimit": 50000,
         "rewardsPoints": 3200,
-        "cardColor": "#C0C0C0"
+        "cardColor": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+        "createTime": "2023-01-15T00:00:00.000Z",
+        "lastUsedTime": "2024-01-15T14:20:00.000Z",
+        "monthlySpending": 8500,
+        "transactionCount": 23,
+        "topCategory": "餐饮",
+        "securityFeatures": {
+          "chipEnabled": true,
+          "contactlessEnabled": true,
+          "onlineShoppingEnabled": true,
+          "internationalEnabled": true
+        }
       },
       {
-        "cardNumber": "6222 7777 7777 7777",
-        "cardType": "普卡",
-        "cardBrand": "银联",
-        "creditLimit": 30000,
-        "availableCredit": 28000,
-        "currentBalance": 2000,
-        "minPayment": 200,
-        "statementDate": "25",
+        "id": "cc002",
+        "cardNumber": "6222 8888 8888 8888",
+        "cardType": "钻石卡",
+        "cardBrand": "Visa",
+        "creditLimit": 200000,
+        "availableCredit": 180000,
+        "currentBalance": 20000,
+        "minPayment": 2000,
+        "statementDate": "15",
         "dueDate": "2024-02-15",
-        "lastStatementDate": "2024-01-25",
+        "lastStatementDate": "2024-01-15",
         "cardStatus": "active",
         "cardHolder": "张小明",
-        "expiryDate": "2027-06-30",
+        "expiryDate": "2030-12-31",
         "cvv": "789",
-        "annualFee": 100,
-        "interestRate": 0.0006,
-        "cashAdvanceLimit": 15000,
-        "rewardsPoints": 800,
-        "cardColor": "#87CEEB"
+        "annualFee": 1000,
+        "interestRate": 0.0003,
+        "cashAdvanceLimit": 100000,
+        "rewardsPoints": 8500,
+        "cardColor": "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+        "createTime": "2023-06-01T00:00:00.000Z",
+        "lastUsedTime": "2024-01-14T16:30:00.000Z",
+        "monthlySpending": 12000,
+        "transactionCount": 18,
+        "topCategory": "购物",
+        "securityFeatures": {
+          "chipEnabled": true,
+          "contactlessEnabled": true,
+          "onlineShoppingEnabled": true,
+          "internationalEnabled": true
+        }
+      }
+    ],
+    "transactionRecords": [
+      {
+        "id": 1,
+        "type": "income",
+        "amount": 15000,
+        "description": "工资收入",
+        "balance": 150000,
+        "timestamp": "2024-01-15T09:00:00.000Z",
+        "icon": "💰",
+        "title": "工资收入",
+        "time": "09:00"
+      },
+      {
+        "id": 2,
+        "type": "expense",
+        "amount": 2000,
+        "description": "信用卡还款",
+        "balance": 148000,
+        "timestamp": "2024-01-12T11:45:00.000Z",
+        "icon": "💳",
+        "title": "信用卡还款",
+        "time": "11:45"
+      }
+    ],
+    "wealthProducts": {
+      "deposits": {
+        "current": 30000,
+        "fixed": 50000,
+        "smart": 20000
+      },
+      "investments": [
+        {
+          "id": "inv002",
+          "name": "稳健理财B",
+          "type": "理财产品",
+          "amount": 20000,
+          "rate": 4.5,
+          "term": "180天",
+          "purchaseDate": "2024-01-05T00:00:00.000Z",
+          "maturityDate": "2024-07-05T00:00:00.000Z",
+          "status": "持有中"
+        }
+      ]
+    },
+    "lifeServices": {
+      "phoneRecharge": {
+        "phoneNumber": "13999999999",
+        "lastRecharge": 100,
+        "lastRechargeDate": "2024-01-10T00:00:00.000Z"
+      },
+      "utilities": [
+        {
+          "type": "电费",
+          "account": "9876543210",
+          "lastPayment": 350,
+          "lastPaymentDate": "2024-01-08T00:00:00.000Z"
+        },
+        {
+          "type": "水费",
+          "account": "1234567890",
+          "lastPayment": 120,
+          "lastPaymentDate": "2024-01-05T00:00:00.000Z"
+        },
+        {
+          "type": "燃气费",
+          "account": "5555666677",
+          "lastPayment": 180,
+          "lastPaymentDate": "2024-01-03T00:00:00.000Z"
+        }
+      ]
+    },
+    "bankAccounts": [
+      {
+        "accountNumber": "6228480012345678901",
+        "accountName": "张小明",
+        "bankName": "中国农业银行",
+        "accountType": "储蓄卡",
+        "balance": 150000.00,
+        "currency": "CNY",
+        "status": "active",
+        "openDate": "2020-03-15T00:00:00.000Z",
+        "branchName": "上海陆家嘴支行"
+      },
+      {
+        "accountNumber": "6228480012345678902",
+        "accountName": "张小明",
+        "bankName": "中国农业银行",
+        "accountType": "定期存款",
+        "balance": 100000.00,
+        "currency": "CNY",
+        "status": "active",
+        "openDate": "2023-06-01T00:00:00.000Z",
+        "branchName": "上海陆家嘴支行",
+        "maturityDate": "2024-06-01T00:00:00.000Z",
+        "interestRate": 2.75
+      }
+    ],
+    "transferRecords": [
+      {
+        "id": "t001",
+        "type": "outgoing",
+        "amount": 5000,
+        "recipient": "李小红",
+        "recipientAccount": "6228480012345678903",
+        "description": "生活费转账",
+        "status": "completed",
+        "timestamp": "2024-01-14T10:30:00.000Z",
+        "fee": 2.5
+      },
+      {
+        "id": "t002",
+        "type": "incoming",
+        "amount": 8000,
+        "sender": "张大明",
+        "senderAccount": "6228480012345678904",
+        "description": "工资转账",
+        "status": "completed",
+        "timestamp": "2024-01-12T09:15:00.000Z",
+        "fee": 0
+      }
+    ],
+    "frequentContacts": [
+      {
+        "id": "fc001",
+        "name": "李小红",
+        "account": "6228480012345678903",
+        "bank": "中国农业银行",
+        "phone": "13777777777",
+        "lastTransfer": "2024-01-14T10:30:00.000Z",
+        "transferCount": 15
+      },
+      {
+        "id": "fc002",
+        "name": "张大明",
+        "account": "6228480012345678904",
+        "bank": "中国工商银行",
+        "phone": "13800138000",
+        "lastTransfer": "2024-01-12T09:15:00.000Z",
+        "transferCount": 8
+      }
+    ],
+    "paymentRecords": [
+      {
+        "id": "p001",
+        "type": "手机充值",
+        "amount": 100,
+        "phoneNumber": "13999999999",
+        "status": "completed",
+        "timestamp": "2024-01-10T14:20:00.000Z",
+        "operator": "中国移动"
+      },
+      {
+        "id": "p002",
+        "type": "电费",
+        "amount": 350,
+        "account": "9876543210",
+        "status": "completed",
+        "timestamp": "2024-01-08T16:45:00.000Z",
+        "provider": "国家电网"
+      },
+      {
+        "id": "p003",
+        "type": "水费",
+        "amount": 120,
+        "account": "1234567890",
+        "status": "completed",
+        "timestamp": "2024-01-05T11:30:00.000Z",
+        "provider": "上海水务"
+      }
+    ],
+    "investmentPortfolio": {
+      "totalValue": 100000,
+      "totalReturn": 4500,
+      "returnRate": 4.5,
+      "holdings": [
+        {
+          "id": "inv001",
+          "name": "稳健理财A",
+          "type": "理财产品",
+          "amount": 30000,
+          "rate": 3.8,
+          "term": "90天",
+          "purchaseDate": "2024-01-01T00:00:00.000Z",
+          "maturityDate": "2024-04-01T00:00:00.000Z",
+          "status": "持有中",
+          "currentValue": 30285
+        },
+        {
+          "id": "inv002",
+          "name": "稳健理财B",
+          "type": "理财产品",
+          "amount": 20000,
+          "rate": 4.5,
+          "term": "180天",
+          "purchaseDate": "2024-01-05T00:00:00.000Z",
+          "maturityDate": "2024-07-05T00:00:00.000Z",
+          "status": "持有中",
+          "currentValue": 20450
+        },
+        {
+          "id": "inv003",
+          "name": "灵活理财C",
+          "type": "货币基金",
+          "amount": 50000,
+          "rate": 2.8,
+          "term": "开放式",
+          "purchaseDate": "2023-12-01T00:00:00.000Z",
+          "maturityDate": null,
+          "status": "持有中",
+          "currentValue": 51140
+        }
+      ]
+    },
+    "creditCardTransactions": [
+      {
+        "id": "cct001",
+        "cardNumber": "6222 9999 9999 9999",
+        "type": "消费",
+        "amount": 1200,
+        "merchant": "星巴克咖啡",
+        "category": "餐饮",
+        "timestamp": "2024-01-15T14:30:00.000Z",
+        "status": "已入账"
+      },
+      {
+        "id": "cct002",
+        "cardNumber": "6222 9999 9999 9999",
+        "type": "消费",
+        "amount": 3500,
+        "merchant": "京东商城",
+        "category": "购物",
+        "timestamp": "2024-01-14T20:15:00.000Z",
+        "status": "已入账"
+      },
+      {
+        "id": "cct003",
+        "cardNumber": "6222 9999 9999 9999",
+        "type": "还款",
+        "amount": 2000,
+        "merchant": "信用卡还款",
+        "category": "还款",
+        "timestamp": "2024-01-12T11:45:00.000Z",
+        "status": "已入账"
       }
     ]
   },
   {
-    "id": "u003",
+    "id": "u002",
     "username": "李小红",
     "phone": "13777777777", 
     "password": "password123",
@@ -227,7 +389,7 @@
     "nickname": "小红",
     "email": "lixiaohong@example.com",
     "idCard": "110101199303031789",
-    "avatar": "/static/avatars/lixiaohong_avatar.jpg",
+    "avatar": "/static/wealth/useravatar.jpg",
     "status": "active",
     "createTime": "2024-01-03T16:45:00.000Z",
     "lastLoginTime": "2024-01-14T11:10:00.000Z",
@@ -257,24 +419,6 @@
           "status": "active",
           "ip": "192.168.1.300",
           "deviceType": "mobile"
-        },
-        {
-          "id": 2,
-          "name": "iPad Pro",
-          "lastLogin": "2024-01-13T16:45:00.000Z",
-          "location": "广州市",
-          "status": "active",
-          "ip": "192.168.1.301",
-          "deviceType": "tablet"
-        },
-        {
-          "id": 3,
-          "name": "Dell Laptop",
-          "lastLogin": "2024-01-12T08:30:00.000Z",
-          "location": "广州市",
-          "status": "active",
-          "ip": "192.168.1.302",
-          "deviceType": "desktop"
         }
       ],
       "securityEvents": [
@@ -286,15 +430,6 @@
           "location": "广州市",
           "ip": "192.168.1.300",
           "status": "success"
-        },
-        {
-          "id": 2,
-          "type": "failed_login",
-          "description": "登录失败",
-          "timestamp": "2024-01-13T20:15:00.000Z",
-          "location": "广州市",
-          "ip": "192.168.1.303",
-          "status": "failed"
         }
       ],
       "securityQuestions": [],
@@ -322,27 +457,1256 @@
         "cashAdvanceLimit": 100000,
         "rewardsPoints": 6800,
         "cardColor": "#FF69B4"
+      }
+    ],
+    "transactionRecords": [
+      {
+        "id": 1,
+        "type": "income",
+        "amount": 12000,
+        "description": "工资收入",
+        "balance": 80000,
+        "timestamp": "2024-01-14T09:00:00.000Z",
+        "icon": "💰",
+        "title": "工资收入",
+        "time": "09:00"
       },
       {
-        "cardNumber": "6222 5555 5555 5555",
+        "id": 2,
+        "type": "expense",
+        "amount": 1000,
+        "description": "生活缴费",
+        "balance": 79000,
+        "timestamp": "2024-01-11T16:45:00.000Z",
+        "icon": "🏠",
+        "title": "电费缴费",
+        "time": "16:45"
+      }
+    ],
+    "wealthProducts": {
+      "deposits": {
+        "current": 20000,
+        "fixed": 30000,
+        "smart": 15000
+      },
+      "investments": [
+        {
+          "id": "inv004",
+          "name": "高收益理财C",
+          "type": "理财产品",
+          "amount": 15000,
+          "rate": 5.2,
+          "term": "365天",
+          "purchaseDate": "2024-01-01T00:00:00.000Z",
+          "maturityDate": "2025-01-01T00:00:00.000Z",
+          "status": "持有中"
+        }
+      ]
+    },
+    "lifeServices": {
+      "phoneRecharge": {
+        "phoneNumber": "13777777777",
+        "lastRecharge": 200,
+        "lastRechargeDate": "2024-01-05T00:00:00.000Z"
+      },
+      "utilities": [
+        {
+          "type": "电费",
+          "account": "5555666677",
+          "lastPayment": 280,
+          "lastPaymentDate": "2024-01-11T00:00:00.000Z"
+        },
+        {
+          "type": "水费",
+          "account": "7777888899",
+          "lastPayment": 150,
+          "lastPaymentDate": "2024-01-08T00:00:00.000Z"
+        },
+        {
+          "type": "燃气费",
+          "account": "1111222233",
+          "lastPayment": 220,
+          "lastPaymentDate": "2024-01-06T00:00:00.000Z"
+        }
+      ]
+    },
+    "bankAccounts": [
+      {
+        "accountNumber": "6228480012345678903",
+        "accountName": "李小红",
+        "bankName": "中国农业银行",
+        "accountType": "储蓄卡",
+        "balance": 80000.00,
+        "currency": "CNY",
+        "status": "active",
+        "openDate": "2021-05-20T00:00:00.000Z",
+        "branchName": "广州珠江新城支行"
+      },
+      {
+        "accountNumber": "6228480012345678904",
+        "accountName": "李小红",
+        "bankName": "中国农业银行",
+        "accountType": "定期存款",
+        "balance": 50000.00,
+        "currency": "CNY",
+        "status": "active",
+        "openDate": "2023-08-15T00:00:00.000Z",
+        "branchName": "广州珠江新城支行",
+        "maturityDate": "2024-08-15T00:00:00.000Z",
+        "interestRate": 3.2
+      }
+    ],
+    "transferRecords": [
+      {
+        "id": "t003",
+        "type": "incoming",
+        "amount": 5000,
+        "sender": "张小明",
+        "senderAccount": "6228480012345678901",
+        "description": "生活费转账",
+        "status": "completed",
+        "timestamp": "2024-01-14T10:30:00.000Z",
+        "fee": 0
+      },
+      {
+        "id": "t004",
+        "type": "outgoing",
+        "amount": 3000,
+        "recipient": "陈美丽",
+        "recipientAccount": "6228480012345678905",
+        "description": "朋友借款",
+        "status": "completed",
+        "timestamp": "2024-01-13T15:20:00.000Z",
+        "fee": 1.5
+      }
+    ],
+    "frequentContacts": [
+      {
+        "id": "fc003",
+        "name": "张小明",
+        "account": "6228480012345678901",
+        "bank": "中国农业银行",
+        "phone": "13999999999",
+        "lastTransfer": "2024-01-14T10:30:00.000Z",
+        "transferCount": 12
+      },
+      {
+        "id": "fc004",
+        "name": "陈美丽",
+        "account": "6228480012345678905",
+        "bank": "中国建设银行",
+        "phone": "13555555555",
+        "lastTransfer": "2024-01-13T15:20:00.000Z",
+        "transferCount": 5
+      }
+    ],
+    "paymentRecords": [
+      {
+        "id": "p004",
+        "type": "手机充值",
+        "amount": 200,
+        "phoneNumber": "13777777777",
+        "status": "completed",
+        "timestamp": "2024-01-05T16:30:00.000Z",
+        "operator": "中国联通"
+      },
+      {
+        "id": "p005",
+        "type": "电费",
+        "amount": 280,
+        "account": "5555666677",
+        "status": "completed",
+        "timestamp": "2024-01-11T12:15:00.000Z",
+        "provider": "南方电网"
+      },
+      {
+        "id": "p006",
+        "type": "水费",
+        "amount": 150,
+        "account": "7777888899",
+        "status": "completed",
+        "timestamp": "2024-01-08T09:45:00.000Z",
+        "provider": "广州水务"
+      }
+    ],
+    "investmentPortfolio": {
+      "totalValue": 65000,
+      "totalReturn": 2800,
+      "returnRate": 4.3,
+      "holdings": [
+        {
+          "id": "inv004",
+          "name": "高收益理财C",
+          "type": "理财产品",
+          "amount": 15000,
+          "rate": 5.2,
+          "term": "365天",
+          "purchaseDate": "2024-01-01T00:00:00.000Z",
+          "maturityDate": "2025-01-01T00:00:00.000Z",
+          "status": "持有中",
+          "currentValue": 15780
+        },
+        {
+          "id": "inv005",
+          "name": "稳健理财D",
+          "type": "理财产品",
+          "amount": 20000,
+          "rate": 4.0,
+          "term": "180天",
+          "purchaseDate": "2023-12-15T00:00:00.000Z",
+          "maturityDate": "2024-06-15T00:00:00.000Z",
+          "status": "持有中",
+          "currentValue": 20400
+        },
+        {
+          "id": "inv006",
+          "name": "灵活理财E",
+          "type": "货币基金",
+          "amount": 30000,
+          "rate": 2.5,
+          "term": "开放式",
+          "purchaseDate": "2023-11-01T00:00:00.000Z",
+          "maturityDate": null,
+          "status": "持有中",
+          "currentValue": 30620
+        }
+      ]
+    },
+    "creditCardTransactions": [
+      {
+        "id": "cct004",
+        "cardNumber": "6222 6666 6666 6666",
+        "type": "消费",
+        "amount": 2800,
+        "merchant": "天猫商城",
+        "category": "购物",
+        "timestamp": "2024-01-14T19:45:00.000Z",
+        "status": "已入账"
+      },
+      {
+        "id": "cct005",
+        "cardNumber": "6222 6666 6666 6666",
+        "type": "消费",
+        "amount": 450,
+        "merchant": "海底捞",
+        "category": "餐饮",
+        "timestamp": "2024-01-13T18:30:00.000Z",
+        "status": "已入账"
+      },
+      {
+        "id": "cct006",
+        "cardNumber": "6222 6666 6666 6666",
+        "type": "还款",
+        "amount": 1000,
+        "merchant": "信用卡还款",
+        "category": "还款",
+        "timestamp": "2024-01-11T16:45:00.000Z",
+        "status": "已入账"
+      }
+    ]
+  },
+  {
+    "id": "u003",
+    "username": "王大伟",
+    "phone": "13666666666",
+    "password": "123456",
+    "transactionPassword": "111111",
+    "balance": 250000.00,
+    "nickname": "大伟",
+    "email": "wangdawei@example.com",
+    "idCard": "110101198805051234",
+    "avatar": "/static/wealth/useravatar.jpg",
+    "status": "active",
+    "createTime": "2024-01-04T10:30:00.000Z",
+    "lastLoginTime": "2024-01-15T16:45:00.000Z",
+    "realName": "王大伟",
+    "gender": "男",
+    "birthDate": "1988-05-05",
+    "address": "深圳市南山区科技园南区深南大道10000号",
+    "avatarUpdateTime": "2024-01-15T16:45:00.000Z",
+    "lastUpdateTime": "2024-01-15T16:45:00.000Z",
+    "securitySettings": {
+      "biometricEnabled": true,
+      "smsVerificationEnabled": true,
+      "accountLockEnabled": true,
+      "twoFactorEnabled": true,
+      "securityNotificationsEnabled": true,
+      "transactionLimit": 500000,
+      "passwordUpdateTime": "2024-01-12T00:00:00.000Z",
+      "transactionPasswordUpdateTime": "2024-01-12T00:00:00.000Z",
+      "securityQuestionsSet": true,
+      "emergencyContactSet": true,
+      "loginDevices": [
+        {
+          "id": 1,
+          "name": "Huawei Mate 60 Pro",
+          "lastLogin": "2024-01-15T16:45:00.000Z",
+          "location": "深圳市",
+          "status": "active",
+          "ip": "192.168.1.400",
+          "deviceType": "mobile"
+        }
+      ],
+      "securityEvents": [
+        {
+          "id": 1,
+          "type": "login",
+          "description": "账户登录",
+          "timestamp": "2024-01-15T16:45:00.000Z",
+          "location": "深圳市",
+          "ip": "192.168.1.400",
+          "status": "success"
+        }
+      ],
+      "securityQuestions": [
+        {
+          "question": "您的出生地是哪里？",
+          "answer": "北京"
+        }
+      ],
+      "emergencyContact": {
+        "name": "王大明",
+        "phone": "13900139000",
+        "relationship": "兄弟"
+      },
+      "twoFactorSecret": "KBSWY3DPEHPK3PXP"
+    },
+    "creditCards": [
+      {
+        "cardNumber": "6222 4444 4444 4444",
+        "cardType": "钻石卡",
+        "cardBrand": "银联",
+        "creditLimit": 300000,
+        "availableCredit": 250000,
+        "currentBalance": 50000,
+        "minPayment": 5000,
+        "statementDate": "5",
+        "dueDate": "2024-02-05",
+        "lastStatementDate": "2024-01-05",
+        "cardStatus": "active",
+        "cardHolder": "王大伟",
+        "expiryDate": "2031-12-31",
+        "cvv": "999",
+        "annualFee": 2000,
+        "interestRate": 0.0002,
+        "cashAdvanceLimit": 150000,
+        "rewardsPoints": 15000,
+        "cardColor": "#FFD700"
+      }
+    ],
+    "transactionRecords": [
+      {
+        "id": 1,
+        "type": "income",
+        "amount": 25000,
+        "description": "工资收入",
+        "balance": 250000,
+        "timestamp": "2024-01-15T09:00:00.000Z",
+        "icon": "💰",
+        "title": "工资收入",
+        "time": "09:00"
+      },
+      {
+        "id": 2,
+        "type": "expense",
+        "amount": 3000,
+        "description": "信用卡还款",
+        "balance": 247000,
+        "timestamp": "2024-01-12T16:30:00.000Z",
+        "icon": "💳",
+        "title": "信用卡还款",
+        "time": "16:30"
+      }
+    ],
+    "wealthProducts": {
+      "deposits": {
+        "current": 50000,
+        "fixed": 80000,
+        "smart": 30000
+      },
+      "investments": [
+        {
+          "id": "inv005",
+          "name": "高端理财D",
+          "type": "理财产品",
+          "amount": 50000,
+          "rate": 6.5,
+          "term": "365天",
+          "purchaseDate": "2024-01-01T00:00:00.000Z",
+          "maturityDate": "2025-01-01T00:00:00.000Z",
+          "status": "持有中"
+        }
+      ]
+    },
+    "lifeServices": {
+      "phoneRecharge": {
+        "phoneNumber": "13666666666",
+        "lastRecharge": 300,
+        "lastRechargeDate": "2024-01-08T00:00:00.000Z"
+      },
+      "utilities": [
+        {
+          "type": "电费",
+          "account": "1111222233",
+          "lastPayment": 500,
+          "lastPaymentDate": "2024-01-10T00:00:00.000Z"
+        },
+        {
+          "type": "水费",
+          "account": "4444555566",
+          "lastPayment": 280,
+          "lastPaymentDate": "2024-01-07T00:00:00.000Z"
+        },
+        {
+          "type": "燃气费",
+          "account": "8888999900",
+          "lastPayment": 350,
+          "lastPaymentDate": "2024-01-05T00:00:00.000Z"
+        }
+      ]
+    },
+    "bankAccounts": [
+      {
+        "accountNumber": "6228480012345678906",
+        "accountName": "王大伟",
+        "bankName": "中国农业银行",
+        "accountType": "储蓄卡",
+        "balance": 250000.00,
+        "currency": "CNY",
+        "status": "active",
+        "openDate": "2019-08-10T00:00:00.000Z",
+        "branchName": "深圳科技园支行"
+      },
+      {
+        "accountNumber": "6228480012345678907",
+        "accountName": "王大伟",
+        "bankName": "中国农业银行",
+        "accountType": "定期存款",
+        "balance": 200000.00,
+        "currency": "CNY",
+        "status": "active",
+        "openDate": "2023-03-01T00:00:00.000Z",
+        "branchName": "深圳科技园支行",
+        "maturityDate": "2024-03-01T00:00:00.000Z",
+        "interestRate": 3.5
+      }
+    ],
+    "transferRecords": [
+      {
+        "id": "t005",
+        "type": "outgoing",
+        "amount": 15000,
+        "recipient": "刘强",
+        "recipientAccount": "6228480012345678909",
+        "description": "投资款转账",
+        "status": "completed",
+        "timestamp": "2024-01-13T11:20:00.000Z",
+        "fee": 7.5
+      },
+      {
+        "id": "t006",
+        "type": "incoming",
+        "amount": 25000,
+        "sender": "公司财务",
+        "senderAccount": "6228480012345678910",
+        "description": "工资转账",
+        "status": "completed",
+        "timestamp": "2024-01-15T09:00:00.000Z",
+        "fee": 0
+      }
+    ],
+    "frequentContacts": [
+      {
+        "id": "fc005",
+        "name": "刘强",
+        "account": "6228480012345678909",
+        "bank": "中国农业银行",
+        "phone": "13444444444",
+        "lastTransfer": "2024-01-13T11:20:00.000Z",
+        "transferCount": 8
+      },
+      {
+        "id": "fc006",
+        "name": "公司财务",
+        "account": "6228480012345678910",
+        "bank": "中国工商银行",
+        "phone": "0755-12345678",
+        "lastTransfer": "2024-01-15T09:00:00.000Z",
+        "transferCount": 24
+      }
+    ],
+    "paymentRecords": [
+      {
+        "id": "p007",
+        "type": "手机充值",
+        "amount": 300,
+        "phoneNumber": "13666666666",
+        "status": "completed",
+        "timestamp": "2024-01-08T14:20:00.000Z",
+        "operator": "中国电信"
+      },
+      {
+        "id": "p008",
+        "type": "电费",
+        "amount": 500,
+        "account": "1111222233",
+        "status": "completed",
+        "timestamp": "2024-01-10T16:30:00.000Z",
+        "provider": "南方电网"
+      },
+      {
+        "id": "p009",
+        "type": "水费",
+        "amount": 280,
+        "account": "4444555566",
+        "status": "completed",
+        "timestamp": "2024-01-07T10:15:00.000Z",
+        "provider": "深圳水务"
+      }
+    ],
+    "investmentPortfolio": {
+      "totalValue": 160000,
+      "totalReturn": 12000,
+      "returnRate": 7.5,
+      "holdings": [
+        {
+          "id": "inv007",
+          "name": "高端理财D",
+          "type": "理财产品",
+          "amount": 50000,
+          "rate": 6.5,
+          "term": "365天",
+          "purchaseDate": "2024-01-01T00:00:00.000Z",
+          "maturityDate": "2025-01-01T00:00:00.000Z",
+          "status": "持有中",
+          "currentValue": 53250
+        },
+        {
+          "id": "inv008",
+          "name": "成长理财E",
+          "type": "理财产品",
+          "amount": 60000,
+          "rate": 8.2,
+          "term": "730天",
+          "purchaseDate": "2023-06-01T00:00:00.000Z",
+          "maturityDate": "2025-06-01T00:00:00.000Z",
+          "status": "持有中",
+          "currentValue": 64920
+        },
+        {
+          "id": "inv009",
+          "name": "灵活理财F",
+          "type": "货币基金",
+          "amount": 50000,
+          "rate": 3.2,
+          "term": "开放式",
+          "purchaseDate": "2023-09-01T00:00:00.000Z",
+          "maturityDate": null,
+          "status": "持有中",
+          "currentValue": 51830
+        }
+      ]
+    },
+    "creditCardTransactions": [
+      {
+        "id": "cct007",
+        "cardNumber": "6222 4444 4444 4444",
+        "type": "消费",
+        "amount": 8500,
+        "merchant": "苹果官方店",
+        "category": "数码",
+        "timestamp": "2024-01-14T15:30:00.000Z",
+        "status": "已入账"
+      },
+      {
+        "id": "cct008",
+        "cardNumber": "6222 4444 4444 4444",
+        "type": "消费",
+        "amount": 1200,
+        "merchant": "希尔顿酒店",
+        "category": "住宿",
+        "timestamp": "2024-01-12T20:45:00.000Z",
+        "status": "已入账"
+      },
+      {
+        "id": "cct009",
+        "cardNumber": "6222 4444 4444 4444",
+        "type": "还款",
+        "amount": 3000,
+        "merchant": "信用卡还款",
+        "category": "还款",
+        "timestamp": "2024-01-12T16:30:00.000Z",
+        "status": "已入账"
+      }
+    ]
+  },
+  {
+    "id": "u004",
+    "username": "陈美丽",
+    "phone": "13555555555",
+    "password": "beautiful123",
+    "transactionPassword": "222222",
+    "balance": 120000.00,
+    "nickname": "美丽",
+    "email": "chenmeili@example.com",
+    "idCard": "110101199512121234",
+    "avatar": "/static/wealth/useravatar.jpg",
+    "status": "active",
+    "createTime": "2024-01-05T14:20:00.000Z",
+    "lastLoginTime": "2024-01-15T12:30:00.000Z",
+    "realName": "陈美丽",
+    "gender": "女",
+    "birthDate": "1995-12-12",
+    "address": "杭州市西湖区文三路259号",
+    "avatarUpdateTime": "2024-01-15T12:30:00.000Z",
+    "lastUpdateTime": "2024-01-15T12:30:00.000Z",
+    "securitySettings": {
+      "biometricEnabled": true,
+      "smsVerificationEnabled": true,
+      "accountLockEnabled": true,
+      "twoFactorEnabled": false,
+      "securityNotificationsEnabled": true,
+      "transactionLimit": 200000,
+      "passwordUpdateTime": "2024-01-08T00:00:00.000Z",
+      "transactionPasswordUpdateTime": "2024-01-08T00:00:00.000Z",
+      "securityQuestionsSet": true,
+      "emergencyContactSet": true,
+      "loginDevices": [
+        {
+          "id": 1,
+          "name": "iPhone 14 Pro",
+          "lastLogin": "2024-01-15T12:30:00.000Z",
+          "location": "杭州市",
+          "status": "active",
+          "ip": "192.168.1.500",
+          "deviceType": "mobile"
+        }
+      ],
+      "securityEvents": [
+        {
+          "id": 1,
+          "type": "login",
+          "description": "账户登录",
+          "timestamp": "2024-01-15T12:30:00.000Z",
+          "location": "杭州市",
+          "ip": "192.168.1.500",
+          "status": "success"
+        }
+      ],
+      "securityQuestions": [
+        {
+          "question": "您最喜欢的电影是什么？",
+          "answer": "泰坦尼克号"
+        }
+      ],
+      "emergencyContact": {
+        "name": "陈美丽妈妈",
+        "phone": "13700137000",
+        "relationship": "母亲"
+      },
+      "twoFactorSecret": null
+    },
+    "creditCards": [
+      {
+        "cardNumber": "6222 2222 2222 2222",
         "cardType": "金卡",
         "cardBrand": "银联",
         "creditLimit": 80000,
-        "availableCredit": 72000,
-        "currentBalance": 8000,
-        "minPayment": 800,
-        "statementDate": "18",
+        "availableCredit": 60000,
+        "currentBalance": 20000,
+        "minPayment": 2000,
+        "statementDate": "8",
         "dueDate": "2024-02-08",
-        "lastStatementDate": "2024-01-18",
+        "lastStatementDate": "2024-01-08",
         "cardStatus": "active",
-        "cardHolder": "李小红",
-        "expiryDate": "2028-11-30",
-        "cvv": "654",
+        "cardHolder": "陈美丽",
+        "expiryDate": "2028-06-30",
+        "cvv": "777",
         "annualFee": 300,
         "interestRate": 0.0005,
         "cashAdvanceLimit": 40000,
-        "rewardsPoints": 2100,
+        "rewardsPoints": 4500,
+        "cardColor": "#FF69B4"
+      }
+    ],
+    "transactionRecords": [
+      {
+        "id": 1,
+        "type": "income",
+        "amount": 12000,
+        "description": "工资收入",
+        "balance": 120000,
+        "timestamp": "2024-01-15T09:00:00.000Z",
+        "icon": "💰",
+        "title": "工资收入",
+        "time": "09:00"
+      },
+      {
+        "id": 2,
+        "type": "expense",
+        "amount": 500,
+        "description": "生活缴费",
+        "balance": 119500,
+        "timestamp": "2024-01-12T10:15:00.000Z",
+        "icon": "🏠",
+        "title": "水费缴费",
+        "time": "10:15"
+      }
+    ],
+    "wealthProducts": {
+      "deposits": {
+        "current": 25000,
+        "fixed": 40000,
+        "smart": 15000
+      },
+      "investments": [
+        {
+          "id": "inv007",
+          "name": "稳健理财E",
+          "type": "理财产品",
+          "amount": 25000,
+          "rate": 4.8,
+          "term": "270天",
+          "purchaseDate": "2024-01-03T00:00:00.000Z",
+          "maturityDate": "2024-10-01T00:00:00.000Z",
+          "status": "持有中"
+        }
+      ]
+    },
+    "lifeServices": {
+      "phoneRecharge": {
+        "phoneNumber": "13555555555",
+        "lastRecharge": 50,
+        "lastRechargeDate": "2024-01-12T00:00:00.000Z"
+      },
+      "utilities": [
+        {
+          "type": "电费",
+          "account": "3333444455",
+          "lastPayment": 180,
+          "lastPaymentDate": "2024-01-12T00:00:00.000Z"
+        },
+        {
+          "type": "水费",
+          "account": "6666777788",
+          "lastPayment": 100,
+          "lastPaymentDate": "2024-01-10T00:00:00.000Z"
+        },
+        {
+          "type": "燃气费",
+          "account": "9999000011",
+          "lastPayment": 150,
+          "lastPaymentDate": "2024-01-08T00:00:00.000Z"
+        }
+      ]
+    },
+    "bankAccounts": [
+      {
+        "accountNumber": "6228480012345678908",
+        "accountName": "陈美丽",
+        "bankName": "中国农业银行",
+        "accountType": "储蓄卡",
+        "balance": 120000.00,
+        "currency": "CNY",
+        "status": "active",
+        "openDate": "2020-12-01T00:00:00.000Z",
+        "branchName": "杭州西湖支行"
+      },
+      {
+        "accountNumber": "6228480012345678909",
+        "accountName": "陈美丽",
+        "bankName": "中国农业银行",
+        "accountType": "定期存款",
+        "balance": 80000.00,
+        "currency": "CNY",
+        "status": "active",
+        "openDate": "2023-09-01T00:00:00.000Z",
+        "branchName": "杭州西湖支行",
+        "maturityDate": "2024-09-01T00:00:00.000Z",
+        "interestRate": 3.0
+      }
+    ],
+    "transferRecords": [
+      {
+        "id": "t007",
+        "type": "incoming",
+        "amount": 3000,
+        "sender": "李小红",
+        "senderAccount": "6228480012345678903",
+        "description": "朋友借款",
+        "status": "completed",
+        "timestamp": "2024-01-13T15:20:00.000Z",
+        "fee": 0
+      },
+      {
+        "id": "t008",
+        "type": "outgoing",
+        "amount": 2000,
+        "recipient": "陈美丽妈妈",
+        "recipientAccount": "6228480012345678911",
+        "description": "生活费转账",
+        "status": "completed",
+        "timestamp": "2024-01-11T10:30:00.000Z",
+        "fee": 1.0
+      }
+    ],
+    "frequentContacts": [
+      {
+        "id": "fc007",
+        "name": "李小红",
+        "account": "6228480012345678903",
+        "bank": "中国农业银行",
+        "phone": "13777777777",
+        "lastTransfer": "2024-01-13T15:20:00.000Z",
+        "transferCount": 6
+      },
+      {
+        "id": "fc008",
+        "name": "陈美丽妈妈",
+        "account": "6228480012345678911",
+        "bank": "中国建设银行",
+        "phone": "13700137000",
+        "lastTransfer": "2024-01-11T10:30:00.000Z",
+        "transferCount": 18
+      }
+    ],
+    "paymentRecords": [
+      {
+        "id": "p010",
+        "type": "手机充值",
+        "amount": 50,
+        "phoneNumber": "13555555555",
+        "status": "completed",
+        "timestamp": "2024-01-12T11:20:00.000Z",
+        "operator": "中国移动"
+      },
+      {
+        "id": "p011",
+        "type": "电费",
+        "amount": 180,
+        "account": "3333444455",
+        "status": "completed",
+        "timestamp": "2024-01-12T14:30:00.000Z",
+        "provider": "国家电网"
+      },
+      {
+        "id": "p012",
+        "type": "水费",
+        "amount": 100,
+        "account": "6666777788",
+        "status": "completed",
+        "timestamp": "2024-01-10T09:15:00.000Z",
+        "provider": "杭州水务"
+      }
+    ],
+    "investmentPortfolio": {
+      "totalValue": 80000,
+      "totalReturn": 3200,
+      "returnRate": 4.0,
+      "holdings": [
+        {
+          "id": "inv010",
+          "name": "稳健理财E",
+          "type": "理财产品",
+          "amount": 25000,
+          "rate": 4.8,
+          "term": "270天",
+          "purchaseDate": "2024-01-03T00:00:00.000Z",
+          "maturityDate": "2024-10-01T00:00:00.000Z",
+          "status": "持有中",
+          "currentValue": 25320
+        },
+        {
+          "id": "inv011",
+          "name": "灵活理财F",
+          "type": "货币基金",
+          "amount": 30000,
+          "rate": 2.8,
+          "term": "开放式",
+          "purchaseDate": "2023-10-01T00:00:00.000Z",
+          "maturityDate": null,
+          "status": "持有中",
+          "currentValue": 30840
+        },
+        {
+          "id": "inv012",
+          "name": "稳健理财G",
+          "type": "理财产品",
+          "amount": 25000,
+          "rate": 3.5,
+          "term": "180天",
+          "purchaseDate": "2023-12-01T00:00:00.000Z",
+          "maturityDate": "2024-06-01T00:00:00.000Z",
+          "status": "持有中",
+          "currentValue": 25440
+        }
+      ]
+    },
+    "creditCardTransactions": [
+      {
+        "id": "cct010",
+        "cardNumber": "6222 2222 2222 2222",
+        "type": "消费",
+        "amount": 1200,
+        "merchant": "优衣库",
+        "category": "服装",
+        "timestamp": "2024-01-14T16:20:00.000Z",
+        "status": "已入账"
+      },
+      {
+        "id": "cct011",
+        "cardNumber": "6222 2222 2222 2222",
+        "type": "消费",
+        "amount": 680,
+        "merchant": "星巴克",
+        "category": "餐饮",
+        "timestamp": "2024-01-13T14:45:00.000Z",
+        "status": "已入账"
+      },
+      {
+        "id": "cct012",
+        "cardNumber": "6222 2222 2222 2222",
+        "type": "还款",
+        "amount": 500,
+        "merchant": "信用卡还款",
+        "category": "还款",
+        "timestamp": "2024-01-12T10:15:00.000Z",
+        "status": "已入账"
+      }
+    ]
+  },
+  {
+    "id": "u005",
+    "username": "刘强",
+    "phone": "13444444444",
+    "password": "strong888",
+    "transactionPassword": "333333",
+    "balance": 180000.00,
+    "nickname": "强哥",
+    "email": "liuqiang@example.com",
+    "idCard": "110101198012121234",
+    "avatar": "/static/wealth/useravatar.jpg",
+    "status": "active",
+    "createTime": "2024-01-06T08:45:00.000Z",
+    "lastLoginTime": "2024-01-15T20:15:00.000Z",
+    "realName": "刘强",
+    "gender": "男",
+    "birthDate": "1980-12-12",
+    "address": "成都市锦江区春熙路123号",
+    "avatarUpdateTime": "2024-01-15T20:15:00.000Z",
+    "lastUpdateTime": "2024-01-15T20:15:00.000Z",
+    "securitySettings": {
+      "biometricEnabled": true,
+      "smsVerificationEnabled": true,
+      "accountLockEnabled": true,
+      "twoFactorEnabled": true,
+      "securityNotificationsEnabled": true,
+      "transactionLimit": 300000,
+      "passwordUpdateTime": "2024-01-09T00:00:00.000Z",
+      "transactionPasswordUpdateTime": "2024-01-09T00:00:00.000Z",
+      "securityQuestionsSet": true,
+      "emergencyContactSet": true,
+      "loginDevices": [
+        {
+          "id": 1,
+          "name": "Xiaomi 14 Pro",
+          "lastLogin": "2024-01-15T20:15:00.000Z",
+          "location": "成都市",
+          "status": "active",
+          "ip": "192.168.1.600",
+          "deviceType": "mobile"
+        }
+      ],
+      "securityEvents": [
+        {
+          "id": 1,
+          "type": "login",
+          "description": "账户登录",
+          "timestamp": "2024-01-15T20:15:00.000Z",
+          "location": "成都市",
+          "ip": "192.168.1.600",
+          "status": "success"
+        }
+      ],
+      "securityQuestions": [
+        {
+          "question": "您的职业是什么？",
+          "answer": "软件工程师"
+        }
+      ],
+      "emergencyContact": {
+        "name": "刘强妻子",
+        "phone": "13600136000",
+        "relationship": "配偶"
+      },
+      "twoFactorSecret": "LBSWY3DPEHPK3PXP"
+    },
+    "creditCards": [
+      {
+        "cardNumber": "6222 1111 1111 1111",
+        "cardType": "白金卡",
+        "cardBrand": "银联",
+        "creditLimit": 120000,
+        "availableCredit": 90000,
+        "currentBalance": 30000,
+        "minPayment": 3000,
+        "statementDate": "15",
+        "dueDate": "2024-02-15",
+        "lastStatementDate": "2024-01-15",
+        "cardStatus": "active",
+        "cardHolder": "刘强",
+        "expiryDate": "2029-03-31",
+        "cvv": "555",
+        "annualFee": 600,
+        "interestRate": 0.0004,
+        "cashAdvanceLimit": 60000,
+        "rewardsPoints": 7200,
         "cardColor": "#32CD32"
+      }
+    ],
+    "transactionRecords": [
+      {
+        "id": 1,
+        "type": "income",
+        "amount": 20000,
+        "description": "工资收入",
+        "balance": 180000,
+        "timestamp": "2024-01-15T09:00:00.000Z",
+        "icon": "💰",
+        "title": "工资收入",
+        "time": "09:00"
+      },
+      {
+        "id": 2,
+        "type": "expense",
+        "amount": 2000,
+        "description": "信用卡还款",
+        "balance": 178000,
+        "timestamp": "2024-01-12T09:30:00.000Z",
+        "icon": "💳",
+        "title": "信用卡还款",
+        "time": "09:30"
+      }
+    ],
+    "wealthProducts": {
+      "deposits": {
+        "current": 40000,
+        "fixed": 60000,
+        "smart": 25000
+      },
+      "investments": [
+        {
+          "id": "inv008",
+          "name": "成长理财F",
+          "type": "理财产品",
+          "amount": 30000,
+          "rate": 5.5,
+          "term": "365天",
+          "purchaseDate": "2024-01-02T00:00:00.000Z",
+          "maturityDate": "2025-01-02T00:00:00.000Z",
+          "status": "持有中"
+        }
+      ]
+    },
+    "lifeServices": {
+      "phoneRecharge": {
+        "phoneNumber": "13444444444",
+        "lastRecharge": 100,
+        "lastRechargeDate": "2024-01-09T00:00:00.000Z"
+      },
+      "utilities": [
+        {
+          "type": "电费",
+          "account": "9999000011",
+          "lastPayment": 400,
+          "lastPaymentDate": "2024-01-11T00:00:00.000Z"
+        },
+        {
+          "type": "水费",
+          "account": "2222333344",
+          "lastPayment": 200,
+          "lastPaymentDate": "2024-01-09T00:00:00.000Z"
+        },
+        {
+          "type": "燃气费",
+          "account": "5555666677",
+          "lastPayment": 300,
+          "lastPaymentDate": "2024-01-07T00:00:00.000Z"
+        }
+      ]
+    },
+    "bankAccounts": [
+      {
+        "accountNumber": "6228480012345678910",
+        "accountName": "刘强",
+        "bankName": "中国农业银行",
+        "accountType": "储蓄卡",
+        "balance": 180000.00,
+        "currency": "CNY",
+        "status": "active",
+        "openDate": "2018-11-15T00:00:00.000Z",
+        "branchName": "成都春熙路支行"
+      },
+      {
+        "accountNumber": "6228480012345678911",
+        "accountName": "刘强",
+        "bankName": "中国农业银行",
+        "accountType": "定期存款",
+        "balance": 150000.00,
+        "currency": "CNY",
+        "status": "active",
+        "openDate": "2023-05-01T00:00:00.000Z",
+        "branchName": "成都春熙路支行",
+        "maturityDate": "2024-05-01T00:00:00.000Z",
+        "interestRate": 3.8
+      }
+    ],
+    "transferRecords": [
+      {
+        "id": "t009",
+        "type": "incoming",
+        "amount": 15000,
+        "sender": "王大伟",
+        "senderAccount": "6228480012345678906",
+        "description": "投资款转账",
+        "status": "completed",
+        "timestamp": "2024-01-13T11:20:00.000Z",
+        "fee": 0
+      },
+      {
+        "id": "t010",
+        "type": "outgoing",
+        "amount": 5000,
+        "recipient": "刘强妻子",
+        "recipientAccount": "6228480012345678912",
+        "description": "家庭开支",
+        "status": "completed",
+        "timestamp": "2024-01-10T14:30:00.000Z",
+        "fee": 2.5
+      }
+    ],
+    "frequentContacts": [
+      {
+        "id": "fc009",
+        "name": "王大伟",
+        "account": "6228480012345678906",
+        "bank": "中国农业银行",
+        "phone": "13666666666",
+        "lastTransfer": "2024-01-13T11:20:00.000Z",
+        "transferCount": 10
+      },
+      {
+        "id": "fc010",
+        "name": "刘强妻子",
+        "account": "6228480012345678912",
+        "bank": "中国建设银行",
+        "phone": "13600136000",
+        "lastTransfer": "2024-01-10T14:30:00.000Z",
+        "transferCount": 25
+      }
+    ],
+    "paymentRecords": [
+      {
+        "id": "p013",
+        "type": "手机充值",
+        "amount": 100,
+        "phoneNumber": "13444444444",
+        "status": "completed",
+        "timestamp": "2024-01-09T13:20:00.000Z",
+        "operator": "中国移动"
+      },
+      {
+        "id": "p014",
+        "type": "电费",
+        "amount": 400,
+        "account": "9999000011",
+        "status": "completed",
+        "timestamp": "2024-01-11T16:45:00.000Z",
+        "provider": "国家电网"
+      },
+      {
+        "id": "p015",
+        "type": "水费",
+        "amount": 200,
+        "account": "2222333344",
+        "status": "completed",
+        "timestamp": "2024-01-09T11:30:00.000Z",
+        "provider": "成都水务"
+      }
+    ],
+    "investmentPortfolio": {
+      "totalValue": 125000,
+      "totalReturn": 7500,
+      "returnRate": 6.0,
+      "holdings": [
+        {
+          "id": "inv013",
+          "name": "成长理财F",
+          "type": "理财产品",
+          "amount": 30000,
+          "rate": 5.5,
+          "term": "365天",
+          "purchaseDate": "2024-01-02T00:00:00.000Z",
+          "maturityDate": "2025-01-02T00:00:00.000Z",
+          "status": "持有中",
+          "currentValue": 31650
+        },
+        {
+          "id": "inv014",
+          "name": "稳健理财H",
+          "type": "理财产品",
+          "amount": 45000,
+          "rate": 4.2,
+          "term": "180天",
+          "purchaseDate": "2023-11-01T00:00:00.000Z",
+          "maturityDate": "2024-05-01T00:00:00.000Z",
+          "status": "持有中",
+          "currentValue": 46950
+        },
+        {
+          "id": "inv015",
+          "name": "灵活理财I",
+          "type": "货币基金",
+          "amount": 50000,
+          "rate": 3.0,
+          "term": "开放式",
+          "purchaseDate": "2023-08-01T00:00:00.000Z",
+          "maturityDate": null,
+          "status": "持有中",
+          "currentValue": 51900
+        }
+      ]
+    },
+    "creditCardTransactions": [
+      {
+        "id": "cct013",
+        "cardNumber": "6222 1111 1111 1111",
+        "type": "消费",
+        "amount": 3200,
+        "merchant": "小米商城",
+        "category": "数码",
+        "timestamp": "2024-01-14T20:15:00.000Z",
+        "status": "已入账"
+      },
+      {
+        "id": "cct014",
+        "cardNumber": "6222 1111 1111 1111",
+        "type": "消费",
+        "amount": 890,
+        "merchant": "肯德基",
+        "category": "餐饮",
+        "timestamp": "2024-01-13T12:30:00.000Z",
+        "status": "已入账"
+      },
+      {
+        "id": "cct015",
+        "cardNumber": "6222 1111 1111 1111",
+        "type": "还款",
+        "amount": 2000,
+        "merchant": "信用卡还款",
+        "category": "还款",
+        "timestamp": "2024-01-12T09:30:00.000Z",
+        "status": "已入账"
       }
     ]
   }

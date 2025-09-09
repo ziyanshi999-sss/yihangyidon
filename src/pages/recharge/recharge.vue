@@ -130,7 +130,7 @@ export default {
     return {
       activeTab: 0,
       selectedAmount: 50,
-      phoneNumber: "15903724152",
+      phoneNumber: "",
       inputPhoneNumber: "",
       showPhoneModal: false,
       carrierInfo: {
@@ -176,6 +176,7 @@ export default {
 
   onLoad(options) {
     this.initPage();
+    this.loadUserPhoneNumber();
     // 如果从其他页面传递了手机号码
     if (options.phone) {
       this.phoneNumber = options.phone;
@@ -202,6 +203,24 @@ export default {
   },
 
   methods: {
+    // 加载用户手机号
+    loadUserPhoneNumber() {
+      try {
+        const users = uni.getStorageSync('users') || []
+        const currentUser = users.find(user => user.isLoggedIn)
+        
+        if (currentUser && currentUser.phone) {
+          this.phoneNumber = currentUser.phone
+          this.getCarrierInfo()
+        } else {
+          this.showPhoneModal = true
+        }
+      } catch (error) {
+        console.error('加载用户手机号失败:', error)
+        this.showPhoneModal = true
+      }
+    },
+
     initPage() {
       console.log("手机充值页面初始化");
       // 设置默认选中第一个金额
@@ -322,10 +341,30 @@ export default {
         return;
       }
 
-      // 跳转到充值支付页面
-      uni.navigateTo({
-        url: `/pages/recharge-payment/recharge-payment?amount=${this.selectedPrice}&phone=${this.phoneNumber}&rechargeAmount=${this.selectedAmount}&type=recharge`,
-      });
+      try {
+        uni.showLoading({ title: "充值中..." });
+
+        // 模拟充值API调用
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+
+        uni.hideLoading();
+        uni.showToast({
+          title: "充值成功",
+          icon: "success",
+        });
+
+        // 跳转到充值成功页面或返回
+        setTimeout(() => {
+          uni.navigateBack();
+        }, 1500);
+      } catch (error) {
+        uni.hideLoading();
+        uni.showToast({
+          title: "充值失败，请稍后重试",
+          icon: "none",
+        });
+        console.error("充值失败:", error);
+      }
     },
 
     goToStream() {

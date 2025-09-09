@@ -1,203 +1,506 @@
 <template>
   <view class="payment-page">
-    <!-- 头部区域 -->
-    <view class="header">
-      <text class="page-title">生活缴费</text>
-      <text class="page-subtitle">便民服务，一键支付</text>
-    </view>
-
-    <!-- 缴费类型网格 -->
-    <view class="payment-grid">
-      <!-- 水费 -->
-      <view class="payment-item" @tap="goToWater">
-        <view class="item-icon water-icon">💧</view>
-        <text class="item-title">水费</text>
-        <text class="item-desc">自来水缴费</text>
-      </view>
-
-      <!-- 电费 -->
-      <view class="payment-item" @tap="goToElectric">
-        <view class="item-icon electric-icon">⚡</view>
-        <text class="item-title">电费</text>
-        <text class="item-desc">电力缴费</text>
-      </view>
-
-      <!-- 燃气费 -->
-      <view class="payment-item" @tap="goToGas">
-        <view class="item-icon gas-icon">🔥</view>
-        <text class="item-title">燃气费</text>
-        <text class="item-desc">天然气缴费</text>
-      </view>
-
-      <!-- 话费 -->
-      <view class="payment-item" @tap="goToPhone">
-        <view class="item-icon phone-icon">📱</view>
-        <text class="item-title">话费</text>
-        <text class="item-desc">手机充值</text>
-      </view>
-
-      <!-- 宽带费 -->
-      <view class="payment-item" @tap="goToBroadband">
-        <view class="item-icon broadband-icon">🌐</view>
-        <text class="item-title">宽带费</text>
-        <text class="item-desc">网络缴费</text>
-      </view>
-
-      <!-- 有线电视 -->
-      <view class="payment-item" @tap="goToTV">
-        <view class="item-icon tv-icon">📺</view>
-        <text class="item-title">有线电视</text>
-        <text class="item-desc">数字电视</text>
+    <!-- 位置选择 -->
+    <view class="location-section">
+      <view class="location-bar">
+        <view class="location-info">
+          <text class="location-icon">📍</text>
+          <text class="location-text">保定市</text>
+        </view>
+        <view class="search-bar">
+          <text class="search-icon">🔍</text>
+          <input class="search-input" placeholder="请输入关键字搜索" />
+        </view>
       </view>
     </view>
 
-    <!-- 最近缴费记录 -->
-    <view class="recent-section">
+    <!-- 我的缴费 -->
+    <view class="my-payment-section">
       <view class="section-header">
-        <text class="section-title">最近缴费</text>
-        <text class="more-link" @tap="goToPaymentManagement">查看全部</text>
+        <text class="section-title">我的缴费</text>
+        <view class="section-right" @tap="goToPaymentManagement">
+          <text class="manage-text">缴费管理</text>
+          <text class="arrow">→</text>
+        </view>
       </view>
 
-      <view class="recent-list" v-if="recentPayments.length > 0">
-        <view
-          class="recent-item"
-          v-for="payment in recentPayments"
-          :key="payment.id"
-          @tap="goToPaymentDetail(payment)"
-        >
-          <view class="recent-left">
-            <view class="recent-icon" :class="payment.type + '-icon'">
-              {{ payment.icon }}
+      <!-- 缴费记录 -->
+      <view class="payment-records" v-if="paymentRecords.length > 0">
+        <view class="records-header">
+          <text class="records-title">最近缴费</text>
+          <text class="records-more" @click="showAllPaymentRecords">查看全部</text>
+        </view>
+        <view class="records-list">
+          <view 
+            class="record-item" 
+            v-for="record in paymentRecords.slice(0, 3)" 
+            :key="record.id"
+          >
+            <view class="record-left">
+              <view class="record-icon">{{ getPaymentIcon(record.type) }}</view>
+              <view class="record-info">
+                <text class="record-type">{{ record.type }}</text>
+                <text class="record-desc">{{ record.phoneNumber || record.account }}</text>
+              </view>
             </view>
-            <view class="recent-info">
-              <text class="recent-title">{{ payment.title }}</text>
-              <text class="recent-desc">{{ payment.desc }}</text>
+            <view class="record-right">
+              <text class="record-amount">¥{{ record.amount }}</text>
+              <text class="record-time">{{ formatTime(record.timestamp) }}</text>
             </view>
-          </view>
-          <view class="recent-right">
-            <text class="recent-amount">¥{{ payment.amount }}</text>
-            <text class="recent-status" :class="payment.status">
-              {{ payment.statusText }}
-            </text>
           </view>
         </view>
       </view>
 
-      <view class="empty-state" v-else>
-        <text class="empty-text">暂无缴费记录</text>
-        <text class="empty-desc">快去缴费吧~</text>
+      <view class="payment-cards">
+        <!-- 党费卡片 -->
+        <view class="payment-card party-card" @tap="handleCardTap('party')">
+          <view class="card-left">
+            <view class="card-icon party-icon">
+              <text class="party-symbol">☭</text>
+            </view>
+            <view class="card-info">
+              <text class="card-title">党费</text>
+              <text class="card-subtitle">自己 | ★手机 | 410******</text>
+              <text class="card-number">*****5030</text>
+            </view>
+          </view>
+        </view>
+
+        <!-- 手机充值卡片 -->
+        <view class="payment-card phone-card" @tap="handleCardTap('phone')">
+          <view class="card-left">
+            <view class="card-icon phone-icon">
+              <text class="phone-symbol">📱</text>
+            </view>
+            <view class="card-info">
+              <text class="card-title">手机充值</text>
+              <text class="card-subtitle">常用缴费 | 15703724132 |</text>
+              <text class="card-number">50元</text>
+            </view>
+          </view>
+          <view class="card-right">
+            <view class="recharge-icon">💳</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 优惠活动横幅 -->
+    <view class="promotion-banner" @tap="handlePromotionTap">
+      <view class="banner-content">
+        <text class="banner-title">生活缴费先领券</text>
+        <text class="banner-subtitle">信用卡支付享返现优惠</text>
+        <text class="banner-tag">广告</text>
+      </view>
+      <view class="banner-decoration">
+        <view class="frog-icon">🐸</view>
+        <view class="cards-icon">💳</view>
+      </view>
+    </view>
+
+    <!-- 新增缴费 -->
+    <view class="new-payment-section">
+      <text class="section-title">新增缴费</text>
+
+      <view class="payment-grid">
+        <!-- 第一行 -->
+        <view class="grid-row">
+          <view
+            class="grid-item"
+            v-for="(item, index) in firstRowItems"
+            :key="index"
+            @tap="handleServiceTap(item)"
+          >
+            <view class="item-icon" :style="{ background: item.bgColor }">
+              <text class="icon-text">{{ item.icon }}</text>
+            </view>
+            <text class="item-label">{{ item.label }}</text>
+          </view>
+        </view>
+
+        <!-- 第二行 -->
+        <view class="grid-row">
+          <view
+            class="grid-item"
+            v-for="(item, index) in secondRowItems"
+            :key="index"
+            @tap="handleServiceTap(item)"
+          >
+            <view class="item-icon" :style="{ background: item.bgColor }">
+              <text class="icon-text">{{ item.icon }}</text>
+            </view>
+            <text class="item-label">{{ item.label }}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 底部导航占位 -->
+    <view class="bottom-nav-placeholder">
+      <view class="nav-item" v-for="(nav, index) in bottomNavs" :key="index">
+        <view class="nav-item-icon" :class="nav.class">{{ nav.icon }}</view>
+        <text class="nav-item-text">{{ nav.text }}</text>
       </view>
     </view>
   </view>
 </template>
 
 <script>
-import { forceCheckLogin } from "@/utils/auth.js";
+import { payLifeBill, queryUtilityBill, getPaymentHistory } from "@/api/life";
 
 export default {
   name: "PaymentPage",
   data() {
     return {
-      recentPayments: [
-        {
-          id: 1,
-          type: "water",
-          icon: "💧",
-          title: "水费缴费",
-          desc: "户号：12345678",
-          amount: "45.60",
-          status: "success",
-          statusText: "缴费成功",
-        },
-        {
-          id: 2,
-          type: "electric",
-          icon: "⚡",
-          title: "电费缴费",
-          desc: "户号：87654321",
-          amount: "128.90",
-          status: "success",
-          statusText: "缴费成功",
-        },
-      ],
+      // 第一行服务项目
+      firstRowItems: [],
+      secondRowItems: [],
+      bottomNavs: [],
+      myPayments: [],
+      paymentRecords: [], // 缴费记录
+      showPaymentHistory: false // 显示缴费历史
     };
   },
 
   onLoad() {
+    this.loadPaymentServicesData()
     console.log("生活缴费页面加载");
   },
 
   onShow() {
-    try {
-      if (!forceCheckLogin()) {
-        console.log("生活缴费页面：用户未登录，跳转到登录页面");
-        uni.reLaunch({
-          url: "/pages/denglu/login",
-        });
-        return;
-      }
-      console.log("生活缴费页面显示");
-    } catch (error) {
-      console.error("生活缴费页面onShow检查失败:", error);
-      uni.reLaunch({
-        url: "/pages/denglu/login",
-      });
-    }
+    // 页面显示时重新加载数据
+    this.loadPaymentServicesData()
   },
 
   methods: {
-    goToWater() {
+    // 加载支付服务数据
+    loadPaymentServicesData() {
+      try {
+        const users = uni.getStorageSync('users') || []
+        const currentUser = users.find(user => user.isLoggedIn)
+        
+        if (currentUser && currentUser.paymentServices) {
+          this.firstRowItems = currentUser.paymentServices.firstRowItems || []
+          this.secondRowItems = currentUser.paymentServices.secondRowItems || []
+          this.bottomNavs = currentUser.paymentServices.bottomNavs || []
+          this.myPayments = currentUser.paymentServices.myPayments || []
+          this.paymentRecords = currentUser.paymentRecords || []
+        } else {
+          // 如果没有支付服务数据，使用默认数据
+          this.firstRowItems = [
+            {
+              icon: "💧",
+              label: "水费",
+              bgColor: "linear-gradient(135deg, #64B5F6 0%, #42A5F5 100%)",
+              type: "water",
+            },
+            {
+              icon: "💡",
+              label: "电费",
+              bgColor: "linear-gradient(135deg, #FFB74D 0%, #FFA726 100%)",
+              type: "electric",
+            },
+            {
+              icon: "🔥",
+              label: "燃气费",
+              bgColor: "linear-gradient(135deg, #FF8A65 0%, #FF7043 100%)",
+              type: "gas",
+            },
+          ]
+          
+          this.secondRowItems = [
+            {
+              icon: "🏠",
+              label: "供暖费",
+              bgColor: "linear-gradient(135deg, #A1887F 0%, #8D6E63 100%)",
+              type: "heating",
+            },
+            {
+              icon: "📺",
+              label: "有线电视费",
+              bgColor: "linear-gradient(135deg, #9575CD 0%, #7E57C2 100%)",
+              type: "tv",
+            },
+            {
+              icon: "📦",
+              label: "物业费",
+              bgColor: "linear-gradient(135deg, #4DB6AC 0%, #26A69A 100%)",
+              type: "property",
+            },
+          ]
+          
+          this.bottomNavs = [
+            { icon: "☭", text: "党费", class: "party-nav" },
+            { icon: "💰", text: "工会费", class: "union-nav" },
+            { icon: "💬", text: "更多", class: "more-nav" },
+          ]
+          
+          this.myPayments = [
+            {
+              type: "party",
+              title: "党费",
+              number: "410******",
+              lastDigits: "5030",
+            },
+            {
+              type: "phone",
+              title: "手机充值",
+              number: "15703724132",
+              amount: "50元",
+            },
+          ]
+          
+          // 保存到用户数据中
+          if (currentUser) {
+            currentUser.paymentServices = {
+              firstRowItems: this.firstRowItems,
+              secondRowItems: this.secondRowItems,
+              bottomNavs: this.bottomNavs,
+              myPayments: this.myPayments
+            }
+            uni.setStorageSync('users', users)
+          }
+        }
+      } catch (error) {
+        console.error('加载支付服务数据失败:', error)
+      }
+    },
+    
+    // 处理卡片点击
+    handleCardTap(type) {
+      console.log("点击卡片:", type);
+
+      switch (type) {
+        case "party":
+          uni.showToast({
+            title: "跳转到党费缴费",
+            icon: "none",
+          });
+          break;
+        case "phone":
+          uni.showToast({
+            title: "跳转到手机充值",
+            icon: "none",
+          });
+          // 可以跳转到手机充值页面
+          // uni.navigateTo({
+          //   url: "/pages/recharge/recharge"
+          // });
+          break;
+      }
+    },
+
+    // 处理优惠横幅点击
+    handlePromotionTap() {
+      console.log("点击优惠横幅");
+      uni.showToast({
+        title: "查看优惠详情",
+        icon: "none",
+      });
+    },
+
+    // 处理服务项目点击
+    handleServiceTap(item) {
+      console.log("点击服务:", item);
+
+      switch (item.type) {
+        case "water":
+          this.goToWaterPage();
+          break;
+        case "electric":
+          this.showPaymentForm("电费", item);
+          break;
+        case "gas":
+          this.showPaymentForm("燃气费", item);
+          break;
+        case "heating":
+          this.showPaymentForm("供暖费", item);
+          break;
+        case "tv":
+          this.showPaymentForm("有线电视费", item);
+          break;
+        case "property":
+          this.showPaymentForm("物业费", item);
+          break;
+        default:
+          uni.showToast({
+            title: `${item.label}功能开发中`,
+            icon: "none",
+          });
+      }
+    },
+
+    // 显示缴费表单
+    showPaymentForm(title, item) {
+      uni.showModal({
+        title: `${title}缴费`,
+        content: `即将打开${title}缴费页面，请输入相关信息进行缴费。`,
+        confirmText: "确定",
+        cancelText: "取消",
+        success: (res) => {
+          if (res.confirm) {
+            // 这里可以跳转到具体的缴费表单页面
+            this.openPaymentForm(item);
+          }
+        },
+      });
+    },
+
+    // 打开缴费表单页面
+    openPaymentForm(item) {
+      // 创建一个简单的缴费表单弹窗
+      this.showPaymentDialog(item);
+    },
+
+    // 显示缴费对话框
+    showPaymentDialog(item) {
+      // 使用uni.showModal创建简单的缴费界面
+      uni.showModal({
+        title: `${item.label}缴费`,
+        editable: true,
+        placeholderText: "请输入户号或账号",
+        success: (res) => {
+          if (res.confirm && res.content) {
+            this.processPayment(item, res.content);
+          }
+        },
+      });
+    },
+
+    // 处理缴费
+    processPayment(item, accountNumber) {
+      uni.showLoading({
+        title: "查询中...",
+      });
+
+      // 模拟查询和缴费过程
+      setTimeout(() => {
+        uni.hideLoading();
+
+        // 显示缴费结果
+        uni.showModal({
+          title: "缴费查询",
+          content: `${
+            item.label
+          }\n账号: ${accountNumber}\n待缴费用: ¥${this.getRandomAmount(
+            item
+          )}元\n\n是否立即缴费？`,
+          confirmText: "立即缴费",
+          cancelText: "取消",
+          success: (res) => {
+            if (res.confirm) {
+              this.completePay(item, accountNumber);
+            }
+          },
+        });
+      }, 1500);
+    },
+
+    // 完成缴费
+    completePay(item, accountNumber) {
+      uni.showLoading({
+        title: "缴费中...",
+      });
+
+      setTimeout(() => {
+        uni.hideLoading();
+        uni.showToast({
+          title: "缴费成功",
+          icon: "success",
+          duration: 2000,
+        });
+
+        // 可以在这里更新缴费记录
+        console.log(`${item.label}缴费成功，账号: ${accountNumber}`);
+      }, 2000);
+    },
+
+    // 跳转到水费页面
+    goToWaterPage() {
+      console.log("跳转到水费页面");
       uni.navigateTo({
         url: "/pages/water/water",
+        success: () => {
+          console.log("成功跳转到水费页面");
+        },
+        fail: (err) => {
+          console.error("跳转失败:", err);
+          uni.showToast({
+            title: "页面跳转失败",
+            icon: "none",
+          });
+        },
       });
     },
 
-    goToElectric() {
-      uni.showToast({
-        title: "电费缴费功能开发中",
-        icon: "none",
-      });
+    // 获取缴费类型图标
+    getPaymentIcon(type) {
+      const icons = {
+        '手机充值': '📱',
+        '电费': '💡',
+        '水费': '💧',
+        '燃气费': '🔥',
+        '党费': '☭'
+      }
+      return icons[type] || '💰'
     },
 
-    goToGas() {
-      uni.showToast({
-        title: "燃气费缴费功能开发中",
-        icon: "none",
-      });
+    // 格式化时间
+    formatTime(timestamp) {
+      const date = new Date(timestamp)
+      const now = new Date()
+      const diff = now - date
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+      
+      if (days === 0) {
+        return '今天'
+      } else if (days === 1) {
+        return '昨天'
+      } else if (days < 7) {
+        return `${days}天前`
+      } else {
+        return date.toLocaleDateString('zh-CN')
+      }
     },
 
-    goToPhone() {
+    // 显示所有缴费记录
+    showAllPaymentRecords() {
       uni.navigateTo({
-        url: "/pages/recharge/recharge",
-      });
+        url: '/pages/payment/records'
+      })
     },
 
-    goToBroadband() {
-      uni.showToast({
-        title: "宽带费缴费功能开发中",
-        icon: "none",
-      });
-    },
-
-    goToTV() {
-      uni.showToast({
-        title: "有线电视缴费功能开发中",
-        icon: "none",
-      });
-    },
-
+    // 跳转到缴费管理页面
     goToPaymentManagement() {
+      console.log("跳转到缴费管理页面");
       uni.navigateTo({
         url: "/pages/payment-management/payment-management",
+        success: () => {
+          console.log("成功跳转到缴费管理页面");
+        },
+        fail: (err) => {
+          console.error("跳转失败:", err);
+          uni.showToast({
+            title: "页面跳转失败",
+            icon: "none",
+          });
+        },
       });
     },
 
-    goToPaymentDetail(payment) {
-      console.log("查看缴费详情:", payment);
-      uni.showToast({
-        title: "缴费详情功能开发中",
-        icon: "none",
-      });
+    // 生成随机金额（模拟数据）
+    getRandomAmount(item) {
+      const amounts = {
+        water: [45, 67, 89, 123, 156],
+        electric: [89, 134, 178, 234, 289],
+        gas: [67, 89, 112, 145, 178],
+        heating: [234, 456, 678, 890, 1200],
+        tv: [25, 30, 35, 40, 50],
+        property: [180, 220, 280, 350, 420],
+      };
+
+      const typeAmounts = amounts[item.type] || [50, 100, 150, 200, 250];
+      return typeAmounts[Math.floor(Math.random() * typeAmounts.length)];
     },
   },
 };
@@ -206,114 +509,163 @@ export default {
 <style scoped>
 .payment-page {
   min-height: 100vh;
-  background: #f5f5f5;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #f5f7fa;
 }
 
-/* 头部区域 */
-.header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 60rpx 30rpx 40rpx;
-  color: #fff;
+/* 位置选择 */
+.location-section {
+  background: #fff;
+  padding: 60rpx 30rpx 20rpx;
+  border-bottom: 1rpx solid #eee;
 }
 
-.page-title {
-  display: block;
-  font-size: 48rpx;
-  font-weight: 600;
-  margin-bottom: 12rpx;
-}
-
-.page-subtitle {
-  display: block;
-  font-size: 28rpx;
-  opacity: 0.9;
-}
-
-/* 缴费类型网格 */
-.payment-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+.location-bar {
+  display: flex;
+  align-items: center;
   gap: 20rpx;
-  padding: 30rpx;
-  background: #fff;
-  margin-bottom: 20rpx;
 }
 
-.payment-item {
+.location-info {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  padding: 40rpx 20rpx;
+  gap: 8rpx;
+}
+
+.location-icon {
+  font-size: 24rpx;
+}
+
+.location-text {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.search-bar {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: #f5f5f5;
+  border-radius: 24rpx;
+  padding: 12rpx 20rpx;
+  gap: 10rpx;
+}
+
+.search-icon {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.search-input {
+  flex: 1;
+  font-size: 26rpx;
+  color: #333;
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: #999;
+}
+
+/* 我的缴费 */
+.my-payment-section {
+  background: #fff;
+  margin: 20rpx 30rpx;
   border-radius: 16rpx;
-  background: #fff;
+  padding: 30rpx;
   box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
 }
 
-.payment-item:active {
-  transform: translateY(-4rpx);
-  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.12);
+/* 缴费记录 */
+.payment-records {
+  margin-top: 20rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid #f0f0f0;
 }
 
-.item-icon {
-  width: 80rpx;
-  height: 80rpx;
-  border-radius: 50%;
+.records-header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  font-size: 36rpx;
   margin-bottom: 20rpx;
 }
 
-.water-icon {
-  background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
-}
-
-.electric-icon {
-  background: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%);
-}
-
-.gas-icon {
-  background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%);
-}
-
-.phone-icon {
-  background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
-}
-
-.broadband-icon {
-  background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
-}
-
-.tv-icon {
-  background: linear-gradient(135deg, #fd79a8 0%, #fdcb6e 100%);
-}
-
-.item-title {
+.records-title {
   font-size: 28rpx;
   font-weight: 600;
   color: #333;
-  margin-bottom: 8rpx;
 }
 
-.item-desc {
+.records-more {
   font-size: 24rpx;
-  color: #999;
-  text-align: center;
+  color: #007AFF;
 }
 
-/* 最近缴费记录 */
-.recent-section {
-  background: #fff;
-  padding: 30rpx;
+.records-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15rpx;
+}
+
+.record-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx;
+  background-color: #f8f9fa;
+  border-radius: 12rpx;
+}
+
+.record-left {
+  display: flex;
+  align-items: center;
+  gap: 15rpx;
+}
+
+.record-icon {
+  font-size: 32rpx;
+}
+
+.record-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5rpx;
+}
+
+.record-type {
+  font-size: 26rpx;
+  font-weight: 500;
+  color: #333;
+}
+
+.record-desc {
+  font-size: 22rpx;
+  color: #666;
+}
+
+.record-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5rpx;
+}
+
+.record-amount {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.record-time {
+  font-size: 20rpx;
+  color: #999;
 }
 
 .section-header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 30rpx;
 }
 
@@ -323,127 +675,365 @@ export default {
   color: #333;
 }
 
-.more-link {
+.section-right {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.manage-text {
   font-size: 26rpx;
-  color: #667eea;
-  font-weight: 500;
+  color: #666;
 }
 
-.recent-list {
-  display: flex;
-  flex-direction: column;
-  gap: 20rpx;
-}
-
-.recent-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 24rpx;
-  background: #f8f9fa;
-  border-radius: 12rpx;
-  transition: background-color 0.3s ease;
-}
-
-.recent-item:active {
-  background: #e9ecef;
-}
-
-.recent-left {
-  display: flex;
-  align-items: center;
-  gap: 20rpx;
-}
-
-.recent-icon {
-  width: 60rpx;
-  height: 60rpx;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 28rpx;
-}
-
-.recent-info {
-  display: flex;
-  flex-direction: column;
-  gap: 6rpx;
-}
-
-.recent-title {
-  font-size: 28rpx;
-  font-weight: 500;
-  color: #333;
-}
-
-.recent-desc {
+.arrow {
   font-size: 24rpx;
   color: #999;
 }
 
-.recent-right {
+/* 缴费卡片 */
+.payment-cards {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  gap: 6rpx;
+  gap: 20rpx;
 }
 
-.recent-amount {
+.payment-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx;
+  border-radius: 12rpx;
+  background: #fff;
+  border: 2rpx solid #f0f0f0;
+  transition: all 0.3s ease;
+}
+
+.payment-card:active {
+  transform: scale(0.98);
+  background: #f8f9fa;
+}
+
+.card-left {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  flex: 1;
+}
+
+.card-icon {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 12rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+}
+
+.party-icon {
+  background: linear-gradient(135deg, #ff4757 0%, #ff3838 100%);
+}
+
+.party-symbol {
+  color: #fff;
+  font-size: 32rpx;
+}
+
+.phone-icon {
+  background: linear-gradient(135deg, #2ed573 0%, #1dd1a1 100%);
+}
+
+.phone-symbol {
+  color: #fff;
+  font-size: 28rpx;
+}
+
+.card-info {
+  flex: 1;
+}
+
+.card-title {
   font-size: 28rpx;
   font-weight: 600;
   color: #333;
+  display: block;
+  margin-bottom: 8rpx;
 }
 
-.recent-status {
-  font-size: 22rpx;
+.card-subtitle {
+  font-size: 24rpx;
+  color: #666;
+  display: block;
+  margin-bottom: 4rpx;
+}
+
+.card-number {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.card-right {
+  display: flex;
+  align-items: center;
+}
+
+.recharge-icon {
+  font-size: 32rpx;
+  color: #2ed573;
+}
+
+/* 优惠横幅 */
+.promotion-banner {
+  background: linear-gradient(135deg, #ff9a56 0%, #ff6b35 100%);
+  margin: 20rpx 30rpx;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4rpx 20rpx rgba(255, 107, 53, 0.3);
+  transition: all 0.3s ease;
+}
+
+.promotion-banner:active {
+  transform: scale(0.98);
+}
+
+.banner-content {
+  flex: 1;
+  z-index: 2;
+}
+
+.banner-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #fff;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.banner-subtitle {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.9);
+  display: block;
+  margin-bottom: 16rpx;
+}
+
+.banner-tag {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 20rpx;
   padding: 4rpx 12rpx;
-  border-radius: 12rpx;
-  font-weight: 500;
+  border-radius: 8rpx;
+  display: inline-block;
 }
 
-.recent-status.success {
-  background: #d1f2eb;
-  color: #00a085;
+.banner-decoration {
+  position: absolute;
+  right: 30rpx;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
 }
 
-.recent-status.pending {
-  background: #fef9e7;
-  color: #f39c12;
+.frog-icon,
+.cards-icon {
+  font-size: 48rpx;
+  animation: float 3s ease-in-out infinite;
 }
 
-.recent-status.failed {
-  background: #fadbd8;
-  color: #e74c3c;
+.cards-icon {
+  animation-delay: 1.5s;
 }
 
-/* 空状态 */
-.empty-state {
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10rpx);
+  }
+}
+
+/* 新增缴费 */
+.new-payment-section {
+  background: #fff;
+  margin: 20rpx 30rpx;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.08);
+}
+
+.payment-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 40rpx;
+  margin-top: 30rpx;
+}
+
+.grid-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20rpx;
+}
+
+.grid-item {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 80rpx 20rpx;
+  text-align: center;
+  transition: all 0.3s ease;
 }
 
-.empty-text {
+.grid-item:active {
+  transform: translateY(-4rpx);
+}
+
+.item-icon {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.item-icon::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: inherit;
+  opacity: 0.8;
+}
+
+.icon-text {
   font-size: 32rpx;
-  color: #999;
-  margin-bottom: 12rpx;
+  color: #fff;
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 1rpx 2rpx rgba(0, 0, 0, 0.2);
 }
 
-.empty-desc {
+.item-label {
   font-size: 26rpx;
-  color: #ccc;
+  color: #333;
+  font-weight: 500;
+}
+
+/* 底部导航占位 */
+.bottom-nav-placeholder {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background: #fff;
+  padding: 20rpx 0;
+  margin-top: 40rpx;
+  border-top: 1rpx solid #eee;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+  padding: 16rpx;
+  transition: all 0.3s ease;
+}
+
+.nav-item:active {
+  transform: scale(0.95);
+}
+
+.nav-item-icon {
+  font-size: 32rpx;
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 12rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+
+.party-nav {
+  background: linear-gradient(135deg, #ff4757 0%, #ff3838 100%);
+}
+
+.union-nav {
+  background: linear-gradient(135deg, #3742fa 0%, #2f3542 100%);
+}
+
+.more-nav {
+  background: linear-gradient(135deg, #57606f 0%, #2f3542 100%);
+}
+
+.nav-item-text {
+  font-size: 22rpx;
+  color: #666;
 }
 
 /* 响应式适配 */
 @media (max-width: 750rpx) {
-  .payment-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .grid-row {
+    gap: 15rpx;
   }
 
-  .page-title {
-    font-size: 40rpx;
+  .item-icon {
+    width: 72rpx;
+    height: 72rpx;
   }
+
+  .icon-text {
+    font-size: 28rpx;
+  }
+
+  .item-label {
+    font-size: 24rpx;
+  }
+}
+
+/* 页面加载动画 */
+.payment-page {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 卡片悬停效果 */
+.payment-card:hover,
+.grid-item:hover {
+  transform: translateY(-2rpx);
+  box-shadow: 0 6rpx 20rpx rgba(0, 0, 0, 0.1);
+}
+
+/* 按钮点击效果 */
+.payment-card:active,
+.grid-item:active,
+.promotion-banner:active,
+.nav-item:active {
+  opacity: 0.8;
 }
 </style>

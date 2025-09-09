@@ -83,24 +83,9 @@
 			}
 		},
 		{
-			"path": "pages/water-payment/water-payment",
-			"style": {
-				"navigationBarTitleText": "水费缴费",
-				"enablePullDownRefresh": false,
-				"navigationStyle": "custom"
-			}
-		},
-		{
 			"path": "pages/payment-management/payment-management",
 			"style": {
 				"navigationBarTitleText": "缴费管理",
-				"enablePullDownRefresh": false
-			}
-		},
-		{
-			"path": "pages/city-select/city-select",
-			"style": {
-				"navigationBarTitleText": "选择城市",
 				"enablePullDownRefresh": false
 			}
 		},
@@ -109,14 +94,6 @@
 			"style": {
 				"navigationBarTitleText": "手机充值",
 				"enablePullDownRefresh": false
-			}
-		},
-		{
-			"path": "pages/recharge-payment/recharge-payment",
-			"style": {
-				"navigationBarTitleText": "支付",
-				"enablePullDownRefresh": false,
-				"navigationStyle": "custom"
 			}
 		},
 		{
@@ -144,6 +121,13 @@
 			"path": "pages/credit-card/credit-card",
 			"style": {
 				"navigationBarTitleText": "信用卡",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/credit-card/repayment",
+			"style": {
+				"navigationBarTitleText": "信用卡还款",
 				"enablePullDownRefresh": false
 			}
 		},

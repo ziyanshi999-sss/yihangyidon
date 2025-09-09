@@ -130,9 +130,10 @@ export default {
         bankName: ''
       },
       accountInfo: {
-        balance: '12,345.67'
+        balance: '0.00'
       },
       userBalance: 100000, // 模拟用户余额
+      bankAccounts: [], // 银行卡数据
     }
   },
   
@@ -187,20 +188,25 @@ export default {
       
       // 新增：获取用户余额的方法
       getUserBalance() {
-        // 由于是模拟环境，我们使用预设的余额数据
-        // 在实际项目中，这里应该是一个API请求获取真实余额
         try {
-          // 模拟从本地存储获取余额（如果有）
-          const savedBalance = uni.getStorageSync('userBalance')
-          if (savedBalance) {
-            this.accountInfo.balance = savedBalance
-            return
-          }
+          // 从user.json获取用户余额
+          const users = uni.getStorageSync('users') || []
+          const currentUser = users.find(user => user.isLoggedIn)
           
-          // 否则使用默认的模拟余额
-          console.log('使用默认模拟余额:', this.accountInfo.balance)
+          if (currentUser && currentUser.balance) {
+            this.accountInfo.balance = Number(currentUser.balance).toLocaleString('zh-CN', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2
+            })
+            this.bankAccounts = currentUser.bankAccounts || []
+            console.log('获取用户余额:', this.accountInfo.balance)
+          } else {
+            this.accountInfo.balance = '0.00'
+            console.log('未找到用户余额，使用默认值')
+          }
         } catch (error) {
           console.error('获取用户余额失败:', error)
+          this.accountInfo.balance = '0.00'
         }
       },
       
@@ -356,7 +362,7 @@ export default {
       
       // 跳转到理财通页面
       goToWealth() {
-        uni.navigateTo({
+        uni.switchTab({
           url: '/pages/wealth/wealth'
         })
       },
