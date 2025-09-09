@@ -15,7 +15,7 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "农业银行"
+				"navigationBarTitleText": "银行"
 			}
 		},
 		{
@@ -83,6 +83,20 @@
 			}
 		},
 		{
+			"path": "pages/water-payment/water-payment",
+			"style": {
+				"navigationBarTitleText": "水费缴费",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/city-select/city-select",
+			"style": {
+				"navigationBarTitleText": "选择城市",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
 			"path": "pages/payment-management/payment-management",
 			"style": {
 				"navigationBarTitleText": "缴费管理",
@@ -93,6 +107,13 @@
 			"path": "pages/recharge/recharge",
 			"style": {
 				"navigationBarTitleText": "手机充值",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/recharge-payment/recharge-payment",
+			"style": {
+				"navigationBarTitleText": "支付",
 				"enablePullDownRefresh": false
 			}
 		},

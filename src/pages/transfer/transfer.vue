@@ -273,8 +273,9 @@ export default {
 
     // 显示所有联系人
     showAllContacts() {
-      uni.navigateTo({
-        url: '/pages/transfer/contacts'
+      uni.showToast({
+        title: "联系人功能开发中",
+        icon: "none"
       })
     },
 

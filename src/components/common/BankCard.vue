@@ -60,7 +60,7 @@ export default {
   },
   computed: {
     bankName() {
-      return this.cardInfo.bankName || "中国农业银行";
+      return this.cardInfo.bankName || "银行";
     },
     bankType() {
       return this.cardInfo.bankType || "abc";

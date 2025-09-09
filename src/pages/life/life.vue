@@ -626,20 +626,137 @@ export default {
           this.quickServices = currentUser.lifeServices.quickServices || this.quickServices
           this.allServices = currentUser.lifeServices.allServices || this.allServices
           this.bannerData = currentUser.lifeServices.bannerData || this.bannerData
+          
+          console.log('✅ 生活服务数据加载成功:', {
+            quickServices: this.quickServices.length,
+            allServices: this.allServices.length,
+            bannerData: this.bannerData.length
+          })
         } else {
           // 如果没有生活服务数据，保存当前数据到用户
           if (currentUser) {
             currentUser.lifeServices = {
               quickServices: this.quickServices,
               allServices: this.allServices,
-              bannerData: this.bannerData
+              bannerData: this.bannerData,
+              paymentCategories: this.getDefaultPaymentCategories(),
+              recentPayments: this.getDefaultRecentPayments(),
+              favoriteServices: this.getDefaultFavoriteServices()
             }
             uni.setStorageSync('users', users)
+            console.log('✅ 已为用户创建生活服务数据')
           }
         }
       } catch (error) {
-        console.error('加载生活服务数据失败:', error)
+        console.error('❌ 加载生活服务数据失败:', error)
       }
+    },
+
+    // 获取默认缴费分类数据
+    getDefaultPaymentCategories() {
+      return [
+        {
+          id: "utilities",
+          name: "水电燃气",
+          icon: "⚡",
+          color: "#FF6B35",
+          services: [
+            {
+              id: "electricity",
+              name: "电费",
+              icon: "⚡",
+              providers: ["国家电网", "南方电网", "地方电网"],
+              defaultProvider: "国家电网"
+            },
+            {
+              id: "water",
+              name: "水费",
+              icon: "💧",
+              providers: ["上海水务", "广州水务", "深圳水务", "杭州水务", "成都水务"],
+              defaultProvider: "上海水务"
+            },
+            {
+              id: "gas",
+              name: "燃气费",
+              icon: "🔥",
+              providers: ["华润燃气", "新奥燃气", "港华燃气"],
+              defaultProvider: "华润燃气"
+            }
+          ]
+        },
+        {
+          id: "communication",
+          name: "通讯服务",
+          icon: "📱",
+          color: "#007AFF",
+          services: [
+            {
+              id: "mobile",
+              name: "手机充值",
+              icon: "📱",
+              providers: ["中国移动", "中国联通", "中国电信"],
+              defaultProvider: "中国移动"
+            },
+            {
+              id: "broadband",
+              name: "宽带缴费",
+              icon: "🌐",
+              providers: ["中国移动", "中国联通", "中国电信"],
+              defaultProvider: "中国移动"
+            }
+          ]
+        }
+      ]
+    },
+
+    // 获取默认最近缴费记录
+    getDefaultRecentPayments() {
+      return [
+        {
+          id: "rp001",
+          type: "电费",
+          amount: 350,
+          account: "9876543210",
+          provider: "国家电网",
+          status: "completed",
+          timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+          icon: "⚡"
+        },
+        {
+          id: "rp002",
+          type: "水费",
+          amount: 120,
+          account: "1234567890",
+          provider: "上海水务",
+          status: "completed",
+          timestamp: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+          icon: "💧"
+        }
+      ]
+    },
+
+    // 获取默认收藏服务
+    getDefaultFavoriteServices() {
+      return [
+        {
+          id: "fs001",
+          type: "电费",
+          account: "9876543210",
+          provider: "国家电网",
+          nickname: "家庭电费",
+          icon: "⚡",
+          color: "#FF6B35"
+        },
+        {
+          id: "fs002",
+          type: "水费",
+          account: "1234567890",
+          provider: "上海水务",
+          nickname: "家庭水费",
+          icon: "💧",
+          color: "#007AFF"
+        }
+      ]
     },
 
     // 更新时间问候语

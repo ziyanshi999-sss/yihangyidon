@@ -202,6 +202,296 @@
           "lastPayment": 180,
           "lastPaymentDate": "2024-01-03T00:00:00.000Z"
         }
+      ],
+      "quickServices": [
+        {
+          "icon": "💧",
+          "label": "生活缴费",
+          "bgColor": "#00D4AA",
+          "action": "payment",
+          "badge": "热门"
+        },
+        {
+          "icon": "📱",
+          "label": "手机充值",
+          "bgColor": "#FF9500",
+          "action": "recharge",
+          "badge": "优惠"
+        },
+        {
+          "icon": "🏛️",
+          "label": "政务民生",
+          "bgColor": "#34C759",
+          "action": "government"
+        },
+        {
+          "icon": "🎮",
+          "label": "小豆乐园",
+          "bgColor": "#FF6B35",
+          "action": "games",
+          "badge": "新"
+        }
+      ],
+      "allServices": [
+        {
+          "icon": "🏫",
+          "label": "校园",
+          "bgColor": "#5AC8FA",
+          "action": "campus",
+          "status": "在线"
+        },
+        {
+          "icon": "⚡",
+          "label": "食堂",
+          "bgColor": "#30D158",
+          "action": "canteen"
+        },
+        {
+          "icon": "🎉",
+          "label": "党费",
+          "bgColor": "#FF3B30",
+          "action": "party"
+        },
+        {
+          "icon": "👨‍⚕️",
+          "label": "养老服务",
+          "bgColor": "#007AFF",
+          "action": "elderly",
+          "status": "热门"
+        },
+        {
+          "icon": "📄",
+          "label": "社保医保",
+          "bgColor": "#34C759",
+          "action": "insurance"
+        },
+        {
+          "icon": "🌿",
+          "label": "低碳空间",
+          "bgColor": "#32D74B",
+          "action": "carbon",
+          "status": "新"
+        },
+        {
+          "icon": "🎫",
+          "label": "优惠卡券",
+          "bgColor": "#AF52DE",
+          "action": "coupons"
+        },
+        {
+          "icon": "🎁",
+          "label": "京东特惠",
+          "bgColor": "#FF9500",
+          "action": "jd",
+          "status": "限时"
+        },
+        {
+          "icon": "🏪",
+          "label": "城市专区",
+          "bgColor": "#5856D6",
+          "action": "city"
+        },
+        {
+          "icon": "🎊",
+          "label": "热门活动",
+          "bgColor": "#FF2D92",
+          "action": "events",
+          "status": "火爆"
+        }
+      ],
+      "bannerData": [
+        {
+          "id": 1,
+          "title": "生活缴费优惠",
+          "subtitle": "水电燃气一键支付",
+          "discount": "立减10元",
+          "icon": "💳",
+          "action": "payment",
+          "url": "/pages/payment/payment"
+        },
+        {
+          "id": 2,
+          "title": "手机充值特惠",
+          "subtitle": "充值满100送20",
+          "discount": "限时优惠",
+          "icon": "📱",
+          "action": "recharge",
+          "url": "/pages/recharge/recharge"
+        },
+        {
+          "id": 3,
+          "title": "政务服务大厅",
+          "subtitle": "在线办事更便民",
+          "discount": "免费办理",
+          "icon": "🏛️",
+          "action": "government",
+          "url": "/pages/government/government"
+        },
+        {
+          "id": 4,
+          "title": "小豆乐园",
+          "subtitle": "趣味游戏赢积分",
+          "discount": "每日签到",
+          "icon": "🎮",
+          "action": "games",
+          "url": "/pages/games/games"
+        }
+      ],
+      "paymentCategories": [
+        {
+          "id": "utilities",
+          "name": "水电燃气",
+          "icon": "⚡",
+          "color": "#FF6B35",
+          "services": [
+            {
+              "id": "electricity",
+              "name": "电费",
+              "icon": "⚡",
+              "providers": ["国家电网", "南方电网", "地方电网"],
+              "defaultProvider": "国家电网"
+            },
+            {
+              "id": "water",
+              "name": "水费",
+              "icon": "💧",
+              "providers": ["上海水务", "广州水务", "深圳水务", "杭州水务", "成都水务"],
+              "defaultProvider": "上海水务"
+            },
+            {
+              "id": "gas",
+              "name": "燃气费",
+              "icon": "🔥",
+              "providers": ["华润燃气", "新奥燃气", "港华燃气"],
+              "defaultProvider": "华润燃气"
+            }
+          ]
+        },
+        {
+          "id": "communication",
+          "name": "通讯服务",
+          "icon": "📱",
+          "color": "#007AFF",
+          "services": [
+            {
+              "id": "mobile",
+              "name": "手机充值",
+              "icon": "📱",
+              "providers": ["中国移动", "中国联通", "中国电信"],
+              "defaultProvider": "中国移动"
+            },
+            {
+              "id": "broadband",
+              "name": "宽带缴费",
+              "icon": "🌐",
+              "providers": ["中国移动", "中国联通", "中国电信"],
+              "defaultProvider": "中国移动"
+            }
+          ]
+        },
+        {
+          "id": "government",
+          "name": "政务服务",
+          "icon": "🏛️",
+          "color": "#34C759",
+          "services": [
+            {
+              "id": "socialSecurity",
+              "name": "社保缴费",
+              "icon": "📄",
+              "providers": ["人力资源和社会保障局"],
+              "defaultProvider": "人力资源和社会保障局"
+            },
+            {
+              "id": "medicalInsurance",
+              "name": "医保缴费",
+              "icon": "🏥",
+              "providers": ["医疗保障局"],
+              "defaultProvider": "医疗保障局"
+            },
+            {
+              "id": "housingFund",
+              "name": "公积金",
+              "icon": "🏠",
+              "providers": ["住房公积金管理中心"],
+              "defaultProvider": "住房公积金管理中心"
+            }
+          ]
+        },
+        {
+          "id": "education",
+          "name": "教育缴费",
+          "icon": "🎓",
+          "color": "#FF9500",
+          "services": [
+            {
+              "id": "tuition",
+              "name": "学费缴费",
+              "icon": "📚",
+              "providers": ["各大学校"],
+              "defaultProvider": "各大学校"
+            },
+            {
+              "id": "exam",
+              "name": "考试报名",
+              "icon": "📝",
+              "providers": ["教育考试院"],
+              "defaultProvider": "教育考试院"
+            }
+          ]
+        }
+      ],
+      "recentPayments": [
+        {
+          "id": "rp001",
+          "type": "电费",
+          "amount": 350,
+          "account": "9876543210",
+          "provider": "国家电网",
+          "status": "completed",
+          "timestamp": "2024-01-08T16:45:00.000Z",
+          "icon": "⚡"
+        },
+        {
+          "id": "rp002",
+          "type": "水费",
+          "amount": 120,
+          "account": "1234567890",
+          "provider": "上海水务",
+          "status": "completed",
+          "timestamp": "2024-01-05T11:30:00.000Z",
+          "icon": "💧"
+        },
+        {
+          "id": "rp003",
+          "type": "手机充值",
+          "amount": 100,
+          "phoneNumber": "13999999999",
+          "provider": "中国移动",
+          "status": "completed",
+          "timestamp": "2024-01-10T14:20:00.000Z",
+          "icon": "📱"
+        }
+      ],
+      "favoriteServices": [
+        {
+          "id": "fs001",
+          "type": "电费",
+          "account": "9876543210",
+          "provider": "国家电网",
+          "nickname": "家庭电费",
+          "icon": "⚡",
+          "color": "#FF6B35"
+        },
+        {
+          "id": "fs002",
+          "type": "水费",
+          "account": "1234567890",
+          "provider": "上海水务",
+          "nickname": "家庭水费",
+          "icon": "💧",
+          "color": "#007AFF"
+        }
       ]
     },
     "bankAccounts": [
@@ -527,6 +817,296 @@
           "account": "1111222233",
           "lastPayment": 220,
           "lastPaymentDate": "2024-01-06T00:00:00.000Z"
+        }
+      ],
+      "quickServices": [
+        {
+          "icon": "💧",
+          "label": "生活缴费",
+          "bgColor": "#00D4AA",
+          "action": "payment",
+          "badge": "热门"
+        },
+        {
+          "icon": "📱",
+          "label": "手机充值",
+          "bgColor": "#FF9500",
+          "action": "recharge",
+          "badge": "优惠"
+        },
+        {
+          "icon": "🏛️",
+          "label": "政务民生",
+          "bgColor": "#34C759",
+          "action": "government"
+        },
+        {
+          "icon": "🎮",
+          "label": "小豆乐园",
+          "bgColor": "#FF6B35",
+          "action": "games",
+          "badge": "新"
+        }
+      ],
+      "allServices": [
+        {
+          "icon": "🏫",
+          "label": "校园",
+          "bgColor": "#5AC8FA",
+          "action": "campus",
+          "status": "在线"
+        },
+        {
+          "icon": "⚡",
+          "label": "食堂",
+          "bgColor": "#30D158",
+          "action": "canteen"
+        },
+        {
+          "icon": "🎉",
+          "label": "党费",
+          "bgColor": "#FF3B30",
+          "action": "party"
+        },
+        {
+          "icon": "👨‍⚕️",
+          "label": "养老服务",
+          "bgColor": "#007AFF",
+          "action": "elderly",
+          "status": "热门"
+        },
+        {
+          "icon": "📄",
+          "label": "社保医保",
+          "bgColor": "#34C759",
+          "action": "insurance"
+        },
+        {
+          "icon": "🌿",
+          "label": "低碳空间",
+          "bgColor": "#32D74B",
+          "action": "carbon",
+          "status": "新"
+        },
+        {
+          "icon": "🎫",
+          "label": "优惠卡券",
+          "bgColor": "#AF52DE",
+          "action": "coupons"
+        },
+        {
+          "icon": "🎁",
+          "label": "京东特惠",
+          "bgColor": "#FF9500",
+          "action": "jd",
+          "status": "限时"
+        },
+        {
+          "icon": "🏪",
+          "label": "城市专区",
+          "bgColor": "#5856D6",
+          "action": "city"
+        },
+        {
+          "icon": "🎊",
+          "label": "热门活动",
+          "bgColor": "#FF2D92",
+          "action": "events",
+          "status": "火爆"
+        }
+      ],
+      "bannerData": [
+        {
+          "id": 1,
+          "title": "生活缴费优惠",
+          "subtitle": "水电燃气一键支付",
+          "discount": "立减10元",
+          "icon": "💳",
+          "action": "payment",
+          "url": "/pages/payment/payment"
+        },
+        {
+          "id": 2,
+          "title": "手机充值特惠",
+          "subtitle": "充值满100送20",
+          "discount": "限时优惠",
+          "icon": "📱",
+          "action": "recharge",
+          "url": "/pages/recharge/recharge"
+        },
+        {
+          "id": 3,
+          "title": "政务服务大厅",
+          "subtitle": "在线办事更便民",
+          "discount": "免费办理",
+          "icon": "🏛️",
+          "action": "government",
+          "url": "/pages/government/government"
+        },
+        {
+          "id": 4,
+          "title": "小豆乐园",
+          "subtitle": "趣味游戏赢积分",
+          "discount": "每日签到",
+          "icon": "🎮",
+          "action": "games",
+          "url": "/pages/games/games"
+        }
+      ],
+      "paymentCategories": [
+        {
+          "id": "utilities",
+          "name": "水电燃气",
+          "icon": "⚡",
+          "color": "#FF6B35",
+          "services": [
+            {
+              "id": "electricity",
+              "name": "电费",
+              "icon": "⚡",
+              "providers": ["国家电网", "南方电网", "地方电网"],
+              "defaultProvider": "南方电网"
+            },
+            {
+              "id": "water",
+              "name": "水费",
+              "icon": "💧",
+              "providers": ["上海水务", "广州水务", "深圳水务", "杭州水务", "成都水务"],
+              "defaultProvider": "广州水务"
+            },
+            {
+              "id": "gas",
+              "name": "燃气费",
+              "icon": "🔥",
+              "providers": ["华润燃气", "新奥燃气", "港华燃气"],
+              "defaultProvider": "新奥燃气"
+            }
+          ]
+        },
+        {
+          "id": "communication",
+          "name": "通讯服务",
+          "icon": "📱",
+          "color": "#007AFF",
+          "services": [
+            {
+              "id": "mobile",
+              "name": "手机充值",
+              "icon": "📱",
+              "providers": ["中国移动", "中国联通", "中国电信"],
+              "defaultProvider": "中国联通"
+            },
+            {
+              "id": "broadband",
+              "name": "宽带缴费",
+              "icon": "🌐",
+              "providers": ["中国移动", "中国联通", "中国电信"],
+              "defaultProvider": "中国联通"
+            }
+          ]
+        },
+        {
+          "id": "government",
+          "name": "政务服务",
+          "icon": "🏛️",
+          "color": "#34C759",
+          "services": [
+            {
+              "id": "socialSecurity",
+              "name": "社保缴费",
+              "icon": "📄",
+              "providers": ["人力资源和社会保障局"],
+              "defaultProvider": "人力资源和社会保障局"
+            },
+            {
+              "id": "medicalInsurance",
+              "name": "医保缴费",
+              "icon": "🏥",
+              "providers": ["医疗保障局"],
+              "defaultProvider": "医疗保障局"
+            },
+            {
+              "id": "housingFund",
+              "name": "公积金",
+              "icon": "🏠",
+              "providers": ["住房公积金管理中心"],
+              "defaultProvider": "住房公积金管理中心"
+            }
+          ]
+        },
+        {
+          "id": "education",
+          "name": "教育缴费",
+          "icon": "🎓",
+          "color": "#FF9500",
+          "services": [
+            {
+              "id": "tuition",
+              "name": "学费缴费",
+              "icon": "📚",
+              "providers": ["各大学校"],
+              "defaultProvider": "各大学校"
+            },
+            {
+              "id": "exam",
+              "name": "考试报名",
+              "icon": "📝",
+              "providers": ["教育考试院"],
+              "defaultProvider": "教育考试院"
+            }
+          ]
+        }
+      ],
+      "recentPayments": [
+        {
+          "id": "rp004",
+          "type": "电费",
+          "amount": 280,
+          "account": "5555666677",
+          "provider": "南方电网",
+          "status": "completed",
+          "timestamp": "2024-01-11T12:15:00.000Z",
+          "icon": "⚡"
+        },
+        {
+          "id": "rp005",
+          "type": "水费",
+          "amount": 150,
+          "account": "7777888899",
+          "provider": "广州水务",
+          "status": "completed",
+          "timestamp": "2024-01-08T09:45:00.000Z",
+          "icon": "💧"
+        },
+        {
+          "id": "rp006",
+          "type": "手机充值",
+          "amount": 200,
+          "phoneNumber": "13777777777",
+          "provider": "中国联通",
+          "status": "completed",
+          "timestamp": "2024-01-05T16:30:00.000Z",
+          "icon": "📱"
+        }
+      ],
+      "favoriteServices": [
+        {
+          "id": "fs003",
+          "type": "电费",
+          "account": "5555666677",
+          "provider": "南方电网",
+          "nickname": "家庭电费",
+          "icon": "⚡",
+          "color": "#FF6B35"
+        },
+        {
+          "id": "fs004",
+          "type": "水费",
+          "account": "7777888899",
+          "provider": "广州水务",
+          "nickname": "家庭水费",
+          "icon": "💧",
+          "color": "#007AFF"
         }
       ]
     },
@@ -862,6 +1442,296 @@
           "account": "8888999900",
           "lastPayment": 350,
           "lastPaymentDate": "2024-01-05T00:00:00.000Z"
+        }
+      ],
+      "quickServices": [
+        {
+          "icon": "💧",
+          "label": "生活缴费",
+          "bgColor": "#00D4AA",
+          "action": "payment",
+          "badge": "热门"
+        },
+        {
+          "icon": "📱",
+          "label": "手机充值",
+          "bgColor": "#FF9500",
+          "action": "recharge",
+          "badge": "优惠"
+        },
+        {
+          "icon": "🏛️",
+          "label": "政务民生",
+          "bgColor": "#34C759",
+          "action": "government"
+        },
+        {
+          "icon": "🎮",
+          "label": "小豆乐园",
+          "bgColor": "#FF6B35",
+          "action": "games",
+          "badge": "新"
+        }
+      ],
+      "allServices": [
+        {
+          "icon": "🏫",
+          "label": "校园",
+          "bgColor": "#5AC8FA",
+          "action": "campus",
+          "status": "在线"
+        },
+        {
+          "icon": "⚡",
+          "label": "食堂",
+          "bgColor": "#30D158",
+          "action": "canteen"
+        },
+        {
+          "icon": "🎉",
+          "label": "党费",
+          "bgColor": "#FF3B30",
+          "action": "party"
+        },
+        {
+          "icon": "👨‍⚕️",
+          "label": "养老服务",
+          "bgColor": "#007AFF",
+          "action": "elderly",
+          "status": "热门"
+        },
+        {
+          "icon": "📄",
+          "label": "社保医保",
+          "bgColor": "#34C759",
+          "action": "insurance"
+        },
+        {
+          "icon": "🌿",
+          "label": "低碳空间",
+          "bgColor": "#32D74B",
+          "action": "carbon",
+          "status": "新"
+        },
+        {
+          "icon": "🎫",
+          "label": "优惠卡券",
+          "bgColor": "#AF52DE",
+          "action": "coupons"
+        },
+        {
+          "icon": "🎁",
+          "label": "京东特惠",
+          "bgColor": "#FF9500",
+          "action": "jd",
+          "status": "限时"
+        },
+        {
+          "icon": "🏪",
+          "label": "城市专区",
+          "bgColor": "#5856D6",
+          "action": "city"
+        },
+        {
+          "icon": "🎊",
+          "label": "热门活动",
+          "bgColor": "#FF2D92",
+          "action": "events",
+          "status": "火爆"
+        }
+      ],
+      "bannerData": [
+        {
+          "id": 1,
+          "title": "生活缴费优惠",
+          "subtitle": "水电燃气一键支付",
+          "discount": "立减10元",
+          "icon": "💳",
+          "action": "payment",
+          "url": "/pages/payment/payment"
+        },
+        {
+          "id": 2,
+          "title": "手机充值特惠",
+          "subtitle": "充值满100送20",
+          "discount": "限时优惠",
+          "icon": "📱",
+          "action": "recharge",
+          "url": "/pages/recharge/recharge"
+        },
+        {
+          "id": 3,
+          "title": "政务服务大厅",
+          "subtitle": "在线办事更便民",
+          "discount": "免费办理",
+          "icon": "🏛️",
+          "action": "government",
+          "url": "/pages/government/government"
+        },
+        {
+          "id": 4,
+          "title": "小豆乐园",
+          "subtitle": "趣味游戏赢积分",
+          "discount": "每日签到",
+          "icon": "🎮",
+          "action": "games",
+          "url": "/pages/games/games"
+        }
+      ],
+      "paymentCategories": [
+        {
+          "id": "utilities",
+          "name": "水电燃气",
+          "icon": "⚡",
+          "color": "#FF6B35",
+          "services": [
+            {
+              "id": "electricity",
+              "name": "电费",
+              "icon": "⚡",
+              "providers": ["国家电网", "南方电网", "地方电网"],
+              "defaultProvider": "国家电网"
+            },
+            {
+              "id": "water",
+              "name": "水费",
+              "icon": "💧",
+              "providers": ["上海水务", "广州水务", "深圳水务", "杭州水务", "成都水务"],
+              "defaultProvider": "深圳水务"
+            },
+            {
+              "id": "gas",
+              "name": "燃气费",
+              "icon": "🔥",
+              "providers": ["华润燃气", "新奥燃气", "港华燃气"],
+              "defaultProvider": "华润燃气"
+            }
+          ]
+        },
+        {
+          "id": "communication",
+          "name": "通讯服务",
+          "icon": "📱",
+          "color": "#007AFF",
+          "services": [
+            {
+              "id": "mobile",
+              "name": "手机充值",
+              "icon": "📱",
+              "providers": ["中国移动", "中国联通", "中国电信"],
+              "defaultProvider": "中国电信"
+            },
+            {
+              "id": "broadband",
+              "name": "宽带缴费",
+              "icon": "🌐",
+              "providers": ["中国移动", "中国联通", "中国电信"],
+              "defaultProvider": "中国电信"
+            }
+          ]
+        },
+        {
+          "id": "government",
+          "name": "政务服务",
+          "icon": "🏛️",
+          "color": "#34C759",
+          "services": [
+            {
+              "id": "socialSecurity",
+              "name": "社保缴费",
+              "icon": "📄",
+              "providers": ["人力资源和社会保障局"],
+              "defaultProvider": "人力资源和社会保障局"
+            },
+            {
+              "id": "medicalInsurance",
+              "name": "医保缴费",
+              "icon": "🏥",
+              "providers": ["医疗保障局"],
+              "defaultProvider": "医疗保障局"
+            },
+            {
+              "id": "housingFund",
+              "name": "公积金",
+              "icon": "🏠",
+              "providers": ["住房公积金管理中心"],
+              "defaultProvider": "住房公积金管理中心"
+            }
+          ]
+        },
+        {
+          "id": "education",
+          "name": "教育缴费",
+          "icon": "🎓",
+          "color": "#FF9500",
+          "services": [
+            {
+              "id": "tuition",
+              "name": "学费缴费",
+              "icon": "📚",
+              "providers": ["各大学校"],
+              "defaultProvider": "各大学校"
+            },
+            {
+              "id": "exam",
+              "name": "考试报名",
+              "icon": "📝",
+              "providers": ["教育考试院"],
+              "defaultProvider": "教育考试院"
+            }
+          ]
+        }
+      ],
+      "recentPayments": [
+        {
+          "id": "rp007",
+          "type": "电费",
+          "amount": 500,
+          "account": "1111222233",
+          "provider": "国家电网",
+          "status": "completed",
+          "timestamp": "2024-01-10T16:30:00.000Z",
+          "icon": "⚡"
+        },
+        {
+          "id": "rp008",
+          "type": "水费",
+          "amount": 280,
+          "account": "4444555566",
+          "provider": "深圳水务",
+          "status": "completed",
+          "timestamp": "2024-01-07T10:15:00.000Z",
+          "icon": "💧"
+        },
+        {
+          "id": "rp009",
+          "type": "手机充值",
+          "amount": 300,
+          "phoneNumber": "13666666666",
+          "provider": "中国电信",
+          "status": "completed",
+          "timestamp": "2024-01-08T14:20:00.000Z",
+          "icon": "📱"
+        }
+      ],
+      "favoriteServices": [
+        {
+          "id": "fs005",
+          "type": "电费",
+          "account": "1111222233",
+          "provider": "国家电网",
+          "nickname": "家庭电费",
+          "icon": "⚡",
+          "color": "#FF6B35"
+        },
+        {
+          "id": "fs006",
+          "type": "水费",
+          "account": "4444555566",
+          "provider": "深圳水务",
+          "nickname": "家庭水费",
+          "icon": "💧",
+          "color": "#007AFF"
         }
       ]
     },

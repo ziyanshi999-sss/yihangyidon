@@ -160,9 +160,9 @@
       
       <!-- 辅助链接 -->
       <view class="help-links">
-        <navigator url="/pages/forget/forget" class="help-link">
+        <view class="help-link" @tap="showForgetPasswordTip">
           <text class="link-text">忘记密码</text>
-        </navigator>
+        </view>
         <text class="divider">|</text>
         <navigator url="/pages/help/help" class="help-link">
           <text class="link-text">帮助中心</text>
@@ -215,6 +215,15 @@ export default {
   },
   
   methods: {
+    // 显示忘记密码提示
+    showForgetPasswordTip() {
+      uni.showModal({
+        title: "忘记密码",
+        content: "请联系客服或前往银行网点重置密码",
+        showCancel: false,
+        confirmText: "确定"
+      })
+    },
     
     // 检查设备指纹支持情况
     checkFingerprintSupport() {
@@ -224,6 +233,24 @@ export default {
         this.fingerprintSupport = false;
         this.fingerprintStatus = 'notSupport';
         console.log('用户已禁用指纹登录');
+        return;
+      }
+
+      // 检查当前运行环境
+      // #ifdef H5
+      // H5环境不支持指纹识别API
+      console.log('H5环境不支持指纹识别');
+      this.fingerprintSupport = false;
+      this.fingerprintStatus = 'notSupport';
+      return;
+      // #endif
+
+      // #ifndef H5
+      // 非H5环境才调用指纹API
+      if (typeof uni.checkIsSupportSoterAuthentication !== 'function') {
+        console.log('当前环境不支持指纹识别API');
+        this.fingerprintSupport = false;
+        this.fingerprintStatus = 'notSupport';
         return;
       }
 
@@ -246,6 +273,7 @@ export default {
           this.fingerprintStatus = 'notSupport';
         }
       });
+      // #endif
     },
     
     // 获取上次使用指纹登录的用户
@@ -285,6 +313,27 @@ export default {
       if (!this.lastFingerprintUser) {
         uni.showToast({
           title: '请先使用密码登录一次',
+          icon: 'none'
+        });
+        return;
+      }
+
+      // 检查当前运行环境
+      // #ifdef H5
+      // H5环境不支持指纹识别
+      uni.showToast({
+        title: 'H5环境不支持指纹识别，请在App中使用',
+        icon: 'none',
+        duration: 3000
+      });
+      return;
+      // #endif
+
+      // #ifndef H5
+      // 非H5环境才调用指纹API
+      if (typeof uni.startSoterAuthentication !== 'function') {
+        uni.showToast({
+          title: '当前环境不支持指纹识别',
           icon: 'none'
         });
         return;
@@ -336,6 +385,7 @@ export default {
           }, 3000);
         }
       });
+      // #endif
     },
     
     // 指纹登录成功处理

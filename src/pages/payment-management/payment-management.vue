@@ -173,7 +173,7 @@ export default {
               id: "phone-001",
               type: "phone",
               title: "手机充值",
-              desc: "手机充值",
+              desc: "15703724152 | 50元",
               icon: "📱",
               bgColor: "#81C784",
             },
@@ -185,9 +185,115 @@ export default {
 
   onLoad() {
     console.log("缴费管理页面加载");
+    this.loadPaymentData();
+  },
+
+  onShow() {
+    console.log("缴费管理页面显示");
+    this.loadPaymentData();
   },
 
   methods: {
+    // 加载缴费数据
+    loadPaymentData() {
+      try {
+        const users = uni.getStorageSync('users') || []
+        const currentUser = users.find(user => user.isLoggedIn)
+        
+        if (currentUser && currentUser.paymentRecords) {
+          // 将缴费记录按类型分组
+          const groupedRecords = this.groupPaymentRecords(currentUser.paymentRecords)
+          
+          // 更新分组数据
+          this.groups = [
+            {
+              id: "self",
+              name: "自己",
+              items: groupedRecords.self || []
+            },
+            {
+              id: "common",
+              name: "常用缴费",
+              items: groupedRecords.common || []
+            }
+          ]
+          
+          console.log('缴费管理数据加载成功:', {
+            totalRecords: currentUser.paymentRecords.length,
+            groups: this.groups.length
+          })
+        } else {
+          console.log('未找到缴费记录数据')
+        }
+      } catch (error) {
+        console.error('加载缴费数据失败:', error)
+      }
+    },
+
+    // 将缴费记录按类型分组
+    groupPaymentRecords(records) {
+      const grouped = {
+        self: [],
+        common: []
+      }
+      
+      records.forEach(record => {
+        const item = {
+          id: record.id,
+          type: this.getPaymentType(record.type),
+          title: record.type,
+          desc: record.phoneNumber || record.account || record.description,
+          icon: this.getPaymentIcon(record.type),
+          bgColor: this.getPaymentColor(record.type)
+        }
+        
+        // 根据类型分配到不同分组
+        if (record.type === '党费') {
+          grouped.self.push(item)
+        } else {
+          grouped.common.push(item)
+        }
+      })
+      
+      return grouped
+    },
+
+    // 获取缴费类型
+    getPaymentType(type) {
+      const typeMap = {
+        '手机充值': 'phone',
+        '电费': 'electric',
+        '水费': 'water',
+        '燃气费': 'gas',
+        '党费': 'party'
+      }
+      return typeMap[type] || 'other'
+    },
+
+    // 获取缴费图标
+    getPaymentIcon(type) {
+      const iconMap = {
+        '手机充值': '📱',
+        '电费': '⚡',
+        '水费': '💧',
+        '燃气费': '🔥',
+        '党费': '☭'
+      }
+      return iconMap[type] || '💰'
+    },
+
+    // 获取缴费颜色
+    getPaymentColor(type) {
+      const colorMap = {
+        '手机充值': '#81C784',
+        '电费': '#FFB74D',
+        '水费': '#64B5F6',
+        '燃气费': '#FF8A65',
+        '党费': '#FF5252'
+      }
+      return colorMap[type] || '#4DB6AC'
+    },
+
     // 切换分组展开状态
     toggleGroup(groupId) {
       const index = this.expandedGroups.indexOf(groupId);

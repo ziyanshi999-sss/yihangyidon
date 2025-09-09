@@ -133,7 +133,7 @@ export function registerUser(userData) {
     email: userData.email || '',
     idCard: userData.idCard || '',
     avatar: '/static/wealth/useravatar.jpg', // 默认头像
-    balance: 0.00, // 初始余额
+    balance: 10000.00, // 初始余额
     realName: userData.nickname || userData.username,
     gender: '',
     birthDate: '',

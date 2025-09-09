@@ -132,7 +132,7 @@ export default {
       accountInfo: {
         balance: '0.00'
       },
-      userBalance: 100000, // 模拟用户余额
+      userBalance: 0, // 从用户数据动态加载
       bankAccounts: [], // 银行卡数据
     }
   },
