@@ -214,7 +214,7 @@ export default {
       showOrderDetail: false,
       showTransferModalFlag: false,
       accountBalance: "3707",
-      actualBalance: 0.20, // 实际余额
+      actualBalance: 0, // 实际余额，将从用户数据中加载
       bankAccount: null, // 银行卡信息
       paymentType: "recharge", // 支付类型：recharge（充值）、water（水费）
       billInfo: null, // 账单信息
@@ -290,7 +290,6 @@ export default {
         if (!currentUser) {
           const users = uni.getStorageSync('users') || [];
           console.log('2. users 数组长度:', users.length);
-          console.log('2. users 数组:', users);
           
           // 尝试找到登录用户，如果没有则使用第一个用户
           currentUser = users.find(user => user.isLoggedIn) || users[0];
@@ -309,7 +308,7 @@ export default {
         console.log('7. 用户名:', currentUser?.username);
         console.log('8. 是否有银行账户:', !!currentUser?.bankAccounts);
         
-        if (currentUser && currentUser.bankAccounts) {
+        if (currentUser && currentUser.bankAccounts && currentUser.bankAccounts.length > 0) {
           console.log('9. 银行账户列表:', currentUser.bankAccounts);
           
           // 获取用户的储蓄卡账户（电子账户）
@@ -381,9 +380,14 @@ export default {
         if (users.length > 0) {
           const firstUser = users[0];
           console.log('使用第一个用户数据:', firstUser.username);
+          console.log('用户银行账户信息:', firstUser.bankAccounts);
           
           if (firstUser.bankAccounts && firstUser.bankAccounts.length > 0) {
-            const bankAccount = firstUser.bankAccounts[0];
+            // 优先选择储蓄卡账户
+            const bankAccount = firstUser.bankAccounts.find(account => 
+              account.accountType === '储蓄卡' && account.status === 'active'
+            ) || firstUser.bankAccounts[0];
+            
             this.bankAccount = bankAccount;
             this.actualBalance = bankAccount.balance;
             this.accountBalance = bankAccount.accountNumber.slice(-4);
@@ -402,8 +406,13 @@ export default {
             });
           } else {
             console.log('❌ 第一个用户也没有银行账户');
-            this.actualBalance = 0.20;
+            // 使用用户的总余额作为电子账户余额
+            this.actualBalance = firstUser.balance || 0.20;
             this.accountBalance = "3707";
+            
+            // 设置当前用户
+            firstUser.isLoggedIn = true;
+            uni.setStorageSync('currentUser', firstUser);
           }
         } else {
           console.log('❌ 没有找到任何用户数据');
