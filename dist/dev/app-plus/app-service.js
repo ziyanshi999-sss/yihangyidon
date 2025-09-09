@@ -7829,7 +7829,7 @@ if (uni.restoreGlobal) {
         uni.setStorageSync("userInfo", userInfo);
         uni.setStorageSync("currentUser", userInfo);
         updateUserBalanceInDatabase(userInfo);
-        addTransactionRecord({
+        addTransactionRecord$1({
           type: "expense",
           amount,
           description,
@@ -7879,7 +7879,7 @@ if (uni.restoreGlobal) {
       formatAppLog("error", "at api/balance.js:184", "更新本地数据库余额失败:", error);
     }
   }
-  function addTransactionRecord(transaction) {
+  function addTransactionRecord$1(transaction) {
     try {
       const userInfo = getUserInfo();
       if (!userInfo) {
@@ -7902,131 +7902,6 @@ if (uni.restoreGlobal) {
     } catch (error) {
       formatAppLog("error", "at api/balance.js:221", "添加交易记录失败:", error);
     }
-  }
-  function verifyPaymentPassword(password) {
-    return new Promise((resolve, reject) => {
-      var _a;
-      try {
-        const userInfo = getUserInfo();
-        if (!userInfo) {
-          reject(new Error("用户未登录"));
-          return;
-        }
-        formatAppLog("log", "at api/balance.js:266", "支付密码验证调试信息:", {
-          userId: userInfo.id,
-          username: userInfo.username,
-          phone: userInfo.phone,
-          storedPassword: userInfo.transactionPassword,
-          inputPassword: password,
-          passwordType: typeof userInfo.transactionPassword,
-          inputType: typeof password,
-          passwordLength: (_a = userInfo.transactionPassword) == null ? void 0 : _a.length,
-          inputLength: password == null ? void 0 : password.length
-        });
-        const isCorrect = userInfo.transactionPassword === password;
-        formatAppLog("log", "at api/balance.js:279", "支付密码验证结果:", isCorrect ? "正确" : "错误");
-        if (!isCorrect) {
-          formatAppLog("log", "at api/balance.js:282", "密码不匹配详情:", {
-            stored: `"${userInfo.transactionPassword}"`,
-            input: `"${password}"`,
-            equal: userInfo.transactionPassword === password
-          });
-        }
-        resolve(isCorrect);
-      } catch (error) {
-        formatAppLog("error", "at api/balance.js:292", "验证支付密码失败:", error);
-        reject(error);
-      }
-    });
-  }
-  function repayCreditCard(cardNumber, amount, paymentPassword) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const userInfo = getUserInfo();
-        if (!userInfo) {
-          reject(new Error("用户未登录"));
-          return;
-        }
-        const isPasswordCorrect = await verifyPaymentPassword(paymentPassword);
-        if (!isPasswordCorrect) {
-          resolve({
-            success: false,
-            message: "支付密码错误",
-            newBalance: userInfo.balance,
-            newCardBalance: 0
-          });
-          return;
-        }
-        const currentBalance = userInfo.balance || 0;
-        if (currentBalance < amount) {
-          resolve({
-            success: false,
-            message: "账户余额不足，无法完成还款",
-            newBalance: currentBalance,
-            newCardBalance: 0
-          });
-          return;
-        }
-        const creditCards = userInfo.creditCards || [];
-        const cardIndex = creditCards.findIndex((card2) => card2.cardNumber === cardNumber);
-        if (cardIndex === -1) {
-          resolve({
-            success: false,
-            message: "未找到指定的信用卡",
-            newBalance: currentBalance,
-            newCardBalance: 0
-          });
-          return;
-        }
-        const card = creditCards[cardIndex];
-        const currentCardBalance = card.currentBalance || 0;
-        if (amount > currentCardBalance) {
-          resolve({
-            success: false,
-            message: "还款金额不能超过当前欠款",
-            newBalance: currentBalance,
-            newCardBalance: currentCardBalance
-          });
-          return;
-        }
-        const newBalance = currentBalance - amount;
-        const newCardBalance = currentCardBalance - amount;
-        const newAvailableCredit = card.creditLimit - newCardBalance;
-        userInfo.balance = newBalance;
-        userInfo.lastUpdateTime = (/* @__PURE__ */ new Date()).toISOString();
-        creditCards[cardIndex] = {
-          ...card,
-          currentBalance: newCardBalance,
-          availableCredit: newAvailableCredit,
-          lastStatementDate: (/* @__PURE__ */ new Date()).toISOString().split("T")[0]
-        };
-        userInfo.creditCards = creditCards;
-        uni.setStorageSync("userInfo", userInfo);
-        uni.setStorageSync("currentUser", userInfo);
-        updateUserBalanceInDatabase(userInfo);
-        addTransactionRecord({
-          type: "expense",
-          amount,
-          description: `信用卡还款 - ${card.cardType} ${cardNumber.slice(-4)}`,
-          balance: newBalance,
-          timestamp: (/* @__PURE__ */ new Date()).toISOString(),
-          icon: "💳",
-          title: "信用卡还款",
-          time: (/* @__PURE__ */ new Date()).toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" })
-        });
-        formatAppLog("log", "at api/balance.js:404", `信用卡还款成功: ${amount}元，剩余余额: ${newBalance}元，信用卡余额: ${newCardBalance}元`);
-        resolve({
-          success: true,
-          message: "还款成功",
-          newBalance,
-          newCardBalance,
-          newAvailableCredit
-        });
-      } catch (error) {
-        formatAppLog("error", "at api/balance.js:415", "信用卡还款失败:", error);
-        reject(error);
-      }
-    });
   }
   function getCreditCards(cardNumber = null) {
     return new Promise((resolve, reject) => {
@@ -13078,6 +12953,187 @@ if (uni.restoreGlobal) {
     ]);
   }
   const PagesCreditCardCreditCard = /* @__PURE__ */ _export_sfc(_sfc_main$a, [["render", _sfc_render$9], ["__scopeId", "data-v-03264d9b"], ["__file", "E:/项目/yihangyidon/src/pages/credit-card/credit-card.vue"]]);
+  function verifyPaymentPassword(password) {
+    return new Promise((resolve, reject) => {
+      var _a, _b;
+      try {
+        formatAppLog("log", "at api/payment.js:12", "=== 支付密码验证开始 ===");
+        if (!password || typeof password !== "string") {
+          formatAppLog("error", "at api/payment.js:16", "支付密码参数无效:", password);
+          resolve(false);
+          return;
+        }
+        const userInfo = getUserInfo();
+        if (!userInfo) {
+          formatAppLog("error", "at api/payment.js:24", "用户未登录");
+          reject(new Error("用户未登录"));
+          return;
+        }
+        formatAppLog("log", "at api/payment.js:29", "用户信息获取成功:", {
+          id: userInfo.id,
+          username: userInfo.username,
+          phone: userInfo.phone,
+          hasTransactionPassword: !!userInfo.transactionPassword,
+          storedPassword: userInfo.transactionPassword,
+          storedPasswordType: typeof userInfo.transactionPassword,
+          storedPasswordLength: (_a = userInfo.transactionPassword) == null ? void 0 : _a.length
+        });
+        const isCorrect = userInfo.transactionPassword === password;
+        formatAppLog("log", "at api/payment.js:42", "密码验证详情:", {
+          inputPassword: password,
+          inputPasswordType: typeof password,
+          inputPasswordLength: password.length,
+          storedPassword: userInfo.transactionPassword,
+          storedPasswordType: typeof userInfo.transactionPassword,
+          storedPasswordLength: (_b = userInfo.transactionPassword) == null ? void 0 : _b.length,
+          exactMatch: userInfo.transactionPassword === password,
+          result: isCorrect
+        });
+        if (isCorrect) {
+          formatAppLog("log", "at api/payment.js:54", "✅ 支付密码验证成功");
+        } else {
+          formatAppLog("log", "at api/payment.js:56", "❌ 支付密码验证失败");
+        }
+        formatAppLog("log", "at api/payment.js:59", "=== 支付密码验证结束 ===");
+        resolve(isCorrect);
+      } catch (error) {
+        formatAppLog("error", "at api/payment.js:63", "验证支付密码异常:", error);
+        reject(error);
+      }
+    });
+  }
+  function executeCreditCardRepayment(params) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        formatAppLog("log", "at api/payment.js:80", "=== 信用卡还款开始 ===");
+        formatAppLog("log", "at api/payment.js:81", "还款参数:", params);
+        const { cardNumber, amount, password } = params;
+        if (!cardNumber || !amount || !password) {
+          resolve({
+            success: false,
+            message: "还款参数不完整"
+          });
+          return;
+        }
+        const passwordValid = await verifyPaymentPassword(password);
+        if (!passwordValid) {
+          resolve({
+            success: false,
+            message: "支付密码错误"
+          });
+          return;
+        }
+        const userInfo = getUserInfo();
+        if (!userInfo) {
+          resolve({
+            success: false,
+            message: "用户未登录"
+          });
+          return;
+        }
+        const currentBalance = userInfo.balance || 0;
+        if (currentBalance < amount) {
+          resolve({
+            success: false,
+            message: "账户余额不足"
+          });
+          return;
+        }
+        const creditCards = userInfo.creditCards || [];
+        const cardIndex = creditCards.findIndex((card2) => card2.cardNumber === cardNumber);
+        if (cardIndex === -1) {
+          resolve({
+            success: false,
+            message: "未找到指定的信用卡"
+          });
+          return;
+        }
+        const card = creditCards[cardIndex];
+        const currentCardBalance = card.currentBalance || 0;
+        if (amount > currentCardBalance) {
+          resolve({
+            success: false,
+            message: "还款金额不能超过当前欠款"
+          });
+          return;
+        }
+        const newBalance = currentBalance - amount;
+        const newCardBalance = currentCardBalance - amount;
+        const newAvailableCredit = card.creditLimit - newCardBalance;
+        userInfo.balance = newBalance;
+        userInfo.lastUpdateTime = (/* @__PURE__ */ new Date()).toISOString();
+        creditCards[cardIndex] = {
+          ...card,
+          currentBalance: newCardBalance,
+          availableCredit: newAvailableCredit,
+          lastStatementDate: (/* @__PURE__ */ new Date()).toISOString().split("T")[0]
+        };
+        userInfo.creditCards = creditCards;
+        uni.setStorageSync("userInfo", userInfo);
+        uni.setStorageSync("currentUser", userInfo);
+        updateUserInDatabase(userInfo);
+        addTransactionRecord(userInfo, amount, cardNumber, newBalance);
+        formatAppLog("log", "at api/payment.js:177", "✅ 信用卡还款成功:", {
+          amount,
+          newBalance,
+          newCardBalance
+        });
+        resolve({
+          success: true,
+          message: "还款成功",
+          newBalance,
+          newCardBalance,
+          newAvailableCredit
+        });
+      } catch (error) {
+        formatAppLog("error", "at api/payment.js:192", "信用卡还款失败:", error);
+        resolve({
+          success: false,
+          message: "还款失败，请重试"
+        });
+      }
+    });
+  }
+  function updateUserInDatabase(userInfo) {
+    try {
+      const users2 = uni.getStorageSync("users") || [];
+      const userIndex = users2.findIndex((user) => user.id === userInfo.id);
+      if (userIndex !== -1) {
+        users2[userIndex] = { ...users2[userIndex], ...userInfo };
+        uni.setStorageSync("users", users2);
+        formatAppLog("log", "at api/payment.js:213", "✅ 用户数据更新成功");
+      }
+    } catch (error) {
+      formatAppLog("error", "at api/payment.js:216", "❌ 更新用户数据失败:", error);
+    }
+  }
+  function addTransactionRecord(userInfo, amount, cardNumber, newBalance) {
+    try {
+      if (!userInfo.transactionRecords) {
+        userInfo.transactionRecords = [];
+      }
+      const newRecord = {
+        id: Date.now(),
+        type: "expense",
+        amount,
+        description: `信用卡还款 - ${cardNumber.slice(-4)}`,
+        balance: newBalance,
+        timestamp: (/* @__PURE__ */ new Date()).toISOString(),
+        icon: "💳",
+        title: "信用卡还款",
+        time: (/* @__PURE__ */ new Date()).toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" })
+      };
+      userInfo.transactionRecords.unshift(newRecord);
+      if (userInfo.transactionRecords.length > 100) {
+        userInfo.transactionRecords = userInfo.transactionRecords.slice(0, 100);
+      }
+      uni.setStorageSync("userInfo", userInfo);
+      uni.setStorageSync("currentUser", userInfo);
+      formatAppLog("log", "at api/payment.js:255", "✅ 交易记录添加成功:", newRecord);
+    } catch (error) {
+      formatAppLog("error", "at api/payment.js:258", "❌ 添加交易记录失败:", error);
+    }
+  }
   const _sfc_main$9 = {
     name: "RepaymentPasswordModal",
     props: {
@@ -13096,36 +13152,53 @@ if (uni.restoreGlobal) {
     },
     data() {
       return {
-        password: "",
+        passwordValue: "",
+        // 密码输入值
         errorMessage: "",
+        // 错误信息
         isProcessing: false,
+        // 处理状态
         cardInfo: {
           currentBalance: 0
         },
         accountBalance: 0
       };
     },
+    computed: {
+      // 是否可以确认还款
+      canConfirm() {
+        return this.passwordValue && this.passwordValue.length === 6 && !this.isProcessing && !this.errorMessage;
+      }
+    },
     watch: {
       visible(newVal) {
         if (newVal) {
-          this.resetForm();
-          this.loadCardInfo();
-          this.loadAccountBalance();
-          this.$nextTick(() => {
-            this.focusPasswordInput();
-          });
+          this.initModal();
+        } else {
+          this.resetModal();
         }
       }
     },
     methods: {
-      closeModal() {
-        this.$emit("close");
+      // 初始化模态框
+      initModal() {
+        formatAppLog("log", "at components/common/RepaymentPasswordModal.vue:150", "初始化还款密码模态框");
+        this.resetModal();
+        this.loadCardInfo();
+        this.loadAccountBalance();
+        this.$nextTick(() => {
+          setTimeout(() => {
+            this.focusPasswordInput();
+          }, 300);
+        });
       },
-      resetForm() {
-        this.password = "";
+      // 重置模态框
+      resetModal() {
+        this.passwordValue = "";
         this.errorMessage = "";
         this.isProcessing = false;
       },
+      // 加载卡片信息
       async loadCardInfo() {
         try {
           const users2 = uni.getStorageSync("users") || [];
@@ -13133,51 +13206,100 @@ if (uni.restoreGlobal) {
           if (currentUser && currentUser.creditCards) {
             const card = currentUser.creditCards.find((c) => c.cardNumber === this.cardNumber);
             if (card) {
-              this.cardInfo = card;
+              this.cardInfo = { ...card };
+              formatAppLog("log", "at components/common/RepaymentPasswordModal.vue:179", "卡片信息加载成功:", this.cardInfo);
             }
           }
         } catch (error) {
-          formatAppLog("error", "at components/common/RepaymentPasswordModal.vue:142", "加载卡片信息失败:", error);
+          formatAppLog("error", "at components/common/RepaymentPasswordModal.vue:183", "加载卡片信息失败:", error);
         }
       },
+      // 加载账户余额
       async loadAccountBalance() {
         try {
           const users2 = uni.getStorageSync("users") || [];
           const currentUser = users2.find((user) => user.isLoggedIn);
           if (currentUser) {
             this.accountBalance = currentUser.balance || 0;
+            formatAppLog("log", "at components/common/RepaymentPasswordModal.vue:194", "账户余额加载成功:", this.accountBalance);
           }
         } catch (error) {
-          formatAppLog("error", "at components/common/RepaymentPasswordModal.vue:153", "加载账户余额失败:", error);
+          formatAppLog("error", "at components/common/RepaymentPasswordModal.vue:197", "加载账户余额失败:", error);
         }
       },
+      // 聚焦密码输入框
       focusPasswordInput() {
-        if (this.$refs.passwordInput) {
-          this.$refs.passwordInput.focus();
-        }
+        this.$nextTick(() => {
+          if (this.$refs.passwordInput) {
+            try {
+              this.$refs.passwordInput.focus();
+              formatAppLog("log", "at components/common/RepaymentPasswordModal.vue:207", "密码输入框聚焦成功");
+            } catch (error) {
+              formatAppLog("log", "at components/common/RepaymentPasswordModal.vue:209", "密码输入框聚焦失败:", error);
+            }
+          }
+        });
       },
-      onPasswordInput(e) {
-        const value = e.detail.value;
-        if (!/^\d*$/.test(value)) {
-          this.password = value.replace(/\D/g, "");
+      // 处理密码输入
+      handlePasswordInput(e) {
+        formatAppLog("log", "at components/common/RepaymentPasswordModal.vue:217", "密码输入事件:", e);
+        let value = "";
+        if (e && e.detail && e.detail.value !== void 0) {
+          value = e.detail.value;
+        } else if (e && e.target && e.target.value !== void 0) {
+          value = e.target.value;
+        } else if (typeof e === "string") {
+          value = e;
+        }
+        formatAppLog("log", "at components/common/RepaymentPasswordModal.vue:229", "原始输入值:", value, "类型:", typeof value);
+        const numericValue = value.replace(/\D/g, "");
+        if (numericValue.length > 6) {
+          this.passwordValue = numericValue.slice(0, 6);
+        } else {
+          this.passwordValue = numericValue;
+        }
+        if (this.errorMessage) {
+          this.errorMessage = "";
+        }
+        formatAppLog("log", "at components/common/RepaymentPasswordModal.vue:246", "密码更新:", {
+          original: value,
+          numeric: numericValue,
+          final: this.passwordValue,
+          length: this.passwordValue.length
+        });
+      },
+      // 处理密码输入框获得焦点
+      handlePasswordFocus() {
+        formatAppLog("log", "at components/common/RepaymentPasswordModal.vue:256", "密码输入框获得焦点");
+      },
+      // 处理密码输入框失去焦点
+      handlePasswordBlur() {
+        formatAppLog("log", "at components/common/RepaymentPasswordModal.vue:261", "密码输入框失去焦点");
+      },
+      // 处理确认还款
+      async handleConfirmRepayment() {
+        var _a;
+        formatAppLog("log", "at components/common/RepaymentPasswordModal.vue:266", "开始确认还款流程");
+        if (!this.passwordValue || this.passwordValue.length !== 6) {
+          this.errorMessage = "请输入6位支付密码";
+          formatAppLog("log", "at components/common/RepaymentPasswordModal.vue:271", "密码长度验证失败:", (_a = this.passwordValue) == null ? void 0 : _a.length);
           return;
         }
-        this.password = value;
-        this.errorMessage = "";
-      },
-      onPasswordFocus() {
-      },
-      onPasswordBlur() {
-      },
-      async confirmRepayment() {
-        if (this.password.length !== 6) {
-          this.errorMessage = "请输入6位支付密码";
+        if (!/^\d{6}$/.test(this.passwordValue)) {
+          this.errorMessage = "支付密码必须为6位数字";
+          formatAppLog("log", "at components/common/RepaymentPasswordModal.vue:278", "密码格式验证失败:", this.passwordValue);
           return;
         }
         this.isProcessing = true;
         this.errorMessage = "";
+        formatAppLog("log", "at components/common/RepaymentPasswordModal.vue:285", "开始验证支付密码:", {
+          password: this.passwordValue,
+          type: typeof this.passwordValue,
+          length: this.passwordValue.length
+        });
         try {
-          const passwordValid = await verifyPaymentPassword(this.password);
+          const passwordValid = await this.verifyPassword(this.passwordValue);
+          formatAppLog("log", "at components/common/RepaymentPasswordModal.vue:294", "支付密码验证结果:", passwordValid);
           if (!passwordValid) {
             this.errorMessage = "支付密码错误";
             this.isProcessing = false;
@@ -13188,11 +13310,12 @@ if (uni.restoreGlobal) {
             this.isProcessing = false;
             return;
           }
-          const result = await repayCreditCard({
+          const result = await executeCreditCardRepayment({
             cardNumber: this.cardNumber,
             amount: this.repaymentAmount,
-            password: this.password
+            password: this.passwordValue
           });
+          formatAppLog("log", "at components/common/RepaymentPasswordModal.vue:315", "还款执行结果:", result);
           if (result.success) {
             this.$emit("repayment-success", result);
             this.closeModal();
@@ -13200,11 +13323,44 @@ if (uni.restoreGlobal) {
             this.errorMessage = result.message || "还款失败";
           }
         } catch (error) {
-          formatAppLog("error", "at components/common/RepaymentPasswordModal.vue:216", "还款失败:", error);
+          formatAppLog("error", "at components/common/RepaymentPasswordModal.vue:325", "还款处理失败:", error);
           this.errorMessage = "还款失败，请重试";
         } finally {
           this.isProcessing = false;
         }
+      },
+      // 验证支付密码
+      async verifyPassword(password) {
+        try {
+          formatAppLog("log", "at components/common/RepaymentPasswordModal.vue:335", "开始验证支付密码:", password);
+          const userInfo = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
+          if (!userInfo) {
+            formatAppLog("error", "at components/common/RepaymentPasswordModal.vue:340", "用户未登录");
+            return false;
+          }
+          formatAppLog("log", "at components/common/RepaymentPasswordModal.vue:344", "用户信息:", {
+            id: userInfo.id,
+            username: userInfo.username,
+            phone: userInfo.phone,
+            hasTransactionPassword: !!userInfo.transactionPassword,
+            storedPassword: userInfo.transactionPassword
+          });
+          const isValid = userInfo.transactionPassword === password;
+          formatAppLog("log", "at components/common/RepaymentPasswordModal.vue:354", "密码验证结果:", {
+            stored: userInfo.transactionPassword,
+            input: password,
+            match: isValid
+          });
+          return isValid;
+        } catch (error) {
+          formatAppLog("error", "at components/common/RepaymentPasswordModal.vue:363", "验证支付密码失败:", error);
+          return false;
+        }
+      },
+      // 关闭模态框
+      closeModal() {
+        formatAppLog("log", "at components/common/RepaymentPasswordModal.vue:371", "关闭还款密码模态框");
+        this.$emit("close");
       }
     }
   };
@@ -13219,6 +13375,7 @@ if (uni.restoreGlobal) {
         onClick: _cache[7] || (_cache[7] = vue.withModifiers(() => {
         }, ["stop"]))
       }, [
+        vue.createCommentVNode(" 模态框头部 "),
         vue.createElementVNode("view", { class: "modal-header" }, [
           vue.createElementVNode("text", { class: "modal-title" }, "还款确认"),
           vue.createElementVNode("text", {
@@ -13226,7 +13383,9 @@ if (uni.restoreGlobal) {
             onClick: _cache[0] || (_cache[0] = (...args) => $options.closeModal && $options.closeModal(...args))
           }, "×")
         ]),
+        vue.createCommentVNode(" 模态框内容 "),
         vue.createElementVNode("view", { class: "modal-content" }, [
+          vue.createCommentVNode(" 还款信息 "),
           vue.createElementVNode("view", { class: "repayment-info" }, [
             vue.createElementVNode("view", { class: "card-info-header" }, [
               vue.createElementVNode("view", { class: "card-icon" }, "💳"),
@@ -13282,27 +13441,31 @@ if (uni.restoreGlobal) {
               )
             ])
           ]),
+          vue.createCommentVNode(" 密码输入区域 "),
           vue.createElementVNode("view", { class: "password-section" }, [
             vue.createElementVNode("text", { class: "password-title" }, "请输入支付密码"),
-            vue.createElementVNode("view", { class: "password-input-container" }, [
+            vue.createCommentVNode(" 密码输入框 "),
+            vue.createElementVNode("view", { class: "password-input-wrapper" }, [
               vue.withDirectives(vue.createElementVNode(
                 "input",
                 {
                   ref: "passwordInput",
                   class: "password-input",
-                  type: "password",
-                  "onUpdate:modelValue": _cache[1] || (_cache[1] = ($event) => $data.password = $event),
+                  type: "number",
+                  "onUpdate:modelValue": _cache[1] || (_cache[1] = ($event) => $data.passwordValue = $event),
                   maxlength: "6",
-                  onInput: _cache[2] || (_cache[2] = (...args) => $options.onPasswordInput && $options.onPasswordInput(...args)),
-                  onFocus: _cache[3] || (_cache[3] = (...args) => $options.onPasswordFocus && $options.onPasswordFocus(...args)),
-                  onBlur: _cache[4] || (_cache[4] = (...args) => $options.onPasswordBlur && $options.onPasswordBlur(...args))
+                  placeholder: "请输入6位数字密码",
+                  onInput: _cache[2] || (_cache[2] = (...args) => $options.handlePasswordInput && $options.handlePasswordInput(...args)),
+                  onFocus: _cache[3] || (_cache[3] = (...args) => $options.handlePasswordFocus && $options.handlePasswordFocus(...args)),
+                  onBlur: _cache[4] || (_cache[4] = (...args) => $options.handlePasswordBlur && $options.handlePasswordBlur(...args))
                 },
                 null,
                 544
                 /* NEED_HYDRATION, NEED_PATCH */
               ), [
-                [vue.vModelText, $data.password]
+                [vue.vModelText, $data.passwordValue]
               ]),
+              vue.createCommentVNode(" 密码圆点显示 "),
               vue.createElementVNode("view", { class: "password-dots" }, [
                 (vue.openBlock(), vue.createElementBlock(
                   vue.Fragment,
@@ -13312,7 +13475,10 @@ if (uni.restoreGlobal) {
                       "view",
                       {
                         key: index,
-                        class: vue.normalizeClass(["password-dot", { filled: index < $data.password.length }])
+                        class: vue.normalizeClass(["password-dot", {
+                          filled: index < $data.passwordValue.length,
+                          active: index === $data.passwordValue.length
+                        }])
                       },
                       null,
                       2
@@ -13324,6 +13490,7 @@ if (uni.restoreGlobal) {
                 ))
               ])
             ]),
+            vue.createCommentVNode(" 错误提示 "),
             $data.errorMessage ? (vue.openBlock(), vue.createElementBlock("view", {
               key: 0,
               class: "error-message"
@@ -13335,9 +13502,14 @@ if (uni.restoreGlobal) {
                 1
                 /* TEXT */
               )
-            ])) : vue.createCommentVNode("v-if", true)
+            ])) : vue.createCommentVNode("v-if", true),
+            vue.createCommentVNode(" 密码提示 "),
+            vue.createElementVNode("view", { class: "password-hint" }, [
+              vue.createElementVNode("text", { class: "hint-text" }, "请输入6位数字支付密码")
+            ])
           ])
         ]),
+        vue.createCommentVNode(" 模态框底部 "),
         vue.createElementVNode("view", { class: "modal-footer" }, [
           vue.createElementVNode("button", {
             class: "btn-cancel",
@@ -13345,8 +13517,8 @@ if (uni.restoreGlobal) {
           }, "取消"),
           vue.createElementVNode("button", {
             class: "btn-confirm",
-            disabled: $data.password.length !== 6 || $data.isProcessing,
-            onClick: _cache[6] || (_cache[6] = (...args) => $options.confirmRepayment && $options.confirmRepayment(...args))
+            disabled: !$options.canConfirm || $data.isProcessing,
+            onClick: _cache[6] || (_cache[6] = (...args) => $options.handleConfirmRepayment && $options.handleConfirmRepayment(...args))
           }, vue.toDisplayString($data.isProcessing ? "处理中..." : "确认还款"), 9, ["disabled"])
         ])
       ])
