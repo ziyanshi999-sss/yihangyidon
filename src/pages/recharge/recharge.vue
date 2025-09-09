@@ -322,30 +322,10 @@ export default {
         return;
       }
 
-      try {
-        uni.showLoading({ title: "充值中..." });
-
-        // 模拟充值API调用
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-
-        uni.hideLoading();
-        uni.showToast({
-          title: "充值成功",
-          icon: "success",
-        });
-
-        // 跳转到充值成功页面或返回
-        setTimeout(() => {
-          uni.navigateBack();
-        }, 1500);
-      } catch (error) {
-        uni.hideLoading();
-        uni.showToast({
-          title: "充值失败，请稍后重试",
-          icon: "none",
-        });
-        console.error("充值失败:", error);
-      }
+      // 跳转到充值支付页面
+      uni.navigateTo({
+        url: `/pages/recharge-payment/recharge-payment?amount=${this.selectedPrice}&phone=${this.phoneNumber}&rechargeAmount=${this.selectedAmount}&type=recharge`,
+      });
     },
 
     goToStream() {

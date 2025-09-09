@@ -7,6 +7,9 @@ const _sfc_main = {
     return {
       activeCategory: 0,
       categories: ["精选", "活动", "折扣", "品牌"],
+      currentTimeGreeting: "",
+      greetingEmoji: "",
+      weatherInfo: "22°C 晴",
       // 轮播图数据
       bannerData: [
         {
@@ -55,13 +58,15 @@ const _sfc_main = {
           icon: "💧",
           label: "生活缴费",
           bgColor: "#00D4AA",
-          action: "payment"
+          action: "payment",
+          badge: "热门"
         },
         {
           icon: "📱",
           label: "手机充值",
           bgColor: "#FF9500",
-          action: "recharge"
+          action: "recharge",
+          badge: "优惠"
         },
         {
           icon: "🏛️",
@@ -69,17 +74,30 @@ const _sfc_main = {
           bgColor: "#34C759",
           action: "government"
         },
-        { icon: "🎮", label: "小豆乐园", bgColor: "#FF6B35", action: "games" }
+        {
+          icon: "🎮",
+          label: "小豆乐园",
+          bgColor: "#FF6B35",
+          action: "games",
+          badge: "新"
+        }
       ],
       allServices: [
-        { icon: "🏫", label: "校园", bgColor: "#5AC8FA", action: "campus" },
+        {
+          icon: "🏫",
+          label: "校园",
+          bgColor: "#5AC8FA",
+          action: "campus",
+          status: "在线"
+        },
         { icon: "⚡", label: "食堂", bgColor: "#30D158", action: "canteen" },
         { icon: "🎉", label: "党费", bgColor: "#FF3B30", action: "party" },
         {
           icon: "👨‍⚕️",
           label: "养老服务",
           bgColor: "#007AFF",
-          action: "elderly"
+          action: "elderly",
+          status: "热门"
         },
         {
           icon: "📄",
@@ -87,16 +105,34 @@ const _sfc_main = {
           bgColor: "#34C759",
           action: "insurance"
         },
-        { icon: "🌿", label: "低碳空间", bgColor: "#32D74B", action: "carbon" },
+        {
+          icon: "🌿",
+          label: "低碳空间",
+          bgColor: "#32D74B",
+          action: "carbon",
+          status: "新"
+        },
         {
           icon: "🎫",
           label: "优惠卡券",
           bgColor: "#AF52DE",
           action: "coupons"
         },
-        { icon: "🎁", label: "京东特惠", bgColor: "#FF9500", action: "jd" },
+        {
+          icon: "🎁",
+          label: "京东特惠",
+          bgColor: "#FF9500",
+          action: "jd",
+          status: "限时"
+        },
         { icon: "🏪", label: "城市专区", bgColor: "#5856D6", action: "city" },
-        { icon: "🎊", label: "热门活动", bgColor: "#FF2D92", action: "events" }
+        {
+          icon: "🎊",
+          label: "热门活动",
+          bgColor: "#FF2D92",
+          action: "events",
+          status: "火爆"
+        }
       ],
       // 不同分类的卡片数据
       promotionCards: {
@@ -106,8 +142,7 @@ const _sfc_main = {
             title: "积分当钱花",
             subtitle: "至高抵现50%",
             desc: "积分当钱花优惠手不停",
-            buttonText: "立即使用",
-            icon: "🎁"
+            buttonText: "立即使用"
           },
           small: [
             {
@@ -166,8 +201,7 @@ const _sfc_main = {
             title: "限时秒杀",
             subtitle: "每日10点开抢",
             desc: "超值商品限量抢购",
-            buttonText: "立即抢购",
-            icon: "⚡"
+            buttonText: "立即抢购"
           },
           small: [
             {
@@ -226,8 +260,7 @@ const _sfc_main = {
             title: "超级折扣日",
             subtitle: "全场最低3折",
             desc: "品牌商品超低折扣",
-            buttonText: "查看折扣",
-            icon: "💰"
+            buttonText: "查看折扣"
           },
           small: [
             {
@@ -286,8 +319,7 @@ const _sfc_main = {
             title: "品牌联盟",
             subtitle: "知名品牌集结",
             desc: "精选品牌特惠专区",
-            buttonText: "进入专区",
-            icon: "⭐"
+            buttonText: "进入专区"
           },
           small: [
             {
@@ -372,6 +404,30 @@ const _sfc_main = {
   methods: {
     initPage() {
       console.log("生活页面初始化");
+      this.updateTimeGreeting();
+    },
+    // 更新时间问候语
+    updateTimeGreeting() {
+      const hour = (/* @__PURE__ */ new Date()).getHours();
+      if (hour < 6) {
+        this.currentTimeGreeting = "深夜好";
+        this.greetingEmoji = "🌙";
+      } else if (hour < 12) {
+        this.currentTimeGreeting = "早上好";
+        this.greetingEmoji = "🌅";
+      } else if (hour < 18) {
+        this.currentTimeGreeting = "下午好";
+        this.greetingEmoji = "☀️";
+      } else {
+        this.currentTimeGreeting = "晚上好";
+        this.greetingEmoji = "🌆";
+      }
+    },
+    // 跳转到个人资料
+    goToProfile() {
+      common_vendor.index.navigateTo({
+        url: "/pages/user/profile"
+      });
     },
     handleServiceTap(service) {
       console.log("点击服务:", service);
@@ -520,7 +576,11 @@ const _sfc_main = {
 };
 function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
   return {
-    a: common_vendor.f($data.bannerData, (banner, index, i0) => {
+    a: common_vendor.t($data.currentTimeGreeting),
+    b: common_vendor.t($data.greetingEmoji),
+    c: common_vendor.t($data.weatherInfo),
+    d: common_vendor.o((...args) => $options.goToProfile && $options.goToProfile(...args)),
+    e: common_vendor.f($data.bannerData, (banner, index, i0) => {
       return {
         a: common_vendor.t(banner.title),
         b: common_vendor.t(banner.subtitle),
@@ -532,39 +592,49 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
         h: banner.id
       };
     }),
-    b: common_vendor.f($data.quickServices, (service, index, i0) => {
-      return {
+    f: common_vendor.f($data.quickServices, (service, index, i0) => {
+      return common_vendor.e({
         a: common_vendor.t(service.icon),
         b: service.bgColor,
         c: common_vendor.t(service.label),
-        d: index,
-        e: common_vendor.o(($event) => $options.handleServiceTap(service), index)
-      };
+        d: service.badge
+      }, service.badge ? {
+        e: common_vendor.t(service.badge)
+      } : {}, {
+        f: index,
+        g: common_vendor.o(($event) => $options.handleServiceTap(service), index)
+      });
     }),
-    c: common_vendor.f($data.allServices, (service, index, i0) => {
-      return {
+    g: common_vendor.f($data.allServices, (service, index, i0) => {
+      return common_vendor.e({
         a: common_vendor.t(service.icon),
         b: service.bgColor,
         c: common_vendor.t(service.label),
-        d: index,
-        e: common_vendor.o(($event) => $options.handleServiceTap(service), index)
-      };
+        d: service.status
+      }, service.status ? {
+        e: common_vendor.t(service.status)
+      } : {}, {
+        f: index,
+        g: common_vendor.o(($event) => $options.handleServiceTap(service), index)
+      });
     }),
-    d: common_vendor.f($data.categories, (category, index, i0) => {
-      return {
+    h: common_vendor.f($data.categories, (category, index, i0) => {
+      return common_vendor.e({
         a: common_vendor.t(category),
-        b: index,
-        c: $data.activeCategory === index ? 1 : "",
-        d: common_vendor.o(($event) => $options.switchCategory(index), index)
-      };
+        b: $data.activeCategory === index
+      }, $data.activeCategory === index ? {} : {}, {
+        c: index,
+        d: $data.activeCategory === index ? 1 : "",
+        e: common_vendor.o(($event) => $options.switchCategory(index), index)
+      });
     }),
-    e: common_vendor.t($options.currentPromotionData.main.title),
-    f: common_vendor.t($options.currentPromotionData.main.subtitle),
-    g: common_vendor.t($options.currentPromotionData.main.desc),
-    h: common_vendor.t($options.currentPromotionData.main.buttonText),
-    i: common_vendor.o((...args) => $options.handleMainCardTap && $options.handleMainCardTap(...args)),
-    j: common_vendor.t($options.currentPromotionData.main.icon),
-    k: common_vendor.f($options.currentPromotionData.small, (card, index, i0) => {
+    i: common_vendor.t($options.currentPromotionData.main.title),
+    j: common_vendor.t($options.currentPromotionData.main.subtitle),
+    k: common_vendor.t($options.currentPromotionData.main.desc),
+    l: common_vendor.t($options.currentPromotionData.main.buttonText),
+    m: common_vendor.o((...args) => $options.handleMainCardTap && $options.handleMainCardTap(...args)),
+    n: common_vendor.t($options.currentPromotionData.main.icon),
+    o: common_vendor.f($options.currentPromotionData.small, (card, index, i0) => {
       return {
         a: common_vendor.t(card.title),
         b: common_vendor.t(card.subtitle),

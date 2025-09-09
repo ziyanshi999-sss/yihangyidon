@@ -1,4 +1,6 @@
 {
   "navigationBarTitleText": "财富",
-  "usingComponents": {}
+  "usingComponents": {
+    "service-modal": "../../components/common/ServiceModal"
+  }
 }

@@ -242,9 +242,22 @@ export default {
 
     // 进入缴费流程
     enterPaymentFlow(company) {
-      // 这里可以跳转到具体的缴费表单页面
-      // 或者显示缴费表单弹窗
-      this.showPaymentForm(company);
+      // 跳转到新的水费缴费页面
+      uni.navigateTo({
+        url: `/pages/water-payment/water-payment?city=${encodeURIComponent(
+          this.selectedCity
+        )}&company=${encodeURIComponent(JSON.stringify(company))}`,
+        success: () => {
+          console.log("成功跳转到水费缴费页面");
+        },
+        fail: (err) => {
+          console.error("跳转失败:", err);
+          uni.showToast({
+            title: "页面跳转失败",
+            icon: "none",
+          });
+        },
+      });
     },
 
     // 显示缴费表单

@@ -4,27 +4,33 @@ const common_vendor = require("./common/vendor.js");
 const utils_auth = require("./utils/auth.js");
 if (!Math) {
   "./pages/denglu/login.js";
+  "./pages/register/register.js";
   "./pages/index/index.js";
   "./pages/user/user.js";
   "./pages/wealth/wealth.js";
   "./pages/life/life.js";
   "./pages/service/chat.js";
+  "./pages/help/help-center.js";
+  "./pages/help/help-detail.js";
   "./pages/transfer/transfer.js";
   "./pages/account/account.js";
   "./pages/payment/payment.js";
+  "./pages/water/water.js";
+  "./pages/water-payment/water-payment.js";
+  "./pages/payment-management/payment-management.js";
+  "./pages/city-select/city-select.js";
   "./pages/recharge/recharge.js";
-  "./pages/government/government.js";
-  "./pages/games/games.js";
-  "./pages/transfer/transfer.js";
-  "./pages/account/account.js";
-  "./pages/payment/payment.js";
-  "./pages/recharge/recharge.js";
+  "./pages/recharge-payment/recharge-payment.js";
   "./pages/government/government.js";
   "./pages/games/games.js";
   "./pages/transfer/history.js";
   "./pages/credit-card/credit-card.js";
   "./pages/balance/balance.js";
   "./pages/loan/loan.js";
+  "./pages/credit-cards/credit-cards.js";
+  "./pages/user/profile.js";
+  "./pages/user/security.js";
+  "./pages/user/change-password.js";
 }
 const _sfc_main = {
   name: "App",
@@ -126,8 +132,8 @@ const _sfc_main = {
       common_vendor.index.addInterceptor("navigateTo", {
         invoke(e) {
           console.log("拦截 navigateTo:", e.url);
-          if (e.url.includes("/pages/denglu/login")) {
-            console.log("跳转到登录页面，允许");
+          if (e.url.includes("/pages/denglu/login") || e.url.includes("/pages/register/register")) {
+            console.log("跳转到登录页面或注册页面，允许");
             return true;
           }
           if (!utils_auth.forceCheckLogin()) {
@@ -150,8 +156,8 @@ const _sfc_main = {
       common_vendor.index.addInterceptor("reLaunch", {
         invoke(e) {
           console.log("拦截 reLaunch:", e.url);
-          if (e.url.includes("/pages/denglu/login")) {
-            console.log("重定向到登录页面，允许");
+          if (e.url.includes("/pages/denglu/login") || e.url.includes("/pages/register/register")) {
+            console.log("重定向到登录页面或注册页面，允许");
             return true;
           }
           if (!utils_auth.forceCheckLogin()) {
@@ -164,8 +170,8 @@ const _sfc_main = {
       common_vendor.index.addInterceptor("redirectTo", {
         invoke(e) {
           console.log("拦截 redirectTo:", e.url);
-          if (e.url.includes("/pages/denglu/login")) {
-            console.log("重定向到登录页面，允许");
+          if (e.url.includes("/pages/denglu/login") || e.url.includes("/pages/register/register")) {
+            console.log("重定向到登录页面或注册页面，允许");
             return true;
           }
           if (!utils_auth.forceCheckLogin()) {
@@ -231,8 +237,21 @@ const _sfc_main = {
     isConnected: true
   }
 };
+function getEnvironment() {
+  if (typeof common_vendor.index !== "undefined" && common_vendor.index.getSystemInfoSync) {
+    const systemInfo = common_vendor.index.getSystemInfoSync();
+    if (systemInfo.platform === "devtools") {
+      return "development";
+    }
+  }
+  if (typeof process !== "undefined" && process.env && "development") {
+    return "development";
+  }
+  return "development";
+}
 function createApp() {
   const app = common_vendor.createSSRApp(_sfc_main);
+  const currentEnv = getEnvironment();
   app.config.errorHandler = (err, vm, info) => {
     console.error("Vue Error:", err);
     console.error("Error Info:", info);
@@ -251,7 +270,7 @@ function createApp() {
     // 应用版本
     version: "1.0.0",
     // 环境信息
-    env: "development",
+    env: currentEnv,
     // 平台信息
     platform: common_vendor.index.getSystemInfoSync().platform,
     // 工具方法
@@ -333,7 +352,7 @@ function createApp() {
     // 网络请求封装
     request: {
       // 基础配置
-      baseURL: "http://localhost:3000/api",
+      baseURL: currentEnv === "development" ? "http://localhost:3000/api" : "https://api.hospital.com",
       // 请求拦截器
       beforeRequest(config) {
         const token = common_vendor.index.getStorageSync("token");
