@@ -220,3 +220,153 @@
   margin-top: 0.3125rem;
 }
 
+/* 指纹登录样式 */
+.fingerprint-section[data-v-6f56e16f] {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.875rem 0.9375rem;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 0.625rem;
+  margin-bottom: 0.9375rem;
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
+}
+.fingerprint-icon[data-v-6f56e16f] {
+  width: 3.75rem;
+  height: 3.75rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.9375rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+.fingerprint-icon.scanning[data-v-6f56e16f] {
+  animation: fingerprintPulse-6f56e16f 1.5s infinite;
+}
+.fingerprint-icon[data-v-6f56e16f]::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.3) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+.fingerprint-icon.scanning[data-v-6f56e16f]::before {
+  animation: fingerprintScan-6f56e16f 2s infinite;
+}
+@keyframes fingerprintPulse-6f56e16f {
+0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(46, 125, 50, 0.4);
+}
+50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 0.625rem rgba(46, 125, 50, 0);
+}
+}
+@keyframes fingerprintScan-6f56e16f {
+0% {
+    transform: translateX(-100%);
+}
+100% {
+    transform: translateX(100%);
+}
+}
+.fingerprint-symbol[data-v-6f56e16f] {
+  font-size: 1.875rem;
+  color: white;
+}
+.fingerprint-title[data-v-6f56e16f] {
+  font-size: 1.125rem;
+  font-weight: bold;
+  color: #2e7d32;
+  margin-bottom: 0.46875rem;
+}
+.fingerprint-desc[data-v-6f56e16f] {
+  font-size: 0.875rem;
+  color: #666;
+  margin-bottom: 0.9375rem;
+  text-align: center;
+}
+.fingerprint-status[data-v-6f56e16f] {
+  min-height: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.status-text[data-v-6f56e16f] {
+  font-size: 0.8125rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.625rem;
+  font-weight: 500;
+}
+.status-text.ready[data-v-6f56e16f] {
+  color: #2e7d32;
+  background: rgba(46, 125, 50, 0.1);
+}
+.status-text.scanning[data-v-6f56e16f] {
+  color: #ff9800;
+  background: rgba(255, 152, 0, 0.1);
+  animation: statusBlink-6f56e16f 1s infinite;
+}
+.status-text.success[data-v-6f56e16f] {
+  color: #4caf50;
+  background: rgba(76, 175, 80, 0.1);
+}
+.status-text.failed[data-v-6f56e16f] {
+  color: #f44336;
+  background: rgba(244, 67, 54, 0.1);
+}
+.status-text.not-support[data-v-6f56e16f] {
+  color: #9e9e9e;
+  background: rgba(158, 158, 158, 0.1);
+}
+@keyframes statusBlink-6f56e16f {
+0%, 100% {
+    opacity: 1;
+}
+50% {
+    opacity: 0.5;
+}
+}
+.fingerprint-login-btn[data-v-6f56e16f] {
+  width: 100%;
+  height: 2.5rem;
+  background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+  color: white;
+  padding: 0.625rem 0.9375rem;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  font-weight: bold;
+  margin-top: 0.9375rem;
+  border: none;
+  box-shadow: 0 0.125rem 0.375rem rgba(46, 125, 50, 0.3);
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.46875rem;
+}
+.fingerprint-login-btn[data-v-6f56e16f]:disabled {
+  background: #ccc;
+  color: #999;
+  box-shadow: none;
+}
+.fingerprint-login-btn[data-v-6f56e16f]:active:not(:disabled) {
+  transform: scale(0.98);
+}
+.btn-icon[data-v-6f56e16f] {
+  font-size: 1rem;
+}
+.btn-text[data-v-6f56e16f] {
+  font-size: 1rem;
+}
+

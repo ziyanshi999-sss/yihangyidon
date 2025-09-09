@@ -63,6 +63,78 @@
   padding: 0.9375rem;
   box-shadow: 0 0.0625rem 0.375rem rgba(0, 0, 0, 0.08);
 }
+
+/* 缴费记录 */
+.payment-records[data-v-6e0fac4f] {
+  margin-top: 0.625rem;
+  padding-top: 0.625rem;
+  border-top: 0.03125rem solid #f0f0f0;
+}
+.records-header[data-v-6e0fac4f] {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.625rem;
+}
+.records-title[data-v-6e0fac4f] {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #333;
+}
+.records-more[data-v-6e0fac4f] {
+  font-size: 0.75rem;
+  color: #007AFF;
+}
+.records-list[data-v-6e0fac4f] {
+  display: flex;
+  flex-direction: column;
+  gap: 0.46875rem;
+}
+.record-item[data-v-6e0fac4f] {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.625rem;
+  background-color: #f8f9fa;
+  border-radius: 0.375rem;
+}
+.record-left[data-v-6e0fac4f] {
+  display: flex;
+  align-items: center;
+  gap: 0.46875rem;
+}
+.record-icon[data-v-6e0fac4f] {
+  font-size: 1rem;
+}
+.record-info[data-v-6e0fac4f] {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15625rem;
+}
+.record-type[data-v-6e0fac4f] {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #333;
+}
+.record-desc[data-v-6e0fac4f] {
+  font-size: 0.6875rem;
+  color: #666;
+}
+.record-right[data-v-6e0fac4f] {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.15625rem;
+}
+.record-amount[data-v-6e0fac4f] {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #333;
+}
+.record-time[data-v-6e0fac4f] {
+  font-size: 0.625rem;
+  color: #999;
+}
 .section-header[data-v-6e0fac4f] {
   display: flex;
   justify-content: space-between;
