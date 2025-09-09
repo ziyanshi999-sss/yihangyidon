@@ -102,6 +102,9 @@
                     },
                     "baidu": {
                         "key": "your_baidu_key"
+                    },
+                    "tencent": {
+                        "key": "3CSBZ-O4BY5-XFSIR-INBZY-OXQR5-WZFSZ"
                     }
                 }
             }
@@ -115,7 +118,18 @@
         "setting": {
             "urlCheck": false
         },
-        "usingComponents": true
+        "usingComponents": true,
+        "permission": {
+            "scope.userLocation": {
+                "desc": "您的位置信息将用于小程序定位及网点查询功能"
+            }
+        },
+        "plugins": {
+            "myPlugin": {
+                "version": "1.0.0",
+                "provider": "wx76a9a06e5b4e693e"
+            }
+        }
     },
     "mp-alipay": {
         "usingComponents": true

@@ -197,6 +197,13 @@
 				"enablePullDownRefresh": false,
 				"navigationStyle": "custom"
 			}
+		},
+		{
+			"path": "pages/service/branch",
+			"style": {
+				"navigationBarTitleText": "网点查询",
+				"enablePullDownRefresh": false
+			}
 		}
 	],
 	"globalStyle": {

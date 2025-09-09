@@ -242,6 +242,328 @@ if (uni.restoreGlobal) {
             lastPayment: 180,
             lastPaymentDate: "2024-01-03T00:00:00.000Z"
           }
+        ],
+        quickServices: [
+          {
+            icon: "💧",
+            label: "生活缴费",
+            bgColor: "#00D4AA",
+            action: "payment",
+            badge: "热门"
+          },
+          {
+            icon: "📱",
+            label: "手机充值",
+            bgColor: "#FF9500",
+            action: "recharge",
+            badge: "优惠"
+          },
+          {
+            icon: "🏛️",
+            label: "政务民生",
+            bgColor: "#34C759",
+            action: "government"
+          },
+          {
+            icon: "🎮",
+            label: "小豆乐园",
+            bgColor: "#FF6B35",
+            action: "games",
+            badge: "新"
+          }
+        ],
+        allServices: [
+          {
+            icon: "🏫",
+            label: "校园",
+            bgColor: "#5AC8FA",
+            action: "campus",
+            status: "在线"
+          },
+          {
+            icon: "⚡",
+            label: "食堂",
+            bgColor: "#30D158",
+            action: "canteen"
+          },
+          {
+            icon: "🎉",
+            label: "党费",
+            bgColor: "#FF3B30",
+            action: "party"
+          },
+          {
+            icon: "👨‍⚕️",
+            label: "养老服务",
+            bgColor: "#007AFF",
+            action: "elderly",
+            status: "热门"
+          },
+          {
+            icon: "📄",
+            label: "社保医保",
+            bgColor: "#34C759",
+            action: "insurance"
+          },
+          {
+            icon: "🌿",
+            label: "低碳空间",
+            bgColor: "#32D74B",
+            action: "carbon",
+            status: "新"
+          },
+          {
+            icon: "🎫",
+            label: "优惠卡券",
+            bgColor: "#AF52DE",
+            action: "coupons"
+          },
+          {
+            icon: "🎁",
+            label: "京东特惠",
+            bgColor: "#FF9500",
+            action: "jd",
+            status: "限时"
+          },
+          {
+            icon: "🏪",
+            label: "城市专区",
+            bgColor: "#5856D6",
+            action: "city"
+          },
+          {
+            icon: "🎊",
+            label: "热门活动",
+            bgColor: "#FF2D92",
+            action: "events",
+            status: "火爆"
+          }
+        ],
+        bannerData: [
+          {
+            id: 1,
+            title: "生活缴费优惠",
+            subtitle: "水电燃气一键支付",
+            discount: "立减10元",
+            icon: "💳",
+            action: "payment",
+            url: "/pages/payment/payment"
+          },
+          {
+            id: 2,
+            title: "手机充值特惠",
+            subtitle: "充值满100送20",
+            discount: "限时优惠",
+            icon: "📱",
+            action: "recharge",
+            url: "/pages/recharge/recharge"
+          },
+          {
+            id: 3,
+            title: "政务服务大厅",
+            subtitle: "在线办事更便民",
+            discount: "免费办理",
+            icon: "🏛️",
+            action: "government",
+            url: "/pages/government/government"
+          },
+          {
+            id: 4,
+            title: "小豆乐园",
+            subtitle: "趣味游戏赢积分",
+            discount: "每日签到",
+            icon: "🎮",
+            action: "games",
+            url: "/pages/games/games"
+          }
+        ],
+        paymentCategories: [
+          {
+            id: "utilities",
+            name: "水电燃气",
+            icon: "⚡",
+            color: "#FF6B35",
+            services: [
+              {
+                id: "electricity",
+                name: "电费",
+                icon: "⚡",
+                providers: [
+                  "国家电网",
+                  "南方电网",
+                  "地方电网"
+                ],
+                defaultProvider: "国家电网"
+              },
+              {
+                id: "water",
+                name: "水费",
+                icon: "💧",
+                providers: [
+                  "上海水务",
+                  "广州水务",
+                  "深圳水务",
+                  "杭州水务",
+                  "成都水务"
+                ],
+                defaultProvider: "上海水务"
+              },
+              {
+                id: "gas",
+                name: "燃气费",
+                icon: "🔥",
+                providers: [
+                  "华润燃气",
+                  "新奥燃气",
+                  "港华燃气"
+                ],
+                defaultProvider: "华润燃气"
+              }
+            ]
+          },
+          {
+            id: "communication",
+            name: "通讯服务",
+            icon: "📱",
+            color: "#007AFF",
+            services: [
+              {
+                id: "mobile",
+                name: "手机充值",
+                icon: "📱",
+                providers: [
+                  "中国移动",
+                  "中国联通",
+                  "中国电信"
+                ],
+                defaultProvider: "中国移动"
+              },
+              {
+                id: "broadband",
+                name: "宽带缴费",
+                icon: "🌐",
+                providers: [
+                  "中国移动",
+                  "中国联通",
+                  "中国电信"
+                ],
+                defaultProvider: "中国移动"
+              }
+            ]
+          },
+          {
+            id: "government",
+            name: "政务服务",
+            icon: "🏛️",
+            color: "#34C759",
+            services: [
+              {
+                id: "socialSecurity",
+                name: "社保缴费",
+                icon: "📄",
+                providers: [
+                  "人力资源和社会保障局"
+                ],
+                defaultProvider: "人力资源和社会保障局"
+              },
+              {
+                id: "medicalInsurance",
+                name: "医保缴费",
+                icon: "🏥",
+                providers: [
+                  "医疗保障局"
+                ],
+                defaultProvider: "医疗保障局"
+              },
+              {
+                id: "housingFund",
+                name: "公积金",
+                icon: "🏠",
+                providers: [
+                  "住房公积金管理中心"
+                ],
+                defaultProvider: "住房公积金管理中心"
+              }
+            ]
+          },
+          {
+            id: "education",
+            name: "教育缴费",
+            icon: "🎓",
+            color: "#FF9500",
+            services: [
+              {
+                id: "tuition",
+                name: "学费缴费",
+                icon: "📚",
+                providers: [
+                  "各大学校"
+                ],
+                defaultProvider: "各大学校"
+              },
+              {
+                id: "exam",
+                name: "考试报名",
+                icon: "📝",
+                providers: [
+                  "教育考试院"
+                ],
+                defaultProvider: "教育考试院"
+              }
+            ]
+          }
+        ],
+        recentPayments: [
+          {
+            id: "rp001",
+            type: "电费",
+            amount: 350,
+            account: "9876543210",
+            provider: "国家电网",
+            status: "completed",
+            timestamp: "2024-01-08T16:45:00.000Z",
+            icon: "⚡"
+          },
+          {
+            id: "rp002",
+            type: "水费",
+            amount: 120,
+            account: "1234567890",
+            provider: "上海水务",
+            status: "completed",
+            timestamp: "2024-01-05T11:30:00.000Z",
+            icon: "💧"
+          },
+          {
+            id: "rp003",
+            type: "手机充值",
+            amount: 100,
+            phoneNumber: "13999999999",
+            provider: "中国移动",
+            status: "completed",
+            timestamp: "2024-01-10T14:20:00.000Z",
+            icon: "📱"
+          }
+        ],
+        favoriteServices: [
+          {
+            id: "fs001",
+            type: "电费",
+            account: "9876543210",
+            provider: "国家电网",
+            nickname: "家庭电费",
+            icon: "⚡",
+            color: "#FF6B35"
+          },
+          {
+            id: "fs002",
+            type: "水费",
+            account: "1234567890",
+            provider: "上海水务",
+            nickname: "家庭水费",
+            icon: "💧",
+            color: "#007AFF"
+          }
         ]
       },
       bankAccounts: [
@@ -567,6 +889,328 @@ if (uni.restoreGlobal) {
             account: "1111222233",
             lastPayment: 220,
             lastPaymentDate: "2024-01-06T00:00:00.000Z"
+          }
+        ],
+        quickServices: [
+          {
+            icon: "💧",
+            label: "生活缴费",
+            bgColor: "#00D4AA",
+            action: "payment",
+            badge: "热门"
+          },
+          {
+            icon: "📱",
+            label: "手机充值",
+            bgColor: "#FF9500",
+            action: "recharge",
+            badge: "优惠"
+          },
+          {
+            icon: "🏛️",
+            label: "政务民生",
+            bgColor: "#34C759",
+            action: "government"
+          },
+          {
+            icon: "🎮",
+            label: "小豆乐园",
+            bgColor: "#FF6B35",
+            action: "games",
+            badge: "新"
+          }
+        ],
+        allServices: [
+          {
+            icon: "🏫",
+            label: "校园",
+            bgColor: "#5AC8FA",
+            action: "campus",
+            status: "在线"
+          },
+          {
+            icon: "⚡",
+            label: "食堂",
+            bgColor: "#30D158",
+            action: "canteen"
+          },
+          {
+            icon: "🎉",
+            label: "党费",
+            bgColor: "#FF3B30",
+            action: "party"
+          },
+          {
+            icon: "👨‍⚕️",
+            label: "养老服务",
+            bgColor: "#007AFF",
+            action: "elderly",
+            status: "热门"
+          },
+          {
+            icon: "📄",
+            label: "社保医保",
+            bgColor: "#34C759",
+            action: "insurance"
+          },
+          {
+            icon: "🌿",
+            label: "低碳空间",
+            bgColor: "#32D74B",
+            action: "carbon",
+            status: "新"
+          },
+          {
+            icon: "🎫",
+            label: "优惠卡券",
+            bgColor: "#AF52DE",
+            action: "coupons"
+          },
+          {
+            icon: "🎁",
+            label: "京东特惠",
+            bgColor: "#FF9500",
+            action: "jd",
+            status: "限时"
+          },
+          {
+            icon: "🏪",
+            label: "城市专区",
+            bgColor: "#5856D6",
+            action: "city"
+          },
+          {
+            icon: "🎊",
+            label: "热门活动",
+            bgColor: "#FF2D92",
+            action: "events",
+            status: "火爆"
+          }
+        ],
+        bannerData: [
+          {
+            id: 1,
+            title: "生活缴费优惠",
+            subtitle: "水电燃气一键支付",
+            discount: "立减10元",
+            icon: "💳",
+            action: "payment",
+            url: "/pages/payment/payment"
+          },
+          {
+            id: 2,
+            title: "手机充值特惠",
+            subtitle: "充值满100送20",
+            discount: "限时优惠",
+            icon: "📱",
+            action: "recharge",
+            url: "/pages/recharge/recharge"
+          },
+          {
+            id: 3,
+            title: "政务服务大厅",
+            subtitle: "在线办事更便民",
+            discount: "免费办理",
+            icon: "🏛️",
+            action: "government",
+            url: "/pages/government/government"
+          },
+          {
+            id: 4,
+            title: "小豆乐园",
+            subtitle: "趣味游戏赢积分",
+            discount: "每日签到",
+            icon: "🎮",
+            action: "games",
+            url: "/pages/games/games"
+          }
+        ],
+        paymentCategories: [
+          {
+            id: "utilities",
+            name: "水电燃气",
+            icon: "⚡",
+            color: "#FF6B35",
+            services: [
+              {
+                id: "electricity",
+                name: "电费",
+                icon: "⚡",
+                providers: [
+                  "国家电网",
+                  "南方电网",
+                  "地方电网"
+                ],
+                defaultProvider: "南方电网"
+              },
+              {
+                id: "water",
+                name: "水费",
+                icon: "💧",
+                providers: [
+                  "上海水务",
+                  "广州水务",
+                  "深圳水务",
+                  "杭州水务",
+                  "成都水务"
+                ],
+                defaultProvider: "广州水务"
+              },
+              {
+                id: "gas",
+                name: "燃气费",
+                icon: "🔥",
+                providers: [
+                  "华润燃气",
+                  "新奥燃气",
+                  "港华燃气"
+                ],
+                defaultProvider: "新奥燃气"
+              }
+            ]
+          },
+          {
+            id: "communication",
+            name: "通讯服务",
+            icon: "📱",
+            color: "#007AFF",
+            services: [
+              {
+                id: "mobile",
+                name: "手机充值",
+                icon: "📱",
+                providers: [
+                  "中国移动",
+                  "中国联通",
+                  "中国电信"
+                ],
+                defaultProvider: "中国联通"
+              },
+              {
+                id: "broadband",
+                name: "宽带缴费",
+                icon: "🌐",
+                providers: [
+                  "中国移动",
+                  "中国联通",
+                  "中国电信"
+                ],
+                defaultProvider: "中国联通"
+              }
+            ]
+          },
+          {
+            id: "government",
+            name: "政务服务",
+            icon: "🏛️",
+            color: "#34C759",
+            services: [
+              {
+                id: "socialSecurity",
+                name: "社保缴费",
+                icon: "📄",
+                providers: [
+                  "人力资源和社会保障局"
+                ],
+                defaultProvider: "人力资源和社会保障局"
+              },
+              {
+                id: "medicalInsurance",
+                name: "医保缴费",
+                icon: "🏥",
+                providers: [
+                  "医疗保障局"
+                ],
+                defaultProvider: "医疗保障局"
+              },
+              {
+                id: "housingFund",
+                name: "公积金",
+                icon: "🏠",
+                providers: [
+                  "住房公积金管理中心"
+                ],
+                defaultProvider: "住房公积金管理中心"
+              }
+            ]
+          },
+          {
+            id: "education",
+            name: "教育缴费",
+            icon: "🎓",
+            color: "#FF9500",
+            services: [
+              {
+                id: "tuition",
+                name: "学费缴费",
+                icon: "📚",
+                providers: [
+                  "各大学校"
+                ],
+                defaultProvider: "各大学校"
+              },
+              {
+                id: "exam",
+                name: "考试报名",
+                icon: "📝",
+                providers: [
+                  "教育考试院"
+                ],
+                defaultProvider: "教育考试院"
+              }
+            ]
+          }
+        ],
+        recentPayments: [
+          {
+            id: "rp004",
+            type: "电费",
+            amount: 280,
+            account: "5555666677",
+            provider: "南方电网",
+            status: "completed",
+            timestamp: "2024-01-11T12:15:00.000Z",
+            icon: "⚡"
+          },
+          {
+            id: "rp005",
+            type: "水费",
+            amount: 150,
+            account: "7777888899",
+            provider: "广州水务",
+            status: "completed",
+            timestamp: "2024-01-08T09:45:00.000Z",
+            icon: "💧"
+          },
+          {
+            id: "rp006",
+            type: "手机充值",
+            amount: 200,
+            phoneNumber: "13777777777",
+            provider: "中国联通",
+            status: "completed",
+            timestamp: "2024-01-05T16:30:00.000Z",
+            icon: "📱"
+          }
+        ],
+        favoriteServices: [
+          {
+            id: "fs003",
+            type: "电费",
+            account: "5555666677",
+            provider: "南方电网",
+            nickname: "家庭电费",
+            icon: "⚡",
+            color: "#FF6B35"
+          },
+          {
+            id: "fs004",
+            type: "水费",
+            account: "7777888899",
+            provider: "广州水务",
+            nickname: "家庭水费",
+            icon: "💧",
+            color: "#007AFF"
           }
         ]
       },
@@ -902,6 +1546,328 @@ if (uni.restoreGlobal) {
             account: "8888999900",
             lastPayment: 350,
             lastPaymentDate: "2024-01-05T00:00:00.000Z"
+          }
+        ],
+        quickServices: [
+          {
+            icon: "💧",
+            label: "生活缴费",
+            bgColor: "#00D4AA",
+            action: "payment",
+            badge: "热门"
+          },
+          {
+            icon: "📱",
+            label: "手机充值",
+            bgColor: "#FF9500",
+            action: "recharge",
+            badge: "优惠"
+          },
+          {
+            icon: "🏛️",
+            label: "政务民生",
+            bgColor: "#34C759",
+            action: "government"
+          },
+          {
+            icon: "🎮",
+            label: "小豆乐园",
+            bgColor: "#FF6B35",
+            action: "games",
+            badge: "新"
+          }
+        ],
+        allServices: [
+          {
+            icon: "🏫",
+            label: "校园",
+            bgColor: "#5AC8FA",
+            action: "campus",
+            status: "在线"
+          },
+          {
+            icon: "⚡",
+            label: "食堂",
+            bgColor: "#30D158",
+            action: "canteen"
+          },
+          {
+            icon: "🎉",
+            label: "党费",
+            bgColor: "#FF3B30",
+            action: "party"
+          },
+          {
+            icon: "👨‍⚕️",
+            label: "养老服务",
+            bgColor: "#007AFF",
+            action: "elderly",
+            status: "热门"
+          },
+          {
+            icon: "📄",
+            label: "社保医保",
+            bgColor: "#34C759",
+            action: "insurance"
+          },
+          {
+            icon: "🌿",
+            label: "低碳空间",
+            bgColor: "#32D74B",
+            action: "carbon",
+            status: "新"
+          },
+          {
+            icon: "🎫",
+            label: "优惠卡券",
+            bgColor: "#AF52DE",
+            action: "coupons"
+          },
+          {
+            icon: "🎁",
+            label: "京东特惠",
+            bgColor: "#FF9500",
+            action: "jd",
+            status: "限时"
+          },
+          {
+            icon: "🏪",
+            label: "城市专区",
+            bgColor: "#5856D6",
+            action: "city"
+          },
+          {
+            icon: "🎊",
+            label: "热门活动",
+            bgColor: "#FF2D92",
+            action: "events",
+            status: "火爆"
+          }
+        ],
+        bannerData: [
+          {
+            id: 1,
+            title: "生活缴费优惠",
+            subtitle: "水电燃气一键支付",
+            discount: "立减10元",
+            icon: "💳",
+            action: "payment",
+            url: "/pages/payment/payment"
+          },
+          {
+            id: 2,
+            title: "手机充值特惠",
+            subtitle: "充值满100送20",
+            discount: "限时优惠",
+            icon: "📱",
+            action: "recharge",
+            url: "/pages/recharge/recharge"
+          },
+          {
+            id: 3,
+            title: "政务服务大厅",
+            subtitle: "在线办事更便民",
+            discount: "免费办理",
+            icon: "🏛️",
+            action: "government",
+            url: "/pages/government/government"
+          },
+          {
+            id: 4,
+            title: "小豆乐园",
+            subtitle: "趣味游戏赢积分",
+            discount: "每日签到",
+            icon: "🎮",
+            action: "games",
+            url: "/pages/games/games"
+          }
+        ],
+        paymentCategories: [
+          {
+            id: "utilities",
+            name: "水电燃气",
+            icon: "⚡",
+            color: "#FF6B35",
+            services: [
+              {
+                id: "electricity",
+                name: "电费",
+                icon: "⚡",
+                providers: [
+                  "国家电网",
+                  "南方电网",
+                  "地方电网"
+                ],
+                defaultProvider: "国家电网"
+              },
+              {
+                id: "water",
+                name: "水费",
+                icon: "💧",
+                providers: [
+                  "上海水务",
+                  "广州水务",
+                  "深圳水务",
+                  "杭州水务",
+                  "成都水务"
+                ],
+                defaultProvider: "深圳水务"
+              },
+              {
+                id: "gas",
+                name: "燃气费",
+                icon: "🔥",
+                providers: [
+                  "华润燃气",
+                  "新奥燃气",
+                  "港华燃气"
+                ],
+                defaultProvider: "华润燃气"
+              }
+            ]
+          },
+          {
+            id: "communication",
+            name: "通讯服务",
+            icon: "📱",
+            color: "#007AFF",
+            services: [
+              {
+                id: "mobile",
+                name: "手机充值",
+                icon: "📱",
+                providers: [
+                  "中国移动",
+                  "中国联通",
+                  "中国电信"
+                ],
+                defaultProvider: "中国电信"
+              },
+              {
+                id: "broadband",
+                name: "宽带缴费",
+                icon: "🌐",
+                providers: [
+                  "中国移动",
+                  "中国联通",
+                  "中国电信"
+                ],
+                defaultProvider: "中国电信"
+              }
+            ]
+          },
+          {
+            id: "government",
+            name: "政务服务",
+            icon: "🏛️",
+            color: "#34C759",
+            services: [
+              {
+                id: "socialSecurity",
+                name: "社保缴费",
+                icon: "📄",
+                providers: [
+                  "人力资源和社会保障局"
+                ],
+                defaultProvider: "人力资源和社会保障局"
+              },
+              {
+                id: "medicalInsurance",
+                name: "医保缴费",
+                icon: "🏥",
+                providers: [
+                  "医疗保障局"
+                ],
+                defaultProvider: "医疗保障局"
+              },
+              {
+                id: "housingFund",
+                name: "公积金",
+                icon: "🏠",
+                providers: [
+                  "住房公积金管理中心"
+                ],
+                defaultProvider: "住房公积金管理中心"
+              }
+            ]
+          },
+          {
+            id: "education",
+            name: "教育缴费",
+            icon: "🎓",
+            color: "#FF9500",
+            services: [
+              {
+                id: "tuition",
+                name: "学费缴费",
+                icon: "📚",
+                providers: [
+                  "各大学校"
+                ],
+                defaultProvider: "各大学校"
+              },
+              {
+                id: "exam",
+                name: "考试报名",
+                icon: "📝",
+                providers: [
+                  "教育考试院"
+                ],
+                defaultProvider: "教育考试院"
+              }
+            ]
+          }
+        ],
+        recentPayments: [
+          {
+            id: "rp007",
+            type: "电费",
+            amount: 500,
+            account: "1111222233",
+            provider: "国家电网",
+            status: "completed",
+            timestamp: "2024-01-10T16:30:00.000Z",
+            icon: "⚡"
+          },
+          {
+            id: "rp008",
+            type: "水费",
+            amount: 280,
+            account: "4444555566",
+            provider: "深圳水务",
+            status: "completed",
+            timestamp: "2024-01-07T10:15:00.000Z",
+            icon: "💧"
+          },
+          {
+            id: "rp009",
+            type: "手机充值",
+            amount: 300,
+            phoneNumber: "13666666666",
+            provider: "中国电信",
+            status: "completed",
+            timestamp: "2024-01-08T14:20:00.000Z",
+            icon: "📱"
+          }
+        ],
+        favoriteServices: [
+          {
+            id: "fs005",
+            type: "电费",
+            account: "1111222233",
+            provider: "国家电网",
+            nickname: "家庭电费",
+            icon: "⚡",
+            color: "#FF6B35"
+          },
+          {
+            id: "fs006",
+            type: "水费",
+            account: "4444555566",
+            provider: "深圳水务",
+            nickname: "家庭水费",
+            icon: "💧",
+            color: "#007AFF"
           }
         ]
       },
@@ -1882,7 +2848,7 @@ if (uni.restoreGlobal) {
       idCard: userData.idCard || "",
       avatar: "/static/wealth/useravatar.jpg",
       // 默认头像
-      balance: 0,
+      balance: 1e4,
       // 初始余额
       realName: userData.nickname || userData.username,
       gender: "",
@@ -1966,9 +2932,9 @@ if (uni.restoreGlobal) {
   ];
   function isLoggedIn() {
     try {
-      const userInfo = uni.getStorageSync("userInfo");
+      const userInfo2 = uni.getStorageSync("userInfo");
       const isLoggedIn2 = uni.getStorageSync("isLoggedIn");
-      return !!(userInfo && isLoggedIn2);
+      return !!(userInfo2 && isLoggedIn2);
     } catch (error) {
       formatAppLog("error", "at utils/auth.js:24", "检查登录状态失败:", error);
       return false;
@@ -2030,8 +2996,8 @@ if (uni.restoreGlobal) {
   function forceCheckLogin() {
     try {
       const isLoggedIn2 = uni.getStorageSync("isLoggedIn");
-      const userInfo = uni.getStorageSync("userInfo");
-      if (!isLoggedIn2 || !userInfo) {
+      const userInfo2 = uni.getStorageSync("userInfo");
+      if (!isLoggedIn2 || !userInfo2) {
         formatAppLog("log", "at utils/auth.js:125", "强制检查：用户未登录，清除所有状态");
         clearAllUserData();
         return false;
@@ -2047,15 +3013,15 @@ if (uni.restoreGlobal) {
       return false;
     }
   }
-  function handleLoginSuccess(userInfo) {
+  function handleLoginSuccess(userInfo2) {
     try {
       const users2 = uni.getStorageSync("users") || [];
-      const userIndex = users2.findIndex((user) => user.id === userInfo.id);
+      const userIndex = users2.findIndex((user) => user.id === userInfo2.id);
       if (userIndex !== -1) {
         users2.forEach((user) => {
           user.isLoggedIn = false;
         });
-        const completeUserInfo = { ...users2[userIndex], ...userInfo };
+        const completeUserInfo = { ...users2[userIndex], ...userInfo2 };
         completeUserInfo.isLoggedIn = true;
         completeUserInfo.lastLoginTime = (/* @__PURE__ */ new Date()).toISOString();
         users2[userIndex] = completeUserInfo;
@@ -2071,21 +3037,21 @@ if (uni.restoreGlobal) {
           transactionPassword: completeUserInfo.transactionPassword
         });
       } else {
-        uni.setStorageSync("userInfo", userInfo);
-        uni.setStorageSync("currentUser", userInfo);
+        uni.setStorageSync("userInfo", userInfo2);
+        uni.setStorageSync("currentUser", userInfo2);
         uni.setStorageSync("isLoggedIn", true);
         formatAppLog("log", "at utils/auth.js:186", "用户登录成功，使用传入数据:", {
-          id: userInfo.id,
-          username: userInfo.username,
-          phone: userInfo.phone,
-          hasTransactionPassword: !!userInfo.transactionPassword,
-          transactionPassword: userInfo.transactionPassword
+          id: userInfo2.id,
+          username: userInfo2.username,
+          phone: userInfo2.phone,
+          hasTransactionPassword: !!userInfo2.transactionPassword,
+          transactionPassword: userInfo2.transactionPassword
         });
       }
     } catch (error) {
       formatAppLog("error", "at utils/auth.js:195", "更新用户登录状态失败:", error);
-      uni.setStorageSync("userInfo", userInfo);
-      uni.setStorageSync("currentUser", userInfo);
+      uni.setStorageSync("userInfo", userInfo2);
+      uni.setStorageSync("currentUser", userInfo2);
       uni.setStorageSync("isLoggedIn", true);
     }
     const redirectUrl = uni.getStorageSync("redirectUrl");
@@ -2244,15 +3210,15 @@ if (uni.restoreGlobal) {
   }
   async function syncLogoutToServer(reason) {
     try {
-      const userInfo = getUserInfo();
-      if (!userInfo) {
+      const userInfo2 = getUserInfo();
+      if (!userInfo2) {
         formatAppLog("log", "at utils/auth.js:422", "用户信息不存在，跳过服务器同步");
         return;
       }
       const logoutData = {
-        userId: userInfo.id,
-        username: userInfo.username,
-        phone: userInfo.phone,
+        userId: userInfo2.id,
+        username: userInfo2.username,
+        phone: userInfo2.phone,
         reason,
         timestamp: Date.now(),
         platform: uni.getSystemInfoSync().platform,
@@ -2318,7 +3284,7 @@ if (uni.restoreGlobal) {
     }
     return target;
   };
-  const _sfc_main$v = {
+  const _sfc_main$z = {
     data() {
       return {
         loginType: "password",
@@ -2345,30 +3311,45 @@ if (uni.restoreGlobal) {
       this.getLastFingerprintUser();
     },
     methods: {
+      // 显示忘记密码提示
+      showForgetPasswordTip() {
+        uni.showModal({
+          title: "忘记密码",
+          content: "请联系客服或前往银行网点重置密码",
+          showCancel: false,
+          confirmText: "确定"
+        });
+      },
       // 检查设备指纹支持情况
       checkFingerprintSupport() {
         const fingerprintEnabled = uni.getStorageSync("fingerprintLoginEnabled");
         if (fingerprintEnabled === false) {
           this.fingerprintSupport = false;
           this.fingerprintStatus = "notSupport";
-          formatAppLog("log", "at pages/denglu/login.vue:226", "用户已禁用指纹登录");
+          formatAppLog("log", "at pages/denglu/login.vue:235", "用户已禁用指纹登录");
+          return;
+        }
+        if (typeof uni.checkIsSupportSoterAuthentication !== "function") {
+          formatAppLog("log", "at pages/denglu/login.vue:251", "当前环境不支持指纹识别API");
+          this.fingerprintSupport = false;
+          this.fingerprintStatus = "notSupport";
           return;
         }
         uni.checkIsSupportSoterAuthentication({
           success: (res) => {
-            formatAppLog("log", "at pages/denglu/login.vue:232", "指纹支持检查结果:", res);
+            formatAppLog("log", "at pages/denglu/login.vue:259", "指纹支持检查结果:", res);
             if (res.supportMode && res.supportMode.includes("fingerPrint")) {
               this.fingerprintSupport = true;
               this.fingerprintStatus = "ready";
-              formatAppLog("log", "at pages/denglu/login.vue:236", "设备支持指纹识别");
+              formatAppLog("log", "at pages/denglu/login.vue:263", "设备支持指纹识别");
             } else {
               this.fingerprintSupport = false;
               this.fingerprintStatus = "notSupport";
-              formatAppLog("log", "at pages/denglu/login.vue:240", "设备不支持指纹识别");
+              formatAppLog("log", "at pages/denglu/login.vue:267", "设备不支持指纹识别");
             }
           },
           fail: (err) => {
-            formatAppLog("error", "at pages/denglu/login.vue:244", "检查指纹支持失败:", err);
+            formatAppLog("error", "at pages/denglu/login.vue:271", "检查指纹支持失败:", err);
             this.fingerprintSupport = false;
             this.fingerprintStatus = "notSupport";
           }
@@ -2380,10 +3361,10 @@ if (uni.restoreGlobal) {
           const lastUser = uni.getStorageSync("lastFingerprintUser");
           if (lastUser) {
             this.lastFingerprintUser = lastUser;
-            formatAppLog("log", "at pages/denglu/login.vue:257", "上次指纹登录用户:", lastUser);
+            formatAppLog("log", "at pages/denglu/login.vue:285", "上次指纹登录用户:", lastUser);
           }
         } catch (error) {
-          formatAppLog("error", "at pages/denglu/login.vue:260", "获取上次指纹登录用户失败:", error);
+          formatAppLog("error", "at pages/denglu/login.vue:288", "获取上次指纹登录用户失败:", error);
         }
       },
       // 开始指纹登录
@@ -2411,6 +3392,13 @@ if (uni.restoreGlobal) {
           });
           return;
         }
+        if (typeof uni.startSoterAuthentication !== "function") {
+          uni.showToast({
+            title: "当前环境不支持指纹识别",
+            icon: "none"
+          });
+          return;
+        }
         this.isFingerprintScanning = true;
         this.fingerprintStatus = "scanning";
         const challenge = Math.random().toString(36).substring(2, 15);
@@ -2419,13 +3407,13 @@ if (uni.restoreGlobal) {
           challenge,
           authContent: "请用指纹解锁",
           success: (res) => {
-            formatAppLog("log", "at pages/denglu/login.vue:304", "指纹认证成功:", res);
+            formatAppLog("log", "at pages/denglu/login.vue:353", "指纹认证成功:", res);
             this.fingerprintStatus = "success";
             this.isFingerprintScanning = false;
             this.handleFingerprintLoginSuccess();
           },
           fail: (err) => {
-            formatAppLog("error", "at pages/denglu/login.vue:312", "指纹认证失败:", err);
+            formatAppLog("error", "at pages/denglu/login.vue:361", "指纹认证失败:", err);
             this.fingerprintStatus = "failed";
             this.isFingerprintScanning = false;
             if (err.errCode === 1) {
@@ -2473,9 +3461,9 @@ if (uni.restoreGlobal) {
       saveUserForFingerprint(user) {
         try {
           uni.setStorageSync("lastFingerprintUser", user);
-          formatAppLog("log", "at pages/denglu/login.vue:372", "用户信息已保存用于指纹登录:", user.username);
+          formatAppLog("log", "at pages/denglu/login.vue:422", "用户信息已保存用于指纹登录:", user.username);
         } catch (error) {
-          formatAppLog("error", "at pages/denglu/login.vue:374", "保存用户信息失败:", error);
+          formatAppLog("error", "at pages/denglu/login.vue:424", "保存用户信息失败:", error);
         }
       },
       // 获取指纹按钮文本
@@ -2592,7 +3580,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$u(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$y(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "login-container" }, [
       vue.createCommentVNode(" 背景装饰 "),
       vue.createElementVNode("view", { class: "bg-decoration" }, [
@@ -2837,9 +3825,9 @@ if (uni.restoreGlobal) {
         ]),
         vue.createCommentVNode(" 辅助链接 "),
         vue.createElementVNode("view", { class: "help-links" }, [
-          vue.createElementVNode("navigator", {
-            url: "/pages/forget/forget",
-            class: "help-link"
+          vue.createElementVNode("view", {
+            class: "help-link",
+            onClick: _cache[9] || (_cache[9] = (...args) => $options.showForgetPasswordTip && $options.showForgetPasswordTip(...args))
           }, [
             vue.createElementVNode("text", { class: "link-text" }, "忘记密码")
           ]),
@@ -2861,8 +3849,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesDengluLogin = /* @__PURE__ */ _export_sfc(_sfc_main$v, [["render", _sfc_render$u], ["__scopeId", "data-v-6f56e16f"], ["__file", "E:/项目/yihangyidon/src/pages/denglu/login.vue"]]);
-  const _sfc_main$u = {
+  const PagesDengluLogin = /* @__PURE__ */ _export_sfc(_sfc_main$z, [["render", _sfc_render$y], ["__scopeId", "data-v-6f56e16f"], ["__file", "E:/项目/yihangyidon/src/pages/denglu/login.vue"]]);
+  const _sfc_main$y = {
     data() {
       return {
         form: {
@@ -3079,7 +4067,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$t(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$x(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "register-container" }, [
       vue.createCommentVNode(" 标题 "),
       vue.createElementVNode("view", { class: "title" }, "注册账户"),
@@ -3294,8 +4282,8 @@ if (uni.restoreGlobal) {
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesRegisterRegister = /* @__PURE__ */ _export_sfc(_sfc_main$u, [["render", _sfc_render$t], ["__scopeId", "data-v-97bb96ad"], ["__file", "E:/项目/yihangyidon/src/pages/register/register.vue"]]);
-  const _sfc_main$t = {
+  const PagesRegisterRegister = /* @__PURE__ */ _export_sfc(_sfc_main$y, [["render", _sfc_render$x], ["__scopeId", "data-v-97bb96ad"], ["__file", "E:/项目/yihangyidon/src/pages/register/register.vue"]]);
+  const _sfc_main$x = {
     data() {
       return {
         isLoggedIn: false,
@@ -3340,6 +4328,18 @@ if (uni.restoreGlobal) {
           icon: "none",
           duration: 2e3
         });
+      },
+      // 添加到methods对象中
+      handleBranchClick() {
+        if (this.isLoggedIn) {
+          uni.navigateTo({
+            url: "/pages/service/branch"
+          });
+        } else {
+          uni.navigateTo({
+            url: "/pages/denglu/login"
+          });
+        }
       },
       // 处理转账按钮点击事件
       handleTransferClick() {
@@ -3428,7 +4428,7 @@ if (uni.restoreGlobal) {
           showFlash: true,
           // 成功扫码的回调
           success: (res) => {
-            formatAppLog("log", "at pages/index/index.vue:348", "扫码结果：", res);
+            formatAppLog("log", "at pages/index/index.vue:363", "扫码结果：", res);
             const result = res.result;
             if (result.startsWith("http")) {
               uni.showModal({
@@ -3465,7 +4465,7 @@ if (uni.restoreGlobal) {
           },
           // 扫码失败的回调
           fail: (err) => {
-            formatAppLog("error", "at pages/index/index.vue:396", "扫码失败：", err);
+            formatAppLog("error", "at pages/index/index.vue:411", "扫码失败：", err);
             if (err.errMsg !== "scanCode:fail cancel") {
               uni.showToast({
                 title: "扫码失败，请重试",
@@ -3492,7 +4492,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$s(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$w(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", {
       class: "home-container",
       onClick: _cache[29] || (_cache[29] = (...args) => $options.closeSearchSuggestions && $options.closeSearchSuggestions(...args))
@@ -3656,7 +4656,7 @@ if (uni.restoreGlobal) {
             ]),
             vue.createElementVNode("view", {
               class: "function-item",
-              onClick: _cache[20] || (_cache[20] = ($event) => $options.showFeatureTip("网点查询"))
+              onClick: _cache[20] || (_cache[20] = (...args) => $options.handleBranchClick && $options.handleBranchClick(...args))
             }, [
               vue.createElementVNode("view", { class: "function-icon icon-branch" }, "🏦"),
               vue.createElementVNode("text", { class: "function-text" }, "网点查询")
@@ -3784,7 +4784,7 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesIndexIndex = /* @__PURE__ */ _export_sfc(_sfc_main$t, [["render", _sfc_render$s], ["__scopeId", "data-v-83a5a03c"], ["__file", "E:/项目/yihangyidon/src/pages/index/index.vue"]]);
+  const PagesIndexIndex = /* @__PURE__ */ _export_sfc(_sfc_main$x, [["render", _sfc_render$w], ["__scopeId", "data-v-83a5a03c"], ["__file", "E:/项目/yihangyidon/src/pages/index/index.vue"]]);
   const scriptRel = "modulepreload";
   const assetsURL = function(dep) {
     return "/" + dep;
@@ -3834,23 +4834,23 @@ if (uni.restoreGlobal) {
       }
     });
   };
-  function isPlatinumVip(userInfo) {
-    if (!userInfo || !userInfo.creditCards || !Array.isArray(userInfo.creditCards)) {
+  function isPlatinumVip(userInfo2) {
+    if (!userInfo2 || !userInfo2.creditCards || !Array.isArray(userInfo2.creditCards)) {
       return false;
     }
-    const hasPlatinumCard = userInfo.creditCards.some(
+    const hasPlatinumCard = userInfo2.creditCards.some(
       (card) => card.cardType === "白金卡" || card.cardType === "钻石卡"
     );
-    const hasHighBalance = userInfo.balance >= 5e5;
-    const hasHighCreditLimit = userInfo.creditCards.some(
+    const hasHighBalance = userInfo2.balance >= 5e5;
+    const hasHighCreditLimit = userInfo2.creditCards.some(
       (card) => card.creditLimit >= 1e5
     );
     return hasPlatinumCard || hasHighBalance || hasHighCreditLimit;
   }
-  function canAccessPlatinumHotline(userInfo) {
-    return isPlatinumVip(userInfo);
+  function canAccessPlatinumHotline(userInfo2) {
+    return isPlatinumVip(userInfo2);
   }
-  const _sfc_main$s = {
+  const _sfc_main$w = {
     name: "ServiceModal",
     props: {
       visible: {
@@ -3872,8 +4872,8 @@ if (uni.restoreGlobal) {
     computed: {
       // 检查当前用户是否可以访问白金贵宾专线
       canAccessPlatinum() {
-        const userInfo = getUserInfo();
-        return canAccessPlatinumHotline(userInfo);
+        const userInfo2 = getUserInfo();
+        return canAccessPlatinumHotline(userInfo2);
       }
     },
     methods: {
@@ -3955,7 +4955,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$r(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$v(_ctx, _cache, $props, $setup, $data, $options) {
     return $props.visible ? (vue.openBlock(), vue.createElementBlock("view", {
       key: 0,
       class: "service-modal",
@@ -4080,8 +5080,8 @@ if (uni.restoreGlobal) {
       )
     ])) : vue.createCommentVNode("v-if", true);
   }
-  const ServiceModal = /* @__PURE__ */ _export_sfc(_sfc_main$s, [["render", _sfc_render$r], ["__scopeId", "data-v-1f8e1b4e"], ["__file", "E:/项目/yihangyidon/src/components/common/ServiceModal.vue"]]);
-  const _sfc_main$r = {
+  const ServiceModal = /* @__PURE__ */ _export_sfc(_sfc_main$w, [["render", _sfc_render$v], ["__scopeId", "data-v-1f8e1b4e"], ["__file", "E:/项目/yihangyidon/src/components/common/ServiceModal.vue"]]);
+  const _sfc_main$v = {
     components: {
       ServiceModal
     },
@@ -4133,9 +5133,9 @@ if (uni.restoreGlobal) {
       },
       // 检查登录状态
       checkLoginStatus() {
-        const userInfo = getUserInfo();
-        if (userInfo) {
-          this.userInfo = userInfo;
+        const userInfo2 = getUserInfo();
+        if (userInfo2) {
+          this.userInfo = userInfo2;
         } else {
           this.userInfo = null;
         }
@@ -4336,7 +5336,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$q(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$u(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_ServiceModal = vue.resolveComponent("ServiceModal");
     return vue.openBlock(), vue.createElementBlock("view", { class: "user-page" }, [
       vue.createCommentVNode(" 顶部背景 "),
@@ -4552,9 +5552,9 @@ if (uni.restoreGlobal) {
       }, null, 8, ["visible", "onClose"])
     ]);
   }
-  const PagesUserUser = /* @__PURE__ */ _export_sfc(_sfc_main$r, [["render", _sfc_render$q], ["__scopeId", "data-v-99b0ba47"], ["__file", "E:/项目/yihangyidon/src/pages/user/user.vue"]]);
+  const PagesUserUser = /* @__PURE__ */ _export_sfc(_sfc_main$v, [["render", _sfc_render$u], ["__scopeId", "data-v-99b0ba47"], ["__file", "E:/项目/yihangyidon/src/pages/user/user.vue"]]);
   const _imports_0$1 = "/static/tabbar/service.png";
-  const _sfc_main$q = {
+  const _sfc_main$u = {
     components: {
       ServiceModal
     },
@@ -4563,8 +5563,6 @@ if (uni.restoreGlobal) {
         hideAmount: false,
         activeTab: "deposit",
         showServiceModal: false,
-        investmentPortfolio: null,
-        // 投资组合数据
         tabs: [
           { key: "deposit", name: "存款" },
           { key: "product", name: "理财产品" },
@@ -4592,7 +5590,11 @@ if (uni.restoreGlobal) {
           { id: "d2", name: "整存整取", term: "1年", minAmount: 1e3, rate: 2.1 },
           { id: "d3", name: "大额存单", term: "3年", minAmount: 2e5, rate: 2.95 }
         ],
-        wealthProducts: [],
+        wealthProducts: [
+          { id: "w1", name: "稳健优选第68期", risk: "低", term: "90天", minAmount: 1e4, yield: 3.2 },
+          { id: "w2", name: "灵活理财T+1", risk: "低", term: "开放式", minAmount: 1e3, yield: 2.65 },
+          { id: "w3", name: "进取增强半年期", risk: "中", term: "180天", minAmount: 1e4, yield: 4.1 }
+        ],
         insuranceList: [
           { id: "i1", name: "安心医疗险", type: "health", typeText: "医疗险", desc: "百万保额·报销广", premium: 268 },
           { id: "i2", name: "家庭意外险", type: "accident", typeText: "意外险", desc: "全家保障·一年期", premium: 199 },
@@ -4644,53 +5646,9 @@ if (uni.restoreGlobal) {
         ]
       };
     },
-    onLoad() {
-      this.loadWealthData();
-    },
-    onShow() {
-      this.loadWealthData();
-    },
     methods: {
-      // 加载财富数据
-      loadWealthData() {
-        try {
-          const users2 = uni.getStorageSync("users") || [];
-          const currentUser = users2.find((user) => user.isLoggedIn);
-          if (currentUser && currentUser.wealthProducts) {
-            this.wealthProducts = currentUser.wealthProducts;
-            this.investmentPortfolio = currentUser.investmentPortfolio;
-          } else {
-            this.wealthProducts = [
-              { id: "w1", name: "稳健优选第68期", risk: "低", term: "90天", minAmount: 1e4, yield: 3.2 },
-              { id: "w2", name: "灵活理财T+1", risk: "低", term: "开放式", minAmount: 1e3, yield: 2.65 },
-              { id: "w3", name: "进取增强半年期", risk: "中", term: "180天", minAmount: 1e4, yield: 4.1 }
-            ];
-            if (currentUser) {
-              currentUser.wealthProducts = this.wealthProducts;
-              uni.setStorageSync("users", users2);
-            }
-          }
-        } catch (error) {
-          formatAppLog("error", "at pages/wealth/wealth.vue:403", "加载财富数据失败:", error);
-        }
-      },
       onSwiperClick(idx) {
         uni.showToast({ title: `轮播图第${idx + 1}张`, icon: "none" });
-      },
-      // 格式化数字
-      formatNumber(num) {
-        if (!num)
-          return "0";
-        return Number(num).toLocaleString("zh-CN", {
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 0
-        });
-      },
-      // 显示投资组合详情
-      showPortfolioDetail() {
-        uni.navigateTo({
-          url: "/pages/wealth/portfolio"
-        });
       },
       onOnlineService() {
         this.showServiceModal = true;
@@ -4741,7 +5699,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$p(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$t(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_ServiceModal = vue.resolveComponent("ServiceModal");
     return vue.openBlock(), vue.createElementBlock("view", { class: "wealth-container" }, [
       vue.createCommentVNode(" 资产概览轮播（图片版） "),
@@ -4773,107 +5731,10 @@ if (uni.restoreGlobal) {
           ))
         ])
       ]),
-      vue.createCommentVNode(" 投资组合概览 "),
-      $data.investmentPortfolio ? (vue.openBlock(), vue.createElementBlock("view", {
-        key: 0,
-        class: "portfolio-overview"
-      }, [
-        vue.createElementVNode("view", { class: "portfolio-header" }, [
-          vue.createElementVNode("text", { class: "portfolio-title" }, "我的投资组合"),
-          vue.createElementVNode("text", {
-            class: "portfolio-more",
-            onClick: _cache[0] || (_cache[0] = (...args) => $options.showPortfolioDetail && $options.showPortfolioDetail(...args))
-          }, "查看详情")
-        ]),
-        vue.createElementVNode("view", { class: "portfolio-stats" }, [
-          vue.createElementVNode("view", { class: "stat-item" }, [
-            vue.createElementVNode(
-              "text",
-              { class: "stat-value" },
-              "¥" + vue.toDisplayString($options.formatNumber($data.investmentPortfolio.totalValue)),
-              1
-              /* TEXT */
-            ),
-            vue.createElementVNode("text", { class: "stat-label" }, "总价值")
-          ]),
-          vue.createElementVNode("view", { class: "stat-item" }, [
-            vue.createElementVNode(
-              "text",
-              { class: "stat-value profit" },
-              "+¥" + vue.toDisplayString($options.formatNumber($data.investmentPortfolio.totalReturn)),
-              1
-              /* TEXT */
-            ),
-            vue.createElementVNode("text", { class: "stat-label" }, "总收益")
-          ]),
-          vue.createElementVNode("view", { class: "stat-item" }, [
-            vue.createElementVNode(
-              "text",
-              { class: "stat-value profit" },
-              "+" + vue.toDisplayString($data.investmentPortfolio.returnRate) + "%",
-              1
-              /* TEXT */
-            ),
-            vue.createElementVNode("text", { class: "stat-label" }, "收益率")
-          ])
-        ]),
-        vue.createElementVNode("view", { class: "portfolio-holdings" }, [
-          vue.createElementVNode("text", { class: "holdings-title" }, "持仓产品"),
-          vue.createElementVNode("view", { class: "holdings-list" }, [
-            (vue.openBlock(true), vue.createElementBlock(
-              vue.Fragment,
-              null,
-              vue.renderList($data.investmentPortfolio.holdings.slice(0, 3), (holding) => {
-                return vue.openBlock(), vue.createElementBlock("view", {
-                  class: "holding-item",
-                  key: holding.id
-                }, [
-                  vue.createElementVNode("view", { class: "holding-info" }, [
-                    vue.createElementVNode(
-                      "text",
-                      { class: "holding-name" },
-                      vue.toDisplayString(holding.name),
-                      1
-                      /* TEXT */
-                    ),
-                    vue.createElementVNode(
-                      "text",
-                      { class: "holding-type" },
-                      vue.toDisplayString(holding.type),
-                      1
-                      /* TEXT */
-                    )
-                  ]),
-                  vue.createElementVNode("view", { class: "holding-value" }, [
-                    vue.createElementVNode(
-                      "text",
-                      { class: "holding-amount" },
-                      "¥" + vue.toDisplayString($options.formatNumber(holding.currentValue)),
-                      1
-                      /* TEXT */
-                    ),
-                    vue.createElementVNode(
-                      "text",
-                      {
-                        class: vue.normalizeClass(["holding-return", holding.currentValue > holding.amount ? "profit" : "loss"])
-                      },
-                      vue.toDisplayString(holding.currentValue > holding.amount ? "+" : "") + vue.toDisplayString(((holding.currentValue - holding.amount) / holding.amount * 100).toFixed(2)) + "% ",
-                      3
-                      /* TEXT, CLASS */
-                    )
-                  ])
-                ]);
-              }),
-              128
-              /* KEYED_FRAGMENT */
-            ))
-          ])
-        ])
-      ])) : vue.createCommentVNode("v-if", true),
       vue.createCommentVNode(" 客服模块 "),
       vue.createElementVNode("view", {
         class: "service-card",
-        onClick: _cache[3] || (_cache[3] = (...args) => $options.onOnlineService && $options.onOnlineService(...args))
+        onClick: _cache[2] || (_cache[2] = (...args) => $options.onOnlineService && $options.onOnlineService(...args))
       }, [
         vue.createElementVNode("image", {
           class: "service-icon",
@@ -4893,13 +5754,13 @@ if (uni.restoreGlobal) {
         vue.createElementVNode("view", { class: "service-actions" }, [
           vue.createElementVNode("button", {
             class: "mini-btn ghost",
-            onClick: _cache[1] || (_cache[1] = vue.withModifiers((...args) => $options.onOnlineService && $options.onOnlineService(...args), ["stop"]))
+            onClick: _cache[0] || (_cache[0] = vue.withModifiers((...args) => $options.onOnlineService && $options.onOnlineService(...args), ["stop"]))
           }, "在线客服"),
           vue.createElementVNode(
             "button",
             {
               class: "mini-btn call",
-              onClick: _cache[2] || (_cache[2] = vue.withModifiers((...args) => $options.onCallHotline && $options.onCallHotline(...args), ["stop"]))
+              onClick: _cache[1] || (_cache[1] = vue.withModifiers((...args) => $options.onCallHotline && $options.onCallHotline(...args), ["stop"]))
             },
             "拨打 " + vue.toDisplayString($data.serviceHotline),
             1
@@ -4911,28 +5772,28 @@ if (uni.restoreGlobal) {
       vue.createElementVNode("view", { class: "entry-grid" }, [
         vue.createElementVNode("view", {
           class: "entry-item",
-          onClick: _cache[4] || (_cache[4] = ($event) => $data.activeTab = "deposit")
+          onClick: _cache[3] || (_cache[3] = ($event) => $data.activeTab = "deposit")
         }, [
           vue.createElementVNode("view", { class: "entry-icon" }, "🏦"),
           vue.createElementVNode("text", { class: "entry-text" }, "存款")
         ]),
         vue.createElementVNode("view", {
           class: "entry-item",
-          onClick: _cache[5] || (_cache[5] = ($event) => $data.activeTab = "product")
+          onClick: _cache[4] || (_cache[4] = ($event) => $data.activeTab = "product")
         }, [
           vue.createElementVNode("view", { class: "entry-icon" }, "📈"),
           vue.createElementVNode("text", { class: "entry-text" }, "理财产品")
         ]),
         vue.createElementVNode("view", {
           class: "entry-item",
-          onClick: _cache[6] || (_cache[6] = ($event) => $data.activeTab = "insurance")
+          onClick: _cache[5] || (_cache[5] = ($event) => $data.activeTab = "insurance")
         }, [
           vue.createElementVNode("view", { class: "entry-icon" }, "🛡️"),
           vue.createElementVNode("text", { class: "entry-text" }, "保险")
         ]),
         vue.createElementVNode("view", {
           class: "entry-item",
-          onClick: _cache[7] || (_cache[7] = ($event) => $data.activeTab = "forex")
+          onClick: _cache[6] || (_cache[6] = ($event) => $data.activeTab = "forex")
         }, [
           vue.createElementVNode("view", { class: "entry-icon" }, "💱"),
           vue.createElementVNode("text", { class: "entry-text" }, "外汇")
@@ -4963,7 +5824,7 @@ if (uni.restoreGlobal) {
               vue.createElementVNode("text", { class: "section-title" }, "我的存款"),
               vue.createElementVNode("text", {
                 class: "link",
-                onClick: _cache[8] || (_cache[8] = ($event) => $options.onViewAll("deposit"))
+                onClick: _cache[7] || (_cache[7] = ($event) => $options.onViewAll("deposit"))
               }, "查看明细")
             ]),
             vue.createElementVNode("view", { class: "deposit-stats" }, [
@@ -5256,21 +6117,21 @@ if (uni.restoreGlobal) {
             vue.createElementVNode("view", { class: "tool-grid" }, [
               vue.createElementVNode("view", {
                 class: "tool-item",
-                onClick: _cache[9] || (_cache[9] = ($event) => $options.onOpenTool("calc"))
+                onClick: _cache[8] || (_cache[8] = ($event) => $options.onOpenTool("calc"))
               }, [
                 vue.createElementVNode("text", { class: "tool-icon" }, "🧮"),
                 vue.createElementVNode("text", { class: "tool-text" }, "收益计算器")
               ]),
               vue.createElementVNode("view", {
                 class: "tool-item",
-                onClick: _cache[10] || (_cache[10] = ($event) => $options.onOpenTool("calendar"))
+                onClick: _cache[9] || (_cache[9] = ($event) => $options.onOpenTool("calendar"))
               }, [
                 vue.createElementVNode("text", { class: "tool-icon" }, "📅"),
                 vue.createElementVNode("text", { class: "tool-text" }, "产品日历")
               ]),
               vue.createElementVNode("view", {
                 class: "tool-item",
-                onClick: _cache[11] || (_cache[11] = ($event) => $options.onOpenTool("risk"))
+                onClick: _cache[10] || (_cache[10] = ($event) => $options.onOpenTool("risk"))
               }, [
                 vue.createElementVNode("text", { class: "tool-icon" }, "⚖️"),
                 vue.createElementVNode("text", { class: "tool-text" }, "风险评测")
@@ -5349,8 +6210,8 @@ if (uni.restoreGlobal) {
       }, null, 8, ["visible", "onClose"])
     ]);
   }
-  const PagesWealthWealth = /* @__PURE__ */ _export_sfc(_sfc_main$q, [["render", _sfc_render$p], ["__scopeId", "data-v-a00d3a3e"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/wealth.vue"]]);
-  const _sfc_main$p = {
+  const PagesWealthWealth = /* @__PURE__ */ _export_sfc(_sfc_main$u, [["render", _sfc_render$t], ["__scopeId", "data-v-a00d3a3e"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/wealth.vue"]]);
+  const _sfc_main$t = {
     name: "LifePage",
     data() {
       return {
@@ -5765,19 +6626,132 @@ if (uni.restoreGlobal) {
             this.quickServices = currentUser.lifeServices.quickServices || this.quickServices;
             this.allServices = currentUser.lifeServices.allServices || this.allServices;
             this.bannerData = currentUser.lifeServices.bannerData || this.bannerData;
+            formatAppLog("log", "at pages/life/life.vue:630", "✅ 生活服务数据加载成功:", {
+              quickServices: this.quickServices.length,
+              allServices: this.allServices.length,
+              bannerData: this.bannerData.length
+            });
           } else {
             if (currentUser) {
               currentUser.lifeServices = {
                 quickServices: this.quickServices,
                 allServices: this.allServices,
-                bannerData: this.bannerData
+                bannerData: this.bannerData,
+                paymentCategories: this.getDefaultPaymentCategories(),
+                recentPayments: this.getDefaultRecentPayments(),
+                favoriteServices: this.getDefaultFavoriteServices()
               };
               uni.setStorageSync("users", users2);
+              formatAppLog("log", "at pages/life/life.vue:647", "✅ 已为用户创建生活服务数据");
             }
           }
         } catch (error) {
-          formatAppLog("error", "at pages/life/life.vue:641", "加载生活服务数据失败:", error);
+          formatAppLog("error", "at pages/life/life.vue:651", "❌ 加载生活服务数据失败:", error);
         }
+      },
+      // 获取默认缴费分类数据
+      getDefaultPaymentCategories() {
+        return [
+          {
+            id: "utilities",
+            name: "水电燃气",
+            icon: "⚡",
+            color: "#FF6B35",
+            services: [
+              {
+                id: "electricity",
+                name: "电费",
+                icon: "⚡",
+                providers: ["国家电网", "南方电网", "地方电网"],
+                defaultProvider: "国家电网"
+              },
+              {
+                id: "water",
+                name: "水费",
+                icon: "💧",
+                providers: ["上海水务", "广州水务", "深圳水务", "杭州水务", "成都水务"],
+                defaultProvider: "上海水务"
+              },
+              {
+                id: "gas",
+                name: "燃气费",
+                icon: "🔥",
+                providers: ["华润燃气", "新奥燃气", "港华燃气"],
+                defaultProvider: "华润燃气"
+              }
+            ]
+          },
+          {
+            id: "communication",
+            name: "通讯服务",
+            icon: "📱",
+            color: "#007AFF",
+            services: [
+              {
+                id: "mobile",
+                name: "手机充值",
+                icon: "📱",
+                providers: ["中国移动", "中国联通", "中国电信"],
+                defaultProvider: "中国移动"
+              },
+              {
+                id: "broadband",
+                name: "宽带缴费",
+                icon: "🌐",
+                providers: ["中国移动", "中国联通", "中国电信"],
+                defaultProvider: "中国移动"
+              }
+            ]
+          }
+        ];
+      },
+      // 获取默认最近缴费记录
+      getDefaultRecentPayments() {
+        return [
+          {
+            id: "rp001",
+            type: "电费",
+            amount: 350,
+            account: "9876543210",
+            provider: "国家电网",
+            status: "completed",
+            timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1e3).toISOString(),
+            icon: "⚡"
+          },
+          {
+            id: "rp002",
+            type: "水费",
+            amount: 120,
+            account: "1234567890",
+            provider: "上海水务",
+            status: "completed",
+            timestamp: new Date(Date.now() - 5 * 24 * 60 * 60 * 1e3).toISOString(),
+            icon: "💧"
+          }
+        ];
+      },
+      // 获取默认收藏服务
+      getDefaultFavoriteServices() {
+        return [
+          {
+            id: "fs001",
+            type: "电费",
+            account: "9876543210",
+            provider: "国家电网",
+            nickname: "家庭电费",
+            icon: "⚡",
+            color: "#FF6B35"
+          },
+          {
+            id: "fs002",
+            type: "水费",
+            account: "1234567890",
+            provider: "上海水务",
+            nickname: "家庭水费",
+            icon: "💧",
+            color: "#007AFF"
+          }
+        ];
       },
       // 更新时间问候语
       updateTimeGreeting() {
@@ -5803,7 +6777,7 @@ if (uni.restoreGlobal) {
         });
       },
       handleServiceTap(service) {
-        formatAppLog("log", "at pages/life/life.vue:671", "点击服务:", service);
+        formatAppLog("log", "at pages/life/life.vue:788", "点击服务:", service);
         switch (service.action) {
           case "payment":
             this.goToPayment();
@@ -5826,7 +6800,7 @@ if (uni.restoreGlobal) {
       },
       switchCategory(index) {
         this.activeCategory = index;
-        formatAppLog("log", "at pages/life/life.vue:696", "切换分类:", this.categories[index]);
+        formatAppLog("log", "at pages/life/life.vue:813", "切换分类:", this.categories[index]);
         uni.showToast({
           title: `切换到${this.categories[index]}`,
           icon: "none",
@@ -5850,7 +6824,7 @@ if (uni.restoreGlobal) {
       // 处理主卡片点击
       handleMainCardTap() {
         const currentCard = this.currentPromotionData.main;
-        formatAppLog("log", "at pages/life/life.vue:723", "点击主卡片:", currentCard);
+        formatAppLog("log", "at pages/life/life.vue:840", "点击主卡片:", currentCard);
         uni.showToast({
           title: `点击了${currentCard.title}`,
           icon: "none"
@@ -5858,7 +6832,7 @@ if (uni.restoreGlobal) {
       },
       // 处理小卡片点击
       handleSmallCardTap(card, index) {
-        formatAppLog("log", "at pages/life/life.vue:732", "点击小卡片:", card, index);
+        formatAppLog("log", "at pages/life/life.vue:849", "点击小卡片:", card, index);
         uni.showToast({
           title: `点击了${card.title}`,
           icon: "none"
@@ -5866,7 +6840,7 @@ if (uni.restoreGlobal) {
       },
       // 处理轮播图点击
       handleBannerTap(banner) {
-        formatAppLog("log", "at pages/life/life.vue:741", "点击轮播图:", banner);
+        formatAppLog("log", "at pages/life/life.vue:858", "点击轮播图:", banner);
         switch (banner.action) {
           case "payment":
             this.goToPayment();
@@ -5885,10 +6859,10 @@ if (uni.restoreGlobal) {
               uni.navigateTo({
                 url: banner.url,
                 success: () => {
-                  formatAppLog("log", "at pages/life/life.vue:763", `成功跳转到: ${banner.url}`);
+                  formatAppLog("log", "at pages/life/life.vue:880", `成功跳转到: ${banner.url}`);
                 },
                 fail: (err) => {
-                  formatAppLog("error", "at pages/life/life.vue:766", "跳转失败:", err);
+                  formatAppLog("error", "at pages/life/life.vue:883", "跳转失败:", err);
                   uni.showToast({
                     title: "页面跳转失败",
                     icon: "none"
@@ -5904,14 +6878,14 @@ if (uni.restoreGlobal) {
         }
       },
       goToPayment() {
-        formatAppLog("log", "at pages/life/life.vue:783", "跳转到生活缴费页面");
+        formatAppLog("log", "at pages/life/life.vue:900", "跳转到生活缴费页面");
         uni.navigateTo({
           url: "/pages/payment/payment",
           success: () => {
-            formatAppLog("log", "at pages/life/life.vue:787", "成功跳转到生活缴费页面");
+            formatAppLog("log", "at pages/life/life.vue:904", "成功跳转到生活缴费页面");
           },
           fail: (err) => {
-            formatAppLog("error", "at pages/life/life.vue:790", "跳转失败:", err);
+            formatAppLog("error", "at pages/life/life.vue:907", "跳转失败:", err);
             uni.showToast({
               title: "页面跳转失败",
               icon: "none"
@@ -5920,14 +6894,14 @@ if (uni.restoreGlobal) {
         });
       },
       goToRecharge() {
-        formatAppLog("log", "at pages/life/life.vue:800", "跳转到手机充值页面");
+        formatAppLog("log", "at pages/life/life.vue:917", "跳转到手机充值页面");
         uni.navigateTo({
           url: "/pages/recharge/recharge",
           success: () => {
-            formatAppLog("log", "at pages/life/life.vue:804", "成功跳转到手机充值页面");
+            formatAppLog("log", "at pages/life/life.vue:921", "成功跳转到手机充值页面");
           },
           fail: (err) => {
-            formatAppLog("error", "at pages/life/life.vue:807", "跳转失败:", err);
+            formatAppLog("error", "at pages/life/life.vue:924", "跳转失败:", err);
             uni.showToast({
               title: "页面跳转失败",
               icon: "none"
@@ -5947,7 +6921,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$o(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$s(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "life-page" }, [
       vue.createCommentVNode(" 头部标题区域 "),
       vue.createElementVNode("view", { class: "header-section" }, [
@@ -6336,7 +7310,7 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesLifeLife = /* @__PURE__ */ _export_sfc(_sfc_main$p, [["render", _sfc_render$o], ["__scopeId", "data-v-980f0516"], ["__file", "E:/项目/yihangyidon/src/pages/life/life.vue"]]);
+  const PagesLifeLife = /* @__PURE__ */ _export_sfc(_sfc_main$t, [["render", _sfc_render$s], ["__scopeId", "data-v-980f0516"], ["__file", "E:/项目/yihangyidon/src/pages/life/life.vue"]]);
   const SILICONFLOW_API_KEY = "sk-fkzxlpblcjigbzitanooofmnfmvvedobfdvvxqdbbdodntdt";
   const API_BASE_URL = "https://api.siliconflow.cn/v1";
   const sessionHistory = {};
@@ -6518,7 +7492,7 @@ if (uni.restoreGlobal) {
   };
   const _imports_0 = "/static/wealth/aiavatar.png";
   const _imports_1 = "/static/wealth/useravatar.jpg";
-  const _sfc_main$o = {
+  const _sfc_main$s = {
     data() {
       return {
         draft: "",
@@ -6930,7 +7904,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$n(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$r(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "chat-page" }, [
       vue.createElementVNode("view", { class: "chat-header" }, [
         vue.createElementVNode("text", { class: "title" }, "AI 智能客服"),
@@ -7135,8 +8109,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesServiceChat = /* @__PURE__ */ _export_sfc(_sfc_main$o, [["render", _sfc_render$n], ["__scopeId", "data-v-e19cce9b"], ["__file", "E:/项目/yihangyidon/src/pages/service/chat.vue"]]);
-  const _sfc_main$n = {
+  const PagesServiceChat = /* @__PURE__ */ _export_sfc(_sfc_main$s, [["render", _sfc_render$r], ["__scopeId", "data-v-e19cce9b"], ["__file", "E:/项目/yihangyidon/src/pages/service/chat.vue"]]);
+  const _sfc_main$r = {
     data() {
       return {
         searchKeyword: "",
@@ -7174,7 +8148,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$m(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$q(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "help-center" }, [
       vue.createCommentVNode(" 顶部搜索栏 "),
       vue.createElementVNode("view", { class: "search-header" }, [
@@ -7451,8 +8425,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesHelpHelpCenter = /* @__PURE__ */ _export_sfc(_sfc_main$n, [["render", _sfc_render$m], ["__scopeId", "data-v-292cc293"], ["__file", "E:/项目/yihangyidon/src/pages/help/help-center.vue"]]);
-  const _sfc_main$m = {
+  const PagesHelpHelpCenter = /* @__PURE__ */ _export_sfc(_sfc_main$r, [["render", _sfc_render$q], ["__scopeId", "data-v-292cc293"], ["__file", "E:/项目/yihangyidon/src/pages/help/help-center.vue"]]);
+  const _sfc_main$q = {
     data() {
       return {
         helpId: "",
@@ -7614,7 +8588,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$l(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$p(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "help-detail" }, [
       vue.createCommentVNode(" 顶部导航 "),
       vue.createElementVNode("view", { class: "detail-header" }, [
@@ -7788,16 +8762,16 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesHelpHelpDetail = /* @__PURE__ */ _export_sfc(_sfc_main$m, [["render", _sfc_render$l], ["__scopeId", "data-v-ba096d18"], ["__file", "E:/项目/yihangyidon/src/pages/help/help-detail.vue"]]);
+  const PagesHelpHelpDetail = /* @__PURE__ */ _export_sfc(_sfc_main$q, [["render", _sfc_render$p], ["__scopeId", "data-v-ba096d18"], ["__file", "E:/项目/yihangyidon/src/pages/help/help-detail.vue"]]);
   function getUserBalance() {
     return new Promise((resolve, reject) => {
       try {
-        const userInfo = getUserInfo();
-        if (!userInfo) {
+        const userInfo2 = getUserInfo();
+        if (!userInfo2) {
           reject(new Error("用户未登录"));
           return;
         }
-        const balance = userInfo.balance || 0;
+        const balance = userInfo2.balance || 0;
         formatAppLog("log", "at api/balance.js:18", "获取用户余额:", balance);
         resolve(balance);
       } catch (error) {
@@ -7809,12 +8783,12 @@ if (uni.restoreGlobal) {
   function deductBalance(amount, description = "转账支出") {
     return new Promise((resolve, reject) => {
       try {
-        const userInfo = getUserInfo();
-        if (!userInfo) {
+        const userInfo2 = getUserInfo();
+        if (!userInfo2) {
           reject(new Error("用户未登录"));
           return;
         }
-        const currentBalance = userInfo.balance || 0;
+        const currentBalance = userInfo2.balance || 0;
         if (currentBalance < amount) {
           resolve({
             success: false,
@@ -7824,11 +8798,11 @@ if (uni.restoreGlobal) {
           return;
         }
         const newBalance = currentBalance - amount;
-        userInfo.balance = newBalance;
-        userInfo.lastUpdateTime = (/* @__PURE__ */ new Date()).toISOString();
-        uni.setStorageSync("userInfo", userInfo);
-        uni.setStorageSync("currentUser", userInfo);
-        updateUserBalanceInDatabase(userInfo);
+        userInfo2.balance = newBalance;
+        userInfo2.lastUpdateTime = (/* @__PURE__ */ new Date()).toISOString();
+        uni.setStorageSync("userInfo", userInfo2);
+        uni.setStorageSync("currentUser", userInfo2);
+        updateUserBalanceInDatabase(userInfo2);
         addTransactionRecord$1({
           type: "expense",
           amount,
@@ -7851,12 +8825,12 @@ if (uni.restoreGlobal) {
   function checkBalanceSufficient(amount) {
     return new Promise((resolve, reject) => {
       try {
-        const userInfo = getUserInfo();
-        if (!userInfo) {
+        const userInfo2 = getUserInfo();
+        if (!userInfo2) {
           reject(new Error("用户未登录"));
           return;
         }
-        const currentBalance = userInfo.balance || 0;
+        const currentBalance = userInfo2.balance || 0;
         const isSufficient = currentBalance >= amount;
         formatAppLog("log", "at api/balance.js:159", `余额检查: 当前余额${currentBalance}元，需要${amount}元，是否足够: ${isSufficient}`);
         resolve(isSufficient);
@@ -7866,12 +8840,12 @@ if (uni.restoreGlobal) {
       }
     });
   }
-  function updateUserBalanceInDatabase(userInfo) {
+  function updateUserBalanceInDatabase(userInfo2) {
     try {
       const users2 = uni.getStorageSync("users") || [];
-      const userIndex = users2.findIndex((user) => user.id === userInfo.id);
+      const userIndex = users2.findIndex((user) => user.id === userInfo2.id);
       if (userIndex !== -1) {
-        users2[userIndex] = { ...users2[userIndex], ...userInfo };
+        users2[userIndex] = { ...users2[userIndex], ...userInfo2 };
         uni.setStorageSync("users", users2);
         formatAppLog("log", "at api/balance.js:181", "本地数据库余额更新成功");
       }
@@ -7881,23 +8855,23 @@ if (uni.restoreGlobal) {
   }
   function addTransactionRecord$1(transaction) {
     try {
-      const userInfo = getUserInfo();
-      if (!userInfo) {
+      const userInfo2 = getUserInfo();
+      if (!userInfo2) {
         return;
       }
-      if (!userInfo.transactionRecords) {
-        userInfo.transactionRecords = [];
+      if (!userInfo2.transactionRecords) {
+        userInfo2.transactionRecords = [];
       }
       const newRecord = {
         id: Date.now(),
         ...transaction
       };
-      userInfo.transactionRecords.unshift(newRecord);
-      if (userInfo.transactionRecords.length > 100) {
-        userInfo.transactionRecords = userInfo.transactionRecords.slice(0, 100);
+      userInfo2.transactionRecords.unshift(newRecord);
+      if (userInfo2.transactionRecords.length > 100) {
+        userInfo2.transactionRecords = userInfo2.transactionRecords.slice(0, 100);
       }
-      uni.setStorageSync("userInfo", userInfo);
-      uni.setStorageSync("currentUser", userInfo);
+      uni.setStorageSync("userInfo", userInfo2);
+      uni.setStorageSync("currentUser", userInfo2);
       formatAppLog("log", "at api/balance.js:218", "交易记录添加成功:", newRecord);
     } catch (error) {
       formatAppLog("error", "at api/balance.js:221", "添加交易记录失败:", error);
@@ -7906,12 +8880,12 @@ if (uni.restoreGlobal) {
   function getCreditCards(cardNumber = null) {
     return new Promise((resolve, reject) => {
       try {
-        const userInfo = getUserInfo();
-        if (!userInfo) {
+        const userInfo2 = getUserInfo();
+        if (!userInfo2) {
           reject(new Error("用户未登录"));
           return;
         }
-        const creditCards = userInfo.creditCards || [];
+        const creditCards = userInfo2.creditCards || [];
         if (cardNumber) {
           const card = creditCards.find((card2) => card2.cardNumber === cardNumber);
           resolve(card || null);
@@ -7927,12 +8901,12 @@ if (uni.restoreGlobal) {
   function getRepaymentRecords(cardNumber = null, limit = 10) {
     return new Promise((resolve, reject) => {
       try {
-        const userInfo = getUserInfo();
-        if (!userInfo) {
+        const userInfo2 = getUserInfo();
+        if (!userInfo2) {
           reject(new Error("用户未登录"));
           return;
         }
-        const records = userInfo.transactionRecords || [];
+        const records = userInfo2.transactionRecords || [];
         let repaymentRecords = records.filter(
           (record) => record.description && record.description.includes("信用卡还款")
         );
@@ -7950,7 +8924,7 @@ if (uni.restoreGlobal) {
       }
     });
   }
-  const _sfc_main$l = {
+  const _sfc_main$p = {
     name: "PaymentPasswordModal",
     props: {
       visible: {
@@ -8061,10 +9035,10 @@ if (uni.restoreGlobal) {
         this.closeModal();
       },
       addSecurityEvent(type, description) {
-        const userInfo = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
-        if (userInfo && userInfo.securitySettings) {
-          if (!userInfo.securitySettings.securityEvents) {
-            userInfo.securitySettings.securityEvents = [];
+        const userInfo2 = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
+        if (userInfo2 && userInfo2.securitySettings) {
+          if (!userInfo2.securitySettings.securityEvents) {
+            userInfo2.securitySettings.securityEvents = [];
           }
           const newEvent = {
             id: Date.now(),
@@ -8075,17 +9049,17 @@ if (uni.restoreGlobal) {
             ip: "192.168.1.100",
             status: "success"
           };
-          userInfo.securitySettings.securityEvents.unshift(newEvent);
-          if (userInfo.securitySettings.securityEvents.length > 50) {
-            userInfo.securitySettings.securityEvents = userInfo.securitySettings.securityEvents.slice(0, 50);
+          userInfo2.securitySettings.securityEvents.unshift(newEvent);
+          if (userInfo2.securitySettings.securityEvents.length > 50) {
+            userInfo2.securitySettings.securityEvents = userInfo2.securitySettings.securityEvents.slice(0, 50);
           }
-          uni.setStorageSync("userInfo", userInfo);
-          uni.setStorageSync("currentUser", userInfo);
+          uni.setStorageSync("userInfo", userInfo2);
+          uni.setStorageSync("currentUser", userInfo2);
         }
       }
     }
   };
-  function _sfc_render$k(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$o(_ctx, _cache, $props, $setup, $data, $options) {
     return $props.visible ? (vue.openBlock(), vue.createElementBlock("view", {
       key: 0,
       class: "payment-password-modal",
@@ -8218,8 +9192,8 @@ if (uni.restoreGlobal) {
       ])
     ])) : vue.createCommentVNode("v-if", true);
   }
-  const PaymentPasswordModal = /* @__PURE__ */ _export_sfc(_sfc_main$l, [["render", _sfc_render$k], ["__scopeId", "data-v-c92603ac"], ["__file", "E:/项目/yihangyidon/src/components/common/PaymentPasswordModal.vue"]]);
-  const _sfc_main$k = {
+  const PaymentPasswordModal = /* @__PURE__ */ _export_sfc(_sfc_main$p, [["render", _sfc_render$o], ["__scopeId", "data-v-c92603ac"], ["__file", "E:/项目/yihangyidon/src/components/common/PaymentPasswordModal.vue"]]);
+  const _sfc_main$o = {
     components: {
       PaymentPasswordModal
     },
@@ -8313,8 +9287,9 @@ if (uni.restoreGlobal) {
       },
       // 显示所有联系人
       showAllContacts() {
-        uni.navigateTo({
-          url: "/pages/transfer/contacts"
+        uni.showToast({
+          title: "联系人功能开发中",
+          icon: "none"
         });
       },
       // 显示转账提示
@@ -8355,7 +9330,7 @@ if (uni.restoreGlobal) {
           if (savedLimit) {
             this.transferLimit = savedLimit;
           }
-          formatAppLog("log", "at pages/transfer/transfer.vue:325", "转账限额:", this.transferLimit);
+          formatAppLog("log", "at pages/transfer/transfer.vue:326", "转账限额:", this.transferLimit);
         }, 300);
       },
       // 获取用户余额
@@ -8363,9 +9338,9 @@ if (uni.restoreGlobal) {
         try {
           const balance = await getUserBalance();
           this.userBalance = balance;
-          formatAppLog("log", "at pages/transfer/transfer.vue:334", "获取用户余额成功:", balance);
+          formatAppLog("log", "at pages/transfer/transfer.vue:335", "获取用户余额成功:", balance);
         } catch (error) {
-          formatAppLog("error", "at pages/transfer/transfer.vue:336", "获取用户余额失败:", error);
+          formatAppLog("error", "at pages/transfer/transfer.vue:337", "获取用户余额失败:", error);
           this.userBalance = 0;
         }
       },
@@ -8396,7 +9371,7 @@ if (uni.restoreGlobal) {
             return false;
           }
         } catch (error) {
-          formatAppLog("error", "at pages/transfer/transfer.vue:374", "检查余额失败:", error);
+          formatAppLog("error", "at pages/transfer/transfer.vue:375", "检查余额失败:", error);
           uni.showToast({
             title: "检查余额失败，请重试",
             icon: "none"
@@ -8447,7 +9422,7 @@ if (uni.restoreGlobal) {
             this.showPasswordModal = true;
           }
         } catch (error) {
-          formatAppLog("error", "at pages/transfer/transfer.vue:437", "转账过程中出错:", error);
+          formatAppLog("error", "at pages/transfer/transfer.vue:438", "转账过程中出错:", error);
           uni.showToast({
             title: "转账失败，请重试",
             icon: "none"
@@ -8459,10 +9434,10 @@ if (uni.restoreGlobal) {
       async verifyPayeeInfo(account, name) {
         try {
           await new Promise((resolve) => setTimeout(resolve, 1e3));
-          formatAppLog("log", "at pages/transfer/transfer.vue:456", "收款人信息验证成功");
+          formatAppLog("log", "at pages/transfer/transfer.vue:457", "收款人信息验证成功");
           await this.processAccountTransfer();
         } catch (error) {
-          formatAppLog("error", "at pages/transfer/transfer.vue:461", "验证收款人信息失败:", error);
+          formatAppLog("error", "at pages/transfer/transfer.vue:462", "验证收款人信息失败:", error);
           uni.showToast({
             title: "收款人信息验证失败",
             icon: "none"
@@ -8499,7 +9474,7 @@ if (uni.restoreGlobal) {
             remark: ""
           };
         } catch (error) {
-          formatAppLog("error", "at pages/transfer/transfer.vue:513", "账号转账失败:", error);
+          formatAppLog("error", "at pages/transfer/transfer.vue:514", "账号转账失败:", error);
           this.saveTransferRecord({
             type: "account",
             account: this.accountForm.account,
@@ -8546,7 +9521,7 @@ if (uni.restoreGlobal) {
             remark: ""
           };
         } catch (error) {
-          formatAppLog("error", "at pages/transfer/transfer.vue:577", "手机号转账失败:", error);
+          formatAppLog("error", "at pages/transfer/transfer.vue:578", "手机号转账失败:", error);
           this.saveTransferRecord({
             type: "phone",
             phone: this.phoneForm.phone,
@@ -8579,9 +9554,9 @@ if (uni.restoreGlobal) {
             records.splice(100);
           }
           uni.setStorageSync("transferRecords", records);
-          formatAppLog("log", "at pages/transfer/transfer.vue:619", "转账记录已保存");
+          formatAppLog("log", "at pages/transfer/transfer.vue:620", "转账记录已保存");
         } catch (error) {
-          formatAppLog("error", "at pages/transfer/transfer.vue:621", "保存转账记录失败:", error);
+          formatAppLog("error", "at pages/transfer/transfer.vue:622", "保存转账记录失败:", error);
         }
       },
       // 跳转到转账记录
@@ -8629,7 +9604,7 @@ if (uni.restoreGlobal) {
           });
           this.clearForms();
         } catch (error) {
-          formatAppLog("error", "at pages/transfer/transfer.vue:687", "转账处理失败:", error);
+          formatAppLog("error", "at pages/transfer/transfer.vue:688", "转账处理失败:", error);
           this.isProcessing = false;
           uni.showToast({
             title: "转账失败，请重试",
@@ -8658,7 +9633,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$j(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$n(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_PaymentPasswordModal = vue.resolveComponent("PaymentPasswordModal");
     return vue.openBlock(), vue.createElementBlock("view", { class: "transfer-page" }, [
       vue.createCommentVNode(" 顶部导航 "),
@@ -9014,8 +9989,8 @@ if (uni.restoreGlobal) {
       }, null, 8, ["visible", "amount", "payee", "description", "onPaymentConfirmed", "onClose"])
     ]);
   }
-  const PagesTransferTransfer = /* @__PURE__ */ _export_sfc(_sfc_main$k, [["render", _sfc_render$j], ["__scopeId", "data-v-d303ad3d"], ["__file", "E:/项目/yihangyidon/src/pages/transfer/transfer.vue"]]);
-  const _sfc_main$j = {
+  const PagesTransferTransfer = /* @__PURE__ */ _export_sfc(_sfc_main$o, [["render", _sfc_render$n], ["__scopeId", "data-v-d303ad3d"], ["__file", "E:/项目/yihangyidon/src/pages/transfer/transfer.vue"]]);
+  const _sfc_main$n = {
     data() {
       return {
         isLoginNeeded: false,
@@ -9035,8 +10010,8 @@ if (uni.restoreGlobal) {
         accountInfo: {
           balance: "0.00"
         },
-        userBalance: 1e5,
-        // 模拟用户余额
+        userBalance: 0,
+        // 从用户数据动态加载
         bankAccounts: []
         // 银行卡数据
       };
@@ -9242,7 +10217,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$i(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$m(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "account-page" }, [
       vue.createCommentVNode(" 顶部导航 "),
       vue.createElementVNode("view", { class: "nav-bar" }, [
@@ -9469,302 +10444,449 @@ if (uni.restoreGlobal) {
       ))
     ]);
   }
-  const PagesAccountAccount = /* @__PURE__ */ _export_sfc(_sfc_main$j, [["render", _sfc_render$i], ["__scopeId", "data-v-f7e9057f"], ["__file", "E:/项目/yihangyidon/src/pages/account/account.vue"]]);
-  const _sfc_main$i = {
+  const PagesAccountAccount = /* @__PURE__ */ _export_sfc(_sfc_main$n, [["render", _sfc_render$m], ["__scopeId", "data-v-f7e9057f"], ["__file", "E:/项目/yihangyidon/src/pages/account/account.vue"]]);
+  const _sfc_main$m = {
     name: "PaymentPage",
     data() {
       return {
-        // 第一行服务项目
-        firstRowItems: [],
-        secondRowItems: [],
-        bottomNavs: [],
-        myPayments: [],
-        paymentRecords: [],
-        // 缴费记录
-        showPaymentHistory: false
-        // 显示缴费历史
+        recentPayments: [],
+        paymentRecords: []
       };
     },
     onLoad() {
-      this.loadPaymentServicesData();
-      formatAppLog("log", "at pages/payment/payment.vue:167", "生活缴费页面加载");
+      formatAppLog("log", "at pages/payment/payment.vue:107", "生活缴费页面加载");
+      this.loadPaymentData();
     },
     onShow() {
-      this.loadPaymentServicesData();
+      try {
+        if (!forceCheckLogin()) {
+          formatAppLog("log", "at pages/payment/payment.vue:114", "生活缴费页面：用户未登录，跳转到登录页面");
+          uni.reLaunch({
+            url: "/pages/denglu/login"
+          });
+          return;
+        }
+        formatAppLog("log", "at pages/payment/payment.vue:120", "生活缴费页面显示");
+        this.loadPaymentData();
+      } catch (error) {
+        formatAppLog("error", "at pages/payment/payment.vue:123", "生活缴费页面onShow检查失败:", error);
+        uni.reLaunch({
+          url: "/pages/denglu/login"
+        });
+      }
     },
     methods: {
-      // 加载支付服务数据
-      loadPaymentServicesData() {
+      // 加载缴费数据
+      loadPaymentData() {
         try {
           const users2 = uni.getStorageSync("users") || [];
           const currentUser = users2.find((user) => user.isLoggedIn);
-          if (currentUser && currentUser.paymentServices) {
-            this.firstRowItems = currentUser.paymentServices.firstRowItems || [];
-            this.secondRowItems = currentUser.paymentServices.secondRowItems || [];
-            this.bottomNavs = currentUser.paymentServices.bottomNavs || [];
-            this.myPayments = currentUser.paymentServices.myPayments || [];
+          if (currentUser) {
             this.paymentRecords = currentUser.paymentRecords || [];
+            this.recentPayments = this.paymentRecords.slice(0, 5).map((record) => ({
+              id: record.id,
+              type: this.getPaymentType(record.type),
+              icon: this.getPaymentIcon(record.type),
+              title: record.type,
+              desc: record.phoneNumber || record.account || record.description,
+              amount: record.amount.toFixed(2),
+              status: record.status === "completed" ? "success" : "pending",
+              statusText: record.status === "completed" ? "缴费成功" : "处理中"
+            }));
+            formatAppLog("log", "at pages/payment/payment.vue:153", "✅ 生活缴费数据加载成功:", {
+              paymentRecords: this.paymentRecords.length,
+              recentPayments: this.recentPayments.length,
+              userBalance: currentUser.balance
+            });
           } else {
-            this.firstRowItems = [
-              {
-                icon: "💧",
-                label: "水费",
-                bgColor: "linear-gradient(135deg, #64B5F6 0%, #42A5F5 100%)",
-                type: "water"
-              },
-              {
-                icon: "💡",
-                label: "电费",
-                bgColor: "linear-gradient(135deg, #FFB74D 0%, #FFA726 100%)",
-                type: "electric"
-              },
-              {
-                icon: "🔥",
-                label: "燃气费",
-                bgColor: "linear-gradient(135deg, #FF8A65 0%, #FF7043 100%)",
-                type: "gas"
-              }
-            ];
-            this.secondRowItems = [
-              {
-                icon: "🏠",
-                label: "供暖费",
-                bgColor: "linear-gradient(135deg, #A1887F 0%, #8D6E63 100%)",
-                type: "heating"
-              },
-              {
-                icon: "📺",
-                label: "有线电视费",
-                bgColor: "linear-gradient(135deg, #9575CD 0%, #7E57C2 100%)",
-                type: "tv"
-              },
-              {
-                icon: "📦",
-                label: "物业费",
-                bgColor: "linear-gradient(135deg, #4DB6AC 0%, #26A69A 100%)",
-                type: "property"
-              }
-            ];
-            this.bottomNavs = [
-              { icon: "☭", text: "党费", class: "party-nav" },
-              { icon: "💰", text: "工会费", class: "union-nav" },
-              { icon: "💬", text: "更多", class: "more-nav" }
-            ];
-            this.myPayments = [
-              {
-                type: "party",
-                title: "党费",
-                number: "410******",
-                lastDigits: "5030"
-              },
-              {
-                type: "phone",
-                title: "手机充值",
-                number: "15703724132",
-                amount: "50元"
-              }
-            ];
-            if (currentUser) {
-              currentUser.paymentServices = {
-                firstRowItems: this.firstRowItems,
-                secondRowItems: this.secondRowItems,
-                bottomNavs: this.bottomNavs,
-                myPayments: this.myPayments
-              };
-              uni.setStorageSync("users", users2);
-            }
+            formatAppLog("log", "at pages/payment/payment.vue:159", "❌ 未找到当前用户数据");
+            this.recentPayments = [];
+            this.paymentRecords = [];
           }
         } catch (error) {
-          formatAppLog("error", "at pages/payment/payment.vue:265", "加载支付服务数据失败:", error);
+          formatAppLog("error", "at pages/payment/payment.vue:164", "❌ 加载生活缴费数据失败:", error);
+          this.recentPayments = [];
+          this.paymentRecords = [];
         }
       },
-      // 处理卡片点击
-      handleCardTap(type) {
-        formatAppLog("log", "at pages/payment/payment.vue:271", "点击卡片:", type);
-        switch (type) {
-          case "party":
-            uni.showToast({
-              title: "跳转到党费缴费",
-              icon: "none"
-            });
-            break;
-          case "phone":
-            uni.showToast({
-              title: "跳转到手机充值",
-              icon: "none"
-            });
-            break;
-        }
+      // 获取缴费类型
+      getPaymentType(type) {
+        const typeMap = {
+          "手机充值": "phone",
+          "电费": "electric",
+          "水费": "water",
+          "燃气费": "gas",
+          "党费": "party"
+        };
+        return typeMap[type] || "other";
       },
-      // 处理优惠横幅点击
-      handlePromotionTap() {
-        formatAppLog("log", "at pages/payment/payment.vue:295", "点击优惠横幅");
-        uni.showToast({
-          title: "查看优惠详情",
-          icon: "none"
-        });
-      },
-      // 处理服务项目点击
-      handleServiceTap(item) {
-        formatAppLog("log", "at pages/payment/payment.vue:304", "点击服务:", item);
-        switch (item.type) {
-          case "water":
-            this.goToWaterPage();
-            break;
-          case "electric":
-            this.showPaymentForm("电费", item);
-            break;
-          case "gas":
-            this.showPaymentForm("燃气费", item);
-            break;
-          case "heating":
-            this.showPaymentForm("供暖费", item);
-            break;
-          case "tv":
-            this.showPaymentForm("有线电视费", item);
-            break;
-          case "property":
-            this.showPaymentForm("物业费", item);
-            break;
-          default:
-            uni.showToast({
-              title: `${item.label}功能开发中`,
-              icon: "none"
-            });
-        }
-      },
-      // 显示缴费表单
-      showPaymentForm(title, item) {
-        uni.showModal({
-          title: `${title}缴费`,
-          content: `即将打开${title}缴费页面，请输入相关信息进行缴费。`,
-          confirmText: "确定",
-          cancelText: "取消",
-          success: (res) => {
-            if (res.confirm) {
-              this.openPaymentForm(item);
-            }
-          }
-        });
-      },
-      // 打开缴费表单页面
-      openPaymentForm(item) {
-        this.showPaymentDialog(item);
-      },
-      // 显示缴费对话框
-      showPaymentDialog(item) {
-        uni.showModal({
-          title: `${item.label}缴费`,
-          editable: true,
-          placeholderText: "请输入户号或账号",
-          success: (res) => {
-            if (res.confirm && res.content) {
-              this.processPayment(item, res.content);
-            }
-          }
-        });
-      },
-      // 处理缴费
-      processPayment(item, accountNumber) {
-        uni.showLoading({
-          title: "查询中..."
-        });
-        setTimeout(() => {
-          uni.hideLoading();
-          uni.showModal({
-            title: "缴费查询",
-            content: `${item.label}
-账号: ${accountNumber}
-待缴费用: ¥${this.getRandomAmount(
-              item
-            )}元
-
-是否立即缴费？`,
-            confirmText: "立即缴费",
-            cancelText: "取消",
-            success: (res) => {
-              if (res.confirm) {
-                this.completePay(item, accountNumber);
-              }
-            }
-          });
-        }, 1500);
-      },
-      // 完成缴费
-      completePay(item, accountNumber) {
-        uni.showLoading({
-          title: "缴费中..."
-        });
-        setTimeout(() => {
-          uni.hideLoading();
-          uni.showToast({
-            title: "缴费成功",
-            icon: "success",
-            duration: 2e3
-          });
-          formatAppLog("log", "at pages/payment/payment.vue:414", `${item.label}缴费成功，账号: ${accountNumber}`);
-        }, 2e3);
-      },
-      // 跳转到水费页面
-      goToWaterPage() {
-        formatAppLog("log", "at pages/payment/payment.vue:420", "跳转到水费页面");
-        uni.navigateTo({
-          url: "/pages/water/water",
-          success: () => {
-            formatAppLog("log", "at pages/payment/payment.vue:424", "成功跳转到水费页面");
-          },
-          fail: (err) => {
-            formatAppLog("error", "at pages/payment/payment.vue:427", "跳转失败:", err);
-            uni.showToast({
-              title: "页面跳转失败",
-              icon: "none"
-            });
-          }
-        });
-      },
-      // 获取缴费类型图标
+      // 获取缴费图标
       getPaymentIcon(type) {
-        const icons = {
+        const iconMap = {
           "手机充值": "📱",
-          "电费": "💡",
+          "电费": "⚡",
           "水费": "💧",
           "燃气费": "🔥",
           "党费": "☭"
         };
-        return icons[type] || "💰";
+        return iconMap[type] || "💰";
       },
-      // 格式化时间
-      formatTime(timestamp) {
-        const date = new Date(timestamp);
-        const now = /* @__PURE__ */ new Date();
-        const diff = now - date;
-        const days = Math.floor(diff / (1e3 * 60 * 60 * 24));
-        if (days === 0) {
-          return "今天";
-        } else if (days === 1) {
-          return "昨天";
-        } else if (days < 7) {
-          return `${days}天前`;
-        } else {
-          return date.toLocaleDateString("zh-CN");
-        }
-      },
-      // 显示所有缴费记录
-      showAllPaymentRecords() {
+      goToWater() {
         uni.navigateTo({
-          url: "/pages/payment/records"
+          url: "/pages/water/water"
         });
       },
-      // 跳转到缴费管理页面
-      goToPaymentManagement() {
-        formatAppLog("log", "at pages/payment/payment.vue:475", "跳转到缴费管理页面");
+      goToElectric() {
+        uni.showToast({
+          title: "电费缴费功能开发中",
+          icon: "none"
+        });
+      },
+      goToGas() {
+        uni.showToast({
+          title: "燃气费缴费功能开发中",
+          icon: "none"
+        });
+      },
+      goToPhone() {
         uni.navigateTo({
-          url: "/pages/payment-management/payment-management",
+          url: "/pages/recharge/recharge"
+        });
+      },
+      goToBroadband() {
+        uni.showToast({
+          title: "宽带费缴费功能开发中",
+          icon: "none"
+        });
+      },
+      goToTV() {
+        uni.showToast({
+          title: "有线电视缴费功能开发中",
+          icon: "none"
+        });
+      },
+      goToPaymentManagement() {
+        uni.navigateTo({
+          url: "/pages/payment-management/payment-management"
+        });
+      },
+      goToPaymentDetail(payment) {
+        formatAppLog("log", "at pages/payment/payment.vue:241", "查看缴费详情:", payment);
+        uni.showToast({
+          title: "缴费详情功能开发中",
+          icon: "none"
+        });
+      }
+    }
+  };
+  function _sfc_render$l(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("view", { class: "payment-page" }, [
+      vue.createCommentVNode(" 头部区域 "),
+      vue.createElementVNode("view", { class: "header" }, [
+        vue.createElementVNode("text", { class: "page-title" }, "生活缴费"),
+        vue.createElementVNode("text", { class: "page-subtitle" }, "便民服务，一键支付")
+      ]),
+      vue.createCommentVNode(" 缴费类型网格 "),
+      vue.createElementVNode("view", { class: "payment-grid" }, [
+        vue.createCommentVNode(" 水费 "),
+        vue.createElementVNode("view", {
+          class: "payment-item",
+          onClick: _cache[0] || (_cache[0] = (...args) => $options.goToWater && $options.goToWater(...args))
+        }, [
+          vue.createElementVNode("view", { class: "item-icon water-icon" }, "💧"),
+          vue.createElementVNode("text", { class: "item-title" }, "水费"),
+          vue.createElementVNode("text", { class: "item-desc" }, "自来水缴费")
+        ]),
+        vue.createCommentVNode(" 电费 "),
+        vue.createElementVNode("view", {
+          class: "payment-item",
+          onClick: _cache[1] || (_cache[1] = (...args) => $options.goToElectric && $options.goToElectric(...args))
+        }, [
+          vue.createElementVNode("view", { class: "item-icon electric-icon" }, "⚡"),
+          vue.createElementVNode("text", { class: "item-title" }, "电费"),
+          vue.createElementVNode("text", { class: "item-desc" }, "电力缴费")
+        ]),
+        vue.createCommentVNode(" 燃气费 "),
+        vue.createElementVNode("view", {
+          class: "payment-item",
+          onClick: _cache[2] || (_cache[2] = (...args) => $options.goToGas && $options.goToGas(...args))
+        }, [
+          vue.createElementVNode("view", { class: "item-icon gas-icon" }, "🔥"),
+          vue.createElementVNode("text", { class: "item-title" }, "燃气费"),
+          vue.createElementVNode("text", { class: "item-desc" }, "天然气缴费")
+        ]),
+        vue.createCommentVNode(" 话费 "),
+        vue.createElementVNode("view", {
+          class: "payment-item",
+          onClick: _cache[3] || (_cache[3] = (...args) => $options.goToPhone && $options.goToPhone(...args))
+        }, [
+          vue.createElementVNode("view", { class: "item-icon phone-icon" }, "📱"),
+          vue.createElementVNode("text", { class: "item-title" }, "话费"),
+          vue.createElementVNode("text", { class: "item-desc" }, "手机充值")
+        ]),
+        vue.createCommentVNode(" 宽带费 "),
+        vue.createElementVNode("view", {
+          class: "payment-item",
+          onClick: _cache[4] || (_cache[4] = (...args) => $options.goToBroadband && $options.goToBroadband(...args))
+        }, [
+          vue.createElementVNode("view", { class: "item-icon broadband-icon" }, "🌐"),
+          vue.createElementVNode("text", { class: "item-title" }, "宽带费"),
+          vue.createElementVNode("text", { class: "item-desc" }, "网络缴费")
+        ]),
+        vue.createCommentVNode(" 有线电视 "),
+        vue.createElementVNode("view", {
+          class: "payment-item",
+          onClick: _cache[5] || (_cache[5] = (...args) => $options.goToTV && $options.goToTV(...args))
+        }, [
+          vue.createElementVNode("view", { class: "item-icon tv-icon" }, "📺"),
+          vue.createElementVNode("text", { class: "item-title" }, "有线电视"),
+          vue.createElementVNode("text", { class: "item-desc" }, "数字电视")
+        ])
+      ]),
+      vue.createCommentVNode(" 最近缴费记录 "),
+      vue.createElementVNode("view", { class: "recent-section" }, [
+        vue.createElementVNode("view", { class: "section-header" }, [
+          vue.createElementVNode("text", { class: "section-title" }, "最近缴费"),
+          vue.createElementVNode("text", {
+            class: "more-link",
+            onClick: _cache[6] || (_cache[6] = (...args) => $options.goToPaymentManagement && $options.goToPaymentManagement(...args))
+          }, "查看全部")
+        ]),
+        $data.recentPayments.length > 0 ? (vue.openBlock(), vue.createElementBlock("view", {
+          key: 0,
+          class: "recent-list"
+        }, [
+          (vue.openBlock(true), vue.createElementBlock(
+            vue.Fragment,
+            null,
+            vue.renderList($data.recentPayments, (payment) => {
+              return vue.openBlock(), vue.createElementBlock("view", {
+                class: "recent-item",
+                key: payment.id,
+                onClick: ($event) => $options.goToPaymentDetail(payment)
+              }, [
+                vue.createElementVNode("view", { class: "recent-left" }, [
+                  vue.createElementVNode(
+                    "view",
+                    {
+                      class: vue.normalizeClass(["recent-icon", payment.type + "-icon"])
+                    },
+                    vue.toDisplayString(payment.icon),
+                    3
+                    /* TEXT, CLASS */
+                  ),
+                  vue.createElementVNode("view", { class: "recent-info" }, [
+                    vue.createElementVNode(
+                      "text",
+                      { class: "recent-title" },
+                      vue.toDisplayString(payment.title),
+                      1
+                      /* TEXT */
+                    ),
+                    vue.createElementVNode(
+                      "text",
+                      { class: "recent-desc" },
+                      vue.toDisplayString(payment.desc),
+                      1
+                      /* TEXT */
+                    )
+                  ])
+                ]),
+                vue.createElementVNode("view", { class: "recent-right" }, [
+                  vue.createElementVNode(
+                    "text",
+                    { class: "recent-amount" },
+                    "¥" + vue.toDisplayString(payment.amount),
+                    1
+                    /* TEXT */
+                  ),
+                  vue.createElementVNode(
+                    "text",
+                    {
+                      class: vue.normalizeClass(["recent-status", payment.status])
+                    },
+                    vue.toDisplayString(payment.statusText),
+                    3
+                    /* TEXT, CLASS */
+                  )
+                ])
+              ], 8, ["onClick"]);
+            }),
+            128
+            /* KEYED_FRAGMENT */
+          ))
+        ])) : (vue.openBlock(), vue.createElementBlock("view", {
+          key: 1,
+          class: "empty-state"
+        }, [
+          vue.createElementVNode("text", { class: "empty-text" }, "暂无缴费记录"),
+          vue.createElementVNode("text", { class: "empty-desc" }, "快去缴费吧~")
+        ]))
+      ])
+    ]);
+  }
+  const PagesPaymentPayment = /* @__PURE__ */ _export_sfc(_sfc_main$m, [["render", _sfc_render$l], ["__scopeId", "data-v-6e0fac4f"], ["__file", "E:/项目/yihangyidon/src/pages/payment/payment.vue"]]);
+  const _sfc_main$l = {
+    name: "WaterPage",
+    data() {
+      return {
+        selectedCity: "保定市",
+        // 默认城市
+        // 不同城市的水费公司数据
+        cityWaterCompanies: {
+          保定市: [
+            {
+              name: "保定市自来水公司",
+              description: "保定市主城区供水服务",
+              code: "baoding_water",
+              serviceArea: "主城区、高新区"
+            },
+            {
+              name: "保定市北部水务公司",
+              description: "保定市北部地区供水服务",
+              code: "baoding_north_water",
+              serviceArea: "徐水区、满城区"
+            }
+          ],
+          北京: [
+            {
+              name: "北京自来水集团",
+              description: "北京市主要供水服务商",
+              code: "beijing_water",
+              serviceArea: "全市范围"
+            },
+            {
+              name: "北京市郊区水务公司",
+              description: "北京市郊区供水服务",
+              code: "beijing_suburb_water",
+              serviceArea: "郊区县域"
+            }
+          ],
+          上海: [
+            {
+              name: "上海城投水务集团",
+              description: "上海市主要供水服务商",
+              code: "shanghai_water",
+              serviceArea: "全市范围"
+            }
+          ],
+          广州市: [
+            {
+              name: "广州市自来水公司",
+              description: "广州市主城区供水服务",
+              code: "guangzhou_water",
+              serviceArea: "主城区"
+            },
+            {
+              name: "广州市番禺水务公司",
+              description: "番禺区供水服务",
+              code: "guangzhou_panyu_water",
+              serviceArea: "番禺区"
+            }
+          ],
+          深圳: [
+            {
+              name: "深圳市水务集团",
+              description: "深圳市主要供水服务商",
+              code: "shenzhen_water",
+              serviceArea: "全市范围"
+            }
+          ],
+          杭州市: [
+            {
+              name: "杭州市自来水公司",
+              description: "杭州市主城区供水服务",
+              code: "hangzhou_water",
+              serviceArea: "主城区、西湖区"
+            }
+          ]
+        }
+      };
+    },
+    computed: {
+      // 当前城市的水费公司
+      waterCompanies() {
+        return this.cityWaterCompanies[this.selectedCity] || [];
+      }
+    },
+    onLoad() {
+      formatAppLog("log", "at pages/water/water.vue:153", "水费页面加载");
+      this.initializeLocation();
+      this.loadUserData();
+    },
+    onShow() {
+      this.syncLocationFromStorage();
+    },
+    onReady() {
+      uni.$on("citySelected", (city) => {
+        formatAppLog("log", "at pages/water/water.vue:166", "水费页面接收到城市选择:", city);
+        if (city && city !== this.selectedCity) {
+          this.selectedCity = city;
+          uni.showToast({
+            title: `已切换到${city}`,
+            icon: "none",
+            duration: 1500
+          });
+        }
+      });
+    },
+    onUnload() {
+      uni.$off("citySelected");
+    },
+    methods: {
+      // 加载用户数据
+      loadUserData() {
+        try {
+          const users2 = uni.getStorageSync("users") || [];
+          const currentUser = users2.find((user) => user.isLoggedIn);
+          if (currentUser) {
+            formatAppLog("log", "at pages/water/water.vue:191", "✅ 用户数据加载成功:", {
+              username: currentUser.username,
+              phone: currentUser.phone,
+              balance: currentUser.balance,
+              hasLifeServices: !!currentUser.lifeServices
+            });
+            if (currentUser.lifeServices) {
+              formatAppLog("log", "at pages/water/water.vue:200", "用户生活服务数据:", currentUser.lifeServices);
+            }
+          } else {
+            formatAppLog("log", "at pages/water/water.vue:203", "❌ 未找到当前用户数据");
+          }
+        } catch (error) {
+          formatAppLog("error", "at pages/water/water.vue:206", "❌ 加载用户数据失败:", error);
+        }
+      },
+      // 初始化位置信息
+      initializeLocation() {
+        const city = uni.getStorageSync("selectedCity");
+        if (city) {
+          this.selectedCity = city;
+          formatAppLog("log", "at pages/water/water.vue:215", `水费页面同步城市: ${city}`);
+        }
+      },
+      // 从存储同步位置信息
+      syncLocationFromStorage() {
+        const city = uni.getStorageSync("selectedCity");
+        if (city && city !== this.selectedCity) {
+          this.selectedCity = city;
+          formatAppLog("log", "at pages/water/water.vue:224", `水费页面城市已更新: ${city}`);
+          uni.showToast({
+            title: `已切换到${city}`,
+            icon: "none",
+            duration: 1500
+          });
+        }
+      },
+      // 跳转到城市选择页面
+      goToCitySelect() {
+        formatAppLog("log", "at pages/water/water.vue:237", "从水费页面跳转到城市选择");
+        uni.navigateTo({
+          url: "/pages/city-select/city-select",
           success: () => {
-            formatAppLog("log", "at pages/payment/payment.vue:479", "成功跳转到缴费管理页面");
+            formatAppLog("log", "at pages/water/water.vue:241", "成功跳转到城市选择页面");
           },
           fail: (err) => {
-            formatAppLog("error", "at pages/payment/payment.vue:482", "跳转失败:", err);
+            formatAppLog("error", "at pages/water/water.vue:244", "跳转失败:", err);
             uni.showToast({
               title: "页面跳转失败",
               icon: "none"
@@ -9772,646 +10894,1939 @@ if (uni.restoreGlobal) {
           }
         });
       },
-      // 生成随机金额（模拟数据）
-      getRandomAmount(item) {
-        const amounts = {
-          water: [45, 67, 89, 123, 156],
-          electric: [89, 134, 178, 234, 289],
-          gas: [67, 89, 112, 145, 178],
-          heating: [234, 456, 678, 890, 1200],
-          tv: [25, 30, 35, 40, 50],
-          property: [180, 220, 280, 350, 420]
-        };
-        const typeAmounts = amounts[item.type] || [50, 100, 150, 200, 250];
-        return typeAmounts[Math.floor(Math.random() * typeAmounts.length)];
-      }
-    }
-  };
-  function _sfc_render$h(_ctx, _cache, $props, $setup, $data, $options) {
-    return vue.openBlock(), vue.createElementBlock("view", { class: "payment-page" }, [
-      vue.createCommentVNode(" 位置选择 "),
-      vue.createElementVNode("view", { class: "location-section" }, [
-        vue.createElementVNode("view", { class: "location-bar" }, [
-          vue.createElementVNode("view", { class: "location-info" }, [
-            vue.createElementVNode("text", { class: "location-icon" }, "📍"),
-            vue.createElementVNode("text", { class: "location-text" }, "保定市")
-          ]),
-          vue.createElementVNode("view", { class: "search-bar" }, [
-            vue.createElementVNode("text", { class: "search-icon" }, "🔍"),
-            vue.createElementVNode("input", {
-              class: "search-input",
-              placeholder: "请输入关键字搜索"
-            })
-          ])
-        ])
-      ]),
-      vue.createCommentVNode(" 我的缴费 "),
-      vue.createElementVNode("view", { class: "my-payment-section" }, [
-        vue.createElementVNode("view", { class: "section-header" }, [
-          vue.createElementVNode("text", { class: "section-title" }, "我的缴费"),
-          vue.createElementVNode("view", {
-            class: "section-right",
-            onClick: _cache[0] || (_cache[0] = (...args) => $options.goToPaymentManagement && $options.goToPaymentManagement(...args))
-          }, [
-            vue.createElementVNode("text", { class: "manage-text" }, "缴费管理"),
-            vue.createElementVNode("text", { class: "arrow" }, "→")
-          ])
-        ]),
-        vue.createCommentVNode(" 缴费记录 "),
-        $data.paymentRecords.length > 0 ? (vue.openBlock(), vue.createElementBlock("view", {
-          key: 0,
-          class: "payment-records"
-        }, [
-          vue.createElementVNode("view", { class: "records-header" }, [
-            vue.createElementVNode("text", { class: "records-title" }, "最近缴费"),
-            vue.createElementVNode("text", {
-              class: "records-more",
-              onClick: _cache[1] || (_cache[1] = (...args) => $options.showAllPaymentRecords && $options.showAllPaymentRecords(...args))
-            }, "查看全部")
-          ]),
-          vue.createElementVNode("view", { class: "records-list" }, [
-            (vue.openBlock(true), vue.createElementBlock(
-              vue.Fragment,
-              null,
-              vue.renderList($data.paymentRecords.slice(0, 3), (record) => {
-                return vue.openBlock(), vue.createElementBlock("view", {
-                  class: "record-item",
-                  key: record.id
-                }, [
-                  vue.createElementVNode("view", { class: "record-left" }, [
-                    vue.createElementVNode(
-                      "view",
-                      { class: "record-icon" },
-                      vue.toDisplayString($options.getPaymentIcon(record.type)),
-                      1
-                      /* TEXT */
-                    ),
-                    vue.createElementVNode("view", { class: "record-info" }, [
-                      vue.createElementVNode(
-                        "text",
-                        { class: "record-type" },
-                        vue.toDisplayString(record.type),
-                        1
-                        /* TEXT */
-                      ),
-                      vue.createElementVNode(
-                        "text",
-                        { class: "record-desc" },
-                        vue.toDisplayString(record.phoneNumber || record.account),
-                        1
-                        /* TEXT */
-                      )
-                    ])
-                  ]),
-                  vue.createElementVNode("view", { class: "record-right" }, [
-                    vue.createElementVNode(
-                      "text",
-                      { class: "record-amount" },
-                      "¥" + vue.toDisplayString(record.amount),
-                      1
-                      /* TEXT */
-                    ),
-                    vue.createElementVNode(
-                      "text",
-                      { class: "record-time" },
-                      vue.toDisplayString($options.formatTime(record.timestamp)),
-                      1
-                      /* TEXT */
-                    )
-                  ])
-                ]);
-              }),
-              128
-              /* KEYED_FRAGMENT */
-            ))
-          ])
-        ])) : vue.createCommentVNode("v-if", true),
-        vue.createElementVNode("view", { class: "payment-cards" }, [
-          vue.createCommentVNode(" 党费卡片 "),
-          vue.createElementVNode("view", {
-            class: "payment-card party-card",
-            onClick: _cache[2] || (_cache[2] = ($event) => $options.handleCardTap("party"))
-          }, [
-            vue.createElementVNode("view", { class: "card-left" }, [
-              vue.createElementVNode("view", { class: "card-icon party-icon" }, [
-                vue.createElementVNode("text", { class: "party-symbol" }, "☭")
-              ]),
-              vue.createElementVNode("view", { class: "card-info" }, [
-                vue.createElementVNode("text", { class: "card-title" }, "党费"),
-                vue.createElementVNode("text", { class: "card-subtitle" }, "自己 | ★手机 | 410******"),
-                vue.createElementVNode("text", { class: "card-number" }, "*****5030")
-              ])
-            ])
-          ]),
-          vue.createCommentVNode(" 手机充值卡片 "),
-          vue.createElementVNode("view", {
-            class: "payment-card phone-card",
-            onClick: _cache[3] || (_cache[3] = ($event) => $options.handleCardTap("phone"))
-          }, [
-            vue.createElementVNode("view", { class: "card-left" }, [
-              vue.createElementVNode("view", { class: "card-icon phone-icon" }, [
-                vue.createElementVNode("text", { class: "phone-symbol" }, "📱")
-              ]),
-              vue.createElementVNode("view", { class: "card-info" }, [
-                vue.createElementVNode("text", { class: "card-title" }, "手机充值"),
-                vue.createElementVNode("text", { class: "card-subtitle" }, "常用缴费 | 15703724132 |"),
-                vue.createElementVNode("text", { class: "card-number" }, "50元")
-              ])
-            ]),
-            vue.createElementVNode("view", { class: "card-right" }, [
-              vue.createElementVNode("view", { class: "recharge-icon" }, "💳")
-            ])
-          ])
-        ])
-      ]),
-      vue.createCommentVNode(" 优惠活动横幅 "),
-      vue.createElementVNode("view", {
-        class: "promotion-banner",
-        onClick: _cache[4] || (_cache[4] = (...args) => $options.handlePromotionTap && $options.handlePromotionTap(...args))
-      }, [
-        vue.createElementVNode("view", { class: "banner-content" }, [
-          vue.createElementVNode("text", { class: "banner-title" }, "生活缴费先领券"),
-          vue.createElementVNode("text", { class: "banner-subtitle" }, "信用卡支付享返现优惠"),
-          vue.createElementVNode("text", { class: "banner-tag" }, "广告")
-        ]),
-        vue.createElementVNode("view", { class: "banner-decoration" }, [
-          vue.createElementVNode("view", { class: "frog-icon" }, "🐸"),
-          vue.createElementVNode("view", { class: "cards-icon" }, "💳")
-        ])
-      ]),
-      vue.createCommentVNode(" 新增缴费 "),
-      vue.createElementVNode("view", { class: "new-payment-section" }, [
-        vue.createElementVNode("text", { class: "section-title" }, "新增缴费"),
-        vue.createElementVNode("view", { class: "payment-grid" }, [
-          vue.createCommentVNode(" 第一行 "),
-          vue.createElementVNode("view", { class: "grid-row" }, [
-            (vue.openBlock(true), vue.createElementBlock(
-              vue.Fragment,
-              null,
-              vue.renderList($data.firstRowItems, (item, index) => {
-                return vue.openBlock(), vue.createElementBlock("view", {
-                  class: "grid-item",
-                  key: index,
-                  onClick: ($event) => $options.handleServiceTap(item)
-                }, [
-                  vue.createElementVNode(
-                    "view",
-                    {
-                      class: "item-icon",
-                      style: vue.normalizeStyle({ background: item.bgColor })
-                    },
-                    [
-                      vue.createElementVNode(
-                        "text",
-                        { class: "icon-text" },
-                        vue.toDisplayString(item.icon),
-                        1
-                        /* TEXT */
-                      )
-                    ],
-                    4
-                    /* STYLE */
-                  ),
-                  vue.createElementVNode(
-                    "text",
-                    { class: "item-label" },
-                    vue.toDisplayString(item.label),
-                    1
-                    /* TEXT */
-                  )
-                ], 8, ["onClick"]);
-              }),
-              128
-              /* KEYED_FRAGMENT */
-            ))
-          ]),
-          vue.createCommentVNode(" 第二行 "),
-          vue.createElementVNode("view", { class: "grid-row" }, [
-            (vue.openBlock(true), vue.createElementBlock(
-              vue.Fragment,
-              null,
-              vue.renderList($data.secondRowItems, (item, index) => {
-                return vue.openBlock(), vue.createElementBlock("view", {
-                  class: "grid-item",
-                  key: index,
-                  onClick: ($event) => $options.handleServiceTap(item)
-                }, [
-                  vue.createElementVNode(
-                    "view",
-                    {
-                      class: "item-icon",
-                      style: vue.normalizeStyle({ background: item.bgColor })
-                    },
-                    [
-                      vue.createElementVNode(
-                        "text",
-                        { class: "icon-text" },
-                        vue.toDisplayString(item.icon),
-                        1
-                        /* TEXT */
-                      )
-                    ],
-                    4
-                    /* STYLE */
-                  ),
-                  vue.createElementVNode(
-                    "text",
-                    { class: "item-label" },
-                    vue.toDisplayString(item.label),
-                    1
-                    /* TEXT */
-                  )
-                ], 8, ["onClick"]);
-              }),
-              128
-              /* KEYED_FRAGMENT */
-            ))
-          ])
-        ])
-      ]),
-      vue.createCommentVNode(" 底部导航占位 "),
-      vue.createElementVNode("view", { class: "bottom-nav-placeholder" }, [
-        (vue.openBlock(true), vue.createElementBlock(
-          vue.Fragment,
-          null,
-          vue.renderList($data.bottomNavs, (nav, index) => {
-            return vue.openBlock(), vue.createElementBlock("view", {
-              class: "nav-item",
-              key: index
-            }, [
-              vue.createElementVNode(
-                "view",
-                {
-                  class: vue.normalizeClass(["nav-item-icon", nav.class])
-                },
-                vue.toDisplayString(nav.icon),
-                3
-                /* TEXT, CLASS */
-              ),
-              vue.createElementVNode(
-                "text",
-                { class: "nav-item-text" },
-                vue.toDisplayString(nav.text),
-                1
-                /* TEXT */
-              )
-            ]);
-          }),
-          128
-          /* KEYED_FRAGMENT */
-        ))
-      ])
-    ]);
-  }
-  const PagesPaymentPayment = /* @__PURE__ */ _export_sfc(_sfc_main$i, [["render", _sfc_render$h], ["__scopeId", "data-v-6e0fac4f"], ["__file", "E:/项目/yihangyidon/src/pages/payment/payment.vue"]]);
-  const _sfc_main$h = {
-    name: "WaterPage",
-    data() {
-      return {
-        searchKeyword: "",
-        isExpanded: false,
-        allCompanies: []
-      };
-    },
-    onLoad() {
-      this.loadWaterCompaniesData();
-    },
-    computed: {
-      // 过滤后的公司列表
-      filteredCompanies() {
-        let companies = this.allCompanies;
-        if (this.searchKeyword.trim()) {
-          companies = companies.filter(
-            (company) => company.name.toLowerCase().includes(this.searchKeyword.toLowerCase()) || company.desc.toLowerCase().includes(this.searchKeyword.toLowerCase()) || company.area.toLowerCase().includes(this.searchKeyword.toLowerCase())
-          );
-        }
-        if (!this.isExpanded && !this.searchKeyword) {
-          return companies.slice(0, 5);
-        }
-        return companies;
-      },
-      // 是否有更多数据
-      hasMore() {
-        return !this.searchKeyword && this.allCompanies.length > 5;
-      }
-    },
-    onLoad() {
-      this.loadWaterCompaniesData();
-      formatAppLog("log", "at pages/water/water.vue:114", "水费区域选择页面加载");
-    },
-    methods: {
-      // 加载水费公司数据
-      loadWaterCompaniesData() {
-        try {
-          const users2 = uni.getStorageSync("users") || [];
-          const currentUser = users2.find((user) => user.isLoggedIn);
-          if (currentUser && currentUser.waterCompanies) {
-            this.allCompanies = currentUser.waterCompanies;
-          } else {
-            this.allCompanies = [
-              {
-                id: 1,
-                name: "保定市荣投水务有限公司",
-                desc: "水费",
-                area: "保定市",
-                type: "municipal"
-              },
-              {
-                id: 2,
-                name: "保定徐水智享物业管理有限公司",
-                desc: "徐水凯郡丽城小区水费",
-                area: "徐水区",
-                type: "property"
-              },
-              {
-                id: 3,
-                name: "定兴县自来水公司",
-                desc: "水费",
-                area: "定兴县",
-                type: "municipal"
-              },
-              {
-                id: 4,
-                name: "定州市东亭物业服务有限公司",
-                desc: "东亭水电费-金城颂园",
-                area: "定州市",
-                type: "property"
-              },
-              {
-                id: 5,
-                name: "定州市东亭物业服务有限公司",
-                desc: "东亭水电费-宝塔花园",
-                area: "定州市",
-                type: "property"
-              },
-              {
-                id: 6,
-                name: "涿州市供水有限公司",
-                desc: "水费",
-                area: "涿州市",
-                type: "municipal"
-              },
-              {
-                id: 7,
-                name: "高碑店市自来水公司",
-                desc: "水费",
-                area: "高碑店市",
-                type: "municipal"
-              },
-              {
-                id: 8,
-                name: "安国市自来水公司",
-                desc: "水费",
-                area: "安国市",
-                type: "municipal"
-              },
-              {
-                id: 9,
-                name: "易县自来水公司",
-                desc: "水费",
-                area: "易县",
-                type: "municipal"
-              },
-              {
-                id: 10,
-                name: "曲阳县自来水公司",
-                desc: "水费",
-                area: "曲阳县",
-                type: "municipal"
-              }
-            ];
-            if (currentUser) {
-              currentUser.waterCompanies = this.allCompanies;
-              uni.setStorageSync("users", users2);
-            }
-          }
-        } catch (error) {
-          formatAppLog("error", "at pages/water/water.vue:208", "加载水费公司数据失败:", error);
-        }
-      },
-      // 处理搜索
-      handleSearch(e) {
-        this.searchKeyword = e.detail.value;
-        formatAppLog("log", "at pages/water/water.vue:214", "搜索关键词:", this.searchKeyword);
-      },
-      // 切换展开状态
-      toggleExpand() {
-        this.isExpanded = !this.isExpanded;
-        formatAppLog("log", "at pages/water/water.vue:220", "展开状态:", this.isExpanded);
-      },
-      // 选择水费公司
+      // 选择供水公司
       selectCompany(company) {
-        formatAppLog("log", "at pages/water/water.vue:225", "选择水费公司:", company);
+        formatAppLog("log", "at pages/water/water.vue:255", "选择供水公司:", company);
         uni.showModal({
-          title: "确认选择",
-          content: `您选择了：${company.name}
-服务区域：${company.area}
-是否继续进行水费缴费？`,
-          confirmText: "继续缴费",
-          cancelText: "重新选择",
+          title: company.name,
+          content: `服务区域：${company.serviceArea}
+
+即将进入${company.name}缴费页面，请准备好您的用户编号。`,
+          confirmText: "进入缴费",
+          cancelText: "取消",
           success: (res) => {
             if (res.confirm) {
-              this.proceedToPayment(company);
+              this.enterPaymentFlow(company);
             }
           }
         });
       },
       // 进入缴费流程
-      proceedToPayment(company) {
-        formatAppLog("log", "at pages/water/water.vue:243", "进入缴费流程:", company);
-        this.showPaymentForm(company);
+      enterPaymentFlow(company) {
+        uni.navigateTo({
+          url: `/pages/water-payment/water-payment?city=${encodeURIComponent(
+            this.selectedCity
+          )}&company=${encodeURIComponent(JSON.stringify(company))}`,
+          success: () => {
+            formatAppLog("log", "at pages/water/water.vue:278", "成功跳转到水费缴费页面");
+          },
+          fail: (err) => {
+            formatAppLog("error", "at pages/water/water.vue:281", "跳转失败:", err);
+            uni.showToast({
+              title: "页面跳转失败",
+              icon: "none"
+            });
+          }
+        });
       },
       // 显示缴费表单
       showPaymentForm(company) {
         uni.showModal({
-          title: `${company.name}`,
-          content: "请输入您的水费户号",
+          title: `${company.name}缴费`,
           editable: true,
-          placeholderText: "请输入户号",
+          placeholderText: "请输入用户编号",
           success: (res) => {
             if (res.confirm && res.content) {
               this.processWaterPayment(company, res.content);
+            } else if (res.confirm && !res.content) {
+              uni.showToast({
+                title: "请输入用户编号",
+                icon: "none"
+              });
             }
           }
         });
       },
       // 处理水费缴费
-      processWaterPayment(company, accountNumber) {
+      processWaterPayment(company, userNumber) {
         uni.showLoading({
           title: "查询中..."
         });
         setTimeout(() => {
           uni.hideLoading();
-          const mockData = this.generateMockWaterBill(company, accountNumber);
-          uni.showModal({
-            title: "水费查询结果",
-            content: `缴费单位：${company.name}
-户号：${accountNumber}
-用户地址：${mockData.address}
-当前欠费：¥${mockData.amount}元
-账期：${mockData.period}
+          const mockBill = {
+            userNumber,
+            userName: (userInfo == null ? void 0 : userInfo.realName) || (userInfo == null ? void 0 : userInfo.nickname) || "用户",
+            address: (userInfo == null ? void 0 : userInfo.address) || "用户地址",
+            lastReading: 145,
+            currentReading: 167,
+            usage: 22,
+            amount: this.calculateWaterBill(22),
+            dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1e3).toISOString().split("T")[0]
+          };
+          this.showBillDetails(company, mockBill);
+        }, 2e3);
+      },
+      // 显示账单详情
+      showBillDetails(company, bill) {
+        const content = `用户编号：${bill.userNumber}
+用户姓名：${bill.userName}
+用水地址：${bill.address}
+上期读数：${bill.lastReading}吨
+本期读数：${bill.currentReading}吨
+本期用量：${bill.usage}吨
+应缴费用：¥${bill.amount}元
+缴费期限：${bill.dueDate}
 
-是否立即缴费？`,
-            confirmText: "立即缴费",
-            cancelText: "取消",
-            success: (res) => {
-              if (res.confirm) {
-                this.completeWaterPayment(company, accountNumber, mockData);
-              }
+是否立即缴费？`;
+        uni.showModal({
+          title: "水费账单",
+          content,
+          confirmText: "立即缴费",
+          cancelText: "取消",
+          success: (res) => {
+            if (res.confirm) {
+              this.completeWaterPayment(company, bill);
             }
-          });
-        }, 1500);
+          }
+        });
       },
       // 完成水费缴费
-      completeWaterPayment(company, accountNumber, billData) {
+      completeWaterPayment(company, bill) {
         uni.showLoading({
           title: "缴费中..."
         });
         setTimeout(() => {
           uni.hideLoading();
+          this.savePaymentRecord(company, bill);
           uni.showModal({
             title: "缴费成功",
             content: `恭喜您！水费缴费成功
+          
+缴费金额：¥${bill.amount}元
+缴费时间：${(/* @__PURE__ */ new Date()).toLocaleString()}
+流水号：${this.generateTransactionId()}
 
-缴费单位：${company.name}
-户号：${accountNumber}
-缴费金额：¥${billData.amount}元
-交易时间：${(/* @__PURE__ */ new Date()).toLocaleString()}
-
-感谢您的使用！`,
-            confirmText: "完成",
+请保留好缴费凭证，如有疑问请联系供水公司。`,
             showCancel: false,
+            confirmText: "确定",
             success: () => {
-              uni.navigateBack({
-                delta: 2
-                // 返回到缴费主页
-              });
+              formatAppLog("log", "at pages/water/water.vue:385", `水费缴费成功 - ${company.name}: ¥${bill.amount}`);
+              uni.navigateBack();
             }
           });
-        }, 2e3);
+        }, 2500);
       },
-      // 生成模拟账单数据
-      generateMockWaterBill(company, accountNumber) {
-        const amounts = [45.5, 67.8, 89.3, 123.6, 156.2, 78.9, 92.4];
-        const addresses = [
-          "XX小区1号楼2单元301",
-          "XX花园3号楼1单元201",
-          "XX家园5号楼3单元401",
-          "XX公寓2号楼2单元101",
-          "XX新城4号楼1单元501"
-        ];
-        const currentDate = /* @__PURE__ */ new Date();
-        const period = `${currentDate.getFullYear()}年${currentDate.getMonth() + 1}月`;
-        return {
-          amount: amounts[Math.floor(Math.random() * amounts.length)],
-          address: addresses[Math.floor(Math.random() * addresses.length)],
-          period,
-          usage: Math.floor(Math.random() * 50) + 10 + "吨"
-        };
+      // 保存缴费记录
+      savePaymentRecord(company, bill) {
+        try {
+          const users2 = uni.getStorageSync("users") || [];
+          const currentUserIndex = users2.findIndex((user) => user.isLoggedIn);
+          if (currentUserIndex !== -1) {
+            const currentUser = users2[currentUserIndex];
+            const paymentRecord = {
+              id: `p${Date.now()}`,
+              type: "水费",
+              amount: parseFloat(bill.amount),
+              account: bill.userNumber,
+              description: `${company.name} - ${bill.address}`,
+              status: "completed",
+              timestamp: (/* @__PURE__ */ new Date()).toISOString(),
+              operator: company.name,
+              transactionId: this.generateTransactionId()
+            };
+            if (!currentUser.paymentRecords) {
+              currentUser.paymentRecords = [];
+            }
+            currentUser.paymentRecords.unshift(paymentRecord);
+            currentUser.balance -= parseFloat(bill.amount);
+            currentUser.lastUpdateTime = (/* @__PURE__ */ new Date()).toISOString();
+            users2[currentUserIndex] = currentUser;
+            uni.setStorageSync("users", users2);
+            uni.setStorageSync("userInfo", currentUser);
+            uni.setStorageSync("currentUser", currentUser);
+            formatAppLog("log", "at pages/water/water.vue:430", "水费缴费记录已保存:", paymentRecord);
+          }
+        } catch (error) {
+          formatAppLog("error", "at pages/water/water.vue:433", "保存缴费记录失败:", error);
+        }
+      },
+      // 计算水费（模拟计算）
+      calculateWaterBill(usage) {
+        let amount = 0;
+        if (usage <= 15) {
+          amount = usage * 2.8;
+        } else if (usage <= 25) {
+          amount = 15 * 2.8 + (usage - 15) * 4.2;
+        } else {
+          amount = 15 * 2.8 + 10 * 4.2 + (usage - 25) * 6;
+        }
+        return amount.toFixed(2);
+      },
+      // 生成交易流水号
+      generateTransactionId() {
+        const now = /* @__PURE__ */ new Date();
+        const timestamp = now.getTime().toString();
+        const random = Math.floor(Math.random() * 1e3).toString().padStart(3, "0");
+        return `WF${timestamp.slice(-8)}${random}`;
       }
     }
   };
-  function _sfc_render$g(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$k(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "water-page" }, [
-      vue.createCommentVNode(" 位置选择 "),
+      vue.createCommentVNode(" 地区选择 "),
       vue.createElementVNode("view", { class: "location-section" }, [
-        vue.createElementVNode("view", { class: "location-bar" }, [
+        vue.createElementVNode("view", { class: "location-header" }, [
+          vue.createElementVNode("text", { class: "location-title" }, "选择地区"),
+          vue.createElementVNode("text", { class: "location-tip" }, "请选择您的缴费地区")
+        ]),
+        vue.createElementVNode("view", {
+          class: "current-location",
+          onClick: _cache[0] || (_cache[0] = (...args) => $options.goToCitySelect && $options.goToCitySelect(...args))
+        }, [
           vue.createElementVNode("view", { class: "location-info" }, [
             vue.createElementVNode("text", { class: "location-icon" }, "📍"),
-            vue.createElementVNode("text", { class: "location-text" }, "保定市")
+            vue.createElementVNode("view", { class: "location-text-wrapper" }, [
+              vue.createElementVNode(
+                "text",
+                { class: "location-text" },
+                vue.toDisplayString($data.selectedCity),
+                1
+                /* TEXT */
+              ),
+              vue.createElementVNode("text", { class: "location-status" }, "当前定位")
+            ])
           ]),
-          vue.createElementVNode("view", { class: "search-bar" }, [
-            vue.createElementVNode("text", { class: "search-icon" }, "🔍"),
+          vue.createElementVNode("text", { class: "change-text" }, "更换")
+        ])
+      ]),
+      vue.createCommentVNode(" 水费公司选择 "),
+      $options.waterCompanies.length > 0 ? (vue.openBlock(), vue.createElementBlock("view", {
+        key: 0,
+        class: "company-section"
+      }, [
+        vue.createElementVNode("view", { class: "section-header" }, [
+          vue.createElementVNode("text", { class: "section-title" }, "选择供水公司"),
+          vue.createElementVNode(
+            "text",
+            { class: "company-count" },
+            vue.toDisplayString($options.waterCompanies.length) + "家公司",
+            1
+            /* TEXT */
+          )
+        ]),
+        vue.createElementVNode("view", { class: "company-list" }, [
+          (vue.openBlock(true), vue.createElementBlock(
+            vue.Fragment,
+            null,
+            vue.renderList($options.waterCompanies, (company, index) => {
+              return vue.openBlock(), vue.createElementBlock("view", {
+                class: "company-item",
+                key: index,
+                onClick: ($event) => $options.selectCompany(company)
+              }, [
+                vue.createElementVNode("view", { class: "company-info" }, [
+                  vue.createElementVNode(
+                    "text",
+                    { class: "company-name" },
+                    vue.toDisplayString(company.name),
+                    1
+                    /* TEXT */
+                  ),
+                  vue.createElementVNode(
+                    "text",
+                    { class: "company-desc" },
+                    vue.toDisplayString(company.description),
+                    1
+                    /* TEXT */
+                  )
+                ]),
+                vue.createElementVNode("view", { class: "company-arrow" }, [
+                  vue.createElementVNode("text", { class: "arrow-icon" }, "→")
+                ])
+              ], 8, ["onClick"]);
+            }),
+            128
+            /* KEYED_FRAGMENT */
+          ))
+        ])
+      ])) : vue.createCommentVNode("v-if", true),
+      vue.createCommentVNode(" 暂无服务提示 "),
+      $options.waterCompanies.length === 0 ? (vue.openBlock(), vue.createElementBlock("view", {
+        key: 1,
+        class: "no-service"
+      }, [
+        vue.createElementVNode("view", { class: "no-service-icon" }, "🚰"),
+        vue.createElementVNode("text", { class: "no-service-title" }, "暂无水费服务"),
+        vue.createElementVNode(
+          "text",
+          { class: "no-service-desc" },
+          vue.toDisplayString($data.selectedCity) + "暂未开通水费缴费服务",
+          1
+          /* TEXT */
+        ),
+        vue.createElementVNode("text", { class: "no-service-tip" }, "请联系当地供水公司或稍后再试")
+      ])) : vue.createCommentVNode("v-if", true),
+      vue.createCommentVNode(" 底部说明 "),
+      vue.createElementVNode("view", { class: "footer-info" }, [
+        vue.createElementVNode("text", { class: "info-text" }, "• 缴费成功后，请保留缴费凭证"),
+        vue.createElementVNode("text", { class: "info-text" }, "• 如有疑问，请联系供水公司客服"),
+        vue.createElementVNode("text", { class: "info-text" }, "• 缴费到账时间：实时到账")
+      ])
+    ]);
+  }
+  const PagesWaterWater = /* @__PURE__ */ _export_sfc(_sfc_main$l, [["render", _sfc_render$k], ["__scopeId", "data-v-ebd6dd79"], ["__file", "E:/项目/yihangyidon/src/pages/water/water.vue"]]);
+  const _sfc_main$k = {
+    name: "WaterPaymentPage",
+    data() {
+      return {
+        selectedCity: "保定市",
+        selectedCompany: {
+          name: "保定市自来水公司",
+          code: "baoding_water"
+        },
+        userNumber: "",
+        selectedGroup: "self",
+        showWaterFlow: false,
+        showBillModal: false,
+        groupOptions: [
+          { label: "自己", value: "self" },
+          { label: "父母", value: "parents" },
+          { label: "朋友", value: "friends" }
+        ],
+        billInfo: {
+          userNumber: "",
+          userName: "",
+          address: "",
+          lastReading: 0,
+          currentReading: 0,
+          usage: 0,
+          amount: "0.00",
+          dueDate: ""
+        }
+      };
+    },
+    computed: {
+      canProceed() {
+        return this.userNumber && this.userNumber.length >= 6;
+      }
+    },
+    onLoad(options) {
+      if (options.city) {
+        this.selectedCity = options.city;
+      }
+      if (options.company) {
+        try {
+          this.selectedCompany = JSON.parse(decodeURIComponent(options.company));
+        } catch (e) {
+          formatAppLog("error", "at pages/water-payment/water-payment.vue:206", "解析公司信息失败:", e);
+        }
+      }
+      formatAppLog("log", "at pages/water-payment/water-payment.vue:210", "水费缴费页面加载，参数：", {
+        city: this.selectedCity,
+        company: this.selectedCompany
+      });
+      this.startWaterAnimation();
+      this.loadUserData();
+    },
+    onShow() {
+      try {
+        if (!forceCheckLogin()) {
+          formatAppLog("log", "at pages/water-payment/water-payment.vue:223", "水费缴费页面：用户未登录，跳转到登录页面");
+          uni.reLaunch({
+            url: "/pages/denglu/login"
+          });
+          return;
+        }
+        formatAppLog("log", "at pages/water-payment/water-payment.vue:229", "水费缴费页面显示");
+      } catch (error) {
+        formatAppLog("error", "at pages/water-payment/water-payment.vue:231", "水费缴费页面onShow检查失败:", error);
+        uni.reLaunch({
+          url: "/pages/denglu/login"
+        });
+      }
+    },
+    onUnload() {
+      if (this.waterTimer) {
+        clearInterval(this.waterTimer);
+      }
+    },
+    methods: {
+      // 加载用户数据
+      loadUserData() {
+        try {
+          const users2 = uni.getStorageSync("users") || [];
+          const currentUser = users2.find((user) => user.isLoggedIn);
+          if (currentUser) {
+            formatAppLog("log", "at pages/water-payment/water-payment.vue:253", "水费缴费页面加载用户数据:", {
+              username: currentUser.username,
+              balance: currentUser.balance
+            });
+          }
+        } catch (error) {
+          formatAppLog("error", "at pages/water-payment/water-payment.vue:259", "加载用户数据失败:", error);
+        }
+      },
+      // 启动水流动画
+      startWaterAnimation() {
+        this.waterTimer = setInterval(() => {
+          this.showWaterFlow = !this.showWaterFlow;
+        }, 2e3);
+      },
+      // 用户号输入处理
+      onUserNumberInput() {
+        this.userNumber = this.userNumber.replace(/[^a-zA-Z0-9]/g, "");
+      },
+      // 选择分组
+      selectGroup(group) {
+        this.selectedGroup = group;
+        formatAppLog("log", "at pages/water-payment/water-payment.vue:279", "选择分组:", group);
+      },
+      // 处理下一步
+      async handleNext() {
+        if (!this.canProceed) {
+          uni.showToast({
+            title: "请输入正确的用户号",
+            icon: "none"
+          });
+          return;
+        }
+        try {
+          uni.showLoading({ title: "查询中..." });
+          await this.queryUserBill();
+          uni.hideLoading();
+          this.showBillModal = true;
+        } catch (error) {
+          uni.hideLoading();
+          uni.showToast({
+            title: "查询失败，请稍后重试",
+            icon: "none"
+          });
+          formatAppLog("error", "at pages/water-payment/water-payment.vue:306", "查询用户账单失败:", error);
+        }
+      },
+      // 查询用户账单
+      async queryUserBill() {
+        await new Promise((resolve) => setTimeout(resolve, 2e3));
+        const mockBill = {
+          userNumber: this.userNumber,
+          userName: this.generateUserName(),
+          address: this.generateAddress(),
+          lastReading: Math.floor(Math.random() * 100) + 50,
+          currentReading: 0,
+          usage: 0,
+          amount: "0.00",
+          dueDate: this.generateDueDate()
+        };
+        mockBill.currentReading = mockBill.lastReading + Math.floor(Math.random() * 30) + 10;
+        mockBill.usage = mockBill.currentReading - mockBill.lastReading;
+        mockBill.amount = this.calculateWaterBill(mockBill.usage);
+        this.billInfo = mockBill;
+      },
+      // 生成模拟用户名
+      generateUserName() {
+        const surnames = [
+          "张",
+          "王",
+          "李",
+          "刘",
+          "陈",
+          "杨",
+          "赵",
+          "黄",
+          "周",
+          "吴"
+        ];
+        const names = [
+          "伟",
+          "芳",
+          "娜",
+          "敏",
+          "静",
+          "丽",
+          "强",
+          "磊",
+          "军",
+          "洋"
+        ];
+        return surnames[Math.floor(Math.random() * surnames.length)] + names[Math.floor(Math.random() * names.length)];
+      },
+      // 生成模拟地址
+      generateAddress() {
+        const districts = ["新市区", "竞秀区", "莲池区", "满城区", "清苑区"];
+        const communities = [
+          "阳光小区",
+          "绿城花园",
+          "金桂园",
+          "紫薇苑",
+          "梧桐大院"
+        ];
+        const buildings = Math.floor(Math.random() * 20) + 1;
+        const units = Math.floor(Math.random() * 6) + 1;
+        const rooms = Math.floor(Math.random() * 20) + 101;
+        return `${districts[Math.floor(Math.random() * districts.length)]}${communities[Math.floor(Math.random() * communities.length)]}${buildings}号楼${units}单元${rooms}`;
+      },
+      // 生成缴费期限
+      generateDueDate() {
+        const date = /* @__PURE__ */ new Date();
+        date.setDate(date.getDate() + Math.floor(Math.random() * 30) + 15);
+        return date.toISOString().split("T")[0];
+      },
+      // 计算水费
+      calculateWaterBill(usage) {
+        let amount = 0;
+        if (usage <= 15) {
+          amount = usage * 2.8;
+        } else if (usage <= 25) {
+          amount = 15 * 2.8 + (usage - 15) * 4.2;
+        } else {
+          amount = 15 * 2.8 + 10 * 4.2 + (usage - 25) * 6;
+        }
+        return amount.toFixed(2);
+      },
+      // 隐藏账单弹窗
+      hideBillModal() {
+        this.showBillModal = false;
+      },
+      // 进入支付流程
+      proceedToPayment() {
+        this.hideBillModal();
+        uni.navigateTo({
+          url: `/pages/recharge-payment/recharge-payment?amount=${this.billInfo.amount}&phone=${this.userNumber}&rechargeAmount=${this.billInfo.amount}&type=water&billInfo=${encodeURIComponent(
+            JSON.stringify(this.billInfo)
+          )}`
+        });
+      }
+    }
+  };
+  function _sfc_render$j(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("view", { class: "water-payment-page" }, [
+      vue.createCommentVNode(" 顶部厨房插画背景 "),
+      vue.createElementVNode("view", { class: "header-section" }, [
+        vue.createElementVNode("view", { class: "kitchen-illustration" }, [
+          vue.createCommentVNode(" SVG厨房插画 "),
+          vue.createElementVNode("view", { class: "kitchen-scene" }, [
+            vue.createCommentVNode(" 背景砖墙 "),
+            vue.createElementVNode("view", { class: "brick-wall" }),
+            vue.createCommentVNode(" 水槽和水龙头 "),
+            vue.createElementVNode("view", { class: "sink-area" }, [
+              vue.createElementVNode("view", { class: "faucet" }, [
+                vue.createElementVNode("view", { class: "faucet-base" }),
+                $data.showWaterFlow ? (vue.openBlock(), vue.createElementBlock("view", {
+                  key: 0,
+                  class: "water-flow"
+                })) : vue.createCommentVNode("v-if", true)
+              ]),
+              vue.createElementVNode("view", { class: "sink-bowl" }, [
+                vue.createElementVNode("view", { class: "sink-inner" }),
+                vue.createElementVNode("view", { class: "plate plate-1" }),
+                vue.createElementVNode("view", { class: "plate plate-2" })
+              ])
+            ]),
+            vue.createCommentVNode(" 台面物品 "),
+            vue.createElementVNode("view", { class: "counter-items" }, [
+              vue.createElementVNode("view", { class: "cutting-board" }, [
+                vue.createElementVNode("view", { class: "carrot" }),
+                vue.createElementVNode("view", { class: "tomato" }),
+                vue.createElementVNode("view", { class: "knife" })
+              ]),
+              vue.createElementVNode("view", { class: "glass" })
+            ]),
+            vue.createCommentVNode(" 挂钩和物品 "),
+            vue.createElementVNode("view", { class: "hanging-items" }, [
+              vue.createElementVNode("view", { class: "meat-hook" })
+            ])
+          ])
+        ]),
+        vue.createCommentVNode(" 标题区域 "),
+        vue.createElementVNode("view", { class: "title-section" }, [
+          vue.createElementVNode("text", { class: "page-title" }, "水费"),
+          vue.createElementVNode(
+            "text",
+            { class: "location-text" },
+            vue.toDisplayString($data.selectedCity),
+            1
+            /* TEXT */
+          )
+        ])
+      ]),
+      vue.createCommentVNode(" 缴费项目信息 "),
+      vue.createElementVNode("view", { class: "payment-info-section" }, [
+        vue.createElementVNode("view", { class: "info-row" }, [
+          vue.createElementVNode("text", { class: "info-label" }, "缴费项目"),
+          vue.createElementVNode("text", { class: "info-value" }, "水费")
+        ]),
+        vue.createElementVNode("view", { class: "info-row" }, [
+          vue.createElementVNode("text", { class: "info-label" }, "收费单位"),
+          vue.createElementVNode(
+            "text",
+            { class: "info-value" },
+            vue.toDisplayString($data.selectedCompany.name),
+            1
+            /* TEXT */
+          )
+        ]),
+        vue.createElementVNode("view", { class: "info-row" }, [
+          vue.createElementVNode("text", { class: "info-label" }, "用户号"),
+          vue.createElementVNode("view", { class: "input-container" }, [
             vue.withDirectives(vue.createElementVNode(
               "input",
               {
-                class: "search-input",
-                placeholder: "请输入水费公司名称或小区名称",
-                "onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => $data.searchKeyword = $event),
-                onInput: _cache[1] || (_cache[1] = (...args) => $options.handleSearch && $options.handleSearch(...args))
+                class: "user-number-input",
+                "onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => $data.userNumber = $event),
+                placeholder: "请输入用户号",
+                type: "text",
+                maxlength: "20",
+                onInput: _cache[1] || (_cache[1] = (...args) => $options.onUserNumberInput && $options.onUserNumberInput(...args))
               },
               null,
               544
               /* NEED_HYDRATION, NEED_PATCH */
             ), [
-              [vue.vModelText, $data.searchKeyword]
+              [vue.vModelText, $data.userNumber]
             ])
           ])
         ])
       ]),
-      vue.createCommentVNode(" 新增缴费标题 "),
-      vue.createElementVNode("view", { class: "section-title-container" }, [
-        vue.createElementVNode("text", { class: "section-title" }, "新增缴费")
-      ]),
-      vue.createCommentVNode(" 水费公司列表 "),
-      vue.createElementVNode("view", { class: "company-list" }, [
-        (vue.openBlock(true), vue.createElementBlock(
-          vue.Fragment,
-          null,
-          vue.renderList($options.filteredCompanies, (company, index) => {
-            return vue.openBlock(), vue.createElementBlock("view", {
-              class: "company-item",
-              key: index,
-              onClick: ($event) => $options.selectCompany(company)
-            }, [
-              vue.createElementVNode("view", { class: "company-info" }, [
+      vue.createCommentVNode(" 分组选择 "),
+      vue.createElementVNode("view", { class: "group-section" }, [
+        vue.createElementVNode("text", { class: "group-label" }, "分组"),
+        vue.createElementVNode("view", { class: "group-options" }, [
+          (vue.openBlock(true), vue.createElementBlock(
+            vue.Fragment,
+            null,
+            vue.renderList($data.groupOptions, (group, index) => {
+              return vue.openBlock(), vue.createElementBlock("view", {
+                class: vue.normalizeClass(["group-option", { active: $data.selectedGroup === group.value }]),
+                key: index,
+                onClick: ($event) => $options.selectGroup(group.value)
+              }, [
                 vue.createElementVNode(
                   "text",
-                  { class: "company-name" },
-                  vue.toDisplayString(company.name),
+                  { class: "group-text" },
+                  vue.toDisplayString(group.label),
                   1
                   /* TEXT */
-                ),
+                )
+              ], 10, ["onClick"]);
+            }),
+            128
+            /* KEYED_FRAGMENT */
+          ))
+        ]),
+        vue.createElementVNode("view", { class: "group-manage" }, [
+          vue.createElementVNode("text", { class: "manage-text" }, "常用缴费"),
+          vue.createElementVNode("text", { class: "manage-arrow" }, ">")
+        ])
+      ]),
+      vue.createCommentVNode(" 下一步按钮 "),
+      vue.createElementVNode("view", { class: "next-button-container" }, [
+        vue.createElementVNode("button", {
+          class: vue.normalizeClass(["next-button", { disabled: !$options.canProceed }]),
+          onClick: _cache[2] || (_cache[2] = (...args) => $options.handleNext && $options.handleNext(...args)),
+          disabled: !$options.canProceed
+        }, " 下一步 ", 10, ["disabled"])
+      ]),
+      vue.createCommentVNode(" 账单详情弹窗 "),
+      $data.showBillModal ? (vue.openBlock(), vue.createElementBlock("view", {
+        key: 0,
+        class: "bill-modal",
+        onClick: _cache[6] || (_cache[6] = (...args) => $options.hideBillModal && $options.hideBillModal(...args))
+      }, [
+        vue.createElementVNode("view", {
+          class: "modal-content",
+          onClick: _cache[5] || (_cache[5] = vue.withModifiers(() => {
+          }, ["stop"]))
+        }, [
+          vue.createElementVNode("view", { class: "modal-header" }, [
+            vue.createElementVNode("text", { class: "modal-title" }, "水费账单"),
+            vue.createElementVNode("text", {
+              class: "modal-close",
+              onClick: _cache[3] || (_cache[3] = (...args) => $options.hideBillModal && $options.hideBillModal(...args))
+            }, "×")
+          ]),
+          vue.createElementVNode("view", { class: "modal-body" }, [
+            vue.createElementVNode("view", { class: "bill-info" }, [
+              vue.createElementVNode("view", { class: "bill-row" }, [
+                vue.createElementVNode("text", { class: "bill-label" }, "用户编号："),
                 vue.createElementVNode(
                   "text",
-                  { class: "company-desc" },
-                  vue.toDisplayString(company.desc),
+                  { class: "bill-value" },
+                  vue.toDisplayString($data.billInfo.userNumber),
                   1
                   /* TEXT */
                 )
               ]),
-              vue.createElementVNode("view", { class: "company-arrow" }, [
-                vue.createElementVNode("text", { class: "arrow-icon" }, "→")
+              vue.createElementVNode("view", { class: "bill-row" }, [
+                vue.createElementVNode("text", { class: "bill-label" }, "用户姓名："),
+                vue.createElementVNode(
+                  "text",
+                  { class: "bill-value" },
+                  vue.toDisplayString($data.billInfo.userName),
+                  1
+                  /* TEXT */
+                )
+              ]),
+              vue.createElementVNode("view", { class: "bill-row" }, [
+                vue.createElementVNode("text", { class: "bill-label" }, "用水地址："),
+                vue.createElementVNode(
+                  "text",
+                  { class: "bill-value" },
+                  vue.toDisplayString($data.billInfo.address),
+                  1
+                  /* TEXT */
+                )
+              ]),
+              vue.createElementVNode("view", { class: "bill-row" }, [
+                vue.createElementVNode("text", { class: "bill-label" }, "上期读数："),
+                vue.createElementVNode(
+                  "text",
+                  { class: "bill-value" },
+                  vue.toDisplayString($data.billInfo.lastReading) + "吨",
+                  1
+                  /* TEXT */
+                )
+              ]),
+              vue.createElementVNode("view", { class: "bill-row" }, [
+                vue.createElementVNode("text", { class: "bill-label" }, "本期读数："),
+                vue.createElementVNode(
+                  "text",
+                  { class: "bill-value" },
+                  vue.toDisplayString($data.billInfo.currentReading) + "吨",
+                  1
+                  /* TEXT */
+                )
+              ]),
+              vue.createElementVNode("view", { class: "bill-row" }, [
+                vue.createElementVNode("text", { class: "bill-label" }, "本期用量："),
+                vue.createElementVNode(
+                  "text",
+                  { class: "bill-value" },
+                  vue.toDisplayString($data.billInfo.usage) + "吨",
+                  1
+                  /* TEXT */
+                )
+              ]),
+              vue.createElementVNode("view", { class: "bill-row highlight" }, [
+                vue.createElementVNode("text", { class: "bill-label" }, "应缴费用："),
+                vue.createElementVNode(
+                  "text",
+                  { class: "bill-amount" },
+                  "¥" + vue.toDisplayString($data.billInfo.amount),
+                  1
+                  /* TEXT */
+                )
+              ]),
+              vue.createElementVNode("view", { class: "bill-row" }, [
+                vue.createElementVNode("text", { class: "bill-label" }, "缴费期限："),
+                vue.createElementVNode(
+                  "text",
+                  { class: "bill-value" },
+                  vue.toDisplayString($data.billInfo.dueDate),
+                  1
+                  /* TEXT */
+                )
               ])
-            ], 8, ["onClick"]);
-          }),
-          128
-          /* KEYED_FRAGMENT */
-        ))
-      ]),
-      vue.createCommentVNode(" 展开更多按钮 "),
-      $options.hasMore ? (vue.openBlock(), vue.createElementBlock("view", {
-        key: 0,
-        class: "expand-more",
-        onClick: _cache[2] || (_cache[2] = (...args) => $options.toggleExpand && $options.toggleExpand(...args))
-      }, [
-        vue.createElementVNode(
-          "text",
-          { class: "expand-text" },
-          vue.toDisplayString($data.isExpanded ? "收起" : "展开更多"),
-          1
-          /* TEXT */
-        ),
-        vue.createElementVNode(
-          "text",
-          { class: "expand-icon" },
-          vue.toDisplayString($data.isExpanded ? "↑" : "↓"),
-          1
-          /* TEXT */
-        )
-      ])) : vue.createCommentVNode("v-if", true),
-      vue.createCommentVNode(" 没有搜索结果时显示 "),
-      $data.searchKeyword && $options.filteredCompanies.length === 0 ? (vue.openBlock(), vue.createElementBlock("view", {
-        key: 1,
-        class: "no-result"
-      }, [
-        vue.createElementVNode("text", { class: "no-result-text" }, "未找到相关水费公司"),
-        vue.createElementVNode("text", { class: "no-result-desc" }, "请尝试输入其他关键词")
+            ]),
+            vue.createElementVNode("button", {
+              class: "pay-button",
+              onClick: _cache[4] || (_cache[4] = (...args) => $options.proceedToPayment && $options.proceedToPayment(...args))
+            }, "立即缴费")
+          ])
+        ])
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesWaterWater = /* @__PURE__ */ _export_sfc(_sfc_main$h, [["render", _sfc_render$g], ["__scopeId", "data-v-ebd6dd79"], ["__file", "E:/项目/yihangyidon/src/pages/water/water.vue"]]);
-  const _sfc_main$g = {
+  const PagesWaterPaymentWaterPayment = /* @__PURE__ */ _export_sfc(_sfc_main$k, [["render", _sfc_render$j], ["__scopeId", "data-v-16fc2ef4"], ["__file", "E:/项目/yihangyidon/src/pages/water-payment/water-payment.vue"]]);
+  const _sfc_main$j = {
+    name: "CitySelectPage",
+    data() {
+      return {
+        searchKeyword: "",
+        currentCity: "保定市",
+        currentLetter: "",
+        showLetterTip: false,
+        touchTimer: null,
+        searchTimer: null,
+        isTouching: false,
+        highlightedLetter: "",
+        dynamicSidebarTop: 550,
+        // 动态计算的侧边栏位置，大幅增加默认值确保绝对不遮挡
+        // 热门城市
+        hotCities: [
+          "北京",
+          "重庆",
+          "广州市",
+          "杭州市",
+          "上海",
+          "深圳",
+          "苏州市",
+          "天津"
+        ],
+        // 所有城市数据
+        allCities: [
+          // A
+          "阿坝藏族羌族自治州",
+          "阿克苏地区",
+          "阿拉尔市",
+          "阿里地区",
+          "阿勒泰地区",
+          "阿坝市",
+          "安康市",
+          "安庆市",
+          "安顺市",
+          "安阳市",
+          // B
+          "北京",
+          "保定市",
+          // C
+          "重庆",
+          "成都市",
+          "长沙市",
+          "长春市",
+          "常州市",
+          "沧州市",
+          // D
+          "大连市",
+          "东莞市",
+          "大庆市",
+          "丹东市",
+          "德州市",
+          "德阳市",
+          // E
+          "鄂尔多斯市",
+          "恩施土家族苗族自治州",
+          // F
+          "福州市",
+          "佛山市",
+          "抚顺市",
+          "阜阳市",
+          // G
+          "广州市",
+          "贵阳市",
+          "桂林市",
+          "赣州市",
+          "广安市",
+          // H
+          "杭州市",
+          "哈尔滨市",
+          "合肥市",
+          "海口市",
+          "呼和浩特市",
+          "惠州市",
+          // J
+          "济南市",
+          "江门市",
+          "嘉兴市",
+          "金华市",
+          "荆州市",
+          "九江市",
+          // K
+          "昆明市",
+          "开封市",
+          // L
+          "兰州市",
+          "洛阳市",
+          "连云港市",
+          "临沂市",
+          "柳州市",
+          // M
+          "绵阳市",
+          "马鞍山市",
+          // N
+          "南京市",
+          "宁波市",
+          "南昌市",
+          "南宁市",
+          "南通市",
+          // P
+          "平顶山市",
+          // Q
+          "青岛市",
+          "泉州市",
+          "秦皇岛市",
+          // R
+          "日照市",
+          // S
+          "上海",
+          "深圳",
+          "苏州市",
+          "石家庄市",
+          "沈阳市",
+          "绍兴市",
+          // T
+          "天津",
+          "太原市",
+          "台州市",
+          "唐山市",
+          "泰安市",
+          // W
+          "武汉市",
+          "无锡市",
+          "温州市",
+          "乌鲁木齐市",
+          "潍坊市",
+          "芜湖市",
+          // X
+          "西安市",
+          "厦门市",
+          "徐州市",
+          "襄阳市",
+          "湘潭市",
+          "新乡市",
+          // Y
+          "银川市",
+          "扬州市",
+          "烟台市",
+          "宜昌市",
+          "岳阳市",
+          // Z
+          "郑州市",
+          "珠海市",
+          "中山市",
+          "株洲市",
+          "淄博市",
+          "遵义市"
+        ],
+        // 字母索引
+        alphabetList: [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E",
+          "F",
+          "G",
+          "H",
+          "J",
+          "K",
+          "L",
+          "M",
+          "N",
+          "P",
+          "Q",
+          "R",
+          "S",
+          "T",
+          "W",
+          "X",
+          "Y",
+          "Z"
+        ]
+      };
+    },
+    computed: {
+      // 搜索过滤的城市 - 增强版
+      filteredCities() {
+        if (!this.searchKeyword)
+          return [];
+        const keyword = this.searchKeyword.toLowerCase().trim();
+        const results = [];
+        this.allCities.forEach((city) => {
+          let matchScore = 0;
+          if (city.toLowerCase() === keyword) {
+            matchScore = 100;
+          } else if (city.toLowerCase().startsWith(keyword)) {
+            matchScore = 90;
+          } else if (city.toLowerCase().includes(keyword)) {
+            matchScore = 80;
+          } else {
+            const firstLetter = this.getCityFirstLetter(city).toLowerCase();
+            const fullPinyin = this.getCityPinyin(city).toLowerCase();
+            if (firstLetter === keyword) {
+              matchScore = 70;
+            } else if (fullPinyin.includes(keyword)) {
+              matchScore = 60;
+            } else if (firstLetter.includes(keyword)) {
+              matchScore = 50;
+            }
+          }
+          if (matchScore > 0) {
+            results.push({ city, score: matchScore });
+          }
+        });
+        return results.sort((a, b) => b.score - a.score).map((item) => item.city);
+      },
+      // 按字母分组的城市 - 增强版
+      groupedCities() {
+        const grouped = {};
+        this.allCities.forEach((city) => {
+          const letter = this.getCityFirstLetter(city);
+          if (!grouped[letter]) {
+            grouped[letter] = [];
+          }
+          grouped[letter].push(city);
+        });
+        const sortedGrouped = {};
+        this.alphabetList.forEach((letter) => {
+          if (grouped[letter]) {
+            sortedGrouped[letter] = grouped[letter].sort((a, b) => {
+              return a.localeCompare(b, "zh-CN");
+            });
+          }
+        });
+        return sortedGrouped;
+      },
+      // 可用的字母列表 (只显示有城市的字母)
+      availableLetters() {
+        return this.alphabetList.filter(
+          (letter) => this.groupedCities[letter] && this.groupedCities[letter].length > 0
+        );
+      },
+      // 滚动进度百分比
+      scrollProgress() {
+        if (!this.currentLetter || this.availableLetters.length === 0)
+          return 0;
+        const currentIndex = this.availableLetters.indexOf(this.currentLetter);
+        if (currentIndex === -1)
+          return 0;
+        return (currentIndex + 1) / this.availableLetters.length * 100;
+      }
+    },
+    methods: {
+      // 处理搜索 - 添加防抖
+      handleSearch() {
+        if (this.searchTimer) {
+          clearTimeout(this.searchTimer);
+        }
+        this.searchTimer = setTimeout(() => {
+          formatAppLog("log", "at pages/city-select/city-select.vue:438", "搜索关键词:", this.searchKeyword);
+        }, 300);
+      },
+      // 滚动到指定字母 - 增强版
+      scrollToLetter(letter) {
+        formatAppLog("log", "at pages/city-select/city-select.vue:444", "=== 开始滚动到字母:", letter, "===");
+        this.currentLetter = letter;
+        this.showScrollingIndicator(letter);
+        uni.createSelectorQuery().selectViewport().scrollOffset().exec((res) => {
+          const scrollOffset = res[0];
+          formatAppLog("log", "at pages/city-select/city-select.vue:457", "当前页面滚动位置:", scrollOffset);
+          const query = uni.createSelectorQuery().in(this);
+          query.select(`#letter-${letter}`).boundingClientRect();
+          query.select(".search-section").boundingClientRect();
+          query.select(".location-section").boundingClientRect();
+          query.select(".hot-cities-section").boundingClientRect();
+          query.exec((results) => {
+            const [targetRect, searchRect, locationRect, hotCitiesRect] = results;
+            formatAppLog("log", "at pages/city-select/city-select.vue:472", "查询结果:", {
+              target: targetRect,
+              search: searchRect,
+              location: locationRect,
+              hotCities: hotCitiesRect
+            });
+            if (targetRect) {
+              let actualHeaderHeight = 0;
+              if (searchRect)
+                actualHeaderHeight += searchRect.height;
+              if (locationRect)
+                actualHeaderHeight += locationRect.height;
+              if (hotCitiesRect)
+                actualHeaderHeight += hotCitiesRect.height;
+              formatAppLog("log", "at pages/city-select/city-select.vue:486", `实际头部高度: ${actualHeaderHeight}rpx`);
+              const targetScrollTop = targetRect.top + scrollOffset.scrollTop - actualHeaderHeight - 20;
+              formatAppLog(
+                "log",
+                "at pages/city-select/city-select.vue:495",
+                `目标滚动位置: ${targetScrollTop}, 元素绝对位置: ${targetRect.top + scrollOffset.scrollTop}`
+              );
+              uni.pageScrollTo({
+                scrollTop: Math.max(0, targetScrollTop),
+                duration: 300,
+                success: () => {
+                  formatAppLog("log", "at pages/city-select/city-select.vue:505", `✅ 成功滚动到字母 ${letter}`);
+                  setTimeout(() => {
+                    this.highlightTargetSection(letter);
+                  }, 100);
+                },
+                fail: (err) => {
+                  formatAppLog("error", "at pages/city-select/city-select.vue:511", "❌ 滚动失败:", err);
+                  this.retryScrollToLetter(letter);
+                }
+              });
+            } else {
+              formatAppLog("warn", "at pages/city-select/city-select.vue:517", `❌ 未找到字母 ${letter} 对应的元素，尝试重新查询`);
+              setTimeout(() => {
+                this.retryScrollToLetter(letter);
+              }, 200);
+            }
+          });
+        });
+      },
+      // 重试滚动到指定字母
+      retryScrollToLetter(letter) {
+        formatAppLog("log", "at pages/city-select/city-select.vue:528", `🔄 重试滚动到字母 ${letter}`);
+        uni.createSelectorQuery().selectViewport().scrollOffset().exec((res) => {
+          const scrollOffset = res[0];
+          const query = uni.createSelectorQuery().in(this);
+          query.selectAll(".letter-group").boundingClientRect();
+          query.select(".search-section").boundingClientRect();
+          query.select(".location-section").boundingClientRect();
+          query.select(".hot-cities-section").boundingClientRect();
+          query.exec((results) => {
+            const [rects, searchRect, locationRect, hotCitiesRect] = results;
+            formatAppLog("log", "at pages/city-select/city-select.vue:550", "重试查询结果:", {
+              letterGroups: rects ? rects.length : 0,
+              search: searchRect,
+              location: locationRect,
+              hotCities: hotCitiesRect
+            });
+            if (!rects || rects.length === 0) {
+              formatAppLog("warn", "at pages/city-select/city-select.vue:558", "❌ 重试仍未找到任何字母组，尝试最近字母");
+              this.scrollToNearestLetter(letter);
+              return;
+            }
+            const letterIndex = this.availableLetters.indexOf(letter);
+            formatAppLog(
+              "log",
+              "at pages/city-select/city-select.vue:565",
+              `字母 ${letter} 在可用字母中的索引: ${letterIndex}, 总共 ${rects.length} 个组`
+            );
+            formatAppLog("log", "at pages/city-select/city-select.vue:568", "可用字母列表:", this.availableLetters);
+            if (letterIndex >= 0 && letterIndex < rects.length && rects[letterIndex]) {
+              const rect = rects[letterIndex];
+              formatAppLog("log", "at pages/city-select/city-select.vue:576", `字母 ${letter} 的位置信息:`, rect);
+              let actualHeaderHeight = 0;
+              if (searchRect)
+                actualHeaderHeight += searchRect.height;
+              if (locationRect)
+                actualHeaderHeight += locationRect.height;
+              if (hotCitiesRect)
+                actualHeaderHeight += hotCitiesRect.height;
+              formatAppLog("log", "at pages/city-select/city-select.vue:584", `重试计算的头部高度: ${actualHeaderHeight}rpx`);
+              const targetScrollTop = rect.top + scrollOffset.scrollTop - actualHeaderHeight - 30;
+              formatAppLog("log", "at pages/city-select/city-select.vue:590", `重试最终滚动位置: ${targetScrollTop}`);
+              uni.pageScrollTo({
+                scrollTop: Math.max(0, targetScrollTop),
+                duration: 300,
+                success: () => {
+                  formatAppLog("log", "at pages/city-select/city-select.vue:596", `✅ 重试成功滚动到字母 ${letter}`);
+                  this.highlightTargetSection(letter);
+                },
+                fail: (err) => {
+                  formatAppLog("error", "at pages/city-select/city-select.vue:600", `❌ 重试滚动失败:`, err);
+                  this.scrollToNearestLetter(letter);
+                }
+              });
+            } else {
+              formatAppLog("warn", "at pages/city-select/city-select.vue:606", `❌ 重试也未找到字母 ${letter}，滚动到最近的字母`);
+              this.scrollToNearestLetter(letter);
+            }
+          });
+        });
+      },
+      // 显示滚动指示器
+      showScrollingIndicator(letter) {
+        this.showLetterTip = true;
+        if (uni.vibrateShort) {
+          uni.vibrateShort({
+            type: "light"
+          });
+        }
+      },
+      // 高亮目标区域
+      highlightTargetSection(letter) {
+        this.highlightedLetter = letter;
+        setTimeout(() => {
+          this.highlightedLetter = "";
+        }, 1e3);
+      },
+      // 滚动到最近的字母
+      scrollToNearestLetter(targetLetter) {
+        const targetIndex = this.alphabetList.indexOf(targetLetter);
+        if (targetIndex === -1)
+          return;
+        let nearestLetter = null;
+        let minDistance = Infinity;
+        this.availableLetters.forEach((letter) => {
+          const letterIndex = this.alphabetList.indexOf(letter);
+          const distance = Math.abs(letterIndex - targetIndex);
+          if (distance < minDistance) {
+            minDistance = distance;
+            nearestLetter = letter;
+          }
+        });
+        if (nearestLetter) {
+          formatAppLog(
+            "log",
+            "at pages/city-select/city-select.vue:656",
+            `字母 ${targetLetter} 不存在，滚动到最近的字母 ${nearestLetter}`
+          );
+          this.scrollToLetter(nearestLetter);
+        }
+      },
+      // 触摸开始
+      handleTouchStart(letter) {
+        this.currentLetter = letter;
+        this.showLetterTip = true;
+        this.isTouching = true;
+        uni.vibrateShort({
+          type: "light"
+        });
+        this.scrollToLetter(letter);
+      },
+      // 触摸移动 - 支持滑动选择
+      handleTouchMove(event) {
+        if (!this.isTouching)
+          return;
+        const touch = event.touches[0];
+        const sidebarRect = event.currentTarget.getBoundingClientRect();
+        const relativeY = touch.clientY - sidebarRect.top;
+        const itemHeight = sidebarRect.height / this.availableLetters.length;
+        const index = Math.floor(relativeY / itemHeight);
+        if (index >= 0 && index < this.availableLetters.length) {
+          const letter = this.availableLetters[index];
+          if (letter && letter !== this.currentLetter) {
+            this.currentLetter = letter;
+            uni.vibrateShort({
+              type: "light"
+            });
+            this.scrollToLetter(letter);
+          }
+        }
+      },
+      // 触摸结束
+      handleTouchEnd() {
+        this.isTouching = false;
+        setTimeout(() => {
+          this.showLetterTip = false;
+          this.currentLetter = "";
+        }, 800);
+      },
+      // 监听页面滚动，更新当前字母
+      handlePageScroll() {
+        if (this.isTouching || this.searchKeyword)
+          return;
+        const query = uni.createSelectorQuery().in(this);
+        this.availableLetters.forEach((letter) => {
+          query.select(`#letter-${letter}`).boundingClientRect();
+        });
+        query.exec((rects) => {
+          const viewportHeight = uni.getSystemInfoSync().windowHeight;
+          const scrollTop = uni.getSystemInfoSync().scrollTop || 0;
+          const centerY = scrollTop + viewportHeight / 2;
+          let currentVisibleLetter = "";
+          let minDistance = Infinity;
+          rects.forEach((rect, index) => {
+            if (rect) {
+              const letterCenterY = rect.top + rect.height / 2;
+              const distance = Math.abs(letterCenterY - centerY);
+              if (distance < minDistance) {
+                minDistance = distance;
+                currentVisibleLetter = this.availableLetters[index];
+              }
+            }
+          });
+          if (currentVisibleLetter && currentVisibleLetter !== this.currentLetter) {
+            this.currentLetter = currentVisibleLetter;
+          }
+        });
+      },
+      // 获取高亮部分 - 安全的文本分割方式
+      getHighlightedParts(city) {
+        if (!this.searchKeyword)
+          return [{ text: city, isHighlight: false }];
+        const keyword = this.searchKeyword;
+        const regex = new RegExp(`(${keyword})`, "gi");
+        const parts = city.split(regex);
+        return parts.map((part) => ({
+          text: part,
+          isHighlight: part.toLowerCase() === keyword.toLowerCase()
+        })).filter((part) => part.text);
+      },
+      // 获取城市拼音
+      getCityPinyin(city) {
+        const pinyinMap = {
+          北京: "Beijing",
+          上海: "Shanghai",
+          广州: "Guangzhou",
+          深圳: "Shenzhen",
+          天津: "Tianjin",
+          重庆: "Chongqing",
+          杭州市: "Hangzhou",
+          南京市: "Nanjing",
+          苏州市: "Suzhou",
+          成都市: "Chengdu",
+          武汉市: "Wuhan",
+          西安市: "Xian",
+          长沙市: "Changsha",
+          沈阳市: "Shenyang",
+          青岛市: "Qingdao",
+          大连市: "Dalian",
+          厦门市: "Xiamen",
+          宁波市: "Ningbo",
+          保定市: "Baoding",
+          石家庄市: "Shijiazhuang",
+          唐山市: "Tangshan"
+        };
+        return pinyinMap[city] || this.getCityFirstLetter(city);
+      },
+      // 选择当前定位城市
+      selectCurrentLocation() {
+        this.selectCity(this.currentCity);
+      },
+      // 选择城市
+      selectCity(city) {
+        formatAppLog("log", "at pages/city-select/city-select.vue:815", "选择城市:", city);
+        uni.setStorageSync("selectedCity", city);
+        uni.showToast({
+          title: `已选择${city}`,
+          icon: "success",
+          duration: 1500
+        });
+        setTimeout(() => {
+          uni.navigateBack({
+            success: () => {
+              uni.$emit("citySelected", city);
+              formatAppLog("log", "at pages/city-select/city-select.vue:833", `城市选择完成，返回上一页: ${city}`);
+            },
+            fail: (err) => {
+              formatAppLog("error", "at pages/city-select/city-select.vue:836", "返回上一页失败:", err);
+              uni.navigateTo({
+                url: "/pages/payment/payment",
+                fail: () => {
+                  uni.switchTab({
+                    url: "/pages/index/index"
+                  });
+                }
+              });
+            }
+          });
+        }, 1500);
+      },
+      // 获取城市首字母
+      getCityFirstLetter(city) {
+        const pinyinMap = {
+          阿: "A",
+          安: "A",
+          北: "B",
+          保: "B",
+          包: "B",
+          本: "B",
+          蚌: "B",
+          毕: "B",
+          滨: "B",
+          亳: "B",
+          重: "C",
+          成: "C",
+          长: "C",
+          常: "C",
+          沧: "C",
+          承: "C",
+          朝: "C",
+          潮: "C",
+          郴: "C",
+          池: "C",
+          赤: "C",
+          崇: "C",
+          楚: "C",
+          滁: "C",
+          大: "D",
+          丹: "D",
+          德: "D",
+          东: "D",
+          定: "D",
+          儋: "D",
+          达: "D",
+          迪: "D",
+          鄂: "E",
+          恩: "E",
+          福: "F",
+          佛: "F",
+          抚: "F",
+          阜: "F",
+          防: "F",
+          房: "F",
+          广: "G",
+          贵: "G",
+          桂: "G",
+          赣: "G",
+          甘: "G",
+          固: "G",
+          果: "G",
+          杭: "H",
+          哈: "H",
+          合: "H",
+          海: "H",
+          呼: "H",
+          惠: "H",
+          黄: "H",
+          怀: "H",
+          湖: "H",
+          葫: "H",
+          鹤: "H",
+          河: "H",
+          衡: "H",
+          红: "H",
+          淮: "H",
+          济: "J",
+          江: "J",
+          嘉: "J",
+          金: "J",
+          荆: "J",
+          九: "J",
+          佳: "J",
+          吉: "J",
+          鸡: "J",
+          揭: "J",
+          晋: "J",
+          锦: "J",
+          焦: "J",
+          酒: "J",
+          昆: "K",
+          开: "K",
+          克: "K",
+          喀: "K",
+          兰: "L",
+          洛: "L",
+          连: "L",
+          临: "L",
+          柳: "L",
+          六: "L",
+          辽: "L",
+          丽: "L",
+          丽: "L",
+          龙: "L",
+          娄: "L",
+          泸: "L",
+          吕: "L",
+          来: "L",
+          莱: "L",
+          廊: "L",
+          拉: "L",
+          乐: "L",
+          绵: "M",
+          马: "M",
+          牡: "M",
+          茂: "M",
+          梅: "M",
+          眉: "M",
+          密: "M",
+          南: "N",
+          宁: "N",
+          内: "N",
+          怒: "N",
+          那: "N",
+          平: "P",
+          濮: "P",
+          盘: "P",
+          萍: "P",
+          攀: "P",
+          青: "Q",
+          泉: "Q",
+          秦: "Q",
+          齐: "Q",
+          七: "Q",
+          清: "Q",
+          钦: "Q",
+          黔: "Q",
+          曲: "Q",
+          衢: "Q",
+          日: "R",
+          瑞: "R",
+          上: "S",
+          深: "S",
+          苏: "S",
+          石: "S",
+          沈: "S",
+          绍: "S",
+          三: "S",
+          汕: "S",
+          韶: "S",
+          十: "S",
+          双: "S",
+          四: "S",
+          松: "S",
+          随: "S",
+          商: "S",
+          宿: "S",
+          邵: "S",
+          朔: "S",
+          山: "S",
+          汉: "S",
+          天: "T",
+          太: "T",
+          台: "T",
+          唐: "T",
+          泰: "T",
+          通: "T",
+          铜: "T",
+          图: "T",
+          吐: "T",
+          塔: "T",
+          天: "T",
+          武: "W",
+          无: "W",
+          温: "W",
+          乌: "W",
+          潍: "W",
+          芜: "W",
+          渭: "W",
+          文: "W",
+          梧: "W",
+          五: "W",
+          威: "W",
+          乌: "W",
+          西: "X",
+          厦: "X",
+          徐: "X",
+          襄: "X",
+          湘: "X",
+          新: "X",
+          信: "X",
+          许: "X",
+          咸: "X",
+          孝: "X",
+          忻: "X",
+          邢: "X",
+          兴: "X",
+          宣: "X",
+          雅: "X",
+          银: "Y",
+          扬: "Y",
+          烟: "Y",
+          宜: "Y",
+          岳: "Y",
+          玉: "Y",
+          榆: "Y",
+          运: "Y",
+          营: "Y",
+          益: "Y",
+          永: "Y",
+          伊: "Y",
+          延: "Y",
+          盐: "Y",
+          郑: "Z",
+          珠: "Z",
+          中: "Z",
+          株: "Z",
+          淄: "Z",
+          遵: "Z",
+          张: "Z",
+          湛: "Z",
+          肇: "Z",
+          镇: "Z",
+          舟: "Z",
+          周: "Z",
+          驻: "Z",
+          自: "Z",
+          资: "Z"
+        };
+        const firstChar = city.charAt(0);
+        return pinyinMap[firstChar] || "Z";
+      },
+      // 动态调整侧边栏位置，确保不遮挡热门城市
+      adjustSidebarPosition() {
+        setTimeout(() => {
+          const query = uni.createSelectorQuery().in(this);
+          query.select(".search-section").boundingClientRect();
+          query.select(".location-section").boundingClientRect();
+          query.select(".hot-cities-section").boundingClientRect();
+          query.exec((results) => {
+            const [searchRect, locationRect, hotCitiesRect] = results;
+            let totalHeight = 0;
+            if (searchRect)
+              totalHeight += searchRect.height;
+            if (locationRect)
+              totalHeight += locationRect.height;
+            if (hotCitiesRect)
+              totalHeight += hotCitiesRect.height;
+            const sidebarTop = totalHeight + 120;
+            formatAppLog("log", "at pages/city-select/city-select.vue:1095", `📐 动态计算侧边栏位置: ${sidebarTop}rpx`);
+            this.dynamicSidebarTop = sidebarTop;
+            formatAppLog("log", "at pages/city-select/city-select.vue:1100", `✅ 侧边栏位置已动态调整为: ${sidebarTop}rpx`);
+            formatAppLog("log", "at pages/city-select/city-select.vue:1101", `📊 各区域高度详情:`, {
+              搜索栏: (searchRect == null ? void 0 : searchRect.height) || 0,
+              定位区域: (locationRect == null ? void 0 : locationRect.height) || 0,
+              热门城市: (hotCitiesRect == null ? void 0 : hotCitiesRect.height) || 0,
+              总高度: totalHeight,
+              额外间距: 120,
+              最终位置: sidebarTop
+            });
+            if (sidebarTop > 600) {
+              formatAppLog(
+                "warn",
+                "at pages/city-select/city-select.vue:1112",
+                `⚠️ 侧边栏位置可能过低: ${sidebarTop}rpx，请检查页面布局`
+              );
+            }
+          });
+        }, 500);
+      },
+      // 调试方法：检查字母组是否正确渲染
+      debugLetterGroups() {
+        formatAppLog("log", "at pages/city-select/city-select.vue:1122", "=== 🔍 调试字母组信息 ===");
+        formatAppLog("log", "at pages/city-select/city-select.vue:1123", "可用字母:", this.availableLetters);
+        formatAppLog("log", "at pages/city-select/city-select.vue:1124", "分组城市:", Object.keys(this.groupedCities));
+        formatAppLog("log", "at pages/city-select/city-select.vue:1125", "全部字母表:", this.alphabetList);
+        const query = uni.createSelectorQuery().in(this);
+        query.selectAll(".letter-group").boundingClientRect();
+        query.exec((results) => {
+          const rects = results[0];
+          formatAppLog("log", "at pages/city-select/city-select.vue:1133", `总共找到 ${rects ? rects.length : 0} 个字母组DOM元素`);
+          if (rects) {
+            rects.forEach((rect, index) => {
+              const letter = this.availableLetters[index];
+              formatAppLog(
+                "log",
+                "at pages/city-select/city-select.vue:1138",
+                `字母组 ${index}: ${letter} - 位置: ${rect.top}, 高度: ${rect.height}`
+              );
+            });
+          }
+        });
+        this.availableLetters.forEach((letter, index) => {
+          setTimeout(() => {
+            const letterQuery = uni.createSelectorQuery().in(this);
+            letterQuery.select(`#letter-${letter}`).boundingClientRect().exec((res) => {
+              const rect = res[0];
+              formatAppLog(
+                "log",
+                "at pages/city-select/city-select.vue:1154",
+                `🔍 字母 ${letter} (索引${index}) 元素:`,
+                rect ? `✅ 存在，位置: ${rect.top}, 高度: ${rect.height}` : "❌ 不存在"
+              );
+            });
+          }, index * 50);
+        });
+      }
+    },
+    onLoad() {
+      formatAppLog("log", "at pages/city-select/city-select.vue:1167", "城市选择页面加载");
+    },
+    onReady() {
+      uni.$on("citySelected", (city) => {
+        formatAppLog("log", "at pages/city-select/city-select.vue:1173", "接收到城市选择:", city);
+      });
+      this.adjustSidebarPosition();
+      setTimeout(() => {
+        this.debugLetterGroups();
+      }, 1500);
+      this.$nextTick(() => {
+        if (typeof window !== "undefined") {
+          window.testScrollToLetter = (letter) => {
+            formatAppLog("log", "at pages/city-select/city-select.vue:1189", `🧪 测试滚动到字母: ${letter}`);
+            this.scrollToLetter(letter);
+          };
+          formatAppLog("log", "at pages/city-select/city-select.vue:1192", "✅ 测试方法已添加：window.testScrollToLetter('A')");
+          window.showSidebarDebugInfo = () => {
+            formatAppLog("log", "at pages/city-select/city-select.vue:1196", `🔍 当前侧边栏位置: ${this.dynamicSidebarTop}rpx`);
+            formatAppLog("log", "at pages/city-select/city-select.vue:1197", "🔍 重新计算位置...");
+            this.adjustSidebarPosition();
+          };
+          formatAppLog("log", "at pages/city-select/city-select.vue:1200", "✅ 调试方法已添加：window.showSidebarDebugInfo()");
+        }
+      });
+    },
+    onPageScroll(scrollInfo) {
+      this.handlePageScroll(scrollInfo);
+    },
+    onUnload() {
+      uni.$off("citySelected");
+      if (this.searchTimer) {
+        clearTimeout(this.searchTimer);
+      }
+      if (this.touchTimer) {
+        clearTimeout(this.touchTimer);
+      }
+    }
+  };
+  function _sfc_render$i(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("view", { class: "city-select-page" }, [
+      vue.createCommentVNode(" 搜索栏 "),
+      vue.createElementVNode("view", { class: "search-section" }, [
+        vue.createElementVNode("view", { class: "search-bar" }, [
+          vue.createElementVNode("text", { class: "search-icon" }, "🔍"),
+          vue.withDirectives(vue.createElementVNode(
+            "input",
+            {
+              class: "search-input",
+              placeholder: "请输入城市名或首字母查询，如：北京/B/b",
+              "onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => $data.searchKeyword = $event),
+              onInput: _cache[1] || (_cache[1] = (...args) => $options.handleSearch && $options.handleSearch(...args))
+            },
+            null,
+            544
+            /* NEED_HYDRATION, NEED_PATCH */
+          ), [
+            [vue.vModelText, $data.searchKeyword]
+          ])
+        ])
+      ]),
+      vue.createCommentVNode(" 当前定位 "),
+      vue.createElementVNode("view", { class: "location-section" }, [
+        vue.createElementVNode("view", {
+          class: "location-item",
+          onClick: _cache[2] || (_cache[2] = (...args) => $options.selectCurrentLocation && $options.selectCurrentLocation(...args))
+        }, [
+          vue.createElementVNode("view", { class: "location-icon" }, "📍"),
+          vue.createElementVNode("text", { class: "location-text" }, "保定市"),
+          vue.createElementVNode("text", { class: "current-tag" }, "当前定位")
+        ])
+      ]),
+      vue.createCommentVNode(" 热门城市 "),
+      !$data.searchKeyword ? (vue.openBlock(), vue.createElementBlock("view", {
+        key: 0,
+        class: "hot-cities-section"
+      }, [
+        vue.createElementVNode("view", { class: "hot-cities-grid" }, [
+          (vue.openBlock(true), vue.createElementBlock(
+            vue.Fragment,
+            null,
+            vue.renderList($data.hotCities, (city) => {
+              return vue.openBlock(), vue.createElementBlock("view", {
+                class: "hot-city-item",
+                key: city,
+                onClick: ($event) => $options.selectCity(city)
+              }, [
+                vue.createElementVNode(
+                  "text",
+                  { class: "hot-city-text" },
+                  vue.toDisplayString(city),
+                  1
+                  /* TEXT */
+                )
+              ], 8, ["onClick"]);
+            }),
+            128
+            /* KEYED_FRAGMENT */
+          ))
+        ])
+      ])) : vue.createCommentVNode("v-if", true),
+      vue.createCommentVNode(" 城市列表 "),
+      vue.createElementVNode("view", { class: "city-list-section" }, [
+        vue.createCommentVNode(" 字母索引侧边栏 "),
+        !$data.searchKeyword ? (vue.openBlock(), vue.createElementBlock(
+          "view",
+          {
+            key: 0,
+            class: "alphabet-sidebar",
+            style: vue.normalizeStyle({ top: $data.dynamicSidebarTop + "rpx" })
+          },
+          [
+            vue.createElementVNode(
+              "view",
+              {
+                class: "sidebar-container",
+                onTouchmove: _cache[3] || (_cache[3] = (...args) => $options.handleTouchMove && $options.handleTouchMove(...args)),
+                onTouchend: _cache[4] || (_cache[4] = (...args) => $options.handleTouchEnd && $options.handleTouchEnd(...args))
+              },
+              [
+                (vue.openBlock(true), vue.createElementBlock(
+                  vue.Fragment,
+                  null,
+                  vue.renderList($options.availableLetters, (letter) => {
+                    return vue.openBlock(), vue.createElementBlock("view", {
+                      class: vue.normalizeClass(["alphabet-item", { active: $data.currentLetter === letter }]),
+                      key: letter,
+                      "data-letter": letter,
+                      onClick: ($event) => $options.scrollToLetter(letter),
+                      onTouchstart: ($event) => $options.handleTouchStart(letter)
+                    }, [
+                      vue.createElementVNode(
+                        "text",
+                        { class: "alphabet-text" },
+                        vue.toDisplayString(letter),
+                        1
+                        /* TEXT */
+                      )
+                    ], 42, ["data-letter", "onClick", "onTouchstart"]);
+                  }),
+                  128
+                  /* KEYED_FRAGMENT */
+                ))
+              ],
+              32
+              /* NEED_HYDRATION */
+            ),
+            vue.createCommentVNode(" 字母提示框 "),
+            $data.showLetterTip ? (vue.openBlock(), vue.createElementBlock(
+              "view",
+              {
+                key: 0,
+                class: vue.normalizeClass(["letter-tip", { show: $data.showLetterTip }])
+              },
+              [
+                vue.createElementVNode(
+                  "text",
+                  { class: "tip-text" },
+                  vue.toDisplayString($data.currentLetter),
+                  1
+                  /* TEXT */
+                )
+              ],
+              2
+              /* CLASS */
+            )) : vue.createCommentVNode("v-if", true),
+            vue.createCommentVNode(" 滚动进度指示器 "),
+            !$data.searchKeyword ? (vue.openBlock(), vue.createElementBlock("view", {
+              key: 1,
+              class: "scroll-progress"
+            }, [
+              vue.createElementVNode(
+                "view",
+                {
+                  class: "progress-bar",
+                  style: vue.normalizeStyle({ height: $options.scrollProgress + "%" })
+                },
+                null,
+                4
+                /* STYLE */
+              )
+            ])) : vue.createCommentVNode("v-if", true)
+          ],
+          4
+          /* STYLE */
+        )) : vue.createCommentVNode("v-if", true),
+        vue.createCommentVNode(" 城市列表内容 "),
+        vue.createElementVNode("view", { class: "city-content" }, [
+          vue.createCommentVNode(" 搜索结果 "),
+          $data.searchKeyword && $options.filteredCities.length > 0 ? (vue.openBlock(), vue.createElementBlock("view", { key: 0 }, [
+            vue.createElementVNode("view", { class: "section-divider" }, [
+              vue.createElementVNode("text", { class: "divider-text" }, "搜索结果"),
+              vue.createElementVNode(
+                "text",
+                { class: "result-count" },
+                "(" + vue.toDisplayString($options.filteredCities.length) + ")",
+                1
+                /* TEXT */
+              )
+            ]),
+            (vue.openBlock(true), vue.createElementBlock(
+              vue.Fragment,
+              null,
+              vue.renderList($options.filteredCities, (city) => {
+                return vue.openBlock(), vue.createElementBlock("view", {
+                  class: "city-item",
+                  key: city,
+                  onClick: ($event) => $options.selectCity(city)
+                }, [
+                  vue.createElementVNode("view", { class: "city-name" }, [
+                    !$data.searchKeyword ? (vue.openBlock(), vue.createElementBlock(
+                      "text",
+                      { key: 0 },
+                      vue.toDisplayString(city),
+                      1
+                      /* TEXT */
+                    )) : (vue.openBlock(true), vue.createElementBlock(
+                      vue.Fragment,
+                      { key: 1 },
+                      vue.renderList($options.getHighlightedParts(city), (part, index) => {
+                        return vue.openBlock(), vue.createElementBlock(
+                          "text",
+                          {
+                            key: index,
+                            class: vue.normalizeClass({ highlight: part.isHighlight })
+                          },
+                          vue.toDisplayString(part.text),
+                          3
+                          /* TEXT, CLASS */
+                        );
+                      }),
+                      128
+                      /* KEYED_FRAGMENT */
+                    ))
+                  ]),
+                  vue.createElementVNode(
+                    "text",
+                    { class: "city-pinyin" },
+                    vue.toDisplayString($options.getCityPinyin(city)),
+                    1
+                    /* TEXT */
+                  )
+                ], 8, ["onClick"]);
+              }),
+              128
+              /* KEYED_FRAGMENT */
+            ))
+          ])) : $data.searchKeyword && $options.filteredCities.length === 0 ? (vue.openBlock(), vue.createElementBlock(
+            vue.Fragment,
+            { key: 1 },
+            [
+              vue.createCommentVNode(" 无搜索结果 "),
+              vue.createElementVNode("view", { class: "no-result" }, [
+                vue.createElementVNode("text", { class: "no-result-text" }, "未找到相关城市")
+              ])
+            ],
+            2112
+            /* STABLE_FRAGMENT, DEV_ROOT_FRAGMENT */
+          )) : (vue.openBlock(), vue.createElementBlock(
+            vue.Fragment,
+            { key: 2 },
+            [
+              vue.createCommentVNode(" 按字母分组的城市列表 "),
+              vue.createElementVNode("view", null, [
+                (vue.openBlock(true), vue.createElementBlock(
+                  vue.Fragment,
+                  null,
+                  vue.renderList($options.groupedCities, (cities, letter) => {
+                    return vue.openBlock(), vue.createElementBlock("view", {
+                      key: letter,
+                      id: `letter-${letter}`,
+                      class: "letter-group"
+                    }, [
+                      vue.createElementVNode("view", {
+                        class: vue.normalizeClass(["section-divider sticky-header", { "highlight-flash": $data.highlightedLetter === letter }]),
+                        "data-letter": letter
+                      }, [
+                        vue.createElementVNode(
+                          "text",
+                          { class: "divider-text" },
+                          vue.toDisplayString(letter),
+                          1
+                          /* TEXT */
+                        ),
+                        vue.createElementVNode(
+                          "text",
+                          { class: "city-count" },
+                          "(" + vue.toDisplayString(cities.length) + ")",
+                          1
+                          /* TEXT */
+                        )
+                      ], 10, ["data-letter"]),
+                      (vue.openBlock(true), vue.createElementBlock(
+                        vue.Fragment,
+                        null,
+                        vue.renderList(cities, (city) => {
+                          return vue.openBlock(), vue.createElementBlock("view", {
+                            class: "city-item",
+                            key: city,
+                            onClick: ($event) => $options.selectCity(city)
+                          }, [
+                            vue.createElementVNode(
+                              "text",
+                              { class: "city-name" },
+                              vue.toDisplayString(city),
+                              1
+                              /* TEXT */
+                            ),
+                            vue.createElementVNode(
+                              "text",
+                              { class: "city-first-letter" },
+                              vue.toDisplayString($options.getCityFirstLetter(city)),
+                              1
+                              /* TEXT */
+                            )
+                          ], 8, ["onClick"]);
+                        }),
+                        128
+                        /* KEYED_FRAGMENT */
+                      ))
+                    ], 8, ["id"]);
+                  }),
+                  128
+                  /* KEYED_FRAGMENT */
+                ))
+              ])
+            ],
+            2112
+            /* STABLE_FRAGMENT, DEV_ROOT_FRAGMENT */
+          ))
+        ])
+      ])
+    ]);
+  }
+  const PagesCitySelectCitySelect = /* @__PURE__ */ _export_sfc(_sfc_main$j, [["render", _sfc_render$i], ["__scopeId", "data-v-66878741"], ["__file", "E:/项目/yihangyidon/src/pages/city-select/city-select.vue"]]);
+  const _sfc_main$i = {
     name: "PaymentManagementPage",
     data() {
       return {
@@ -10493,7 +12908,7 @@ if (uni.restoreGlobal) {
                 id: "phone-001",
                 type: "phone",
                 title: "手机充值",
-                desc: "手机充值",
+                desc: "15703724152 | 50元",
                 icon: "📱",
                 bgColor: "#81C784"
               }
@@ -10504,8 +12919,99 @@ if (uni.restoreGlobal) {
     },
     onLoad() {
       formatAppLog("log", "at pages/payment-management/payment-management.vue:187", "缴费管理页面加载");
+      this.loadPaymentData();
+    },
+    onShow() {
+      formatAppLog("log", "at pages/payment-management/payment-management.vue:192", "缴费管理页面显示");
+      this.loadPaymentData();
     },
     methods: {
+      // 加载缴费数据
+      loadPaymentData() {
+        try {
+          const users2 = uni.getStorageSync("users") || [];
+          const currentUser = users2.find((user) => user.isLoggedIn);
+          if (currentUser && currentUser.paymentRecords) {
+            const groupedRecords = this.groupPaymentRecords(currentUser.paymentRecords);
+            this.groups = [
+              {
+                id: "self",
+                name: "自己",
+                items: groupedRecords.self || []
+              },
+              {
+                id: "common",
+                name: "常用缴费",
+                items: groupedRecords.common || []
+              }
+            ];
+            formatAppLog("log", "at pages/payment-management/payment-management.vue:221", "缴费管理数据加载成功:", {
+              totalRecords: currentUser.paymentRecords.length,
+              groups: this.groups.length
+            });
+          } else {
+            formatAppLog("log", "at pages/payment-management/payment-management.vue:226", "未找到缴费记录数据");
+          }
+        } catch (error) {
+          formatAppLog("error", "at pages/payment-management/payment-management.vue:229", "加载缴费数据失败:", error);
+        }
+      },
+      // 将缴费记录按类型分组
+      groupPaymentRecords(records) {
+        const grouped = {
+          self: [],
+          common: []
+        };
+        records.forEach((record) => {
+          const item = {
+            id: record.id,
+            type: this.getPaymentType(record.type),
+            title: record.type,
+            desc: record.phoneNumber || record.account || record.description,
+            icon: this.getPaymentIcon(record.type),
+            bgColor: this.getPaymentColor(record.type)
+          };
+          if (record.type === "党费") {
+            grouped.self.push(item);
+          } else {
+            grouped.common.push(item);
+          }
+        });
+        return grouped;
+      },
+      // 获取缴费类型
+      getPaymentType(type) {
+        const typeMap = {
+          "手机充值": "phone",
+          "电费": "electric",
+          "水费": "water",
+          "燃气费": "gas",
+          "党费": "party"
+        };
+        return typeMap[type] || "other";
+      },
+      // 获取缴费图标
+      getPaymentIcon(type) {
+        const iconMap = {
+          "手机充值": "📱",
+          "电费": "⚡",
+          "水费": "💧",
+          "燃气费": "🔥",
+          "党费": "☭"
+        };
+        return iconMap[type] || "💰";
+      },
+      // 获取缴费颜色
+      getPaymentColor(type) {
+        const colorMap = {
+          "手机充值": "#81C784",
+          "电费": "#FFB74D",
+          "水费": "#64B5F6",
+          "燃气费": "#FF8A65",
+          "党费": "#FF5252"
+        };
+        return colorMap[type] || "#4DB6AC";
+      },
       // 切换分组展开状态
       toggleGroup(groupId) {
         const index = this.expandedGroups.indexOf(groupId);
@@ -10514,11 +13020,11 @@ if (uni.restoreGlobal) {
         } else {
           this.expandedGroups.push(groupId);
         }
-        formatAppLog("log", "at pages/payment-management/payment-management.vue:199", "切换分组:", groupId, "展开状态:", this.expandedGroups);
+        formatAppLog("log", "at pages/payment-management/payment-management.vue:305", "切换分组:", groupId, "展开状态:", this.expandedGroups);
       },
       // 处理新增分组
       handleAddGroup() {
-        formatAppLog("log", "at pages/payment-management/payment-management.vue:204", "新增分组");
+        formatAppLog("log", "at pages/payment-management/payment-management.vue:310", "新增分组");
         uni.showModal({
           title: "新增分组",
           content: "请输入分组名称",
@@ -10544,11 +13050,11 @@ if (uni.restoreGlobal) {
           title: `分组"${groupName}"创建成功`,
           icon: "success"
         });
-        formatAppLog("log", "at pages/payment-management/payment-management.vue:234", "创建新分组:", newGroup);
+        formatAppLog("log", "at pages/payment-management/payment-management.vue:340", "创建新分组:", newGroup);
       },
       // 编辑分组
       editGroup(groupId) {
-        formatAppLog("log", "at pages/payment-management/payment-management.vue:239", "编辑分组:", groupId);
+        formatAppLog("log", "at pages/payment-management/payment-management.vue:345", "编辑分组:", groupId);
         const group = this.groups.find((g) => g.id === groupId);
         if (!group)
           return;
@@ -10570,7 +13076,7 @@ if (uni.restoreGlobal) {
       },
       // 删除分组
       deleteGroup(groupId) {
-        formatAppLog("log", "at pages/payment-management/payment-management.vue:262", "删除分组:", groupId);
+        formatAppLog("log", "at pages/payment-management/payment-management.vue:368", "删除分组:", groupId);
         const group = this.groups.find((g) => g.id === groupId);
         if (!group)
           return;
@@ -10600,7 +13106,7 @@ if (uni.restoreGlobal) {
       },
       // 编辑缴费项目
       editPaymentItem(item) {
-        formatAppLog("log", "at pages/payment-management/payment-management.vue:296", "编辑缴费项目:", item);
+        formatAppLog("log", "at pages/payment-management/payment-management.vue:402", "编辑缴费项目:", item);
         uni.showModal({
           title: `编辑${item.title}`,
           content: "请输入新的信息",
@@ -10619,7 +13125,7 @@ if (uni.restoreGlobal) {
       },
       // 删除缴费项目
       deletePaymentItem(item) {
-        formatAppLog("log", "at pages/payment-management/payment-management.vue:316", "删除缴费项目:", item);
+        formatAppLog("log", "at pages/payment-management/payment-management.vue:422", "删除缴费项目:", item);
         uni.showModal({
           title: "确认删除",
           content: `确定要删除"${item.title}"吗？`,
@@ -10649,16 +13155,16 @@ if (uni.restoreGlobal) {
       // 显示添加项目菜单
       showAddItemMenu() {
         this.showAddMenu = true;
-        formatAppLog("log", "at pages/payment-management/payment-management.vue:351", "显示添加菜单");
+        formatAppLog("log", "at pages/payment-management/payment-management.vue:457", "显示添加菜单");
       },
       // 隐藏添加项目菜单
       hideAddItemMenu() {
         this.showAddMenu = false;
-        formatAppLog("log", "at pages/payment-management/payment-management.vue:357", "隐藏添加菜单");
+        formatAppLog("log", "at pages/payment-management/payment-management.vue:463", "隐藏添加菜单");
       },
       // 添加缴费项目
       addPaymentItem(item) {
-        formatAppLog("log", "at pages/payment-management/payment-management.vue:362", "添加缴费项目:", item);
+        formatAppLog("log", "at pages/payment-management/payment-management.vue:468", "添加缴费项目:", item);
         this.hideAddItemMenu();
         this.showGroupSelector(item);
       },
@@ -10726,7 +13232,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$f(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$h(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "payment-management-page" }, [
       vue.createCommentVNode(" 新增分组 "),
       vue.createElementVNode("view", { class: "add-group-section" }, [
@@ -10915,8 +13421,8 @@ if (uni.restoreGlobal) {
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesPaymentManagementPaymentManagement = /* @__PURE__ */ _export_sfc(_sfc_main$g, [["render", _sfc_render$f], ["__scopeId", "data-v-aea28279"], ["__file", "E:/项目/yihangyidon/src/pages/payment-management/payment-management.vue"]]);
-  const _sfc_main$f = {
+  const PagesPaymentManagementPaymentManagement = /* @__PURE__ */ _export_sfc(_sfc_main$i, [["render", _sfc_render$h], ["__scopeId", "data-v-aea28279"], ["__file", "E:/项目/yihangyidon/src/pages/payment-management/payment-management.vue"]]);
+  const _sfc_main$h = {
     name: "RechargePage",
     data() {
       return {
@@ -10926,8 +13432,8 @@ if (uni.restoreGlobal) {
         inputPhoneNumber: "",
         showPhoneModal: false,
         carrierInfo: {
-          name: "中国移动",
-          location: "黑龙江 牡丹江"
+          name: "",
+          location: ""
         },
         rechargeAmounts: [
           { value: 50, price: 47.77, discount: null, selected: true },
@@ -10960,7 +13466,7 @@ if (uni.restoreGlobal) {
     },
     onLoad(options) {
       this.initPage();
-      this.loadUserPhoneNumber();
+      this.loadUserData();
       if (options.phone) {
         this.phoneNumber = options.phone;
         this.getCarrierInfo();
@@ -10984,35 +13490,41 @@ if (uni.restoreGlobal) {
       }
     },
     methods: {
-      // 加载用户手机号
-      loadUserPhoneNumber() {
-        try {
-          const users2 = uni.getStorageSync("users") || [];
-          const currentUser = users2.find((user) => user.isLoggedIn);
-          if (currentUser && currentUser.phone) {
-            this.phoneNumber = currentUser.phone;
-            this.getCarrierInfo();
-          } else {
-            this.showPhoneModal = true;
-          }
-        } catch (error) {
-          formatAppLog("error", "at pages/recharge/recharge.vue:219", "加载用户手机号失败:", error);
-          this.showPhoneModal = true;
-        }
-      },
       initPage() {
-        formatAppLog("log", "at pages/recharge/recharge.vue:225", "手机充值页面初始化");
+        formatAppLog("log", "at pages/recharge/recharge.vue:207", "手机充值页面初始化");
         if (!this.phoneNumber) {
           this.showPhoneModal = true;
         }
       },
+      // 加载用户数据
+      loadUserData() {
+        try {
+          const users2 = uni.getStorageSync("users") || [];
+          const currentUser = users2.find((user) => user.isLoggedIn);
+          if (currentUser) {
+            if (currentUser.phone && !this.phoneNumber) {
+              this.phoneNumber = currentUser.phone;
+              this.getCarrierInfo();
+            }
+            formatAppLog("log", "at pages/recharge/recharge.vue:227", "✅ 充值页面用户数据加载成功:", {
+              username: currentUser.username,
+              phone: currentUser.phone,
+              balance: currentUser.balance
+            });
+          } else {
+            formatAppLog("log", "at pages/recharge/recharge.vue:233", "❌ 未找到当前用户数据");
+          }
+        } catch (error) {
+          formatAppLog("error", "at pages/recharge/recharge.vue:236", "❌ 加载用户数据失败:", error);
+        }
+      },
       switchTab(index) {
         this.activeTab = index;
-        formatAppLog("log", "at pages/recharge/recharge.vue:234", "切换到标签:", index === 0 ? "充话费" : "自动充值");
+        formatAppLog("log", "at pages/recharge/recharge.vue:242", "切换到标签:", index === 0 ? "充话费" : "自动充值");
       },
       selectAmount(amount) {
         this.selectedAmount = amount.value;
-        formatAppLog("log", "at pages/recharge/recharge.vue:239", "选择充值金额:", amount);
+        formatAppLog("log", "at pages/recharge/recharge.vue:247", "选择充值金额:", amount);
       },
       selectFromContacts() {
         this.showPhoneModal = true;
@@ -11099,25 +13611,9 @@ if (uni.restoreGlobal) {
           });
           return;
         }
-        try {
-          uni.showLoading({ title: "充值中..." });
-          await new Promise((resolve) => setTimeout(resolve, 2e3));
-          uni.hideLoading();
-          uni.showToast({
-            title: "充值成功",
-            icon: "success"
-          });
-          setTimeout(() => {
-            uni.navigateBack();
-          }, 1500);
-        } catch (error) {
-          uni.hideLoading();
-          uni.showToast({
-            title: "充值失败，请稍后重试",
-            icon: "none"
-          });
-          formatAppLog("error", "at pages/recharge/recharge.vue:366", "充值失败:", error);
-        }
+        uni.navigateTo({
+          url: `/pages/recharge-payment/recharge-payment?amount=${this.selectedPrice}&phone=${this.phoneNumber}&rechargeAmount=${this.selectedAmount}&type=recharge`
+        });
       },
       goToStream() {
         uni.showToast({
@@ -11139,7 +13635,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$e(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$g(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "recharge-page" }, [
       vue.createCommentVNode(" 手机号码区域 "),
       vue.createElementVNode("view", { class: "phone-section" }, [
@@ -11333,8 +13829,652 @@ if (uni.restoreGlobal) {
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesRechargeRecharge = /* @__PURE__ */ _export_sfc(_sfc_main$f, [["render", _sfc_render$e], ["__scopeId", "data-v-d370def1"], ["__file", "E:/项目/yihangyidon/src/pages/recharge/recharge.vue"]]);
-  const _sfc_main$e = {
+  const PagesRechargeRecharge = /* @__PURE__ */ _export_sfc(_sfc_main$h, [["render", _sfc_render$g], ["__scopeId", "data-v-d370def1"], ["__file", "E:/项目/yihangyidon/src/pages/recharge/recharge.vue"]]);
+  const _sfc_main$g = {
+    name: "RechargePaymentPage",
+    data() {
+      return {
+        paymentInfo: {
+          amount: 49.99,
+          phoneNumber: "",
+          rechargeAmount: 50
+        },
+        selectedPaymentMethod: "account",
+        showOrderDetail: false,
+        showTransferModalFlag: false,
+        accountBalance: "3707",
+        actualBalance: 0,
+        // 实际余额，将从用户数据中加载
+        bankAccount: null,
+        // 银行卡信息
+        paymentType: "recharge",
+        // 支付类型：recharge（充值）、water（水费）
+        billInfo: null
+        // 账单信息
+      };
+    },
+    onLoad(options) {
+      if (options.amount) {
+        this.paymentInfo.amount = parseFloat(options.amount);
+      }
+      if (options.phone) {
+        this.paymentInfo.phoneNumber = options.phone;
+      }
+      if (options.rechargeAmount) {
+        this.paymentInfo.rechargeAmount = parseInt(options.rechargeAmount);
+      }
+      if (options.type) {
+        this.paymentType = options.type;
+      }
+      if (options.billInfo) {
+        try {
+          this.billInfo = JSON.parse(decodeURIComponent(options.billInfo));
+        } catch (e) {
+          formatAppLog("error", "at pages/recharge-payment/recharge-payment.vue:246", "解析账单信息失败:", e);
+        }
+      }
+      this.loadUserBankData();
+      formatAppLog(
+        "log",
+        "at pages/recharge-payment/recharge-payment.vue:253",
+        "支付页面加载，支付信息：",
+        this.paymentInfo,
+        "支付类型：",
+        this.paymentType
+      );
+    },
+    onShow() {
+      try {
+        if (!forceCheckLogin()) {
+          formatAppLog("log", "at pages/recharge-payment/recharge-payment.vue:264", "充值支付页面：用户未登录，跳转到登录页面");
+          uni.reLaunch({
+            url: "/pages/denglu/login"
+          });
+          return;
+        }
+        formatAppLog("log", "at pages/recharge-payment/recharge-payment.vue:270", "充值支付页面显示");
+      } catch (error) {
+        formatAppLog("error", "at pages/recharge-payment/recharge-payment.vue:272", "充值支付页面onShow检查失败:", error);
+        uni.reLaunch({
+          url: "/pages/denglu/login"
+        });
+      }
+    },
+    methods: {
+      // 加载用户银行卡数据
+      loadUserBankData() {
+        try {
+          formatAppLog("log", "at pages/recharge-payment/recharge-payment.vue:283", "=== 开始加载银行卡数据 ===");
+          let currentUser = uni.getStorageSync("currentUser");
+          formatAppLog("log", "at pages/recharge-payment/recharge-payment.vue:287", "1. 从 currentUser 获取:", currentUser);
+          if (!currentUser) {
+            const users2 = uni.getStorageSync("users") || [];
+            formatAppLog("log", "at pages/recharge-payment/recharge-payment.vue:292", "2. users 数组长度:", users2.length);
+            currentUser = users2.find((user) => user.isLoggedIn) || users2[0];
+            formatAppLog("log", "at pages/recharge-payment/recharge-payment.vue:296", "3. 选择的用户:", currentUser ? currentUser.username : "无");
+            if (currentUser) {
+              currentUser.isLoggedIn = true;
+              uni.setStorageSync("currentUser", currentUser);
+              formatAppLog("log", "at pages/recharge-payment/recharge-payment.vue:302", "4. 设置当前用户:", currentUser.username);
+            }
+          }
+          formatAppLog("log", "at pages/recharge-payment/recharge-payment.vue:306", "5. 最终用户数据:", currentUser);
+          formatAppLog("log", "at pages/recharge-payment/recharge-payment.vue:307", "6. 用户ID:", currentUser == null ? void 0 : currentUser.id);
+          formatAppLog("log", "at pages/recharge-payment/recharge-payment.vue:308", "7. 用户名:", currentUser == null ? void 0 : currentUser.username);
+          formatAppLog("log", "at pages/recharge-payment/recharge-payment.vue:309", "8. 是否有银行账户:", !!(currentUser == null ? void 0 : currentUser.bankAccounts));
+          if (currentUser && currentUser.bankAccounts && currentUser.bankAccounts.length > 0) {
+            formatAppLog("log", "at pages/recharge-payment/recharge-payment.vue:312", "9. 银行账户列表:", currentUser.bankAccounts);
+            const bankAccount = currentUser.bankAccounts.find(
+              (account) => account.accountType === "储蓄卡" && account.status === "active"
+            );
+            formatAppLog("log", "at pages/recharge-payment/recharge-payment.vue:319", "10. 找到的储蓄卡账户:", bankAccount);
+            if (bankAccount) {
+              this.bankAccount = bankAccount;
+              this.actualBalance = bankAccount.balance;
+              this.accountBalance = bankAccount.accountNumber.slice(-4);
+              formatAppLog("log", "at pages/recharge-payment/recharge-payment.vue:326", "✅ 加载银行卡数据成功:", {
+                accountNumber: bankAccount.accountNumber,
+                balance: bankAccount.balance,
+                bankName: bankAccount.bankName,
+                accountType: bankAccount.accountType,
+                accountBalance: this.accountBalance,
+                actualBalance: this.actualBalance
+              });
+            } else {
+              formatAppLog("log", "at pages/recharge-payment/recharge-payment.vue:335", "未找到储蓄卡账户，使用第一个可用账户");
+              const firstAccount = currentUser.bankAccounts[0];
+              if (firstAccount) {
+                this.bankAccount = firstAccount;
+                this.actualBalance = firstAccount.balance;
+                this.accountBalance = firstAccount.accountNumber.slice(-4);
+                formatAppLog("log", "at pages/recharge-payment/recharge-payment.vue:342", "✅ 使用第一个可用账户:", {
+                  accountNumber: firstAccount.accountNumber,
+                  balance: firstAccount.balance,
+                  bankName: firstAccount.bankName,
+                  accountType: firstAccount.accountType,
+                  accountBalance: this.accountBalance,
+                  actualBalance: this.actualBalance
+                });
+              } else {
+                formatAppLog("log", "at pages/recharge-payment/recharge-payment.vue:351", "❌ 没有找到任何银行账户");
+                this.actualBalance = 0.2;
+                this.accountBalance = "3707";
+              }
+            }
+          } else {
+            formatAppLog("log", "at pages/recharge-payment/recharge-payment.vue:358", "❌ 用户数据中没有银行账户信息");
+            formatAppLog("log", "at pages/recharge-payment/recharge-payment.vue:359", "用户数据:", currentUser);
+            formatAppLog("log", "at pages/recharge-payment/recharge-payment.vue:360", "bankAccounts 字段:", currentUser == null ? void 0 : currentUser.bankAccounts);
+            this.loadFromOriginalData();
+          }
+        } catch (error) {
+          formatAppLog("error", "at pages/recharge-payment/recharge-payment.vue:366", "❌ 加载银行卡数据失败:", error);
+          this.actualBalance = 0.2;
+          this.accountBalance = "3707";
+        }
+      },
+      // 从原始数据重新加载
+      loadFromOriginalData() {
+        try {
+          formatAppLog("log", "at pages/recharge-payment/recharge-payment.vue:376", "=== 尝试从原始数据重新加载 ===");
+          const users2 = uni.getStorageSync("users") || [];
+          if (users2.length > 0) {
+            const firstUser = users2[0];
+            formatAppLog("log", "at pages/recharge-payment/recharge-payment.vue:382", "使用第一个用户数据:", firstUser.username);
+            formatAppLog("log", "at pages/recharge-payment/recharge-payment.vue:383", "用户银行账户信息:", firstUser.bankAccounts);
+            if (firstUser.bankAccounts && firstUser.bankAccounts.length > 0) {
+              const bankAccount = firstUser.bankAccounts.find(
+                (account) => account.accountType === "储蓄卡" && account.status === "active"
+              ) || firstUser.bankAccounts[0];
+              this.bankAccount = bankAccount;
+              this.actualBalance = bankAccount.balance;
+              this.accountBalance = bankAccount.accountNumber.slice(-4);
+              firstUser.isLoggedIn = true;
+              uni.setStorageSync("currentUser", firstUser);
+              formatAppLog("log", "at pages/recharge-payment/recharge-payment.vue:399", "✅ 从原始数据加载成功:", {
+                accountNumber: bankAccount.accountNumber,
+                balance: bankAccount.balance,
+                bankName: bankAccount.bankName,
+                accountType: bankAccount.accountType,
+                accountBalance: this.accountBalance,
+                actualBalance: this.actualBalance
+              });
+            } else {
+              formatAppLog("log", "at pages/recharge-payment/recharge-payment.vue:408", "❌ 第一个用户也没有银行账户");
+              this.actualBalance = firstUser.balance || 0.2;
+              this.accountBalance = "3707";
+              firstUser.isLoggedIn = true;
+              uni.setStorageSync("currentUser", firstUser);
+            }
+          } else {
+            formatAppLog("log", "at pages/recharge-payment/recharge-payment.vue:418", "❌ 没有找到任何用户数据");
+            this.actualBalance = 0.2;
+            this.accountBalance = "3707";
+          }
+        } catch (error) {
+          formatAppLog("error", "at pages/recharge-payment/recharge-payment.vue:423", "❌ 从原始数据加载失败:", error);
+          this.actualBalance = 0.2;
+          this.accountBalance = "3707";
+        }
+      },
+      goBack() {
+        uni.navigateBack();
+      },
+      toggleOrderDetail() {
+        this.showOrderDetail = !this.showOrderDetail;
+      },
+      selectPaymentMethod(method) {
+        this.selectedPaymentMethod = method;
+        formatAppLog("log", "at pages/recharge-payment/recharge-payment.vue:439", "选择支付方式：", method);
+      },
+      showTransferModal() {
+        this.showTransferModalFlag = true;
+      },
+      hideTransferModal() {
+        this.showTransferModalFlag = false;
+      },
+      selectBank(bankCode) {
+        formatAppLog("log", "at pages/recharge-payment/recharge-payment.vue:451", "选择银行：", bankCode);
+        this.hideTransferModal();
+        uni.showToast({
+          title: "银行转账功能开发中",
+          icon: "none"
+        });
+      },
+      async handlePayment() {
+        if (!this.selectedPaymentMethod) {
+          uni.showToast({
+            title: "请选择支付方式",
+            icon: "none"
+          });
+          return;
+        }
+        try {
+          uni.showLoading({ title: "支付中..." });
+          switch (this.selectedPaymentMethod) {
+            case "account":
+              await this.handleAccountPayment();
+              break;
+            case "alipay":
+              await this.handleAlipayPayment();
+              break;
+            case "wechat":
+              await this.handleWechatPayment();
+              break;
+          }
+        } catch (error) {
+          uni.hideLoading();
+          uni.showToast({
+            title: "支付失败，请稍后重试",
+            icon: "none"
+          });
+          formatAppLog("error", "at pages/recharge-payment/recharge-payment.vue:489", "支付失败:", error);
+        }
+      },
+      async handleAccountPayment() {
+        if (this.actualBalance < this.paymentInfo.amount) {
+          uni.hideLoading();
+          uni.showToast({
+            title: `余额不足，可用余额${this.actualBalance.toFixed(2)}元`,
+            icon: "none",
+            duration: 2e3
+          });
+          return;
+        }
+        await new Promise((resolve) => setTimeout(resolve, 2e3));
+        this.updateUserBalance();
+        uni.hideLoading();
+        uni.showToast({
+          title: "支付成功",
+          icon: "success",
+          duration: 2e3
+        });
+        setTimeout(() => {
+          this.handlePaymentSuccess();
+        }, 1500);
+      },
+      async handleAlipayPayment() {
+        await new Promise((resolve) => setTimeout(resolve, 2e3));
+        uni.hideLoading();
+        uni.showToast({
+          title: "支付成功",
+          icon: "success"
+        });
+        setTimeout(() => {
+          this.handlePaymentSuccess();
+        }, 1500);
+      },
+      async handleWechatPayment() {
+        await new Promise((resolve) => setTimeout(resolve, 2e3));
+        uni.hideLoading();
+        uni.showToast({
+          title: "支付成功",
+          icon: "success"
+        });
+        setTimeout(() => {
+          this.handlePaymentSuccess();
+        }, 1500);
+      },
+      // 更新用户余额
+      updateUserBalance() {
+        try {
+          const users2 = uni.getStorageSync("users") || [];
+          const currentUserIndex = users2.findIndex((user) => user.isLoggedIn);
+          if (currentUserIndex !== -1) {
+            const currentUser = users2[currentUserIndex];
+            currentUser.balance -= this.paymentInfo.amount;
+            if (this.bankAccount) {
+              const bankAccountIndex = currentUser.bankAccounts.findIndex(
+                (account) => account.accountNumber === this.bankAccount.accountNumber
+              );
+              if (bankAccountIndex !== -1) {
+                currentUser.bankAccounts[bankAccountIndex].balance -= this.paymentInfo.amount;
+              }
+            }
+            this.actualBalance -= this.paymentInfo.amount;
+            const transactionRecord = {
+              id: Date.now(),
+              type: "expense",
+              amount: this.paymentInfo.amount,
+              description: this.paymentType === "water" ? "水费缴费" : "手机充值",
+              balance: currentUser.balance,
+              timestamp: (/* @__PURE__ */ new Date()).toISOString(),
+              icon: this.paymentType === "water" ? "💧" : "📱",
+              title: this.paymentType === "water" ? "水费缴费" : "手机充值",
+              time: (/* @__PURE__ */ new Date()).toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" })
+            };
+            if (!currentUser.transactionRecords) {
+              currentUser.transactionRecords = [];
+            }
+            currentUser.transactionRecords.unshift(transactionRecord);
+            currentUser.lastUpdateTime = (/* @__PURE__ */ new Date()).toISOString();
+            users2[currentUserIndex] = currentUser;
+            uni.setStorageSync("users", users2);
+            uni.setStorageSync("userInfo", currentUser);
+            uni.setStorageSync("currentUser", currentUser);
+            formatAppLog("log", "at pages/recharge-payment/recharge-payment.vue:605", "用户余额更新成功:", {
+              newBalance: currentUser.balance,
+              paymentAmount: this.paymentInfo.amount
+            });
+          }
+        } catch (error) {
+          formatAppLog("error", "at pages/recharge-payment/recharge-payment.vue:611", "更新用户余额失败:", error);
+        }
+      },
+      // 处理支付成功后的跳转
+      handlePaymentSuccess() {
+        if (this.paymentType === "water") {
+          uni.reLaunch({
+            url: "/pages/life/life"
+          });
+        } else {
+          uni.navigateBack({
+            delta: 2
+          });
+        }
+      }
+    }
+  };
+  function _sfc_render$f(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("view", { class: "payment-page" }, [
+      vue.createCommentVNode(" 导航栏 "),
+      vue.createElementVNode("view", { class: "nav-bar" }, [
+        vue.createElementVNode("view", {
+          class: "nav-back",
+          onClick: _cache[0] || (_cache[0] = (...args) => $options.goBack && $options.goBack(...args))
+        }, [
+          vue.createElementVNode("text", { class: "back-icon" }, "‹")
+        ]),
+        vue.createElementVNode("text", { class: "nav-title" }, "支付"),
+        vue.createElementVNode("view", { class: "nav-placeholder" })
+      ]),
+      vue.createCommentVNode(" 支付金额显示 "),
+      vue.createElementVNode("view", { class: "payment-amount-section" }, [
+        vue.createElementVNode("text", { class: "amount-label" }, "应付金额(元)"),
+        vue.createElementVNode(
+          "text",
+          { class: "amount-value" },
+          vue.toDisplayString($data.paymentInfo.amount),
+          1
+          /* TEXT */
+        )
+      ]),
+      vue.createCommentVNode(" 订单详情 "),
+      vue.createElementVNode("view", { class: "order-section" }, [
+        vue.createElementVNode("view", { class: "section-header" }, [
+          vue.createElementVNode("text", { class: "section-title" }, "订单详情"),
+          vue.createElementVNode("view", {
+            class: "toggle-btn",
+            onClick: _cache[1] || (_cache[1] = (...args) => $options.toggleOrderDetail && $options.toggleOrderDetail(...args))
+          }, [
+            vue.createElementVNode(
+              "text",
+              { class: "toggle-text" },
+              vue.toDisplayString($data.showOrderDetail ? "全额支付" : "话费充值"),
+              1
+              /* TEXT */
+            ),
+            vue.createElementVNode(
+              "text",
+              {
+                class: vue.normalizeClass(["toggle-icon", { rotated: $data.showOrderDetail }])
+              },
+              "›",
+              2
+              /* CLASS */
+            )
+          ])
+        ]),
+        $data.showOrderDetail ? (vue.openBlock(), vue.createElementBlock("view", {
+          key: 0,
+          class: "order-info"
+        }, [
+          vue.createElementVNode("view", { class: "order-item" }, [
+            vue.createElementVNode("text", { class: "item-label" }, "订单金额"),
+            vue.createElementVNode(
+              "text",
+              { class: "item-value" },
+              vue.toDisplayString($data.paymentInfo.amount) + "元",
+              1
+              /* TEXT */
+            )
+          ]),
+          vue.createElementVNode("view", { class: "order-item" }, [
+            vue.createElementVNode("text", { class: "item-label" }, "手机号码"),
+            vue.createElementVNode(
+              "text",
+              { class: "item-value" },
+              vue.toDisplayString($data.paymentInfo.phoneNumber),
+              1
+              /* TEXT */
+            )
+          ]),
+          vue.createElementVNode("view", { class: "order-item" }, [
+            vue.createElementVNode("text", { class: "item-label" }, "充值面额"),
+            vue.createElementVNode(
+              "text",
+              { class: "item-value" },
+              vue.toDisplayString($data.paymentInfo.rechargeAmount) + "元",
+              1
+              /* TEXT */
+            )
+          ])
+        ])) : vue.createCommentVNode("v-if", true)
+      ]),
+      vue.createCommentVNode(" 支付方式 "),
+      vue.createElementVNode("view", { class: "payment-methods-section" }, [
+        vue.createElementVNode("text", { class: "section-title" }, "付款方式"),
+        vue.createCommentVNode(" 电子账户 "),
+        vue.createElementVNode(
+          "view",
+          {
+            class: vue.normalizeClass(["payment-method", { selected: $data.selectedPaymentMethod === "account" }]),
+            onClick: _cache[2] || (_cache[2] = ($event) => $options.selectPaymentMethod("account"))
+          },
+          [
+            vue.createElementVNode("view", { class: "method-left" }, [
+              vue.createElementVNode("view", { class: "method-icon account-icon" }, "💳"),
+              vue.createElementVNode("view", { class: "method-info" }, [
+                vue.createElementVNode(
+                  "text",
+                  { class: "method-name" },
+                  "电子账户(" + vue.toDisplayString($data.accountBalance) + ")",
+                  1
+                  /* TEXT */
+                ),
+                vue.createElementVNode(
+                  "text",
+                  { class: "method-desc" },
+                  vue.toDisplayString($data.bankAccount ? $data.bankAccount.bankName + "储蓄卡" : "可快速从他行卡转账并支付"),
+                  1
+                  /* TEXT */
+                )
+              ])
+            ]),
+            vue.createElementVNode("view", { class: "method-right" }, [
+              vue.createElementVNode(
+                "view",
+                {
+                  class: vue.normalizeClass(["radio", { checked: $data.selectedPaymentMethod === "account" }])
+                },
+                [
+                  $data.selectedPaymentMethod === "account" ? (vue.openBlock(), vue.createElementBlock("view", {
+                    key: 0,
+                    class: "radio-inner"
+                  })) : vue.createCommentVNode("v-if", true)
+                ],
+                2
+                /* CLASS */
+              )
+            ])
+          ],
+          2
+          /* CLASS */
+        ),
+        vue.createCommentVNode(" 余额不足提示 "),
+        $data.selectedPaymentMethod === "account" && $data.actualBalance < $data.paymentInfo.amount ? (vue.openBlock(), vue.createElementBlock("view", {
+          key: 0,
+          class: "insufficient-notice"
+        }, [
+          vue.createElementVNode(
+            "text",
+            { class: "notice-text" },
+            "余额不足，可用余额 " + vue.toDisplayString($data.actualBalance.toFixed(2)) + "元",
+            1
+            /* TEXT */
+          )
+        ])) : vue.createCommentVNode("v-if", true),
+        vue.createCommentVNode(" 从他行转入资金 "),
+        vue.createElementVNode("view", {
+          class: "transfer-option",
+          onClick: _cache[3] || (_cache[3] = (...args) => $options.showTransferModal && $options.showTransferModal(...args))
+        }, [
+          vue.createElementVNode("view", { class: "transfer-left" }, [
+            vue.createElementVNode("view", { class: "transfer-icon" }, "🏦"),
+            vue.createElementVNode("text", { class: "transfer-text" }, "从他行转入资金")
+          ]),
+          vue.createElementVNode("view", { class: "transfer-arrow" }, "›")
+        ]),
+        vue.createCommentVNode(" 支付宝 "),
+        vue.createElementVNode(
+          "view",
+          {
+            class: vue.normalizeClass(["payment-method", { selected: $data.selectedPaymentMethod === "alipay" }]),
+            onClick: _cache[4] || (_cache[4] = ($event) => $options.selectPaymentMethod("alipay"))
+          },
+          [
+            vue.createElementVNode("view", { class: "method-left" }, [
+              vue.createElementVNode("view", { class: "method-icon alipay-icon" }, [
+                vue.createElementVNode("text", { class: "icon-text" }, "支")
+              ]),
+              vue.createElementVNode("view", { class: "method-info" }, [
+                vue.createElementVNode("text", { class: "method-name" }, "支付宝"),
+                vue.createElementVNode("text", { class: "method-desc" }, "数亿用户的选择，更快更安全")
+              ])
+            ]),
+            vue.createElementVNode("view", { class: "method-right" }, [
+              vue.createElementVNode(
+                "view",
+                {
+                  class: vue.normalizeClass(["radio", { checked: $data.selectedPaymentMethod === "alipay" }])
+                },
+                [
+                  $data.selectedPaymentMethod === "alipay" ? (vue.openBlock(), vue.createElementBlock("view", {
+                    key: 0,
+                    class: "radio-inner"
+                  })) : vue.createCommentVNode("v-if", true)
+                ],
+                2
+                /* CLASS */
+              )
+            ])
+          ],
+          2
+          /* CLASS */
+        ),
+        vue.createCommentVNode(" 微信支付 "),
+        vue.createElementVNode(
+          "view",
+          {
+            class: vue.normalizeClass(["payment-method", { selected: $data.selectedPaymentMethod === "wechat" }]),
+            onClick: _cache[5] || (_cache[5] = ($event) => $options.selectPaymentMethod("wechat"))
+          },
+          [
+            vue.createElementVNode("view", { class: "method-left" }, [
+              vue.createElementVNode("view", { class: "method-icon wechat-icon" }, [
+                vue.createElementVNode("text", { class: "icon-text" }, "微")
+              ]),
+              vue.createElementVNode("view", { class: "method-info" }, [
+                vue.createElementVNode("text", { class: "method-name" }, "微信支付"),
+                vue.createElementVNode("text", { class: "method-desc" }, "微信安全支付")
+              ])
+            ]),
+            vue.createElementVNode("view", { class: "method-right" }, [
+              vue.createElementVNode(
+                "view",
+                {
+                  class: vue.normalizeClass(["radio", { checked: $data.selectedPaymentMethod === "wechat" }])
+                },
+                [
+                  $data.selectedPaymentMethod === "wechat" ? (vue.openBlock(), vue.createElementBlock("view", {
+                    key: 0,
+                    class: "radio-inner"
+                  })) : vue.createCommentVNode("v-if", true)
+                ],
+                2
+                /* CLASS */
+              )
+            ])
+          ],
+          2
+          /* CLASS */
+        )
+      ]),
+      vue.createCommentVNode(" 付款按钮 "),
+      vue.createElementVNode("view", { class: "payment-button-container" }, [
+        vue.createElementVNode("button", {
+          class: vue.normalizeClass(["payment-button", { disabled: !$data.selectedPaymentMethod }]),
+          onClick: _cache[6] || (_cache[6] = (...args) => $options.handlePayment && $options.handlePayment(...args)),
+          disabled: !$data.selectedPaymentMethod
+        }, " 付款 ", 10, ["disabled"])
+      ]),
+      vue.createCommentVNode(" 转账弹窗 "),
+      $data.showTransferModalFlag ? (vue.openBlock(), vue.createElementBlock("view", {
+        key: 0,
+        class: "transfer-modal",
+        onClick: _cache[13] || (_cache[13] = (...args) => $options.hideTransferModal && $options.hideTransferModal(...args))
+      }, [
+        vue.createElementVNode("view", {
+          class: "modal-content",
+          onClick: _cache[12] || (_cache[12] = vue.withModifiers(() => {
+          }, ["stop"]))
+        }, [
+          vue.createElementVNode("view", { class: "modal-header" }, [
+            vue.createElementVNode("text", { class: "modal-title" }, "从他行转入资金"),
+            vue.createElementVNode("text", {
+              class: "modal-close",
+              onClick: _cache[7] || (_cache[7] = (...args) => $options.hideTransferModal && $options.hideTransferModal(...args))
+            }, "×")
+          ]),
+          vue.createElementVNode("view", { class: "modal-body" }, [
+            vue.createElementVNode("text", { class: "modal-desc" }, "选择银行卡进行转账充值"),
+            vue.createElementVNode("view", { class: "bank-list" }, [
+              vue.createElementVNode("view", {
+                class: "bank-item",
+                onClick: _cache[8] || (_cache[8] = ($event) => $options.selectBank("icbc"))
+              }, [
+                vue.createElementVNode("text", { class: "bank-name" }, "工商银行"),
+                vue.createElementVNode("text", { class: "bank-arrow" }, "›")
+              ]),
+              vue.createElementVNode("view", {
+                class: "bank-item",
+                onClick: _cache[9] || (_cache[9] = ($event) => $options.selectBank("ccb"))
+              }, [
+                vue.createElementVNode("text", { class: "bank-name" }, "建设银行"),
+                vue.createElementVNode("text", { class: "bank-arrow" }, "›")
+              ]),
+              vue.createElementVNode("view", {
+                class: "bank-item",
+                onClick: _cache[10] || (_cache[10] = ($event) => $options.selectBank("abc"))
+              }, [
+                vue.createElementVNode("text", { class: "bank-name" }, "农业银行"),
+                vue.createElementVNode("text", { class: "bank-arrow" }, "›")
+              ]),
+              vue.createElementVNode("view", {
+                class: "bank-item",
+                onClick: _cache[11] || (_cache[11] = ($event) => $options.selectBank("boc"))
+              }, [
+                vue.createElementVNode("text", { class: "bank-name" }, "中国银行"),
+                vue.createElementVNode("text", { class: "bank-arrow" }, "›")
+              ])
+            ])
+          ])
+        ])
+      ])) : vue.createCommentVNode("v-if", true)
+    ]);
+  }
+  const PagesRechargePaymentRechargePayment = /* @__PURE__ */ _export_sfc(_sfc_main$g, [["render", _sfc_render$f], ["__scopeId", "data-v-e95b868e"], ["__file", "E:/项目/yihangyidon/src/pages/recharge-payment/recharge-payment.vue"]]);
+  const _sfc_main$f = {
     name: "GovernmentPage",
     data() {
       return {
@@ -11552,7 +14692,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$d(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$e(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "government-page" }, [
       vue.createElementVNode("view", { class: "page-header" }, [
         vue.createElementVNode("text", { class: "header-title" }, "政务民生"),
@@ -11739,8 +14879,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesGovernmentGovernment = /* @__PURE__ */ _export_sfc(_sfc_main$e, [["render", _sfc_render$d], ["__scopeId", "data-v-55002ac7"], ["__file", "E:/项目/yihangyidon/src/pages/government/government.vue"]]);
-  const _sfc_main$d = {
+  const PagesGovernmentGovernment = /* @__PURE__ */ _export_sfc(_sfc_main$f, [["render", _sfc_render$e], ["__scopeId", "data-v-55002ac7"], ["__file", "E:/项目/yihangyidon/src/pages/government/government.vue"]]);
+  const _sfc_main$e = {
     name: "GamesPage",
     data() {
       return {
@@ -11970,7 +15110,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$c(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$d(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "games-page" }, [
       vue.createElementVNode("view", { class: "page-header" }, [
         vue.createElementVNode("text", { class: "header-title" }, "小豆乐园"),
@@ -12217,8 +15357,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesGamesGames = /* @__PURE__ */ _export_sfc(_sfc_main$d, [["render", _sfc_render$c], ["__scopeId", "data-v-5e0e9dd0"], ["__file", "E:/项目/yihangyidon/src/pages/games/games.vue"]]);
-  const _sfc_main$c = {
+  const PagesGamesGames = /* @__PURE__ */ _export_sfc(_sfc_main$e, [["render", _sfc_render$d], ["__scopeId", "data-v-5e0e9dd0"], ["__file", "E:/项目/yihangyidon/src/pages/games/games.vue"]]);
+  const _sfc_main$d = {
     data() {
       return {
         transferRecords: []
@@ -12311,7 +15451,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$b(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$c(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "history-page" }, [
       vue.createCommentVNode(" 顶部导航 "),
       vue.createElementVNode("view", { class: "nav-bar" }, [
@@ -12395,7 +15535,7 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesTransferHistory = /* @__PURE__ */ _export_sfc(_sfc_main$c, [["render", _sfc_render$b], ["__scopeId", "data-v-c9706b1b"], ["__file", "E:/项目/yihangyidon/src/pages/transfer/history.vue"]]);
+  const PagesTransferHistory = /* @__PURE__ */ _export_sfc(_sfc_main$d, [["render", _sfc_render$c], ["__scopeId", "data-v-c9706b1b"], ["__file", "E:/项目/yihangyidon/src/pages/transfer/history.vue"]]);
   const formatBankCard = (cardNumber, separator = " ") => {
     if (!cardNumber)
       return "";
@@ -12412,7 +15552,7 @@ if (uni.restoreGlobal) {
     const middle = "*".repeat(card.length - showStart - showEnd);
     return formatBankCard(start + middle + end);
   };
-  const _sfc_main$b = {
+  const _sfc_main$c = {
     name: "BankCard",
     props: {
       cardInfo: {
@@ -12430,7 +15570,7 @@ if (uni.restoreGlobal) {
     },
     computed: {
       bankName() {
-        return this.cardInfo.bankName || "中国农业银行";
+        return this.cardInfo.bankName || "银行";
       },
       bankType() {
         return this.cardInfo.bankType || "abc";
@@ -12487,7 +15627,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$a(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$b(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock(
       "view",
       {
@@ -12575,8 +15715,8 @@ if (uni.restoreGlobal) {
       /* CLASS */
     );
   }
-  const BankCard = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["render", _sfc_render$a], ["__scopeId", "data-v-2f14f5e9"], ["__file", "E:/项目/yihangyidon/src/components/common/BankCard.vue"]]);
-  const _sfc_main$a = {
+  const BankCard = /* @__PURE__ */ _export_sfc(_sfc_main$c, [["render", _sfc_render$b], ["__scopeId", "data-v-2f14f5e9"], ["__file", "E:/项目/yihangyidon/src/components/common/BankCard.vue"]]);
+  const _sfc_main$b = {
     components: {
       BankCard
     },
@@ -12755,7 +15895,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$9(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$a(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_BankCard = vue.resolveComponent("BankCard");
     return vue.openBlock(), vue.createElementBlock("view", { class: "credit-card-container" }, [
       vue.createCommentVNode(" 页面头部 "),
@@ -12952,7 +16092,7 @@ if (uni.restoreGlobal) {
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesCreditCardCreditCard = /* @__PURE__ */ _export_sfc(_sfc_main$a, [["render", _sfc_render$9], ["__scopeId", "data-v-03264d9b"], ["__file", "E:/项目/yihangyidon/src/pages/credit-card/credit-card.vue"]]);
+  const PagesCreditCardCreditCard = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["render", _sfc_render$a], ["__scopeId", "data-v-03264d9b"], ["__file", "E:/项目/yihangyidon/src/pages/credit-card/credit-card.vue"]]);
   function verifyPaymentPassword(password) {
     return new Promise((resolve, reject) => {
       var _a, _b;
@@ -12963,30 +16103,30 @@ if (uni.restoreGlobal) {
           resolve(false);
           return;
         }
-        const userInfo = getUserInfo();
-        if (!userInfo) {
+        const userInfo2 = getUserInfo();
+        if (!userInfo2) {
           formatAppLog("error", "at api/payment.js:24", "用户未登录");
           reject(new Error("用户未登录"));
           return;
         }
         formatAppLog("log", "at api/payment.js:29", "用户信息获取成功:", {
-          id: userInfo.id,
-          username: userInfo.username,
-          phone: userInfo.phone,
-          hasTransactionPassword: !!userInfo.transactionPassword,
-          storedPassword: userInfo.transactionPassword,
-          storedPasswordType: typeof userInfo.transactionPassword,
-          storedPasswordLength: (_a = userInfo.transactionPassword) == null ? void 0 : _a.length
+          id: userInfo2.id,
+          username: userInfo2.username,
+          phone: userInfo2.phone,
+          hasTransactionPassword: !!userInfo2.transactionPassword,
+          storedPassword: userInfo2.transactionPassword,
+          storedPasswordType: typeof userInfo2.transactionPassword,
+          storedPasswordLength: (_a = userInfo2.transactionPassword) == null ? void 0 : _a.length
         });
-        const isCorrect = userInfo.transactionPassword === password;
+        const isCorrect = userInfo2.transactionPassword === password;
         formatAppLog("log", "at api/payment.js:42", "密码验证详情:", {
           inputPassword: password,
           inputPasswordType: typeof password,
           inputPasswordLength: password.length,
-          storedPassword: userInfo.transactionPassword,
-          storedPasswordType: typeof userInfo.transactionPassword,
-          storedPasswordLength: (_b = userInfo.transactionPassword) == null ? void 0 : _b.length,
-          exactMatch: userInfo.transactionPassword === password,
+          storedPassword: userInfo2.transactionPassword,
+          storedPasswordType: typeof userInfo2.transactionPassword,
+          storedPasswordLength: (_b = userInfo2.transactionPassword) == null ? void 0 : _b.length,
+          exactMatch: userInfo2.transactionPassword === password,
           result: isCorrect
         });
         if (isCorrect) {
@@ -13023,15 +16163,15 @@ if (uni.restoreGlobal) {
           });
           return;
         }
-        const userInfo = getUserInfo();
-        if (!userInfo) {
+        const userInfo2 = getUserInfo();
+        if (!userInfo2) {
           resolve({
             success: false,
             message: "用户未登录"
           });
           return;
         }
-        const currentBalance = userInfo.balance || 0;
+        const currentBalance = userInfo2.balance || 0;
         if (currentBalance < amount) {
           resolve({
             success: false,
@@ -13039,7 +16179,7 @@ if (uni.restoreGlobal) {
           });
           return;
         }
-        const creditCards = userInfo.creditCards || [];
+        const creditCards = userInfo2.creditCards || [];
         const cardIndex = creditCards.findIndex((card2) => card2.cardNumber === cardNumber);
         if (cardIndex === -1) {
           resolve({
@@ -13060,19 +16200,19 @@ if (uni.restoreGlobal) {
         const newBalance = currentBalance - amount;
         const newCardBalance = currentCardBalance - amount;
         const newAvailableCredit = card.creditLimit - newCardBalance;
-        userInfo.balance = newBalance;
-        userInfo.lastUpdateTime = (/* @__PURE__ */ new Date()).toISOString();
+        userInfo2.balance = newBalance;
+        userInfo2.lastUpdateTime = (/* @__PURE__ */ new Date()).toISOString();
         creditCards[cardIndex] = {
           ...card,
           currentBalance: newCardBalance,
           availableCredit: newAvailableCredit,
           lastStatementDate: (/* @__PURE__ */ new Date()).toISOString().split("T")[0]
         };
-        userInfo.creditCards = creditCards;
-        uni.setStorageSync("userInfo", userInfo);
-        uni.setStorageSync("currentUser", userInfo);
-        updateUserInDatabase(userInfo);
-        addTransactionRecord(userInfo, amount, cardNumber, newBalance);
+        userInfo2.creditCards = creditCards;
+        uni.setStorageSync("userInfo", userInfo2);
+        uni.setStorageSync("currentUser", userInfo2);
+        updateUserInDatabase(userInfo2);
+        addTransactionRecord(userInfo2, amount, cardNumber, newBalance);
         formatAppLog("log", "at api/payment.js:177", "✅ 信用卡还款成功:", {
           amount,
           newBalance,
@@ -13094,12 +16234,12 @@ if (uni.restoreGlobal) {
       }
     });
   }
-  function updateUserInDatabase(userInfo) {
+  function updateUserInDatabase(userInfo2) {
     try {
       const users2 = uni.getStorageSync("users") || [];
-      const userIndex = users2.findIndex((user) => user.id === userInfo.id);
+      const userIndex = users2.findIndex((user) => user.id === userInfo2.id);
       if (userIndex !== -1) {
-        users2[userIndex] = { ...users2[userIndex], ...userInfo };
+        users2[userIndex] = { ...users2[userIndex], ...userInfo2 };
         uni.setStorageSync("users", users2);
         formatAppLog("log", "at api/payment.js:213", "✅ 用户数据更新成功");
       }
@@ -13107,10 +16247,10 @@ if (uni.restoreGlobal) {
       formatAppLog("error", "at api/payment.js:216", "❌ 更新用户数据失败:", error);
     }
   }
-  function addTransactionRecord(userInfo, amount, cardNumber, newBalance) {
+  function addTransactionRecord(userInfo2, amount, cardNumber, newBalance) {
     try {
-      if (!userInfo.transactionRecords) {
-        userInfo.transactionRecords = [];
+      if (!userInfo2.transactionRecords) {
+        userInfo2.transactionRecords = [];
       }
       const newRecord = {
         id: Date.now(),
@@ -13123,18 +16263,18 @@ if (uni.restoreGlobal) {
         title: "信用卡还款",
         time: (/* @__PURE__ */ new Date()).toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" })
       };
-      userInfo.transactionRecords.unshift(newRecord);
-      if (userInfo.transactionRecords.length > 100) {
-        userInfo.transactionRecords = userInfo.transactionRecords.slice(0, 100);
+      userInfo2.transactionRecords.unshift(newRecord);
+      if (userInfo2.transactionRecords.length > 100) {
+        userInfo2.transactionRecords = userInfo2.transactionRecords.slice(0, 100);
       }
-      uni.setStorageSync("userInfo", userInfo);
-      uni.setStorageSync("currentUser", userInfo);
+      uni.setStorageSync("userInfo", userInfo2);
+      uni.setStorageSync("currentUser", userInfo2);
       formatAppLog("log", "at api/payment.js:255", "✅ 交易记录添加成功:", newRecord);
     } catch (error) {
       formatAppLog("error", "at api/payment.js:258", "❌ 添加交易记录失败:", error);
     }
   }
-  const _sfc_main$9 = {
+  const _sfc_main$a = {
     name: "RepaymentPasswordModal",
     props: {
       visible: {
@@ -13333,21 +16473,21 @@ if (uni.restoreGlobal) {
       async verifyPassword(password) {
         try {
           formatAppLog("log", "at components/common/RepaymentPasswordModal.vue:335", "开始验证支付密码:", password);
-          const userInfo = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
-          if (!userInfo) {
+          const userInfo2 = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
+          if (!userInfo2) {
             formatAppLog("error", "at components/common/RepaymentPasswordModal.vue:340", "用户未登录");
             return false;
           }
           formatAppLog("log", "at components/common/RepaymentPasswordModal.vue:344", "用户信息:", {
-            id: userInfo.id,
-            username: userInfo.username,
-            phone: userInfo.phone,
-            hasTransactionPassword: !!userInfo.transactionPassword,
-            storedPassword: userInfo.transactionPassword
+            id: userInfo2.id,
+            username: userInfo2.username,
+            phone: userInfo2.phone,
+            hasTransactionPassword: !!userInfo2.transactionPassword,
+            storedPassword: userInfo2.transactionPassword
           });
-          const isValid = userInfo.transactionPassword === password;
+          const isValid = userInfo2.transactionPassword === password;
           formatAppLog("log", "at components/common/RepaymentPasswordModal.vue:354", "密码验证结果:", {
-            stored: userInfo.transactionPassword,
+            stored: userInfo2.transactionPassword,
             input: password,
             match: isValid
           });
@@ -13364,7 +16504,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$8(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$9(_ctx, _cache, $props, $setup, $data, $options) {
     return $props.visible ? (vue.openBlock(), vue.createElementBlock("view", {
       key: 0,
       class: "modal-overlay",
@@ -13524,8 +16664,8 @@ if (uni.restoreGlobal) {
       ])
     ])) : vue.createCommentVNode("v-if", true);
   }
-  const RepaymentPasswordModal = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["render", _sfc_render$8], ["__scopeId", "data-v-d5beb455"], ["__file", "E:/项目/yihangyidon/src/components/common/RepaymentPasswordModal.vue"]]);
-  const _sfc_main$8 = {
+  const RepaymentPasswordModal = /* @__PURE__ */ _export_sfc(_sfc_main$a, [["render", _sfc_render$9], ["__scopeId", "data-v-d5beb455"], ["__file", "E:/项目/yihangyidon/src/components/common/RepaymentPasswordModal.vue"]]);
+  const _sfc_main$9 = {
     name: "CreditCardRepayment",
     components: {
       RepaymentPasswordModal
@@ -13538,7 +16678,9 @@ if (uni.restoreGlobal) {
         showPasswordModal: false,
         repaymentRecords: [],
         accountBalance: 0,
-        quickAmounts: [100, 500, 1e3, 5e3, "all"]
+        quickAmounts: [100, 500, 1e3, 5e3, "all"],
+        isAmountFocused: false,
+        isProcessing: false
       };
     },
     computed: {
@@ -13565,7 +16707,7 @@ if (uni.restoreGlobal) {
             this.selectedCard = this.creditCards[0];
           }
         } catch (error) {
-          formatAppLog("error", "at pages/credit-card/repayment.vue:205", "加载数据失败:", error);
+          formatAppLog("error", "at pages/credit-card/repayment.vue:281", "加载数据失败:", error);
           uni.showToast({
             title: "加载数据失败",
             icon: "none"
@@ -13578,6 +16720,15 @@ if (uni.restoreGlobal) {
       },
       onAmountInput(e) {
         this.repaymentAmount = e.detail.value;
+      },
+      onAmountFocus() {
+        this.isAmountFocused = true;
+      },
+      onAmountBlur() {
+        this.isAmountFocused = false;
+      },
+      clearAmount() {
+        this.repaymentAmount = "";
       },
       setQuickAmount(amount) {
         if (amount === "all") {
@@ -13612,7 +16763,7 @@ if (uni.restoreGlobal) {
         this.showPasswordModal = false;
       },
       async onRepaymentSuccess(result) {
-        formatAppLog("log", "at pages/credit-card/repayment.vue:259", "还款成功:", result);
+        formatAppLog("log", "at pages/credit-card/repayment.vue:347", "还款成功:", result);
         if (this.selectedCard) {
           this.selectedCard.currentBalance = result.newCardBalance;
           this.selectedCard.availableCredit = result.newAvailableCredit;
@@ -13647,16 +16798,29 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$7(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$8(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_RepaymentPasswordModal = vue.resolveComponent("RepaymentPasswordModal");
     return vue.openBlock(), vue.createElementBlock("view", { class: "repayment-container" }, [
       vue.createCommentVNode(" 页面头部 "),
       vue.createElementVNode("view", { class: "page-header" }, [
-        vue.createElementVNode("text", { class: "header-title" }, "信用卡还款")
+        vue.createElementVNode("view", { class: "header-content" }, [
+          vue.createElementVNode("text", { class: "header-title" }, "信用卡还款"),
+          vue.createElementVNode("text", { class: "header-subtitle" }, "安全便捷的还款服务")
+        ]),
+        vue.createElementVNode("view", { class: "header-decoration" })
       ]),
       vue.createCommentVNode(" 信用卡列表 "),
       vue.createElementVNode("view", { class: "cards-section" }, [
-        vue.createElementVNode("text", { class: "section-title" }, "选择信用卡"),
+        vue.createElementVNode("view", { class: "section-header" }, [
+          vue.createElementVNode("text", { class: "section-title" }, "选择信用卡"),
+          vue.createElementVNode(
+            "view",
+            { class: "section-badge" },
+            vue.toDisplayString($data.creditCards.length) + "张卡片",
+            1
+            /* TEXT */
+          )
+        ]),
         vue.createElementVNode("view", { class: "cards-list" }, [
           (vue.openBlock(true), vue.createElementBlock(
             vue.Fragment,
@@ -13667,81 +16831,85 @@ if (uni.restoreGlobal) {
                 class: vue.normalizeClass(["card-item", { selected: $data.selectedCard && $data.selectedCard.cardNumber === card.cardNumber }]),
                 onClick: ($event) => $options.selectCard(card)
               }, [
-                vue.createElementVNode("view", { class: "card-header" }, [
-                  vue.createElementVNode("view", { class: "card-info" }, [
-                    vue.createElementVNode(
-                      "text",
-                      { class: "card-type" },
-                      vue.toDisplayString(card.cardType),
-                      1
-                      /* TEXT */
-                    ),
-                    vue.createElementVNode(
-                      "text",
-                      { class: "card-number" },
-                      "**** **** **** " + vue.toDisplayString(card.cardNumber.slice(-4)),
-                      1
-                      /* TEXT */
-                    )
-                  ]),
-                  vue.createElementVNode(
-                    "view",
-                    {
-                      class: vue.normalizeClass(["card-status", card.cardStatus])
-                    },
-                    [
+                vue.createElementVNode("view", { class: "card-gradient" }),
+                vue.createElementVNode("view", { class: "card-content" }, [
+                  vue.createElementVNode("view", { class: "card-header" }, [
+                    vue.createElementVNode("view", { class: "card-info" }, [
                       vue.createElementVNode(
                         "text",
-                        null,
-                        vue.toDisplayString(card.cardStatus === "active" ? "正常" : "异常"),
+                        { class: "card-type" },
+                        vue.toDisplayString(card.cardType),
+                        1
+                        /* TEXT */
+                      ),
+                      vue.createElementVNode(
+                        "text",
+                        { class: "card-number" },
+                        "**** **** **** " + vue.toDisplayString(card.cardNumber.slice(-4)),
                         1
                         /* TEXT */
                       )
-                    ],
-                    2
-                    /* CLASS */
-                  )
-                ]),
-                vue.createElementVNode("view", { class: "card-details" }, [
-                  vue.createElementVNode("view", { class: "detail-row" }, [
-                    vue.createElementVNode("text", { class: "detail-label" }, "信用额度"),
+                    ]),
                     vue.createElementVNode(
-                      "text",
-                      { class: "detail-value" },
-                      "¥" + vue.toDisplayString(card.creditLimit.toLocaleString()),
-                      1
-                      /* TEXT */
+                      "view",
+                      {
+                        class: vue.normalizeClass(["card-status", card.cardStatus])
+                      },
+                      [
+                        vue.createElementVNode("view", { class: "status-dot" }),
+                        vue.createElementVNode(
+                          "text",
+                          null,
+                          vue.toDisplayString(card.cardStatus === "active" ? "正常" : "异常"),
+                          1
+                          /* TEXT */
+                        )
+                      ],
+                      2
+                      /* CLASS */
                     )
                   ]),
-                  vue.createElementVNode("view", { class: "detail-row" }, [
-                    vue.createElementVNode("text", { class: "detail-label" }, "可用额度"),
-                    vue.createElementVNode(
-                      "text",
-                      { class: "detail-value" },
-                      "¥" + vue.toDisplayString(card.availableCredit.toLocaleString()),
-                      1
-                      /* TEXT */
-                    )
-                  ]),
-                  vue.createElementVNode("view", { class: "detail-row" }, [
-                    vue.createElementVNode("text", { class: "detail-label" }, "当前欠款"),
-                    vue.createElementVNode(
-                      "text",
-                      { class: "detail-value amount" },
-                      "¥" + vue.toDisplayString(card.currentBalance.toLocaleString()),
-                      1
-                      /* TEXT */
-                    )
-                  ]),
-                  vue.createElementVNode("view", { class: "detail-row" }, [
-                    vue.createElementVNode("text", { class: "detail-label" }, "最低还款"),
-                    vue.createElementVNode(
-                      "text",
-                      { class: "detail-value" },
-                      "¥" + vue.toDisplayString(card.minPayment.toLocaleString()),
-                      1
-                      /* TEXT */
-                    )
+                  vue.createElementVNode("view", { class: "card-details" }, [
+                    vue.createElementVNode("view", { class: "detail-row" }, [
+                      vue.createElementVNode("text", { class: "detail-label" }, "信用额度"),
+                      vue.createElementVNode(
+                        "text",
+                        { class: "detail-value" },
+                        "¥" + vue.toDisplayString(card.creditLimit.toLocaleString()),
+                        1
+                        /* TEXT */
+                      )
+                    ]),
+                    vue.createElementVNode("view", { class: "detail-row" }, [
+                      vue.createElementVNode("text", { class: "detail-label" }, "可用额度"),
+                      vue.createElementVNode(
+                        "text",
+                        { class: "detail-value" },
+                        "¥" + vue.toDisplayString(card.availableCredit.toLocaleString()),
+                        1
+                        /* TEXT */
+                      )
+                    ]),
+                    vue.createElementVNode("view", { class: "detail-row highlight" }, [
+                      vue.createElementVNode("text", { class: "detail-label" }, "当前欠款"),
+                      vue.createElementVNode(
+                        "text",
+                        { class: "detail-value amount" },
+                        "¥" + vue.toDisplayString(card.currentBalance.toLocaleString()),
+                        1
+                        /* TEXT */
+                      )
+                    ]),
+                    vue.createElementVNode("view", { class: "detail-row" }, [
+                      vue.createElementVNode("text", { class: "detail-label" }, "最低还款"),
+                      vue.createElementVNode(
+                        "text",
+                        { class: "detail-value" },
+                        "¥" + vue.toDisplayString(card.minPayment.toLocaleString()),
+                        1
+                        /* TEXT */
+                      )
+                    ])
                   ])
                 ])
               ], 10, ["onClick"]);
@@ -13756,40 +16924,94 @@ if (uni.restoreGlobal) {
         key: 0,
         class: "amount-section"
       }, [
-        vue.createElementVNode("text", { class: "section-title" }, "还款金额"),
-        vue.createElementVNode("view", { class: "amount-input-container" }, [
-          vue.createElementVNode("text", { class: "currency-symbol" }, "¥"),
-          vue.withDirectives(vue.createElementVNode(
-            "input",
+        vue.createElementVNode("view", { class: "section-header" }, [
+          vue.createElementVNode("text", { class: "section-title" }, "还款金额"),
+          vue.createElementVNode("text", { class: "section-desc" }, "请输入或选择还款金额")
+        ]),
+        vue.createElementVNode("view", { class: "amount-input-wrapper" }, [
+          vue.createElementVNode("view", { class: "amount-input-container" }, [
+            vue.createElementVNode("text", { class: "currency-symbol" }, "¥"),
+            vue.withDirectives(vue.createElementVNode(
+              "input",
+              {
+                "onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => $data.repaymentAmount = $event),
+                type: "digit",
+                class: "amount-input",
+                placeholder: "请输入还款金额",
+                onInput: _cache[1] || (_cache[1] = (...args) => $options.onAmountInput && $options.onAmountInput(...args)),
+                onFocus: _cache[2] || (_cache[2] = (...args) => $options.onAmountFocus && $options.onAmountFocus(...args)),
+                onBlur: _cache[3] || (_cache[3] = (...args) => $options.onAmountBlur && $options.onAmountBlur(...args))
+              },
+              null,
+              544
+              /* NEED_HYDRATION, NEED_PATCH */
+            ), [
+              [vue.vModelText, $data.repaymentAmount]
+            ]),
+            $data.repaymentAmount ? (vue.openBlock(), vue.createElementBlock("view", {
+              key: 0,
+              class: "clear-btn",
+              onClick: _cache[4] || (_cache[4] = (...args) => $options.clearAmount && $options.clearAmount(...args))
+            }, [
+              vue.createElementVNode("text", { class: "clear-icon" }, "×")
+            ])) : vue.createCommentVNode("v-if", true)
+          ]),
+          vue.createElementVNode(
+            "view",
             {
-              "onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => $data.repaymentAmount = $event),
-              type: "digit",
-              class: "amount-input",
-              placeholder: "请输入还款金额",
-              onInput: _cache[1] || (_cache[1] = (...args) => $options.onAmountInput && $options.onAmountInput(...args))
+              class: vue.normalizeClass(["input-underline", { active: $data.isAmountFocused }])
             },
             null,
-            544
-            /* NEED_HYDRATION, NEED_PATCH */
-          ), [
-            [vue.vModelText, $data.repaymentAmount]
-          ])
+            2
+            /* CLASS */
+          )
         ]),
         vue.createCommentVNode(" 快捷金额按钮 "),
         vue.createElementVNode("view", { class: "quick-amounts" }, [
-          (vue.openBlock(true), vue.createElementBlock(
-            vue.Fragment,
-            null,
-            vue.renderList($data.quickAmounts, (amount) => {
-              return vue.openBlock(), vue.createElementBlock("button", {
-                key: amount,
-                class: vue.normalizeClass(["quick-amount-btn", { active: $data.repaymentAmount === amount }]),
-                onClick: ($event) => $options.setQuickAmount(amount)
-              }, vue.toDisplayString(amount === "all" ? "全额还款" : `¥${amount}`), 11, ["onClick"]);
-            }),
-            128
-            /* KEYED_FRAGMENT */
-          ))
+          vue.createElementVNode("view", { class: "quick-amounts-title" }, "快捷选择"),
+          vue.createElementVNode("view", { class: "quick-amounts-grid" }, [
+            vue.createCommentVNode(" 金额按钮行 "),
+            vue.createElementVNode("view", { class: "quick-amounts-row" }, [
+              (vue.openBlock(), vue.createElementBlock(
+                vue.Fragment,
+                null,
+                vue.renderList([100, 500, 1e3, 5e3], (amount) => {
+                  return vue.createElementVNode("button", {
+                    key: amount,
+                    class: vue.normalizeClass(["quick-amount-btn", { active: $data.repaymentAmount === amount.toString() }]),
+                    onClick: ($event) => $options.setQuickAmount(amount)
+                  }, [
+                    vue.createElementVNode(
+                      "text",
+                      { class: "btn-text" },
+                      "¥" + vue.toDisplayString(amount),
+                      1
+                      /* TEXT */
+                    ),
+                    vue.createElementVNode("view", { class: "btn-ripple" })
+                  ], 10, ["onClick"]);
+                }),
+                64
+                /* STABLE_FRAGMENT */
+              ))
+            ]),
+            vue.createCommentVNode(" 全额还款按钮 "),
+            vue.createElementVNode("view", { class: "quick-amounts-full" }, [
+              vue.createElementVNode(
+                "button",
+                {
+                  class: vue.normalizeClass(["quick-amount-btn full-repayment-btn", { active: $data.repaymentAmount === "all" }]),
+                  onClick: _cache[5] || (_cache[5] = ($event) => $options.setQuickAmount("all"))
+                },
+                [
+                  vue.createElementVNode("text", { class: "btn-text" }, "全额还款"),
+                  vue.createElementVNode("view", { class: "btn-ripple" })
+                ],
+                2
+                /* CLASS */
+              )
+            ])
+          ])
         ])
       ])) : vue.createCommentVNode("v-if", true),
       vue.createCommentVNode(" 还款信息确认 "),
@@ -13798,64 +17020,104 @@ if (uni.restoreGlobal) {
         class: "confirm-section"
       }, [
         vue.createElementVNode("view", { class: "confirm-card" }, [
-          vue.createElementVNode("text", { class: "confirm-title" }, "还款确认"),
+          vue.createElementVNode("view", { class: "confirm-header" }, [
+            vue.createElementVNode("text", { class: "confirm-title" }, "还款确认"),
+            vue.createElementVNode("view", { class: "confirm-icon" }, "💳")
+          ]),
           vue.createElementVNode("view", { class: "confirm-details" }, [
             vue.createElementVNode("view", { class: "confirm-row" }, [
-              vue.createElementVNode("text", { class: "confirm-label" }, "信用卡"),
-              vue.createElementVNode(
-                "text",
-                { class: "confirm-value" },
-                vue.toDisplayString($data.selectedCard.cardType) + " ****" + vue.toDisplayString($data.selectedCard.cardNumber.slice(-4)),
-                1
-                /* TEXT */
-              )
+              vue.createElementVNode("view", { class: "confirm-item" }, [
+                vue.createElementVNode("text", { class: "confirm-label" }, "信用卡"),
+                vue.createElementVNode(
+                  "text",
+                  { class: "confirm-value" },
+                  vue.toDisplayString($data.selectedCard.cardType) + " ****" + vue.toDisplayString($data.selectedCard.cardNumber.slice(-4)),
+                  1
+                  /* TEXT */
+                )
+              ])
+            ]),
+            vue.createElementVNode("view", { class: "confirm-row highlight" }, [
+              vue.createElementVNode("view", { class: "confirm-item" }, [
+                vue.createElementVNode("text", { class: "confirm-label" }, "还款金额"),
+                vue.createElementVNode(
+                  "text",
+                  { class: "confirm-value amount" },
+                  "¥" + vue.toDisplayString(parseFloat($data.repaymentAmount || 0).toFixed(2)),
+                  1
+                  /* TEXT */
+                )
+              ])
             ]),
             vue.createElementVNode("view", { class: "confirm-row" }, [
-              vue.createElementVNode("text", { class: "confirm-label" }, "还款金额"),
-              vue.createElementVNode(
-                "text",
-                { class: "confirm-value amount" },
-                "¥" + vue.toDisplayString(parseFloat($data.repaymentAmount || 0).toFixed(2)),
-                1
-                /* TEXT */
-              )
-            ]),
-            vue.createElementVNode("view", { class: "confirm-row" }, [
-              vue.createElementVNode("text", { class: "confirm-label" }, "还款后余额"),
-              vue.createElementVNode(
-                "text",
-                { class: "confirm-value" },
-                "¥" + vue.toDisplayString(($data.selectedCard.currentBalance - parseFloat($data.repaymentAmount || 0)).toFixed(2)),
-                1
-                /* TEXT */
-              )
+              vue.createElementVNode("view", { class: "confirm-item" }, [
+                vue.createElementVNode("text", { class: "confirm-label" }, "还款后余额"),
+                vue.createElementVNode(
+                  "text",
+                  { class: "confirm-value" },
+                  "¥" + vue.toDisplayString(($data.selectedCard.currentBalance - parseFloat($data.repaymentAmount || 0)).toFixed(2)),
+                  1
+                  /* TEXT */
+                )
+              ])
             ])
+          ]),
+          vue.createElementVNode("view", { class: "confirm-footer" }, [
+            vue.createElementVNode("text", { class: "confirm-tip" }, "请确认信息无误后点击还款")
           ])
         ])
       ])) : vue.createCommentVNode("v-if", true),
       vue.createCommentVNode(" 还款按钮 "),
       vue.createElementVNode("view", { class: "action-section" }, [
         vue.createElementVNode("button", {
-          class: vue.normalizeClass(["repayment-btn", { disabled: !$options.canRepay }]),
-          disabled: !$options.canRepay,
-          onClick: _cache[2] || (_cache[2] = (...args) => $options.showRepaymentModal && $options.showRepaymentModal(...args))
-        }, " 确认还款 ", 10, ["disabled"])
+          class: vue.normalizeClass(["repayment-btn", { disabled: !$options.canRepay, loading: $data.isProcessing }]),
+          disabled: !$options.canRepay || $data.isProcessing,
+          onClick: _cache[6] || (_cache[6] = (...args) => $options.showRepaymentModal && $options.showRepaymentModal(...args))
+        }, [
+          $data.isProcessing ? (vue.openBlock(), vue.createElementBlock("view", {
+            key: 0,
+            class: "btn-loading"
+          }, [
+            vue.createElementVNode("view", { class: "loading-spinner" }),
+            vue.createElementVNode("text", null, "处理中...")
+          ])) : (vue.openBlock(), vue.createElementBlock("view", {
+            key: 1,
+            class: "btn-content"
+          }, [
+            vue.createElementVNode("text", { class: "btn-text" }, "确认还款"),
+            vue.createElementVNode("view", { class: "btn-icon" }, "→")
+          ]))
+        ], 10, ["disabled"])
       ]),
       vue.createCommentVNode(" 还款记录 "),
       vue.createElementVNode("view", { class: "records-section" }, [
         vue.createElementVNode("view", { class: "records-header" }, [
-          vue.createElementVNode("text", { class: "section-title" }, "最近还款记录"),
-          vue.createElementVNode("text", {
+          vue.createElementVNode("view", { class: "section-header" }, [
+            vue.createElementVNode("text", { class: "section-title" }, "最近还款记录"),
+            vue.createElementVNode(
+              "view",
+              { class: "records-count" },
+              vue.toDisplayString($data.repaymentRecords.length) + "条记录",
+              1
+              /* TEXT */
+            )
+          ]),
+          vue.createElementVNode("view", {
             class: "view-all",
-            onClick: _cache[3] || (_cache[3] = (...args) => $options.viewAllRecords && $options.viewAllRecords(...args))
-          }, "查看全部")
+            onClick: _cache[7] || (_cache[7] = (...args) => $options.viewAllRecords && $options.viewAllRecords(...args))
+          }, [
+            vue.createElementVNode("text", null, "查看全部"),
+            vue.createElementVNode("view", { class: "arrow-icon" }, "→")
+          ])
         ]),
         vue.createElementVNode("view", { class: "records-list" }, [
           $data.repaymentRecords.length === 0 ? (vue.openBlock(), vue.createElementBlock("view", {
             key: 0,
             class: "empty-records"
           }, [
-            vue.createElementVNode("text", { class: "empty-text" }, "暂无还款记录")
+            vue.createElementVNode("view", { class: "empty-icon" }, "📋"),
+            vue.createElementVNode("text", { class: "empty-text" }, "暂无还款记录"),
+            vue.createElementVNode("text", { class: "empty-desc" }, "完成首次还款后记录将显示在这里")
           ])) : (vue.openBlock(), vue.createElementBlock("view", { key: 1 }, [
             (vue.openBlock(true), vue.createElementBlock(
               vue.Fragment,
@@ -13865,6 +17127,9 @@ if (uni.restoreGlobal) {
                   key: record.id,
                   class: "record-item"
                 }, [
+                  vue.createElementVNode("view", { class: "record-icon" }, [
+                    vue.createElementVNode("text", null, "💳")
+                  ]),
                   vue.createElementVNode("view", { class: "record-info" }, [
                     vue.createElementVNode(
                       "text",
@@ -13888,13 +17153,16 @@ if (uni.restoreGlobal) {
                       /* TEXT */
                     )
                   ]),
-                  vue.createElementVNode(
-                    "text",
-                    { class: "record-amount" },
-                    "-¥" + vue.toDisplayString(record.amount.toFixed(2)),
-                    1
-                    /* TEXT */
-                  )
+                  vue.createElementVNode("view", { class: "record-amount" }, [
+                    vue.createElementVNode(
+                      "text",
+                      { class: "amount-text" },
+                      "-¥" + vue.toDisplayString(record.amount.toFixed(2)),
+                      1
+                      /* TEXT */
+                    ),
+                    vue.createElementVNode("view", { class: "amount-status success" }, "成功")
+                  ])
                 ]);
               }),
               128
@@ -13913,8 +17181,8 @@ if (uni.restoreGlobal) {
       }, null, 8, ["visible", "card-number", "repayment-amount", "onClose", "onRepaymentSuccess"])
     ]);
   }
-  const PagesCreditCardRepayment = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["render", _sfc_render$7], ["__scopeId", "data-v-08d86d8e"], ["__file", "E:/项目/yihangyidon/src/pages/credit-card/repayment.vue"]]);
-  const _sfc_main$7 = {
+  const PagesCreditCardRepayment = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["render", _sfc_render$8], ["__scopeId", "data-v-08d86d8e"], ["__file", "E:/项目/yihangyidon/src/pages/credit-card/repayment.vue"]]);
+  const _sfc_main$8 = {
     data() {
       return {
         type: "normal",
@@ -14148,7 +17416,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$6(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$7(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "balance-container" }, [
       vue.createCommentVNode(" 页面头部 "),
       vue.createElementVNode("view", { class: "page-header" }, [
@@ -14332,8 +17600,8 @@ if (uni.restoreGlobal) {
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesBalanceBalance = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["render", _sfc_render$6], ["__scopeId", "data-v-a05d65b8"], ["__file", "E:/项目/yihangyidon/src/pages/balance/balance.vue"]]);
-  const _sfc_main$6 = {
+  const PagesBalanceBalance = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["render", _sfc_render$7], ["__scopeId", "data-v-a05d65b8"], ["__file", "E:/项目/yihangyidon/src/pages/balance/balance.vue"]]);
+  const _sfc_main$7 = {
     data() {
       return {
         hasLoan: true,
@@ -14557,7 +17825,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$5(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$6(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "loan-container" }, [
       vue.createCommentVNode(" 页面头部 "),
       vue.createElementVNode("view", { class: "page-header" }, [
@@ -14804,8 +18072,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesLoanLoan = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["render", _sfc_render$5], ["__scopeId", "data-v-2fe4ed24"], ["__file", "E:/项目/yihangyidon/src/pages/loan/loan.vue"]]);
-  const _sfc_main$5 = {
+  const PagesLoanLoan = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["render", _sfc_render$6], ["__scopeId", "data-v-2fe4ed24"], ["__file", "E:/项目/yihangyidon/src/pages/loan/loan.vue"]]);
+  const _sfc_main$6 = {
     name: "CardDetailModal",
     props: {
       visible: {
@@ -14838,7 +18106,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$4(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$5(_ctx, _cache, $props, $setup, $data, $options) {
     var _a, _b, _c, _d, _e, _f, _g, _h;
     return $props.visible ? (vue.openBlock(), vue.createElementBlock("view", {
       key: 0,
@@ -15104,8 +18372,8 @@ if (uni.restoreGlobal) {
       ])
     ])) : vue.createCommentVNode("v-if", true);
   }
-  const CardDetailModal = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["render", _sfc_render$4], ["__scopeId", "data-v-fcf447e6"], ["__file", "E:/项目/yihangyidon/src/components/common/CardDetailModal.vue"]]);
-  const _sfc_main$4 = {
+  const CardDetailModal = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["render", _sfc_render$5], ["__scopeId", "data-v-fcf447e6"], ["__file", "E:/项目/yihangyidon/src/components/common/CardDetailModal.vue"]]);
+  const _sfc_main$5 = {
     name: "CreditCards",
     components: {
       CardDetailModal,
@@ -15281,7 +18549,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$3(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$4(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_CardDetailModal = vue.resolveComponent("CardDetailModal");
     const _component_RepaymentPasswordModal = vue.resolveComponent("RepaymentPasswordModal");
     return vue.openBlock(), vue.createElementBlock("view", { class: "credit-cards-page" }, [
@@ -15648,7 +18916,7 @@ if (uni.restoreGlobal) {
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesCreditCardsCreditCards = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["render", _sfc_render$3], ["__scopeId", "data-v-a750c574"], ["__file", "E:/项目/yihangyidon/src/pages/credit-cards/credit-cards.vue"]]);
+  const PagesCreditCardsCreditCards = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["render", _sfc_render$4], ["__scopeId", "data-v-a750c574"], ["__file", "E:/项目/yihangyidon/src/pages/credit-cards/credit-cards.vue"]]);
   class SyncManager {
     constructor() {
       this.maxRetryCount = 3;
@@ -15791,14 +19059,14 @@ if (uni.restoreGlobal) {
      * 同步头像
      * @param {object} userInfo 用户信息
      */
-    async syncAvatar(userInfo) {
+    async syncAvatar(userInfo2) {
       try {
         const response = await this.request({
           url: "https://api.abchina.com/user/avatar",
           method: "PUT",
           data: {
-            avatar: userInfo.avatar,
-            avatarUpdateTime: userInfo.avatarUpdateTime
+            avatar: userInfo2.avatar,
+            avatarUpdateTime: userInfo2.avatarUpdateTime
           }
         });
         return response.success;
@@ -15828,12 +19096,12 @@ if (uni.restoreGlobal) {
      * 同步用户信息
      * @param {object} userInfo 用户信息
      */
-    async syncUserInfo(userInfo) {
+    async syncUserInfo(userInfo2) {
       try {
         const response = await this.request({
           url: "https://api.abchina.com/user/info",
           method: "PUT",
-          data: userInfo
+          data: userInfo2
         });
         return response.success;
       } catch (error) {
@@ -15941,7 +19209,7 @@ if (uni.restoreGlobal) {
     }
   }
   const syncManager = new SyncManager();
-  const _sfc_main$3 = {
+  const _sfc_main$4 = {
     data() {
       return {
         profileData: {
@@ -15969,9 +19237,9 @@ if (uni.restoreGlobal) {
       },
       loadProfileData() {
         try {
-          const userInfo = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
-          if (userInfo) {
-            this.profileData = { ...this.profileData, ...userInfo };
+          const userInfo2 = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
+          if (userInfo2) {
+            this.profileData = { ...this.profileData, ...userInfo2 };
             this.setPickerIndexes();
           }
         } catch (error) {
@@ -16117,15 +19385,15 @@ if (uni.restoreGlobal) {
       // 保存头像到本地存储和数据库
       async saveAvatarToStorage(avatarUrl) {
         try {
-          let userInfo = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
-          if (userInfo) {
-            userInfo.avatar = avatarUrl;
-            userInfo.avatarUpdateTime = (/* @__PURE__ */ new Date()).toISOString();
-            uni.setStorageSync("userInfo", userInfo);
-            uni.setStorageSync("currentUser", userInfo);
-            await this.updateLocalDatabase(userInfo);
+          let userInfo2 = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
+          if (userInfo2) {
+            userInfo2.avatar = avatarUrl;
+            userInfo2.avatarUpdateTime = (/* @__PURE__ */ new Date()).toISOString();
+            uni.setStorageSync("userInfo", userInfo2);
+            uni.setStorageSync("currentUser", userInfo2);
+            await this.updateLocalDatabase(userInfo2);
             if (!this.isOfflineMode) {
-              await this.syncToServer(userInfo);
+              await this.syncToServer(userInfo2);
             }
           }
         } catch (error) {
@@ -16134,17 +19402,17 @@ if (uni.restoreGlobal) {
         }
       },
       // 更新本地数据库
-      async updateLocalDatabase(userInfo) {
+      async updateLocalDatabase(userInfo2) {
         try {
           const users2 = uni.getStorageSync("users") || [];
           const userIndex = users2.findIndex(
-            (user) => user.id === userInfo.id || user.phone === userInfo.phone || user.username === userInfo.username
+            (user) => user.id === userInfo2.id || user.phone === userInfo2.phone || user.username === userInfo2.username
           );
           if (userIndex !== -1) {
-            users2[userIndex].avatar = userInfo.avatar;
-            users2[userIndex].avatarUpdateTime = userInfo.avatarUpdateTime;
+            users2[userIndex].avatar = userInfo2.avatar;
+            users2[userIndex].avatarUpdateTime = userInfo2.avatarUpdateTime;
             uni.setStorageSync("users", users2);
-            formatAppLog("log", "at pages/user/profile.vue:385", "本地数据库更新成功:", userInfo.avatar);
+            formatAppLog("log", "at pages/user/profile.vue:385", "本地数据库更新成功:", userInfo2.avatar);
           }
         } catch (error) {
           formatAppLog("error", "at pages/user/profile.vue:388", "更新本地数据库失败:", error);
@@ -16152,19 +19420,19 @@ if (uni.restoreGlobal) {
         }
       },
       // 同步到服务器
-      async syncToServer(userInfo) {
+      async syncToServer(userInfo2) {
         try {
-          const response = await this.updateUserInfoAPI(userInfo);
+          const response = await this.updateUserInfoAPI(userInfo2);
           if (response.success) {
             formatAppLog("log", "at pages/user/profile.vue:399", "服务器同步成功");
           }
         } catch (error) {
           formatAppLog("error", "at pages/user/profile.vue:402", "服务器同步失败:", error);
-          syncManager.addSyncTask("updateAvatar", userInfo);
+          syncManager.addSyncTask("updateAvatar", userInfo2);
         }
       },
       // 更新用户信息API
-      updateUserInfoAPI(userInfo) {
+      updateUserInfoAPI(userInfo2) {
         return new Promise((resolve, reject) => {
           uni.request({
             url: "https://api.abchina.com/user/info",
@@ -16174,8 +19442,8 @@ if (uni.restoreGlobal) {
               "Authorization": `Bearer ${uni.getStorageSync("token") || ""}`
             },
             data: {
-              avatar: userInfo.avatar,
-              avatarUpdateTime: userInfo.avatarUpdateTime
+              avatar: userInfo2.avatar,
+              avatarUpdateTime: userInfo2.avatarUpdateTime
             },
             success: (res) => {
               if (res.data.code === 0) {
@@ -16202,22 +19470,22 @@ if (uni.restoreGlobal) {
           uni.showLoading({
             title: "保存中..."
           });
-          let userInfo = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
-          if (userInfo) {
-            userInfo = {
-              ...userInfo,
+          let userInfo2 = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
+          if (userInfo2) {
+            userInfo2 = {
+              ...userInfo2,
               ...this.profileData,
               lastUpdateTime: (/* @__PURE__ */ new Date()).toISOString()
             };
-            uni.setStorageSync("userInfo", userInfo);
-            uni.setStorageSync("currentUser", userInfo);
-            await this.updateLocalDatabase(userInfo);
+            uni.setStorageSync("userInfo", userInfo2);
+            uni.setStorageSync("currentUser", userInfo2);
+            await this.updateLocalDatabase(userInfo2);
             try {
-              await this.syncProfileToServer(userInfo);
+              await this.syncProfileToServer(userInfo2);
               formatAppLog("log", "at pages/user/profile.vue:471", "个人资料同步成功");
             } catch (syncError) {
               formatAppLog("error", "at pages/user/profile.vue:473", "同步失败，已加入同步队列:", syncError);
-              syncManager.addSyncTask("updateProfile", userInfo);
+              syncManager.addSyncTask("updateProfile", userInfo2);
             }
           }
           uni.hideLoading();
@@ -16238,9 +19506,9 @@ if (uni.restoreGlobal) {
         }
       },
       // 同步个人资料到服务器
-      async syncProfileToServer(userInfo) {
+      async syncProfileToServer(userInfo2) {
         try {
-          const response = await this.updateUserInfoAPI(userInfo);
+          const response = await this.updateUserInfoAPI(userInfo2);
           if (!response.success) {
             throw new Error("同步失败");
           }
@@ -16251,7 +19519,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$2(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$3(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "profile-page" }, [
       vue.createElementVNode("view", { class: "nav-bar" }, [
         vue.createElementVNode("view", {
@@ -16446,8 +19714,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesUserProfile = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["render", _sfc_render$2], ["__scopeId", "data-v-f6b4f04d"], ["__file", "E:/项目/yihangyidon/src/pages/user/profile.vue"]]);
-  const _sfc_main$2 = {
+  const PagesUserProfile = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["render", _sfc_render$3], ["__scopeId", "data-v-f6b4f04d"], ["__file", "E:/项目/yihangyidon/src/pages/user/profile.vue"]]);
+  const _sfc_main$3 = {
     data() {
       return {
         securityScore: 85,
@@ -16541,9 +19809,9 @@ if (uni.restoreGlobal) {
           if (settings && typeof settings === "object") {
             Object.assign(this, settings);
           }
-          const userInfo = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
-          if (userInfo && userInfo.securitySettings && typeof userInfo.securitySettings === "object") {
-            const securitySettings = userInfo.securitySettings;
+          const userInfo2 = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
+          if (userInfo2 && userInfo2.securitySettings && typeof userInfo2.securitySettings === "object") {
+            const securitySettings = userInfo2.securitySettings;
             this.biometricEnabled = Boolean(securitySettings.biometricEnabled);
             this.smsVerificationEnabled = Boolean(securitySettings.smsVerificationEnabled);
             this.accountLockEnabled = Boolean(securitySettings.accountLockEnabled);
@@ -16597,16 +19865,16 @@ if (uni.restoreGlobal) {
             loginDevices: this.loginDevices
           };
           uni.setStorageSync("securitySettings", settings);
-          const userInfo = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
-          if (userInfo) {
-            userInfo.securitySettings = {
-              ...userInfo.securitySettings,
+          const userInfo2 = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
+          if (userInfo2) {
+            userInfo2.securitySettings = {
+              ...userInfo2.securitySettings,
               ...settings,
               lastUpdateTime: (/* @__PURE__ */ new Date()).toISOString()
             };
-            uni.setStorageSync("userInfo", userInfo);
-            uni.setStorageSync("currentUser", userInfo);
-            this.updateUserSecurityInDatabase(userInfo);
+            uni.setStorageSync("userInfo", userInfo2);
+            uni.setStorageSync("currentUser", userInfo2);
+            this.updateUserSecurityInDatabase(userInfo2);
           }
           this.lastUpdateTime = (/* @__PURE__ */ new Date()).toLocaleDateString();
           this.calculateSecurityScore();
@@ -16615,14 +19883,14 @@ if (uni.restoreGlobal) {
         }
       },
       // 更新数据库中的用户安全设置
-      updateUserSecurityInDatabase(userInfo) {
+      updateUserSecurityInDatabase(userInfo2) {
         try {
           const users2 = uni.getStorageSync("users") || [];
           const userIndex = users2.findIndex(
-            (user) => user.id === userInfo.id || user.phone === userInfo.phone || user.username === userInfo.username
+            (user) => user.id === userInfo2.id || user.phone === userInfo2.phone || user.username === userInfo2.username
           );
           if (userIndex !== -1) {
-            users2[userIndex].securitySettings = userInfo.securitySettings;
+            users2[userIndex].securitySettings = userInfo2.securitySettings;
             uni.setStorageSync("users", users2);
             formatAppLog("log", "at pages/user/security.vue:550", "用户安全设置数据库更新成功");
           }
@@ -16844,10 +20112,10 @@ if (uni.restoreGlobal) {
       },
       // 添加安全事件
       addSecurityEvent(type, description) {
-        const userInfo = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
-        if (userInfo && userInfo.securitySettings) {
-          if (!userInfo.securitySettings.securityEvents) {
-            userInfo.securitySettings.securityEvents = [];
+        const userInfo2 = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
+        if (userInfo2 && userInfo2.securitySettings) {
+          if (!userInfo2.securitySettings.securityEvents) {
+            userInfo2.securitySettings.securityEvents = [];
           }
           const newEvent = {
             id: Date.now(),
@@ -16858,13 +20126,13 @@ if (uni.restoreGlobal) {
             ip: "192.168.1.100",
             status: "success"
           };
-          userInfo.securitySettings.securityEvents.unshift(newEvent);
-          if (userInfo.securitySettings.securityEvents.length > 50) {
-            userInfo.securitySettings.securityEvents = userInfo.securitySettings.securityEvents.slice(0, 50);
+          userInfo2.securitySettings.securityEvents.unshift(newEvent);
+          if (userInfo2.securitySettings.securityEvents.length > 50) {
+            userInfo2.securitySettings.securityEvents = userInfo2.securitySettings.securityEvents.slice(0, 50);
           }
-          uni.setStorageSync("userInfo", userInfo);
-          uni.setStorageSync("currentUser", userInfo);
-          this.updateUserSecurityInDatabase(userInfo);
+          uni.setStorageSync("userInfo", userInfo2);
+          uni.setStorageSync("currentUser", userInfo2);
+          this.updateUserSecurityInDatabase(userInfo2);
         }
       },
       // 生物识别开关变化
@@ -16989,13 +20257,13 @@ IP：${device.ip}`
       // 更新交易密码
       updateTransactionPassword(newPassword) {
         try {
-          const userInfo = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
-          if (userInfo) {
-            userInfo.transactionPassword = newPassword;
-            userInfo.securitySettings.transactionPasswordUpdateTime = (/* @__PURE__ */ new Date()).toISOString();
-            uni.setStorageSync("userInfo", userInfo);
-            uni.setStorageSync("currentUser", userInfo);
-            this.updateUserSecurityInDatabase(userInfo);
+          const userInfo2 = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
+          if (userInfo2) {
+            userInfo2.transactionPassword = newPassword;
+            userInfo2.securitySettings.transactionPasswordUpdateTime = (/* @__PURE__ */ new Date()).toISOString();
+            uni.setStorageSync("userInfo", userInfo2);
+            uni.setStorageSync("currentUser", userInfo2);
+            this.updateUserSecurityInDatabase(userInfo2);
             this.addSecurityEvent("transaction_password_change", "修改交易密码");
             this.transactionPasswordUpdateTime = (/* @__PURE__ */ new Date()).toISOString();
             this.calculateSecurityScore();
@@ -17090,22 +20358,22 @@ IP：${device.ip}`
       },
       // 保存安全问题
       saveSecurityQuestion(question, answer) {
-        const userInfo = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
-        if (userInfo && userInfo.securitySettings) {
-          if (!userInfo.securitySettings.securityQuestions) {
-            userInfo.securitySettings.securityQuestions = [];
+        const userInfo2 = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
+        if (userInfo2 && userInfo2.securitySettings) {
+          if (!userInfo2.securitySettings.securityQuestions) {
+            userInfo2.securitySettings.securityQuestions = [];
           }
-          userInfo.securitySettings.securityQuestions.push({
+          userInfo2.securitySettings.securityQuestions.push({
             question,
             answer
           });
-          if (userInfo.securitySettings.securityQuestions.length >= 3) {
-            userInfo.securitySettings.securityQuestionsSet = true;
+          if (userInfo2.securitySettings.securityQuestions.length >= 3) {
+            userInfo2.securitySettings.securityQuestionsSet = true;
             this.securityQuestionsSet = true;
           }
-          uni.setStorageSync("userInfo", userInfo);
-          uni.setStorageSync("currentUser", userInfo);
-          this.updateUserSecurityInDatabase(userInfo);
+          uni.setStorageSync("userInfo", userInfo2);
+          uni.setStorageSync("currentUser", userInfo2);
+          this.updateUserSecurityInDatabase(userInfo2);
           this.addSecurityEvent("security_question_set", "设置安全问题");
           this.calculateSecurityScore();
           this.generateSecurityRecommendations();
@@ -17181,18 +20449,18 @@ IP：${device.ip}`
           });
           return;
         }
-        const userInfo = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
-        if (userInfo && userInfo.securitySettings) {
-          userInfo.securitySettings.emergencyContact = {
+        const userInfo2 = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
+        if (userInfo2 && userInfo2.securitySettings) {
+          userInfo2.securitySettings.emergencyContact = {
             name,
             phone,
             relationship
           };
-          userInfo.securitySettings.emergencyContactSet = true;
+          userInfo2.securitySettings.emergencyContactSet = true;
           this.emergencyContactSet = true;
-          uni.setStorageSync("userInfo", userInfo);
-          uni.setStorageSync("currentUser", userInfo);
-          this.updateUserSecurityInDatabase(userInfo);
+          uni.setStorageSync("userInfo", userInfo2);
+          uni.setStorageSync("currentUser", userInfo2);
+          this.updateUserSecurityInDatabase(userInfo2);
           this.addSecurityEvent("emergency_contact_set", "设置紧急联系人");
           this.calculateSecurityScore();
           this.generateSecurityRecommendations();
@@ -17264,9 +20532,9 @@ IP：${device.ip}`
       },
       // 查看登录记录
       viewLoginHistory() {
-        const userInfo = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
-        if (userInfo && userInfo.securitySettings && userInfo.securitySettings.securityEvents) {
-          const loginEvents = userInfo.securitySettings.securityEvents.filter((event) => event.type === "login").slice(0, 10);
+        const userInfo2 = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
+        if (userInfo2 && userInfo2.securitySettings && userInfo2.securitySettings.securityEvents) {
+          const loginEvents = userInfo2.securitySettings.securityEvents.filter((event) => event.type === "login").slice(0, 10);
           if (loginEvents.length === 0) {
             uni.showToast({
               title: "暂无登录记录",
@@ -17297,9 +20565,9 @@ IP：${event.ip}
       },
       // 查看安全事件
       viewSecurityEvents() {
-        const userInfo = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
-        if (userInfo && userInfo.securitySettings && userInfo.securitySettings.securityEvents) {
-          const securityEvents = userInfo.securitySettings.securityEvents.slice(0, 15);
+        const userInfo2 = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
+        if (userInfo2 && userInfo2.securitySettings && userInfo2.securitySettings.securityEvents) {
+          const securityEvents = userInfo2.securitySettings.securityEvents.slice(0, 15);
           if (securityEvents.length === 0) {
             uni.showToast({
               title: "暂无安全事件",
@@ -17330,7 +20598,7 @@ IP：${event.ip}
       }
     }
   };
-  function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$2(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "security-page" }, [
       vue.createCommentVNode(" 顶部导航栏 "),
       vue.createElementVNode("view", { class: "nav-bar" }, [
@@ -17896,8 +21164,8 @@ IP：${event.ip}
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesUserSecurity = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["render", _sfc_render$1], ["__scopeId", "data-v-b74f3c40"], ["__file", "E:/项目/yihangyidon/src/pages/user/security.vue"]]);
-  const _sfc_main$1 = {
+  const PagesUserSecurity = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["render", _sfc_render$2], ["__scopeId", "data-v-b74f3c40"], ["__file", "E:/项目/yihangyidon/src/pages/user/security.vue"]]);
+  const _sfc_main$2 = {
     data() {
       return {
         type: "login",
@@ -18043,7 +21311,7 @@ IP：${event.ip}
           uni.showToast({ title: `修改${this.pageTitle}失败`, icon: "none" });
         }
       },
-      async updateLocalDatabase(userInfo) {
+      async updateLocalDatabase(userInfo2) {
         try {
           const response = await uni.request({
             url: "/db/user.json",
@@ -18051,17 +21319,17 @@ IP：${event.ip}
           });
           if (response.data && Array.isArray(response.data)) {
             const users2 = response.data;
-            const userIndex = users2.findIndex((user) => user.id === userInfo.id);
+            const userIndex = users2.findIndex((user) => user.id === userInfo2.id);
             if (userIndex !== -1) {
-              users2[userIndex] = { ...users2[userIndex], ...userInfo };
+              users2[userIndex] = { ...users2[userIndex], ...userInfo2 };
               uni.setStorageSync("users_backup", users2);
               formatAppLog("log", "at pages/user/change-password.vue:260", "本地数据库密码更新成功");
             }
           } else {
             const users2 = uni.getStorageSync("users") || [];
-            const userIndex = users2.findIndex((user) => user.id === userInfo.id);
+            const userIndex = users2.findIndex((user) => user.id === userInfo2.id);
             if (userIndex !== -1) {
-              users2[userIndex] = { ...users2[userIndex], ...userInfo };
+              users2[userIndex] = { ...users2[userIndex], ...userInfo2 };
               uni.setStorageSync("users", users2);
               formatAppLog("log", "at pages/user/change-password.vue:269", "本地存储密码更新成功");
             }
@@ -18070,9 +21338,9 @@ IP：${event.ip}
           formatAppLog("error", "at pages/user/change-password.vue:273", "更新本地数据库失败:", error);
           try {
             const users2 = uni.getStorageSync("users") || [];
-            const userIndex = users2.findIndex((user) => user.id === userInfo.id);
+            const userIndex = users2.findIndex((user) => user.id === userInfo2.id);
             if (userIndex !== -1) {
-              users2[userIndex] = { ...users2[userIndex], ...userInfo };
+              users2[userIndex] = { ...users2[userIndex], ...userInfo2 };
               uni.setStorageSync("users", users2);
               formatAppLog("log", "at pages/user/change-password.vue:281", "降级到本地存储更新成功");
             }
@@ -18083,10 +21351,10 @@ IP：${event.ip}
         }
       },
       addSecurityEvent(type, description) {
-        const userInfo = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
-        if (userInfo && userInfo.securitySettings) {
-          if (!userInfo.securitySettings.securityEvents) {
-            userInfo.securitySettings.securityEvents = [];
+        const userInfo2 = uni.getStorageSync("userInfo") || uni.getStorageSync("currentUser");
+        if (userInfo2 && userInfo2.securitySettings) {
+          if (!userInfo2.securitySettings.securityEvents) {
+            userInfo2.securitySettings.securityEvents = [];
           }
           const newEvent = {
             id: Date.now(),
@@ -18097,18 +21365,18 @@ IP：${event.ip}
             ip: "192.168.1.100",
             status: "success"
           };
-          userInfo.securitySettings.securityEvents.unshift(newEvent);
-          if (userInfo.securitySettings.securityEvents.length > 50) {
-            userInfo.securitySettings.securityEvents = userInfo.securitySettings.securityEvents.slice(0, 50);
+          userInfo2.securitySettings.securityEvents.unshift(newEvent);
+          if (userInfo2.securitySettings.securityEvents.length > 50) {
+            userInfo2.securitySettings.securityEvents = userInfo2.securitySettings.securityEvents.slice(0, 50);
           }
-          uni.setStorageSync("userInfo", userInfo);
-          uni.setStorageSync("currentUser", userInfo);
-          this.updateLocalDatabase(userInfo);
+          uni.setStorageSync("userInfo", userInfo2);
+          uni.setStorageSync("currentUser", userInfo2);
+          this.updateLocalDatabase(userInfo2);
         }
       }
     }
   };
-  function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "change-password-page" }, [
       vue.createCommentVNode(" 顶部导航栏 "),
       vue.createElementVNode("view", { class: "nav-bar" }, [
@@ -18222,7 +21490,931 @@ IP：${event.ip}
       ])
     ]);
   }
-  const PagesUserChangePassword = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["render", _sfc_render], ["__scopeId", "data-v-df75db25"], ["__file", "E:/项目/yihangyidon/src/pages/user/change-password.vue"]]);
+  const PagesUserChangePassword = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["render", _sfc_render$1], ["__scopeId", "data-v-df75db25"], ["__file", "E:/项目/yihangyidon/src/pages/user/change-password.vue"]]);
+  const _sfc_main$1 = {
+    data() {
+      return {
+        latitude: 0,
+        longitude: 0,
+        scale: 14,
+        markers: [],
+        searchKeyword: "",
+        branches: [],
+        mapKey: "",
+        // 地图API Key - 需要配置
+        // 新增数据
+        currentView: "map",
+        // 'map' 或 'list'
+        selectedBranch: null,
+        sortBy: "distance",
+        // 'distance' 或 'name'
+        // 筛选相关
+        distanceFilter: 3,
+        serviceFilter: "全部",
+        timeFilter: "全部",
+        showFilterModal: false,
+        currentFilterType: "距离",
+        // 模拟网点数据
+        mockBranches: [
+          {
+            id: 1,
+            name: "中国农业银行上海陆家嘴支行",
+            address: "上海市浦东新区陆家嘴环路1000号",
+            latitude: 31.2397,
+            longitude: 121.4999,
+            phone: "021-58888888",
+            businessHours: "周一至周五 9:00-17:00",
+            status: "open",
+            statusText: "营业中",
+            services: ["存取款", "理财", "贷款", "外汇"],
+            distance: 0
+          },
+          {
+            id: 2,
+            name: "中国农业银行上海外滩支行",
+            address: "上海市黄浦区中山东一路1号",
+            latitude: 31.2397,
+            longitude: 121.49,
+            phone: "021-58888889",
+            businessHours: "周一至周五 9:00-17:00",
+            status: "open",
+            statusText: "营业中",
+            services: ["存取款", "理财", "企业服务"],
+            distance: 0
+          },
+          {
+            id: 3,
+            name: "中国农业银行上海徐家汇支行",
+            address: "上海市徐汇区漕溪北路88号",
+            latitude: 31.1997,
+            longitude: 121.4399,
+            phone: "021-58888890",
+            businessHours: "周一至周五 9:00-17:00",
+            status: "closed",
+            statusText: "已关闭",
+            services: ["存取款", "理财"],
+            distance: 0
+          },
+          {
+            id: 4,
+            name: "中国农业银行上海静安支行",
+            address: "上海市静安区南京西路1376号",
+            latitude: 31.2297,
+            longitude: 121.4499,
+            phone: "021-58888891",
+            businessHours: "周一至周五 9:00-17:00",
+            status: "open",
+            statusText: "营业中",
+            services: ["存取款", "理财", "贷款", "外汇", "企业服务"],
+            distance: 0
+          },
+          {
+            id: 5,
+            name: "中国农业银行上海虹桥支行",
+            address: "上海市长宁区虹桥路1号",
+            latitude: 31.2097,
+            longitude: 121.4099,
+            phone: "021-58888892",
+            businessHours: "周一至周五 9:00-17:00",
+            status: "open",
+            statusText: "营业中",
+            services: ["存取款", "理财", "贷款"],
+            distance: 0
+          }
+        ]
+      };
+    },
+    onLoad() {
+      formatAppLog("log", "at pages/service/branch.vue:324", "网点查询页面加载");
+      this.getLocation();
+    },
+    computed: {
+      // 筛选后的网点列表
+      filteredBranches() {
+        let filtered = this.branches;
+        if (this.searchKeyword) {
+          filtered = filtered.filter(
+            (branch) => branch.name.includes(this.searchKeyword) || branch.address.includes(this.searchKeyword)
+          );
+        }
+        if (this.distanceFilter !== "全部") {
+          const maxDistance = this.distanceFilter * 1e3;
+          filtered = filtered.filter((branch) => branch.distance <= maxDistance);
+        }
+        if (this.serviceFilter !== "全部") {
+          filtered = filtered.filter(
+            (branch) => branch.services.includes(this.serviceFilter)
+          );
+        }
+        if (this.timeFilter !== "全部") {
+          if (this.timeFilter === "营业中") {
+            filtered = filtered.filter((branch) => branch.status === "open");
+          } else if (this.timeFilter === "已关闭") {
+            filtered = filtered.filter((branch) => branch.status === "closed");
+          }
+        }
+        return filtered;
+      },
+      // 排序后的网点列表
+      sortedBranches() {
+        const sorted = [...this.filteredBranches];
+        if (this.sortBy === "distance") {
+          return sorted.sort((a, b) => a.distance - b.distance);
+        } else if (this.sortBy === "name") {
+          return sorted.sort((a, b) => a.name.localeCompare(b.name));
+        }
+        return sorted;
+      }
+    },
+    methods: {
+      // 获取用户位置
+      getLocation() {
+        if (!uni.getLocation) {
+          formatAppLog("warn", "at pages/service/branch.vue:384", "当前环境不支持位置服务");
+          this.setDefaultLocation();
+          return;
+        }
+        uni.getLocation({
+          type: "gcj02",
+          success: (res) => {
+            this.latitude = res.latitude;
+            this.longitude = res.longitude;
+            this.markers = [{
+              id: 0,
+              latitude: res.latitude,
+              longitude: res.longitude,
+              title: "当前位置",
+              iconPath: "/static/logo.png",
+              width: 30,
+              height: 30
+            }];
+            formatAppLog("log", "at pages/service/branch.vue:404", "获取位置成功:", res.latitude, res.longitude);
+            this.loadMockBranches();
+          },
+          fail: (err) => {
+            formatAppLog("error", "at pages/service/branch.vue:410", "获取位置失败:", err);
+            uni.showToast({
+              title: "无法获取位置，使用默认位置",
+              icon: "none",
+              duration: 2e3
+            });
+            this.setDefaultLocation();
+          }
+        });
+      },
+      // 设置默认位置（当无法获取用户位置时使用）
+      setDefaultLocation() {
+        this.latitude = 31.2397;
+        this.longitude = 121.4999;
+        this.markers = [{
+          id: 0,
+          latitude: this.latitude,
+          longitude: this.longitude,
+          title: "默认位置（上海）",
+          iconPath: "/static/logo.png",
+          width: 30,
+          height: 30
+        }];
+        this.loadMockBranches();
+      },
+      // 搜索附近网点
+      searchNearby() {
+        if (!this.latitude || !this.longitude) {
+          uni.showToast({
+            title: "请先定位",
+            icon: "none"
+          });
+          return;
+        }
+        if (!this.mapKey) {
+          formatAppLog("log", "at pages/service/branch.vue:453", "使用模拟网点数据");
+          this.loadMockBranches();
+          uni.showToast({
+            title: "已加载附近网点",
+            icon: "success",
+            duration: 1500
+          });
+          return;
+        }
+        const location = `${this.latitude},${this.longitude}`;
+        const radius = 3e3;
+        uni.request({
+          url: `https://apis.map.qq.com/ws/place/v1/search`,
+          data: {
+            key: this.mapKey,
+            keyword: "农业银行",
+            // 搜索关键词
+            boundary: `nearby(${location},${radius})`,
+            filter: "category=银行",
+            page_size: 20
+          },
+          success: (res) => {
+            if (res.statusCode === 200 && res.data.status === 0) {
+              formatAppLog("log", "at pages/service/branch.vue:477", "搜索成功:", res.data);
+              this.branches = res.data.data.map((item) => {
+                var _a, _b, _c, _d;
+                return {
+                  id: item.id || Date.now() + Math.random(),
+                  // 确保有id
+                  name: item.title || "未知网点",
+                  address: item.address || "地址未知",
+                  latitude: ((_a = item.location) == null ? void 0 : _a.lat) || 0,
+                  longitude: ((_b = item.location) == null ? void 0 : _b.lng) || 0,
+                  distance: this.calculateDistance(
+                    this.latitude,
+                    this.longitude,
+                    ((_c = item.location) == null ? void 0 : _c.lat) || 0,
+                    ((_d = item.location) == null ? void 0 : _d.lng) || 0
+                  )
+                };
+              });
+              this.setMarkers();
+            } else {
+              formatAppLog("error", "at pages/service/branch.vue:494", "搜索失败:", res.data);
+              this.loadMockBranches();
+              uni.showToast({
+                title: "使用模拟数据",
+                icon: "none",
+                duration: 1500
+              });
+            }
+          },
+          fail: (err) => {
+            formatAppLog("error", "at pages/service/branch.vue:505", "请求失败:", err);
+            this.loadMockBranches();
+            uni.showToast({
+              title: "网络异常，使用模拟数据",
+              icon: "none",
+              duration: 2e3
+            });
+          }
+        });
+      },
+      // 设置地图标记点
+      setMarkers() {
+        try {
+          const currentLocationMarker = this.markers && this.markers[0] ? this.markers[0] : null;
+          const branchMarkers = this.branches.map((branch, index) => ({
+            id: index + 1,
+            // 确保id唯一
+            latitude: branch.latitude || 0,
+            longitude: branch.longitude || 0,
+            title: branch.name || "未知网点",
+            iconPath: "/static/logo.png",
+            width: 24,
+            height: 24
+          }));
+          this.markers = currentLocationMarker ? [currentLocationMarker, ...branchMarkers] : branchMarkers;
+          formatAppLog("log", "at pages/service/branch.vue:537", "设置地图标记点成功:", this.markers.length);
+        } catch (error) {
+          formatAppLog("error", "at pages/service/branch.vue:539", "设置地图标记点失败:", error);
+          this.markers = [{
+            id: 0,
+            latitude: this.latitude || 31.2397,
+            longitude: this.longitude || 121.4999,
+            title: "当前位置",
+            iconPath: "/static/logo.png",
+            width: 30,
+            height: 30
+          }];
+        }
+      },
+      // 计算两点间距离（简化版）
+      calculateDistance(lat1, lon1, lat2, lon2) {
+        const R = 6371;
+        const dLat = this.deg2rad(lat2 - lat1);
+        const dLon = this.deg2rad(lon2 - lon1);
+        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        const distance = R * c;
+        return (distance * 1e3).toFixed(0);
+      },
+      // 角度转弧度
+      deg2rad(deg) {
+        return deg * (Math.PI / 180);
+      },
+      // 加载模拟网点数据
+      loadMockBranches() {
+        this.branches = this.mockBranches.map((branch) => ({
+          ...branch,
+          distance: this.calculateDistance(
+            this.latitude,
+            this.longitude,
+            branch.latitude,
+            branch.longitude
+          )
+        }));
+        this.setMarkers();
+      },
+      // 搜索输入处理
+      onSearchInput() {
+        this.searchBranches();
+      },
+      // 搜索网点
+      searchBranches() {
+        if (!this.searchKeyword.trim()) {
+          this.loadMockBranches();
+          return;
+        }
+        const filtered = this.mockBranches.filter(
+          (branch) => branch.name.includes(this.searchKeyword) || branch.address.includes(this.searchKeyword)
+        );
+        this.branches = filtered.map((branch) => ({
+          ...branch,
+          distance: this.calculateDistance(
+            this.latitude,
+            this.longitude,
+            branch.latitude,
+            branch.longitude
+          )
+        }));
+        this.setMarkers();
+      },
+      // 切换视图
+      switchView(view) {
+        this.currentView = view;
+      },
+      // 设置排序方式
+      setSortBy(sortBy) {
+        this.sortBy = sortBy;
+      },
+      // 选择网点
+      selectBranch(branch) {
+        this.selectedBranch = branch;
+      },
+      // 关闭网点详情
+      closeBranchDetail() {
+        this.selectedBranch = null;
+      },
+      // 拨打电话
+      callBranch(branch) {
+        uni.makePhoneCall({
+          phoneNumber: branch.phone,
+          success: () => {
+            formatAppLog("log", "at pages/service/branch.vue:643", "拨打电话成功");
+          },
+          fail: (err) => {
+            formatAppLog("error", "at pages/service/branch.vue:646", "拨打电话失败:", err);
+            uni.showToast({
+              title: "拨打电话失败",
+              icon: "none"
+            });
+          }
+        });
+      },
+      // 导航到网点
+      navigateToBranch(branch) {
+        uni.showModal({
+          title: "导航提示",
+          content: `是否要导航到${branch.name}？`,
+          success: (res) => {
+            if (res.confirm) {
+              uni.showToast({
+                title: "正在打开导航...",
+                icon: "none"
+              });
+            }
+          }
+        });
+      },
+      // 地图标记点击
+      onMarkerTap(e) {
+        var _a;
+        try {
+          const markerId = (_a = e.detail) == null ? void 0 : _a.markerId;
+          if (markerId > 0 && this.branches && this.branches.length > 0) {
+            const branch = this.branches[markerId - 1];
+            if (branch && branch.id) {
+              this.selectBranch(branch);
+            }
+          }
+        } catch (error) {
+          formatAppLog("error", "at pages/service/branch.vue:684", "地图标记点击处理失败:", error);
+        }
+      },
+      // 显示距离筛选
+      showDistanceFilter() {
+        this.currentFilterType = "距离";
+        this.showFilterModal = true;
+      },
+      // 显示服务筛选
+      showServiceFilter() {
+        this.currentFilterType = "服务";
+        this.showFilterModal = true;
+      },
+      // 显示时间筛选
+      showTimeFilter() {
+        this.currentFilterType = "营业状态";
+        this.showFilterModal = true;
+      },
+      // 关闭筛选弹窗
+      closeFilterModal() {
+        this.showFilterModal = false;
+      },
+      // 获取筛选选项
+      getFilterOptions() {
+        switch (this.currentFilterType) {
+          case "距离":
+            return [
+              { label: "1km内", value: 1 },
+              { label: "3km内", value: 3 },
+              { label: "5km内", value: 5 },
+              { label: "10km内", value: 10 }
+            ];
+          case "服务":
+            return [
+              { label: "全部", value: "全部" },
+              { label: "存取款", value: "存取款" },
+              { label: "理财", value: "理财" },
+              { label: "贷款", value: "贷款" },
+              { label: "外汇", value: "外汇" },
+              { label: "企业服务", value: "企业服务" }
+            ];
+          case "营业状态":
+            return [
+              { label: "全部", value: "全部" },
+              { label: "营业中", value: "营业中" },
+              { label: "已关闭", value: "已关闭" }
+            ];
+          default:
+            return [];
+        }
+      },
+      // 检查筛选选项是否被选中
+      isFilterSelected(value) {
+        switch (this.currentFilterType) {
+          case "距离":
+            return this.distanceFilter === value;
+          case "服务":
+            return this.serviceFilter === value;
+          case "营业状态":
+            return this.timeFilter === value;
+          default:
+            return false;
+        }
+      },
+      // 选择筛选选项
+      selectFilterOption(value) {
+        switch (this.currentFilterType) {
+          case "距离":
+            this.distanceFilter = value;
+            break;
+          case "服务":
+            this.serviceFilter = value;
+            break;
+          case "营业状态":
+            this.timeFilter = value;
+            break;
+        }
+        this.closeFilterModal();
+      }
+    }
+  };
+  function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("view", { class: "branch-page" }, [
+      vue.createCommentVNode(" 搜索栏 "),
+      vue.createElementVNode("view", { class: "search-section" }, [
+        vue.createElementVNode("view", { class: "search-bar" }, [
+          vue.createElementVNode("view", { class: "search-input-container" }, [
+            vue.createElementVNode("text", { class: "search-icon" }, "🔍"),
+            vue.withDirectives(vue.createElementVNode(
+              "input",
+              {
+                class: "search-input",
+                "onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => $data.searchKeyword = $event),
+                placeholder: "搜索网点名称或地址",
+                onInput: _cache[1] || (_cache[1] = (...args) => $options.onSearchInput && $options.onSearchInput(...args))
+              },
+              null,
+              544
+              /* NEED_HYDRATION, NEED_PATCH */
+            ), [
+              [vue.vModelText, $data.searchKeyword]
+            ])
+          ]),
+          vue.createElementVNode("button", {
+            class: "search-btn",
+            onClick: _cache[2] || (_cache[2] = (...args) => $options.searchBranches && $options.searchBranches(...args))
+          }, "搜索")
+        ]),
+        vue.createCommentVNode(" 筛选选项 "),
+        vue.createElementVNode("view", { class: "filter-section" }, [
+          vue.createElementVNode("view", {
+            class: "filter-item",
+            onClick: _cache[3] || (_cache[3] = (...args) => $options.showDistanceFilter && $options.showDistanceFilter(...args))
+          }, [
+            vue.createElementVNode("text", { class: "filter-label" }, "距离"),
+            vue.createElementVNode(
+              "text",
+              { class: "filter-value" },
+              vue.toDisplayString($data.distanceFilter) + "km",
+              1
+              /* TEXT */
+            ),
+            vue.createElementVNode("text", { class: "filter-arrow" }, "▼")
+          ]),
+          vue.createElementVNode("view", {
+            class: "filter-item",
+            onClick: _cache[4] || (_cache[4] = (...args) => $options.showServiceFilter && $options.showServiceFilter(...args))
+          }, [
+            vue.createElementVNode("text", { class: "filter-label" }, "服务"),
+            vue.createElementVNode(
+              "text",
+              { class: "filter-value" },
+              vue.toDisplayString($data.serviceFilter),
+              1
+              /* TEXT */
+            ),
+            vue.createElementVNode("text", { class: "filter-arrow" }, "▼")
+          ]),
+          vue.createElementVNode("view", {
+            class: "filter-item",
+            onClick: _cache[5] || (_cache[5] = (...args) => $options.showTimeFilter && $options.showTimeFilter(...args))
+          }, [
+            vue.createElementVNode("text", { class: "filter-label" }, "营业状态"),
+            vue.createElementVNode(
+              "text",
+              { class: "filter-value" },
+              vue.toDisplayString($data.timeFilter),
+              1
+              /* TEXT */
+            ),
+            vue.createElementVNode("text", { class: "filter-arrow" }, "▼")
+          ])
+        ])
+      ]),
+      vue.createCommentVNode(" 地图和列表切换 "),
+      vue.createElementVNode("view", { class: "view-toggle" }, [
+        vue.createElementVNode(
+          "view",
+          {
+            class: vue.normalizeClass(["toggle-item", { active: $data.currentView === "map" }]),
+            onClick: _cache[6] || (_cache[6] = ($event) => $options.switchView("map"))
+          },
+          [
+            vue.createElementVNode("text", { class: "toggle-icon" }, "🗺️"),
+            vue.createElementVNode("text", { class: "toggle-text" }, "地图")
+          ],
+          2
+          /* CLASS */
+        ),
+        vue.createElementVNode(
+          "view",
+          {
+            class: vue.normalizeClass(["toggle-item", { active: $data.currentView === "list" }]),
+            onClick: _cache[7] || (_cache[7] = ($event) => $options.switchView("list"))
+          },
+          [
+            vue.createElementVNode("text", { class: "toggle-icon" }, "📋"),
+            vue.createElementVNode("text", { class: "toggle-text" }, "列表")
+          ],
+          2
+          /* CLASS */
+        )
+      ]),
+      vue.createCommentVNode(" 地图视图 "),
+      $data.currentView === "map" ? (vue.openBlock(), vue.createElementBlock("view", {
+        key: 0,
+        class: "map-container"
+      }, [
+        vue.createElementVNode("map", {
+          id: "myMap",
+          latitude: $data.latitude,
+          longitude: $data.longitude,
+          markers: $data.markers,
+          scale: $data.scale,
+          "show-location": "",
+          onMarkertap: _cache[8] || (_cache[8] = (...args) => $options.onMarkerTap && $options.onMarkerTap(...args)),
+          style: { "width": "100%", "height": "100%" }
+        }, null, 40, ["latitude", "longitude", "markers", "scale"]),
+        vue.createCommentVNode(" 地图配置提示 "),
+        !$data.mapKey ? (vue.openBlock(), vue.createElementBlock("view", {
+          key: 0,
+          class: "map-tip"
+        }, [
+          vue.createElementVNode("text", { class: "tip-text" }, "地图功能需要配置API密钥"),
+          vue.createElementVNode("text", { class: "tip-desc" }, "当前显示模拟数据")
+        ])) : vue.createCommentVNode("v-if", true),
+        vue.createCommentVNode(" 地图控制按钮 "),
+        vue.createElementVNode("view", { class: "map-controls" }, [
+          vue.createElementVNode("button", {
+            class: "control-btn",
+            onClick: _cache[9] || (_cache[9] = (...args) => $options.getLocation && $options.getLocation(...args))
+          }, [
+            vue.createElementVNode("text", { class: "btn-icon" }, "📍"),
+            vue.createElementVNode("text", { class: "btn-text" }, "定位")
+          ]),
+          vue.createElementVNode("button", {
+            class: "control-btn",
+            onClick: _cache[10] || (_cache[10] = (...args) => $options.searchNearby && $options.searchNearby(...args))
+          }, [
+            vue.createElementVNode("text", { class: "btn-icon" }, "🔍"),
+            vue.createElementVNode("text", { class: "btn-text" }, "附近")
+          ])
+        ])
+      ])) : vue.createCommentVNode("v-if", true),
+      vue.createCommentVNode(" 列表视图 "),
+      $data.currentView === "list" ? (vue.openBlock(), vue.createElementBlock("view", {
+        key: 1,
+        class: "list-container"
+      }, [
+        vue.createElementVNode("view", { class: "list-header" }, [
+          vue.createElementVNode(
+            "text",
+            { class: "list-title" },
+            "附近网点 (" + vue.toDisplayString($options.filteredBranches.length) + ")",
+            1
+            /* TEXT */
+          ),
+          vue.createElementVNode("view", { class: "sort-options" }, [
+            vue.createElementVNode(
+              "text",
+              {
+                class: vue.normalizeClass(["sort-item", { active: $data.sortBy === "distance" }]),
+                onClick: _cache[11] || (_cache[11] = ($event) => $options.setSortBy("distance"))
+              },
+              " 距离 ",
+              2
+              /* CLASS */
+            ),
+            vue.createElementVNode(
+              "text",
+              {
+                class: vue.normalizeClass(["sort-item", { active: $data.sortBy === "name" }]),
+                onClick: _cache[12] || (_cache[12] = ($event) => $options.setSortBy("name"))
+              },
+              " 名称 ",
+              2
+              /* CLASS */
+            )
+          ])
+        ]),
+        vue.createElementVNode("scroll-view", {
+          class: "branch-list",
+          "scroll-y": ""
+        }, [
+          (vue.openBlock(true), vue.createElementBlock(
+            vue.Fragment,
+            null,
+            vue.renderList($options.sortedBranches, (branch) => {
+              return vue.openBlock(), vue.createElementBlock("view", {
+                class: "branch-item",
+                key: branch.id,
+                onClick: ($event) => $options.selectBranch(branch)
+              }, [
+                vue.createElementVNode("view", { class: "branch-info" }, [
+                  vue.createElementVNode("view", { class: "branch-header" }, [
+                    vue.createElementVNode(
+                      "text",
+                      { class: "branch-name" },
+                      vue.toDisplayString(branch.name),
+                      1
+                      /* TEXT */
+                    ),
+                    vue.createElementVNode(
+                      "view",
+                      {
+                        class: vue.normalizeClass(["branch-status", branch.status])
+                      },
+                      [
+                        vue.createElementVNode(
+                          "text",
+                          { class: "status-text" },
+                          vue.toDisplayString(branch.statusText),
+                          1
+                          /* TEXT */
+                        )
+                      ],
+                      2
+                      /* CLASS */
+                    )
+                  ]),
+                  vue.createElementVNode(
+                    "text",
+                    { class: "branch-address" },
+                    vue.toDisplayString(branch.address),
+                    1
+                    /* TEXT */
+                  ),
+                  vue.createElementVNode("view", { class: "branch-details" }, [
+                    vue.createElementVNode(
+                      "text",
+                      { class: "branch-distance" },
+                      vue.toDisplayString(branch.distance) + "m",
+                      1
+                      /* TEXT */
+                    ),
+                    vue.createElementVNode(
+                      "text",
+                      { class: "branch-phone" },
+                      vue.toDisplayString(branch.phone),
+                      1
+                      /* TEXT */
+                    )
+                  ]),
+                  vue.createElementVNode("view", { class: "branch-services" }, [
+                    (vue.openBlock(true), vue.createElementBlock(
+                      vue.Fragment,
+                      null,
+                      vue.renderList(branch.services, (service) => {
+                        return vue.openBlock(), vue.createElementBlock(
+                          "text",
+                          {
+                            class: "service-tag",
+                            key: service
+                          },
+                          vue.toDisplayString(service),
+                          1
+                          /* TEXT */
+                        );
+                      }),
+                      128
+                      /* KEYED_FRAGMENT */
+                    ))
+                  ])
+                ]),
+                vue.createElementVNode("view", { class: "branch-actions" }, [
+                  vue.createElementVNode("button", {
+                    class: "action-btn",
+                    onClick: vue.withModifiers(($event) => $options.callBranch(branch), ["stop"])
+                  }, [
+                    vue.createElementVNode("text", { class: "action-icon" }, "📞")
+                  ], 8, ["onClick"]),
+                  vue.createElementVNode("button", {
+                    class: "action-btn",
+                    onClick: vue.withModifiers(($event) => $options.navigateToBranch(branch), ["stop"])
+                  }, [
+                    vue.createElementVNode("text", { class: "action-icon" }, "🧭")
+                  ], 8, ["onClick"])
+                ])
+              ], 8, ["onClick"]);
+            }),
+            128
+            /* KEYED_FRAGMENT */
+          )),
+          $options.filteredBranches.length === 0 ? (vue.openBlock(), vue.createElementBlock("view", {
+            key: 0,
+            class: "empty-state"
+          }, [
+            vue.createElementVNode("text", { class: "empty-icon" }, "🏦"),
+            vue.createElementVNode("text", { class: "empty-text" }, "暂无网点信息"),
+            vue.createElementVNode("text", { class: "empty-desc" }, "请尝试调整搜索条件")
+          ])) : vue.createCommentVNode("v-if", true)
+        ])
+      ])) : vue.createCommentVNode("v-if", true),
+      vue.createCommentVNode(" 网点详情弹窗 "),
+      $data.selectedBranch ? (vue.openBlock(), vue.createElementBlock("view", {
+        key: 2,
+        class: "branch-detail-modal",
+        onClick: _cache[17] || (_cache[17] = (...args) => $options.closeBranchDetail && $options.closeBranchDetail(...args))
+      }, [
+        vue.createElementVNode("view", {
+          class: "modal-content",
+          onClick: _cache[16] || (_cache[16] = vue.withModifiers(() => {
+          }, ["stop"]))
+        }, [
+          vue.createElementVNode("view", { class: "modal-header" }, [
+            vue.createElementVNode(
+              "text",
+              { class: "modal-title" },
+              vue.toDisplayString($data.selectedBranch.name),
+              1
+              /* TEXT */
+            ),
+            vue.createElementVNode("text", {
+              class: "modal-close",
+              onClick: _cache[13] || (_cache[13] = (...args) => $options.closeBranchDetail && $options.closeBranchDetail(...args))
+            }, "×")
+          ]),
+          vue.createElementVNode("view", { class: "modal-body" }, [
+            vue.createElementVNode("view", { class: "detail-section" }, [
+              vue.createElementVNode("text", { class: "detail-label" }, "地址"),
+              vue.createElementVNode(
+                "text",
+                { class: "detail-value" },
+                vue.toDisplayString($data.selectedBranch.address),
+                1
+                /* TEXT */
+              )
+            ]),
+            vue.createElementVNode("view", { class: "detail-section" }, [
+              vue.createElementVNode("text", { class: "detail-label" }, "电话"),
+              vue.createElementVNode(
+                "text",
+                { class: "detail-value" },
+                vue.toDisplayString($data.selectedBranch.phone),
+                1
+                /* TEXT */
+              )
+            ]),
+            vue.createElementVNode("view", { class: "detail-section" }, [
+              vue.createElementVNode("text", { class: "detail-label" }, "营业时间"),
+              vue.createElementVNode(
+                "text",
+                { class: "detail-value" },
+                vue.toDisplayString($data.selectedBranch.businessHours),
+                1
+                /* TEXT */
+              )
+            ]),
+            vue.createElementVNode("view", { class: "detail-section" }, [
+              vue.createElementVNode("text", { class: "detail-label" }, "服务项目"),
+              vue.createElementVNode("view", { class: "service-list" }, [
+                (vue.openBlock(true), vue.createElementBlock(
+                  vue.Fragment,
+                  null,
+                  vue.renderList($data.selectedBranch.services, (service) => {
+                    return vue.openBlock(), vue.createElementBlock(
+                      "text",
+                      {
+                        class: "service-item",
+                        key: service
+                      },
+                      vue.toDisplayString(service),
+                      1
+                      /* TEXT */
+                    );
+                  }),
+                  128
+                  /* KEYED_FRAGMENT */
+                ))
+              ])
+            ])
+          ]),
+          vue.createElementVNode("view", { class: "modal-footer" }, [
+            vue.createElementVNode("button", {
+              class: "modal-btn secondary",
+              onClick: _cache[14] || (_cache[14] = ($event) => $options.callBranch($data.selectedBranch))
+            }, [
+              vue.createElementVNode("text", { class: "btn-icon" }, "📞"),
+              vue.createElementVNode("text", { class: "btn-text" }, "拨打电话")
+            ]),
+            vue.createElementVNode("button", {
+              class: "modal-btn primary",
+              onClick: _cache[15] || (_cache[15] = ($event) => $options.navigateToBranch($data.selectedBranch))
+            }, [
+              vue.createElementVNode("text", { class: "btn-icon" }, "🧭"),
+              vue.createElementVNode("text", { class: "btn-text" }, "导航前往")
+            ])
+          ])
+        ])
+      ])) : vue.createCommentVNode("v-if", true),
+      vue.createCommentVNode(" 筛选弹窗 "),
+      $data.showFilterModal ? (vue.openBlock(), vue.createElementBlock("view", {
+        key: 3,
+        class: "filter-modal",
+        onClick: _cache[20] || (_cache[20] = (...args) => $options.closeFilterModal && $options.closeFilterModal(...args))
+      }, [
+        vue.createElementVNode("view", {
+          class: "filter-content",
+          onClick: _cache[19] || (_cache[19] = vue.withModifiers(() => {
+          }, ["stop"]))
+        }, [
+          vue.createElementVNode("view", { class: "filter-header" }, [
+            vue.createElementVNode(
+              "text",
+              { class: "filter-title" },
+              vue.toDisplayString($data.currentFilterType) + "筛选",
+              1
+              /* TEXT */
+            ),
+            vue.createElementVNode("text", {
+              class: "filter-close",
+              onClick: _cache[18] || (_cache[18] = (...args) => $options.closeFilterModal && $options.closeFilterModal(...args))
+            }, "×")
+          ]),
+          vue.createElementVNode("view", { class: "filter-options" }, [
+            (vue.openBlock(true), vue.createElementBlock(
+              vue.Fragment,
+              null,
+              vue.renderList($options.getFilterOptions(), (option) => {
+                return vue.openBlock(), vue.createElementBlock("view", {
+                  class: vue.normalizeClass(["filter-option", { active: $options.isFilterSelected(option.value) }]),
+                  key: option.value,
+                  onClick: ($event) => $options.selectFilterOption(option.value)
+                }, [
+                  vue.createElementVNode(
+                    "text",
+                    { class: "option-text" },
+                    vue.toDisplayString(option.label),
+                    1
+                    /* TEXT */
+                  ),
+                  $options.isFilterSelected(option.value) ? (vue.openBlock(), vue.createElementBlock("text", {
+                    key: 0,
+                    class: "option-check"
+                  }, "✓")) : vue.createCommentVNode("v-if", true)
+                ], 10, ["onClick"]);
+              }),
+              128
+              /* KEYED_FRAGMENT */
+            ))
+          ])
+        ])
+      ])) : vue.createCommentVNode("v-if", true)
+    ]);
+  }
+  const PagesServiceBranch = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["render", _sfc_render], ["__scopeId", "data-v-51383fbf"], ["__file", "E:/项目/yihangyidon/src/pages/service/branch.vue"]]);
   __definePage("pages/denglu/login", PagesDengluLogin);
   __definePage("pages/register/register", PagesRegisterRegister);
   __definePage("pages/index/index", PagesIndexIndex);
@@ -18236,8 +22428,11 @@ IP：${event.ip}
   __definePage("pages/account/account", PagesAccountAccount);
   __definePage("pages/payment/payment", PagesPaymentPayment);
   __definePage("pages/water/water", PagesWaterWater);
+  __definePage("pages/water-payment/water-payment", PagesWaterPaymentWaterPayment);
+  __definePage("pages/city-select/city-select", PagesCitySelectCitySelect);
   __definePage("pages/payment-management/payment-management", PagesPaymentManagementPaymentManagement);
   __definePage("pages/recharge/recharge", PagesRechargeRecharge);
+  __definePage("pages/recharge-payment/recharge-payment", PagesRechargePaymentRechargePayment);
   __definePage("pages/government/government", PagesGovernmentGovernment);
   __definePage("pages/games/games", PagesGamesGames);
   __definePage("pages/transfer/history", PagesTransferHistory);
@@ -18249,6 +22444,7 @@ IP：${event.ip}
   __definePage("pages/user/profile", PagesUserProfile);
   __definePage("pages/user/security", PagesUserSecurity);
   __definePage("pages/user/change-password", PagesUserChangePassword);
+  __definePage("pages/service/branch", PagesServiceBranch);
   function initPushNotification() {
     if (typeof plus !== "undefined" && plus.push) {
       plus.globalEvent.addEventListener("newPath", ({ path }) => {
@@ -18329,10 +22525,10 @@ IP：${event.ip}
        */
       initUserInfo() {
         try {
-          const userInfo = uni.getStorageSync("userInfo");
-          if (userInfo) {
-            this.globalData.userInfo = userInfo;
-            formatAppLog("log", "at App.vue:87", "用户信息已恢复:", userInfo);
+          const userInfo2 = uni.getStorageSync("userInfo");
+          if (userInfo2) {
+            this.globalData.userInfo = userInfo2;
+            formatAppLog("log", "at App.vue:87", "用户信息已恢复:", userInfo2);
           }
         } catch (error) {
           formatAppLog("error", "at App.vue:90", "恢复用户信息失败:", error);
