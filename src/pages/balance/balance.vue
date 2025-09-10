@@ -55,7 +55,7 @@
                 <view class="info-row">
                   <text class="transaction-title">{{ transaction.title }}</text>
                   <text class="transaction-amount" :class="transaction.type">
-                    {{ transaction.type === 'income' ? '+' : '-' }}¥{{ transaction.amount.toFixed(2) }}
+                    {{ transaction.type === 'income' ? '+' : '-' }}¥{{ formatAmount(transaction.amount) }}
                   </text>
                 </view>
                 <text class="transaction-time">{{ transaction.time }}</text>
@@ -123,7 +123,22 @@ export default {
         const currentUser = users.find(user => user.isLoggedIn)
         
         if (currentUser && currentUser.transactionRecords) {
-          this.transactions = currentUser.transactionRecords
+          // 验证并过滤有效的交易记录
+          this.transactions = currentUser.transactionRecords.filter(transaction => {
+            const isValid = this.validateTransaction(transaction)
+            if (!isValid) {
+              console.warn('发现无效交易记录，已过滤:', transaction)
+            }
+            return isValid
+          })
+          
+          // 如果没有有效记录，生成模拟数据
+          if (this.transactions.length === 0) {
+            console.log('没有有效的交易记录，生成模拟数据')
+            this.transactions = this.generateMockTransactions()
+            currentUser.transactionRecords = this.transactions
+            uni.setStorageSync('users', users)
+          }
         } else {
           // 如果没有交易记录，使用模拟数据
           const mockTransactions = this.generateMockTransactions()
@@ -199,23 +214,57 @@ export default {
           const minutes = Math.floor(Math.random() * 60)
           const timeStr = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`
           
-          transactions.push({
+          // 确保所有必要字段都存在且有效
+          const transaction = {
             id: `${i}-${j}`,
-            title: type,
-            amount: amount,
-            type: category,
-            icon: icon,
-            date: date.toISOString().split('T')[0],
-            time: timeStr,
+            title: type || '未知交易',
+            amount: amount || 0, // 确保金额不为null
+            type: category || 'expense',
+            icon: icon || '💳',
+            date: date.toISOString().split('T')[0], // 确保日期格式正确
+            time: timeStr || '00:00',
             desc: `这是一笔${type}交易`,
             account: '储蓄卡(****1234)',
             status: 'success'
-          })
+          }
+          
+          // 验证交易数据完整性
+          if (this.validateTransaction(transaction)) {
+            transactions.push(transaction)
+          } else {
+            console.warn('跳过无效交易数据:', transaction)
+          }
         }
       }
       
       // 按日期倒序排序
       return transactions.sort((a, b) => new Date(b.date) - new Date(a.date))
+    },
+    
+    // 验证交易数据完整性
+    validateTransaction(transaction) {
+      try {
+        // 检查必要字段
+        if (!transaction.id || !transaction.title || !transaction.date) {
+          return false
+        }
+        
+        // 检查金额
+        if (transaction.amount === null || transaction.amount === undefined || isNaN(transaction.amount)) {
+          return false
+        }
+        
+        // 检查日期
+        const date = new Date(transaction.date)
+        if (isNaN(date.getTime())) {
+          return false
+        }
+        
+        return true
+      } catch (error) {
+        console.error('验证交易数据失败:', error)
+        return false
+      }
     },
     
     // 按日期分组交易记录
@@ -235,25 +284,57 @@ export default {
     
     // 格式化日期显示
     formatDate(dateString) {
-      const date = new Date(dateString)
-      const today = new Date()
-      today.setHours(0, 0, 0, 0)
-      
-      const yesterday = new Date(today)
-      yesterday.setDate(yesterday.getDate() - 1)
-      
-      const targetDate = new Date(date)
-      targetDate.setHours(0, 0, 0, 0)
-      
-      if (targetDate.getTime() === today.getTime()) {
-        return '今天'
-      } else if (targetDate.getTime() === yesterday.getTime()) {
-        return '昨天'
-      } else {
-        // 显示具体日期
-        const month = date.getMonth() + 1
-        const day = date.getDate()
-        return `${month}月${day}日`
+      try {
+        // 验证日期字符串
+        if (!dateString || dateString === 'Invalid Date') {
+          console.warn('无效的日期字符串:', dateString)
+          return '未知日期'
+        }
+        
+        const date = new Date(dateString)
+        
+        // 验证日期是否有效
+        if (isNaN(date.getTime())) {
+          console.warn('无效的日期对象:', dateString)
+          return '未知日期'
+        }
+        
+        const today = new Date()
+        today.setHours(0, 0, 0, 0)
+        
+        const yesterday = new Date(today)
+        yesterday.setDate(yesterday.getDate() - 1)
+        
+        const targetDate = new Date(date)
+        targetDate.setHours(0, 0, 0, 0)
+        
+        if (targetDate.getTime() === today.getTime()) {
+          return '今天'
+        } else if (targetDate.getTime() === yesterday.getTime()) {
+          return '昨天'
+        } else {
+          // 显示具体日期
+          const month = date.getMonth() + 1
+          const day = date.getDate()
+          return `${month}月${day}日`
+        }
+      } catch (error) {
+        console.error('格式化日期失败:', error, 'dateString:', dateString)
+        return '未知日期'
+      }
+    },
+    
+    // 格式化金额显示
+    formatAmount(amount) {
+      try {
+        if (amount === null || amount === undefined || isNaN(amount)) {
+          console.warn('无效的金额:', amount)
+          return '0.00'
+        }
+        return Number(amount).toFixed(2)
+      } catch (error) {
+        console.error('格式化金额失败:', error, 'amount:', amount)
+        return '0.00'
       }
     },
     

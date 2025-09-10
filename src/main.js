@@ -5,6 +5,7 @@
 
 import { createSSRApp } from "vue"
 import App from "./App.vue"
+import "./styles/theme.css"
 
 // 环境检测函数
 function getEnvironment() {

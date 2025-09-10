@@ -63,7 +63,7 @@
           </view>
           
           <view class="card-number">
-            <text class="number-text">**** **** **** {{ card.cardNumber.slice(-4) }}</text>
+            <text class="number-text">{{ formatCardNumber(card.cardNumber) }}</text>
           </view>
           
           <view class="card-info">
@@ -158,6 +158,7 @@
     <CardDetailModal 
       :visible="showCardDetailModal"
       :card-info="selectedCard"
+      :balance-visible="balanceVisible"
       @close="closeCardDetailModal"
       @repay="handleRepayFromDetail"
       @manage="handleManageCard"
@@ -276,6 +277,13 @@ export default {
       if (!this.balanceVisible) return '****'
       return `¥${(amount || 0).toLocaleString()}`
     },
+    formatCardNumber(cardNumber) {
+      if (!this.balanceVisible) {
+        return '**** **** **** ****'
+      }
+      // 显示完整卡号，每4位用空格分隔
+      return cardNumber.replace(/(\d{4})(?=\d)/g, '$1 ')
+    },
     toggleBalanceVisibility() {
       this.balanceVisible = !this.balanceVisible
     },
@@ -295,12 +303,19 @@ export default {
     handleRepayFromDetail(card) {
       this.selectedCard = card
       this.repaymentAmountForModal = card.currentBalance // 默认全额还款
-      this.showRepaymentPasswordModal = true
+      this.showCardDetailModal = false // 先关闭详情弹窗
+      this.showRepaymentPasswordModal = true // 再打开还款密码弹窗
     },
     closeRepaymentPasswordModal() {
       this.showRepaymentPasswordModal = false
+      // 如果是从详情弹窗进入的还款，取消时应该返回详情弹窗
+      const wasFromDetail = !!this.selectedCard
       this.selectedCard = null
       this.repaymentAmountForModal = 0
+      
+      if (wasFromDetail) {
+        this.showCardDetailModal = true
+      }
     },
     async onRepaymentSuccess(result) {
       console.log('还款成功，更新数据:', result)

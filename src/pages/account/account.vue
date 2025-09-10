@@ -109,6 +109,7 @@
         </view>
       </view>
     </view>
+    
   </view>
 </template>
 
@@ -133,7 +134,7 @@ export default {
         balance: '0.00'
       },
       userBalance: 0, // 从用户数据动态加载
-      bankAccounts: [], // 银行卡数据
+      bankAccounts: [] // 银行卡数据
     }
   },
   

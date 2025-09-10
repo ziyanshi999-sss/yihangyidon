@@ -442,6 +442,41 @@
 	color: var(--text-color, #333);
 	font-weight: 500;
 }
+
+/* AI财富管家特殊样式 */
+.ai-wealth-item[data-v-99b0ba47] {
+	position: relative;
+}
+.menu-text-container[data-v-99b0ba47] {
+	display: flex;
+	align-items: center;
+	gap: 0.375rem;
+}
+.ai-badge[data-v-99b0ba47] {
+	background: linear-gradient(135deg, #4caf50, #2e7d32);
+	color: white;
+	font-size: 0.5625rem;
+	font-weight: bold;
+	padding: 0.125rem 0.25rem;
+	border-radius: 0.25rem;
+	box-shadow: 0 0.0625rem 0.25rem rgba(76, 175, 80, 0.3);
+	animation: pulse-99b0ba47 2s infinite;
+	white-space: nowrap;
+}
+@keyframes pulse-99b0ba47 {
+0% {
+		transform: scale(1);
+		box-shadow: 0 0.0625rem 0.25rem rgba(76, 175, 80, 0.3);
+}
+50% {
+		transform: scale(1.05);
+		box-shadow: 0 0.125rem 0.5rem rgba(76, 175, 80, 0.5);
+}
+100% {
+		transform: scale(1);
+		box-shadow: 0 0.0625rem 0.25rem rgba(76, 175, 80, 0.3);
+}
+}
 .arrow[data-v-99b0ba47] {
 	font-size: 0.875rem;
 	color: var(--text-color, #999);

@@ -3790,7 +3790,7 @@ if (uni.restoreGlobal) {
     }
     return target;
   };
-  const _sfc_main$D = {
+  const _sfc_main$I = {
     data() {
       return {
         loginType: "password",
@@ -4086,7 +4086,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$C(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$H(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "login-container" }, [
       vue.createCommentVNode(" 背景装饰 "),
       vue.createElementVNode("view", { class: "bg-decoration" }, [
@@ -4355,8 +4355,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesDengluLogin = /* @__PURE__ */ _export_sfc(_sfc_main$D, [["render", _sfc_render$C], ["__scopeId", "data-v-6f56e16f"], ["__file", "E:/项目/yihangyidon/src/pages/denglu/login.vue"]]);
-  const _sfc_main$C = {
+  const PagesDengluLogin = /* @__PURE__ */ _export_sfc(_sfc_main$I, [["render", _sfc_render$H], ["__scopeId", "data-v-6f56e16f"], ["__file", "E:/项目/yihangyidon/src/pages/denglu/login.vue"]]);
+  const _sfc_main$H = {
     data() {
       return {
         form: {
@@ -4573,7 +4573,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$B(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$G(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "register-container" }, [
       vue.createCommentVNode(" 标题 "),
       vue.createElementVNode("view", { class: "title" }, "注册账户"),
@@ -4788,8 +4788,8 @@ if (uni.restoreGlobal) {
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesRegisterRegister = /* @__PURE__ */ _export_sfc(_sfc_main$C, [["render", _sfc_render$B], ["__scopeId", "data-v-97bb96ad"], ["__file", "E:/项目/yihangyidon/src/pages/register/register.vue"]]);
-  const _sfc_main$B = {
+  const PagesRegisterRegister = /* @__PURE__ */ _export_sfc(_sfc_main$H, [["render", _sfc_render$G], ["__scopeId", "data-v-97bb96ad"], ["__file", "E:/项目/yihangyidon/src/pages/register/register.vue"]]);
+  const _sfc_main$G = {
     data() {
       return {
         isLoggedIn: false,
@@ -4998,7 +4998,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$A(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$F(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", {
       class: "home-container",
       onClick: _cache[29] || (_cache[29] = (...args) => $options.closeSearchSuggestions && $options.closeSearchSuggestions(...args))
@@ -5290,7 +5290,7 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesIndexIndex = /* @__PURE__ */ _export_sfc(_sfc_main$B, [["render", _sfc_render$A], ["__scopeId", "data-v-83a5a03c"], ["__file", "E:/项目/yihangyidon/src/pages/index/index.vue"]]);
+  const PagesIndexIndex = /* @__PURE__ */ _export_sfc(_sfc_main$G, [["render", _sfc_render$F], ["__scopeId", "data-v-83a5a03c"], ["__file", "E:/项目/yihangyidon/src/pages/index/index.vue"]]);
   const scriptRel = "modulepreload";
   const assetsURL = function(dep) {
     return "/" + dep;
@@ -5356,7 +5356,7 @@ if (uni.restoreGlobal) {
   function canAccessPlatinumHotline(userInfo2) {
     return isPlatinumVip(userInfo2);
   }
-  const _sfc_main$A = {
+  const _sfc_main$F = {
     name: "ServiceModal",
     props: {
       visible: {
@@ -5461,7 +5461,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$z(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$E(_ctx, _cache, $props, $setup, $data, $options) {
     return $props.visible ? (vue.openBlock(), vue.createElementBlock("view", {
       key: 0,
       class: "service-modal",
@@ -5586,8 +5586,8 @@ if (uni.restoreGlobal) {
       )
     ])) : vue.createCommentVNode("v-if", true);
   }
-  const ServiceModal = /* @__PURE__ */ _export_sfc(_sfc_main$A, [["render", _sfc_render$z], ["__scopeId", "data-v-1f8e1b4e"], ["__file", "E:/项目/yihangyidon/src/components/common/ServiceModal.vue"]]);
-  const _sfc_main$z = {
+  const ServiceModal = /* @__PURE__ */ _export_sfc(_sfc_main$F, [["render", _sfc_render$E], ["__scopeId", "data-v-1f8e1b4e"], ["__file", "E:/项目/yihangyidon/src/components/common/ServiceModal.vue"]]);
+  const _sfc_main$E = {
     components: {
       ServiceModal
     },
@@ -5600,11 +5600,11 @@ if (uni.restoreGlobal) {
     onShow() {
       try {
         if (!forceCheckLogin()) {
-          formatAppLog("log", "at pages/user/user.vue:164", "个人中心：用户未登录，跳转到登录页面");
+          formatAppLog("log", "at pages/user/user.vue:174", "个人中心：用户未登录，跳转到登录页面");
           uni.reLaunch({
             url: "/pages/denglu/login",
             fail: (error) => {
-              formatAppLog("error", "at pages/user/user.vue:168", "个人中心跳转失败:", error);
+              formatAppLog("error", "at pages/user/user.vue:178", "个人中心跳转失败:", error);
               uni.navigateTo({ url: "/pages/denglu/login" });
             }
           });
@@ -5612,7 +5612,7 @@ if (uni.restoreGlobal) {
         }
         this.checkLoginStatus();
       } catch (error) {
-        formatAppLog("error", "at pages/user/user.vue:177", "个人中心onShow检查失败:", error);
+        formatAppLog("error", "at pages/user/user.vue:187", "个人中心onShow检查失败:", error);
         uni.reLaunch({
           url: "/pages/denglu/login",
           fail: () => {
@@ -5694,6 +5694,11 @@ if (uni.restoreGlobal) {
           url: "/pages/user/security"
         });
       },
+      goToAIWealthManager() {
+        uni.navigateTo({
+          url: "/pages/wealth/ai-wealth-manager"
+        });
+      },
       goToContact() {
         this.showServiceModal = true;
       },
@@ -5725,7 +5730,7 @@ if (uni.restoreGlobal) {
             confirmText: "确定"
           });
         } catch (error) {
-          formatAppLog("error", "at pages/user/user.vue:304", "查看退出记录失败:", error);
+          formatAppLog("error", "at pages/user/user.vue:319", "查看退出记录失败:", error);
           uni.showToast({
             title: "查看记录失败",
             icon: "none"
@@ -5748,7 +5753,7 @@ if (uni.restoreGlobal) {
               const importedUsers = module.users || module.getAllUsers();
               this.displayCreditCards(importedUsers);
             }).catch((error) => {
-              formatAppLog("error", "at pages/user/user.vue:334", "导入用户数据失败:", error);
+              formatAppLog("error", "at pages/user/user.vue:349", "导入用户数据失败:", error);
               uni.showToast({
                 title: "获取数据失败",
                 icon: "none"
@@ -5758,7 +5763,7 @@ if (uni.restoreGlobal) {
           }
           this.displayCreditCards(users2);
         } catch (error) {
-          formatAppLog("error", "at pages/user/user.vue:345", "获取信用卡信息失败:", error);
+          formatAppLog("error", "at pages/user/user.vue:360", "获取信用卡信息失败:", error);
           uni.showToast({
             title: "获取数据失败",
             icon: "none"
@@ -5832,7 +5837,7 @@ if (uni.restoreGlobal) {
           urls: [this.userInfo.avatar],
           current: this.userInfo.avatar,
           fail: (error) => {
-            formatAppLog("error", "at pages/user/user.vue:436", "预览头像失败:", error);
+            formatAppLog("error", "at pages/user/user.vue:451", "预览头像失败:", error);
             uni.showToast({
               title: "预览失败",
               icon: "none"
@@ -5842,7 +5847,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$y(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$D(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_ServiceModal = vue.resolveComponent("ServiceModal");
     return vue.openBlock(), vue.createElementBlock("view", { class: "user-page" }, [
       vue.createCommentVNode(" 顶部背景 "),
@@ -6005,6 +6010,19 @@ if (uni.restoreGlobal) {
                 vue.createElementVNode("text", { class: "menu-text" }, "安全设置")
               ]),
               vue.createElementVNode("text", { class: "arrow" }, ">")
+            ]),
+            vue.createElementVNode("view", {
+              class: "menu-item ai-wealth-item",
+              onClick: _cache[11] || (_cache[11] = (...args) => $options.goToAIWealthManager && $options.goToAIWealthManager(...args))
+            }, [
+              vue.createElementVNode("view", { class: "menu-left" }, [
+                vue.createElementVNode("text", { class: "menu-icon" }, "🤖"),
+                vue.createElementVNode("view", { class: "menu-text-container" }, [
+                  vue.createElementVNode("text", { class: "menu-text" }, "智能财富管家"),
+                  vue.createElementVNode("view", { class: "ai-badge" }, "AI")
+                ])
+              ]),
+              vue.createElementVNode("text", { class: "arrow" }, ">")
             ])
           ])
         ]),
@@ -6013,7 +6031,7 @@ if (uni.restoreGlobal) {
           vue.createElementVNode("view", { class: "menu-list" }, [
             vue.createElementVNode("view", {
               class: "menu-item",
-              onClick: _cache[11] || (_cache[11] = (...args) => $options.goToHelp && $options.goToHelp(...args))
+              onClick: _cache[12] || (_cache[12] = (...args) => $options.goToHelp && $options.goToHelp(...args))
             }, [
               vue.createElementVNode("view", { class: "menu-left" }, [
                 vue.createElementVNode("text", { class: "menu-icon" }, "❓"),
@@ -6023,7 +6041,7 @@ if (uni.restoreGlobal) {
             ]),
             vue.createElementVNode("view", {
               class: "menu-item",
-              onClick: _cache[12] || (_cache[12] = (...args) => $options.goToContact && $options.goToContact(...args))
+              onClick: _cache[13] || (_cache[13] = (...args) => $options.goToContact && $options.goToContact(...args))
             }, [
               vue.createElementVNode("view", { class: "menu-left" }, [
                 vue.createElementVNode("text", { class: "menu-icon" }, "📞"),
@@ -6033,7 +6051,7 @@ if (uni.restoreGlobal) {
             ]),
             vue.createElementVNode("view", {
               class: "menu-item",
-              onClick: _cache[13] || (_cache[13] = (...args) => $options.viewLogoutHistory && $options.viewLogoutHistory(...args))
+              onClick: _cache[14] || (_cache[14] = (...args) => $options.viewLogoutHistory && $options.viewLogoutHistory(...args))
             }, [
               vue.createElementVNode("view", { class: "menu-left" }, [
                 vue.createElementVNode("text", { class: "menu-icon" }, "📋"),
@@ -6047,7 +6065,7 @@ if (uni.restoreGlobal) {
         vue.createElementVNode("view", { class: "logout-section" }, [
           vue.createElementVNode("button", {
             class: "logout-btn",
-            onClick: _cache[14] || (_cache[14] = (...args) => $options.handleLogout && $options.handleLogout(...args))
+            onClick: _cache[15] || (_cache[15] = (...args) => $options.handleLogout && $options.handleLogout(...args))
           }, "退出登录")
         ])
       ])) : vue.createCommentVNode("v-if", true),
@@ -6058,11 +6076,12 @@ if (uni.restoreGlobal) {
       }, null, 8, ["visible", "onClose"])
     ]);
   }
-  const PagesUserUser = /* @__PURE__ */ _export_sfc(_sfc_main$z, [["render", _sfc_render$y], ["__scopeId", "data-v-99b0ba47"], ["__file", "E:/项目/yihangyidon/src/pages/user/user.vue"]]);
+  const PagesUserUser = /* @__PURE__ */ _export_sfc(_sfc_main$E, [["render", _sfc_render$D], ["__scopeId", "data-v-99b0ba47"], ["__file", "E:/项目/yihangyidon/src/pages/user/user.vue"]]);
   function getCurrentUserWealthData() {
     var _a, _b;
     const users2 = getUsersData();
-    const currentUser = users2.find((user) => user.isLoggedIn === true) || users2[0];
+    const currentUserId = getCurrentUserId();
+    const currentUser = users2.find((user) => user.id === currentUserId) || users2[0];
     return {
       deposits: ((_a = currentUser.wealthProducts) == null ? void 0 : _a.deposits) || {
         current: 0,
@@ -6082,11 +6101,149 @@ if (uni.restoreGlobal) {
         smart: { rate: 2.8, features: [], riskWarning: "" }
       },
       insuranceProducts: currentUser.insuranceProducts || {
-        categories: []
+        categories: [
+          {
+            id: "life",
+            name: "人寿保险",
+            icon: "👨‍👩‍👧‍👦",
+            color: "#FF6B35",
+            products: [
+              {
+                id: "life001",
+                name: "终身寿险",
+                type: "人寿保险",
+                premium: 5e3,
+                coverage: 5e5,
+                term: "终身",
+                features: ["终身保障", "现金价值", "分红收益"],
+                riskLevel: "低风险",
+                status: "在售"
+              },
+              {
+                id: "life002",
+                name: "定期寿险",
+                type: "人寿保险",
+                premium: 2e3,
+                coverage: 3e5,
+                term: "20年",
+                features: ["高保障", "低保费", "灵活选择"],
+                riskLevel: "低风险",
+                status: "在售"
+              }
+            ]
+          },
+          {
+            id: "health",
+            name: "健康保险",
+            icon: "🏥",
+            color: "#34C759",
+            products: [
+              {
+                id: "health001",
+                name: "重疾保险",
+                type: "健康保险",
+                premium: 3e3,
+                coverage: 2e5,
+                term: "终身",
+                features: ["重疾保障", "轻症赔付", "豁免保费"],
+                riskLevel: "中风险",
+                status: "在售"
+              },
+              {
+                id: "health002",
+                name: "医疗保险",
+                type: "健康保险",
+                premium: 800,
+                coverage: 1e5,
+                term: "1年",
+                features: ["住院保障", "门诊报销", "无免赔额"],
+                riskLevel: "低风险",
+                status: "在售"
+              }
+            ]
+          },
+          {
+            id: "accident",
+            name: "意外保险",
+            icon: "🛡️",
+            color: "#FF9500",
+            products: [
+              {
+                id: "accident001",
+                name: "综合意外险",
+                type: "意外保险",
+                premium: 200,
+                coverage: 1e5,
+                term: "1年",
+                features: ["意外身故", "意外伤残", "意外医疗"],
+                riskLevel: "低风险",
+                status: "在售"
+              }
+            ]
+          }
+        ]
       },
       forexProducts: currentUser.forexProducts || {
-        majorPairs: [],
-        tradingPairs: []
+        majorPairs: [
+          {
+            code: "USD/CNY",
+            name: "美元/人民币",
+            price: "7.2345",
+            change: "+0.0123",
+            changePercent: "+0.17%",
+            trend: "up"
+          },
+          {
+            code: "EUR/CNY",
+            name: "欧元/人民币",
+            price: "7.8901",
+            change: "-0.0234",
+            changePercent: "-0.30%",
+            trend: "down"
+          },
+          {
+            code: "GBP/CNY",
+            name: "英镑/人民币",
+            price: "9.1234",
+            change: "+0.0456",
+            changePercent: "+0.50%",
+            trend: "up"
+          },
+          {
+            code: "JPY/CNY",
+            name: "日元/人民币",
+            price: "0.0489",
+            change: "-0.0001",
+            changePercent: "-0.20%",
+            trend: "down"
+          }
+        ],
+        tradingPairs: [
+          {
+            id: "forex001",
+            pair: "USD/CNY",
+            buyPrice: "7.2345",
+            sellPrice: "7.2340",
+            spread: "0.0005",
+            status: "可交易"
+          },
+          {
+            id: "forex002",
+            pair: "EUR/CNY",
+            buyPrice: "7.8901",
+            sellPrice: "7.8896",
+            spread: "0.0005",
+            status: "可交易"
+          },
+          {
+            id: "forex003",
+            pair: "GBP/CNY",
+            buyPrice: "9.1234",
+            sellPrice: "9.1229",
+            spread: "0.0005",
+            status: "可交易"
+          }
+        ]
       }
     };
   }
@@ -6272,12 +6429,12 @@ if (uni.restoreGlobal) {
       if (success) {
         syncWealthDataToStorage(userId, wealthData);
         uni.$emit("wealthDataUpdated", { userId, wealthData });
-        formatAppLog("log", "at api/wealth.js:298", "财富数据更新成功:", userId, wealthData);
+        formatAppLog("log", "at api/wealth.js:437", "财富数据更新成功:", userId, wealthData);
         return true;
       }
       return false;
     } catch (error) {
-      formatAppLog("error", "at api/wealth.js:303", "更新财富数据失败:", error);
+      formatAppLog("error", "at api/wealth.js:442", "更新财富数据失败:", error);
       return false;
     }
   }
@@ -6290,9 +6447,9 @@ if (uni.restoreGlobal) {
         lastUpdateTime: (/* @__PURE__ */ new Date()).toISOString()
       };
       setStorage("wealthData", localWealthData, true);
-      formatAppLog("log", "at api/wealth.js:328", "财富数据已同步到本地存储:", userId);
+      formatAppLog("log", "at api/wealth.js:467", "财富数据已同步到本地存储:", userId);
     } catch (error) {
-      formatAppLog("error", "at api/wealth.js:330", "同步财富数据到本地存储失败:", error);
+      formatAppLog("error", "at api/wealth.js:469", "同步财富数据到本地存储失败:", error);
     }
   }
   function getWealthDataFromStorage(userId) {
@@ -6300,7 +6457,7 @@ if (uni.restoreGlobal) {
       const localWealthData = getStorage("wealthData", true) || {};
       return localWealthData[userId] || null;
     } catch (error) {
-      formatAppLog("error", "at api/wealth.js:344", "从本地存储获取财富数据失败:", error);
+      formatAppLog("error", "at api/wealth.js:483", "从本地存储获取财富数据失败:", error);
       return null;
     }
   }
@@ -6309,10 +6466,10 @@ if (uni.restoreGlobal) {
       const localWealthData = getWealthDataFromStorage(userId);
       if (localWealthData) {
         updateUser(userId, localWealthData);
-        formatAppLog("log", "at api/wealth.js:358", "本地存储财富数据已同步到用户数据:", userId);
+        formatAppLog("log", "at api/wealth.js:497", "本地存储财富数据已同步到用户数据:", userId);
       }
     } catch (error) {
-      formatAppLog("error", "at api/wealth.js:361", "同步本地存储到用户数据失败:", error);
+      formatAppLog("error", "at api/wealth.js:500", "同步本地存储到用户数据失败:", error);
     }
   }
   function addInvestmentRecord(userId, investment) {
@@ -6335,12 +6492,12 @@ if (uni.restoreGlobal) {
         user.wealthProducts.investments.push(newInvestment);
         updateUserWealthData(userId, { wealthProducts: user.wealthProducts });
         updateInvestmentPortfolio(userId);
-        formatAppLog("log", "at api/wealth.js:398", "投资记录添加成功:", newInvestment);
+        formatAppLog("log", "at api/wealth.js:537", "投资记录添加成功:", newInvestment);
         return true;
       }
       return false;
     } catch (error) {
-      formatAppLog("error", "at api/wealth.js:403", "添加投资记录失败:", error);
+      formatAppLog("error", "at api/wealth.js:542", "添加投资记录失败:", error);
       return false;
     }
   }
@@ -6363,7 +6520,7 @@ if (uni.restoreGlobal) {
         updateUserWealthData(userId, { investmentPortfolio });
       }
     } catch (error) {
-      formatAppLog("error", "at api/wealth.js:436", "更新投资组合失败:", error);
+      formatAppLog("error", "at api/wealth.js:575", "更新投资组合失败:", error);
     }
   }
   function addDepositRecord(userId, type, amount) {
@@ -6380,12 +6537,12 @@ if (uni.restoreGlobal) {
         user.wealthProducts.deposits[type] = (user.wealthProducts.deposits[type] || 0) + amount;
         updateUserWealthData(userId, { wealthProducts: user.wealthProducts });
         updateUserBalance(userId, -amount, `存款-${type}`);
-        formatAppLog("log", "at api/wealth.js:468", "存款记录添加成功:", { type, amount });
+        formatAppLog("log", "at api/wealth.js:607", "存款记录添加成功:", { type, amount });
         return true;
       }
       return false;
     } catch (error) {
-      formatAppLog("error", "at api/wealth.js:473", "添加存款记录失败:", error);
+      formatAppLog("error", "at api/wealth.js:612", "添加存款记录失败:", error);
       return false;
     }
   }
@@ -6415,10 +6572,10 @@ if (uni.restoreGlobal) {
           transactionRecords: user.transactionRecords
         });
         uni.$emit("balanceUpdated", { userId, balance: user.balance, transaction });
-        formatAppLog("log", "at api/wealth.js:520", "用户余额更新成功:", { userId, balance: user.balance });
+        formatAppLog("log", "at api/wealth.js:659", "用户余额更新成功:", { userId, balance: user.balance });
       }
     } catch (error) {
-      formatAppLog("error", "at api/wealth.js:523", "更新用户余额失败:", error);
+      formatAppLog("error", "at api/wealth.js:662", "更新用户余额失败:", error);
     }
   }
   function getCurrentUserId() {
@@ -6426,7 +6583,7 @@ if (uni.restoreGlobal) {
       const userInfo2 = uni.getStorageSync("userInfo");
       return (userInfo2 == null ? void 0 : userInfo2.id) || "u001";
     } catch (error) {
-      formatAppLog("error", "at api/wealth.js:536", "获取当前用户ID失败:", error);
+      formatAppLog("error", "at api/wealth.js:675", "获取当前用户ID失败:", error);
       return "u001";
     }
   }
@@ -6435,14 +6592,14 @@ if (uni.restoreGlobal) {
       const userId = getCurrentUserId();
       syncStorageToUserData(userId);
       uni.$on("wealthDataUpdated", (data) => {
-        formatAppLog("log", "at api/wealth.js:554", "财富数据更新事件:", data);
+        formatAppLog("log", "at api/wealth.js:693", "财富数据更新事件:", data);
       });
       uni.$on("balanceUpdated", (data) => {
-        formatAppLog("log", "at api/wealth.js:559", "余额更新事件:", data);
+        formatAppLog("log", "at api/wealth.js:698", "余额更新事件:", data);
       });
-      formatAppLog("log", "at api/wealth.js:563", "财富数据同步初始化完成");
+      formatAppLog("log", "at api/wealth.js:702", "财富数据同步初始化完成");
     } catch (error) {
-      formatAppLog("error", "at api/wealth.js:565", "初始化财富数据同步失败:", error);
+      formatAppLog("error", "at api/wealth.js:704", "初始化财富数据同步失败:", error);
     }
   }
   function purchaseWealthProduct(userId, product, amount) {
@@ -6450,7 +6607,7 @@ if (uni.restoreGlobal) {
       const users2 = getUsersData();
       const user = users2.find((user2) => user2.id === userId);
       if (!user || user.balance < amount) {
-        formatAppLog("log", "at api/wealth.js:582", "余额不足，无法购买");
+        formatAppLog("log", "at api/wealth.js:721", "余额不足，无法购买");
         return false;
       }
       const investment = {
@@ -6465,12 +6622,12 @@ if (uni.restoreGlobal) {
       const success = addInvestmentRecord(userId, investment);
       if (success) {
         updateUserBalance(userId, -amount, `购买${product.name}`);
-        formatAppLog("log", "at api/wealth.js:603", "理财产品购买成功:", { product: product.name, amount });
+        formatAppLog("log", "at api/wealth.js:742", "理财产品购买成功:", { product: product.name, amount });
         return true;
       }
       return false;
     } catch (error) {
-      formatAppLog("error", "at api/wealth.js:609", "购买理财产品失败:", error);
+      formatAppLog("error", "at api/wealth.js:748", "购买理财产品失败:", error);
       return false;
     }
   }
@@ -6480,19 +6637,59 @@ if (uni.restoreGlobal) {
       const users2 = getUsersData();
       const user = users2.find((user2) => user2.id === userId);
       if (!user || user.balance < premium) {
-        formatAppLog("log", "at api/wealth.js:628", "余额不足，无法购买保险");
+        formatAppLog("log", "at api/wealth.js:767", "余额不足，无法购买保险");
         return false;
       }
       updateUserBalance(userId, -premium, `购买${product.name}保险`);
-      formatAppLog("log", "at api/wealth.js:636", "保险产品购买成功:", { product: product.name, premium });
+      formatAppLog("log", "at api/wealth.js:775", "保险产品购买成功:", { product: product.name, premium });
       return true;
     } catch (error) {
-      formatAppLog("error", "at api/wealth.js:639", "购买保险产品失败:", error);
+      formatAppLog("error", "at api/wealth.js:778", "购买保险产品失败:", error);
       return false;
     }
   }
+  function checkAndFixUserDataConsistency() {
+    try {
+      formatAppLog("log", "at utils/data-consistency.js:12", "🔍 开始检查用户数据一致性...");
+      const currentUserId = uni.getStorageSync("currentUserId") || "u001";
+      const users2 = uni.getStorageSync("users") || [];
+      const userInfo2 = uni.getStorageSync("userInfo");
+      formatAppLog("log", "at utils/data-consistency.js:19", "当前用户ID:", currentUserId);
+      formatAppLog("log", "at utils/data-consistency.js:20", "存储的用户信息:", userInfo2);
+      const dbUser = users2.find((user) => user.id === currentUserId);
+      if (!dbUser) {
+        formatAppLog("warn", "at utils/data-consistency.js:26", "⚠️ 数据库中未找到用户:", currentUserId);
+        return null;
+      }
+      const isConsistent = userInfo2 && userInfo2.id === dbUser.id && userInfo2.username === dbUser.username && userInfo2.balance === dbUser.balance && userInfo2.phone === dbUser.phone;
+      if (isConsistent) {
+        formatAppLog("log", "at utils/data-consistency.js:38", "✅ 用户数据一致，无需修复");
+        return userInfo2;
+      }
+      formatAppLog("log", "at utils/data-consistency.js:43", "🔧 发现数据不一致，开始修复...");
+      formatAppLog("log", "at utils/data-consistency.js:44", "数据库用户:", dbUser.username, "余额:", dbUser.balance);
+      formatAppLog("log", "at utils/data-consistency.js:45", "存储用户:", userInfo2 == null ? void 0 : userInfo2.username, "余额:", userInfo2 == null ? void 0 : userInfo2.balance);
+      const fixedUserInfo = {
+        ...dbUser,
+        // 确保必要字段存在
+        balance: dbUser.balance || 0,
+        nickname: dbUser.nickname || dbUser.username
+      };
+      uni.setStorageSync("userInfo", fixedUserInfo);
+      uni.setStorageSync("currentUser", fixedUserInfo);
+      formatAppLog("log", "at utils/data-consistency.js:59", "✅ 用户数据修复完成:", {
+        username: fixedUserInfo.username,
+        balance: fixedUserInfo.balance,
+        phone: fixedUserInfo.phone
+      });
+      return fixedUserInfo;
+    } catch (error) {
+      formatAppLog("error", "at utils/data-consistency.js:68", "❌ 数据一致性检查失败:", error);
+      return null;
+    }
+  }
   const _imports_0$1 = "/static/tabbar/service.png";
-  const _sfc_main$y = {
+  const _sfc_main$D = {
     components: {
       ServiceModal
     },
@@ -6585,7 +6782,7 @@ if (uni.restoreGlobal) {
       };
     },
     onLoad() {
-      formatAppLog("log", "at pages/wealth/wealth.vue:333", "财富页面加载");
+      formatAppLog("log", "at pages/wealth/wealth.vue:334", "财富页面加载");
       this.ensureLoginStatus();
       this.initDataSync();
     },
@@ -6595,17 +6792,28 @@ if (uni.restoreGlobal) {
         const isLoggedIn2 = uni.getStorageSync("isLoggedIn");
         const userInfo2 = uni.getStorageSync("userInfo");
         if (!isLoggedIn2 || !userInfo2) {
-          const defaultUser = {
-            id: "u001",
-            username: "张小明",
-            phone: "13999999999",
-            balance: 15e4,
-            nickname: "小明"
-          };
-          uni.setStorageSync("userInfo", defaultUser);
-          uni.setStorageSync("isLoggedIn", true);
-          uni.setStorageSync("currentUser", defaultUser);
-          formatAppLog("log", "at pages/wealth/wealth.vue:358", "已设置临时登录状态用于测试");
+          const consistentUserInfo = checkAndFixUserDataConsistency();
+          if (consistentUserInfo) {
+            uni.setStorageSync("isLoggedIn", true);
+            formatAppLog("log", "at pages/wealth/wealth.vue:351", "已设置真实用户登录状态:", consistentUserInfo.username, "余额:", consistentUserInfo.balance);
+          } else {
+            const defaultUser = {
+              id: "u001",
+              username: "张小明",
+              phone: "13999999999",
+              balance: 15e4,
+              nickname: "小明"
+            };
+            uni.setStorageSync("userInfo", defaultUser);
+            uni.setStorageSync("isLoggedIn", true);
+            uni.setStorageSync("currentUser", defaultUser);
+            formatAppLog("log", "at pages/wealth/wealth.vue:366", "已设置默认用户登录状态用于测试");
+          }
+        } else {
+          const consistentUserInfo = checkAndFixUserDataConsistency();
+          if (consistentUserInfo) {
+            formatAppLog("log", "at pages/wealth/wealth.vue:372", "用户数据一致性检查完成:", consistentUserInfo.username, "余额:", consistentUserInfo.balance);
+          }
         }
       },
       onSwiperClick(idx) {
@@ -6689,7 +6897,7 @@ if (uni.restoreGlobal) {
           uni.navigateTo({
             url,
             fail: (err) => {
-              formatAppLog("error", "at pages/wealth/wealth.vue:451", "页面跳转失败:", err);
+              formatAppLog("error", "at pages/wealth/wealth.vue:466", "页面跳转失败:", err);
               uni.showToast({ title: "页面跳转失败", icon: "none" });
             }
           });
@@ -6701,21 +6909,21 @@ if (uni.restoreGlobal) {
       initDataSync() {
         initWealthDataSync();
         uni.$on("depositSuccess", (data) => {
-          formatAppLog("log", "at pages/wealth/wealth.vue:467", "财富页面收到存款成功事件:", data);
+          formatAppLog("log", "at pages/wealth/wealth.vue:482", "财富页面收到存款成功事件:", data);
         });
         uni.$on("purchaseSuccess", (data) => {
-          formatAppLog("log", "at pages/wealth/wealth.vue:472", "财富页面收到购买成功事件:", data);
+          formatAppLog("log", "at pages/wealth/wealth.vue:487", "财富页面收到购买成功事件:", data);
         });
         uni.$on("insurancePurchaseSuccess", (data) => {
-          formatAppLog("log", "at pages/wealth/wealth.vue:477", "财富页面收到保险购买成功事件:", data);
+          formatAppLog("log", "at pages/wealth/wealth.vue:492", "财富页面收到保险购买成功事件:", data);
         });
         uni.$on("balanceUpdated", (data) => {
-          formatAppLog("log", "at pages/wealth/wealth.vue:482", "财富页面收到余额更新事件:", data);
+          formatAppLog("log", "at pages/wealth/wealth.vue:497", "财富页面收到余额更新事件:", data);
         });
       }
     }
   };
-  function _sfc_render$x(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$C(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_ServiceModal = vue.resolveComponent("ServiceModal");
     return vue.openBlock(), vue.createElementBlock("view", { class: "wealth-container" }, [
       vue.createCommentVNode(" 资产概览轮播（图片版） "),
@@ -7226,8 +7434,8 @@ if (uni.restoreGlobal) {
       }, null, 8, ["visible", "onClose"])
     ]);
   }
-  const PagesWealthWealth = /* @__PURE__ */ _export_sfc(_sfc_main$y, [["render", _sfc_render$x], ["__scopeId", "data-v-a00d3a3e"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/wealth.vue"]]);
-  const _sfc_main$x = {
+  const PagesWealthWealth = /* @__PURE__ */ _export_sfc(_sfc_main$D, [["render", _sfc_render$C], ["__scopeId", "data-v-a00d3a3e"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/wealth.vue"]]);
+  const _sfc_main$C = {
     name: "LifePage",
     data() {
       return {
@@ -7937,7 +8145,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$w(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$B(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "life-page" }, [
       vue.createCommentVNode(" 头部标题区域 "),
       vue.createElementVNode("view", { class: "header-section" }, [
@@ -8326,7 +8534,7 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesLifeLife = /* @__PURE__ */ _export_sfc(_sfc_main$x, [["render", _sfc_render$w], ["__scopeId", "data-v-980f0516"], ["__file", "E:/项目/yihangyidon/src/pages/life/life.vue"]]);
+  const PagesLifeLife = /* @__PURE__ */ _export_sfc(_sfc_main$C, [["render", _sfc_render$B], ["__scopeId", "data-v-980f0516"], ["__file", "E:/项目/yihangyidon/src/pages/life/life.vue"]]);
   const SILICONFLOW_API_KEY = "sk-fkzxlpblcjigbzitanooofmnfmvvedobfdvvxqdbbdodntdt";
   const API_BASE_URL = "https://api.siliconflow.cn/v1";
   const sessionHistory = {};
@@ -8508,7 +8716,7 @@ if (uni.restoreGlobal) {
   };
   const _imports_0 = "/static/wealth/aiavatar.png";
   const _imports_1 = "/static/wealth/useravatar.jpg";
-  const _sfc_main$w = {
+  const _sfc_main$B = {
     data() {
       return {
         draft: "",
@@ -8920,7 +9128,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$v(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$A(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "chat-page" }, [
       vue.createElementVNode("view", { class: "chat-header" }, [
         vue.createElementVNode("text", { class: "title" }, "AI 智能客服"),
@@ -9125,8 +9333,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesServiceChat = /* @__PURE__ */ _export_sfc(_sfc_main$w, [["render", _sfc_render$v], ["__scopeId", "data-v-e19cce9b"], ["__file", "E:/项目/yihangyidon/src/pages/service/chat.vue"]]);
-  const _sfc_main$v = {
+  const PagesServiceChat = /* @__PURE__ */ _export_sfc(_sfc_main$B, [["render", _sfc_render$A], ["__scopeId", "data-v-e19cce9b"], ["__file", "E:/项目/yihangyidon/src/pages/service/chat.vue"]]);
+  const _sfc_main$A = {
     data() {
       return {
         searchKeyword: "",
@@ -9164,7 +9372,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$u(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$z(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "help-center" }, [
       vue.createCommentVNode(" 顶部搜索栏 "),
       vue.createElementVNode("view", { class: "search-header" }, [
@@ -9441,8 +9649,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesHelpHelpCenter = /* @__PURE__ */ _export_sfc(_sfc_main$v, [["render", _sfc_render$u], ["__scopeId", "data-v-292cc293"], ["__file", "E:/项目/yihangyidon/src/pages/help/help-center.vue"]]);
-  const _sfc_main$u = {
+  const PagesHelpHelpCenter = /* @__PURE__ */ _export_sfc(_sfc_main$A, [["render", _sfc_render$z], ["__scopeId", "data-v-292cc293"], ["__file", "E:/项目/yihangyidon/src/pages/help/help-center.vue"]]);
+  const _sfc_main$z = {
     data() {
       return {
         helpId: "",
@@ -9604,7 +9812,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$t(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$y(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "help-detail" }, [
       vue.createCommentVNode(" 顶部导航 "),
       vue.createElementVNode("view", { class: "detail-header" }, [
@@ -9778,7 +9986,7 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesHelpHelpDetail = /* @__PURE__ */ _export_sfc(_sfc_main$u, [["render", _sfc_render$t], ["__scopeId", "data-v-ba096d18"], ["__file", "E:/项目/yihangyidon/src/pages/help/help-detail.vue"]]);
+  const PagesHelpHelpDetail = /* @__PURE__ */ _export_sfc(_sfc_main$z, [["render", _sfc_render$y], ["__scopeId", "data-v-ba096d18"], ["__file", "E:/项目/yihangyidon/src/pages/help/help-detail.vue"]]);
   function getUserBalance() {
     return new Promise((resolve, reject) => {
       try {
@@ -9940,7 +10148,7 @@ if (uni.restoreGlobal) {
       }
     });
   }
-  const _sfc_main$t = {
+  const _sfc_main$y = {
     name: "PaymentPasswordModal",
     props: {
       visible: {
@@ -10075,7 +10283,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$s(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$x(_ctx, _cache, $props, $setup, $data, $options) {
     return $props.visible ? (vue.openBlock(), vue.createElementBlock("view", {
       key: 0,
       class: "payment-password-modal",
@@ -10208,8 +10416,8 @@ if (uni.restoreGlobal) {
       ])
     ])) : vue.createCommentVNode("v-if", true);
   }
-  const PaymentPasswordModal = /* @__PURE__ */ _export_sfc(_sfc_main$t, [["render", _sfc_render$s], ["__scopeId", "data-v-c92603ac"], ["__file", "E:/项目/yihangyidon/src/components/common/PaymentPasswordModal.vue"]]);
-  const _sfc_main$s = {
+  const PaymentPasswordModal = /* @__PURE__ */ _export_sfc(_sfc_main$y, [["render", _sfc_render$x], ["__scopeId", "data-v-c92603ac"], ["__file", "E:/项目/yihangyidon/src/components/common/PaymentPasswordModal.vue"]]);
+  const _sfc_main$x = {
     components: {
       PaymentPasswordModal
     },
@@ -10649,7 +10857,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$r(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$w(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_PaymentPasswordModal = vue.resolveComponent("PaymentPasswordModal");
     return vue.openBlock(), vue.createElementBlock("view", { class: "transfer-page" }, [
       vue.createCommentVNode(" 顶部导航 "),
@@ -11005,8 +11213,8 @@ if (uni.restoreGlobal) {
       }, null, 8, ["visible", "amount", "payee", "description", "onPaymentConfirmed", "onClose"])
     ]);
   }
-  const PagesTransferTransfer = /* @__PURE__ */ _export_sfc(_sfc_main$s, [["render", _sfc_render$r], ["__scopeId", "data-v-d303ad3d"], ["__file", "E:/项目/yihangyidon/src/pages/transfer/transfer.vue"]]);
-  const _sfc_main$r = {
+  const PagesTransferTransfer = /* @__PURE__ */ _export_sfc(_sfc_main$x, [["render", _sfc_render$w], ["__scopeId", "data-v-d303ad3d"], ["__file", "E:/项目/yihangyidon/src/pages/transfer/transfer.vue"]]);
+  const _sfc_main$w = {
     data() {
       return {
         isLoginNeeded: false,
@@ -11038,8 +11246,8 @@ if (uni.restoreGlobal) {
       if (!this.isLoginNeeded) {
         this.checkVerificationStatus();
         this.checkBankCardStatus();
-        formatAppLog("log", "at pages/account/account.vue:152", "账户页面初始化 - 认证状态:", this.isVerified);
-        formatAppLog("log", "at pages/account/account.vue:153", "账户页面初始化 - 银行卡状态:", this.hasBankCard);
+        formatAppLog("log", "at pages/account/account.vue:153", "账户页面初始化 - 认证状态:", this.isVerified);
+        formatAppLog("log", "at pages/account/account.vue:154", "账户页面初始化 - 银行卡状态:", this.hasBankCard);
       }
     },
     onShow() {
@@ -11054,14 +11262,14 @@ if (uni.restoreGlobal) {
       checkLoginStatus() {
         try {
           if (!forceCheckLogin()) {
-            formatAppLog("log", "at pages/account/account.vue:176", "账户页面：用户未登录，显示登录提示");
+            formatAppLog("log", "at pages/account/account.vue:177", "账户页面：用户未登录，显示登录提示");
             this.isLoginNeeded = true;
             return;
           }
           this.isLoginNeeded = false;
-          formatAppLog("log", "at pages/account/account.vue:182", "账户页面显示");
+          formatAppLog("log", "at pages/account/account.vue:183", "账户页面显示");
         } catch (error) {
-          formatAppLog("error", "at pages/account/account.vue:184", "账户页面登录检查失败:", error);
+          formatAppLog("error", "at pages/account/account.vue:185", "账户页面登录检查失败:", error);
           this.isLoginNeeded = true;
         }
       },
@@ -11076,13 +11284,13 @@ if (uni.restoreGlobal) {
               maximumFractionDigits: 2
             });
             this.bankAccounts = currentUser.bankAccounts || [];
-            formatAppLog("log", "at pages/account/account.vue:202", "获取用户余额:", this.accountInfo.balance);
+            formatAppLog("log", "at pages/account/account.vue:203", "获取用户余额:", this.accountInfo.balance);
           } else {
             this.accountInfo.balance = "0.00";
-            formatAppLog("log", "at pages/account/account.vue:205", "未找到用户余额，使用默认值");
+            formatAppLog("log", "at pages/account/account.vue:206", "未找到用户余额，使用默认值");
           }
         } catch (error) {
-          formatAppLog("error", "at pages/account/account.vue:208", "获取用户余额失败:", error);
+          formatAppLog("error", "at pages/account/account.vue:209", "获取用户余额失败:", error);
           this.accountInfo.balance = "0.00";
         }
       },
@@ -11233,7 +11441,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$q(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$v(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "account-page" }, [
       vue.createCommentVNode(" 顶部导航 "),
       vue.createElementVNode("view", { class: "nav-bar" }, [
@@ -11460,8 +11668,8 @@ if (uni.restoreGlobal) {
       ))
     ]);
   }
-  const PagesAccountAccount = /* @__PURE__ */ _export_sfc(_sfc_main$r, [["render", _sfc_render$q], ["__scopeId", "data-v-f7e9057f"], ["__file", "E:/项目/yihangyidon/src/pages/account/account.vue"]]);
-  const _sfc_main$q = {
+  const PagesAccountAccount = /* @__PURE__ */ _export_sfc(_sfc_main$w, [["render", _sfc_render$v], ["__scopeId", "data-v-f7e9057f"], ["__file", "E:/项目/yihangyidon/src/pages/account/account.vue"]]);
+  const _sfc_main$v = {
     name: "PaymentPage",
     data() {
       return {
@@ -11595,7 +11803,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$p(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$u(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "payment-page" }, [
       vue.createCommentVNode(" 头部区域 "),
       vue.createElementVNode("view", { class: "header" }, [
@@ -11741,8 +11949,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesPaymentPayment = /* @__PURE__ */ _export_sfc(_sfc_main$q, [["render", _sfc_render$p], ["__scopeId", "data-v-6e0fac4f"], ["__file", "E:/项目/yihangyidon/src/pages/payment/payment.vue"]]);
-  const _sfc_main$p = {
+  const PagesPaymentPayment = /* @__PURE__ */ _export_sfc(_sfc_main$v, [["render", _sfc_render$u], ["__scopeId", "data-v-6e0fac4f"], ["__file", "E:/项目/yihangyidon/src/pages/payment/payment.vue"]]);
+  const _sfc_main$u = {
     name: "WaterPage",
     data() {
       return {
@@ -12088,7 +12296,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$o(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$t(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "water-page" }, [
       vue.createCommentVNode(" 地区选择 "),
       vue.createElementVNode("view", { class: "location-section" }, [
@@ -12191,8 +12399,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesWaterWater = /* @__PURE__ */ _export_sfc(_sfc_main$p, [["render", _sfc_render$o], ["__scopeId", "data-v-ebd6dd79"], ["__file", "E:/项目/yihangyidon/src/pages/water/water.vue"]]);
-  const _sfc_main$o = {
+  const PagesWaterWater = /* @__PURE__ */ _export_sfc(_sfc_main$u, [["render", _sfc_render$t], ["__scopeId", "data-v-ebd6dd79"], ["__file", "E:/项目/yihangyidon/src/pages/water/water.vue"]]);
+  const _sfc_main$t = {
     name: "WaterPaymentPage",
     data() {
       return {
@@ -12415,7 +12623,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$n(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$s(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "water-payment-page" }, [
       vue.createCommentVNode(" 顶部厨房插画背景 "),
       vue.createElementVNode("view", { class: "header-section" }, [
@@ -12653,8 +12861,8 @@ if (uni.restoreGlobal) {
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesWaterPaymentWaterPayment = /* @__PURE__ */ _export_sfc(_sfc_main$o, [["render", _sfc_render$n], ["__scopeId", "data-v-16fc2ef4"], ["__file", "E:/项目/yihangyidon/src/pages/water-payment/water-payment.vue"]]);
-  const _sfc_main$n = {
+  const PagesWaterPaymentWaterPayment = /* @__PURE__ */ _export_sfc(_sfc_main$t, [["render", _sfc_render$s], ["__scopeId", "data-v-16fc2ef4"], ["__file", "E:/项目/yihangyidon/src/pages/water-payment/water-payment.vue"]]);
+  const _sfc_main$s = {
     name: "CitySelectPage",
     data() {
       return {
@@ -13546,7 +13754,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$m(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$r(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "city-select-page" }, [
       vue.createCommentVNode(" 搜索栏 "),
       vue.createElementVNode("view", { class: "search-section" }, [
@@ -13841,8 +14049,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesCitySelectCitySelect = /* @__PURE__ */ _export_sfc(_sfc_main$n, [["render", _sfc_render$m], ["__scopeId", "data-v-66878741"], ["__file", "E:/项目/yihangyidon/src/pages/city-select/city-select.vue"]]);
-  const _sfc_main$m = {
+  const PagesCitySelectCitySelect = /* @__PURE__ */ _export_sfc(_sfc_main$s, [["render", _sfc_render$r], ["__scopeId", "data-v-66878741"], ["__file", "E:/项目/yihangyidon/src/pages/city-select/city-select.vue"]]);
+  const _sfc_main$r = {
     name: "PaymentManagementPage",
     data() {
       return {
@@ -14248,7 +14456,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$l(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$q(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "payment-management-page" }, [
       vue.createCommentVNode(" 新增分组 "),
       vue.createElementVNode("view", { class: "add-group-section" }, [
@@ -14437,8 +14645,8 @@ if (uni.restoreGlobal) {
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesPaymentManagementPaymentManagement = /* @__PURE__ */ _export_sfc(_sfc_main$m, [["render", _sfc_render$l], ["__scopeId", "data-v-aea28279"], ["__file", "E:/项目/yihangyidon/src/pages/payment-management/payment-management.vue"]]);
-  const _sfc_main$l = {
+  const PagesPaymentManagementPaymentManagement = /* @__PURE__ */ _export_sfc(_sfc_main$r, [["render", _sfc_render$q], ["__scopeId", "data-v-aea28279"], ["__file", "E:/项目/yihangyidon/src/pages/payment-management/payment-management.vue"]]);
+  const _sfc_main$q = {
     name: "RechargePage",
     data() {
       return {
@@ -14651,7 +14859,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$k(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$p(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "recharge-page" }, [
       vue.createCommentVNode(" 手机号码区域 "),
       vue.createElementVNode("view", { class: "phone-section" }, [
@@ -14845,8 +15053,8 @@ if (uni.restoreGlobal) {
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesRechargeRecharge = /* @__PURE__ */ _export_sfc(_sfc_main$l, [["render", _sfc_render$k], ["__scopeId", "data-v-d370def1"], ["__file", "E:/项目/yihangyidon/src/pages/recharge/recharge.vue"]]);
-  const _sfc_main$k = {
+  const PagesRechargeRecharge = /* @__PURE__ */ _export_sfc(_sfc_main$q, [["render", _sfc_render$p], ["__scopeId", "data-v-d370def1"], ["__file", "E:/项目/yihangyidon/src/pages/recharge/recharge.vue"]]);
+  const _sfc_main$p = {
     name: "RechargePaymentPage",
     data() {
       return {
@@ -15191,7 +15399,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$j(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$o(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "payment-page" }, [
       vue.createCommentVNode(" 导航栏 "),
       vue.createElementVNode("view", { class: "nav-bar" }, [
@@ -15489,8 +15697,8 @@ if (uni.restoreGlobal) {
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesRechargePaymentRechargePayment = /* @__PURE__ */ _export_sfc(_sfc_main$k, [["render", _sfc_render$j], ["__scopeId", "data-v-e95b868e"], ["__file", "E:/项目/yihangyidon/src/pages/recharge-payment/recharge-payment.vue"]]);
-  const _sfc_main$j = {
+  const PagesRechargePaymentRechargePayment = /* @__PURE__ */ _export_sfc(_sfc_main$p, [["render", _sfc_render$o], ["__scopeId", "data-v-e95b868e"], ["__file", "E:/项目/yihangyidon/src/pages/recharge-payment/recharge-payment.vue"]]);
+  const _sfc_main$o = {
     name: "GovernmentPage",
     data() {
       return {
@@ -15708,7 +15916,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$i(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$n(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "government-page" }, [
       vue.createElementVNode("view", { class: "page-header" }, [
         vue.createElementVNode("text", { class: "header-title" }, "政务民生"),
@@ -15895,8 +16103,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesGovernmentGovernment = /* @__PURE__ */ _export_sfc(_sfc_main$j, [["render", _sfc_render$i], ["__scopeId", "data-v-55002ac7"], ["__file", "E:/项目/yihangyidon/src/pages/government/government.vue"]]);
-  const _sfc_main$i = {
+  const PagesGovernmentGovernment = /* @__PURE__ */ _export_sfc(_sfc_main$o, [["render", _sfc_render$n], ["__scopeId", "data-v-55002ac7"], ["__file", "E:/项目/yihangyidon/src/pages/government/government.vue"]]);
+  const _sfc_main$n = {
     name: "GamesPage",
     data() {
       return {
@@ -16126,7 +16334,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$h(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$m(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "games-page" }, [
       vue.createElementVNode("view", { class: "page-header" }, [
         vue.createElementVNode("text", { class: "header-title" }, "小豆乐园"),
@@ -16373,8 +16581,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesGamesGames = /* @__PURE__ */ _export_sfc(_sfc_main$i, [["render", _sfc_render$h], ["__scopeId", "data-v-5e0e9dd0"], ["__file", "E:/项目/yihangyidon/src/pages/games/games.vue"]]);
-  const _sfc_main$h = {
+  const PagesGamesGames = /* @__PURE__ */ _export_sfc(_sfc_main$n, [["render", _sfc_render$m], ["__scopeId", "data-v-5e0e9dd0"], ["__file", "E:/项目/yihangyidon/src/pages/games/games.vue"]]);
+  const _sfc_main$m = {
     data() {
       return {
         transferRecords: []
@@ -16467,7 +16675,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$g(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$l(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "history-page" }, [
       vue.createCommentVNode(" 顶部导航 "),
       vue.createElementVNode("view", { class: "nav-bar" }, [
@@ -16551,7 +16759,7 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesTransferHistory = /* @__PURE__ */ _export_sfc(_sfc_main$h, [["render", _sfc_render$g], ["__scopeId", "data-v-c9706b1b"], ["__file", "E:/项目/yihangyidon/src/pages/transfer/history.vue"]]);
+  const PagesTransferHistory = /* @__PURE__ */ _export_sfc(_sfc_main$m, [["render", _sfc_render$l], ["__scopeId", "data-v-c9706b1b"], ["__file", "E:/项目/yihangyidon/src/pages/transfer/history.vue"]]);
   const formatBankCard = (cardNumber, separator = " ") => {
     if (!cardNumber)
       return "";
@@ -16568,7 +16776,7 @@ if (uni.restoreGlobal) {
     const middle = "*".repeat(card.length - showStart - showEnd);
     return formatBankCard(start + middle + end);
   };
-  const _sfc_main$g = {
+  const _sfc_main$l = {
     name: "BankCard",
     props: {
       cardInfo: {
@@ -16643,7 +16851,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$f(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$k(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock(
       "view",
       {
@@ -16731,8 +16939,8 @@ if (uni.restoreGlobal) {
       /* CLASS */
     );
   }
-  const BankCard = /* @__PURE__ */ _export_sfc(_sfc_main$g, [["render", _sfc_render$f], ["__scopeId", "data-v-2f14f5e9"], ["__file", "E:/项目/yihangyidon/src/components/common/BankCard.vue"]]);
-  const _sfc_main$f = {
+  const BankCard = /* @__PURE__ */ _export_sfc(_sfc_main$l, [["render", _sfc_render$k], ["__scopeId", "data-v-2f14f5e9"], ["__file", "E:/项目/yihangyidon/src/components/common/BankCard.vue"]]);
+  const _sfc_main$k = {
     components: {
       BankCard
     },
@@ -16911,7 +17119,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$e(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$j(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_BankCard = vue.resolveComponent("BankCard");
     return vue.openBlock(), vue.createElementBlock("view", { class: "credit-card-container" }, [
       vue.createCommentVNode(" 页面头部 "),
@@ -17108,7 +17316,7 @@ if (uni.restoreGlobal) {
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesCreditCardCreditCard = /* @__PURE__ */ _export_sfc(_sfc_main$f, [["render", _sfc_render$e], ["__scopeId", "data-v-03264d9b"], ["__file", "E:/项目/yihangyidon/src/pages/credit-card/credit-card.vue"]]);
+  const PagesCreditCardCreditCard = /* @__PURE__ */ _export_sfc(_sfc_main$k, [["render", _sfc_render$j], ["__scopeId", "data-v-03264d9b"], ["__file", "E:/项目/yihangyidon/src/pages/credit-card/credit-card.vue"]]);
   function verifyPaymentPassword(password) {
     return new Promise((resolve, reject) => {
       var _a, _b;
@@ -17290,7 +17498,7 @@ if (uni.restoreGlobal) {
       formatAppLog("error", "at api/payment.js:258", "❌ 添加交易记录失败:", error);
     }
   }
-  const _sfc_main$e = {
+  const _sfc_main$j = {
     name: "RepaymentPasswordModal",
     props: {
       visible: {
@@ -17520,7 +17728,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$d(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$i(_ctx, _cache, $props, $setup, $data, $options) {
     return $props.visible ? (vue.openBlock(), vue.createElementBlock("view", {
       key: 0,
       class: "modal-overlay",
@@ -17680,8 +17888,8 @@ if (uni.restoreGlobal) {
       ])
     ])) : vue.createCommentVNode("v-if", true);
   }
-  const RepaymentPasswordModal = /* @__PURE__ */ _export_sfc(_sfc_main$e, [["render", _sfc_render$d], ["__scopeId", "data-v-d5beb455"], ["__file", "E:/项目/yihangyidon/src/components/common/RepaymentPasswordModal.vue"]]);
-  const _sfc_main$d = {
+  const RepaymentPasswordModal = /* @__PURE__ */ _export_sfc(_sfc_main$j, [["render", _sfc_render$i], ["__scopeId", "data-v-d5beb455"], ["__file", "E:/项目/yihangyidon/src/components/common/RepaymentPasswordModal.vue"]]);
+  const _sfc_main$i = {
     name: "CreditCardRepayment",
     components: {
       RepaymentPasswordModal
@@ -17814,7 +18022,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$c(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$h(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_RepaymentPasswordModal = vue.resolveComponent("RepaymentPasswordModal");
     return vue.openBlock(), vue.createElementBlock("view", { class: "repayment-container" }, [
       vue.createCommentVNode(" 页面头部 "),
@@ -18197,8 +18405,8 @@ if (uni.restoreGlobal) {
       }, null, 8, ["visible", "card-number", "repayment-amount", "onClose", "onRepaymentSuccess"])
     ]);
   }
-  const PagesCreditCardRepayment = /* @__PURE__ */ _export_sfc(_sfc_main$d, [["render", _sfc_render$c], ["__scopeId", "data-v-08d86d8e"], ["__file", "E:/项目/yihangyidon/src/pages/credit-card/repayment.vue"]]);
-  const _sfc_main$c = {
+  const PagesCreditCardRepayment = /* @__PURE__ */ _export_sfc(_sfc_main$i, [["render", _sfc_render$h], ["__scopeId", "data-v-08d86d8e"], ["__file", "E:/项目/yihangyidon/src/pages/credit-card/repayment.vue"]]);
+  const _sfc_main$h = {
     data() {
       return {
         type: "normal",
@@ -18239,7 +18447,19 @@ if (uni.restoreGlobal) {
           const users2 = uni.getStorageSync("users") || [];
           const currentUser = users2.find((user) => user.isLoggedIn);
           if (currentUser && currentUser.transactionRecords) {
-            this.transactions = currentUser.transactionRecords;
+            this.transactions = currentUser.transactionRecords.filter((transaction) => {
+              const isValid = this.validateTransaction(transaction);
+              if (!isValid) {
+                formatAppLog("warn", "at pages/balance/balance.vue:130", "发现无效交易记录，已过滤:", transaction);
+              }
+              return isValid;
+            });
+            if (this.transactions.length === 0) {
+              formatAppLog("log", "at pages/balance/balance.vue:137", "没有有效的交易记录，生成模拟数据");
+              this.transactions = this.generateMockTransactions();
+              currentUser.transactionRecords = this.transactions;
+              uni.setStorageSync("users", users2);
+            }
           } else {
             const mockTransactions = this.generateMockTransactions();
             this.transactions = mockTransactions;
@@ -18318,21 +18538,47 @@ if (uni.restoreGlobal) {
             const hours = Math.floor(Math.random() * 24);
             const minutes = Math.floor(Math.random() * 60);
             const timeStr = `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
-            transactions.push({
+            const transaction = {
               id: `${i}-${j}`,
-              title: type,
-              amount,
-              type: category,
-              icon,
+              title: type || "未知交易",
+              amount: amount || 0,
+              // 确保金额不为null
+              type: category || "expense",
+              icon: icon || "💳",
               date: date.toISOString().split("T")[0],
-              time: timeStr,
+              // 确保日期格式正确
+              time: timeStr || "00:00",
               desc: `这是一笔${type}交易`,
               account: "储蓄卡(****1234)",
               status: "success"
-            });
+            };
+            if (this.validateTransaction(transaction)) {
+              transactions.push(transaction);
+            } else {
+              formatAppLog("warn", "at pages/balance/balance.vue:235", "跳过无效交易数据:", transaction);
+            }
           }
         }
         return transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+      },
+      // 验证交易数据完整性
+      validateTransaction(transaction) {
+        try {
+          if (!transaction.id || !transaction.title || !transaction.date) {
+            return false;
+          }
+          if (transaction.amount === null || transaction.amount === void 0 || isNaN(transaction.amount)) {
+            return false;
+          }
+          const date = new Date(transaction.date);
+          if (isNaN(date.getTime())) {
+            return false;
+          }
+          return true;
+        } catch (error) {
+          formatAppLog("error", "at pages/balance/balance.vue:265", "验证交易数据失败:", error);
+          return false;
+        }
       },
       // 按日期分组交易记录
       groupTransactionsByDate() {
@@ -18348,21 +18594,47 @@ if (uni.restoreGlobal) {
       },
       // 格式化日期显示
       formatDate(dateString) {
-        const date = new Date(dateString);
-        const today = /* @__PURE__ */ new Date();
-        today.setHours(0, 0, 0, 0);
-        const yesterday = new Date(today);
-        yesterday.setDate(yesterday.getDate() - 1);
-        const targetDate = new Date(date);
-        targetDate.setHours(0, 0, 0, 0);
-        if (targetDate.getTime() === today.getTime()) {
-          return "今天";
-        } else if (targetDate.getTime() === yesterday.getTime()) {
-          return "昨天";
-        } else {
-          const month = date.getMonth() + 1;
-          const day = date.getDate();
-          return `${month}月${day}日`;
+        try {
+          if (!dateString || dateString === "Invalid Date") {
+            formatAppLog("warn", "at pages/balance/balance.vue:290", "无效的日期字符串:", dateString);
+            return "未知日期";
+          }
+          const date = new Date(dateString);
+          if (isNaN(date.getTime())) {
+            formatAppLog("warn", "at pages/balance/balance.vue:298", "无效的日期对象:", dateString);
+            return "未知日期";
+          }
+          const today = /* @__PURE__ */ new Date();
+          today.setHours(0, 0, 0, 0);
+          const yesterday = new Date(today);
+          yesterday.setDate(yesterday.getDate() - 1);
+          const targetDate = new Date(date);
+          targetDate.setHours(0, 0, 0, 0);
+          if (targetDate.getTime() === today.getTime()) {
+            return "今天";
+          } else if (targetDate.getTime() === yesterday.getTime()) {
+            return "昨天";
+          } else {
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+            return `${month}月${day}日`;
+          }
+        } catch (error) {
+          formatAppLog("error", "at pages/balance/balance.vue:322", "格式化日期失败:", error, "dateString:", dateString);
+          return "未知日期";
+        }
+      },
+      // 格式化金额显示
+      formatAmount(amount) {
+        try {
+          if (amount === null || amount === void 0 || isNaN(amount)) {
+            formatAppLog("warn", "at pages/balance/balance.vue:331", "无效的金额:", amount);
+            return "0.00";
+          }
+          return Number(amount).toFixed(2);
+        } catch (error) {
+          formatAppLog("error", "at pages/balance/balance.vue:336", "格式化金额失败:", error, "amount:", amount);
+          return "0.00";
         }
       },
       // 计算收支汇总
@@ -18432,7 +18704,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$b(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$g(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "balance-container" }, [
       vue.createCommentVNode(" 页面头部 "),
       vue.createElementVNode("view", { class: "page-header" }, [
@@ -18580,7 +18852,7 @@ if (uni.restoreGlobal) {
                               {
                                 class: vue.normalizeClass(["transaction-amount", transaction.type])
                               },
-                              vue.toDisplayString(transaction.type === "income" ? "+" : "-") + "¥" + vue.toDisplayString(transaction.amount.toFixed(2)),
+                              vue.toDisplayString(transaction.type === "income" ? "+" : "-") + "¥" + vue.toDisplayString($options.formatAmount(transaction.amount)),
                               3
                               /* TEXT, CLASS */
                             )
@@ -18616,8 +18888,8 @@ if (uni.restoreGlobal) {
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesBalanceBalance = /* @__PURE__ */ _export_sfc(_sfc_main$c, [["render", _sfc_render$b], ["__scopeId", "data-v-a05d65b8"], ["__file", "E:/项目/yihangyidon/src/pages/balance/balance.vue"]]);
-  const _sfc_main$b = {
+  const PagesBalanceBalance = /* @__PURE__ */ _export_sfc(_sfc_main$h, [["render", _sfc_render$g], ["__scopeId", "data-v-a05d65b8"], ["__file", "E:/项目/yihangyidon/src/pages/balance/balance.vue"]]);
+  const _sfc_main$g = {
     data() {
       return {
         hasLoan: true,
@@ -18841,7 +19113,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$a(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$f(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "loan-container" }, [
       vue.createCommentVNode(" 页面头部 "),
       vue.createElementVNode("view", { class: "page-header" }, [
@@ -19088,8 +19360,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesLoanLoan = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["render", _sfc_render$a], ["__scopeId", "data-v-2fe4ed24"], ["__file", "E:/项目/yihangyidon/src/pages/loan/loan.vue"]]);
-  const _sfc_main$a = {
+  const PagesLoanLoan = /* @__PURE__ */ _export_sfc(_sfc_main$g, [["render", _sfc_render$f], ["__scopeId", "data-v-2fe4ed24"], ["__file", "E:/项目/yihangyidon/src/pages/loan/loan.vue"]]);
+  const _sfc_main$f = {
     name: "CardDetailModal",
     props: {
       visible: {
@@ -19098,12 +19370,47 @@ if (uni.restoreGlobal) {
       },
       cardInfo: {
         type: Object,
-        default: () => ({})
+        default: () => ({
+          cardColor: "linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)",
+          bankName: "未知银行",
+          cardType: "信用卡",
+          cardNumber: "0000000000000000",
+          status: "active",
+          creditLimit: 0,
+          availableCredit: 0,
+          currentBalance: 0,
+          billDate: 15,
+          repaymentDate: 3,
+          securityFeatures: {
+            smsNotification: false,
+            emailNotification: false,
+            biometricAuth: false,
+            transactionLimit: 5e3
+          }
+        })
+      },
+      balanceVisible: {
+        type: Boolean,
+        default: true
       }
     },
     methods: {
       closeModal() {
         this.$emit("close");
+      },
+      formatCurrency(amount) {
+        if (!this.balanceVisible)
+          return "****";
+        return `¥${(amount || 0).toLocaleString()}`;
+      },
+      formatCardNumber(cardNumber) {
+        if (!this.balanceVisible) {
+          return "**** **** **** ****";
+        }
+        if (!cardNumber) {
+          return "0000 0000 0000 0000";
+        }
+        return cardNumber.replace(/(\d{4})(?=\d)/g, "$1 ");
       },
       handleRepay() {
         this.$emit("repay", this.cardInfo);
@@ -19122,8 +19429,8 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$9(_ctx, _cache, $props, $setup, $data, $options) {
-    var _a, _b, _c, _d, _e, _f, _g, _h;
+  function _sfc_render$e(_ctx, _cache, $props, $setup, $data, $options) {
+    var _a, _b, _c, _d, _e, _f, _g;
     return $props.visible ? (vue.openBlock(), vue.createElementBlock("view", {
       key: 0,
       class: "modal-overlay",
@@ -19147,7 +19454,7 @@ if (uni.restoreGlobal) {
             "view",
             {
               class: "card-preview",
-              style: vue.normalizeStyle({ background: $props.cardInfo.cardColor })
+              style: vue.normalizeStyle({ background: $props.cardInfo && $props.cardInfo.cardColor || "linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)" })
             },
             [
               vue.createElementVNode("view", { class: "preview-header" }, [
@@ -19155,7 +19462,7 @@ if (uni.restoreGlobal) {
                   vue.createElementVNode(
                     "text",
                     { class: "brand-text" },
-                    vue.toDisplayString($props.cardInfo.bankName),
+                    vue.toDisplayString($props.cardInfo && $props.cardInfo.bankName || "未知银行"),
                     1
                     /* TEXT */
                   )
@@ -19164,7 +19471,7 @@ if (uni.restoreGlobal) {
                   vue.createElementVNode(
                     "text",
                     { class: "type-text" },
-                    vue.toDisplayString($props.cardInfo.cardType),
+                    vue.toDisplayString($props.cardInfo && $props.cardInfo.cardType || "信用卡"),
                     1
                     /* TEXT */
                   )
@@ -19174,7 +19481,7 @@ if (uni.restoreGlobal) {
                 vue.createElementVNode(
                   "text",
                   { class: "number-text" },
-                  "**** **** **** " + vue.toDisplayString($props.cardInfo.cardNumber.slice(-4)),
+                  vue.toDisplayString($options.formatCardNumber($props.cardInfo && $props.cardInfo.cardNumber)),
                   1
                   /* TEXT */
                 )
@@ -19188,7 +19495,7 @@ if (uni.restoreGlobal) {
                   vue.createElementVNode(
                     "text",
                     { class: "status-text" },
-                    vue.toDisplayString($options.getStatusText($props.cardInfo.status)),
+                    vue.toDisplayString($options.getStatusText($props.cardInfo && $props.cardInfo.status)),
                     1
                     /* TEXT */
                   )
@@ -19207,7 +19514,7 @@ if (uni.restoreGlobal) {
                 vue.createElementVNode(
                   "text",
                   { class: "info-value" },
-                  vue.toDisplayString($props.cardInfo.bankName),
+                  vue.toDisplayString($props.cardInfo && $props.cardInfo.bankName || "未知银行"),
                   1
                   /* TEXT */
                 )
@@ -19217,7 +19524,7 @@ if (uni.restoreGlobal) {
                 vue.createElementVNode(
                   "text",
                   { class: "info-value" },
-                  vue.toDisplayString($props.cardInfo.cardType),
+                  vue.toDisplayString($props.cardInfo && $props.cardInfo.cardType || "信用卡"),
                   1
                   /* TEXT */
                 )
@@ -19227,7 +19534,7 @@ if (uni.restoreGlobal) {
                 vue.createElementVNode(
                   "text",
                   { class: "info-value" },
-                  "**** **** **** " + vue.toDisplayString($props.cardInfo.cardNumber.slice(-4)),
+                  vue.toDisplayString($options.formatCardNumber($props.cardInfo && $props.cardInfo.cardNumber)),
                   1
                   /* TEXT */
                 )
@@ -19237,7 +19544,7 @@ if (uni.restoreGlobal) {
                 vue.createElementVNode(
                   "text",
                   { class: "info-value" },
-                  vue.toDisplayString($options.getStatusText($props.cardInfo.status)),
+                  vue.toDisplayString($options.getStatusText($props.cardInfo && $props.cardInfo.status)),
                   1
                   /* TEXT */
                 )
@@ -19253,7 +19560,7 @@ if (uni.restoreGlobal) {
                 vue.createElementVNode(
                   "text",
                   { class: "info-value" },
-                  "¥" + vue.toDisplayString($props.cardInfo.creditLimit.toLocaleString()),
+                  vue.toDisplayString($options.formatCurrency($props.cardInfo && $props.cardInfo.creditLimit)),
                   1
                   /* TEXT */
                 )
@@ -19263,7 +19570,7 @@ if (uni.restoreGlobal) {
                 vue.createElementVNode(
                   "text",
                   { class: "info-value available" },
-                  "¥" + vue.toDisplayString($props.cardInfo.availableCredit.toLocaleString()),
+                  vue.toDisplayString($options.formatCurrency($props.cardInfo && $props.cardInfo.availableCredit)),
                   1
                   /* TEXT */
                 )
@@ -19273,7 +19580,7 @@ if (uni.restoreGlobal) {
                 vue.createElementVNode(
                   "text",
                   { class: "info-value debt" },
-                  "¥" + vue.toDisplayString($props.cardInfo.currentBalance.toLocaleString()),
+                  vue.toDisplayString($options.formatCurrency($props.cardInfo && $props.cardInfo.currentBalance)),
                   1
                   /* TEXT */
                 )
@@ -19283,7 +19590,7 @@ if (uni.restoreGlobal) {
                 vue.createElementVNode(
                   "text",
                   { class: "info-value" },
-                  "¥" + vue.toDisplayString(($props.cardInfo.creditLimit - $props.cardInfo.availableCredit).toLocaleString()),
+                  vue.toDisplayString($options.formatCurrency(($props.cardInfo && $props.cardInfo.creditLimit) - ($props.cardInfo && $props.cardInfo.availableCredit))),
                   1
                   /* TEXT */
                 )
@@ -19307,7 +19614,7 @@ if (uni.restoreGlobal) {
                 vue.createElementVNode(
                   "text",
                   { class: "info-value" },
-                  "¥" + vue.toDisplayString(($props.cardInfo.currentBalance * 0.1).toFixed(2)),
+                  vue.toDisplayString($options.formatCurrency(($props.cardInfo && $props.cardInfo.currentBalance) * 0.1)),
                   1
                   /* TEXT */
                 )
@@ -19328,9 +19635,9 @@ if (uni.restoreGlobal) {
                 vue.createElementVNode(
                   "text",
                   {
-                    class: vue.normalizeClass(["feature-status", { active: (_a = $props.cardInfo.securityFeatures) == null ? void 0 : _a.smsNotification }])
+                    class: vue.normalizeClass(["feature-status", { active: $props.cardInfo && ((_a = $props.cardInfo.securityFeatures) == null ? void 0 : _a.smsNotification) }])
                   },
-                  vue.toDisplayString(((_b = $props.cardInfo.securityFeatures) == null ? void 0 : _b.smsNotification) ? "已开启" : "未开启"),
+                  vue.toDisplayString($props.cardInfo && ((_b = $props.cardInfo.securityFeatures) == null ? void 0 : _b.smsNotification) ? "已开启" : "未开启"),
                   3
                   /* TEXT, CLASS */
                 )
@@ -19341,9 +19648,9 @@ if (uni.restoreGlobal) {
                 vue.createElementVNode(
                   "text",
                   {
-                    class: vue.normalizeClass(["feature-status", { active: (_c = $props.cardInfo.securityFeatures) == null ? void 0 : _c.emailNotification }])
+                    class: vue.normalizeClass(["feature-status", { active: $props.cardInfo && ((_c = $props.cardInfo.securityFeatures) == null ? void 0 : _c.emailNotification) }])
                   },
-                  vue.toDisplayString(((_d = $props.cardInfo.securityFeatures) == null ? void 0 : _d.emailNotification) ? "已开启" : "未开启"),
+                  vue.toDisplayString($props.cardInfo && ((_d = $props.cardInfo.securityFeatures) == null ? void 0 : _d.emailNotification) ? "已开启" : "未开启"),
                   3
                   /* TEXT, CLASS */
                 )
@@ -19354,9 +19661,9 @@ if (uni.restoreGlobal) {
                 vue.createElementVNode(
                   "text",
                   {
-                    class: vue.normalizeClass(["feature-status", { active: (_e = $props.cardInfo.securityFeatures) == null ? void 0 : _e.biometricAuth }])
+                    class: vue.normalizeClass(["feature-status", { active: $props.cardInfo && ((_e = $props.cardInfo.securityFeatures) == null ? void 0 : _e.biometricAuth) }])
                   },
-                  vue.toDisplayString(((_f = $props.cardInfo.securityFeatures) == null ? void 0 : _f.biometricAuth) ? "已开启" : "未开启"),
+                  vue.toDisplayString($props.cardInfo && ((_f = $props.cardInfo.securityFeatures) == null ? void 0 : _f.biometricAuth) ? "已开启" : "未开启"),
                   3
                   /* TEXT, CLASS */
                 )
@@ -19367,7 +19674,7 @@ if (uni.restoreGlobal) {
                 vue.createElementVNode(
                   "text",
                   { class: "feature-status" },
-                  " ¥" + vue.toDisplayString(((_h = (_g = $props.cardInfo.securityFeatures) == null ? void 0 : _g.transactionLimit) == null ? void 0 : _h.toLocaleString()) || "5000"),
+                  vue.toDisplayString($options.formatCurrency($props.cardInfo && ((_g = $props.cardInfo.securityFeatures) == null ? void 0 : _g.transactionLimit) || 5e3)),
                   1
                   /* TEXT */
                 )
@@ -19388,8 +19695,8 @@ if (uni.restoreGlobal) {
       ])
     ])) : vue.createCommentVNode("v-if", true);
   }
-  const CardDetailModal = /* @__PURE__ */ _export_sfc(_sfc_main$a, [["render", _sfc_render$9], ["__scopeId", "data-v-fcf447e6"], ["__file", "E:/项目/yihangyidon/src/components/common/CardDetailModal.vue"]]);
-  const _sfc_main$9 = {
+  const CardDetailModal = /* @__PURE__ */ _export_sfc(_sfc_main$f, [["render", _sfc_render$e], ["__scopeId", "data-v-fcf447e6"], ["__file", "E:/项目/yihangyidon/src/components/common/CardDetailModal.vue"]]);
+  const _sfc_main$e = {
     name: "CreditCards",
     components: {
       CardDetailModal,
@@ -19437,7 +19744,7 @@ if (uni.restoreGlobal) {
             this.resetSummary();
           }
         } catch (error) {
-          formatAppLog("error", "at pages/credit-cards/credit-cards.vue:261", "加载信用卡信息失败:", error);
+          formatAppLog("error", "at pages/credit-cards/credit-cards.vue:262", "加载信用卡信息失败:", error);
           uni.showToast({ title: "加载失败", icon: "none" });
         }
       },
@@ -19455,6 +19762,12 @@ if (uni.restoreGlobal) {
         if (!this.balanceVisible)
           return "****";
         return `¥${(amount || 0).toLocaleString()}`;
+      },
+      formatCardNumber(cardNumber) {
+        if (!this.balanceVisible) {
+          return "**** **** **** ****";
+        }
+        return cardNumber.replace(/(\d{4})(?=\d)/g, "$1 ");
       },
       toggleBalanceVisibility() {
         this.balanceVisible = !this.balanceVisible;
@@ -19475,15 +19788,20 @@ if (uni.restoreGlobal) {
       handleRepayFromDetail(card) {
         this.selectedCard = card;
         this.repaymentAmountForModal = card.currentBalance;
+        this.showCardDetailModal = false;
         this.showRepaymentPasswordModal = true;
       },
       closeRepaymentPasswordModal() {
         this.showRepaymentPasswordModal = false;
+        const wasFromDetail = !!this.selectedCard;
         this.selectedCard = null;
         this.repaymentAmountForModal = 0;
+        if (wasFromDetail) {
+          this.showCardDetailModal = true;
+        }
       },
       async onRepaymentSuccess(result) {
-        formatAppLog("log", "at pages/credit-cards/credit-cards.vue:306", "还款成功，更新数据:", result);
+        formatAppLog("log", "at pages/credit-cards/credit-cards.vue:321", "还款成功，更新数据:", result);
         await this.loadCreditCards();
         this.closeRepaymentPasswordModal();
         uni.showToast({ title: "还款成功", icon: "success" });
@@ -19541,7 +19859,7 @@ if (uni.restoreGlobal) {
             uni.showToast({ title: "添加成功", icon: "success" });
           }
         } catch (error) {
-          formatAppLog("error", "at pages/credit-cards/credit-cards.vue:368", "添加卡片失败:", error);
+          formatAppLog("error", "at pages/credit-cards/credit-cards.vue:383", "添加卡片失败:", error);
           uni.showToast({ title: "添加失败", icon: "none" });
         }
       },
@@ -19565,7 +19883,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$8(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$d(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_CardDetailModal = vue.resolveComponent("CardDetailModal");
     const _component_RepaymentPasswordModal = vue.resolveComponent("RepaymentPasswordModal");
     return vue.openBlock(), vue.createElementBlock("view", { class: "credit-cards-page" }, [
@@ -19686,7 +20004,7 @@ if (uni.restoreGlobal) {
                   vue.createElementVNode(
                     "text",
                     { class: "number-text" },
-                    "**** **** **** " + vue.toDisplayString(card.cardNumber.slice(-4)),
+                    vue.toDisplayString($options.formatCardNumber(card.cardNumber)),
                     1
                     /* TEXT */
                   )
@@ -19822,10 +20140,11 @@ if (uni.restoreGlobal) {
       vue.createVNode(_component_CardDetailModal, {
         visible: $data.showCardDetailModal,
         "card-info": $data.selectedCard,
+        "balance-visible": $data.balanceVisible,
         onClose: $options.closeCardDetailModal,
         onRepay: $options.handleRepayFromDetail,
         onManage: $options.handleManageCard
-      }, null, 8, ["visible", "card-info", "onClose", "onRepay", "onManage"]),
+      }, null, 8, ["visible", "card-info", "balance-visible", "onClose", "onRepay", "onManage"]),
       vue.createCommentVNode(" 还款密码模态框 "),
       vue.createVNode(_component_RepaymentPasswordModal, {
         visible: $data.showRepaymentPasswordModal,
@@ -19932,7 +20251,7 @@ if (uni.restoreGlobal) {
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesCreditCardsCreditCards = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["render", _sfc_render$8], ["__scopeId", "data-v-a750c574"], ["__file", "E:/项目/yihangyidon/src/pages/credit-cards/credit-cards.vue"]]);
+  const PagesCreditCardsCreditCards = /* @__PURE__ */ _export_sfc(_sfc_main$e, [["render", _sfc_render$d], ["__scopeId", "data-v-a750c574"], ["__file", "E:/项目/yihangyidon/src/pages/credit-cards/credit-cards.vue"]]);
   class SyncManager {
     constructor() {
       this.maxRetryCount = 3;
@@ -20225,7 +20544,7 @@ if (uni.restoreGlobal) {
     }
   }
   const syncManager = new SyncManager();
-  const _sfc_main$8 = {
+  const _sfc_main$d = {
     data() {
       return {
         profileData: {
@@ -20535,7 +20854,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$7(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$c(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "profile-page" }, [
       vue.createElementVNode("view", { class: "nav-bar" }, [
         vue.createElementVNode("view", {
@@ -20730,8 +21049,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesUserProfile = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["render", _sfc_render$7], ["__scopeId", "data-v-f6b4f04d"], ["__file", "E:/项目/yihangyidon/src/pages/user/profile.vue"]]);
-  const _sfc_main$7 = {
+  const PagesUserProfile = /* @__PURE__ */ _export_sfc(_sfc_main$d, [["render", _sfc_render$c], ["__scopeId", "data-v-f6b4f04d"], ["__file", "E:/项目/yihangyidon/src/pages/user/profile.vue"]]);
+  const _sfc_main$c = {
     data() {
       return {
         securityScore: 85,
@@ -21614,7 +21933,7 @@ IP：${event.ip}
       }
     }
   };
-  function _sfc_render$6(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$b(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "security-page" }, [
       vue.createCommentVNode(" 顶部导航栏 "),
       vue.createElementVNode("view", { class: "nav-bar" }, [
@@ -22180,8 +22499,8 @@ IP：${event.ip}
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesUserSecurity = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["render", _sfc_render$6], ["__scopeId", "data-v-b74f3c40"], ["__file", "E:/项目/yihangyidon/src/pages/user/security.vue"]]);
-  const _sfc_main$6 = {
+  const PagesUserSecurity = /* @__PURE__ */ _export_sfc(_sfc_main$c, [["render", _sfc_render$b], ["__scopeId", "data-v-b74f3c40"], ["__file", "E:/项目/yihangyidon/src/pages/user/security.vue"]]);
+  const _sfc_main$b = {
     data() {
       return {
         type: "login",
@@ -22392,7 +22711,7 @@ IP：${event.ip}
       }
     }
   };
-  function _sfc_render$5(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$a(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "change-password-page" }, [
       vue.createCommentVNode(" 顶部导航栏 "),
       vue.createElementVNode("view", { class: "nav-bar" }, [
@@ -22506,8 +22825,8 @@ IP：${event.ip}
       ])
     ]);
   }
-  const PagesUserChangePassword = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["render", _sfc_render$5], ["__scopeId", "data-v-df75db25"], ["__file", "E:/项目/yihangyidon/src/pages/user/change-password.vue"]]);
-  const _sfc_main$5 = {
+  const PagesUserChangePassword = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["render", _sfc_render$a], ["__scopeId", "data-v-df75db25"], ["__file", "E:/项目/yihangyidon/src/pages/user/change-password.vue"]]);
+  const _sfc_main$a = {
     data() {
       return {
         latitude: 0,
@@ -22986,7 +23305,7 @@ IP：${event.ip}
       }
     }
   };
-  function _sfc_render$4(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$9(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "branch-page" }, [
       vue.createCommentVNode(" 搜索栏 "),
       vue.createElementVNode("view", { class: "search-section" }, [
@@ -23430,7 +23749,7 @@ IP：${event.ip}
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesServiceBranch = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["render", _sfc_render$4], ["__scopeId", "data-v-51383fbf"], ["__file", "E:/项目/yihangyidon/src/pages/service/branch.vue"]]);
+  const PagesServiceBranch = /* @__PURE__ */ _export_sfc(_sfc_main$a, [["render", _sfc_render$9], ["__scopeId", "data-v-51383fbf"], ["__file", "E:/项目/yihangyidon/src/pages/service/branch.vue"]]);
   function drawSimpleLineChart(canvasId, data, context) {
     try {
       formatAppLog("log", "at utils/simple-chart.js:14", "🎨 绘制简单折线图:", canvasId);
@@ -23549,7 +23868,7 @@ IP：${event.ip}
     ctx.textAlign = "center";
     ctx.fillText("数据对比图", width / 2, 20);
   }
-  const _sfc_main$4 = {
+  const _sfc_main$9 = {
     data() {
       return {
         hideAmount: false,
@@ -23711,34 +24030,59 @@ IP：${event.ip}
           uni.showLoading({ title: "加载中..." });
           const depositData = getDepositRates();
           formatAppLog("log", "at pages/wealth/deposit.vue:560", "存款数据:", depositData);
+          if (!depositData.fixed || depositData.fixed.length === 0) {
+            formatAppLog("log", "at pages/wealth/deposit.vue:564", "定期存款数据为空，使用默认数据");
+            depositData.fixed = [
+              { term: "3个月", rate: 1.85 },
+              { term: "6个月", rate: 2.05 },
+              { term: "1年", rate: 2.1 },
+              { term: "2年", rate: 2.6 },
+              { term: "3年", rate: 2.95 },
+              { term: "5年", rate: 3.2 }
+            ];
+          }
           this.depositData = depositData;
           await this.initChart(depositData);
           uni.hideLoading();
           this.loading = false;
         } catch (error) {
-          formatAppLog("error", "at pages/wealth/deposit.vue:571", "加载存款数据失败:", error);
+          formatAppLog("error", "at pages/wealth/deposit.vue:584", "加载存款数据失败:", error);
           uni.hideLoading();
           uni.showToast({ title: "加载失败", icon: "none" });
           this.loading = false;
         }
       },
       async initChart(chartConfig) {
-        var _a, _b;
+        var _a, _b, _c, _d;
         try {
-          formatAppLog("log", "at pages/wealth/deposit.vue:580", "🎨 开始渲染存款利率图表");
+          formatAppLog("log", "at pages/wealth/deposit.vue:593", "🎨 开始渲染存款利率图表");
           await this.$nextTick();
           await new Promise((resolve) => setTimeout(resolve, 200));
           const chartData = ((_b = (_a = this.depositData) == null ? void 0 : _a.fixed) == null ? void 0 : _b.map((item) => item.rate)) || [1.85, 2.05, 2.1, 2.6, 2.95, 3.2];
-          drawSimpleLineChart("depositRateChart", chartData, this);
-          formatAppLog("log", "at pages/wealth/deposit.vue:592", "✅ 存款利率图表渲染成功");
+          const labels = ((_d = (_c = this.depositData) == null ? void 0 : _c.fixed) == null ? void 0 : _d.map((item) => item.term)) || ["3个月", "6个月", "1年", "2年", "3年", "5年"];
+          drawSimpleLineChart("depositRateChart", {
+            data: chartData,
+            labels,
+            title: "存款利率趋势",
+            yAxisLabel: "利率(%)",
+            colors: ["#007AFF"]
+          });
+          formatAppLog("log", "at pages/wealth/deposit.vue:613", "✅ 存款利率图表渲染成功");
         } catch (error) {
-          formatAppLog("error", "at pages/wealth/deposit.vue:595", "❌ 图表渲染失败:", error);
+          formatAppLog("error", "at pages/wealth/deposit.vue:616", "❌ 图表渲染失败:", error);
           const defaultData = [1.85, 2.05, 2.1, 2.6, 2.95, 3.2];
-          drawSimpleLineChart("depositRateChart", defaultData, this);
+          const defaultLabels = ["3个月", "6个月", "1年", "2年", "3年", "5年"];
+          drawSimpleLineChart("depositRateChart", {
+            data: defaultData,
+            labels: defaultLabels,
+            title: "存款利率趋势",
+            yAxisLabel: "利率(%)",
+            colors: ["#007AFF"]
+          });
         }
       },
       onChartTouch(e) {
-        formatAppLog("log", "at pages/wealth/deposit.vue:603", "图表触摸事件:", e);
+        formatAppLog("log", "at pages/wealth/deposit.vue:632", "图表触摸事件:", e);
       },
       onProductDetail(product) {
         uni.navigateTo({
@@ -23857,22 +24201,22 @@ IP：${event.ip}
         uni.showModal({
           title: "确认存款",
           content: `确定要存入${this.confirmAmount}元到${this.confirmProduct.name}吗？`,
-          success: (res) => {
+          success: async (res) => {
             if (res.confirm) {
-              this.processDeposit();
+              await this.processDeposit();
             }
           }
         });
       },
       // 处理存款业务
-      processDeposit() {
+      async processDeposit() {
         uni.showLoading({ title: "处理中..." });
         try {
           const userId = getCurrentUserId();
           const depositType = this.getDepositType(this.confirmProduct.name);
           const amount = parseFloat(this.confirmAmount);
           const success = addDepositRecord(userId, depositType, amount);
-          setTimeout(() => {
+          setTimeout(async () => {
             uni.hideLoading();
             if (success) {
               uni.showToast({
@@ -23880,7 +24224,7 @@ IP：${event.ip}
                 icon: "success"
               });
               this.closeConfirmModal();
-              this.loadDepositData();
+              await this.loadDepositData();
               uni.$emit("depositSuccess", { type: depositType, amount });
             } else {
               uni.showToast({
@@ -23895,11 +24239,15 @@ IP：${event.ip}
             title: "存款失败，请重试",
             icon: "none"
           });
-          formatAppLog("error", "at pages/wealth/deposit.vue:793", "存款处理失败:", error);
+          formatAppLog("error", "at pages/wealth/deposit.vue:822", "存款处理失败:", error);
         }
       },
       // 获取存款类型
       getDepositType(productName) {
+        if (!productName || typeof productName !== "string") {
+          formatAppLog("warn", "at pages/wealth/deposit.vue:829", "产品名称为空或无效:", productName);
+          return "current";
+        }
         if (productName.includes("活期"))
           return "current";
         if (productName.includes("定期"))
@@ -23912,7 +24260,7 @@ IP：${event.ip}
       initDataSync() {
         initWealthDataSync();
         uni.$on("balanceUpdated", (data) => {
-          formatAppLog("log", "at pages/wealth/deposit.vue:812", "存款页面收到余额更新事件:", data);
+          formatAppLog("log", "at pages/wealth/deposit.vue:846", "存款页面收到余额更新事件:", data);
         });
       },
       calculateInterest() {
@@ -23935,7 +24283,7 @@ IP：${event.ip}
       }
     }
   };
-  function _sfc_render$3(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$8(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "deposit-page" }, [
       vue.createCommentVNode(" 头部导航 "),
       vue.createElementVNode("view", { class: "header" }, [
@@ -24659,8 +25007,8 @@ IP：${event.ip}
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesWealthDeposit = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["render", _sfc_render$3], ["__scopeId", "data-v-76c36c1f"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/deposit.vue"]]);
-  const _sfc_main$3 = {
+  const PagesWealthDeposit = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["render", _sfc_render$8], ["__scopeId", "data-v-76c36c1f"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/deposit.vue"]]);
+  const _sfc_main$8 = {
     data() {
       return {
         loading: false,
@@ -24949,21 +25297,21 @@ IP：${event.ip}
         uni.showModal({
           title: "确认申购",
           content: `确定要申购${this.purchaseAmount}元的${this.purchaseProduct.name}吗？`,
-          success: (res) => {
+          success: async (res) => {
             if (res.confirm) {
-              this.processPurchase();
+              await this.processPurchase();
             }
           }
         });
       },
       // 处理申购业务
-      processPurchase() {
+      async processPurchase() {
         uni.showLoading({ title: "申购处理中..." });
         try {
           const userId = getCurrentUserId();
           const amount = parseFloat(this.purchaseAmount);
           const success = purchaseWealthProduct(userId, this.purchaseProduct, amount);
-          setTimeout(() => {
+          setTimeout(async () => {
             uni.hideLoading();
             if (success) {
               uni.showToast({
@@ -24971,7 +25319,7 @@ IP：${event.ip}
                 icon: "success"
               });
               this.closePurchaseModal();
-              this.loadProductData();
+              await this.loadProductData();
               uni.$emit("purchaseSuccess", { product: this.purchaseProduct.name, amount });
             } else {
               uni.showToast({
@@ -24998,7 +25346,7 @@ IP：${event.ip}
       }
     }
   };
-  function _sfc_render$2(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$7(_ctx, _cache, $props, $setup, $data, $options) {
     var _a;
     return vue.openBlock(), vue.createElementBlock("view", { class: "product-page" }, [
       vue.createCommentVNode(" 头部导航 "),
@@ -25603,8 +25951,8 @@ IP：${event.ip}
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesWealthProduct = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["render", _sfc_render$2], ["__scopeId", "data-v-080bb83e"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/product.vue"]]);
-  const _sfc_main$2 = {
+  const PagesWealthProduct = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["render", _sfc_render$7], ["__scopeId", "data-v-080bb83e"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/product.vue"]]);
+  const _sfc_main$7 = {
     data() {
       return {
         loading: false,
@@ -25797,7 +26145,7 @@ IP：${event.ip}
             growthRate: "12.5",
             productCount: totalProducts
           };
-          this.initChart(insuranceCategories);
+          await this.initChart(insuranceCategories);
           uni.hideLoading();
           this.loading = false;
         } catch (error) {
@@ -25807,26 +26155,42 @@ IP：${event.ip}
           this.loading = false;
         }
       },
-      initChart(chartConfig) {
+      async initChart(insuranceCategories) {
         try {
-          formatAppLog("log", "at pages/wealth/insurance.vue:411", "开始渲染保险图表");
-          const chart = initChart("insuranceChart", chartConfig, this);
-          if (chart) {
-            formatAppLog("log", "at pages/wealth/insurance.vue:417", "保险图表渲染成功");
-            this.chartInstance = chart;
-          } else {
-            formatAppLog("log", "at pages/wealth/insurance.vue:420", "图表渲染失败，使用默认配置");
-            const defaultConfig = createInsuranceChart(this.insuranceData);
-            this.chartInstance = initChart("insuranceChart", defaultConfig, this);
-          }
+          formatAppLog("log", "at pages/wealth/insurance.vue:411", "🎨 开始渲染保险图表");
+          await this.$nextTick();
+          await new Promise((resolve) => setTimeout(resolve, 200));
+          const chartData = insuranceCategories.map((category) => {
+            const avgPremium = category.products.reduce((sum, product) => sum + product.premium, 0) / category.products.length;
+            return avgPremium;
+          });
+          const labels = insuranceCategories.map((category) => category.name);
+          drawSimpleBarChart("insuranceChart", {
+            data: chartData,
+            labels,
+            title: "保险产品平均保费",
+            yAxisLabel: "保费(元)",
+            colors: ["#FF6B35", "#34C759", "#FF9500"]
+          });
+          formatAppLog("log", "at pages/wealth/insurance.vue:436", "✅ 保险图表渲染成功");
         } catch (error) {
-          formatAppLog("error", "at pages/wealth/insurance.vue:426", "图表渲染失败:", error);
-          const defaultConfig = createInsuranceChart(this.insuranceData);
-          this.chartInstance = initChart("insuranceChart", defaultConfig, this);
+          formatAppLog("error", "at pages/wealth/insurance.vue:438", "❌ 保险图表渲染失败:", error);
+          this.showChartFallback("保险产品保费数据加载失败");
+        }
+      },
+      // 图表降级处理
+      showChartFallback(message) {
+        const chartContainer = document.getElementById("insuranceChart");
+        if (chartContainer) {
+          chartContainer.innerHTML = `
+          <div style="display: flex; align-items: center; justify-content: center; height: 200px; color: #999; font-size: 14px;">
+            ${message}
+          </div>
+        `;
         }
       },
       onChartTouch(e) {
-        formatAppLog("log", "at pages/wealth/insurance.vue:434", "图表触摸事件:", e);
+        formatAppLog("log", "at pages/wealth/insurance.vue:457", "图表触摸事件:", e);
       },
       onProductDetail(product) {
         uni.navigateTo({
@@ -25835,6 +26199,11 @@ IP：${event.ip}
       },
       onProductBuy(product) {
         this.processInsurancePurchase(product);
+      },
+      onProductDetail(product) {
+        uni.navigateTo({
+          url: `/pages/wealth/insurance-detail?id=${product.id}&name=${product.name}&type=${product.type}&premium=${product.premium}&coverage=${product.coverage}&term=${product.term}`
+        });
       },
       // 处理保险购买
       processInsurancePurchase(product) {
@@ -25875,19 +26244,19 @@ IP：${event.ip}
             title: "投保失败，请重试",
             icon: "none"
           });
-          formatAppLog("error", "at pages/wealth/insurance.vue:495", "投保处理失败:", error);
+          formatAppLog("error", "at pages/wealth/insurance.vue:524", "投保处理失败:", error);
         }
       },
       // 初始化数据同步
       initDataSync() {
         initWealthDataSync();
         uni.$on("balanceUpdated", (data) => {
-          formatAppLog("log", "at pages/wealth/insurance.vue:506", "保险页面收到余额更新事件:", data);
+          formatAppLog("log", "at pages/wealth/insurance.vue:535", "保险页面收到余额更新事件:", data);
         });
       }
     }
   };
-  function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$6(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "insurance-page" }, [
       vue.createCommentVNode(" 头部导航 "),
       vue.createElementVNode("view", { class: "header" }, [
@@ -26237,147 +26606,8 @@ IP：${event.ip}
       ])
     ]);
   }
-  const PagesWealthInsurance = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["render", _sfc_render$1], ["__scopeId", "data-v-64b05542"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/insurance.vue"]]);
-  function updateChartData(chartInstance, newData, chartType) {
-    if (!chartInstance || !newData) {
-      formatAppLog("log", "at utils/chartUpdater.js:14", "图表实例或数据无效");
-      return;
-    }
-    formatAppLog("log", "at utils/chartUpdater.js:18", "开始更新图表数据:", chartType);
-    try {
-      switch (chartType) {
-        case "deposit":
-          updateDepositChart(chartInstance, newData);
-          break;
-        case "product":
-          updateProductChart(chartInstance, newData);
-          break;
-        case "insurance":
-          updateInsuranceChart(chartInstance, newData);
-          break;
-        case "forex":
-          updateForexChart(chartInstance, newData);
-          break;
-        default:
-          formatAppLog("log", "at utils/chartUpdater.js:35", "未知的图表类型:", chartType);
-      }
-    } catch (error) {
-      formatAppLog("error", "at utils/chartUpdater.js:38", "更新图表数据失败:", error);
-    }
-  }
-  function updateDepositChart(chartInstance, data) {
-    if (!data.fixed)
-      return;
-    const categories = Object.keys(data.fixed);
-    const values = Object.values(data.fixed);
-    chartInstance.setOption({
-      xAxis: {
-        data: categories
-      },
-      series: [{
-        data: values,
-        animation: true,
-        animationDuration: 1e3,
-        animationEasing: "cubicOut"
-      }]
-    }, true);
-  }
-  function updateProductChart(chartInstance, data) {
-    if (!data.products)
-      return;
-    const products = data.products.slice(0, 8);
-    const names = products.map((p) => p.name.length > 6 ? p.name.substring(0, 6) + "..." : p.name);
-    const rates = products.map((p) => p.expectedReturn);
-    chartInstance.setOption({
-      xAxis: {
-        data: names
-      },
-      series: [{
-        data: rates,
-        animation: true,
-        animationDuration: 1e3,
-        animationEasing: "cubicOut"
-      }]
-    }, true);
-  }
-  function updateInsuranceChart(chartInstance, data) {
-    if (!data.products)
-      return;
-    const products = data.products.slice(0, 6);
-    const names = products.map((p) => p.name.length > 8 ? p.name.substring(0, 8) + "..." : p.name);
-    const premiums = products.map((p) => p.monthlyPremium);
-    chartInstance.setOption({
-      xAxis: {
-        data: names
-      },
-      series: [{
-        data: premiums,
-        animation: true,
-        animationDuration: 1e3,
-        animationEasing: "cubicOut"
-      }]
-    }, true);
-  }
-  function updateForexChart(chartInstance, data) {
-    if (!data.majorPairs)
-      return;
-    const pairs = data.majorPairs.slice(0, 6);
-    const names = pairs.map((p) => p.code);
-    const prices = pairs.map((p) => parseFloat(p.price));
-    chartInstance.setOption({
-      xAxis: {
-        data: names
-      },
-      series: [{
-        data: prices,
-        animation: true,
-        animationDuration: 1e3,
-        animationEasing: "cubicOut"
-      }]
-    }, true);
-  }
-  function createChartUpdater(chartInstance, dataFetcher, chartType, interval = 3e4) {
-    let updateTimer = null;
-    let isUpdating = false;
-    const updateChart = async () => {
-      if (isUpdating)
-        return;
-      isUpdating = true;
-      try {
-        formatAppLog("log", "at utils/chartUpdater.js:150", `开始定时更新${chartType}图表数据...`);
-        const newData = await dataFetcher();
-        updateChartData(chartInstance, newData, chartType);
-        formatAppLog("log", "at utils/chartUpdater.js:153", `${chartType}图表数据更新完成`);
-      } catch (error) {
-        formatAppLog("error", "at utils/chartUpdater.js:155", `更新${chartType}图表数据失败:`, error);
-      } finally {
-        isUpdating = false;
-      }
-    };
-    const start = () => {
-      if (updateTimer)
-        return;
-      updateTimer = setInterval(updateChart, interval);
-      formatAppLog("log", "at utils/chartUpdater.js:164", `${chartType}图表定时更新已启动，间隔: ${interval}ms`);
-    };
-    const stop = () => {
-      if (updateTimer) {
-        clearInterval(updateTimer);
-        updateTimer = null;
-        formatAppLog("log", "at utils/chartUpdater.js:171", `${chartType}图表定时更新已停止`);
-      }
-    };
-    const destroy = () => {
-      stop();
-    };
-    return {
-      start,
-      stop,
-      destroy,
-      update: updateChart
-    };
-  }
-  const _sfc_main$1 = {
+  const PagesWealthInsurance = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["render", _sfc_render$6], ["__scopeId", "data-v-64b05542"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/insurance.vue"]]);
+  const _sfc_main$6 = {
     data() {
       return {
         loading: false,
@@ -26405,7 +26635,7 @@ IP：${event.ip}
           amount: "",
           result: null
         },
-        chartUpdater: null,
+        updateTimer: null,
         autoUpdate: true,
         updateInterval: 3e4,
         // 30秒更新一次
@@ -26446,9 +26676,9 @@ IP：${event.ip}
     },
     onUnload() {
       this.stopAutoUpdate();
-      if (this.chartInstance) {
-        this.chartInstance.dispose();
-        this.chartInstance = null;
+      if (this.updateTimer) {
+        clearInterval(this.updateTimer);
+        this.updateTimer = null;
       }
     },
     methods: {
@@ -26470,73 +26700,83 @@ IP：${event.ip}
             marketStatus: "正常交易",
             lastUpdate: (/* @__PURE__ */ new Date()).toISOString()
           };
-          formatAppLog("log", "at pages/wealth/forex.vue:321", "外汇数据:", forexData);
+          formatAppLog("log", "at pages/wealth/forex.vue:320", "外汇数据:", forexData);
           this.forexData = forexData;
-          this.initChart(forexData);
-          this.startAutoUpdate();
+          await this.initChart(forexData);
+          this.startSimpleAutoUpdate();
           uni.hideLoading();
           this.loading = false;
         } catch (error) {
-          formatAppLog("error", "at pages/wealth/forex.vue:335", "加载外汇数据失败:", error);
+          formatAppLog("error", "at pages/wealth/forex.vue:334", "加载外汇数据失败:", error);
           uni.hideLoading();
           uni.showToast({ title: "加载失败", icon: "none" });
           this.loading = false;
         }
       },
-      // 启动自动更新
-      startAutoUpdate() {
-        if (this.chartUpdater) {
-          this.chartUpdater.destroy();
+      // 启动简单自动更新
+      startSimpleAutoUpdate() {
+        if (this.updateTimer) {
+          clearInterval(this.updateTimer);
         }
-        this.chartUpdater = createChartUpdater(
-          this.chartInstance,
-          () => getCachedData("forex_rates", getForexRates),
-          "forex",
-          this.updateInterval
-        );
         if (this.autoUpdate) {
-          this.chartUpdater.start();
-          formatAppLog("log", "at pages/wealth/forex.vue:357", "外汇图表自动更新已启动");
+          this.updateTimer = setInterval(() => {
+            this.loadForexData();
+          }, this.updateInterval);
+          formatAppLog("log", "at pages/wealth/forex.vue:351", "外汇数据自动更新已启动");
         }
       },
       // 停止自动更新
       stopAutoUpdate() {
-        if (this.chartUpdater) {
-          this.chartUpdater.stop();
-          formatAppLog("log", "at pages/wealth/forex.vue:365", "外汇图表自动更新已停止");
+        if (this.updateTimer) {
+          clearInterval(this.updateTimer);
+          this.updateTimer = null;
+          formatAppLog("log", "at pages/wealth/forex.vue:360", "外汇数据自动更新已停止");
         }
       },
       // 切换自动更新
       toggleAutoUpdate() {
         this.autoUpdate = !this.autoUpdate;
         if (this.autoUpdate) {
-          this.startAutoUpdate();
+          this.startSimpleAutoUpdate();
           uni.showToast({ title: "自动更新已开启", icon: "success" });
         } else {
           this.stopAutoUpdate();
           uni.showToast({ title: "自动更新已关闭", icon: "none" });
         }
       },
-      initChart(chartConfig) {
+      async initChart(forexData) {
         try {
-          formatAppLog("log", "at pages/wealth/forex.vue:383", "开始渲染外汇图表");
-          const chart = initChart("forexChart", chartConfig, this);
-          if (chart) {
-            formatAppLog("log", "at pages/wealth/forex.vue:389", "外汇图表渲染成功");
-            this.chartInstance = chart;
-          } else {
-            formatAppLog("log", "at pages/wealth/forex.vue:392", "图表渲染失败，使用默认配置");
-            const defaultConfig = createForexChart(this.forexData);
-            this.chartInstance = initChart("forexChart", defaultConfig, this);
-          }
+          formatAppLog("log", "at pages/wealth/forex.vue:378", "🎨 开始渲染外汇图表");
+          await this.$nextTick();
+          await new Promise((resolve) => setTimeout(resolve, 200));
+          const chartData = forexData.majorPairs.map((pair) => parseFloat(pair.price));
+          const labels = forexData.majorPairs.map((pair) => pair.code);
+          drawSimpleLineChart("forexChart", {
+            data: chartData,
+            labels,
+            title: "主要货币对汇率",
+            yAxisLabel: "汇率",
+            colors: ["#FF6B35", "#34C759", "#FF9500", "#007AFF", "#AF52DE", "#FF2D92"]
+          });
+          formatAppLog("log", "at pages/wealth/forex.vue:399", "✅ 外汇图表渲染成功");
         } catch (error) {
-          formatAppLog("error", "at pages/wealth/forex.vue:398", "图表渲染失败:", error);
-          const defaultConfig = createForexChart(this.forexData);
-          this.chartInstance = initChart("forexChart", defaultConfig, this);
+          formatAppLog("error", "at pages/wealth/forex.vue:401", "❌ 外汇图表渲染失败:", error);
+          this.showChartFallback("外汇汇率数据加载失败");
+        }
+      },
+      // 图表降级处理
+      showChartFallback(message) {
+        const chartContainer = document.getElementById("forexChart");
+        if (chartContainer) {
+          chartContainer.innerHTML = `
+          <div style="display: flex; align-items: center; justify-content: center; height: 200px; color: #999; font-size: 14px;">
+            ${message}
+          </div>
+        `;
         }
       },
       onChartTouch(e) {
-        formatAppLog("log", "at pages/wealth/forex.vue:406", "图表触摸事件:", e);
+        formatAppLog("log", "at pages/wealth/forex.vue:420", "图表触摸事件:", e);
       },
       formatTime(timeString) {
         const date = new Date(timeString);
@@ -26604,7 +26844,7 @@ IP：${event.ip}
       }
     }
   };
-  function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$5(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "forex-page" }, [
       vue.createCommentVNode(" 头部导航 "),
       vue.createElementVNode("view", { class: "header" }, [
@@ -26969,7 +27209,5555 @@ IP：${event.ip}
       ])
     ]);
   }
-  const PagesWealthForex = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["render", _sfc_render], ["__scopeId", "data-v-3af541aa"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/forex.vue"]]);
+  const PagesWealthForex = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["render", _sfc_render$5], ["__scopeId", "data-v-3af541aa"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/forex.vue"]]);
+  const _sfc_main$5 = {
+    data() {
+      return {
+        product: {},
+        coverageDetails: [],
+        notices: []
+      };
+    },
+    onLoad(options) {
+      this.loadProductDetail(options);
+    },
+    methods: {
+      goBack() {
+        uni.navigateBack();
+      },
+      onShare() {
+        uni.showToast({
+          title: "分享功能开发中",
+          icon: "none"
+        });
+      },
+      loadProductDetail(options) {
+        const productId = options.id || "health001";
+        const productName = options.name || "重疾保险";
+        this.product = {
+          id: productId,
+          name: productName,
+          type: "健康保险",
+          premium: 3e3,
+          coverage: 2e5,
+          term: "终身",
+          features: ["重疾保障", "轻症赔付", "豁免保费", "现金价值"],
+          riskLevel: "中风险",
+          status: "在售",
+          icon: "🏥"
+        };
+        this.setCoverageDetails();
+        this.setNotices();
+      },
+      setCoverageDetails() {
+        if (this.product.type === "健康保险") {
+          this.coverageDetails = [
+            {
+              name: "重大疾病保障",
+              amount: 2e5,
+              description: "涵盖100种重大疾病，确诊即赔"
+            },
+            {
+              name: "轻症疾病保障",
+              amount: 4e4,
+              description: "涵盖50种轻症疾病，按保额20%赔付"
+            },
+            {
+              name: "身故保障",
+              amount: 2e5,
+              description: "因疾病或意外导致身故，按保额赔付"
+            },
+            {
+              name: "保费豁免",
+              amount: 0,
+              description: "确诊轻症或重疾后，后续保费免交"
+            }
+          ];
+        } else if (this.product.type === "人寿保险") {
+          this.coverageDetails = [
+            {
+              name: "身故保障",
+              amount: this.product.coverage,
+              description: "因疾病或意外导致身故，按保额赔付"
+            },
+            {
+              name: "全残保障",
+              amount: this.product.coverage,
+              description: "因疾病或意外导致全残，按保额赔付"
+            },
+            {
+              name: "现金价值",
+              amount: 0,
+              description: "保单具有现金价值，可申请保单贷款"
+            }
+          ];
+        } else {
+          this.coverageDetails = [
+            {
+              name: "意外身故",
+              amount: this.product.coverage,
+              description: "因意外导致身故，按保额赔付"
+            },
+            {
+              name: "意外伤残",
+              amount: this.product.coverage,
+              description: "因意外导致伤残，按伤残等级赔付"
+            },
+            {
+              name: "意外医疗",
+              amount: 1e4,
+              description: "因意外产生的医疗费用，实报实销"
+            }
+          ];
+        }
+      },
+      setNotices() {
+        this.notices = [
+          "投保年龄：18-60周岁",
+          "缴费方式：年缴/月缴可选",
+          "等待期：90天（意外伤害无等待期）",
+          "健康告知：请如实告知健康状况",
+          "犹豫期：15天，犹豫期内可全额退保",
+          "理赔时效：资料齐全后10个工作日内赔付"
+        ];
+      },
+      onConsult() {
+        uni.navigateTo({
+          url: "/pages/service/chat"
+        });
+      },
+      onPurchase() {
+        uni.showModal({
+          title: "确认投保",
+          content: `确定要购买${this.product.name}吗？
+保费：¥${this.product.premium}/年`,
+          success: (res) => {
+            if (res.confirm) {
+              this.processPurchase();
+            }
+          }
+        });
+      },
+      async processPurchase() {
+        uni.showLoading({ title: "投保处理中..." });
+        try {
+          const userId = getCurrentUserId();
+          const success = purchaseInsuranceProduct(userId, this.product);
+          setTimeout(() => {
+            uni.hideLoading();
+            if (success) {
+              uni.showToast({
+                title: "投保成功",
+                icon: "success"
+              });
+              setTimeout(() => {
+                uni.navigateTo({
+                  url: "/pages/wealth/insurance-success?productName=" + this.product.name
+                });
+              }, 1500);
+            } else {
+              uni.showToast({
+                title: "投保失败，请重试",
+                icon: "none"
+              });
+            }
+          }, 1500);
+        } catch (error) {
+          uni.hideLoading();
+          uni.showToast({
+            title: "投保失败，请重试",
+            icon: "none"
+          });
+          formatAppLog("error", "at pages/wealth/insurance-detail.vue:283", "投保处理失败:", error);
+        }
+      },
+      formatNumber(num) {
+        if (num >= 1e4) {
+          return (num / 1e4).toFixed(1) + "万";
+        }
+        return num.toString();
+      }
+    }
+  };
+  function _sfc_render$4(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("view", { class: "insurance-detail-page" }, [
+      vue.createCommentVNode(" 头部导航 "),
+      vue.createElementVNode("view", { class: "header" }, [
+        vue.createElementVNode("view", { class: "nav-bar" }, [
+          vue.createElementVNode("view", {
+            class: "nav-left",
+            onClick: _cache[0] || (_cache[0] = (...args) => $options.goBack && $options.goBack(...args))
+          }, [
+            vue.createElementVNode("text", { class: "nav-icon" }, "‹")
+          ]),
+          vue.createElementVNode("text", { class: "nav-title" }, "保险详情"),
+          vue.createElementVNode("view", { class: "nav-right" }, [
+            vue.createElementVNode("text", {
+              class: "nav-icon",
+              onClick: _cache[1] || (_cache[1] = (...args) => $options.onShare && $options.onShare(...args))
+            }, "⤴")
+          ])
+        ])
+      ]),
+      vue.createCommentVNode(" 产品基本信息 "),
+      vue.createElementVNode("view", { class: "product-info" }, [
+        vue.createElementVNode("view", { class: "product-header" }, [
+          vue.createElementVNode(
+            "view",
+            { class: "product-icon" },
+            vue.toDisplayString($data.product.icon || "🛡️"),
+            1
+            /* TEXT */
+          ),
+          vue.createElementVNode("view", { class: "product-basic" }, [
+            vue.createElementVNode(
+              "text",
+              { class: "product-name" },
+              vue.toDisplayString($data.product.name),
+              1
+              /* TEXT */
+            ),
+            vue.createElementVNode(
+              "text",
+              { class: "product-type" },
+              vue.toDisplayString($data.product.type),
+              1
+              /* TEXT */
+            ),
+            vue.createElementVNode("view", { class: "product-tags" }, [
+              vue.createElementVNode(
+                "text",
+                {
+                  class: vue.normalizeClass(["tag", "tag-" + $data.product.riskLevel])
+                },
+                vue.toDisplayString($data.product.riskLevel),
+                3
+                /* TEXT, CLASS */
+              ),
+              vue.createElementVNode(
+                "text",
+                { class: "tag tag-status" },
+                vue.toDisplayString($data.product.status),
+                1
+                /* TEXT */
+              )
+            ])
+          ])
+        ]),
+        vue.createElementVNode("view", { class: "product-highlights" }, [
+          vue.createElementVNode("view", { class: "highlight-item" }, [
+            vue.createElementVNode("text", { class: "highlight-label" }, "保费"),
+            vue.createElementVNode(
+              "text",
+              { class: "highlight-value" },
+              "¥" + vue.toDisplayString($data.product.premium) + "/年",
+              1
+              /* TEXT */
+            )
+          ]),
+          vue.createElementVNode("view", { class: "highlight-item" }, [
+            vue.createElementVNode("text", { class: "highlight-label" }, "保额"),
+            vue.createElementVNode(
+              "text",
+              { class: "highlight-value" },
+              "¥" + vue.toDisplayString($options.formatNumber($data.product.coverage)),
+              1
+              /* TEXT */
+            )
+          ]),
+          vue.createElementVNode("view", { class: "highlight-item" }, [
+            vue.createElementVNode("text", { class: "highlight-label" }, "保障期限"),
+            vue.createElementVNode(
+              "text",
+              { class: "highlight-value" },
+              vue.toDisplayString($data.product.term),
+              1
+              /* TEXT */
+            )
+          ])
+        ])
+      ]),
+      vue.createCommentVNode(" 产品特色 "),
+      vue.createElementVNode("view", { class: "product-features" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "产品特色"),
+        vue.createElementVNode("view", { class: "features-list" }, [
+          (vue.openBlock(true), vue.createElementBlock(
+            vue.Fragment,
+            null,
+            vue.renderList($data.product.features, (feature, index) => {
+              return vue.openBlock(), vue.createElementBlock("view", {
+                class: "feature-item",
+                key: index
+              }, [
+                vue.createElementVNode("text", { class: "feature-icon" }, "✓"),
+                vue.createElementVNode(
+                  "text",
+                  { class: "feature-text" },
+                  vue.toDisplayString(feature),
+                  1
+                  /* TEXT */
+                )
+              ]);
+            }),
+            128
+            /* KEYED_FRAGMENT */
+          ))
+        ])
+      ]),
+      vue.createCommentVNode(" 保障内容 "),
+      vue.createElementVNode("view", { class: "coverage-details" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "保障内容"),
+        vue.createElementVNode("view", { class: "coverage-list" }, [
+          (vue.openBlock(true), vue.createElementBlock(
+            vue.Fragment,
+            null,
+            vue.renderList($data.coverageDetails, (coverage, index) => {
+              return vue.openBlock(), vue.createElementBlock("view", {
+                class: "coverage-item",
+                key: index
+              }, [
+                vue.createElementVNode("view", { class: "coverage-header" }, [
+                  vue.createElementVNode(
+                    "text",
+                    { class: "coverage-name" },
+                    vue.toDisplayString(coverage.name),
+                    1
+                    /* TEXT */
+                  ),
+                  vue.createElementVNode(
+                    "text",
+                    { class: "coverage-amount" },
+                    "¥" + vue.toDisplayString($options.formatNumber(coverage.amount)),
+                    1
+                    /* TEXT */
+                  )
+                ]),
+                vue.createElementVNode(
+                  "text",
+                  { class: "coverage-desc" },
+                  vue.toDisplayString(coverage.description),
+                  1
+                  /* TEXT */
+                )
+              ]);
+            }),
+            128
+            /* KEYED_FRAGMENT */
+          ))
+        ])
+      ]),
+      vue.createCommentVNode(" 投保须知 "),
+      vue.createElementVNode("view", { class: "notice-section" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "投保须知"),
+        vue.createElementVNode("view", { class: "notice-list" }, [
+          (vue.openBlock(true), vue.createElementBlock(
+            vue.Fragment,
+            null,
+            vue.renderList($data.notices, (notice, index) => {
+              return vue.openBlock(), vue.createElementBlock("view", {
+                class: "notice-item",
+                key: index
+              }, [
+                vue.createElementVNode(
+                  "text",
+                  { class: "notice-number" },
+                  vue.toDisplayString(index + 1),
+                  1
+                  /* TEXT */
+                ),
+                vue.createElementVNode(
+                  "text",
+                  { class: "notice-text" },
+                  vue.toDisplayString(notice),
+                  1
+                  /* TEXT */
+                )
+              ]);
+            }),
+            128
+            /* KEYED_FRAGMENT */
+          ))
+        ])
+      ]),
+      vue.createCommentVNode(" 风险提示 "),
+      vue.createElementVNode("view", { class: "risk-warning" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "风险提示"),
+        vue.createElementVNode("view", { class: "warning-content" }, [
+          vue.createElementVNode("text", { class: "warning-text" }, "• 保险产品存在投资风险，请根据自身风险承受能力谨慎选择"),
+          vue.createElementVNode("text", { class: "warning-text" }, "• 投保前请仔细阅读保险条款，了解产品特性和风险"),
+          vue.createElementVNode("text", { class: "warning-text" }, "• 保险收益不保证，实际收益可能低于预期"),
+          vue.createElementVNode("text", { class: "warning-text" }, "• 请确保投保信息的真实性和完整性")
+        ])
+      ]),
+      vue.createCommentVNode(" 底部操作栏 "),
+      vue.createElementVNode("view", { class: "bottom-actions" }, [
+        vue.createElementVNode("view", { class: "action-left" }, [
+          vue.createElementVNode("button", {
+            class: "action-btn secondary",
+            onClick: _cache[2] || (_cache[2] = (...args) => $options.onConsult && $options.onConsult(...args))
+          }, "咨询客服")
+        ]),
+        vue.createElementVNode("view", { class: "action-right" }, [
+          vue.createElementVNode("button", {
+            class: "action-btn primary",
+            onClick: _cache[3] || (_cache[3] = (...args) => $options.onPurchase && $options.onPurchase(...args))
+          }, "立即投保")
+        ])
+      ])
+    ]);
+  }
+  const PagesWealthInsuranceDetail = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["render", _sfc_render$4], ["__scopeId", "data-v-cbee9a92"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/insurance-detail.vue"]]);
+  const _sfc_main$4 = {
+    data() {
+      return {
+        productName: "",
+        premium: 0,
+        term: "",
+        policyNumber: "",
+        purchaseTime: ""
+      };
+    },
+    onLoad(options) {
+      this.initData(options);
+    },
+    methods: {
+      initData(options) {
+        this.productName = options.productName || "重疾保险";
+        this.premium = options.premium || 3e3;
+        this.term = options.term || "终身";
+        this.policyNumber = this.generatePolicyNumber();
+        this.purchaseTime = this.formatTime(/* @__PURE__ */ new Date());
+      },
+      generatePolicyNumber() {
+        const timestamp = Date.now();
+        const random = Math.floor(Math.random() * 1e3);
+        return `IC${timestamp}${random.toString().padStart(3, "0")}`;
+      },
+      formatTime(date) {
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, "0");
+        const day = date.getDate().toString().padStart(2, "0");
+        const hour = date.getHours().toString().padStart(2, "0");
+        const minute = date.getMinutes().toString().padStart(2, "0");
+        return `${year}-${month}-${day} ${hour}:${minute}`;
+      },
+      onViewPolicy() {
+        uni.showToast({
+          title: "保单功能开发中",
+          icon: "none"
+        });
+      },
+      onBackHome() {
+        uni.reLaunch({
+          url: "/pages/index/index"
+        });
+      }
+    }
+  };
+  function _sfc_render$3(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("view", { class: "insurance-success-page" }, [
+      vue.createCommentVNode(" 成功状态 "),
+      vue.createElementVNode("view", { class: "success-status" }, [
+        vue.createElementVNode("view", { class: "success-icon" }, "✅"),
+        vue.createElementVNode("text", { class: "success-title" }, "投保成功"),
+        vue.createElementVNode("text", { class: "success-subtitle" }, "您的保险申请已提交，请耐心等待审核")
+      ]),
+      vue.createCommentVNode(" 投保信息 "),
+      vue.createElementVNode("view", { class: "policy-info" }, [
+        vue.createElementVNode("view", { class: "info-header" }, [
+          vue.createElementVNode("text", { class: "info-title" }, "投保信息"),
+          vue.createElementVNode(
+            "text",
+            { class: "policy-number" },
+            "保单号：" + vue.toDisplayString($data.policyNumber),
+            1
+            /* TEXT */
+          )
+        ]),
+        vue.createElementVNode("view", { class: "info-list" }, [
+          vue.createElementVNode("view", { class: "info-item" }, [
+            vue.createElementVNode("text", { class: "info-label" }, "产品名称"),
+            vue.createElementVNode(
+              "text",
+              { class: "info-value" },
+              vue.toDisplayString($data.productName),
+              1
+              /* TEXT */
+            )
+          ]),
+          vue.createElementVNode("view", { class: "info-item" }, [
+            vue.createElementVNode("text", { class: "info-label" }, "投保金额"),
+            vue.createElementVNode(
+              "text",
+              { class: "info-value" },
+              "¥" + vue.toDisplayString($data.premium) + "/年",
+              1
+              /* TEXT */
+            )
+          ]),
+          vue.createElementVNode("view", { class: "info-item" }, [
+            vue.createElementVNode("text", { class: "info-label" }, "保障期限"),
+            vue.createElementVNode(
+              "text",
+              { class: "info-value" },
+              vue.toDisplayString($data.term),
+              1
+              /* TEXT */
+            )
+          ]),
+          vue.createElementVNode("view", { class: "info-item" }, [
+            vue.createElementVNode("text", { class: "info-label" }, "投保时间"),
+            vue.createElementVNode(
+              "text",
+              { class: "info-value" },
+              vue.toDisplayString($data.purchaseTime),
+              1
+              /* TEXT */
+            )
+          ]),
+          vue.createElementVNode("view", { class: "info-item" }, [
+            vue.createElementVNode("text", { class: "info-label" }, "审核状态"),
+            vue.createElementVNode("text", { class: "info-value status-pending" }, "审核中")
+          ])
+        ])
+      ]),
+      vue.createCommentVNode(" 后续步骤 "),
+      vue.createElementVNode("view", { class: "next-steps" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "后续步骤"),
+        vue.createElementVNode("view", { class: "steps-list" }, [
+          vue.createElementVNode("view", { class: "step-item" }, [
+            vue.createElementVNode("view", { class: "step-number" }, "1"),
+            vue.createElementVNode("view", { class: "step-content" }, [
+              vue.createElementVNode("text", { class: "step-title" }, "等待审核"),
+              vue.createElementVNode("text", { class: "step-desc" }, "我们将在1-3个工作日内完成审核")
+            ])
+          ]),
+          vue.createElementVNode("view", { class: "step-item" }, [
+            vue.createElementVNode("view", { class: "step-number" }, "2"),
+            vue.createElementVNode("view", { class: "step-content" }, [
+              vue.createElementVNode("text", { class: "step-title" }, "签署合同"),
+              vue.createElementVNode("text", { class: "step-desc" }, "审核通过后，请签署电子保险合同")
+            ])
+          ]),
+          vue.createElementVNode("view", { class: "step-item" }, [
+            vue.createElementVNode("view", { class: "step-number" }, "3"),
+            vue.createElementVNode("view", { class: "step-content" }, [
+              vue.createElementVNode("text", { class: "step-title" }, "保单生效"),
+              vue.createElementVNode("text", { class: "step-desc" }, "合同签署后，保单正式生效")
+            ])
+          ])
+        ])
+      ]),
+      vue.createCommentVNode(" 重要提醒 "),
+      vue.createElementVNode("view", { class: "important-notice" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "重要提醒"),
+        vue.createElementVNode("view", { class: "notice-content" }, [
+          vue.createElementVNode("text", { class: "notice-text" }, "• 请保持手机畅通，我们会及时通知您审核结果"),
+          vue.createElementVNode("text", { class: "notice-text" }, "• 如有疑问，可随时联系客服：400-123-4567"),
+          vue.createElementVNode("text", { class: "notice-text" }, '• 保单生效后，您可在"我的保单"中查看详情')
+        ])
+      ]),
+      vue.createCommentVNode(" 底部操作 "),
+      vue.createElementVNode("view", { class: "bottom-actions" }, [
+        vue.createElementVNode("button", {
+          class: "action-btn secondary",
+          onClick: _cache[0] || (_cache[0] = (...args) => $options.onViewPolicy && $options.onViewPolicy(...args))
+        }, "查看保单"),
+        vue.createElementVNode("button", {
+          class: "action-btn primary",
+          onClick: _cache[1] || (_cache[1] = (...args) => $options.onBackHome && $options.onBackHome(...args))
+        }, "返回首页")
+      ])
+    ]);
+  }
+  const PagesWealthInsuranceSuccess = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["render", _sfc_render$3], ["__scopeId", "data-v-6999dc6e"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/insurance-success.vue"]]);
+  class ThemeManager {
+    constructor() {
+      this.currentTheme = this.getStoredTheme() || "system";
+      this.themeConfigs = {
+        light: {
+          name: "明亮主题",
+          colors: {
+            primary: "#4caf50",
+            secondary: "#2196f3",
+            background: "#f5f5f5",
+            cardBackground: "#ffffff",
+            textColor: "#333333",
+            textSecondary: "#666666",
+            borderColor: "#e0e0e0",
+            shadowColor: "rgba(0, 0, 0, 0.1)",
+            success: "#4caf50",
+            warning: "#ff9800",
+            error: "#f44336",
+            info: "#2196f3"
+          }
+        },
+        dark: {
+          name: "暗黑主题",
+          colors: {
+            primary: "#4caf50",
+            secondary: "#2196f3",
+            background: "#121212",
+            cardBackground: "#1e1e1e",
+            textColor: "#ffffff",
+            textSecondary: "#b0b0b0",
+            borderColor: "#333333",
+            shadowColor: "rgba(0, 0, 0, 0.3)",
+            success: "#4caf50",
+            warning: "#ff9800",
+            error: "#f44336",
+            info: "#2196f3"
+          }
+        },
+        system: {
+          name: "跟随系统",
+          colors: {}
+        }
+      };
+      this.init();
+    }
+    /**
+     * 初始化主题管理器
+     */
+    init() {
+      this.applyTheme(this.currentTheme);
+      this.setupSystemThemeListener();
+      this.setupStorageListener();
+    }
+    /**
+     * 获取存储的主题
+     */
+    getStoredTheme() {
+      try {
+        if (typeof uni !== "undefined") {
+          return uni.getStorageSync("app_theme");
+        } else if (typeof localStorage !== "undefined") {
+          return localStorage.getItem("app_theme");
+        }
+      } catch (error) {
+        formatAppLog("error", "at utils/theme.js:73", "获取存储主题失败:", error);
+      }
+      return null;
+    }
+    /**
+     * 存储主题设置
+     */
+    setStoredTheme(theme) {
+      try {
+        if (typeof uni !== "undefined") {
+          uni.setStorageSync("app_theme", theme);
+        } else if (typeof localStorage !== "undefined") {
+          localStorage.setItem("app_theme", theme);
+        }
+      } catch (error) {
+        formatAppLog("error", "at utils/theme.js:89", "存储主题失败:", error);
+      }
+    }
+    /**
+     * 获取当前主题
+     */
+    getCurrentTheme() {
+      return this.currentTheme;
+    }
+    /**
+     * 获取主题配置
+     */
+    getThemeConfig(theme) {
+      if (theme === "system") {
+        const systemTheme = this.getSystemTheme();
+        return this.themeConfigs[systemTheme];
+      }
+      return this.themeConfigs[theme] || this.themeConfigs.light;
+    }
+    /**
+     * 获取系统主题
+     */
+    getSystemTheme() {
+      try {
+        if (typeof window !== "undefined" && window.matchMedia) {
+          return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+      } catch (error) {
+        formatAppLog("error", "at utils/theme.js:120", "获取系统主题失败:", error);
+      }
+      return "light";
+    }
+    /**
+     * 应用主题
+     */
+    applyTheme(theme) {
+      try {
+        this.currentTheme = theme;
+        this.setStoredTheme(theme);
+        const actualTheme = theme === "system" ? this.getSystemTheme() : theme;
+        const config = this.getThemeConfig(actualTheme);
+        this.setCSSVariables(config.colors);
+        this.setPageClasses(actualTheme);
+        this.triggerThemeChange(theme, config);
+        formatAppLog("log", "at utils/theme.js:145", "主题已应用:", theme, "实际主题:", actualTheme);
+      } catch (error) {
+        formatAppLog("error", "at utils/theme.js:147", "应用主题失败:", error);
+      }
+    }
+    /**
+     * 设置CSS变量
+     */
+    setCSSVariables(colors) {
+      try {
+        if (typeof document !== "undefined" && document.documentElement) {
+          const root = document.documentElement;
+          Object.entries(colors).forEach(([key, value]) => {
+            root.style.setProperty(`--theme-${key}`, value);
+          });
+          root.style.setProperty("--theme-glass-bg", colors.cardBackground + "80");
+          root.style.setProperty("--theme-glass-border", colors.borderColor + "40");
+          root.style.setProperty("--theme-shadow-sm", `0 2rpx 8rpx ${colors.shadowColor}`);
+          root.style.setProperty("--theme-shadow-md", `0 4rpx 12rpx ${colors.shadowColor}`);
+          root.style.setProperty("--theme-shadow-lg", `0 8rpx 24rpx ${colors.shadowColor}`);
+        }
+      } catch (error) {
+        formatAppLog("error", "at utils/theme.js:171", "设置CSS变量失败:", error);
+      }
+    }
+    /**
+     * 设置页面类名
+     */
+    setPageClasses(theme) {
+      try {
+        if (typeof document !== "undefined" && document.body) {
+          const body = document.body;
+          body.classList.remove("theme-light", "theme-dark", "theme-system");
+          body.classList.add(`theme-${theme}`);
+          if (theme === "dark") {
+            body.classList.add("dark");
+          } else {
+            body.classList.remove("dark");
+          }
+        }
+      } catch (error) {
+        formatAppLog("error", "at utils/theme.js:197", "设置页面类名失败:", error);
+      }
+    }
+    /**
+     * 触发主题变化事件
+     */
+    triggerThemeChange(theme, config) {
+      try {
+        if (typeof window !== "undefined") {
+          const event = new CustomEvent("themeChange", {
+            detail: { theme, config }
+          });
+          window.dispatchEvent(event);
+        }
+        if (typeof getApp !== "undefined") {
+          const app = getApp();
+          if (app && app.globalData) {
+            app.globalData.currentTheme = theme;
+            app.globalData.themeConfig = config;
+          }
+        }
+      } catch (error) {
+        formatAppLog("error", "at utils/theme.js:223", "触发主题变化事件失败:", error);
+      }
+    }
+    /**
+     * 设置系统主题监听器
+     */
+    setupSystemThemeListener() {
+      try {
+        if (typeof window !== "undefined" && window.matchMedia) {
+          const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+          const handleSystemThemeChange = (e) => {
+            if (this.currentTheme === "system") {
+              this.applyTheme("system");
+            }
+          };
+          mediaQuery.addEventListener("change", handleSystemThemeChange);
+        }
+      } catch (error) {
+        formatAppLog("error", "at utils/theme.js:244", "设置系统主题监听器失败:", error);
+      }
+    }
+    /**
+     * 设置存储监听器
+     */
+    setupStorageListener() {
+      try {
+        if (typeof window !== "undefined") {
+          const handleStorageChange = (e) => {
+            if (e.key === "app_theme" && e.newValue !== this.currentTheme) {
+              this.applyTheme(e.newValue);
+            }
+          };
+          window.addEventListener("storage", handleStorageChange);
+        }
+      } catch (error) {
+        formatAppLog("error", "at utils/theme.js:263", "设置存储监听器失败:", error);
+      }
+    }
+    /**
+     * 切换主题
+     */
+    switchTheme(theme) {
+      if (this.themeConfigs[theme]) {
+        this.applyTheme(theme);
+      } else {
+        formatAppLog("error", "at utils/theme.js:274", "未知主题:", theme);
+      }
+    }
+    /**
+     * 获取可用主题列表
+     */
+    getAvailableThemes() {
+      return Object.keys(this.themeConfigs).map((key) => ({
+        key,
+        name: this.themeConfigs[key].name
+      }));
+    }
+  }
+  const themeManager = new ThemeManager();
+  const themeMixin = {
+    data() {
+      return {
+        currentTheme: themeManager.getCurrentTheme(),
+        themeColors: themeManager.getThemeConfig(themeManager.getCurrentTheme()).colors
+      };
+    },
+    onLoad() {
+      this.applyCurrentTheme();
+    },
+    onShow() {
+      this.checkThemeChange();
+    },
+    methods: {
+      /**
+       * 应用当前主题
+       */
+      applyCurrentTheme() {
+        try {
+          const currentTheme = themeManager.getCurrentTheme();
+          const themeConfig = themeManager.getThemeConfig(currentTheme);
+          this.currentTheme = currentTheme;
+          this.themeColors = themeConfig.colors;
+          this.setPageTheme(currentTheme);
+        } catch (error) {
+          formatAppLog("error", "at mixins/theme-mixin.js:41", "应用当前主题失败:", error);
+        }
+      },
+      /**
+       * 检查主题变化
+       */
+      checkThemeChange() {
+        try {
+          const currentTheme = themeManager.getCurrentTheme();
+          if (this.currentTheme !== currentTheme) {
+            this.applyCurrentTheme();
+          }
+        } catch (error) {
+          formatAppLog("error", "at mixins/theme-mixin.js:55", "检查主题变化失败:", error);
+        }
+      },
+      /**
+       * 设置页面主题
+       */
+      setPageTheme(theme) {
+        try {
+          if (typeof document !== "undefined" && document.body) {
+            const body = document.body;
+            body.classList.remove("theme-light", "theme-dark", "theme-system");
+            body.classList.add(`theme-${theme}`);
+            if (theme === "dark") {
+              body.classList.add("dark");
+            } else {
+              body.classList.remove("dark");
+            }
+          }
+          this.currentTheme = theme;
+          const themeConfig = themeManager.getThemeConfig(theme);
+          this.themeColors = themeConfig.colors;
+          formatAppLog("log", "at mixins/theme-mixin.js:87", "页面主题已更新:", theme);
+        } catch (error) {
+          formatAppLog("error", "at mixins/theme-mixin.js:89", "设置页面主题失败:", error);
+        }
+      },
+      /**
+       * 更新主题（供外部调用）
+       */
+      updateTheme(theme) {
+        this.setPageTheme(theme);
+      },
+      /**
+       * 获取主题样式类
+       */
+      getThemeClass(baseClass = "") {
+        return `${baseClass} theme-${this.currentTheme}`.trim();
+      },
+      /**
+       * 获取主题样式
+       */
+      getThemeStyle() {
+        return {
+          "--theme-primary": this.themeColors.primary,
+          "--theme-secondary": this.themeColors.secondary,
+          "--theme-background": this.themeColors.background,
+          "--theme-card-background": this.themeColors.cardBackground,
+          "--theme-text-color": this.themeColors.textColor,
+          "--theme-text-secondary": this.themeColors.textSecondary,
+          "--theme-border-color": this.themeColors.borderColor,
+          "--theme-shadow-color": this.themeColors.shadowColor
+        };
+      }
+    }
+  };
+  const ZHIPU_API_KEY = "e35b142ca46a41c6b9dba61aaeeb7bab.FBAPapUnBuplkDry";
+  const ZHIPU_API_URL = "https://open.bigmodel.cn/api/paas/v4/chat/completions";
+  class ZhipuAIService {
+    constructor() {
+      this.apiKey = ZHIPU_API_KEY;
+      this.baseURL = ZHIPU_API_URL;
+    }
+    /**
+     * 发送请求到智谱AI
+     */
+    async sendRequest(messages, options = {}) {
+      try {
+        const response = await uni.request({
+          url: this.baseURL,
+          method: "POST",
+          header: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${this.apiKey}`
+          },
+          data: {
+            model: "glm-4",
+            messages,
+            temperature: options.temperature || 0.7,
+            max_tokens: options.max_tokens || 2e3,
+            stream: false,
+            ...options
+          }
+        });
+        if (response.statusCode === 200 && response.data.choices && response.data.choices.length > 0) {
+          return {
+            success: true,
+            content: response.data.choices[0].message.content,
+            usage: response.data.usage
+          };
+        } else {
+          throw new Error(`API请求失败: ${response.statusCode}`);
+        }
+      } catch (error) {
+        formatAppLog("error", "at api/zhipu-ai.js:47", "智谱AI API请求错误:", error);
+        return {
+          success: false,
+          error: error.message || "网络请求失败"
+        };
+      }
+    }
+    /**
+     * 分析用户财务状况
+     */
+    async analyzeFinancialStatus(userData) {
+      const prompt = `作为专业的财富管理AI顾问，请分析以下用户数据并提供专业的财务建议：
+
+用户数据：
+- 总资产：¥${userData.totalAssets}
+- 风险偏好：${userData.riskProfile}
+- 年龄：${userData.age || "未知"}
+- 收入：¥${userData.monthlyIncome || "未知"}/月
+- 支出：¥${userData.monthlyExpense || "未知"}/月
+- 投资组合：${JSON.stringify(userData.portfolio)}
+
+请从以下角度进行分析：
+1. 资产配置合理性评估
+2. 风险收益分析
+3. 具体优化建议
+4. 未来规划建议
+
+请用专业但易懂的语言回答，并提供具体的数据支撑。`;
+      const messages = [
+        {
+          role: "system",
+          content: "你是一位专业的财富管理顾问，具有丰富的金融知识和投资经验。请为用户提供专业、实用的财务建议。"
+        },
+        {
+          role: "user",
+          content: prompt
+        }
+      ];
+      return await this.sendRequest(messages, { temperature: 0.3 });
+    }
+    /**
+     * 生成投资建议
+     */
+    async generateInvestmentAdvice(marketData, userProfile) {
+      const prompt = `基于当前市场情况和用户画像，请生成个性化的投资建议：
+
+市场数据：
+${JSON.stringify(marketData, null, 2)}
+
+用户画像：
+- 风险承受能力：${userProfile.riskTolerance}
+- 投资目标：${userProfile.investmentGoals}
+- 投资期限：${userProfile.investmentHorizon}
+- 当前资产：¥${userProfile.currentAssets}
+
+请提供：
+1. 市场趋势分析
+2. 推荐投资策略
+3. 具体产品建议
+4. 风险提示
+5. 预期收益评估`;
+      const messages = [
+        {
+          role: "system",
+          content: "你是一位资深的投资顾问，擅长市场分析和投资策略制定。请基于数据和用户需求提供专业建议。"
+        },
+        {
+          role: "user",
+          content: prompt
+        }
+      ];
+      return await this.sendRequest(messages, { temperature: 0.4 });
+    }
+    /**
+     * 智能对话
+     */
+    async chatWithAI(userMessage, context = {}) {
+      const systemPrompt = `你是智能财富管家AI助手，专门帮助用户进行财富管理和投资决策。
+
+你的能力包括：
+1. 财务分析和建议
+2. 投资组合优化
+3. 风险管理和评估
+4. 市场趋势分析
+5. 理财规划指导
+
+请用专业、友好、易懂的语言与用户交流，并提供实用的建议。如果用户询问超出财务范围的问题，请礼貌地引导回财富管理话题。
+
+当前用户上下文：
+${JSON.stringify(context, null, 2)}`;
+      const messages = [
+        {
+          role: "system",
+          content: systemPrompt
+        },
+        {
+          role: "user",
+          content: userMessage
+        }
+      ];
+      return await this.sendRequest(messages, { temperature: 0.6 });
+    }
+    /**
+     * 生成财务报告
+     */
+    async generateFinancialReport(userData, timeRange = "monthly") {
+      const prompt = `请为用户生成一份详细的财务报告：
+
+用户数据：
+${JSON.stringify(userData, null, 2)}
+
+报告周期：${timeRange}
+
+请包含以下内容：
+1. 财务状况总览
+2. 收入支出分析
+3. 投资表现评估
+4. 风险分析
+5. 改进建议
+6. 未来规划
+
+请用专业的财务报告格式，包含数据分析和具体建议。`;
+      const messages = [
+        {
+          role: "system",
+          content: "你是一位专业的财务分析师，擅长制作详细的财务报告。请提供专业、全面的分析。"
+        },
+        {
+          role: "user",
+          content: prompt
+        }
+      ];
+      return await this.sendRequest(messages, { temperature: 0.2 });
+    }
+    /**
+     * 风险评估
+     */
+    async assessRisk(userData, marketConditions) {
+      const prompt = `请对用户进行全面的风险评估：
+
+用户数据：
+${JSON.stringify(userData, null, 2)}
+
+市场环境：
+${JSON.stringify(marketConditions, null, 2)}
+
+请评估：
+1. 个人风险承受能力
+2. 投资组合风险水平
+3. 市场风险影响
+4. 流动性风险
+5. 信用风险
+6. 风险缓解建议
+
+请提供量化的风险评分（1-10分）和具体建议。`;
+      const messages = [
+        {
+          role: "system",
+          content: "你是一位专业的风险管理专家，擅长识别和评估各种金融风险。请提供准确的风险评估。"
+        },
+        {
+          role: "user",
+          content: prompt
+        }
+      ];
+      return await this.sendRequest(messages, { temperature: 0.3 });
+    }
+  }
+  const zhipuAI = new ZhipuAIService();
+  class ProjectDataAnalyzer {
+    constructor() {
+      this.userData = null;
+      this.projectData = null;
+    }
+    /**
+     * 收集用户所有数据
+     */
+    async collectAllUserData() {
+      try {
+        const userInfo2 = this.getUserInfo();
+        const accountData = this.getAccountData();
+        const transactionData = this.getTransactionData();
+        const investmentData = this.getInvestmentData();
+        const goalData = this.getGoalData();
+        const spendingData = this.getSpendingData();
+        this.userData = {
+          userInfo: userInfo2,
+          accountData,
+          transactionData,
+          investmentData,
+          goalData,
+          spendingData,
+          timestamp: (/* @__PURE__ */ new Date()).toISOString()
+        };
+        return this.userData;
+      } catch (error) {
+        formatAppLog("error", "at utils/project-data-analyzer.js:49", "收集用户数据失败:", error);
+        throw error;
+      }
+    }
+    /**
+     * 获取用户基本信息
+     */
+    getUserInfo() {
+      try {
+        const userInfo2 = uni.getStorageSync("userInfo") || {};
+        const loginInfo = uni.getStorageSync("loginInfo") || {};
+        return {
+          username: userInfo2.username || loginInfo.username || "用户",
+          phone: userInfo2.phone || loginInfo.phone || "",
+          email: userInfo2.email || "",
+          age: userInfo2.age || 30,
+          occupation: userInfo2.occupation || "未知",
+          monthlyIncome: userInfo2.monthlyIncome || 0,
+          monthlyExpense: userInfo2.monthlyExpense || 0,
+          riskProfile: userInfo2.riskProfile || "平衡型",
+          investmentGoals: userInfo2.investmentGoals || ["财富增值"],
+          investmentHorizon: userInfo2.investmentHorizon || "中长期"
+        };
+      } catch (error) {
+        formatAppLog("error", "at utils/project-data-analyzer.js:75", "获取用户信息失败:", error);
+        return {};
+      }
+    }
+    /**
+     * 获取账户数据
+     */
+    getAccountData() {
+      try {
+        const balance = uni.getStorageSync("userBalance") || 0;
+        const accounts = uni.getStorageSync("userAccounts") || [];
+        return {
+          totalBalance: balance,
+          accounts,
+          accountCount: accounts.length,
+          primaryAccount: accounts.find((acc) => acc.isPrimary) || accounts[0] || null
+        };
+      } catch (error) {
+        formatAppLog("error", "at utils/project-data-analyzer.js:95", "获取账户数据失败:", error);
+        return { totalBalance: 0, accounts: [], accountCount: 0 };
+      }
+    }
+    /**
+     * 获取交易记录
+     */
+    getTransactionData() {
+      try {
+        const transactions = uni.getStorageSync("userTransactions") || [];
+        const recentTransactions = transactions.slice(-50);
+        const transactionAnalysis = this.analyzeTransactions(recentTransactions);
+        return {
+          totalTransactions: transactions.length,
+          recentTransactions,
+          analysis: transactionAnalysis
+        };
+      } catch (error) {
+        formatAppLog("error", "at utils/project-data-analyzer.js:117", "获取交易数据失败:", error);
+        return { totalTransactions: 0, recentTransactions: [], analysis: {} };
+      }
+    }
+    /**
+     * 获取投资数据
+     */
+    getInvestmentData() {
+      try {
+        const investments = uni.getStorageSync("userInvestments") || [];
+        const portfolio = uni.getStorageSync("userPortfolio") || {};
+        const performance = this.calculateInvestmentPerformance(investments);
+        return {
+          investments,
+          portfolio,
+          performance,
+          totalInvested: investments.reduce((sum, inv) => sum + (inv.amount || 0), 0),
+          currentValue: investments.reduce((sum, inv) => sum + (inv.currentValue || inv.amount || 0), 0)
+        };
+      } catch (error) {
+        formatAppLog("error", "at utils/project-data-analyzer.js:141", "获取投资数据失败:", error);
+        return { investments: [], portfolio: {}, performance: {}, totalInvested: 0, currentValue: 0 };
+      }
+    }
+    /**
+     * 获取目标数据
+     */
+    getGoalData() {
+      try {
+        const goals = uni.getStorageSync("userGoals") || [];
+        const activeGoals = goals.filter((goal) => goal.status === "active");
+        const completedGoals = goals.filter((goal) => goal.status === "completed");
+        return {
+          totalGoals: goals.length,
+          activeGoals,
+          completedGoals,
+          goalProgress: this.calculateGoalProgress(activeGoals)
+        };
+      } catch (error) {
+        formatAppLog("error", "at utils/project-data-analyzer.js:162", "获取目标数据失败:", error);
+        return { totalGoals: 0, activeGoals: [], completedGoals: [], goalProgress: 0 };
+      }
+    }
+    /**
+     * 获取消费数据
+     */
+    getSpendingData() {
+      try {
+        const spending = uni.getStorageSync("userSpending") || [];
+        const categories = uni.getStorageSync("spendingCategories") || [];
+        const spendingAnalysis = this.analyzeSpending(spending, categories);
+        return {
+          spending,
+          categories,
+          analysis: spendingAnalysis,
+          monthlySpending: this.calculateMonthlySpending(spending)
+        };
+      } catch (error) {
+        formatAppLog("error", "at utils/project-data-analyzer.js:185", "获取消费数据失败:", error);
+        return { spending: [], categories: [], analysis: {}, monthlySpending: 0 };
+      }
+    }
+    /**
+     * 分析交易模式
+     */
+    analyzeTransactions(transactions) {
+      if (!transactions || transactions.length === 0) {
+        return {
+          totalAmount: 0,
+          averageAmount: 0,
+          frequency: 0,
+          topCategories: [],
+          trends: {}
+        };
+      }
+      const totalAmount = transactions.reduce((sum, t) => sum + (t.amount || 0), 0);
+      const averageAmount = totalAmount / transactions.length;
+      const categoryStats = {};
+      transactions.forEach((t) => {
+        const category = t.category || "其他";
+        categoryStats[category] = (categoryStats[category] || 0) + 1;
+      });
+      const topCategories = Object.entries(categoryStats).sort(([, a], [, b]) => b - a).slice(0, 5).map(([category, count]) => ({ category, count }));
+      return {
+        totalAmount,
+        averageAmount,
+        frequency: transactions.length,
+        topCategories,
+        trends: this.calculateTrends(transactions)
+      };
+    }
+    /**
+     * 计算投资表现
+     */
+    calculateInvestmentPerformance(investments) {
+      if (!investments || investments.length === 0) {
+        return {
+          totalReturn: 0,
+          returnRate: 0,
+          bestPerformer: null,
+          worstPerformer: null
+        };
+      }
+      let totalReturn = 0;
+      let totalInvested = 0;
+      let bestReturn = -Infinity;
+      let worstReturn = Infinity;
+      let bestPerformer = null;
+      let worstPerformer = null;
+      investments.forEach((inv) => {
+        const invested = inv.amount || 0;
+        const current = inv.currentValue || inv.amount || 0;
+        const return_ = current - invested;
+        const returnRate = invested > 0 ? return_ / invested * 100 : 0;
+        totalReturn += return_;
+        totalInvested += invested;
+        if (returnRate > bestReturn) {
+          bestReturn = returnRate;
+          bestPerformer = inv;
+        }
+        if (returnRate < worstReturn) {
+          worstReturn = returnRate;
+          worstPerformer = inv;
+        }
+      });
+      const overallReturnRate = totalInvested > 0 ? totalReturn / totalInvested * 100 : 0;
+      return {
+        totalReturn,
+        returnRate: overallReturnRate,
+        bestPerformer: bestPerformer ? { ...bestPerformer, returnRate: bestReturn } : null,
+        worstPerformer: worstPerformer ? { ...worstPerformer, returnRate: worstReturn } : null
+      };
+    }
+    /**
+     * 计算目标进度
+     */
+    calculateGoalProgress(goals) {
+      if (!goals || goals.length === 0)
+        return 0;
+      const totalProgress = goals.reduce((sum, goal) => {
+        return sum + (goal.progress || 0);
+      }, 0);
+      return totalProgress / goals.length;
+    }
+    /**
+     * 分析消费模式
+     */
+    analyzeSpending(spending, categories) {
+      if (!spending || spending.length === 0) {
+        return {
+          totalSpent: 0,
+          averageSpent: 0,
+          topCategories: [],
+          monthlyTrend: []
+        };
+      }
+      const totalSpent = spending.reduce((sum, s) => sum + (s.amount || 0), 0);
+      const averageSpent = totalSpent / spending.length;
+      const categoryStats = {};
+      spending.forEach((s) => {
+        const category = s.category || "其他";
+        categoryStats[category] = (categoryStats[category] || 0) + (s.amount || 0);
+      });
+      const topCategories = Object.entries(categoryStats).sort(([, a], [, b]) => b - a).slice(0, 5).map(([category, amount]) => ({ category, amount }));
+      return {
+        totalSpent,
+        averageSpent,
+        topCategories,
+        monthlyTrend: this.calculateMonthlyTrend(spending)
+      };
+    }
+    /**
+     * 计算月度消费
+     */
+    calculateMonthlySpending(spending) {
+      if (!spending || spending.length === 0)
+        return 0;
+      const currentMonth = (/* @__PURE__ */ new Date()).getMonth();
+      const currentYear = (/* @__PURE__ */ new Date()).getFullYear();
+      const monthlySpending = spending.filter((s) => {
+        const date = new Date(s.date || s.timestamp);
+        return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
+      });
+      return monthlySpending.reduce((sum, s) => sum + (s.amount || 0), 0);
+    }
+    /**
+     * 计算趋势
+     */
+    calculateTrends(data) {
+      if (!data || data.length < 2)
+        return {};
+      const sorted = data.sort((a, b) => new Date(a.date || a.timestamp) - new Date(b.date || b.timestamp));
+      const first = sorted[0];
+      const last = sorted[sorted.length - 1];
+      const firstAmount = first.amount || 0;
+      const lastAmount = last.amount || 0;
+      const trend = lastAmount > firstAmount ? "increasing" : lastAmount < firstAmount ? "decreasing" : "stable";
+      const changeRate = firstAmount > 0 ? (lastAmount - firstAmount) / firstAmount * 100 : 0;
+      return {
+        trend,
+        changeRate,
+        firstValue: firstAmount,
+        lastValue: lastAmount
+      };
+    }
+    /**
+     * 计算月度趋势
+     */
+    calculateMonthlyTrend(spending) {
+      if (!spending || spending.length === 0)
+        return [];
+      const monthlyData = {};
+      spending.forEach((s) => {
+        const date = new Date(s.date || s.timestamp);
+        const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+        monthlyData[monthKey] = (monthlyData[monthKey] || 0) + (s.amount || 0);
+      });
+      return Object.entries(monthlyData).sort(([a], [b]) => a.localeCompare(b)).map(([month, amount]) => ({ month, amount }));
+    }
+    /**
+     * 使用AI分析数据
+     */
+    async analyzeWithAI() {
+      try {
+        if (!this.userData) {
+          await this.collectAllUserData();
+        }
+        const analysis = await zhipuAI.analyzeFinancialStatus({
+          totalAssets: this.userData.accountData.totalBalance,
+          riskProfile: this.userData.userInfo.riskProfile,
+          age: this.userData.userInfo.age,
+          monthlyIncome: this.userData.userInfo.monthlyIncome,
+          monthlyExpense: this.userData.userInfo.monthlyExpense,
+          portfolio: this.userData.investmentData.portfolio,
+          investments: this.userData.investmentData.investments,
+          goals: this.userData.goalData.activeGoals,
+          spending: this.userData.spendingData.analysis
+        });
+        return {
+          success: analysis.success,
+          data: this.userData,
+          aiAnalysis: analysis.content,
+          error: analysis.error
+        };
+      } catch (error) {
+        formatAppLog("error", "at utils/project-data-analyzer.js:414", "AI分析失败:", error);
+        return {
+          success: false,
+          error: error.message
+        };
+      }
+    }
+    /**
+     * 生成智能建议
+     */
+    async generateSmartAdvice() {
+      try {
+        if (!this.userData) {
+          await this.collectAllUserData();
+        }
+        const advice = await zhipuAI.generateInvestmentAdvice(
+          {
+            marketTrend: "stable",
+            interestRate: 3.5,
+            inflation: 2.1
+          },
+          {
+            riskTolerance: this.userData.userInfo.riskProfile,
+            investmentGoals: this.userData.userInfo.investmentGoals,
+            investmentHorizon: this.userData.userInfo.investmentHorizon,
+            currentAssets: this.userData.accountData.totalBalance
+          }
+        );
+        return {
+          success: advice.success,
+          advice: advice.content,
+          error: advice.error
+        };
+      } catch (error) {
+        formatAppLog("error", "at utils/project-data-analyzer.js:451", "生成建议失败:", error);
+        return {
+          success: false,
+          error: error.message
+        };
+      }
+    }
+  }
+  const projectDataAnalyzer = new ProjectDataAnalyzer();
+  class DataPermissionManager {
+    constructor() {
+      this.permissions = {
+        read: {
+          userInfo: false,
+          accountData: false,
+          transactions: false,
+          investments: false,
+          goals: false,
+          spending: false,
+          all: false
+        },
+        write: {
+          updateProfile: false,
+          createGoal: false,
+          updateGoal: false,
+          createInvestment: false,
+          updateInvestment: false,
+          createTransaction: false,
+          all: false
+        },
+        analyze: {
+          financialAnalysis: false,
+          riskAssessment: false,
+          investmentAdvice: false,
+          spendingAnalysis: false,
+          all: false
+        }
+      };
+      this.consentHistory = [];
+      this.loadPermissions();
+    }
+    /**
+     * 加载已保存的权限设置
+     */
+    loadPermissions() {
+      try {
+        const savedPermissions = uni.getStorageSync("ai_data_permissions");
+        if (savedPermissions) {
+          this.permissions = { ...this.permissions, ...savedPermissions };
+        }
+      } catch (error) {
+        formatAppLog("error", "at utils/data-permission-manager.js:50", "加载权限设置失败:", error);
+      }
+    }
+    /**
+     * 保存权限设置
+     */
+    savePermissions() {
+      try {
+        uni.setStorageSync("ai_data_permissions", this.permissions);
+        this.recordConsent("permissions_updated", this.permissions);
+      } catch (error) {
+        formatAppLog("error", "at utils/data-permission-manager.js:62", "保存权限设置失败:", error);
+      }
+    }
+    /**
+     * 记录用户同意操作
+     */
+    recordConsent(action, data) {
+      const consent = {
+        timestamp: (/* @__PURE__ */ new Date()).toISOString(),
+        action,
+        data,
+        ip: "local"
+      };
+      this.consentHistory.push(consent);
+      try {
+        uni.setStorageSync("ai_consent_history", this.consentHistory);
+      } catch (error) {
+        formatAppLog("error", "at utils/data-permission-manager.js:81", "记录同意操作失败:", error);
+      }
+    }
+    /**
+     * 请求数据访问权限
+     */
+    async requestDataAccess(dataType, purpose) {
+      return new Promise((resolve, reject) => {
+        const message = this.getPermissionMessage(dataType, purpose);
+        uni.showModal({
+          title: "数据访问请求",
+          content: message,
+          confirmText: "同意",
+          cancelText: "拒绝",
+          success: (res) => {
+            if (res.confirm) {
+              this.grantPermission(dataType);
+              this.recordConsent("data_access_granted", { dataType, purpose });
+              resolve(true);
+            } else {
+              this.recordConsent("data_access_denied", { dataType, purpose });
+              resolve(false);
+            }
+          },
+          fail: () => {
+            reject(new Error("权限请求失败"));
+          }
+        });
+      });
+    }
+    /**
+     * 获取权限请求消息
+     */
+    getPermissionMessage(dataType, purpose) {
+      const messages = {
+        userInfo: "AI需要访问您的基本信息（年龄、收入、风险偏好等）来提供个性化的理财建议。",
+        accountData: "AI需要访问您的账户数据（余额、账户信息等）来进行财务分析。",
+        transactions: "AI需要访问您的交易记录来分析消费模式和投资行为。",
+        investments: "AI需要访问您的投资数据来评估投资组合表现。",
+        goals: "AI需要访问您的理财目标来制定相应的投资策略。",
+        spending: "AI需要访问您的消费数据来优化支出结构。",
+        all: "AI需要访问您的所有财务数据来提供全面的财富管理服务。"
+      };
+      const purposeMessages = {
+        analysis: "用于财务分析和风险评估",
+        advice: "用于生成个性化投资建议",
+        optimization: "用于优化资产配置",
+        planning: "用于制定理财规划"
+      };
+      return `${messages[dataType] || messages.all}
+
+目的：${purposeMessages[purpose] || purpose}`;
+    }
+    /**
+     * 授予权限
+     */
+    grantPermission(dataType) {
+      if (dataType === "all") {
+        Object.keys(this.permissions.read).forEach((key) => {
+          this.permissions.read[key] = true;
+        });
+        Object.keys(this.permissions.write).forEach((key) => {
+          this.permissions.write[key] = true;
+        });
+        Object.keys(this.permissions.analyze).forEach((key) => {
+          this.permissions.analyze[key] = true;
+        });
+      } else {
+        if (this.permissions.read.hasOwnProperty(dataType)) {
+          this.permissions.read[dataType] = true;
+        }
+        if (this.permissions.write.hasOwnProperty(dataType)) {
+          this.permissions.write[dataType] = true;
+        }
+        if (this.permissions.analyze.hasOwnProperty(dataType)) {
+          this.permissions.analyze[dataType] = true;
+        }
+      }
+      this.savePermissions();
+    }
+    /**
+     * 撤销权限
+     */
+    revokePermission(dataType) {
+      if (dataType === "all") {
+        Object.keys(this.permissions.read).forEach((key) => {
+          this.permissions.read[key] = false;
+        });
+        Object.keys(this.permissions.write).forEach((key) => {
+          this.permissions.write[key] = false;
+        });
+        Object.keys(this.permissions.analyze).forEach((key) => {
+          this.permissions.analyze[key] = false;
+        });
+      } else {
+        if (this.permissions.read.hasOwnProperty(dataType)) {
+          this.permissions.read[dataType] = false;
+        }
+        if (this.permissions.write.hasOwnProperty(dataType)) {
+          this.permissions.write[dataType] = false;
+        }
+        if (this.permissions.analyze.hasOwnProperty(dataType)) {
+          this.permissions.analyze[dataType] = false;
+        }
+      }
+      this.savePermissions();
+      this.recordConsent("permission_revoked", { dataType });
+    }
+    /**
+     * 检查权限
+     */
+    hasPermission(type, dataType) {
+      if (this.permissions[type] && this.permissions[type][dataType]) {
+        return true;
+      }
+      if (this.permissions[type] && this.permissions[type].all) {
+        return true;
+      }
+      return false;
+    }
+    /**
+     * 获取权限状态
+     */
+    getPermissionStatus() {
+      return {
+        permissions: this.permissions,
+        consentHistory: this.consentHistory,
+        lastUpdated: this.consentHistory.length > 0 ? this.consentHistory[this.consentHistory.length - 1].timestamp : null
+      };
+    }
+    /**
+     * 重置所有权限
+     */
+    resetAllPermissions() {
+      this.permissions = {
+        read: {
+          userInfo: false,
+          accountData: false,
+          transactions: false,
+          investments: false,
+          goals: false,
+          spending: false,
+          all: false
+        },
+        write: {
+          updateProfile: false,
+          createGoal: false,
+          updateGoal: false,
+          createInvestment: false,
+          updateInvestment: false,
+          createTransaction: false,
+          all: false
+        },
+        analyze: {
+          financialAnalysis: false,
+          riskAssessment: false,
+          investmentAdvice: false,
+          spendingAnalysis: false,
+          all: false
+        }
+      };
+      this.savePermissions();
+      this.recordConsent("all_permissions_reset", {});
+    }
+    /**
+     * 批量请求权限
+     */
+    async requestMultiplePermissions(permissions) {
+      const results = {};
+      for (const permission of permissions) {
+        const granted = await this.requestDataAccess(permission.dataType, permission.purpose);
+        results[permission.dataType] = granted;
+      }
+      return results;
+    }
+    /**
+     * 获取权限摘要
+     */
+    getPermissionSummary() {
+      const readCount = Object.values(this.permissions.read).filter(Boolean).length;
+      const writeCount = Object.values(this.permissions.write).filter(Boolean).length;
+      const analyzeCount = Object.values(this.permissions.analyze).filter(Boolean).length;
+      return {
+        totalPermissions: readCount + writeCount + analyzeCount,
+        readPermissions: readCount,
+        writePermissions: writeCount,
+        analyzePermissions: analyzeCount,
+        hasFullAccess: this.permissions.read.all && this.permissions.write.all && this.permissions.analyze.all
+      };
+    }
+  }
+  const dataPermissionManager = new DataPermissionManager();
+  class UserDataLoader {
+    constructor() {
+      this.userData = null;
+      this.currentUser = null;
+    }
+    /**
+     * 加载所有用户数据
+     */
+    async loadAllUsers() {
+      try {
+        formatAppLog("log", "at utils/user-data-loader.js:18", "使用模拟用户数据");
+        this.userData = this.getMockUserData();
+        return this.userData;
+      } catch (error) {
+        formatAppLog("error", "at utils/user-data-loader.js:22", "加载用户数据失败:", error);
+        this.userData = [];
+        return [];
+      }
+    }
+    /**
+     * 根据用户ID获取用户数据
+     */
+    async getUserById(userId) {
+      try {
+        if (!this.userData) {
+          await this.loadAllUsers();
+        }
+        const user = this.userData.find((u) => u.id === userId);
+        if (user) {
+          this.currentUser = user;
+          return user;
+        } else {
+          throw new Error(`用户不存在: ${userId}`);
+        }
+      } catch (error) {
+        formatAppLog("error", "at utils/user-data-loader.js:46", "获取用户数据失败:", error);
+        return null;
+      }
+    }
+    /**
+     * 根据手机号获取用户数据
+     */
+    async getUserByPhone(phone) {
+      try {
+        if (!this.userData) {
+          await this.loadAllUsers();
+        }
+        const user = this.userData.find((u) => u.phone === phone);
+        if (user) {
+          this.currentUser = user;
+          return user;
+        } else {
+          throw new Error(`用户不存在: ${phone}`);
+        }
+      } catch (error) {
+        formatAppLog("error", "at utils/user-data-loader.js:68", "获取用户数据失败:", error);
+        return null;
+      }
+    }
+    /**
+     * 根据用户名获取用户数据
+     */
+    async getUserByUsername(username) {
+      try {
+        if (!this.userData) {
+          await this.loadAllUsers();
+        }
+        const user = this.userData.find((u) => u.username === username);
+        if (user) {
+          this.currentUser = user;
+          return user;
+        } else {
+          throw new Error(`用户不存在: ${username}`);
+        }
+      } catch (error) {
+        formatAppLog("error", "at utils/user-data-loader.js:90", "获取用户数据失败:", error);
+        return null;
+      }
+    }
+    /**
+     * 获取当前登录用户数据
+     */
+    getCurrentUser() {
+      if (this.currentUser) {
+        return this.currentUser;
+      }
+      const loginInfo = uni.getStorageSync("loginInfo");
+      if (loginInfo && loginInfo.username) {
+        return this.getUserByUsername(loginInfo.username);
+      }
+      return null;
+    }
+    /**
+     * 获取用户完整财务数据
+     */
+    async getUserFinancialData(userId) {
+      var _a, _b, _c, _d, _e, _f, _g;
+      try {
+        const user = await this.getUserById(userId);
+        if (!user) {
+          throw new Error("用户不存在");
+        }
+        return {
+          // 基本信息
+          userInfo: {
+            id: user.id,
+            username: user.username,
+            phone: user.phone,
+            email: user.email,
+            realName: user.realName,
+            gender: user.gender,
+            birthDate: user.birthDate,
+            address: user.address,
+            avatar: user.avatar,
+            status: user.status,
+            createTime: user.createTime,
+            lastLoginTime: user.lastLoginTime
+          },
+          // 账户数据
+          accountData: {
+            balance: user.balance,
+            bankAccounts: user.bankAccounts || [],
+            totalBalance: user.balance,
+            accountCount: (user.bankAccounts || []).length
+          },
+          // 信用卡数据
+          creditCardData: {
+            cards: user.creditCards || [],
+            totalCreditLimit: (user.creditCards || []).reduce((sum, card) => sum + (card.creditLimit || 0), 0),
+            usedCreditLimit: (user.creditCards || []).reduce((sum, card) => sum + (card.currentBalance || 0), 0),
+            availableCredit: (user.creditCards || []).reduce((sum, card) => sum + (card.availableCredit || 0), 0),
+            cardCount: (user.creditCards || []).length
+          },
+          // 交易数据
+          transactionData: {
+            records: user.transactionRecords || [],
+            totalTransactions: (user.transactionRecords || []).length,
+            totalAmount: (user.transactionRecords || []).reduce((sum, t) => sum + (t.amount || 0), 0),
+            averageAmount: (user.transactionRecords || []).length > 0 ? (user.transactionRecords || []).reduce((sum, t) => sum + (t.amount || 0), 0) / (user.transactionRecords || []).length : 0
+          },
+          // 投资数据
+          investmentData: {
+            portfolio: user.investmentPortfolio || {},
+            wealthProducts: user.wealthProducts || {},
+            totalInvested: (((_a = user.investmentPortfolio) == null ? void 0 : _a.holdings) || []).reduce((sum, inv) => sum + (inv.amount || 0), 0),
+            currentValue: (((_b = user.investmentPortfolio) == null ? void 0 : _b.holdings) || []).reduce((sum, inv) => sum + (inv.currentValue || inv.amount || 0), 0),
+            totalReturn: (((_c = user.investmentPortfolio) == null ? void 0 : _c.holdings) || []).reduce((sum, inv) => sum + ((inv.currentValue || inv.amount || 0) - (inv.amount || 0)), 0),
+            returnRate: ((_d = user.investmentPortfolio) == null ? void 0 : _d.returnRate) || 0
+          },
+          // 转账数据
+          transferData: {
+            records: user.transferRecords || [],
+            frequentContacts: user.frequentContacts || [],
+            totalTransfers: (user.transferRecords || []).length,
+            totalTransferAmount: (user.transferRecords || []).reduce((sum, t) => sum + (t.amount || 0), 0)
+          },
+          // 支付数据
+          paymentData: {
+            records: user.paymentRecords || [],
+            lifeServices: user.lifeServices || {},
+            totalPayments: (user.paymentRecords || []).length,
+            totalPaymentAmount: (user.paymentRecords || []).reduce((sum, p) => sum + (p.amount || 0), 0)
+          },
+          // 安全设置
+          securityData: {
+            settings: user.securitySettings || {},
+            biometricEnabled: ((_e = user.securitySettings) == null ? void 0 : _e.biometricEnabled) || false,
+            twoFactorEnabled: ((_f = user.securitySettings) == null ? void 0 : _f.twoFactorEnabled) || false,
+            transactionLimit: ((_g = user.securitySettings) == null ? void 0 : _g.transactionLimit) || 0
+          },
+          // 时间戳
+          loadedAt: (/* @__PURE__ */ new Date()).toISOString()
+        };
+      } catch (error) {
+        formatAppLog("error", "at utils/user-data-loader.js:203", "获取用户财务数据失败:", error);
+        throw error;
+      }
+    }
+    /**
+     * 更新用户数据
+     */
+    async updateUserData(userId, updateData) {
+      try {
+        if (!this.userData) {
+          await this.loadAllUsers();
+        }
+        const userIndex = this.userData.findIndex((u) => u.id === userId);
+        if (userIndex === -1) {
+          throw new Error("用户不存在");
+        }
+        this.userData[userIndex] = {
+          ...this.userData[userIndex],
+          ...updateData,
+          lastUpdateTime: (/* @__PURE__ */ new Date()).toISOString()
+        };
+        if (this.currentUser && this.currentUser.id === userId) {
+          this.currentUser = this.userData[userIndex];
+        }
+        uni.setStorageSync("userData", this.userData);
+        return this.userData[userIndex];
+      } catch (error) {
+        formatAppLog("error", "at utils/user-data-loader.js:239", "更新用户数据失败:", error);
+        throw error;
+      }
+    }
+    /**
+     * 添加交易记录
+     */
+    async addTransaction(userId, transaction) {
+      try {
+        const user = await this.getUserById(userId);
+        if (!user) {
+          throw new Error("用户不存在");
+        }
+        const newTransaction = {
+          id: Date.now(),
+          ...transaction,
+          timestamp: (/* @__PURE__ */ new Date()).toISOString()
+        };
+        if (!user.transactionRecords) {
+          user.transactionRecords = [];
+        }
+        user.transactionRecords.push(newTransaction);
+        if (transaction.type === "income") {
+          user.balance += transaction.amount;
+        } else if (transaction.type === "expense") {
+          user.balance -= transaction.amount;
+        }
+        await this.updateUserData(userId, user);
+        return newTransaction;
+      } catch (error) {
+        formatAppLog("error", "at utils/user-data-loader.js:277", "添加交易记录失败:", error);
+        throw error;
+      }
+    }
+    /**
+     * 添加投资记录
+     */
+    async addInvestment(userId, investment) {
+      try {
+        const user = await this.getUserById(userId);
+        if (!user) {
+          throw new Error("用户不存在");
+        }
+        const newInvestment = {
+          id: `inv${Date.now()}`,
+          ...investment,
+          purchaseDate: (/* @__PURE__ */ new Date()).toISOString(),
+          status: "持有中",
+          currentValue: investment.amount || 0
+        };
+        if (!user.investmentPortfolio) {
+          user.investmentPortfolio = {
+            totalValue: 0,
+            totalReturn: 0,
+            returnRate: 0,
+            holdings: []
+          };
+        }
+        if (!user.investmentPortfolio.holdings) {
+          user.investmentPortfolio.holdings = [];
+        }
+        user.investmentPortfolio.holdings.push(newInvestment);
+        user.investmentPortfolio.totalValue = user.investmentPortfolio.holdings.reduce((sum, inv) => sum + (inv.currentValue || inv.amount || 0), 0);
+        user.investmentPortfolio.totalReturn = user.investmentPortfolio.holdings.reduce((sum, inv) => sum + ((inv.currentValue || inv.amount || 0) - (inv.amount || 0)), 0);
+        user.investmentPortfolio.returnRate = user.investmentPortfolio.totalValue > 0 ? user.investmentPortfolio.totalReturn / user.investmentPortfolio.totalValue * 100 : 0;
+        await this.updateUserData(userId, user);
+        return newInvestment;
+      } catch (error) {
+        formatAppLog("error", "at utils/user-data-loader.js:324", "添加投资记录失败:", error);
+        throw error;
+      }
+    }
+    /**
+     * 获取模拟用户数据（备用）
+     */
+    getMockUserData() {
+      return [
+        {
+          id: "u001",
+          username: "张小明",
+          phone: "13999999999",
+          password: "abc123",
+          transactionPassword: "654321",
+          balance: 15e4,
+          nickname: "小明",
+          email: "zhangxiaoming@example.com",
+          idCard: "110101199202021456",
+          avatar: "/static/wealth/useravatar.jpg",
+          status: "active",
+          createTime: "2024-01-02T09:15:00.000Z",
+          lastLoginTime: "2024-01-15T14:20:00.000Z",
+          realName: "张小明",
+          gender: "男",
+          birthDate: "1992-02-02",
+          address: "上海市浦东新区陆家嘴环路1000号",
+          avatarUpdateTime: "2024-01-15T14:20:00.000Z",
+          lastUpdateTime: "2024-01-15T14:20:00.000Z",
+          securitySettings: {
+            biometricEnabled: true,
+            smsVerificationEnabled: true,
+            accountLockEnabled: true,
+            twoFactorEnabled: true,
+            securityNotificationsEnabled: true,
+            transactionLimit: 1e5,
+            passwordUpdateTime: "2024-01-10T00:00:00.000Z",
+            transactionPasswordUpdateTime: "2024-01-10T00:00:00.000Z",
+            securityQuestionsSet: true,
+            emergencyContactSet: true,
+            loginDevices: [
+              {
+                id: 1,
+                name: "iPhone 15 Pro",
+                lastLogin: "2024-01-15T14:20:00.000Z",
+                location: "上海市",
+                status: "active",
+                ip: "192.168.1.200",
+                deviceType: "mobile"
+              }
+            ],
+            securityEvents: [
+              {
+                id: 1,
+                type: "login",
+                description: "账户登录",
+                timestamp: "2024-01-15T14:20:00.000Z",
+                location: "上海市",
+                ip: "192.168.1.200",
+                status: "success"
+              }
+            ],
+            securityQuestions: [
+              {
+                question: "您的小学名称是什么？",
+                answer: "实验小学"
+              }
+            ],
+            emergencyContact: {
+              name: "张大明",
+              phone: "13800138000",
+              relationship: "父亲"
+            },
+            twoFactorSecret: "JBSWY3DPEHPK3PXP"
+          },
+          creditCards: [
+            {
+              id: "cc001",
+              cardNumber: "6222 9999 9999 9999",
+              cardType: "白金卡",
+              cardBrand: "银联",
+              creditLimit: 1e5,
+              availableCredit: 85e3,
+              currentBalance: 15e3,
+              minPayment: 1500,
+              statementDate: "20",
+              dueDate: "2024-02-10",
+              lastStatementDate: "2024-01-20",
+              cardStatus: "active",
+              cardHolder: "张小明",
+              expiryDate: "2029-09-30",
+              cvv: "456",
+              annualFee: 500,
+              interestRate: 4e-4,
+              cashAdvanceLimit: 5e4,
+              rewardsPoints: 3200,
+              cardColor: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+              createTime: "2023-01-15T00:00:00.000Z",
+              lastUsedTime: "2024-01-15T14:20:00.000Z",
+              monthlySpending: 8500,
+              transactionCount: 23,
+              topCategory: "餐饮",
+              securityFeatures: {
+                chipEnabled: true,
+                contactlessEnabled: true,
+                onlineShoppingEnabled: true,
+                internationalEnabled: true
+              }
+            }
+          ],
+          transactionRecords: [
+            {
+              id: 1,
+              type: "income",
+              amount: 15e3,
+              description: "工资收入",
+              balance: 15e4,
+              timestamp: "2024-01-15T09:00:00.000Z",
+              icon: "💰",
+              title: "工资收入",
+              time: "09:00"
+            },
+            {
+              id: 2,
+              type: "expense",
+              amount: 2e3,
+              description: "信用卡还款",
+              balance: 148e3,
+              timestamp: "2024-01-12T11:45:00.000Z",
+              icon: "💳",
+              title: "信用卡还款",
+              time: "11:45"
+            }
+          ],
+          wealthProducts: {
+            deposits: {
+              current: 3e4,
+              fixed: 5e4,
+              smart: 2e4
+            },
+            investments: [
+              {
+                id: "inv002",
+                name: "稳健理财B",
+                type: "理财产品",
+                amount: 2e4,
+                rate: 4.5,
+                term: "180天",
+                purchaseDate: "2024-01-05T00:00:00.000Z",
+                maturityDate: "2024-07-05T00:00:00.000Z",
+                status: "持有中"
+              }
+            ]
+          },
+          investmentPortfolio: {
+            totalValue: 1e5,
+            totalReturn: 4500,
+            returnRate: 4.5,
+            holdings: [
+              {
+                id: "inv001",
+                name: "稳健理财A",
+                type: "理财产品",
+                amount: 3e4,
+                rate: 3.8,
+                term: "90天",
+                purchaseDate: "2024-01-01T00:00:00.000Z",
+                maturityDate: "2024-04-01T00:00:00.000Z",
+                status: "持有中",
+                currentValue: 30285
+              },
+              {
+                id: "inv002",
+                name: "稳健理财B",
+                type: "理财产品",
+                amount: 2e4,
+                rate: 4.5,
+                term: "180天",
+                purchaseDate: "2024-01-05T00:00:00.000Z",
+                maturityDate: "2024-07-05T00:00:00.000Z",
+                status: "持有中",
+                currentValue: 20450
+              },
+              {
+                id: "inv003",
+                name: "灵活理财C",
+                type: "货币基金",
+                amount: 5e4,
+                rate: 2.8,
+                term: "开放式",
+                purchaseDate: "2023-12-01T00:00:00.000Z",
+                maturityDate: null,
+                status: "持有中",
+                currentValue: 51140
+              }
+            ]
+          },
+          bankAccounts: [
+            {
+              accountNumber: "6228480012345678901",
+              accountName: "张小明",
+              bankName: "中国农业银行",
+              accountType: "储蓄卡",
+              balance: 15e4,
+              currency: "CNY",
+              status: "active",
+              openDate: "2020-03-15T00:00:00.000Z",
+              branchName: "上海陆家嘴支行"
+            }
+          ],
+          transferRecords: [
+            {
+              id: "t001",
+              type: "outgoing",
+              amount: 5e3,
+              recipient: "李小红",
+              recipientAccount: "6228480012345678903",
+              description: "生活费转账",
+              status: "completed",
+              timestamp: "2024-01-14T10:30:00.000Z",
+              fee: 2.5
+            }
+          ],
+          paymentRecords: [
+            {
+              id: "p001",
+              type: "手机充值",
+              amount: 100,
+              phoneNumber: "13999999999",
+              status: "completed",
+              timestamp: "2024-01-10T14:20:00.000Z",
+              operator: "中国移动"
+            }
+          ]
+        },
+        {
+          id: "u002",
+          username: "李小红",
+          phone: "13777777777",
+          password: "password123",
+          transactionPassword: "789012",
+          balance: 8e4,
+          nickname: "小红",
+          email: "lixiaohong@example.com",
+          idCard: "110101199303031789",
+          avatar: "/static/wealth/useravatar.jpg",
+          status: "active",
+          createTime: "2024-01-03T16:45:00.000Z",
+          lastLoginTime: "2024-01-14T11:10:00.000Z",
+          realName: "李小红",
+          gender: "女",
+          birthDate: "1993-03-03",
+          address: "广州市天河区珠江新城花城大道85号",
+          avatarUpdateTime: "2024-01-14T11:10:00.000Z",
+          lastUpdateTime: "2024-01-14T11:10:00.000Z",
+          securitySettings: {
+            biometricEnabled: false,
+            smsVerificationEnabled: true,
+            accountLockEnabled: false,
+            twoFactorEnabled: false,
+            securityNotificationsEnabled: false,
+            transactionLimit: 2e5,
+            passwordUpdateTime: "2023-12-01T00:00:00.000Z",
+            transactionPasswordUpdateTime: "2023-12-01T00:00:00.000Z",
+            securityQuestionsSet: false,
+            emergencyContactSet: false,
+            loginDevices: [
+              {
+                id: 1,
+                name: "Samsung Galaxy S24",
+                lastLogin: "2024-01-14T11:10:00.000Z",
+                location: "广州市",
+                status: "active",
+                ip: "192.168.1.300",
+                deviceType: "mobile"
+              }
+            ],
+            securityEvents: [
+              {
+                id: 1,
+                type: "login",
+                description: "账户登录",
+                timestamp: "2024-01-14T11:10:00.000Z",
+                location: "广州市",
+                ip: "192.168.1.300",
+                status: "success"
+              }
+            ],
+            securityQuestions: [],
+            emergencyContact: null,
+            twoFactorSecret: null
+          },
+          creditCards: [
+            {
+              cardNumber: "6222 6666 6666 6666",
+              cardType: "钻石卡",
+              cardBrand: "银联",
+              creditLimit: 2e5,
+              availableCredit: 18e4,
+              currentBalance: 2e4,
+              minPayment: 2e3,
+              statementDate: "10",
+              dueDate: "2024-02-01",
+              lastStatementDate: "2024-01-10",
+              cardStatus: "active",
+              cardHolder: "李小红",
+              expiryDate: "2030-03-31",
+              cvv: "321",
+              annualFee: 1e3,
+              interestRate: 3e-4,
+              cashAdvanceLimit: 1e5,
+              rewardsPoints: 6800,
+              cardColor: "#FF69B4"
+            }
+          ],
+          transactionRecords: [
+            {
+              id: 1,
+              type: "income",
+              amount: 12e3,
+              description: "工资收入",
+              balance: 8e4,
+              timestamp: "2024-01-14T09:00:00.000Z",
+              icon: "💰",
+              title: "工资收入",
+              time: "09:00"
+            },
+            {
+              id: 2,
+              type: "expense",
+              amount: 1e3,
+              description: "生活缴费",
+              balance: 79e3,
+              timestamp: "2024-01-11T16:45:00.000Z",
+              icon: "🏠",
+              title: "电费缴费",
+              time: "16:45"
+            }
+          ],
+          wealthProducts: {
+            deposits: {
+              current: 2e4,
+              fixed: 3e4,
+              smart: 15e3
+            },
+            investments: [
+              {
+                id: "inv004",
+                name: "高收益理财C",
+                type: "理财产品",
+                amount: 15e3,
+                rate: 5.2,
+                term: "365天",
+                purchaseDate: "2024-01-01T00:00:00.000Z",
+                maturityDate: "2025-01-01T00:00:00.000Z",
+                status: "持有中"
+              }
+            ]
+          },
+          investmentPortfolio: {
+            totalValue: 65e3,
+            totalReturn: 2800,
+            returnRate: 4.3,
+            holdings: [
+              {
+                id: "inv004",
+                name: "高收益理财C",
+                type: "理财产品",
+                amount: 15e3,
+                rate: 5.2,
+                term: "365天",
+                purchaseDate: "2024-01-01T00:00:00.000Z",
+                maturityDate: "2025-01-01T00:00:00.000Z",
+                status: "持有中",
+                currentValue: 15780
+              }
+            ]
+          },
+          bankAccounts: [
+            {
+              accountNumber: "6228480012345678903",
+              accountName: "李小红",
+              bankName: "中国农业银行",
+              accountType: "储蓄卡",
+              balance: 8e4,
+              currency: "CNY",
+              status: "active",
+              openDate: "2021-05-20T00:00:00.000Z",
+              branchName: "广州珠江新城支行"
+            }
+          ],
+          transferRecords: [
+            {
+              id: "t003",
+              type: "incoming",
+              amount: 5e3,
+              sender: "张小明",
+              senderAccount: "6228480012345678901",
+              description: "生活费转账",
+              status: "completed",
+              timestamp: "2024-01-14T10:30:00.000Z",
+              fee: 0
+            }
+          ],
+          paymentRecords: [
+            {
+              id: "p004",
+              type: "手机充值",
+              amount: 200,
+              phoneNumber: "13777777777",
+              status: "completed",
+              timestamp: "2024-01-05T16:30:00.000Z",
+              operator: "中国联通"
+            }
+          ]
+        }
+      ];
+    }
+    /**
+     * 搜索用户
+     */
+    async searchUsers(keyword) {
+      try {
+        if (!this.userData) {
+          await this.loadAllUsers();
+        }
+        const results = this.userData.filter(
+          (user) => user.username.includes(keyword) || user.phone.includes(keyword) || user.realName.includes(keyword) || user.email.includes(keyword)
+        );
+        return results;
+      } catch (error) {
+        formatAppLog("error", "at utils/user-data-loader.js:762", "搜索用户失败:", error);
+        return [];
+      }
+    }
+    /**
+     * 获取用户统计信息
+     */
+    async getUserStats() {
+      try {
+        if (!this.userData) {
+          await this.loadAllUsers();
+        }
+        const stats = {
+          totalUsers: this.userData.length,
+          activeUsers: this.userData.filter((u) => u.status === "active").length,
+          totalBalance: this.userData.reduce((sum, u) => sum + (u.balance || 0), 0),
+          averageBalance: this.userData.length > 0 ? this.userData.reduce((sum, u) => sum + (u.balance || 0), 0) / this.userData.length : 0,
+          totalInvestments: this.userData.reduce((sum, u) => {
+            var _a;
+            return sum + (((_a = u.investmentPortfolio) == null ? void 0 : _a.totalValue) || 0);
+          }, 0),
+          totalCreditLimit: this.userData.reduce((sum, u) => sum + (u.creditCards || []).reduce((cardSum, card) => cardSum + (card.creditLimit || 0), 0), 0)
+        };
+        return stats;
+      } catch (error) {
+        formatAppLog("error", "at utils/user-data-loader.js:787", "获取用户统计失败:", error);
+        return null;
+      }
+    }
+  }
+  const userDataLoader = new UserDataLoader();
+  class EnhancedDataOperator {
+    constructor() {
+      this.permissionManager = dataPermissionManager;
+    }
+    /**
+     * 智能数据收集 - 获取所有用户数据
+     */
+    async collectAllUserData() {
+      try {
+        if (!this.permissionManager.hasPermission("read", "all")) {
+          const granted = await this.permissionManager.requestDataAccess("all", "analysis");
+          if (!granted) {
+            throw new Error("用户拒绝了数据访问权限");
+          }
+        }
+        const loginInfo = uni.getStorageSync("loginInfo") || {};
+        const currentUserId = loginInfo.userId || "u001";
+        const userFinancialData = await userDataLoader.getUserFinancialData(currentUserId);
+        if (!userFinancialData) {
+          throw new Error("无法加载用户数据");
+        }
+        const allData = {
+          // 从 user.json 获取的真实数据
+          userInfo: userFinancialData.userInfo,
+          accountData: userFinancialData.accountData,
+          creditCardData: userFinancialData.creditCardData,
+          transactionData: userFinancialData.transactionData,
+          investmentData: userFinancialData.investmentData,
+          transferData: userFinancialData.transferData,
+          paymentData: userFinancialData.paymentData,
+          securityData: userFinancialData.securityData,
+          // 补充的本地数据
+          goalData: this.getGoalData(),
+          spendingData: this.getSpendingData(),
+          systemData: this.getSystemData(),
+          // 数据来源标识
+          dataSource: "user.json",
+          userId: currentUserId,
+          // 时间戳
+          collectedAt: (/* @__PURE__ */ new Date()).toISOString()
+        };
+        this.permissionManager.recordConsent("data_collected", {
+          dataTypes: Object.keys(allData),
+          timestamp: allData.collectedAt,
+          userId: currentUserId,
+          dataSource: "user.json"
+        });
+        formatAppLog("log", "at utils/enhanced-data-operator.js:71", "从 user.json 收集用户数据成功:", allData);
+        return allData;
+      } catch (error) {
+        formatAppLog("error", "at utils/enhanced-data-operator.js:74", "收集用户数据失败:", error);
+        throw error;
+      }
+    }
+    /**
+     * 获取用户基本信息
+     */
+    getUserInfo() {
+      const userInfo2 = uni.getStorageSync("userInfo") || {};
+      const loginInfo = uni.getStorageSync("loginInfo") || {};
+      return {
+        username: userInfo2.username || loginInfo.username || "用户",
+        phone: userInfo2.phone || loginInfo.phone || "",
+        email: userInfo2.email || "",
+        age: userInfo2.age || 30,
+        occupation: userInfo2.occupation || "未知",
+        monthlyIncome: userInfo2.monthlyIncome || 0,
+        monthlyExpense: userInfo2.monthlyExpense || 0,
+        riskProfile: userInfo2.riskProfile || "平衡型",
+        investmentGoals: userInfo2.investmentGoals || ["财富增值"],
+        investmentHorizon: userInfo2.investmentHorizon || "中长期",
+        emergencyFund: userInfo2.emergencyFund || 0,
+        debtAmount: userInfo2.debtAmount || 0,
+        creditScore: userInfo2.creditScore || 0
+      };
+    }
+    /**
+     * 获取账户数据
+     */
+    getAccountData() {
+      const balance = uni.getStorageSync("userBalance") || 0;
+      const accounts = uni.getStorageSync("userAccounts") || [];
+      const cards = uni.getStorageSync("userCards") || [];
+      return {
+        totalBalance: balance,
+        accounts,
+        cards,
+        accountCount: accounts.length,
+        cardCount: cards.length,
+        primaryAccount: accounts.find((acc) => acc.isPrimary) || accounts[0] || null,
+        totalCreditLimit: cards.reduce((sum, card) => sum + (card.creditLimit || 0), 0),
+        usedCreditLimit: cards.reduce((sum, card) => sum + (card.usedAmount || 0), 0)
+      };
+    }
+    /**
+     * 获取交易数据
+     */
+    getTransactionData() {
+      const transactions = uni.getStorageSync("userTransactions") || [];
+      const recentTransactions = transactions.slice(-100);
+      return {
+        totalTransactions: transactions.length,
+        recentTransactions,
+        totalAmount: transactions.reduce((sum, t) => sum + (t.amount || 0), 0),
+        averageAmount: transactions.length > 0 ? transactions.reduce((sum, t) => sum + (t.amount || 0), 0) / transactions.length : 0,
+        categories: this.analyzeTransactionCategories(transactions),
+        trends: this.analyzeTransactionTrends(transactions)
+      };
+    }
+    /**
+     * 获取投资数据
+     */
+    getInvestmentData() {
+      const investments = uni.getStorageSync("userInvestments") || [];
+      const portfolio = uni.getStorageSync("userPortfolio") || {};
+      return {
+        investments,
+        portfolio,
+        totalInvested: investments.reduce((sum, inv) => sum + (inv.amount || 0), 0),
+        currentValue: investments.reduce((sum, inv) => sum + (inv.currentValue || inv.amount || 0), 0),
+        totalReturn: investments.reduce((sum, inv) => sum + ((inv.currentValue || inv.amount || 0) - (inv.amount || 0)), 0),
+        returnRate: this.calculateReturnRate(investments),
+        performance: this.calculateInvestmentPerformance(investments)
+      };
+    }
+    /**
+     * 获取目标数据
+     */
+    getGoalData() {
+      const goals = uni.getStorageSync("userGoals") || [];
+      const activeGoals = goals.filter((goal) => goal.status === "active");
+      const completedGoals = goals.filter((goal) => goal.status === "completed");
+      return {
+        totalGoals: goals.length,
+        activeGoals,
+        completedGoals,
+        totalTargetAmount: activeGoals.reduce((sum, goal) => sum + (goal.target || 0), 0),
+        totalSavedAmount: activeGoals.reduce((sum, goal) => sum + (goal.current || 0), 0),
+        averageProgress: this.calculateAverageProgress(activeGoals),
+        goalCategories: this.analyzeGoalCategories(goals)
+      };
+    }
+    /**
+     * 获取消费数据
+     */
+    getSpendingData() {
+      const spending = uni.getStorageSync("userSpending") || [];
+      const categories = uni.getStorageSync("spendingCategories") || [];
+      return {
+        spending,
+        categories,
+        totalSpent: spending.reduce((sum, s) => sum + (s.amount || 0), 0),
+        monthlySpending: this.calculateMonthlySpending(spending),
+        categoryAnalysis: this.analyzeSpendingCategories(spending),
+        trends: this.analyzeSpendingTrends(spending)
+      };
+    }
+    /**
+     * 获取系统数据
+     */
+    getSystemData() {
+      return {
+        appVersion: "1.0.0",
+        platform: uni.getSystemInfoSync().platform,
+        language: uni.getSystemInfoSync().language,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        lastLogin: uni.getStorageSync("lastLogin") || null,
+        sessionDuration: this.calculateSessionDuration(),
+        deviceInfo: uni.getSystemInfoSync()
+      };
+    }
+    /**
+     * AI智能数据操作 - 在用户同意后直接操作数据
+     */
+    async performDataOperation(operation, data) {
+      try {
+        if (!this.permissionManager.hasPermission("write", operation.type)) {
+          const granted = await this.permissionManager.requestDataAccess(operation.dataType, operation.purpose);
+          if (!granted) {
+            throw new Error("用户拒绝了数据操作权限");
+          }
+        }
+        let result;
+        switch (operation.type) {
+          case "updateProfile":
+            result = await this.updateUserProfile(data);
+            break;
+          case "createGoal":
+            result = await this.createGoal(data);
+            break;
+          case "updateGoal":
+            result = await this.updateGoal(data);
+            break;
+          case "createInvestment":
+            result = await this.createInvestment(data);
+            break;
+          case "updateInvestment":
+            result = await this.updateInvestment(data);
+            break;
+          case "createTransaction":
+            result = await this.createTransaction(data);
+            break;
+          default:
+            throw new Error(`不支持的操作类型: ${operation.type}`);
+        }
+        this.permissionManager.recordConsent("data_operation", {
+          operation: operation.type,
+          data,
+          result
+        });
+        return result;
+      } catch (error) {
+        formatAppLog("error", "at utils/enhanced-data-operator.js:255", "数据操作失败:", error);
+        throw error;
+      }
+    }
+    /**
+     * 更新用户资料
+     */
+    async updateUserProfile(profileData) {
+      try {
+        const currentProfile = uni.getStorageSync("userInfo") || {};
+        const updatedProfile = { ...currentProfile, ...profileData };
+        uni.setStorageSync("userInfo", updatedProfile);
+        return {
+          success: true,
+          message: "用户资料更新成功",
+          data: updatedProfile
+        };
+      } catch (error) {
+        throw new Error("更新用户资料失败");
+      }
+    }
+    /**
+     * 创建理财目标
+     */
+    async createGoal(goalData) {
+      try {
+        const goals = uni.getStorageSync("userGoals") || [];
+        const newGoal = {
+          id: Date.now(),
+          ...goalData,
+          status: "active",
+          createdAt: (/* @__PURE__ */ new Date()).toISOString(),
+          progress: 0
+        };
+        goals.push(newGoal);
+        uni.setStorageSync("userGoals", goals);
+        return {
+          success: true,
+          message: "理财目标创建成功",
+          data: newGoal
+        };
+      } catch (error) {
+        throw new Error("创建理财目标失败");
+      }
+    }
+    /**
+     * 更新理财目标
+     */
+    async updateGoal(goalData) {
+      try {
+        const goals = uni.getStorageSync("userGoals") || [];
+        const goalIndex = goals.findIndex((goal) => goal.id === goalData.id);
+        if (goalIndex === -1) {
+          throw new Error("目标不存在");
+        }
+        goals[goalIndex] = { ...goals[goalIndex], ...goalData, updatedAt: (/* @__PURE__ */ new Date()).toISOString() };
+        uni.setStorageSync("userGoals", goals);
+        return {
+          success: true,
+          message: "理财目标更新成功",
+          data: goals[goalIndex]
+        };
+      } catch (error) {
+        throw new Error("更新理财目标失败");
+      }
+    }
+    /**
+     * 创建投资记录
+     */
+    async createInvestment(investmentData) {
+      try {
+        const loginInfo = uni.getStorageSync("loginInfo") || {};
+        const currentUserId = loginInfo.userId || "u001";
+        const newInvestment = await userDataLoader.addInvestment(currentUserId, investmentData);
+        return {
+          success: true,
+          message: "投资记录创建成功",
+          data: newInvestment
+        };
+      } catch (error) {
+        formatAppLog("error", "at utils/enhanced-data-operator.js:350", "创建投资记录失败:", error);
+        throw new Error("创建投资记录失败");
+      }
+    }
+    /**
+     * 更新投资记录
+     */
+    async updateInvestment(investmentData) {
+      try {
+        const investments = uni.getStorageSync("userInvestments") || [];
+        const investmentIndex = investments.findIndex((inv) => inv.id === investmentData.id);
+        if (investmentIndex === -1) {
+          throw new Error("投资记录不存在");
+        }
+        investments[investmentIndex] = { ...investments[investmentIndex], ...investmentData, updatedAt: (/* @__PURE__ */ new Date()).toISOString() };
+        uni.setStorageSync("userInvestments", investments);
+        return {
+          success: true,
+          message: "投资记录更新成功",
+          data: investments[investmentIndex]
+        };
+      } catch (error) {
+        throw new Error("更新投资记录失败");
+      }
+    }
+    /**
+     * 创建交易记录
+     */
+    async createTransaction(transactionData) {
+      try {
+        const loginInfo = uni.getStorageSync("loginInfo") || {};
+        const currentUserId = loginInfo.userId || "u001";
+        const newTransaction = await userDataLoader.addTransaction(currentUserId, transactionData);
+        return {
+          success: true,
+          message: "交易记录创建成功",
+          data: newTransaction
+        };
+      } catch (error) {
+        formatAppLog("error", "at utils/enhanced-data-operator.js:398", "创建交易记录失败:", error);
+        throw new Error("创建交易记录失败");
+      }
+    }
+    /**
+     * AI智能建议执行 - 自动执行AI建议
+     */
+    async executeAISuggestion(suggestion) {
+      try {
+        const aiResponse = await zhipuAI.chatWithAI(
+          `请分析以下建议并提供具体的执行步骤：${JSON.stringify(suggestion)}`,
+          { context: "suggestion_execution" }
+        );
+        if (!aiResponse.success) {
+          throw new Error("AI分析失败");
+        }
+        const executionResult = await this.performSuggestionExecution(suggestion, aiResponse.content);
+        return {
+          success: true,
+          message: "AI建议执行成功",
+          suggestion,
+          aiAnalysis: aiResponse.content,
+          executionResult
+        };
+      } catch (error) {
+        formatAppLog("error", "at utils/enhanced-data-operator.js:429", "执行AI建议失败:", error);
+        throw error;
+      }
+    }
+    /**
+     * 执行建议
+     */
+    async performSuggestionExecution(suggestion, aiAnalysis) {
+      const results = [];
+      if (suggestion.type === "create_goal") {
+        const result = await this.createGoal(suggestion.goalData);
+        results.push(result);
+      } else if (suggestion.type === "update_investment") {
+        const result = await this.updateInvestment(suggestion.investmentData);
+        results.push(result);
+      } else if (suggestion.type === "create_transaction") {
+        const result = await this.createTransaction(suggestion.transactionData);
+        results.push(result);
+      }
+      return results;
+    }
+    // 辅助方法
+    analyzeTransactionCategories(transactions) {
+      const categories = {};
+      transactions.forEach((t) => {
+        const category = t.category || "其他";
+        categories[category] = (categories[category] || 0) + 1;
+      });
+      return categories;
+    }
+    analyzeTransactionTrends(transactions) {
+      return {
+        monthlyTrend: this.calculateMonthlyTrend(transactions),
+        categoryTrend: this.calculateCategoryTrend(transactions)
+      };
+    }
+    calculateReturnRate(investments) {
+      if (investments.length === 0)
+        return 0;
+      const totalInvested = investments.reduce((sum, inv) => sum + (inv.amount || 0), 0);
+      const totalCurrent = investments.reduce((sum, inv) => sum + (inv.currentValue || inv.amount || 0), 0);
+      return totalInvested > 0 ? (totalCurrent - totalInvested) / totalInvested * 100 : 0;
+    }
+    calculateInvestmentPerformance(investments) {
+      return {
+        bestPerformer: this.findBestPerformer(investments),
+        worstPerformer: this.findWorstPerformer(investments),
+        averageReturn: this.calculateAverageReturn(investments)
+      };
+    }
+    calculateAverageProgress(goals) {
+      if (goals.length === 0)
+        return 0;
+      const totalProgress = goals.reduce((sum, goal) => sum + (goal.progress || 0), 0);
+      return totalProgress / goals.length;
+    }
+    analyzeGoalCategories(goals) {
+      const categories = {};
+      goals.forEach((goal) => {
+        const category = goal.category || "其他";
+        categories[category] = (categories[category] || 0) + 1;
+      });
+      return categories;
+    }
+    calculateMonthlySpending(spending) {
+      const currentMonth = (/* @__PURE__ */ new Date()).getMonth();
+      const currentYear = (/* @__PURE__ */ new Date()).getFullYear();
+      return spending.filter((s) => {
+        const date = new Date(s.date || s.timestamp);
+        return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
+      }).reduce((sum, s) => sum + (s.amount || 0), 0);
+    }
+    analyzeSpendingCategories(spending) {
+      const categories = {};
+      spending.forEach((s) => {
+        const category = s.category || "其他";
+        categories[category] = (categories[category] || 0) + (s.amount || 0);
+      });
+      return categories;
+    }
+    analyzeSpendingTrends(spending) {
+      return {
+        monthlyTrend: this.calculateMonthlyTrend(spending),
+        categoryTrend: this.calculateCategoryTrend(spending)
+      };
+    }
+    calculateSessionDuration() {
+      const sessionStart = uni.getStorageSync("sessionStart");
+      if (sessionStart) {
+        return Date.now() - sessionStart;
+      }
+      return 0;
+    }
+    calculateMonthlyTrend(data) {
+      return [];
+    }
+    calculateCategoryTrend(data) {
+      return {};
+    }
+    findBestPerformer(investments) {
+      if (investments.length === 0)
+        return null;
+      return investments.reduce((best, current) => {
+        const currentReturn = (current.currentValue || current.amount || 0) - (current.amount || 0);
+        const bestReturn = (best.currentValue || best.amount || 0) - (best.amount || 0);
+        return currentReturn > bestReturn ? current : best;
+      });
+    }
+    findWorstPerformer(investments) {
+      if (investments.length === 0)
+        return null;
+      return investments.reduce((worst, current) => {
+        const currentReturn = (current.currentValue || current.amount || 0) - (current.amount || 0);
+        const worstReturn = (worst.currentValue || worst.amount || 0) - (worst.amount || 0);
+        return currentReturn < worstReturn ? current : worst;
+      });
+    }
+    calculateAverageReturn(investments) {
+      if (investments.length === 0)
+        return 0;
+      const totalReturn = investments.reduce((sum, inv) => {
+        return sum + ((inv.currentValue || inv.amount || 0) - (inv.amount || 0));
+      }, 0);
+      return totalReturn / investments.length;
+    }
+  }
+  const enhancedDataOperator = new EnhancedDataOperator();
+  class ScrollControl {
+    constructor() {
+      this.isLocked = false;
+      this.originalOverflow = "";
+      this.originalPosition = "";
+      this.originalTop = "";
+    }
+    /**
+     * 锁定页面滚动
+     */
+    lockScroll() {
+      if (this.isLocked)
+        return;
+      try {
+        this.originalTop = window.pageYOffset || document.documentElement.scrollTop;
+        const body = document.body;
+        const html = document.documentElement;
+        this.originalOverflow = body.style.overflow;
+        this.originalPosition = body.style.position;
+        body.style.overflow = "hidden";
+        body.style.position = "fixed";
+        body.style.top = `-${this.originalTop}px`;
+        body.style.width = "100%";
+        if (typeof uni !== "undefined") {
+          uni.pageScrollTo({
+            scrollTop: 0,
+            duration: 0
+          });
+        }
+        this.isLocked = true;
+        formatAppLog("log", "at utils/scroll-control.js:47", "页面滚动已锁定");
+      } catch (error) {
+        formatAppLog("error", "at utils/scroll-control.js:49", "锁定滚动失败:", error);
+      }
+    }
+    /**
+     * 解锁页面滚动
+     */
+    unlockScroll() {
+      if (!this.isLocked)
+        return;
+      try {
+        const body = document.body;
+        body.style.overflow = this.originalOverflow;
+        body.style.position = this.originalPosition;
+        body.style.top = "";
+        body.style.width = "";
+        if (this.originalTop !== "") {
+          window.scrollTo(0, this.originalTop);
+        }
+        this.isLocked = false;
+        formatAppLog("log", "at utils/scroll-control.js:74", "页面滚动已解锁");
+      } catch (error) {
+        formatAppLog("error", "at utils/scroll-control.js:76", "解锁滚动失败:", error);
+      }
+    }
+    /**
+     * 切换滚动锁定状态
+     */
+    toggleScroll() {
+      if (this.isLocked) {
+        this.unlockScroll();
+      } else {
+        this.lockScroll();
+      }
+    }
+    /**
+     * 检查滚动锁定状态
+     */
+    isScrollLocked() {
+      return this.isLocked;
+    }
+    /**
+     * 强制锁定滚动（用于弹窗等场景）
+     */
+    forceLockScroll() {
+      this.lockScroll();
+      try {
+        const body = document.body;
+        body.style.touchAction = "none";
+        body.style.userSelect = "none";
+        body.addEventListener("touchmove", this.preventDefault, { passive: false });
+        body.addEventListener("wheel", this.preventDefault, { passive: false });
+      } catch (error) {
+        formatAppLog("error", "at utils/scroll-control.js:114", "强制锁定滚动失败:", error);
+      }
+    }
+    /**
+     * 强制解锁滚动
+     */
+    forceUnlockScroll() {
+      this.unlockScroll();
+      try {
+        const body = document.body;
+        body.style.touchAction = "";
+        body.style.userSelect = "";
+        body.removeEventListener("touchmove", this.preventDefault);
+        body.removeEventListener("wheel", this.preventDefault);
+      } catch (error) {
+        formatAppLog("error", "at utils/scroll-control.js:133", "强制解锁滚动失败:", error);
+      }
+    }
+    /**
+     * 阻止默认事件
+     */
+    preventDefault(e) {
+      e.preventDefault();
+    }
+    /**
+     * 处理弹窗滚动穿透
+     */
+    handleModalScroll(show, modalElement) {
+      if (show) {
+        this.lockScroll();
+        if (modalElement) {
+          modalElement.style.overflow = "auto";
+          modalElement.style.maxHeight = "100vh";
+        }
+      } else {
+        this.unlockScroll();
+      }
+    }
+    /**
+     * 处理聊天窗口滚动穿透
+     */
+    handleChatScroll(show, chatElement) {
+      if (show) {
+        this.forceLockScroll();
+        if (chatElement) {
+          chatElement.style.overflow = "auto";
+          chatElement.style.maxHeight = "100vh";
+          chatElement.style.position = "fixed";
+          chatElement.style.top = "0";
+          chatElement.style.left = "0";
+          chatElement.style.width = "100%";
+          chatElement.style.height = "100%";
+          chatElement.style.zIndex = "9999";
+        }
+      } else {
+        this.forceUnlockScroll();
+      }
+    }
+    /**
+     * 处理页面切换时的滚动
+     */
+    handlePageScroll(pageName, show) {
+      if (show) {
+        this.lockScroll();
+        formatAppLog("log", "at utils/scroll-control.js:188", `页面 ${pageName} 滚动已锁定`);
+      } else {
+        this.unlockScroll();
+        formatAppLog("log", "at utils/scroll-control.js:191", `页面 ${pageName} 滚动已解锁`);
+      }
+    }
+    /**
+     * 重置滚动控制
+     */
+    reset() {
+      this.forceUnlockScroll();
+      this.isLocked = false;
+      this.originalOverflow = "";
+      this.originalPosition = "";
+      this.originalTop = "";
+    }
+  }
+  const scrollControl = new ScrollControl();
+  const _sfc_main$3 = {
+    name: "AIWealthManager",
+    mixins: [themeMixin],
+    data() {
+      return {
+        showChat: false,
+        inputMessage: "",
+        isLoading: false,
+        aiAnalysis: null,
+        smartAdvice: null,
+        projectData: null,
+        permissionStatus: null,
+        hasFullAccess: false,
+        availableUsers: [],
+        selectedUserId: "u001",
+        currentUserInfo: null,
+        chatMessages: [
+          {
+            type: "ai",
+            content: "您好！我是您的AI财富管家，很高兴为您服务！我可以帮您分析财务状况、提供投资建议、解答理财问题。有什么我可以帮助您的吗？",
+            time: "刚刚"
+          }
+        ],
+        quickQuestions: [
+          "我的财务状况如何？",
+          "有什么投资建议？",
+          "如何优化资产配置？",
+          "帮我分析一下风险"
+        ],
+        userWealth: {
+          totalAssets: 125689.23,
+          changeType: "positive",
+          changePercent: 3.2
+        },
+        wealthBreakdown: [
+          { icon: "💰", label: "活期存款", amount: 32541.78, percent: 26, color: "#4CAF50" },
+          { icon: "🏦", label: "定期存款", amount: 8e4, percent: 64, color: "#2196F3" },
+          { icon: "📈", label: "投资理财", amount: 13147.45, percent: 10, color: "#FF9800" }
+        ],
+        aiAnalysis: [
+          {
+            type: "success",
+            icon: "✅",
+            title: "财务健康度优秀",
+            description: "您的储蓄率达到35%，超出健康标准，建议考虑投资增值",
+            action: "查看投资建议"
+          },
+          {
+            type: "warning",
+            icon: "⚠️",
+            title: "消费结构优化",
+            description: "外卖支出占比25%，建议使用农行生活缴费享满减优惠",
+            action: "立即优化"
+          },
+          {
+            type: "info",
+            icon: "💡",
+            title: "闲置资金发现",
+            description: "发现3笔闲置资金，建议转入农银时时付获得更高收益",
+            action: "查看详情"
+          }
+        ],
+        allocationData: [
+          { name: "现金类", percent: 30, color: "#4CAF50" },
+          { name: "债券类", percent: 40, color: "#2196F3" },
+          { name: "股票类", percent: 20, color: "#FF9800" },
+          { name: "另类投资", percent: 10, color: "#9C27B0" }
+        ],
+        userGoals: [
+          {
+            icon: "🏠",
+            title: "购房首付",
+            target: 5e5,
+            progress: 65,
+            timeline: "2026年8月",
+            color: "#4CAF50"
+          },
+          {
+            icon: "🎓",
+            title: "教育基金",
+            target: 15e4,
+            progress: 40,
+            timeline: "2028年6月",
+            color: "#2196F3"
+          },
+          {
+            icon: "🌴",
+            title: "退休规划",
+            target: 1e6,
+            progress: 25,
+            timeline: "2040年12月",
+            color: "#FF9800"
+          }
+        ],
+        smartSuggestions: [
+          {
+            priority: "high",
+            priorityText: "高优先级",
+            title: "优化资产配置",
+            description: "建议将部分现金转入农银汇理平衡基金，预期年化收益6-8%",
+            benefit: "年化收益提升2-3%"
+          },
+          {
+            priority: "medium",
+            priorityText: "中优先级",
+            title: "增加定投金额",
+            description: "基于您的收入增长，建议将定投金额从2000元提升至3000元",
+            benefit: "目标达成时间提前6个月"
+          },
+          {
+            priority: "low",
+            priorityText: "低优先级",
+            title: "保险配置建议",
+            description: "建议配置重疾险和意外险，完善家庭保障体系",
+            benefit: "风险保障提升80%"
+          }
+        ],
+        assignedAdvisor: {
+          name: "张理财",
+          title: "高级理财顾问",
+          experience: "8年从业经验",
+          rating: 4.8,
+          avatar: "/static/wealth/useravatar.jpg"
+        }
+      };
+    },
+    async onLoad() {
+      scrollControl.lockScroll();
+      await this.loadAvailableUsers();
+      await this.checkPermissions();
+      await this.loadProjectData();
+      await this.generateAIAnalysis();
+    },
+    onUnload() {
+      scrollControl.unlockScroll();
+    },
+    onHide() {
+      scrollControl.unlockScroll();
+    },
+    onShow() {
+      scrollControl.lockScroll();
+    },
+    methods: {
+      goBack() {
+        scrollControl.unlockScroll();
+        uni.navigateBack({
+          delta: 1
+        });
+      },
+      /**
+       * 加载可用用户列表
+       */
+      async loadAvailableUsers() {
+        try {
+          const users2 = await userDataLoader.loadAllUsers();
+          this.availableUsers = users2.map((user) => ({
+            id: user.id,
+            username: user.username,
+            realName: user.realName,
+            phone: user.phone,
+            balance: user.balance,
+            avatar: user.avatar
+          }));
+          if (this.availableUsers.length > 0) {
+            this.selectedUserId = this.availableUsers[0].id;
+            this.currentUserInfo = this.availableUsers[0];
+          }
+          formatAppLog("log", "at pages/wealth/ai-wealth-manager.vue:505", "可用用户列表:", this.availableUsers);
+        } catch (error) {
+          formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:507", "加载用户列表失败:", error);
+          this.availableUsers = [
+            {
+              id: "u001",
+              username: "张小明",
+              realName: "张小明",
+              phone: "13999999999",
+              balance: 15e4,
+              avatar: "/static/wealth/useravatar.jpg"
+            }
+          ];
+          this.selectedUserId = "u001";
+          this.currentUserInfo = this.availableUsers[0];
+        }
+      },
+      /**
+       * 切换用户
+       */
+      async switchUser(userId) {
+        try {
+          this.selectedUserId = userId;
+          this.currentUserInfo = this.availableUsers.find((u) => u.id === userId);
+          uni.setStorageSync("loginInfo", {
+            userId,
+            username: this.currentUserInfo.username
+          });
+          await this.loadProjectData();
+          await this.generateAIAnalysis();
+          uni.showToast({
+            title: `已切换到${this.currentUserInfo.realName}`,
+            icon: "success"
+          });
+        } catch (error) {
+          formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:547", "切换用户失败:", error);
+        }
+      },
+      /**
+       * 显示用户选择器
+       */
+      showUserSelector() {
+        const userList = this.availableUsers.map(
+          (user) => `${user.realName} (${user.username}) - 余额: ¥${user.balance.toLocaleString()}`
+        );
+        uni.showActionSheet({
+          itemList: userList,
+          success: (res) => {
+            const selectedUser = this.availableUsers[res.tapIndex];
+            this.switchUser(selectedUser.id);
+          }
+        });
+      },
+      /**
+       * 检查权限状态
+       */
+      async checkPermissions() {
+        try {
+          this.permissionStatus = dataPermissionManager.getPermissionStatus();
+          this.hasFullAccess = dataPermissionManager.getPermissionSummary().hasFullAccess;
+          formatAppLog("log", "at pages/wealth/ai-wealth-manager.vue:577", "权限状态:", this.permissionStatus);
+        } catch (error) {
+          formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:579", "检查权限失败:", error);
+        }
+      },
+      /**
+       * 请求完整数据访问权限
+       */
+      async requestFullAccess() {
+        try {
+          const granted = await dataPermissionManager.requestDataAccess("all", "analysis");
+          if (granted) {
+            this.hasFullAccess = true;
+            this.permissionStatus = dataPermissionManager.getPermissionStatus();
+            uni.showToast({
+              title: "权限授予成功",
+              icon: "success"
+            });
+            await this.loadProjectData();
+            await this.generateAIAnalysis();
+          } else {
+            uni.showToast({
+              title: "权限被拒绝",
+              icon: "none"
+            });
+          }
+        } catch (error) {
+          formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:608", "请求权限失败:", error);
+          uni.showToast({
+            title: "权限请求失败",
+            icon: "error"
+          });
+        }
+      },
+      /**
+       * 管理数据权限
+       */
+      managePermissions() {
+        uni.showModal({
+          title: "数据权限管理",
+          content: "您希望如何管理AI对您数据的访问权限？",
+          confirmText: "查看权限",
+          cancelText: "重置权限",
+          success: (res) => {
+            if (res.confirm) {
+              this.showPermissionDetails();
+            } else {
+              this.resetPermissions();
+            }
+          }
+        });
+      },
+      /**
+       * 显示权限详情
+       */
+      showPermissionDetails() {
+        const summary = dataPermissionManager.getPermissionSummary();
+        const content = `当前权限状态：
+      
+读取权限：${summary.readPermissions}项
+写入权限：${summary.writePermissions}项
+分析权限：${summary.analyzePermissions}项
+
+${this.hasFullAccess ? "✅ 已授予完整访问权限" : "❌ 未授予完整访问权限"}`;
+        uni.showModal({
+          title: "权限详情",
+          content,
+          showCancel: false
+        });
+      },
+      /**
+       * 重置所有权限
+       */
+      resetPermissions() {
+        uni.showModal({
+          title: "重置权限",
+          content: "确定要重置所有数据访问权限吗？这将撤销AI对您数据的所有访问权限。",
+          success: (res) => {
+            if (res.confirm) {
+              dataPermissionManager.resetAllPermissions();
+              this.hasFullAccess = false;
+              this.permissionStatus = dataPermissionManager.getPermissionStatus();
+              uni.showToast({
+                title: "权限已重置",
+                icon: "success"
+              });
+            }
+          }
+        });
+      },
+      /**
+       * 加载项目数据
+       */
+      async loadProjectData() {
+        try {
+          this.isLoading = true;
+          const data = await enhancedDataOperator.collectAllUserData();
+          this.projectData = data;
+          this.userWealth.totalAssets = data.accountData.totalBalance;
+          this.userWealth.changePercent = data.investmentData.returnRate || 3.2;
+          this.userWealth.changeType = this.userWealth.changePercent >= 0 ? "positive" : "negative";
+          formatAppLog("log", "at pages/wealth/ai-wealth-manager.vue:693", "项目数据加载完成:", data);
+        } catch (error) {
+          formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:695", "加载项目数据失败:", error);
+          this.userWealth.totalAssets = 15e4;
+          this.userWealth.changePercent = 3.2;
+          this.userWealth.changeType = "positive";
+          if (error.message.includes("权限")) {
+            try {
+              await this.requestFullAccess();
+            } catch (permissionError) {
+              formatAppLog("log", "at pages/wealth/ai-wealth-manager.vue:708", "权限请求被拒绝，使用默认数据");
+            }
+          }
+        } finally {
+          this.isLoading = false;
+        }
+      },
+      /**
+       * 生成AI分析
+       */
+      async generateAIAnalysis() {
+        try {
+          this.isLoading = true;
+          const analysis = await projectDataAnalyzer.analyzeWithAI();
+          if (analysis.success) {
+            this.aiAnalysis = analysis.aiAnalysis;
+            formatAppLog("log", "at pages/wealth/ai-wealth-manager.vue:726", "AI分析完成:", analysis.aiAnalysis);
+          } else {
+            formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:728", "AI分析失败:", analysis.error);
+          }
+        } catch (error) {
+          formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:731", "生成AI分析失败:", error);
+        } finally {
+          this.isLoading = false;
+        }
+      },
+      /**
+       * 获取智能建议
+       */
+      async getSmartAdvice() {
+        try {
+          this.isLoading = true;
+          const advice = await projectDataAnalyzer.generateSmartAdvice();
+          if (advice.success) {
+            this.smartAdvice = advice.advice;
+            uni.showModal({
+              title: "智能投资建议",
+              content: advice.advice,
+              showCancel: false
+            });
+          } else {
+            uni.showToast({
+              title: "获取建议失败",
+              icon: "error"
+            });
+          }
+        } catch (error) {
+          formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:759", "获取智能建议失败:", error);
+          uni.showToast({
+            title: "网络错误",
+            icon: "error"
+          });
+        } finally {
+          this.isLoading = false;
+        }
+      },
+      /**
+       * 生成财务报告
+       */
+      async generateFinancialReport() {
+        try {
+          this.isLoading = true;
+          const report = await zhipuAI.generateFinancialReport(this.projectData, "monthly");
+          if (report.success) {
+            uni.showModal({
+              title: "财务分析报告",
+              content: report.content,
+              showCancel: false
+            });
+          } else {
+            uni.showToast({
+              title: "生成报告失败",
+              icon: "error"
+            });
+          }
+        } catch (error) {
+          formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:790", "生成财务报告失败:", error);
+          uni.showToast({
+            title: "网络错误",
+            icon: "error"
+          });
+        } finally {
+          this.isLoading = false;
+        }
+      },
+      /**
+       * 风险评估
+       */
+      async assessRisk() {
+        try {
+          this.isLoading = true;
+          const riskAssessment = await zhipuAI.assessRisk(
+            this.projectData,
+            {
+              marketVolatility: "medium",
+              interestRate: 3.5,
+              inflation: 2.1,
+              economicOutlook: "stable"
+            }
+          );
+          if (riskAssessment.success) {
+            uni.showModal({
+              title: "风险评估报告",
+              content: riskAssessment.content,
+              showCancel: false
+            });
+          } else {
+            uni.showToast({
+              title: "风险评估失败",
+              icon: "error"
+            });
+          }
+        } catch (error) {
+          formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:829", "风险评估失败:", error);
+          uni.showToast({
+            title: "网络错误",
+            icon: "error"
+          });
+        } finally {
+          this.isLoading = false;
+        }
+      },
+      /**
+       * 执行AI建议
+       */
+      async executeAISuggestion(suggestion) {
+        try {
+          this.isLoading = true;
+          const result = await enhancedDataOperator.executeAISuggestion(suggestion);
+          if (result.success) {
+            uni.showModal({
+              title: "AI建议执行成功",
+              content: result.message,
+              showCancel: false
+            });
+            await this.loadProjectData();
+          } else {
+            uni.showToast({
+              title: "执行建议失败",
+              icon: "error"
+            });
+          }
+        } catch (error) {
+          formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:865", "执行AI建议失败:", error);
+          uni.showToast({
+            title: "执行失败",
+            icon: "error"
+          });
+        } finally {
+          this.isLoading = false;
+        }
+      },
+      /**
+       * 智能数据操作
+       */
+      async performDataOperation(operation, data) {
+        try {
+          this.isLoading = true;
+          const result = await enhancedDataOperator.performDataOperation(operation, data);
+          if (result.success) {
+            uni.showToast({
+              title: result.message,
+              icon: "success"
+            });
+            await this.loadProjectData();
+          } else {
+            uni.showToast({
+              title: "操作失败",
+              icon: "error"
+            });
+          }
+        } catch (error) {
+          formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:899", "数据操作失败:", error);
+          uni.showToast({
+            title: "操作失败",
+            icon: "error"
+          });
+        } finally {
+          this.isLoading = false;
+        }
+      },
+      formatNumber(num) {
+        return num.toLocaleString("zh-CN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      },
+      getSegmentStart(index) {
+        let start = 0;
+        for (let i = 0; i < index; i++) {
+          start += this.wealthBreakdown[i].percent;
+        }
+        return start;
+      },
+      toggleChat() {
+        this.showChat = !this.showChat;
+        if (this.showChat) {
+          scrollControl.handleChatScroll(true, this.$refs.chatContainer);
+        } else {
+          scrollControl.handleChatScroll(false, this.$refs.chatContainer);
+        }
+      },
+      closeChat() {
+        this.showChat = false;
+        scrollControl.handleChatScroll(false, this.$refs.chatContainer);
+      },
+      async sendMessage() {
+        if (!this.inputMessage.trim())
+          return;
+        this.chatMessages.push({
+          type: "user",
+          content: this.inputMessage,
+          time: this.getCurrentTime()
+        });
+        const userMessage = this.inputMessage;
+        this.inputMessage = "";
+        try {
+          const response = await zhipuAI.chatWithAI(userMessage, {
+            userData: this.projectData,
+            currentWealth: this.userWealth,
+            context: "wealth_management"
+          });
+          if (response.success) {
+            this.chatMessages.push({
+              type: "ai",
+              content: response.content,
+              time: this.getCurrentTime()
+            });
+          } else {
+            const fallbackResponse = this.generateAIResponse(userMessage);
+            this.chatMessages.push({
+              type: "ai",
+              content: fallbackResponse,
+              time: this.getCurrentTime()
+            });
+          }
+        } catch (error) {
+          formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:970", "AI对话失败:", error);
+          const fallbackResponse = this.generateAIResponse(userMessage);
+          this.chatMessages.push({
+            type: "ai",
+            content: fallbackResponse,
+            time: this.getCurrentTime()
+          });
+        }
+        this.scrollToBottom();
+      },
+      sendQuickQuestion(question) {
+        this.inputMessage = question;
+        this.sendMessage();
+      },
+      generateAIResponse(userMessage) {
+        const responses = {
+          "我的财务状况如何": "根据您的数据，您的财务状况整体良好。总资产125,689元，储蓄率达到35%，超出健康标准。建议适当增加投资比例以提升收益。",
+          "有什么投资建议": "基于您的风险偏好，我建议：1. 增加债券基金配置至40%；2. 考虑定投股票基金；3. 配置部分黄金作为避险资产。",
+          "如何优化资产配置": "当前现金配置偏高，建议：1. 减少5%现金配置；2. 增加债券类产品；3. 保持股票类配置不变。",
+          "帮我分析一下风险": "您的风险等级为中等，适合平衡型配置。建议定期评估风险承受能力，根据市场变化调整配置比例。"
+        };
+        for (const [key, response] of Object.entries(responses)) {
+          if (userMessage.includes(key)) {
+            return response;
+          }
+        }
+        return "感谢您的问题！作为您的AI财富管家，我可以帮您分析财务状况、提供投资建议、制定理财计划。请告诉我您具体想了解什么？";
+      },
+      getCurrentTime() {
+        const now = /* @__PURE__ */ new Date();
+        return `${now.getHours().toString().padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}`;
+      },
+      scrollToBottom() {
+        this.$nextTick(() => {
+          const chatMessages = this.$refs.chatMessages;
+          if (chatMessages) {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+          }
+        });
+      },
+      handleAnalysisAction(analysis) {
+        uni.showModal({
+          title: analysis.title,
+          content: analysis.description,
+          success: (res) => {
+            if (res.confirm) {
+              uni.showToast({
+                title: "操作已执行",
+                icon: "success"
+              });
+            }
+          }
+        });
+      },
+      viewGoalDetail(goal) {
+        uni.showModal({
+          title: goal.title,
+          content: `目标金额：¥${this.formatNumber(goal.target)}
+完成进度：${goal.progress}%
+时间期限：${goal.timeline}`,
+          showCancel: false
+        });
+      },
+      addNewGoal() {
+        uni.showToast({
+          title: "功能开发中",
+          icon: "none"
+        });
+      },
+      viewAllGoals() {
+        uni.navigateTo({
+          url: "/pages/wealth/goal-management"
+        });
+      },
+      applySuggestion(suggestion) {
+        uni.showModal({
+          title: suggestion.title,
+          content: suggestion.description,
+          success: (res) => {
+            if (res.confirm) {
+              uni.showToast({
+                title: "建议已应用",
+                icon: "success"
+              });
+            }
+          }
+        });
+      },
+      showAllocationDetail() {
+        uni.navigateTo({
+          url: "/pages/wealth/asset-allocation-detail"
+        });
+      },
+      autoRebalance() {
+        uni.showModal({
+          title: "一键调仓",
+          content: "系统将根据您的风险偏好自动调整资产配置，是否继续？",
+          success: (res) => {
+            if (res.confirm) {
+              uni.showToast({
+                title: "调仓指令已发送",
+                icon: "success"
+              });
+            }
+          }
+        });
+      },
+      addNewGoal() {
+        uni.navigateTo({
+          url: "/pages/wealth/goal-management"
+        });
+      },
+      viewAllGoals() {
+        uni.navigateTo({
+          url: "/pages/wealth/goal-list"
+        });
+      },
+      applySuggestion(suggestion) {
+        uni.showModal({
+          title: "执行建议",
+          content: suggestion.description,
+          success: (res) => {
+            if (res.confirm) {
+              uni.showToast({
+                title: "建议已执行",
+                icon: "success"
+              });
+            }
+          }
+        });
+      },
+      contactAdvisor() {
+        uni.navigateTo({
+          url: "/pages/wealth/advisor-chat"
+        });
+      },
+      scheduleMeeting() {
+        uni.navigateTo({
+          url: "/pages/wealth/meeting-schedule"
+        });
+      }
+    }
+  };
+  function _sfc_render$2(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock(
+      "view",
+      {
+        class: vue.normalizeClass(["ai-wealth-manager", _ctx.getThemeClass()]),
+        style: vue.normalizeStyle(_ctx.getThemeStyle())
+      },
+      [
+        vue.createCommentVNode(" 顶部背景 "),
+        vue.createElementVNode("view", { class: "header-bg" }),
+        vue.createCommentVNode(" 顶部导航栏 "),
+        vue.createElementVNode("view", { class: "header-section" }, [
+          vue.createElementVNode("view", { class: "header-content" }, [
+            vue.createElementVNode("view", { class: "header-left" }, [
+              vue.createElementVNode("button", {
+                class: "back-btn",
+                onClick: _cache[0] || (_cache[0] = (...args) => $options.goBack && $options.goBack(...args))
+              }, [
+                vue.createElementVNode("text", { class: "back-icon" }, "←")
+              ]),
+              vue.createElementVNode("view", { class: "ai-avatar-container" }, [
+                vue.createElementVNode("image", {
+                  class: "ai-avatar",
+                  src: _imports_0,
+                  mode: "aspectFill"
+                }),
+                vue.createElementVNode("view", { class: "ai-status-dot" })
+              ]),
+              vue.createElementVNode("view", { class: "header-info" }, [
+                vue.createElementVNode("text", { class: "header-title" }, "智能财富管家"),
+                vue.createElementVNode("text", { class: "header-subtitle" }, "AI Wealth Manager")
+              ])
+            ]),
+            vue.createElementVNode("view", { class: "header-right" }, [
+              vue.createElementVNode("button", {
+                class: "chat-btn",
+                onClick: _cache[1] || (_cache[1] = (...args) => $options.toggleChat && $options.toggleChat(...args))
+              }, [
+                vue.createElementVNode("text", { class: "chat-icon" }, "💬")
+              ])
+            ])
+          ])
+        ]),
+        vue.createCommentVNode(" 财富概览卡片 "),
+        vue.createElementVNode("view", { class: "wealth-overview-card" }, [
+          vue.createElementVNode("view", { class: "wealth-header" }, [
+            vue.createElementVNode("view", { class: "wealth-info" }, [
+              vue.createElementVNode("text", { class: "wealth-label" }, "总资产"),
+              vue.createElementVNode(
+                "text",
+                { class: "wealth-amount" },
+                "¥" + vue.toDisplayString($options.formatNumber($data.userWealth.totalAssets)),
+                1
+                /* TEXT */
+              ),
+              vue.createElementVNode(
+                "view",
+                {
+                  class: vue.normalizeClass(["wealth-change", $data.userWealth.changeType])
+                },
+                [
+                  vue.createElementVNode(
+                    "text",
+                    { class: "change-icon" },
+                    vue.toDisplayString($data.userWealth.changeType === "positive" ? "↗" : "↘"),
+                    1
+                    /* TEXT */
+                  ),
+                  vue.createElementVNode(
+                    "text",
+                    { class: "change-text" },
+                    vue.toDisplayString($data.userWealth.changeType === "positive" ? "+" : "") + vue.toDisplayString($data.userWealth.changePercent) + "%",
+                    1
+                    /* TEXT */
+                  )
+                ],
+                2
+                /* CLASS */
+              )
+            ]),
+            vue.createElementVNode("view", { class: "wealth-chart" }, [
+              vue.createElementVNode("view", { class: "chart-circle" }, [
+                (vue.openBlock(true), vue.createElementBlock(
+                  vue.Fragment,
+                  null,
+                  vue.renderList($data.wealthBreakdown, (item, index) => {
+                    return vue.openBlock(), vue.createElementBlock(
+                      "view",
+                      {
+                        class: "chart-segment",
+                        key: index,
+                        style: vue.normalizeStyle({
+                          "--segment-color": item.color,
+                          "--segment-percent": item.percent,
+                          "--segment-start": $options.getSegmentStart(index)
+                        })
+                      },
+                      null,
+                      4
+                      /* STYLE */
+                    );
+                  }),
+                  128
+                  /* KEYED_FRAGMENT */
+                ))
+              ]),
+              vue.createElementVNode("view", { class: "chart-center" }, [
+                vue.createElementVNode("text", { class: "chart-total" }, "总资产"),
+                vue.createElementVNode(
+                  "text",
+                  { class: "chart-amount" },
+                  "¥" + vue.toDisplayString($options.formatNumber($data.userWealth.totalAssets)),
+                  1
+                  /* TEXT */
+                )
+              ])
+            ])
+          ]),
+          vue.createElementVNode("view", { class: "wealth-breakdown" }, [
+            (vue.openBlock(true), vue.createElementBlock(
+              vue.Fragment,
+              null,
+              vue.renderList($data.wealthBreakdown, (item, index) => {
+                return vue.openBlock(), vue.createElementBlock("view", {
+                  class: "breakdown-item",
+                  key: index
+                }, [
+                  vue.createElementVNode(
+                    "view",
+                    {
+                      class: "item-icon",
+                      style: vue.normalizeStyle({ backgroundColor: item.color })
+                    },
+                    [
+                      vue.createElementVNode(
+                        "text",
+                        { class: "icon" },
+                        vue.toDisplayString(item.icon),
+                        1
+                        /* TEXT */
+                      )
+                    ],
+                    4
+                    /* STYLE */
+                  ),
+                  vue.createElementVNode("view", { class: "item-content" }, [
+                    vue.createElementVNode(
+                      "text",
+                      { class: "item-label" },
+                      vue.toDisplayString(item.label),
+                      1
+                      /* TEXT */
+                    ),
+                    vue.createElementVNode(
+                      "text",
+                      { class: "item-amount" },
+                      "¥" + vue.toDisplayString($options.formatNumber(item.amount)),
+                      1
+                      /* TEXT */
+                    )
+                  ]),
+                  vue.createElementVNode(
+                    "text",
+                    { class: "item-percent" },
+                    vue.toDisplayString(item.percent) + "%",
+                    1
+                    /* TEXT */
+                  )
+                ]);
+              }),
+              128
+              /* KEYED_FRAGMENT */
+            ))
+          ])
+        ]),
+        vue.createCommentVNode(" AI智能分析 "),
+        vue.createElementVNode("view", { class: "ai-analysis-section" }, [
+          vue.createElementVNode("view", { class: "ai-header" }, [
+            vue.createElementVNode("view", { class: "ai-title-container" }, [
+              vue.createElementVNode("view", { class: "ai-icon" }, "🤖"),
+              vue.createElementVNode("view", { class: "ai-title-info" }, [
+                vue.createElementVNode("text", { class: "ai-title" }, "AI智能分析"),
+                vue.createElementVNode("text", { class: "ai-subtitle" }, "基于您的数据提供专业建议")
+              ])
+            ]),
+            vue.createElementVNode(
+              "view",
+              {
+                class: vue.normalizeClass(["ai-status", { active: !$data.isLoading }])
+              },
+              [
+                vue.createElementVNode("view", { class: "status-dot" }),
+                vue.createElementVNode(
+                  "text",
+                  { class: "status-text" },
+                  vue.toDisplayString($data.isLoading ? "分析中" : $data.hasFullAccess ? "已授权" : "未授权"),
+                  1
+                  /* TEXT */
+                )
+              ],
+              2
+              /* CLASS */
+            ),
+            vue.createCommentVNode(" 用户选择器 "),
+            $data.currentUserInfo ? (vue.openBlock(), vue.createElementBlock("view", {
+              key: 0,
+              class: "user-selector",
+              onClick: _cache[2] || (_cache[2] = (...args) => $options.showUserSelector && $options.showUserSelector(...args))
+            }, [
+              vue.createElementVNode("view", { class: "user-avatar" }, [
+                vue.createElementVNode("image", {
+                  src: $data.currentUserInfo.avatar,
+                  mode: "aspectFill"
+                }, null, 8, ["src"])
+              ]),
+              vue.createElementVNode("view", { class: "user-info" }, [
+                vue.createElementVNode(
+                  "text",
+                  { class: "user-name" },
+                  vue.toDisplayString($data.currentUserInfo.realName),
+                  1
+                  /* TEXT */
+                ),
+                vue.createElementVNode(
+                  "text",
+                  { class: "user-balance" },
+                  "余额: ¥" + vue.toDisplayString($data.currentUserInfo.balance.toLocaleString()),
+                  1
+                  /* TEXT */
+                )
+              ]),
+              vue.createElementVNode("view", { class: "user-arrow" }, [
+                vue.createElementVNode("text", { class: "arrow" }, "▼")
+              ])
+            ])) : vue.createCommentVNode("v-if", true)
+          ]),
+          vue.createElementVNode("view", { class: "ai-features" }, [
+            vue.createElementVNode(
+              "view",
+              {
+                class: vue.normalizeClass(["feature-card primary", { disabled: $data.isLoading }]),
+                onClick: _cache[3] || (_cache[3] = (...args) => $options.getSmartAdvice && $options.getSmartAdvice(...args))
+              },
+              [
+                vue.createElementVNode("view", { class: "feature-icon" }, [
+                  vue.createElementVNode("text", { class: "icon" }, "💡")
+                ]),
+                vue.createElementVNode("view", { class: "feature-content" }, [
+                  vue.createElementVNode("text", { class: "feature-title" }, "智能建议"),
+                  vue.createElementVNode("text", { class: "feature-desc" }, "获取个性化投资建议")
+                ]),
+                vue.createElementVNode("view", { class: "feature-arrow" }, [
+                  vue.createElementVNode("text", { class: "arrow" }, "→")
+                ])
+              ],
+              2
+              /* CLASS */
+            ),
+            vue.createElementVNode(
+              "view",
+              {
+                class: vue.normalizeClass(["feature-card", { disabled: $data.isLoading }]),
+                onClick: _cache[4] || (_cache[4] = (...args) => $options.generateFinancialReport && $options.generateFinancialReport(...args))
+              },
+              [
+                vue.createElementVNode("view", { class: "feature-icon" }, [
+                  vue.createElementVNode("text", { class: "icon" }, "📊")
+                ]),
+                vue.createElementVNode("view", { class: "feature-content" }, [
+                  vue.createElementVNode("text", { class: "feature-title" }, "财务报告"),
+                  vue.createElementVNode("text", { class: "feature-desc" }, "生成详细分析报告")
+                ]),
+                vue.createElementVNode("view", { class: "feature-arrow" }, [
+                  vue.createElementVNode("text", { class: "arrow" }, "→")
+                ])
+              ],
+              2
+              /* CLASS */
+            ),
+            vue.createElementVNode(
+              "view",
+              {
+                class: vue.normalizeClass(["feature-card", { disabled: $data.isLoading }]),
+                onClick: _cache[5] || (_cache[5] = (...args) => $options.assessRisk && $options.assessRisk(...args))
+              },
+              [
+                vue.createElementVNode("view", { class: "feature-icon" }, [
+                  vue.createElementVNode("text", { class: "icon" }, "🛡️")
+                ]),
+                vue.createElementVNode("view", { class: "feature-content" }, [
+                  vue.createElementVNode("text", { class: "feature-title" }, "风险评估"),
+                  vue.createElementVNode("text", { class: "feature-desc" }, "全面风险分析评估")
+                ]),
+                vue.createElementVNode("view", { class: "feature-arrow" }, [
+                  vue.createElementVNode("text", { class: "arrow" }, "→")
+                ])
+              ],
+              2
+              /* CLASS */
+            )
+          ]),
+          vue.createCommentVNode(" 权限管理 "),
+          !$data.hasFullAccess ? (vue.openBlock(), vue.createElementBlock("view", {
+            key: 0,
+            class: "permission-section"
+          }, [
+            vue.createElementVNode("view", { class: "permission-card" }, [
+              vue.createElementVNode("view", { class: "permission-icon" }, "🔐"),
+              vue.createElementVNode("view", { class: "permission-content" }, [
+                vue.createElementVNode("text", { class: "permission-title" }, "数据访问权限"),
+                vue.createElementVNode("text", { class: "permission-desc" }, "授予AI完整的数据访问权限以获得更好的服务体验")
+              ]),
+              vue.createElementVNode("button", {
+                class: "permission-btn",
+                onClick: _cache[6] || (_cache[6] = (...args) => $options.requestFullAccess && $options.requestFullAccess(...args)),
+                disabled: $data.isLoading
+              }, [
+                vue.createElementVNode("text", { class: "btn-text" }, "授予权限")
+              ], 8, ["disabled"])
+            ])
+          ])) : vue.createCommentVNode("v-if", true),
+          vue.createCommentVNode(" 权限管理按钮 "),
+          $data.hasFullAccess ? (vue.openBlock(), vue.createElementBlock("view", {
+            key: 1,
+            class: "permission-actions"
+          }, [
+            vue.createElementVNode("button", {
+              class: "permission-action-btn",
+              onClick: _cache[7] || (_cache[7] = (...args) => $options.managePermissions && $options.managePermissions(...args))
+            }, [
+              vue.createElementVNode("text", { class: "btn-icon" }, "⚙️"),
+              vue.createElementVNode("text", { class: "btn-text" }, "权限管理")
+            ])
+          ])) : vue.createCommentVNode("v-if", true)
+        ]),
+        vue.createCommentVNode(" 资产配置优化 "),
+        vue.createElementVNode("view", { class: "allocation-section" }, [
+          vue.createElementVNode("view", { class: "section-title" }, "资产配置优化"),
+          vue.createElementVNode("view", { class: "allocation-content" }, [
+            vue.createElementVNode("view", { class: "allocation-chart" }, [
+              vue.createElementVNode("view", { class: "chart-container" }, [
+                vue.createElementVNode(
+                  "view",
+                  {
+                    class: "pie-chart",
+                    ref: "pieChart"
+                  },
+                  null,
+                  512
+                  /* NEED_PATCH */
+                )
+              ]),
+              vue.createElementVNode("view", { class: "allocation-legend" }, [
+                (vue.openBlock(true), vue.createElementBlock(
+                  vue.Fragment,
+                  null,
+                  vue.renderList($data.allocationData, (item, index) => {
+                    return vue.openBlock(), vue.createElementBlock("view", {
+                      class: "legend-item",
+                      key: index
+                    }, [
+                      vue.createElementVNode(
+                        "view",
+                        {
+                          class: "legend-color",
+                          style: vue.normalizeStyle({ backgroundColor: item.color })
+                        },
+                        null,
+                        4
+                        /* STYLE */
+                      ),
+                      vue.createElementVNode(
+                        "text",
+                        { class: "legend-label" },
+                        vue.toDisplayString(item.name),
+                        1
+                        /* TEXT */
+                      ),
+                      vue.createElementVNode(
+                        "text",
+                        { class: "legend-percent" },
+                        vue.toDisplayString(item.percent) + "%",
+                        1
+                        /* TEXT */
+                      )
+                    ]);
+                  }),
+                  128
+                  /* KEYED_FRAGMENT */
+                ))
+              ])
+            ]),
+            vue.createElementVNode("view", { class: "allocation-actions" }, [
+              vue.createElementVNode("button", {
+                class: "action-btn primary",
+                onClick: _cache[8] || (_cache[8] = (...args) => $options.showAllocationDetail && $options.showAllocationDetail(...args))
+              }, "查看详细配置"),
+              vue.createElementVNode("button", {
+                class: "action-btn secondary",
+                onClick: _cache[9] || (_cache[9] = (...args) => $options.autoRebalance && $options.autoRebalance(...args))
+              }, "一键调仓")
+            ])
+          ])
+        ]),
+        vue.createCommentVNode(" 目标管理 "),
+        vue.createElementVNode("view", { class: "goals-section" }, [
+          vue.createElementVNode("view", { class: "section-title" }, "目标管理"),
+          vue.createElementVNode("view", { class: "goals-list" }, [
+            (vue.openBlock(true), vue.createElementBlock(
+              vue.Fragment,
+              null,
+              vue.renderList($data.userGoals, (goal, index) => {
+                return vue.openBlock(), vue.createElementBlock("view", {
+                  class: "goal-item",
+                  key: index,
+                  onClick: ($event) => $options.viewGoalDetail(goal)
+                }, [
+                  vue.createElementVNode("view", { class: "goal-left" }, [
+                    vue.createElementVNode(
+                      "view",
+                      {
+                        class: "goal-icon",
+                        style: vue.normalizeStyle({ backgroundColor: goal.color })
+                      },
+                      [
+                        vue.createElementVNode(
+                          "text",
+                          { class: "icon" },
+                          vue.toDisplayString(goal.icon),
+                          1
+                          /* TEXT */
+                        )
+                      ],
+                      4
+                      /* STYLE */
+                    ),
+                    vue.createElementVNode("view", { class: "goal-content" }, [
+                      vue.createElementVNode(
+                        "text",
+                        { class: "goal-title" },
+                        vue.toDisplayString(goal.title),
+                        1
+                        /* TEXT */
+                      ),
+                      vue.createElementVNode(
+                        "text",
+                        { class: "goal-target" },
+                        "目标：¥" + vue.toDisplayString($options.formatNumber(goal.target)),
+                        1
+                        /* TEXT */
+                      ),
+                      vue.createElementVNode("view", { class: "goal-progress" }, [
+                        vue.createElementVNode("view", { class: "progress-bar" }, [
+                          vue.createElementVNode(
+                            "view",
+                            {
+                              class: "progress-fill",
+                              style: vue.normalizeStyle({ width: goal.progress + "%", backgroundColor: goal.color })
+                            },
+                            null,
+                            4
+                            /* STYLE */
+                          )
+                        ]),
+                        vue.createElementVNode(
+                          "text",
+                          { class: "progress-text" },
+                          vue.toDisplayString(goal.progress) + "%",
+                          1
+                          /* TEXT */
+                        )
+                      ])
+                    ])
+                  ]),
+                  vue.createElementVNode("view", { class: "goal-right" }, [
+                    vue.createElementVNode(
+                      "text",
+                      { class: "goal-timeline" },
+                      vue.toDisplayString(goal.timeline),
+                      1
+                      /* TEXT */
+                    ),
+                    vue.createElementVNode("text", { class: "arrow" }, ">")
+                  ])
+                ], 8, ["onClick"]);
+              }),
+              128
+              /* KEYED_FRAGMENT */
+            ))
+          ]),
+          vue.createElementVNode("view", { class: "goal-actions" }, [
+            vue.createElementVNode("button", {
+              class: "action-btn primary",
+              onClick: _cache[10] || (_cache[10] = (...args) => $options.addNewGoal && $options.addNewGoal(...args))
+            }, "添加新目标"),
+            vue.createElementVNode("button", {
+              class: "action-btn secondary",
+              onClick: _cache[11] || (_cache[11] = (...args) => $options.viewAllGoals && $options.viewAllGoals(...args))
+            }, "查看所有目标")
+          ])
+        ]),
+        vue.createCommentVNode(" 智能建议 "),
+        vue.createElementVNode("view", { class: "suggestions-section" }, [
+          vue.createElementVNode("view", { class: "section-title" }, "智能建议"),
+          vue.createElementVNode("view", { class: "suggestions-list" }, [
+            (vue.openBlock(true), vue.createElementBlock(
+              vue.Fragment,
+              null,
+              vue.renderList($data.smartSuggestions, (suggestion, index) => {
+                return vue.openBlock(), vue.createElementBlock("view", {
+                  class: "suggestion-item",
+                  key: index,
+                  onClick: ($event) => $options.applySuggestion(suggestion)
+                }, [
+                  vue.createElementVNode("view", { class: "suggestion-left" }, [
+                    vue.createElementVNode(
+                      "view",
+                      {
+                        class: vue.normalizeClass(["suggestion-priority", suggestion.priority])
+                      },
+                      [
+                        vue.createElementVNode(
+                          "text",
+                          { class: "priority-text" },
+                          vue.toDisplayString(suggestion.priorityText),
+                          1
+                          /* TEXT */
+                        )
+                      ],
+                      2
+                      /* CLASS */
+                    ),
+                    vue.createElementVNode("view", { class: "suggestion-content" }, [
+                      vue.createElementVNode(
+                        "text",
+                        { class: "suggestion-title" },
+                        vue.toDisplayString(suggestion.title),
+                        1
+                        /* TEXT */
+                      ),
+                      vue.createElementVNode(
+                        "text",
+                        { class: "suggestion-desc" },
+                        vue.toDisplayString(suggestion.description),
+                        1
+                        /* TEXT */
+                      ),
+                      vue.createElementVNode(
+                        "text",
+                        { class: "suggestion-benefit" },
+                        "预期收益：" + vue.toDisplayString(suggestion.benefit),
+                        1
+                        /* TEXT */
+                      )
+                    ])
+                  ]),
+                  vue.createElementVNode("view", { class: "suggestion-right" }, [
+                    vue.createElementVNode("text", { class: "suggestion-action" }, "立即执行"),
+                    vue.createElementVNode("text", { class: "arrow" }, ">")
+                  ])
+                ], 8, ["onClick"]);
+              }),
+              128
+              /* KEYED_FRAGMENT */
+            ))
+          ])
+        ]),
+        vue.createCommentVNode(" 客户经理对接 "),
+        vue.createElementVNode("view", { class: "advisor-section" }, [
+          vue.createElementVNode("view", { class: "section-title" }, "专属客户经理"),
+          $data.assignedAdvisor ? (vue.openBlock(), vue.createElementBlock("view", {
+            key: 0,
+            class: "advisor-card"
+          }, [
+            vue.createElementVNode("view", { class: "advisor-info" }, [
+              vue.createElementVNode("image", {
+                class: "advisor-avatar",
+                src: $data.assignedAdvisor.avatar,
+                mode: "aspectFill"
+              }, null, 8, ["src"]),
+              vue.createElementVNode("view", { class: "advisor-details" }, [
+                vue.createElementVNode(
+                  "text",
+                  { class: "advisor-name" },
+                  vue.toDisplayString($data.assignedAdvisor.name),
+                  1
+                  /* TEXT */
+                ),
+                vue.createElementVNode(
+                  "text",
+                  { class: "advisor-title" },
+                  vue.toDisplayString($data.assignedAdvisor.title),
+                  1
+                  /* TEXT */
+                ),
+                vue.createElementVNode(
+                  "text",
+                  { class: "advisor-experience" },
+                  vue.toDisplayString($data.assignedAdvisor.experience),
+                  1
+                  /* TEXT */
+                ),
+                vue.createElementVNode("view", { class: "advisor-rating" }, [
+                  vue.createElementVNode("view", { class: "rating-stars" }, [
+                    (vue.openBlock(), vue.createElementBlock(
+                      vue.Fragment,
+                      null,
+                      vue.renderList(5, (n) => {
+                        return vue.createElementVNode(
+                          "text",
+                          {
+                            class: vue.normalizeClass(["star", { active: n <= $data.assignedAdvisor.rating }]),
+                            key: n
+                          },
+                          "★",
+                          2
+                          /* CLASS */
+                        );
+                      }),
+                      64
+                      /* STABLE_FRAGMENT */
+                    ))
+                  ]),
+                  vue.createElementVNode(
+                    "text",
+                    { class: "rating-text" },
+                    vue.toDisplayString($data.assignedAdvisor.rating) + "/5.0",
+                    1
+                    /* TEXT */
+                  )
+                ])
+              ])
+            ]),
+            vue.createElementVNode("view", { class: "advisor-actions" }, [
+              vue.createElementVNode("button", {
+                class: "action-btn primary",
+                onClick: _cache[12] || (_cache[12] = (...args) => $options.contactAdvisor && $options.contactAdvisor(...args))
+              }, "联系客户经理"),
+              vue.createElementVNode("button", {
+                class: "action-btn secondary",
+                onClick: _cache[13] || (_cache[13] = (...args) => $options.scheduleMeeting && $options.scheduleMeeting(...args))
+              }, "预约面谈")
+            ])
+          ])) : vue.createCommentVNode("v-if", true)
+        ]),
+        vue.createCommentVNode(" AI对话界面 "),
+        $data.showChat ? (vue.openBlock(), vue.createElementBlock("view", {
+          key: 0,
+          class: "ai-chat-overlay",
+          onClick: _cache[19] || (_cache[19] = (...args) => $options.closeChat && $options.closeChat(...args))
+        }, [
+          vue.createElementVNode(
+            "view",
+            {
+              class: "chat-container",
+              ref: "chatContainer",
+              onClick: _cache[18] || (_cache[18] = vue.withModifiers(() => {
+              }, ["stop"]))
+            },
+            [
+              vue.createElementVNode("view", { class: "chat-header" }, [
+                vue.createElementVNode("view", { class: "chat-avatar" }, [
+                  vue.createElementVNode("image", {
+                    class: "ai-avatar-small",
+                    src: _imports_0,
+                    mode: "aspectFill"
+                  }),
+                  vue.createElementVNode("view", { class: "ai-status-small" })
+                ]),
+                vue.createElementVNode("view", { class: "chat-info" }, [
+                  vue.createElementVNode("text", { class: "chat-name" }, "AI财富管家"),
+                  vue.createElementVNode("text", { class: "chat-status" }, "在线")
+                ]),
+                vue.createElementVNode("button", {
+                  class: "close-btn",
+                  onClick: _cache[14] || (_cache[14] = (...args) => $options.closeChat && $options.closeChat(...args))
+                }, "×")
+              ]),
+              vue.createElementVNode(
+                "view",
+                {
+                  class: "chat-messages",
+                  ref: "chatMessages"
+                },
+                [
+                  (vue.openBlock(true), vue.createElementBlock(
+                    vue.Fragment,
+                    null,
+                    vue.renderList($data.chatMessages, (message, index) => {
+                      return vue.openBlock(), vue.createElementBlock(
+                        "view",
+                        {
+                          class: vue.normalizeClass(["message-item", message.type]),
+                          key: index
+                        },
+                        [
+                          message.type === "ai" ? (vue.openBlock(), vue.createElementBlock("view", {
+                            key: 0,
+                            class: "message-avatar"
+                          }, [
+                            vue.createElementVNode("image", {
+                              class: "avatar-img",
+                              src: _imports_0,
+                              mode: "aspectFill"
+                            })
+                          ])) : vue.createCommentVNode("v-if", true),
+                          vue.createElementVNode("view", { class: "message-content" }, [
+                            vue.createElementVNode("view", { class: "message-bubble" }, [
+                              vue.createElementVNode(
+                                "text",
+                                { class: "message-text" },
+                                vue.toDisplayString(message.content),
+                                1
+                                /* TEXT */
+                              ),
+                              vue.createElementVNode(
+                                "text",
+                                { class: "message-time" },
+                                vue.toDisplayString(message.time),
+                                1
+                                /* TEXT */
+                              )
+                            ])
+                          ])
+                        ],
+                        2
+                        /* CLASS */
+                      );
+                    }),
+                    128
+                    /* KEYED_FRAGMENT */
+                  ))
+                ],
+                512
+                /* NEED_PATCH */
+              ),
+              vue.createElementVNode("view", { class: "chat-input" }, [
+                vue.createElementVNode("view", { class: "input-container" }, [
+                  vue.withDirectives(vue.createElementVNode(
+                    "input",
+                    {
+                      class: "message-input",
+                      "onUpdate:modelValue": _cache[15] || (_cache[15] = ($event) => $data.inputMessage = $event),
+                      placeholder: "输入您的问题...",
+                      onConfirm: _cache[16] || (_cache[16] = (...args) => $options.sendMessage && $options.sendMessage(...args))
+                    },
+                    null,
+                    544
+                    /* NEED_HYDRATION, NEED_PATCH */
+                  ), [
+                    [vue.vModelText, $data.inputMessage]
+                  ]),
+                  vue.createElementVNode("button", {
+                    class: "send-btn",
+                    onClick: _cache[17] || (_cache[17] = (...args) => $options.sendMessage && $options.sendMessage(...args)),
+                    disabled: !$data.inputMessage.trim()
+                  }, [
+                    vue.createElementVNode("text", { class: "send-icon" }, "📤")
+                  ], 8, ["disabled"])
+                ]),
+                vue.createElementVNode("view", { class: "quick-questions" }, [
+                  (vue.openBlock(true), vue.createElementBlock(
+                    vue.Fragment,
+                    null,
+                    vue.renderList($data.quickQuestions, (question, index) => {
+                      return vue.openBlock(), vue.createElementBlock("button", {
+                        class: "quick-btn",
+                        key: index,
+                        onClick: ($event) => $options.sendQuickQuestion(question)
+                      }, vue.toDisplayString(question), 9, ["onClick"]);
+                    }),
+                    128
+                    /* KEYED_FRAGMENT */
+                  ))
+                ])
+              ])
+            ],
+            512
+            /* NEED_PATCH */
+          )
+        ])) : vue.createCommentVNode("v-if", true)
+      ],
+      6
+      /* CLASS, STYLE */
+    );
+  }
+  const PagesWealthAiWealthManager = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["render", _sfc_render$2], ["__scopeId", "data-v-762ab66e"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/ai-wealth-manager.vue"]]);
+  const _sfc_main$2 = {
+    name: "AssetAllocationDetail",
+    mixins: [themeMixin],
+    data() {
+      return {
+        riskProfile: "平衡型",
+        riskLevel: "中等",
+        riskLevelClass: "medium",
+        totalAssets: 125689.23,
+        expectedReturn: 6.8,
+        maxDrawdown: 8.5,
+        sharpeRatio: 1.2,
+        annualReturn: 7.2,
+        volatility: 12.5,
+        historicalReturn: 8.6,
+        allocationDetails: [
+          {
+            name: "现金及货币基金",
+            category: "现金类",
+            icon: "💰",
+            color: "#4CAF50",
+            currentPercent: 30,
+            targetPercent: 25,
+            currentAmount: 37706.77,
+            deviation: 5,
+            expectedReturn: 2.5,
+            recommendation: "建议减少5%现金配置，转入债券类产品"
+          },
+          {
+            name: "债券基金",
+            category: "债券类",
+            icon: "🏦",
+            color: "#2196F3",
+            currentPercent: 35,
+            targetPercent: 40,
+            currentAmount: 43991.23,
+            deviation: -5,
+            expectedReturn: 4.2,
+            recommendation: "建议增加5%债券配置，提高收益稳定性"
+          },
+          {
+            name: "股票基金",
+            category: "股票类",
+            icon: "📈",
+            color: "#FF9800",
+            currentPercent: 25,
+            targetPercent: 25,
+            currentAmount: 31422.31,
+            deviation: 0,
+            expectedReturn: 8.5,
+            recommendation: "当前配置合理，建议保持"
+          },
+          {
+            name: "另类投资",
+            category: "另类投资",
+            icon: "💎",
+            color: "#9C27B0",
+            currentPercent: 10,
+            targetPercent: 10,
+            currentAmount: 12568.92,
+            deviation: 0,
+            expectedReturn: 6.8,
+            recommendation: "当前配置合理，建议保持"
+          }
+        ],
+        rebalanceSuggestions: [
+          {
+            priority: "high",
+            priorityText: "高优先级",
+            title: "优化现金配置",
+            description: "当前现金配置过高，建议将部分资金转入债券基金，提高整体收益",
+            operation: "减仓现金，增仓债券",
+            amount: 6284.46,
+            expectedReturn: 1.7
+          },
+          {
+            priority: "medium",
+            priorityText: "中优先级",
+            title: "平衡风险收益",
+            description: "建议微调股票和债券比例，在控制风险的同时提升收益潜力",
+            operation: "微调股债比例",
+            amount: 2513.78,
+            expectedReturn: 0.8
+          }
+        ]
+      };
+    },
+    methods: {
+      goBack() {
+        uni.navigateBack({
+          delta: 1
+        });
+      },
+      formatNumber(num) {
+        return num.toLocaleString("zh-CN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      },
+      viewDetails(item) {
+        uni.showModal({
+          title: item.name,
+          content: `类别：${item.category}
+当前配置：${item.currentPercent}%
+目标配置：${item.targetPercent}%
+预期收益：${item.expectedReturn}%`,
+          showCancel: false
+        });
+      },
+      executeSuggestion(suggestion) {
+        uni.showModal({
+          title: "执行调仓建议",
+          content: suggestion.description,
+          success: (res) => {
+            if (res.confirm) {
+              uni.showToast({
+                title: "调仓指令已发送",
+                icon: "success"
+              });
+            }
+          }
+        });
+      },
+      viewAnalysis(suggestion) {
+        uni.navigateTo({
+          url: "/pages/wealth/allocation-analysis"
+        });
+      },
+      autoRebalance() {
+        uni.showModal({
+          title: "一键调仓",
+          content: "系统将根据您的风险偏好自动调整资产配置，是否继续？",
+          success: (res) => {
+            if (res.confirm) {
+              uni.showToast({
+                title: "调仓指令已发送",
+                icon: "success"
+              });
+            }
+          }
+        });
+      },
+      manualAdjust() {
+        uni.navigateTo({
+          url: "/pages/wealth/manual-allocation"
+        });
+      },
+      exportReport() {
+        uni.showToast({
+          title: "报告导出中...",
+          icon: "loading"
+        });
+        setTimeout(() => {
+          uni.showToast({
+            title: "报告已导出",
+            icon: "success"
+          });
+        }, 2e3);
+      }
+    }
+  };
+  function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock(
+      "view",
+      {
+        class: vue.normalizeClass(["allocation-detail", _ctx.getThemeClass()]),
+        style: vue.normalizeStyle(_ctx.getThemeStyle())
+      },
+      [
+        vue.createCommentVNode(" 顶部背景 "),
+        vue.createElementVNode("view", { class: "header-bg" }),
+        vue.createCommentVNode(" 顶部导航 "),
+        vue.createElementVNode("view", { class: "top-nav" }, [
+          vue.createElementVNode("view", { class: "nav-content" }, [
+            vue.createElementVNode("button", {
+              class: "back-btn",
+              onClick: _cache[0] || (_cache[0] = (...args) => $options.goBack && $options.goBack(...args))
+            }, [
+              vue.createElementVNode("text", { class: "back-icon" }, "←")
+            ]),
+            vue.createElementVNode("view", { class: "nav-info" }, [
+              vue.createElementVNode("text", { class: "nav-title" }, "资产配置详情"),
+              vue.createElementVNode("text", { class: "nav-subtitle" }, "Asset Allocation Details")
+            ])
+          ])
+        ]),
+        vue.createCommentVNode(" 当前配置概览 "),
+        vue.createElementVNode("view", { class: "current-allocation theme-card" }, [
+          vue.createElementVNode("view", { class: "section-header" }, [
+            vue.createElementVNode("text", { class: "section-title" }, "当前资产配置"),
+            vue.createElementVNode(
+              "text",
+              { class: "section-subtitle" },
+              "基于您的风险偏好：" + vue.toDisplayString($data.riskProfile),
+              1
+              /* TEXT */
+            )
+          ]),
+          vue.createElementVNode("view", { class: "allocation-overview" }, [
+            vue.createElementVNode("view", { class: "pie-chart-container" }, [
+              vue.createElementVNode(
+                "view",
+                {
+                  class: "pie-chart",
+                  ref: "pieChart"
+                },
+                null,
+                512
+                /* NEED_PATCH */
+              ),
+              vue.createElementVNode("view", { class: "chart-center" }, [
+                vue.createElementVNode("text", { class: "center-text" }, "总资产"),
+                vue.createElementVNode(
+                  "text",
+                  { class: "center-amount" },
+                  "¥" + vue.toDisplayString($options.formatNumber($data.totalAssets)),
+                  1
+                  /* TEXT */
+                )
+              ])
+            ]),
+            vue.createElementVNode("view", { class: "allocation-stats" }, [
+              vue.createElementVNode("view", { class: "stat-item" }, [
+                vue.createElementVNode("text", { class: "stat-label" }, "风险等级"),
+                vue.createElementVNode(
+                  "text",
+                  {
+                    class: vue.normalizeClass(["stat-value", $data.riskLevelClass])
+                  },
+                  vue.toDisplayString($data.riskLevel),
+                  3
+                  /* TEXT, CLASS */
+                )
+              ]),
+              vue.createElementVNode("view", { class: "stat-item" }, [
+                vue.createElementVNode("text", { class: "stat-label" }, "预期年化收益"),
+                vue.createElementVNode(
+                  "text",
+                  { class: "stat-value" },
+                  vue.toDisplayString($data.expectedReturn) + "%",
+                  1
+                  /* TEXT */
+                )
+              ]),
+              vue.createElementVNode("view", { class: "stat-item" }, [
+                vue.createElementVNode("text", { class: "stat-label" }, "最大回撤"),
+                vue.createElementVNode(
+                  "text",
+                  { class: "stat-value" },
+                  vue.toDisplayString($data.maxDrawdown) + "%",
+                  1
+                  /* TEXT */
+                )
+              ]),
+              vue.createElementVNode("view", { class: "stat-item" }, [
+                vue.createElementVNode("text", { class: "stat-label" }, "夏普比率"),
+                vue.createElementVNode(
+                  "text",
+                  { class: "stat-value" },
+                  vue.toDisplayString($data.sharpeRatio),
+                  1
+                  /* TEXT */
+                )
+              ])
+            ])
+          ])
+        ]),
+        vue.createCommentVNode(" 详细配置列表 "),
+        vue.createElementVNode("view", { class: "allocation-breakdown theme-card" }, [
+          vue.createElementVNode("view", { class: "section-header" }, [
+            vue.createElementVNode("text", { class: "section-title" }, "详细配置"),
+            vue.createElementVNode("text", { class: "section-subtitle" }, "各类资产的具体配置情况")
+          ]),
+          vue.createElementVNode("view", { class: "breakdown-list" }, [
+            (vue.openBlock(true), vue.createElementBlock(
+              vue.Fragment,
+              null,
+              vue.renderList($data.allocationDetails, (item, index) => {
+                return vue.openBlock(), vue.createElementBlock("view", {
+                  class: "breakdown-item",
+                  key: index
+                }, [
+                  vue.createElementVNode("view", { class: "item-header" }, [
+                    vue.createElementVNode(
+                      "view",
+                      {
+                        class: "item-icon",
+                        style: vue.normalizeStyle({ backgroundColor: item.color })
+                      },
+                      [
+                        vue.createElementVNode(
+                          "text",
+                          { class: "icon" },
+                          vue.toDisplayString(item.icon),
+                          1
+                          /* TEXT */
+                        )
+                      ],
+                      4
+                      /* STYLE */
+                    ),
+                    vue.createElementVNode("view", { class: "item-info" }, [
+                      vue.createElementVNode(
+                        "text",
+                        { class: "item-name" },
+                        vue.toDisplayString(item.name),
+                        1
+                        /* TEXT */
+                      ),
+                      vue.createElementVNode(
+                        "text",
+                        { class: "item-category" },
+                        vue.toDisplayString(item.category),
+                        1
+                        /* TEXT */
+                      )
+                    ]),
+                    vue.createElementVNode("view", { class: "item-actions" }, [
+                      vue.createElementVNode("button", {
+                        class: "action-btn",
+                        onClick: ($event) => $options.viewDetails(item)
+                      }, "详情", 8, ["onClick"])
+                    ])
+                  ]),
+                  vue.createElementVNode("view", { class: "item-content" }, [
+                    vue.createElementVNode("view", { class: "allocation-bar" }, [
+                      vue.createElementVNode("view", { class: "bar-bg" }, [
+                        vue.createElementVNode(
+                          "view",
+                          {
+                            class: "bar-fill",
+                            style: vue.normalizeStyle({ width: item.currentPercent + "%", backgroundColor: item.color })
+                          },
+                          null,
+                          4
+                          /* STYLE */
+                        )
+                      ]),
+                      vue.createElementVNode(
+                        "text",
+                        { class: "bar-text" },
+                        vue.toDisplayString(item.currentPercent) + "%",
+                        1
+                        /* TEXT */
+                      )
+                    ]),
+                    vue.createElementVNode("view", { class: "allocation-details" }, [
+                      vue.createElementVNode("view", { class: "detail-row" }, [
+                        vue.createElementVNode("text", { class: "detail-label" }, "当前金额"),
+                        vue.createElementVNode(
+                          "text",
+                          { class: "detail-value" },
+                          "¥" + vue.toDisplayString($options.formatNumber(item.currentAmount)),
+                          1
+                          /* TEXT */
+                        )
+                      ]),
+                      vue.createElementVNode("view", { class: "detail-row" }, [
+                        vue.createElementVNode("text", { class: "detail-label" }, "目标配置"),
+                        vue.createElementVNode(
+                          "text",
+                          { class: "detail-value" },
+                          vue.toDisplayString(item.targetPercent) + "%",
+                          1
+                          /* TEXT */
+                        )
+                      ]),
+                      vue.createElementVNode("view", { class: "detail-row" }, [
+                        vue.createElementVNode("text", { class: "detail-label" }, "偏离度"),
+                        vue.createElementVNode(
+                          "text",
+                          {
+                            class: vue.normalizeClass(["detail-value", item.deviation > 0 ? "positive" : "negative"])
+                          },
+                          vue.toDisplayString(item.deviation > 0 ? "+" : "") + vue.toDisplayString(item.deviation) + "% ",
+                          3
+                          /* TEXT, CLASS */
+                        )
+                      ]),
+                      vue.createElementVNode("view", { class: "detail-row" }, [
+                        vue.createElementVNode("text", { class: "detail-label" }, "预期收益"),
+                        vue.createElementVNode(
+                          "text",
+                          { class: "detail-value" },
+                          vue.toDisplayString(item.expectedReturn) + "%",
+                          1
+                          /* TEXT */
+                        )
+                      ])
+                    ]),
+                    item.recommendation ? (vue.openBlock(), vue.createElementBlock("view", {
+                      key: 0,
+                      class: "item-recommendation"
+                    }, [
+                      vue.createElementVNode(
+                        "text",
+                        { class: "recommendation-text" },
+                        vue.toDisplayString(item.recommendation),
+                        1
+                        /* TEXT */
+                      )
+                    ])) : vue.createCommentVNode("v-if", true)
+                  ])
+                ]);
+              }),
+              128
+              /* KEYED_FRAGMENT */
+            ))
+          ])
+        ]),
+        vue.createCommentVNode(" 调仓建议 "),
+        vue.createElementVNode("view", { class: "rebalance-suggestions theme-card" }, [
+          vue.createElementVNode("view", { class: "section-header" }, [
+            vue.createElementVNode("text", { class: "section-title" }, "调仓建议"),
+            vue.createElementVNode("text", { class: "section-subtitle" }, "基于市场分析和风险模型")
+          ]),
+          vue.createElementVNode("view", { class: "suggestions-list" }, [
+            (vue.openBlock(true), vue.createElementBlock(
+              vue.Fragment,
+              null,
+              vue.renderList($data.rebalanceSuggestions, (suggestion, index) => {
+                return vue.openBlock(), vue.createElementBlock("view", {
+                  class: "suggestion-item",
+                  key: index
+                }, [
+                  vue.createElementVNode("view", { class: "suggestion-header" }, [
+                    vue.createElementVNode(
+                      "view",
+                      {
+                        class: vue.normalizeClass(["suggestion-priority", suggestion.priority])
+                      },
+                      [
+                        vue.createElementVNode(
+                          "text",
+                          { class: "priority-text" },
+                          vue.toDisplayString(suggestion.priorityText),
+                          1
+                          /* TEXT */
+                        )
+                      ],
+                      2
+                      /* CLASS */
+                    ),
+                    vue.createElementVNode(
+                      "text",
+                      { class: "suggestion-title" },
+                      vue.toDisplayString(suggestion.title),
+                      1
+                      /* TEXT */
+                    )
+                  ]),
+                  vue.createElementVNode("view", { class: "suggestion-content" }, [
+                    vue.createElementVNode(
+                      "text",
+                      { class: "suggestion-desc" },
+                      vue.toDisplayString(suggestion.description),
+                      1
+                      /* TEXT */
+                    ),
+                    vue.createElementVNode("view", { class: "suggestion-details" }, [
+                      vue.createElementVNode("view", { class: "detail-item" }, [
+                        vue.createElementVNode("text", { class: "detail-label" }, "操作类型"),
+                        vue.createElementVNode(
+                          "text",
+                          { class: "detail-value" },
+                          vue.toDisplayString(suggestion.operation),
+                          1
+                          /* TEXT */
+                        )
+                      ]),
+                      vue.createElementVNode("view", { class: "detail-item" }, [
+                        vue.createElementVNode("text", { class: "detail-label" }, "调整金额"),
+                        vue.createElementVNode(
+                          "text",
+                          { class: "detail-value" },
+                          "¥" + vue.toDisplayString($options.formatNumber(suggestion.amount)),
+                          1
+                          /* TEXT */
+                        )
+                      ]),
+                      vue.createElementVNode("view", { class: "detail-item" }, [
+                        vue.createElementVNode("text", { class: "detail-label" }, "预期收益"),
+                        vue.createElementVNode(
+                          "text",
+                          { class: "detail-value" },
+                          vue.toDisplayString(suggestion.expectedReturn) + "%",
+                          1
+                          /* TEXT */
+                        )
+                      ])
+                    ]),
+                    vue.createElementVNode("view", { class: "suggestion-actions" }, [
+                      vue.createElementVNode("button", {
+                        class: "suggestion-btn primary",
+                        onClick: ($event) => $options.executeSuggestion(suggestion)
+                      }, "执行建议", 8, ["onClick"]),
+                      vue.createElementVNode("button", {
+                        class: "suggestion-btn secondary",
+                        onClick: ($event) => $options.viewAnalysis(suggestion)
+                      }, "查看分析", 8, ["onClick"])
+                    ])
+                  ])
+                ]);
+              }),
+              128
+              /* KEYED_FRAGMENT */
+            ))
+          ])
+        ]),
+        vue.createCommentVNode(" 历史表现 "),
+        vue.createElementVNode("view", { class: "historical-performance theme-card" }, [
+          vue.createElementVNode("view", { class: "section-header" }, [
+            vue.createElementVNode("text", { class: "section-title" }, "历史表现"),
+            vue.createElementVNode("text", { class: "section-subtitle" }, "过去12个月的配置表现")
+          ]),
+          vue.createElementVNode("view", { class: "performance-chart" }, [
+            vue.createElementVNode("view", { class: "chart-container" }, [
+              vue.createElementVNode("view", { class: "chart-placeholder" }, [
+                vue.createElementVNode("text", { class: "chart-text" }, "收益率曲线图"),
+                vue.createElementVNode(
+                  "text",
+                  { class: "chart-desc" },
+                  "过去12个月累计收益率：" + vue.toDisplayString($data.historicalReturn) + "%",
+                  1
+                  /* TEXT */
+                )
+              ])
+            ])
+          ]),
+          vue.createElementVNode("view", { class: "performance-metrics" }, [
+            vue.createElementVNode("view", { class: "metric-item" }, [
+              vue.createElementVNode("text", { class: "metric-label" }, "年化收益率"),
+              vue.createElementVNode(
+                "text",
+                { class: "metric-value positive" },
+                vue.toDisplayString($data.annualReturn) + "%",
+                1
+                /* TEXT */
+              )
+            ]),
+            vue.createElementVNode("view", { class: "metric-item" }, [
+              vue.createElementVNode("text", { class: "metric-label" }, "波动率"),
+              vue.createElementVNode(
+                "text",
+                { class: "metric-value" },
+                vue.toDisplayString($data.volatility) + "%",
+                1
+                /* TEXT */
+              )
+            ]),
+            vue.createElementVNode("view", { class: "metric-item" }, [
+              vue.createElementVNode("text", { class: "metric-label" }, "最大回撤"),
+              vue.createElementVNode(
+                "text",
+                { class: "metric-value negative" },
+                vue.toDisplayString($data.maxDrawdown) + "%",
+                1
+                /* TEXT */
+              )
+            ]),
+            vue.createElementVNode("view", { class: "metric-item" }, [
+              vue.createElementVNode("text", { class: "metric-label" }, "夏普比率"),
+              vue.createElementVNode(
+                "text",
+                { class: "metric-value" },
+                vue.toDisplayString($data.sharpeRatio),
+                1
+                /* TEXT */
+              )
+            ])
+          ])
+        ]),
+        vue.createCommentVNode(" 操作按钮 "),
+        vue.createElementVNode("view", { class: "action-buttons" }, [
+          vue.createElementVNode("button", {
+            class: "theme-btn-primary",
+            onClick: _cache[1] || (_cache[1] = (...args) => $options.autoRebalance && $options.autoRebalance(...args))
+          }, "一键调仓"),
+          vue.createElementVNode("button", {
+            class: "theme-btn-secondary",
+            onClick: _cache[2] || (_cache[2] = (...args) => $options.manualAdjust && $options.manualAdjust(...args))
+          }, "手动调整"),
+          vue.createElementVNode("button", {
+            class: "theme-btn-secondary",
+            onClick: _cache[3] || (_cache[3] = (...args) => $options.exportReport && $options.exportReport(...args))
+          }, "导出报告")
+        ])
+      ],
+      6
+      /* CLASS, STYLE */
+    );
+  }
+  const PagesWealthAssetAllocationDetail = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["render", _sfc_render$1], ["__scopeId", "data-v-a3a51207"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/asset-allocation-detail.vue"]]);
+  const _sfc_main$1 = {
+    name: "GoalManagement",
+    mixins: [themeMixin],
+    data() {
+      return {
+        activeGoals: [
+          {
+            id: 1,
+            name: "购房首付",
+            target: 5e5,
+            current: 325e3,
+            progress: 65,
+            deadline: "2026年8月",
+            icon: "🏠",
+            color: "#4caf50"
+          },
+          {
+            id: 2,
+            name: "教育基金",
+            target: 15e4,
+            current: 6e4,
+            progress: 40,
+            deadline: "2028年6月",
+            icon: "🎓",
+            color: "#2196f3"
+          },
+          {
+            id: 3,
+            name: "退休规划",
+            target: 1e6,
+            current: 25e4,
+            progress: 25,
+            deadline: "2040年12月",
+            icon: "🌴",
+            color: "#ff9800"
+          }
+        ],
+        completedGoals: [
+          {
+            id: 4,
+            name: "应急基金",
+            target: 5e4,
+            current: 5e4,
+            progress: 100,
+            deadline: "2024年12月",
+            icon: "🛡️",
+            color: "#9c27b0"
+          }
+        ],
+        quickGoals: [
+          { id: 1, name: "购房首付", icon: "🏠", color: "#4caf50", target: 5e5 },
+          { id: 2, name: "教育基金", icon: "🎓", color: "#2196f3", target: 15e4 },
+          { id: 3, name: "退休规划", icon: "🌴", color: "#ff9800", target: 1e6 },
+          { id: 4, name: "旅行基金", icon: "✈️", color: "#e91e63", target: 3e4 },
+          { id: 5, name: "购车基金", icon: "🚗", color: "#f44336", target: 2e5 },
+          { id: 6, name: "应急基金", icon: "🛡️", color: "#9c27b0", target: 5e4 }
+        ]
+      };
+    },
+    computed: {
+      totalTargetAmount() {
+        return this.activeGoals.reduce((total, goal) => total + goal.target, 0);
+      }
+    },
+    methods: {
+      goBack() {
+        uni.navigateBack({
+          delta: 1
+        });
+      },
+      formatNumber(num) {
+        return num.toLocaleString("zh-CN", { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+      },
+      addQuickGoal(goal) {
+        uni.showModal({
+          title: "添加目标",
+          content: `确定要添加"${goal.name}"目标吗？
+目标金额：¥${this.formatNumber(goal.target)}`,
+          success: (res) => {
+            if (res.confirm) {
+              uni.showToast({
+                title: "目标添加成功",
+                icon: "success"
+              });
+            }
+          }
+        });
+      },
+      viewGoalDetail(goal) {
+        uni.showModal({
+          title: goal.name,
+          content: `目标金额：¥${this.formatNumber(goal.target)}
+当前进度：${goal.progress}%
+完成时间：${goal.deadline}`,
+          showCancel: false
+        });
+      },
+      addNewGoal() {
+        uni.showToast({
+          title: "跳转到添加目标页面",
+          icon: "none"
+        });
+      },
+      viewAllGoals() {
+        uni.showToast({
+          title: "查看所有目标",
+          icon: "none"
+        });
+      }
+    }
+  };
+  function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock(
+      "view",
+      {
+        class: vue.normalizeClass(["goal-management", _ctx.getThemeClass()]),
+        style: vue.normalizeStyle(_ctx.getThemeStyle())
+      },
+      [
+        vue.createCommentVNode(" 顶部背景 "),
+        vue.createElementVNode("view", { class: "header-bg" }),
+        vue.createCommentVNode(" 顶部导航 "),
+        vue.createElementVNode("view", { class: "top-nav" }, [
+          vue.createElementVNode("view", { class: "nav-content" }, [
+            vue.createElementVNode("button", {
+              class: "back-btn",
+              onClick: _cache[0] || (_cache[0] = (...args) => $options.goBack && $options.goBack(...args))
+            }, [
+              vue.createElementVNode("text", { class: "back-icon" }, "←")
+            ]),
+            vue.createElementVNode("view", { class: "nav-info" }, [
+              vue.createElementVNode("text", { class: "nav-title" }, "目标管理"),
+              vue.createElementVNode("text", { class: "nav-subtitle" }, "Goal Management")
+            ])
+          ])
+        ]),
+        vue.createCommentVNode(" 目标概览 "),
+        vue.createElementVNode("view", { class: "goals-overview" }, [
+          vue.createElementVNode("view", { class: "overview-header" }, [
+            vue.createElementVNode("view", { class: "overview-stats" }, [
+              vue.createElementVNode("view", { class: "stat-item" }, [
+                vue.createElementVNode(
+                  "text",
+                  { class: "stat-number" },
+                  vue.toDisplayString($data.activeGoals.length),
+                  1
+                  /* TEXT */
+                ),
+                vue.createElementVNode("text", { class: "stat-label" }, "进行中")
+              ]),
+              vue.createElementVNode("view", { class: "stat-item" }, [
+                vue.createElementVNode(
+                  "text",
+                  { class: "stat-number" },
+                  vue.toDisplayString($data.completedGoals.length),
+                  1
+                  /* TEXT */
+                ),
+                vue.createElementVNode("text", { class: "stat-label" }, "已完成")
+              ]),
+              vue.createElementVNode("view", { class: "stat-item" }, [
+                vue.createElementVNode(
+                  "text",
+                  { class: "stat-number" },
+                  "¥" + vue.toDisplayString($options.formatNumber($options.totalTargetAmount)),
+                  1
+                  /* TEXT */
+                ),
+                vue.createElementVNode("text", { class: "stat-label" }, "总目标金额")
+              ])
+            ])
+          ])
+        ]),
+        vue.createCommentVNode(" 快速添加目标 "),
+        vue.createElementVNode("view", { class: "quick-add" }, [
+          vue.createElementVNode("view", { class: "section-header" }, [
+            vue.createElementVNode("text", { class: "section-title" }, "快速添加目标"),
+            vue.createElementVNode("text", { class: "section-subtitle" }, "选择常见目标类型快速创建")
+          ]),
+          vue.createElementVNode("view", { class: "quick-goals-grid" }, [
+            (vue.openBlock(true), vue.createElementBlock(
+              vue.Fragment,
+              null,
+              vue.renderList($data.quickGoals, (goal) => {
+                return vue.openBlock(), vue.createElementBlock("view", {
+                  key: goal.id,
+                  class: "quick-goal-item",
+                  onClick: ($event) => $options.addQuickGoal(goal)
+                }, [
+                  vue.createElementVNode(
+                    "view",
+                    {
+                      class: "goal-icon",
+                      style: vue.normalizeStyle({ backgroundColor: goal.color })
+                    },
+                    [
+                      vue.createElementVNode(
+                        "text",
+                        { class: "icon-text" },
+                        vue.toDisplayString(goal.icon),
+                        1
+                        /* TEXT */
+                      )
+                    ],
+                    4
+                    /* STYLE */
+                  ),
+                  vue.createElementVNode(
+                    "text",
+                    { class: "goal-name" },
+                    vue.toDisplayString(goal.name),
+                    1
+                    /* TEXT */
+                  )
+                ], 8, ["onClick"]);
+              }),
+              128
+              /* KEYED_FRAGMENT */
+            ))
+          ])
+        ]),
+        vue.createCommentVNode(" 进行中的目标 "),
+        vue.createElementVNode("view", { class: "active-goals" }, [
+          vue.createElementVNode("view", { class: "section-header" }, [
+            vue.createElementVNode("text", { class: "section-title" }, "进行中的目标"),
+            vue.createElementVNode("text", { class: "section-subtitle" }, "查看和管理您的理财目标")
+          ]),
+          vue.createElementVNode("view", { class: "goals-list" }, [
+            (vue.openBlock(true), vue.createElementBlock(
+              vue.Fragment,
+              null,
+              vue.renderList($data.activeGoals, (goal) => {
+                return vue.openBlock(), vue.createElementBlock("view", {
+                  key: goal.id,
+                  class: "goal-item",
+                  onClick: ($event) => $options.viewGoalDetail(goal)
+                }, [
+                  vue.createElementVNode("view", { class: "goal-header" }, [
+                    vue.createElementVNode("view", { class: "goal-info" }, [
+                      vue.createElementVNode(
+                        "view",
+                        {
+                          class: "goal-icon",
+                          style: vue.normalizeStyle({ backgroundColor: goal.color })
+                        },
+                        [
+                          vue.createElementVNode(
+                            "text",
+                            { class: "icon-text" },
+                            vue.toDisplayString(goal.icon),
+                            1
+                            /* TEXT */
+                          )
+                        ],
+                        4
+                        /* STYLE */
+                      ),
+                      vue.createElementVNode("view", { class: "goal-details" }, [
+                        vue.createElementVNode(
+                          "text",
+                          { class: "goal-name" },
+                          vue.toDisplayString(goal.name),
+                          1
+                          /* TEXT */
+                        ),
+                        vue.createElementVNode(
+                          "text",
+                          { class: "goal-amount" },
+                          "目标: ¥" + vue.toDisplayString($options.formatNumber(goal.target)),
+                          1
+                          /* TEXT */
+                        )
+                      ])
+                    ]),
+                    vue.createElementVNode("view", { class: "goal-actions" }, [
+                      vue.createElementVNode(
+                        "text",
+                        { class: "goal-deadline" },
+                        vue.toDisplayString(goal.deadline),
+                        1
+                        /* TEXT */
+                      ),
+                      vue.createElementVNode("text", { class: "arrow" }, ">")
+                    ])
+                  ]),
+                  vue.createElementVNode("view", { class: "goal-progress" }, [
+                    vue.createElementVNode("view", { class: "progress-bar" }, [
+                      vue.createElementVNode(
+                        "view",
+                        {
+                          class: "progress-fill",
+                          style: vue.normalizeStyle({
+                            width: goal.progress + "%",
+                            backgroundColor: goal.color
+                          })
+                        },
+                        null,
+                        4
+                        /* STYLE */
+                      )
+                    ]),
+                    vue.createElementVNode(
+                      "text",
+                      { class: "progress-text" },
+                      vue.toDisplayString(goal.progress) + "%",
+                      1
+                      /* TEXT */
+                    )
+                  ])
+                ], 8, ["onClick"]);
+              }),
+              128
+              /* KEYED_FRAGMENT */
+            ))
+          ])
+        ]),
+        vue.createCommentVNode(" 底部操作按钮 "),
+        vue.createElementVNode("view", { class: "bottom-actions" }, [
+          vue.createElementVNode("button", {
+            class: "action-btn primary",
+            onClick: _cache[1] || (_cache[1] = (...args) => $options.addNewGoal && $options.addNewGoal(...args))
+          }, "添加新目标"),
+          vue.createElementVNode("button", {
+            class: "action-btn secondary",
+            onClick: _cache[2] || (_cache[2] = (...args) => $options.viewAllGoals && $options.viewAllGoals(...args))
+          }, "查看所有目标")
+        ])
+      ],
+      6
+      /* CLASS, STYLE */
+    );
+  }
+  const PagesWealthGoalManagement = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["render", _sfc_render], ["__scopeId", "data-v-6c5242bf"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/goal-management.vue"]]);
   __definePage("pages/denglu/login", PagesDengluLogin);
   __definePage("pages/register/register", PagesRegisterRegister);
   __definePage("pages/index/index", PagesIndexIndex);
@@ -27004,6 +32792,11 @@ IP：${event.ip}
   __definePage("pages/wealth/product", PagesWealthProduct);
   __definePage("pages/wealth/insurance", PagesWealthInsurance);
   __definePage("pages/wealth/forex", PagesWealthForex);
+  __definePage("pages/wealth/insurance-detail", PagesWealthInsuranceDetail);
+  __definePage("pages/wealth/insurance-success", PagesWealthInsuranceSuccess);
+  __definePage("pages/wealth/ai-wealth-manager", PagesWealthAiWealthManager);
+  __definePage("pages/wealth/asset-allocation-detail", PagesWealthAssetAllocationDetail);
+  __definePage("pages/wealth/goal-management", PagesWealthGoalManagement);
   function initPushNotification() {
     if (typeof plus !== "undefined" && plus.push) {
       plus.globalEvent.addEventListener("newPath", ({ path }) => {
@@ -27043,7 +32836,7 @@ IP：${event.ip}
   const _sfc_main = {
     name: "App",
     onLaunch(options) {
-      formatAppLog("log", "at App.vue:13", "App Launch", options);
+      formatAppLog("log", "at App.vue:14", "App Launch", options);
       this.checkUpdate();
       this.initUserInfo();
       this.setSystemInfo();
@@ -27052,21 +32845,21 @@ IP：${event.ip}
       initWealthDataSync();
     },
     onShow(options) {
-      formatAppLog("log", "at App.vue:35", "App Show", options);
+      formatAppLog("log", "at App.vue:36", "App Show", options);
       this.checkLoginStatus();
       this.restoreAppState();
       this.globalLoginCheck();
     },
     onHide() {
-      formatAppLog("log", "at App.vue:48", "App Hide");
+      formatAppLog("log", "at App.vue:49", "App Hide");
       this.saveAppState();
     },
     onError(error) {
-      formatAppLog("error", "at App.vue:55", "App Error:", error);
+      formatAppLog("error", "at App.vue:56", "App Error:", error);
       this.reportError(error);
     },
     onPageNotFound(options) {
-      formatAppLog("log", "at App.vue:62", "Page Not Found:", options);
+      formatAppLog("log", "at App.vue:63", "Page Not Found:", options);
       uni.switchTab({
         url: "/pages/index/index"
       });
@@ -27077,7 +32870,7 @@ IP：${event.ip}
        */
       checkUpdate() {
         plus.runtime.getProperty(plus.runtime.appid, (widgetInfo) => {
-          formatAppLog("log", "at App.vue:77", "当前应用版本:", widgetInfo.version);
+          formatAppLog("log", "at App.vue:78", "当前应用版本:", widgetInfo.version);
         });
       },
       /**
@@ -27085,13 +32878,15 @@ IP：${event.ip}
        */
       initUserInfo() {
         try {
-          const userInfo2 = uni.getStorageSync("userInfo");
-          if (userInfo2) {
-            this.globalData.userInfo = userInfo2;
-            formatAppLog("log", "at App.vue:91", "用户信息已恢复:", userInfo2);
+          const consistentUserInfo = checkAndFixUserDataConsistency();
+          if (consistentUserInfo) {
+            this.globalData.userInfo = consistentUserInfo;
+            formatAppLog("log", "at App.vue:94", "用户信息已恢复并验证:", consistentUserInfo.username, "余额:", consistentUserInfo.balance);
+          } else {
+            formatAppLog("warn", "at App.vue:96", "⚠️ 无法恢复用户信息");
           }
         } catch (error) {
-          formatAppLog("error", "at App.vue:94", "恢复用户信息失败:", error);
+          formatAppLog("error", "at App.vue:99", "恢复用户信息失败:", error);
         }
       },
       /**
@@ -27101,9 +32896,9 @@ IP：${event.ip}
         try {
           const systemInfo = uni.getSystemInfoSync();
           this.globalData.systemInfo = systemInfo;
-          formatAppLog("log", "at App.vue:105", "系统信息:", systemInfo);
+          formatAppLog("log", "at App.vue:110", "系统信息:", systemInfo);
         } catch (error) {
-          formatAppLog("error", "at App.vue:107", "获取系统信息失败:", error);
+          formatAppLog("error", "at App.vue:112", "获取系统信息失败:", error);
         }
       },
       /**
@@ -27111,7 +32906,7 @@ IP：${event.ip}
        */
       initNetworkListener() {
         uni.onNetworkStatusChange((res) => {
-          formatAppLog("log", "at App.vue:116", "网络状态变化:", res);
+          formatAppLog("log", "at App.vue:121", "网络状态变化:", res);
           this.globalData.networkType = res.networkType;
           this.globalData.isConnected = res.isConnected;
           if (!res.isConnected) {
@@ -27130,7 +32925,7 @@ IP：${event.ip}
           const pages = getCurrentPages();
           const currentPage = pages[pages.length - 1];
           if (currentPage && !currentPage.route.includes("login")) {
-            formatAppLog("log", "at App.vue:139", "应用启动时检测到未登录，强制跳转到登录页面");
+            formatAppLog("log", "at App.vue:144", "应用启动时检测到未登录，强制跳转到登录页面");
             uni.reLaunch({
               url: "/pages/denglu/login"
             });
@@ -27143,15 +32938,15 @@ IP：${event.ip}
       initLoginInterceptor() {
         uni.addInterceptor("navigateTo", {
           invoke(e) {
-            formatAppLog("log", "at App.vue:154", "拦截 navigateTo:", e.url);
+            formatAppLog("log", "at App.vue:159", "拦截 navigateTo:", e.url);
             if (e.url.includes("/pages/denglu/login") || e.url.includes("/pages/register/register")) {
-              formatAppLog("log", "at App.vue:158", "跳转到登录页面或注册页面，允许");
+              formatAppLog("log", "at App.vue:163", "跳转到登录页面或注册页面，允许");
               return true;
             }
             if (!forceCheckLogin()) {
-              formatAppLog("log", "at App.vue:164", "用户未登录，阻止页面跳转");
+              formatAppLog("log", "at App.vue:169", "用户未登录，阻止页面跳转");
               if (e.url.includes("/pages/wealth/")) {
-                formatAppLog("log", "at App.vue:167", "财富页面，允许跳转但需要登录检查");
+                formatAppLog("log", "at App.vue:172", "财富页面，允许跳转但需要登录检查");
                 return true;
               }
               return false;
@@ -27161,9 +32956,9 @@ IP：${event.ip}
         });
         uni.addInterceptor("switchTab", {
           invoke(e) {
-            formatAppLog("log", "at App.vue:180", "拦截 switchTab:", e.url);
+            formatAppLog("log", "at App.vue:185", "拦截 switchTab:", e.url);
             if (!forceCheckLogin()) {
-              formatAppLog("log", "at App.vue:184", "用户未登录，阻止tabBar跳转");
+              formatAppLog("log", "at App.vue:189", "用户未登录，阻止tabBar跳转");
               return false;
             }
             return true;
@@ -27171,13 +32966,13 @@ IP：${event.ip}
         });
         uni.addInterceptor("reLaunch", {
           invoke(e) {
-            formatAppLog("log", "at App.vue:195", "拦截 reLaunch:", e.url);
+            formatAppLog("log", "at App.vue:200", "拦截 reLaunch:", e.url);
             if (e.url.includes("/pages/denglu/login") || e.url.includes("/pages/register/register")) {
-              formatAppLog("log", "at App.vue:199", "重定向到登录页面或注册页面，允许");
+              formatAppLog("log", "at App.vue:204", "重定向到登录页面或注册页面，允许");
               return true;
             }
             if (!forceCheckLogin()) {
-              formatAppLog("log", "at App.vue:205", "用户未登录，阻止重定向");
+              formatAppLog("log", "at App.vue:210", "用户未登录，阻止重定向");
               return false;
             }
             return true;
@@ -27185,13 +32980,13 @@ IP：${event.ip}
         });
         uni.addInterceptor("redirectTo", {
           invoke(e) {
-            formatAppLog("log", "at App.vue:216", "拦截 redirectTo:", e.url);
+            formatAppLog("log", "at App.vue:221", "拦截 redirectTo:", e.url);
             if (e.url.includes("/pages/denglu/login") || e.url.includes("/pages/register/register")) {
-              formatAppLog("log", "at App.vue:220", "重定向到登录页面或注册页面，允许");
+              formatAppLog("log", "at App.vue:225", "重定向到登录页面或注册页面，允许");
               return true;
             }
             if (!forceCheckLogin()) {
-              formatAppLog("log", "at App.vue:226", "用户未登录，阻止重定向");
+              formatAppLog("log", "at App.vue:231", "用户未登录，阻止重定向");
               return false;
             }
             return true;
@@ -27217,7 +33012,7 @@ IP：${event.ip}
           };
           uni.setStorageSync("appState", appState);
         } catch (error) {
-          formatAppLog("error", "at App.vue:256", "保存应用状态失败:", error);
+          formatAppLog("error", "at App.vue:261", "保存应用状态失败:", error);
         }
       },
       /**
@@ -27233,14 +33028,14 @@ IP：${event.ip}
             }
           }
         } catch (error) {
-          formatAppLog("error", "at App.vue:274", "恢复应用状态失败:", error);
+          formatAppLog("error", "at App.vue:279", "恢复应用状态失败:", error);
         }
       },
       /**
        * 错误上报
        */
       reportError(error) {
-        formatAppLog("error", "at App.vue:283", "错误上报:", error);
+        formatAppLog("error", "at App.vue:288", "错误上报:", error);
       }
     },
     /**
@@ -27271,8 +33066,8 @@ IP：${event.ip}
     const app = vue.createVueApp(App);
     const currentEnv = getEnvironment();
     app.config.errorHandler = (err, vm, info) => {
-      formatAppLog("error", "at main.js:36", "Vue Error:", err);
-      formatAppLog("error", "at main.js:37", "Error Info:", info);
+      formatAppLog("error", "at main.js:37", "Vue Error:", err);
+      formatAppLog("error", "at main.js:38", "Error Info:", info);
       reportError(err, info);
       uni.showToast({
         title: "应用出现错误，请重试",
@@ -27281,8 +33076,8 @@ IP：${event.ip}
       });
     };
     app.config.warnHandler = (msg, vm, trace) => {
-      formatAppLog("warn", "at main.js:52", "Vue Warning:", msg);
-      formatAppLog("warn", "at main.js:53", "Warning Trace:", trace);
+      formatAppLog("warn", "at main.js:53", "Vue Warning:", msg);
+      formatAppLog("warn", "at main.js:54", "Warning Trace:", trace);
     };
     app.config.globalProperties.$app = {
       // 应用版本
@@ -27381,12 +33176,12 @@ IP：${event.ip}
             };
           }
           config.url += (config.url.includes("?") ? "&" : "?") + `_t=${Date.now()}`;
-          formatAppLog("log", "at main.js:176", "Request:", config);
+          formatAppLog("log", "at main.js:177", "Request:", config);
           return config;
         },
         // 响应拦截器
         afterResponse(response) {
-          formatAppLog("log", "at main.js:182", "Response:", response);
+          formatAppLog("log", "at main.js:183", "Response:", response);
           if (response.statusCode === 401) {
             uni.removeStorageSync("token");
             uni.removeStorageSync("userInfo");
@@ -27416,7 +33211,7 @@ IP：${event.ip}
             });
             return this.afterResponse(response);
           } catch (error) {
-            formatAppLog("error", "at main.js:218", "Request Error:", error);
+            formatAppLog("error", "at main.js:219", "Request Error:", error);
             if (error.errMsg && error.errMsg.includes("request:fail")) {
               uni.showToast({
                 title: "网络连接失败，请检查网络设置",
@@ -27472,7 +33267,7 @@ IP：${event.ip}
           try {
             uni.setStorageSync(key, JSON.stringify(data));
           } catch (error) {
-            formatAppLog("error", "at main.js:284", "Storage Set Error:", error);
+            formatAppLog("error", "at main.js:285", "Storage Set Error:", error);
           }
         },
         // 获取存储
@@ -27488,7 +33283,7 @@ IP：${event.ip}
             }
             return parsed.value;
           } catch (error) {
-            formatAppLog("error", "at main.js:304", "Storage Get Error:", error);
+            formatAppLog("error", "at main.js:305", "Storage Get Error:", error);
             return defaultValue;
           }
         },
@@ -27497,7 +33292,7 @@ IP：${event.ip}
           try {
             uni.removeStorageSync(key);
           } catch (error) {
-            formatAppLog("error", "at main.js:314", "Storage Remove Error:", error);
+            formatAppLog("error", "at main.js:315", "Storage Remove Error:", error);
           }
         },
         // 清空存储
@@ -27505,7 +33300,7 @@ IP：${event.ip}
           try {
             uni.clearStorageSync();
           } catch (error) {
-            formatAppLog("error", "at main.js:323", "Storage Clear Error:", error);
+            formatAppLog("error", "at main.js:324", "Storage Clear Error:", error);
           }
         }
       }
@@ -27513,25 +33308,25 @@ IP：${event.ip}
     app.mixin({
       // 页面生命周期
       onLoad(options) {
-        formatAppLog("log", "at main.js:333", "Page Load:", this.$options.name, options);
+        formatAppLog("log", "at main.js:334", "Page Load:", this.$options.name, options);
         this.pageStartTime = Date.now();
       },
       onShow() {
-        formatAppLog("log", "at main.js:340", "Page Show:", this.$options.name);
+        formatAppLog("log", "at main.js:341", "Page Show:", this.$options.name);
       },
       onHide() {
-        formatAppLog("log", "at main.js:344", "Page Hide:", this.$options.name);
+        formatAppLog("log", "at main.js:345", "Page Hide:", this.$options.name);
         if (this.pageStartTime) {
           const duration = Date.now() - this.pageStartTime;
-          formatAppLog("log", "at main.js:349", "Page Duration:", this.$options.name, duration + "ms");
+          formatAppLog("log", "at main.js:350", "Page Duration:", this.$options.name, duration + "ms");
         }
       },
       onUnload() {
-        formatAppLog("log", "at main.js:354", "Page Unload:", this.$options.name);
+        formatAppLog("log", "at main.js:355", "Page Unload:", this.$options.name);
       },
       // 错误处理
       onError(error) {
-        formatAppLog("error", "at main.js:359", "Page Error:", this.$options.name, error);
+        formatAppLog("error", "at main.js:360", "Page Error:", this.$options.name, error);
         reportError(error, `Page: ${this.$options.name}`);
       }
     });
@@ -27549,15 +33344,15 @@ IP：${event.ip}
       userAgent: uni.getSystemInfoSync(),
       url: ((_a = getCurrentPages().pop()) == null ? void 0 : _a.route) || "unknown"
     };
-    formatAppLog("error", "at main.js:385", "Error Report:", errorData);
+    formatAppLog("error", "at main.js:386", "Error Report:", errorData);
   }
   if (typeof window !== "undefined") {
     window.addEventListener("error", (event) => {
-      formatAppLog("error", "at main.js:398", "Global Error:", event.error);
+      formatAppLog("error", "at main.js:399", "Global Error:", event.error);
       reportError(event.error, "Global Error");
     });
     window.addEventListener("unhandledrejection", (event) => {
-      formatAppLog("error", "at main.js:403", "Unhandled Promise Rejection:", event.reason);
+      formatAppLog("error", "at main.js:404", "Unhandled Promise Rejection:", event.reason);
       reportError(event.reason, "Unhandled Promise Rejection");
     });
   }

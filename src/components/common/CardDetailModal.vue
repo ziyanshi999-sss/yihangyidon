@@ -8,18 +8,18 @@
       
       <view class="modal-content">
         <!-- 卡片预览 -->
-        <view class="card-preview" :style="{ background: cardInfo.cardColor }">
+        <view class="card-preview" :style="{ background: (cardInfo && cardInfo.cardColor) || 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)' }">
           <view class="preview-header">
             <view class="card-brand">
-              <text class="brand-text">{{ cardInfo.bankName }}</text>
+              <text class="brand-text">{{ (cardInfo && cardInfo.bankName) || '未知银行' }}</text>
             </view>
             <view class="card-type">
-              <text class="type-text">{{ cardInfo.cardType }}</text>
+              <text class="type-text">{{ (cardInfo && cardInfo.cardType) || '信用卡' }}</text>
             </view>
           </view>
           
           <view class="card-number">
-            <text class="number-text">**** **** **** {{ cardInfo.cardNumber.slice(-4) }}</text>
+            <text class="number-text">{{ formatCardNumber(cardInfo && cardInfo.cardNumber) }}</text>
           </view>
           
           <view class="card-footer">
@@ -28,7 +28,7 @@
               <text class="holder-name">张小明</text>
             </view>
             <view class="card-status">
-              <text class="status-text">{{ getStatusText(cardInfo.status) }}</text>
+              <text class="status-text">{{ getStatusText(cardInfo && cardInfo.status) }}</text>
             </view>
           </view>
         </view>
@@ -39,19 +39,19 @@
           <view class="info-grid">
             <view class="info-item">
               <text class="info-label">银行名称</text>
-              <text class="info-value">{{ cardInfo.bankName }}</text>
+              <text class="info-value">{{ (cardInfo && cardInfo.bankName) || '未知银行' }}</text>
             </view>
             <view class="info-item">
               <text class="info-label">卡片类型</text>
-              <text class="info-value">{{ cardInfo.cardType }}</text>
+              <text class="info-value">{{ (cardInfo && cardInfo.cardType) || '信用卡' }}</text>
             </view>
             <view class="info-item">
               <text class="info-label">卡号</text>
-              <text class="info-value">**** **** **** {{ cardInfo.cardNumber.slice(-4) }}</text>
+              <text class="info-value">{{ formatCardNumber(cardInfo && cardInfo.cardNumber) }}</text>
             </view>
             <view class="info-item">
               <text class="info-label">状态</text>
-              <text class="info-value">{{ getStatusText(cardInfo.status) }}</text>
+              <text class="info-value">{{ getStatusText(cardInfo && cardInfo.status) }}</text>
             </view>
           </view>
         </view>
@@ -62,19 +62,19 @@
           <view class="info-grid">
             <view class="info-item">
               <text class="info-label">授信额度</text>
-              <text class="info-value">¥{{ cardInfo.creditLimit.toLocaleString() }}</text>
+              <text class="info-value">{{ formatCurrency(cardInfo && cardInfo.creditLimit) }}</text>
             </view>
             <view class="info-item">
               <text class="info-label">可用额度</text>
-              <text class="info-value available">¥{{ cardInfo.availableCredit.toLocaleString() }}</text>
+              <text class="info-value available">{{ formatCurrency(cardInfo && cardInfo.availableCredit) }}</text>
             </view>
             <view class="info-item">
               <text class="info-label">当前欠款</text>
-              <text class="info-value debt">¥{{ cardInfo.currentBalance.toLocaleString() }}</text>
+              <text class="info-value debt">{{ formatCurrency(cardInfo && cardInfo.currentBalance) }}</text>
             </view>
             <view class="info-item">
               <text class="info-label">已用额度</text>
-              <text class="info-value">¥{{ (cardInfo.creditLimit - cardInfo.availableCredit).toLocaleString() }}</text>
+              <text class="info-value">{{ formatCurrency((cardInfo && cardInfo.creditLimit) - (cardInfo && cardInfo.availableCredit)) }}</text>
             </view>
           </view>
         </view>
@@ -93,7 +93,7 @@
             </view>
             <view class="info-item">
               <text class="info-label">最低还款额</text>
-              <text class="info-value">¥{{ (cardInfo.currentBalance * 0.1).toFixed(2) }}</text>
+              <text class="info-value">{{ formatCurrency((cardInfo && cardInfo.currentBalance) * 0.1) }}</text>
             </view>
             <view class="info-item">
               <text class="info-label">免息期</text>
@@ -109,29 +109,29 @@
             <view class="feature-item">
               <text class="feature-icon">📱</text>
               <text class="feature-text">短信通知</text>
-              <text class="feature-status" :class="{ active: cardInfo.securityFeatures?.smsNotification }">
-                {{ cardInfo.securityFeatures?.smsNotification ? '已开启' : '未开启' }}
+              <text class="feature-status" :class="{ active: cardInfo && cardInfo.securityFeatures?.smsNotification }">
+                {{ (cardInfo && cardInfo.securityFeatures?.smsNotification) ? '已开启' : '未开启' }}
               </text>
             </view>
             <view class="feature-item">
               <text class="feature-icon">📧</text>
               <text class="feature-text">邮件通知</text>
-              <text class="feature-status" :class="{ active: cardInfo.securityFeatures?.emailNotification }">
-                {{ cardInfo.securityFeatures?.emailNotification ? '已开启' : '未开启' }}
+              <text class="feature-status" :class="{ active: cardInfo && cardInfo.securityFeatures?.emailNotification }">
+                {{ (cardInfo && cardInfo.securityFeatures?.emailNotification) ? '已开启' : '未开启' }}
               </text>
             </view>
             <view class="feature-item">
               <text class="feature-icon">🔒</text>
               <text class="feature-text">生物识别</text>
-              <text class="feature-status" :class="{ active: cardInfo.securityFeatures?.biometricAuth }">
-                {{ cardInfo.securityFeatures?.biometricAuth ? '已开启' : '未开启' }}
+              <text class="feature-status" :class="{ active: cardInfo && cardInfo.securityFeatures?.biometricAuth }">
+                {{ (cardInfo && cardInfo.securityFeatures?.biometricAuth) ? '已开启' : '未开启' }}
               </text>
             </view>
             <view class="feature-item">
               <text class="feature-icon">💰</text>
               <text class="feature-text">交易限额</text>
               <text class="feature-status">
-                ¥{{ cardInfo.securityFeatures?.transactionLimit?.toLocaleString() || '5000' }}
+                {{ formatCurrency((cardInfo && cardInfo.securityFeatures?.transactionLimit) || 5000) }}
               </text>
             </view>
           </view>
@@ -156,12 +156,48 @@ export default {
     },
     cardInfo: {
       type: Object,
-      default: () => ({})
+      default: () => ({
+        cardColor: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
+        bankName: '未知银行',
+        cardType: '信用卡',
+        cardNumber: '0000000000000000',
+        status: 'active',
+        creditLimit: 0,
+        availableCredit: 0,
+        currentBalance: 0,
+        billDate: 15,
+        repaymentDate: 3,
+        securityFeatures: {
+          smsNotification: false,
+          emailNotification: false,
+          biometricAuth: false,
+          transactionLimit: 5000
+        }
+      })
+    },
+    balanceVisible: {
+      type: Boolean,
+      default: true
     }
   },
   methods: {
     closeModal() {
       this.$emit('close')
+    },
+    formatCurrency(amount) {
+      if (!this.balanceVisible) return '****'
+      return `¥${(amount || 0).toLocaleString()}`
+    },
+    formatCardNumber(cardNumber) {
+      if (!this.balanceVisible) {
+        return '**** **** **** ****'
+      }
+      // 处理空值情况
+      if (!cardNumber) {
+        return '0000 0000 0000 0000'
+      }
+      // 显示完整卡号，每4位用空格分隔
+      return cardNumber.replace(/(\d{4})(?=\d)/g, '$1 ')
     },
     handleRepay() {
       this.$emit('repay', this.cardInfo)
@@ -204,10 +240,12 @@ export default {
   border-radius: 24rpx;
   width: 90%;
   max-width: 600rpx;
-  max-height: 90vh;
+  max-height: 85vh;
   overflow: hidden;
   border: 1rpx solid rgba(59, 130, 246, 0.2);
   box-shadow: 0 20rpx 60rpx rgba(59, 130, 246, 0.2);
+  display: flex;
+  flex-direction: column;
 }
 
 .modal-header {
@@ -232,8 +270,9 @@ export default {
 
 .modal-content {
   padding: 30rpx;
-  max-height: calc(90vh - 200rpx);
+  flex: 1;
   overflow-y: auto;
+  min-height: 0;
 }
 
 /* 卡片预览 - 清新风格 */
@@ -412,17 +451,23 @@ export default {
   gap: 20rpx;
   padding: 30rpx;
   border-top: 1rpx solid rgba(59, 130, 246, 0.1);
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 0 0 24rpx 24rpx;
+  flex-shrink: 0;
 }
 
 .btn-secondary, .btn-primary {
   flex: 1;
-  height: 80rpx;
+  height: 88rpx;
   border-radius: 12rpx;
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: 600;
   border: none;
   cursor: pointer;
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-secondary {

@@ -102,6 +102,16 @@
 						</view>
 						<text class="arrow">></text>
 					</view>
+					<view class="menu-item ai-wealth-item" @click="goToAIWealthManager">
+						<view class="menu-left">
+							<text class="menu-icon">🤖</text>
+							<view class="menu-text-container">
+								<text class="menu-text">智能财富管家</text>
+								<view class="ai-badge">AI</view>
+							</view>
+						</view>
+						<text class="arrow">></text>
+					</view>
 				</view>
 			</view>
 
@@ -263,6 +273,11 @@ export default {
 		goToSecurity() {
 			uni.navigateTo({
 				url: '/pages/user/security'
+			})
+		},
+		goToAIWealthManager() {
+			uni.navigateTo({
+				url: '/pages/wealth/ai-wealth-manager'
 			})
 		},
 		goToContact() {
@@ -717,6 +732,44 @@ export default {
 	font-size: 30rpx;
 	color: var(--text-color, #333);
 	font-weight: 500;
+}
+
+/* AI财富管家特殊样式 */
+.ai-wealth-item {
+	position: relative;
+}
+
+.menu-text-container {
+	display: flex;
+	align-items: center;
+	gap: 12rpx;
+}
+
+.ai-badge {
+	background: linear-gradient(135deg, #4caf50, #2e7d32);
+	color: white;
+	font-size: 18rpx;
+	font-weight: bold;
+	padding: 4rpx 8rpx;
+	border-radius: 8rpx;
+	box-shadow: 0 2rpx 8rpx rgba(76, 175, 80, 0.3);
+	animation: pulse 2s infinite;
+	white-space: nowrap;
+}
+
+@keyframes pulse {
+	0% {
+		transform: scale(1);
+		box-shadow: 0 2rpx 8rpx rgba(76, 175, 80, 0.3);
+	}
+	50% {
+		transform: scale(1.05);
+		box-shadow: 0 4rpx 16rpx rgba(76, 175, 80, 0.5);
+	}
+	100% {
+		transform: scale(1);
+		box-shadow: 0 2rpx 8rpx rgba(76, 175, 80, 0.3);
+	}
 }
 
 .arrow {
