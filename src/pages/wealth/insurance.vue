@@ -43,7 +43,8 @@
       </view>
       <view class="chart-container">
         <canvas 
-          canvas-id="insuranceChart" 
+          :id="'insuranceChart'"
+          :canvas-id="'insuranceChart'"
           class="chart-canvas"
           @touchstart="onChartTouch"
         ></canvas>
@@ -184,7 +185,7 @@
 
 <script>
 import { getInsuranceCategories, purchaseInsuranceProduct, getCurrentUserId, initWealthDataSync } from '@/api/wealth.js'
-import { drawSimpleBarChart } from '@/utils/simple-chart.js'
+import { initUCharts, createInsuranceChart } from '@/utils/ucharts.js'
 
 export default {
   data() {
@@ -416,24 +417,15 @@ export default {
         await new Promise(resolve => setTimeout(resolve, 200))
         // #endif
         
-        // 计算各保险类别的平均保费
-        const chartData = insuranceCategories.map(category => {
-          const avgPremium = category.products.reduce((sum, product) => sum + product.premium, 0) / category.products.length
-          return avgPremium
-        })
+        // 使用uCharts渲染图表
+        const option = createInsuranceChart({ categories: insuranceCategories })
+        this.chartInstance = await initUCharts('insuranceChart', option, this)
         
-        const labels = insuranceCategories.map(category => category.name)
-        
-        // 使用简单图表工具渲染柱状图
-        drawSimpleBarChart('insuranceChart', {
-          data: chartData,
-          labels: labels,
-          title: '保险产品平均保费',
-          yAxisLabel: '保费(元)',
-          colors: ['#FF6B35', '#34C759', '#FF9500']
-        })
-        
-        console.log('✅ 保险图表渲染成功')
+        if (this.chartInstance) {
+          console.log('✅ 保险图表渲染成功 (uCharts)')
+        } else {
+          console.warn('❌ uCharts图表渲染失败')
+        }
       } catch (error) {
         console.error('❌ 保险图表渲染失败:', error)
         // 降级处理：显示文本信息
@@ -654,7 +646,7 @@ export default {
 }
 
 .chart-container {
-  height: 400rpx;
+  height: 300rpx;
   border-radius: 12rpx;
   overflow: hidden;
 }

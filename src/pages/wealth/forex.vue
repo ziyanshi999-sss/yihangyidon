@@ -83,7 +83,8 @@
       </view>
       <view class="chart-container">
         <canvas 
-          canvas-id="forexChart" 
+          :id="'forexChart'"
+          :canvas-id="'forexChart'"
           class="chart-canvas"
           @touchstart="onChartTouch"
         ></canvas>
@@ -208,7 +209,7 @@
 
 <script>
 import { getForexMajorPairs, getForexTradingPairs } from '@/api/wealth.js'
-import { drawSimpleLineChart } from '@/utils/simple-chart.js'
+import { initUCharts, createForexChart } from '@/utils/ucharts.js'
 
 export default {
   data() {
@@ -383,20 +384,15 @@ export default {
         await new Promise(resolve => setTimeout(resolve, 200))
         // #endif
         
-        // 提取汇率数据用于图表
-        const chartData = forexData.majorPairs.map(pair => parseFloat(pair.price))
-        const labels = forexData.majorPairs.map(pair => pair.code)
+        // 使用uCharts渲染图表
+        const option = createForexChart(forexData)
+        this.chartInstance = await initUCharts('forexChart', option, this)
         
-        // 使用简单图表工具渲染折线图
-        drawSimpleLineChart('forexChart', {
-          data: chartData,
-          labels: labels,
-          title: '主要货币对汇率',
-          yAxisLabel: '汇率',
-          colors: ['#FF6B35', '#34C759', '#FF9500', '#007AFF', '#AF52DE', '#FF2D92']
-        })
-        
-        console.log('✅ 外汇图表渲染成功')
+        if (this.chartInstance) {
+          console.log('✅ 外汇图表渲染成功 (uCharts)')
+        } else {
+          console.warn('❌ uCharts图表渲染失败')
+        }
       } catch (error) {
         console.error('❌ 外汇图表渲染失败:', error)
         // 降级处理：显示文本信息
@@ -737,7 +733,7 @@ export default {
 }
 
 .chart-container {
-  height: 400rpx;
+  height: 300rpx;
   border-radius: 12rpx;
   overflow: hidden;
 }

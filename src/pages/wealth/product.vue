@@ -59,7 +59,8 @@
       </view>
       <view class="chart-container">
         <canvas 
-          canvas-id="yieldChart" 
+          :id="'yieldChart'"
+          :canvas-id="'yieldChart'"
           class="chart-canvas"
           @touchstart="onChartTouch"
         ></canvas>
@@ -324,7 +325,7 @@
 
 <script>
 import { getWealthProductCategories, purchaseWealthProduct, getCurrentUserId, initWealthDataSync } from '@/api/wealth.js'
-import { drawSimpleBarChart } from '@/utils/simple-chart.js'
+import { initUCharts, createWealthProductChart } from '@/utils/ucharts.js'
 
 export default {
   data() {
@@ -529,25 +530,28 @@ export default {
       }
     },
     
-    initChart(chartConfig) {
+    async initChart(chartConfig) {
       try {
-        console.log('开始渲染理财产品图表')
+        console.log('🎨 开始渲染理财产品图表')
         
-        // 使用简单图表工具渲染图表
-        const chartData = this.productCategories?.map(category => {
-          const products = category.products || []
-          const totalYield = products.reduce((sum, product) => sum + (product.yield || 0), 0)
-          return products.length > 0 ? (totalYield / products.length) : 0
-        }) || [3.2, 3.8, 4.1]
+        // #ifdef APP-PLUS
+        // App-Plus环境需要延迟初始化
+        await this.$nextTick()
+        await new Promise(resolve => setTimeout(resolve, 200))
+        // #endif
         
-        drawSimpleBarChart('yieldChart', chartData, this)
-        console.log('理财产品图表渲染成功')
+        // 使用uCharts渲染图表
+        const option = createWealthProductChart(this.productCategories)
+        this.chartInstance = await initUCharts('yieldChart', option, this)
+        
+        if (this.chartInstance) {
+          console.log('✅ 理财产品图表渲染成功 (uCharts)')
+        } else {
+          console.warn('❌ uCharts图表渲染失败')
+        }
         
       } catch (error) {
-        console.error('图表渲染失败:', error)
-        // 使用默认数据作为备用
-        const defaultData = [3.2, 3.8, 4.1]
-        drawSimpleBarChart('yieldChart', defaultData, this)
+        console.error('❌ 图表渲染失败:', error)
       }
     },
     
@@ -860,7 +864,7 @@ export default {
 }
 
 .chart-container {
-  height: 400rpx;
+  height: 300rpx;
   border-radius: 12rpx;
   overflow: hidden;
 }
@@ -1419,3 +1423,4 @@ export default {
   line-height: 1.4;
 }
 </style>
+
