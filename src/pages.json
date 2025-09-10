@@ -90,6 +90,62 @@
 			}
 		},
 		{
+			"path": "pages/electric/electric",
+			"style": {
+				"navigationBarTitleText": "电费",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/electric-payment/electric-payment",
+			"style": {
+				"navigationBarTitleText": "电费缴费",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/gas/gas",
+			"style": {
+				"navigationBarTitleText": "燃气费",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/gas-payment/gas-payment",
+			"style": {
+				"navigationBarTitleText": "燃气费缴费",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/broadband/broadband",
+			"style": {
+				"navigationBarTitleText": "宽带费",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/broadband-payment/broadband-payment",
+			"style": {
+				"navigationBarTitleText": "宽带费缴费",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/tv/tv",
+			"style": {
+				"navigationBarTitleText": "有线电视费",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/tv-payment/tv-payment",
+			"style": {
+				"navigationBarTitleText": "有线电视费缴费",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
 			"path": "pages/city-select/city-select",
 			"style": {
 				"navigationBarTitleText": "选择城市",
@@ -260,26 +316,26 @@
 		"list": [
 			{
 				"pagePath": "pages/index/index",
-				"iconPath": "static/tabbar/home.png",
-				"selectedIconPath": "static/tabbar/home-active.png",
+				"iconPath": "static/tabbar/home.jpg",
+				"selectedIconPath": "static/tabbar/home-active.jpg",
 				"text": "首页"
 			},
 			{
 				"pagePath": "pages/wealth/wealth",
-				"iconPath": "static/tabbar/service.png",
-				"selectedIconPath": "static/tabbar/service-active.png",
+				"iconPath": "static/tabbar/service.jpg",
+				"selectedIconPath": "static/tabbar/service-active.jpg",
 				"text": "财富"
 			},
 			{
 				"pagePath": "pages/life/life",
-				"iconPath": "static/tabbar/order.png",
-				"selectedIconPath": "static/tabbar/order-active.png",
+				"iconPath": "static/tabbar/order.jpg",
+				"selectedIconPath": "static/tabbar/order-active.jpg",
 				"text": "生活"
 			},
 			{
 				"pagePath": "pages/user/user",
-				"iconPath": "static/tabbar/user.png",
-				"selectedIconPath": "static/tabbar/user-active.png",
+				"iconPath": "static/tabbar/user.jpg",
+				"selectedIconPath": "static/tabbar/user-active.jpg",
 				"text": "我的"
 			}
 		]
