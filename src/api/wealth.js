@@ -187,6 +187,54 @@ export function getCurrentUserWealthData() {
               riskLevel: '低风险',
               status: '在售',
               description: '保障家庭财产安全，覆盖房屋及室内财产损失'
+            },
+            {
+              id: 'property002',
+              name: '住宅火灾及自然灾害保险',
+              type: '家财保险',
+              premium: 380,
+              coverage: 300000,
+              term: '1年',
+              features: ['火灾爆炸', '台风暴雨', '冰雹洪水', '附加盗抢'],
+              riskLevel: '低风险',
+              status: '在售',
+              description: '针对住宅火灾与自然灾害造成的房屋及室内财产损失提供保障'
+            },
+            {
+              id: 'property003',
+              name: '企业财产综合保险',
+              type: '企业财产险',
+              premium: 2600,
+              coverage: 5000000,
+              term: '1年',
+              features: ['房屋机器', '存货成品', '盗抢责任', '营业中断可选'],
+              riskLevel: '中风险',
+              status: '在售',
+              description: '适用于中小企业，对房屋、机器设备、存货等提供综合保障，可选营业中断险'
+            },
+            {
+              id: 'property004',
+              name: '设备损坏保险（家商两用）',
+              type: '设备险',
+              premium: 980,
+              coverage: 1000000,
+              term: '1年',
+              features: ['意外损坏', '操作不当', '电涌短路', '零部件更换'],
+              riskLevel: '中风险',
+              status: '在售',
+              description: '对家用或商用设备因意外损坏、操作不当、电气故障造成的损失进行赔偿'
+            },
+            {
+              id: 'property005',
+              name: '租客家财与第三者责任保险',
+              type: '家财责任险',
+              premium: 260,
+              coverage: 200000,
+              term: '1年',
+              features: ['室内财产', '租客责任', '第三者责任', '水渍玻璃破碎'],
+              riskLevel: '低风险',
+              status: '在售',
+              description: '面向租住房人群，覆盖室内财产、租客责任与第三者责任等常见风险'
             }
           ]
         }

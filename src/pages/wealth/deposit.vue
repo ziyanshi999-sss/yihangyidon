@@ -1,18 +1,5 @@
 <template>
   <view class="deposit-page">
-    <!-- 头部导航 -->
-    <view class="header">
-      <view class="nav-bar">
-        <view class="nav-left" @click="goBack">
-          <text class="nav-icon">‹</text>
-        </view>
-        <text class="nav-title">存款产品</text>
-        <view class="nav-right">
-          <text class="nav-icon" @click="onRefresh">⟳</text>
-        </view>
-      </view>
-    </view>
-
     <!-- 我的存款概览 -->
     <view class="overview-card">
       <view class="overview-header">
@@ -529,13 +516,6 @@ export default {
   },
   
   methods: {
-    goBack() {
-      uni.navigateBack()
-    },
-    
-    onRefresh() {
-      this.loadDepositData()
-    },
     
     toggleAmountVisibility() {
       this.hideAmount = !this.hideAmount
@@ -856,37 +836,6 @@ export default {
   min-height: 100vh;
 }
 
-/* 头部导航 */
-.header {
-  background: #fff;
-  border-bottom: 1rpx solid #eee;
-}
-
-.nav-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20rpx 30rpx;
-  height: 88rpx;
-}
-
-.nav-left, .nav-right {
-  width: 60rpx;
-  text-align: center;
-}
-
-.nav-icon {
-  font-size: 36rpx;
-  color: #333;
-  font-weight: bold;
-}
-
-.nav-title {
-  font-size: 32rpx;
-  font-weight: 600;
-  color: #333;
-}
-
 /* 概览卡片 */
 .overview-card {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -974,7 +923,7 @@ export default {
 }
 
 .chart-container {
-  height: 300rpx;
+  height: 400rpx;
   border-radius: 12rpx;
   overflow: hidden;
 }

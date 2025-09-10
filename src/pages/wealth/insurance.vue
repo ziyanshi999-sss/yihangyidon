@@ -1,18 +1,5 @@
 <template>
   <view class="insurance-page">
-    <!-- 头部导航 -->
-    <view class="header">
-      <view class="nav-bar">
-        <view class="nav-left" @click="goBack">
-          <text class="nav-icon">‹</text>
-        </view>
-        <text class="nav-title">保险产品</text>
-        <view class="nav-right">
-          <text class="nav-icon" @click="onRefresh">⟳</text>
-        </view>
-      </view>
-    </view>
-
     <!-- 保险市场概览 -->
     <view class="market-overview">
       <view class="overview-header">
@@ -49,6 +36,17 @@
           @touchstart="onChartTouch"
         ></canvas>
       </view>
+      <!-- 一行图例 -->
+      <view class="legend-row" v-if="insuranceCategories && insuranceCategories.length">
+        <scroll-view class="legend-scroll" scroll-x="true">
+          <view class="legend-list">
+            <view class="legend-item" v-for="cat in insuranceCategories" :key="cat.id">
+              <text class="legend-dot" :style="{ background: cat.color }"></text>
+              <text class="legend-name">{{ cat.name }}</text>
+            </view>
+          </view>
+        </scroll-view>
+      </view>
     </view>
 
     <!-- 保险类型筛选 -->
@@ -82,6 +80,13 @@
             @click="activeFilter = 'life'"
           >
             寿险
+          </view>
+          <view 
+            class="filter-item" 
+            :class="{ active: activeFilter === 'property' }"
+            @click="activeFilter = 'property'"
+          >
+            财产险
           </view>
         </view>
       </scroll-view>
@@ -361,13 +366,6 @@ export default {
   },
   
   methods: {
-    goBack() {
-      uni.navigateBack()
-    },
-    
-    onRefresh() {
-      this.loadInsuranceData()
-    },
     
     async loadInsuranceData() {
       try {
@@ -538,37 +536,6 @@ export default {
   min-height: 100vh;
 }
 
-/* 头部导航 */
-.header {
-  background: #fff;
-  border-bottom: 1rpx solid #eee;
-}
-
-.nav-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20rpx 30rpx;
-  height: 88rpx;
-}
-
-.nav-left, .nav-right {
-  width: 60rpx;
-  text-align: center;
-}
-
-.nav-icon {
-  font-size: 36rpx;
-  color: #333;
-  font-weight: bold;
-}
-
-.nav-title {
-  font-size: 32rpx;
-  font-weight: 600;
-  color: #333;
-}
-
 /* 市场概览 */
 .market-overview {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -646,7 +613,7 @@ export default {
 }
 
 .chart-container {
-  height: 300rpx;
+  height: 400rpx;
   border-radius: 12rpx;
   overflow: hidden;
 }
@@ -654,6 +621,33 @@ export default {
 .chart-canvas {
   width: 100%;
   height: 100%;
+}
+
+.legend-row {
+  margin: 10rpx 20rpx 0 20rpx;
+}
+.legend-scroll {
+  white-space: nowrap;
+}
+.legend-list {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20rpx;
+}
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+}
+.legend-dot {
+  width: 14rpx;
+  height: 14rpx;
+  border-radius: 50%;
+  margin-right: 8rpx;
+}
+.legend-name {
+  font-size: 22rpx;
+  color: #666;
 }
 
 /* 筛选区域 */
