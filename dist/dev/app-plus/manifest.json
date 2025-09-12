@@ -17,6 +17,9 @@
     "url": ""
   },
   "permissions": {
+    "ScreenProtector": {
+      "description": "防录屏截屏功能模块"
+    },
     "FaceID": {},
     "Payment": {},
     "Push": {},
@@ -54,6 +57,11 @@
     "usingComponents": true,
     "nvueStyleCompiler": "uni-app",
     "compilerVersion": 3,
+    "nativePlugins": {
+      "ScreenProtector": {
+        "path": "nativeplugins/ScreenProtector"
+      }
+    },
     "distribute": {
       "google": {
         "permissions": [
@@ -174,26 +182,26 @@
       "list": [
         {
           "pagePath": "pages/index/index",
-          "iconPath": "/static/tabbar/home.png",
-          "selectedIconPath": "/static/tabbar/home-active.png",
+          "iconPath": "/static/tabbar/home.jpg",
+          "selectedIconPath": "/static/tabbar/home-active.jpg",
           "text": "首页"
         },
         {
           "pagePath": "pages/wealth/wealth",
-          "iconPath": "/static/tabbar/service.png",
-          "selectedIconPath": "/static/tabbar/service-active.png",
+          "iconPath": "/static/tabbar/service.jpg",
+          "selectedIconPath": "/static/tabbar/service-active.jpg",
           "text": "财富"
         },
         {
           "pagePath": "pages/life/life",
-          "iconPath": "/static/tabbar/order.png",
-          "selectedIconPath": "/static/tabbar/order-active.png",
+          "iconPath": "/static/tabbar/order.jpg",
+          "selectedIconPath": "/static/tabbar/order-active.jpg",
           "text": "生活"
         },
         {
           "pagePath": "pages/user/user",
-          "iconPath": "/static/tabbar/user.png",
-          "selectedIconPath": "/static/tabbar/user-active.png",
+          "iconPath": "/static/tabbar/user.jpg",
+          "selectedIconPath": "/static/tabbar/user-active.jpg",
           "text": "我的"
         }
       ],

@@ -1,0 +1,51 @@
+{
+    "name": "ScreenProtector",
+    "id": "ScreenProtector",
+    "version": "1.0.0",
+    "description": "手机端防录屏截屏原生插件，支持Android FLAG_SECURE和iOS录屏检测",
+    "author": "开发者",
+    "license": "MIT",
+    "_dp_type": "nativeplugin",
+    "_dp_nativeplugin": {
+        "android": {
+            "plugins": [
+                {
+                    "type": "module",
+                    "name": "ScreenProtector",
+                    "class": "io.dcloud.uniplugin.ScreenProtectorModule"
+                }
+            ],
+            "integrateType": "aar",
+            "dependencies": [
+                "androidx.legacy:legacy-support-v4:1.0.0",
+                "androidx.appcompat:appcompat:1.4.0",
+                "com.alibaba:fastjson:1.2.83"
+            ],
+            "minSdkVersion": "21",
+            "useAndroidX": true
+        },
+        "ios": {
+            "plugins": [
+                {
+                    "type": "module",
+                    "name": "ScreenProtector",
+                    "class": "ScreenProtectorModule"
+                }
+            ],
+            "integrateType": "framework",
+            "frameworks": [
+                "UIKit.framework",
+                "Foundation.framework"
+            ],
+            "deploymentTarget": "9.0"
+        }
+    },
+    "keywords": [
+        "防录屏",
+        "截屏检测",
+        "隐私保护",
+        "安全",
+        "uni-app",
+        "原生插件"
+    ]
+}

@@ -1,0 +1,87 @@
+# 银行APP Docker部署配置
+version: '3.8'
+
+services:
+  # Web服务器（H5版本）
+  bank-app-web:
+    image: nginx:1.21-alpine
+    container_name: bank-app-web
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./h5:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./ssl:/etc/ssl:ro
+      - ./logs:/var/log/nginx
+    restart: unless-stopped
+    networks:
+      - bank-app-network
+    environment:
+      - TZ=Asia/Shanghai
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bank-app.rule=Host(`bank-app.yourbank.com`)"
+      - "traefik.http.routers.bank-app.tls=true"
+
+  # API服务器（如果需要本地API）
+  bank-app-api:
+    build: 
+      context: ../server
+      dockerfile: Dockerfile
+    container_name: bank-app-api
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DB_HOST=bank-app-db
+      - DB_PORT=5432
+      - DB_NAME=bankapp
+      - DB_USER=bankuser
+      - DB_PASS=your_secure_password
+    volumes:
+      - ./logs:/app/logs
+    restart: unless-stopped
+    networks:
+      - bank-app-network
+    depends_on:
+      - bank-app-db
+
+  # 数据库（如果需要）
+  bank-app-db:
+    image: postgres:13-alpine
+    container_name: bank-app-db
+    environment:
+      - POSTGRES_DB=bankapp
+      - POSTGRES_USER=bankuser
+      - POSTGRES_PASSWORD=your_secure_password
+    volumes:
+      - bank_app_data:/var/lib/postgresql/data
+      - ./backup:/backup
+    restart: unless-stopped
+    networks:
+      - bank-app-network
+    ports:
+      - "5432:5432"
+
+  # Redis缓存（如果需要）
+  bank-app-redis:
+    image: redis:6-alpine
+    container_name: bank-app-redis
+    restart: unless-stopped
+    networks:
+      - bank-app-network
+    volumes:
+      - bank_app_redis:/data
+    command: redis-server --appendonly yes --requirepass your_redis_password
+
+networks:
+  bank-app-network:
+    driver: bridge
+
+volumes:
+  bank_app_data:
+    driver: local
+  bank_app_redis:
+    driver: local

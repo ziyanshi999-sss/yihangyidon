@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "转账",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "payment-password-modal": "../../components/common/PaymentPasswordModal"
+  }
+}

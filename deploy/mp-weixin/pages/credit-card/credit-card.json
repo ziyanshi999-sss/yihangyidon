@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "信用卡",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "bank-card": "../../components/common/BankCard"
+  }
+}

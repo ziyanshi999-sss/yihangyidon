@@ -1,0 +1,1 @@
+"use strict";exports.canAccessPlatinumHotline=function(r){return function(r){if(!r||!r.creditCards||!Array.isArray(r.creditCards))return!1;const e=r.creditCards.some(r=>"白金卡"===r.cardType||"钻石卡"===r.cardType),t=r.balance>=5e5,c=r.creditCards.some(r=>r.creditLimit>=1e5);return e||t||c}(r)};

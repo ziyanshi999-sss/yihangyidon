@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "信用卡还款",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "repayment-password-modal": "../../components/common/RepaymentPasswordModal"
+  }
+}

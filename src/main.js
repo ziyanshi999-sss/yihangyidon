@@ -5,6 +5,7 @@
 
 import { createSSRApp } from "vue"
 import App from "./App.vue"
+import ScreenProtectorPlugin from "@/plugins/screen-protector-plugin.js"
 
 // 环境检测函数
 function getEnvironment() {
@@ -16,12 +17,12 @@ function getEnvironment() {
 			return 'development'
 		}
 	}
-	
+
 	// 回退到process.env
 	if (typeof process !== 'undefined' && process.env && process.env.NODE_ENV) {
 		return process.env.NODE_ENV
 	}
-	
+
 	// 默认返回development
 	return 'development'
 }
@@ -325,6 +326,54 @@ export function createApp() {
 			}
 		}
 	}
+
+	// 安装防录屏插件
+	app.use(ScreenProtectorPlugin, {
+		// 自动启用防录屏
+		autoEnable: true,
+		// 防护级别
+		protectionLevel: 'high',
+		// 显示警告
+		showAlert: true,
+		// 显示水印
+		showWatermark: false,
+		// 自定义水印文本
+		watermarkText: '银行APP - 隐私保护中',
+		// 排除登录和注册页面
+		excludePaths: [
+			'/pages/denglu/login',
+			'/pages/register/register'
+		],
+		// 事件回调
+		callbacks: {
+			onScreenshotDetected: (data) => {
+				console.warn('🚨 检测到截屏行为:', data)
+				// 可以在这里添加额外的处理逻辑
+				uni.showToast({
+					title: '检测到截屏，已记录',
+					icon: 'none',
+					duration: 3000
+				})
+			},
+			onRecordingDetected: (data) => {
+				console.warn('🚨 检测到录屏行为:', data)
+				// 可以在这里添加额外的处理逻辑
+				uni.showModal({
+					title: '安全警告',
+					content: '检测到录屏行为，为保护您的隐私安全，请停止录屏操作。',
+					showCancel: false,
+					confirmText: '知道了',
+					confirmColor: '#ff4444'
+				})
+			},
+			onProtectionEnabled: (data) => {
+				console.log('✅ 防录屏保护已启用:', data)
+			},
+			onProtectionDisabled: () => {
+				console.log('🔓 防录屏保护已禁用')
+			}
+		}
+	})
 
 	// 全局混入
 	app.mixin({
