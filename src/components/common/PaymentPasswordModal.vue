@@ -30,7 +30,7 @@
         <!-- 密码输入区域 -->
         <view class="password-input-section">
           <view class="input-label">请输入交易密码</view>
-          <view class="password-dots">
+          <view class="password-dots" @click="focusInput">
             <view 
               v-for="(dot, index) in passwordDots" 
               :key="index"
@@ -51,6 +51,25 @@
             @input="onPasswordInput"
             @focus="onInputFocus"
             @blur="onInputBlur"
+            @keyup="onPasswordInput"
+            @keydown="onPasswordInput"
+            inputmode="numeric"
+            pattern="[0-9]*"
+          />
+          
+          <!-- 备用输入框（用于移动端） -->
+          <input
+            ref="passwordInputMobile"
+            type="tel"
+            v-model="currentPassword"
+            maxlength="6"
+            class="mobile-input"
+            @input="onPasswordInput"
+            @focus="onInputFocus"
+            @blur="onInputBlur"
+            inputmode="numeric"
+            pattern="[0-9]*"
+            placeholder="请输入6位数字密码"
           />
         </view>
 
@@ -130,24 +149,47 @@ export default {
     },
     
     focusInput() {
+      console.log('尝试获得输入框焦点')
+      
+      // 优先尝试移动端输入框
+      if (this.$refs.passwordInputMobile) {
+        try {
+          this.$refs.passwordInputMobile.focus()
+          console.log('移动端输入框焦点设置成功')
+          return
+        } catch (error) {
+          console.error('设置移动端输入框焦点失败:', error)
+        }
+      }
+      
+      // 备用：尝试隐藏输入框
       if (this.$refs.passwordInput) {
-        this.$refs.passwordInput.focus()
+        try {
+          this.$refs.passwordInput.focus()
+          console.log('隐藏输入框焦点设置成功')
+        } catch (error) {
+          console.error('设置隐藏输入框焦点失败:', error)
+        }
+      } else {
+        console.error('输入框引用不存在')
       }
     },
     
     onInputFocus() {
-      // 输入框获得焦点时的处理
+      console.log('输入框获得焦点')
     },
     
     onInputBlur() {
-      // 输入框失去焦点时的处理
+      console.log('输入框失去焦点')
     },
     
     onPasswordInput() {
+      console.log('密码输入:', this.currentPassword)
       this.errorMessage = ''
       
       // 如果输入了6位密码，自动验证
       if (this.currentPassword.length === 6) {
+        console.log('密码输入完成，开始验证')
         this.verifyPassword()
       }
     },
@@ -253,13 +295,13 @@ export default {
 }
 
 .modal-content {
-  background: var(--color-surface);
+  background: #ffffff;
   border-radius: 24rpx;
   width: 100%;
   max-width: 640rpx;
   max-height: 85vh;
   overflow: hidden;
-  box-shadow: 0 12rpx 48rpx var(--color-shadowDark);
+  box-shadow: 0 12rpx 48rpx rgba(0, 0, 0, 0.15);
 }
 
 .modal-header {
@@ -267,7 +309,7 @@ export default {
   align-items: center;
   justify-content: space-between;
   padding: 40rpx 50rpx;
-  background: var(--gradient-primary);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
 }
 
@@ -300,7 +342,7 @@ export default {
 }
 
 .payment-info {
-  background: var(--color-surfaceVariant);
+  background: #f8f9fa;
   border-radius: 16rpx;
   padding: 40rpx;
   margin-bottom: 50rpx;
@@ -319,12 +361,12 @@ export default {
 
 .info-label {
   font-size: 28rpx;
-  color: var(--color-textSecondary);
+  color: #666666;
 }
 
 .info-value {
   font-size: 28rpx;
-  color: var(--color-text);
+  color: #333333;
   font-weight: 500;
 }
 
@@ -340,7 +382,7 @@ export default {
 
 .input-label {
   font-size: 32rpx;
-  color: var(--color-text);
+  color: #333333;
   margin-bottom: 30rpx;
   text-align: center;
   font-weight: 500;
@@ -351,23 +393,27 @@ export default {
   justify-content: center;
   gap: 25rpx;
   margin-bottom: 30rpx;
+  position: relative;
+  cursor: pointer;
+  padding: 20rpx;
+  min-height: 120rpx;
 }
 
 .password-dot {
   width: 80rpx;
   height: 80rpx;
-  border: 3rpx solid var(--color-border);
+  border: 3rpx solid #e0e0e0;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--color-surface);
+  background: #ffffff;
   transition: all 0.3s ease;
 }
 
 .password-dot.filled {
-  border-color: var(--color-primary);
-  background: var(--color-primary);
+  border-color: #667eea;
+  background: #667eea;
 }
 
 .password-dot.filled text {
@@ -377,10 +423,34 @@ export default {
 
 .hidden-input {
   position: absolute;
-  left: -9999px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
   opacity: 0;
-  width: 1px;
-  height: 1px;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 16px;
+  z-index: 10;
+}
+
+.mobile-input {
+  width: 100%;
+  height: 80rpx;
+  border: 2rpx solid #e0e0e0;
+  border-radius: 12rpx;
+  padding: 0 20rpx;
+  font-size: 32rpx;
+  text-align: center;
+  background: #ffffff;
+  margin-top: 20rpx;
+  box-sizing: border-box;
+}
+
+.mobile-input:focus {
+  border-color: #667eea;
+  outline: none;
 }
 
 .error-message {
@@ -410,19 +480,19 @@ export default {
 }
 
 .cancel-btn {
-  background: var(--color-surfaceVariant);
-  color: var(--color-textSecondary);
+  background: #f8f9fa;
+  color: #666666;
 }
 
 .cancel-btn:active {
-  background: var(--color-border);
+  background: #e0e0e0;
   transform: scale(0.98);
 }
 
 .confirm-btn {
-  background: var(--gradient-primary);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  box-shadow: 0 4rpx 12rpx var(--color-shadowDark);
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.15);
 }
 
 .confirm-btn:disabled {

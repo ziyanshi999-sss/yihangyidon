@@ -31,9 +31,6 @@ if (uni.restoreGlobal) {
 }
 (function(vue) {
   "use strict";
-  function requireNativePlugin(name) {
-    return weex.requireModule(name);
-  }
   function formatAppLog(type, filename, ...args) {
     if (uni.__log__) {
       uni.__log__(type, filename, ...args);
@@ -3261,21 +3258,27 @@ if (uni.restoreGlobal) {
   let users = [];
   function initUsers() {
     try {
-      users = userDataJson || [];
-      saveUsersToStorage();
-      formatAppLog("log", "at data/users.js:15", "从JSON文件加载用户数据:", users.length, "个用户");
-      formatAppLog("log", "at data/users.js:16", "用户数据详情:", users.map((u) => ({ id: u.id, username: u.username, phone: u.phone, balance: u.balance })));
+      const storedUsers = uni.getStorageSync("users");
+      if (storedUsers && storedUsers.length > 0) {
+        users = storedUsers;
+        formatAppLog("log", "at data/users.js:17", "从本地存储加载用户数据:", users.length, "个用户");
+      } else {
+        users = userDataJson || [];
+        saveUsersToStorage();
+        formatAppLog("log", "at data/users.js:23", "从JSON文件加载用户数据:", users.length, "个用户");
+      }
+      formatAppLog("log", "at data/users.js:26", "用户数据详情:", users.map((u) => ({ id: u.id, username: u.username, phone: u.phone, balance: u.balance })));
     } catch (error) {
-      formatAppLog("error", "at data/users.js:18", "初始化用户数据失败:", error);
+      formatAppLog("error", "at data/users.js:28", "初始化用户数据失败:", error);
       users = userDataJson || [];
     }
   }
   function saveUsersToStorage() {
     try {
       setStorage("users", users, true);
-      formatAppLog("log", "at data/users.js:27", "用户数据已保存到本地存储");
+      formatAppLog("log", "at data/users.js:37", "用户数据已保存到本地存储");
     } catch (error) {
-      formatAppLog("error", "at data/users.js:29", "保存用户数据失败:", error);
+      formatAppLog("error", "at data/users.js:39", "保存用户数据失败:", error);
     }
   }
   initUsers();
@@ -3304,12 +3307,12 @@ if (uni.restoreGlobal) {
     return false;
   }
   function validateUser(usernameOrPhone, password) {
-    formatAppLog("log", "at data/users.js:69", "登录验证:", { usernameOrPhone, password, totalUsers: users.length });
+    formatAppLog("log", "at data/users.js:79", "登录验证:", { usernameOrPhone, password, totalUsers: users.length });
     const user = users.find((user2) => {
       const matchUsername = user2.username && user2.username === usernameOrPhone;
       const matchPhone = user2.phone && user2.phone === usernameOrPhone;
       const matchPassword = user2.password === password;
-      formatAppLog("log", "at data/users.js:77", "检查用户:", {
+      formatAppLog("log", "at data/users.js:87", "检查用户:", {
         userId: user2.id,
         username: user2.username,
         phone: user2.phone,
@@ -3320,10 +3323,10 @@ if (uni.restoreGlobal) {
       return (matchUsername || matchPhone) && matchPassword;
     });
     if (user) {
-      formatAppLog("log", "at data/users.js:90", "登录成功:", user.id);
+      formatAppLog("log", "at data/users.js:100", "登录成功:", user.id);
       user.lastLoginTime = (/* @__PURE__ */ new Date()).toISOString();
     } else {
-      formatAppLog("log", "at data/users.js:94", "登录失败: 用户名/手机号或密码错误");
+      formatAppLog("log", "at data/users.js:104", "登录失败: 用户名/手机号或密码错误");
     }
     return user;
   }
@@ -3384,8 +3387,8 @@ if (uni.restoreGlobal) {
     };
     users.push(newUser);
     saveUsersToStorage();
-    formatAppLog("log", "at data/users.js:166", "新用户注册成功:", newUser);
-    formatAppLog("log", "at data/users.js:167", "当前用户总数:", users.length);
+    formatAppLog("log", "at data/users.js:176", "新用户注册成功:", newUser);
+    formatAppLog("log", "at data/users.js:177", "当前用户总数:", users.length);
     return newUser;
   }
   function getAllUsers() {
@@ -3409,16 +3412,16 @@ if (uni.restoreGlobal) {
   function resetUsersData() {
     users = userDataJson || [];
     saveUsersToStorage();
-    formatAppLog("log", "at data/users.js:205", "用户数据已重置");
+    formatAppLog("log", "at data/users.js:215", "用户数据已重置");
   }
   function clearStorageAndReload() {
     try {
       uni.removeStorageSync("users");
-      formatAppLog("log", "at data/users.js:213", "已清除本地存储");
+      formatAppLog("log", "at data/users.js:223", "已清除本地存储");
       initUsers();
-      formatAppLog("log", "at data/users.js:217", "用户数据已重新加载");
+      formatAppLog("log", "at data/users.js:227", "用户数据已重新加载");
     } catch (error) {
-      formatAppLog("error", "at data/users.js:219", "清除存储并重新加载失败:", error);
+      formatAppLog("error", "at data/users.js:229", "清除存储并重新加载失败:", error);
     }
   }
   const users$1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
@@ -3802,7 +3805,7 @@ if (uni.restoreGlobal) {
     }
     return target;
   };
-  const _sfc_main$D = {
+  const _sfc_main$N = {
     data() {
       return {
         loginType: "password",
@@ -4099,7 +4102,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$C(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$M(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "login-container" }, [
       vue.createCommentVNode(" 背景装饰 "),
       vue.createElementVNode("view", { class: "bg-decoration" }, [
@@ -4368,8 +4371,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesDengluLogin = /* @__PURE__ */ _export_sfc(_sfc_main$D, [["render", _sfc_render$C], ["__scopeId", "data-v-6f56e16f"], ["__file", "E:/项目/yihangyidon/src/pages/denglu/login.vue"]]);
-  const _sfc_main$C = {
+  const PagesDengluLogin = /* @__PURE__ */ _export_sfc(_sfc_main$N, [["render", _sfc_render$M], ["__scopeId", "data-v-6f56e16f"], ["__file", "E:/项目/yihangyidon/src/pages/denglu/login.vue"]]);
+  const _sfc_main$M = {
     data() {
       return {
         form: {
@@ -4614,196 +4617,484 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$B(_ctx, _cache, $props, $setup, $data, $options) {
-    return vue.openBlock(), vue.createElementBlock("view", { class: "register-container" }, [
-      vue.createCommentVNode(" 标题 "),
-      vue.createElementVNode("view", { class: "title" }, "注册账户"),
-      vue.createElementVNode("view", { class: "subtitle" }, "创建您的账户"),
-      vue.createCommentVNode(" 注册表单 "),
-      vue.createElementVNode(
-        "form",
-        {
-          onSubmit: _cache[11] || (_cache[11] = (...args) => $options.handleRegister && $options.handleRegister(...args))
-        },
-        [
-          vue.createCommentVNode(" 用户名输入 "),
-          vue.createElementVNode("view", { class: "input-item" }, [
-            vue.withDirectives(vue.createElementVNode(
-              "input",
-              {
-                type: "text",
-                "onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => $data.form.username = $event),
-                placeholder: "请输入用户名",
-                maxlength: "20",
-                required: ""
-              },
-              null,
-              512
-              /* NEED_PATCH */
-            ), [
-              [vue.vModelText, $data.form.username]
-            ])
-          ]),
-          vue.createCommentVNode(" 手机号输入 "),
-          vue.createElementVNode("view", { class: "input-item" }, [
-            vue.withDirectives(vue.createElementVNode(
-              "input",
-              {
-                type: "number",
-                "onUpdate:modelValue": _cache[1] || (_cache[1] = ($event) => $data.form.phone = $event),
-                placeholder: "请输入手机号",
-                maxlength: "11",
-                required: ""
-              },
-              null,
-              512
-              /* NEED_PATCH */
-            ), [
-              [vue.vModelText, $data.form.phone]
-            ])
-          ]),
-          vue.createCommentVNode(" 验证码输入 "),
-          vue.createElementVNode("view", { class: "input-item" }, [
-            vue.withDirectives(vue.createElementVNode(
-              "input",
-              {
-                type: "number",
-                "onUpdate:modelValue": _cache[2] || (_cache[2] = ($event) => $data.form.code = $event),
-                placeholder: "请输入验证码",
-                maxlength: "6",
-                required: ""
-              },
-              null,
-              512
-              /* NEED_PATCH */
-            ), [
-              [vue.vModelText, $data.form.code]
-            ]),
-            vue.createElementVNode("button", {
-              class: "get-code-btn",
-              onClick: _cache[3] || (_cache[3] = vue.withModifiers((...args) => $options.getCode && $options.getCode(...args), ["stop"])),
-              disabled: $data.countdown > 0
-            }, vue.toDisplayString($data.countdown > 0 ? `${$data.countdown}s后重发` : "获取验证码"), 9, ["disabled"])
-          ]),
-          vue.createCommentVNode(" 密码输入 "),
-          vue.createElementVNode("view", { class: "input-item" }, [
-            vue.withDirectives(vue.createElementVNode("input", {
-              type: $data.showPassword ? "text" : "password",
-              "onUpdate:modelValue": _cache[4] || (_cache[4] = ($event) => $data.form.password = $event),
-              placeholder: "请输入登录密码",
-              required: ""
-            }, null, 8, ["type"]), [
-              [vue.vModelDynamic, $data.form.password]
-            ]),
-            vue.createElementVNode(
-              "button",
-              {
-                class: "password-toggle",
-                onClick: _cache[5] || (_cache[5] = vue.withModifiers((...args) => $options.togglePassword && $options.togglePassword(...args), ["stop"]))
-              },
-              vue.toDisplayString($data.showPassword ? "🙈" : "👁️"),
-              1
-              /* TEXT */
-            )
-          ]),
-          vue.createCommentVNode(" 确认密码输入 "),
-          vue.createElementVNode("view", { class: "input-item" }, [
-            vue.withDirectives(vue.createElementVNode("input", {
-              type: $data.showConfirmPassword ? "text" : "password",
-              "onUpdate:modelValue": _cache[6] || (_cache[6] = ($event) => $data.form.confirmPassword = $event),
-              placeholder: "请再次输入密码",
-              required: ""
-            }, null, 8, ["type"]), [
-              [vue.vModelDynamic, $data.form.confirmPassword]
-            ]),
-            vue.createElementVNode(
-              "button",
-              {
-                class: "password-toggle",
-                onClick: _cache[7] || (_cache[7] = vue.withModifiers((...args) => $options.toggleConfirmPassword && $options.toggleConfirmPassword(...args), ["stop"]))
-              },
-              vue.toDisplayString($data.showConfirmPassword ? "🙈" : "👁️"),
-              1
-              /* TEXT */
-            )
-          ]),
-          vue.createCommentVNode(" 邮箱输入 "),
-          vue.createElementVNode("view", { class: "input-item" }, [
-            vue.withDirectives(vue.createElementVNode(
-              "input",
-              {
-                type: "email",
-                "onUpdate:modelValue": _cache[8] || (_cache[8] = ($event) => $data.form.email = $event),
-                placeholder: "请输入邮箱地址（选填）"
-              },
-              null,
-              512
-              /* NEED_PATCH */
-            ), [
-              [vue.vModelText, $data.form.email]
-            ])
-          ]),
-          vue.createCommentVNode(" 昵称输入 "),
-          vue.createElementVNode("view", { class: "input-item" }, [
-            vue.withDirectives(vue.createElementVNode(
-              "input",
-              {
-                type: "text",
-                "onUpdate:modelValue": _cache[9] || (_cache[9] = ($event) => $data.form.nickname = $event),
-                placeholder: "请输入昵称（选填）",
-                maxlength: "20"
-              },
-              null,
-              512
-              /* NEED_PATCH */
-            ), [
-              [vue.vModelText, $data.form.nickname]
-            ])
-          ]),
-          vue.createCommentVNode(" 身份证号输入 "),
-          vue.createElementVNode("view", { class: "input-item" }, [
-            vue.withDirectives(vue.createElementVNode(
-              "input",
-              {
-                type: "text",
-                "onUpdate:modelValue": _cache[10] || (_cache[10] = ($event) => $data.form.idCard = $event),
-                placeholder: "请输入身份证号",
-                maxlength: "18",
-                required: ""
-              },
-              null,
-              512
-              /* NEED_PATCH */
-            ), [
-              [vue.vModelText, $data.form.idCard]
-            ])
-          ]),
-          vue.createCommentVNode(" 注册按钮 "),
-          vue.createElementVNode("button", {
-            class: "register-btn",
-            "form-type": "submit",
-            loading: $data.loading
-          }, " 立即注册 ", 8, ["loading"])
-        ],
-        32
-        /* NEED_HYDRATION */
-      ),
-      vue.createCommentVNode(" 快速登录按钮 "),
-      vue.createElementVNode("view", { class: "quick-login" }, [
-        vue.createElementVNode("navigator", {
-          url: "/pages/denglu/login",
-          "open-type": "navigate"
-        }, [
-          vue.createElementVNode("button", { class: "quick-login-btn" }, " 已有账户？立即登录 ")
-        ])
+  function _sfc_render$L(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("view", { class: "register-page" }, [
+      vue.createCommentVNode(" 背景装饰 "),
+      vue.createElementVNode("view", { class: "background-decoration" }, [
+        vue.createElementVNode("view", { class: "decoration-circle circle-1" }),
+        vue.createElementVNode("view", { class: "decoration-circle circle-2" }),
+        vue.createElementVNode("view", { class: "decoration-circle circle-3" }),
+        vue.createElementVNode("view", { class: "decoration-wave" })
       ]),
-      vue.createCommentVNode(" 注册须知 "),
-      vue.createElementVNode("view", { class: "register-notice" }, [
-        vue.createElementVNode("text", { class: "notice-title" }, "注册须知："),
-        vue.createElementVNode("text", { class: "notice-item" }, "• 用户名支持中文、英文、数字，长度3-20个字符"),
-        vue.createElementVNode("text", { class: "notice-item" }, "• 密码长度至少6位，建议包含字母和数字"),
-        vue.createElementVNode("text", { class: "notice-item" }, "• 手机号用于接收验证码和安全提醒"),
-        vue.createElementVNode("text", { class: "notice-item" }, "• 注册即表示同意相关服务条款和隐私政策")
+      vue.createCommentVNode(" 顶部导航 "),
+      vue.createElementVNode("view", { class: "top-nav" }, [
+        vue.createElementVNode("view", {
+          class: "nav-back",
+          onClick: _cache[0] || (_cache[0] = (...args) => $options.goBack && $options.goBack(...args))
+        }, [
+          vue.createElementVNode("text", { class: "back-icon" }, "←")
+        ]),
+        vue.createElementVNode("view", { class: "nav-title" }, "创建账户"),
+        vue.createElementVNode("view", { class: "nav-placeholder" })
+      ]),
+      vue.createCommentVNode(" 主要内容区域 "),
+      vue.createElementVNode("view", { class: "main-content" }, [
+        vue.createCommentVNode(" 欢迎区域 "),
+        vue.createElementVNode("view", { class: "welcome-section" }, [
+          vue.createElementVNode("view", { class: "welcome-icon" }, "🚀"),
+          vue.createElementVNode("view", { class: "welcome-title" }, "欢迎加入我们"),
+          vue.createElementVNode("view", { class: "welcome-subtitle" }, "开启您的财富管理之旅")
+        ]),
+        vue.createCommentVNode(" 注册表单 "),
+        vue.createElementVNode("view", { class: "form-container" }, [
+          vue.createElementVNode(
+            "form",
+            {
+              onSubmit: _cache[28] || (_cache[28] = (...args) => $options.handleRegister && $options.handleRegister(...args))
+            },
+            [
+              vue.createCommentVNode(" 用户名输入 "),
+              vue.createElementVNode("view", { class: "form-group" }, [
+                vue.createElementVNode("view", { class: "input-label" }, [
+                  vue.createElementVNode("text", { class: "label-icon" }, "👤"),
+                  vue.createElementVNode("text", { class: "label-text" }, "用户名")
+                ]),
+                vue.createElementVNode(
+                  "view",
+                  {
+                    class: vue.normalizeClass(["input-wrapper", { "focused": $data.focusedField === "username", "error": $data.errors.username }])
+                  },
+                  [
+                    vue.withDirectives(vue.createElementVNode(
+                      "input",
+                      {
+                        type: "text",
+                        "onUpdate:modelValue": _cache[1] || (_cache[1] = ($event) => $data.form.username = $event),
+                        placeholder: "请输入用户名",
+                        maxlength: "20",
+                        onFocus: _cache[2] || (_cache[2] = ($event) => $data.focusedField = "username"),
+                        onBlur: _cache[3] || (_cache[3] = ($event) => $data.focusedField = ""),
+                        required: ""
+                      },
+                      null,
+                      544
+                      /* NEED_HYDRATION, NEED_PATCH */
+                    ), [
+                      [vue.vModelText, $data.form.username]
+                    ]),
+                    vue.createElementVNode("view", { class: "input-border" })
+                  ],
+                  2
+                  /* CLASS */
+                ),
+                $data.errors.username ? (vue.openBlock(), vue.createElementBlock(
+                  "view",
+                  {
+                    key: 0,
+                    class: "error-message"
+                  },
+                  vue.toDisplayString($data.errors.username),
+                  1
+                  /* TEXT */
+                )) : vue.createCommentVNode("v-if", true)
+              ]),
+              vue.createCommentVNode(" 手机号输入 "),
+              vue.createElementVNode("view", { class: "form-group" }, [
+                vue.createElementVNode("view", { class: "input-label" }, [
+                  vue.createElementVNode("text", { class: "label-icon" }, "📱"),
+                  vue.createElementVNode("text", { class: "label-text" }, "手机号")
+                ]),
+                vue.createElementVNode(
+                  "view",
+                  {
+                    class: vue.normalizeClass(["input-wrapper", { "focused": $data.focusedField === "phone", "error": $data.errors.phone }])
+                  },
+                  [
+                    vue.withDirectives(vue.createElementVNode(
+                      "input",
+                      {
+                        type: "number",
+                        "onUpdate:modelValue": _cache[4] || (_cache[4] = ($event) => $data.form.phone = $event),
+                        placeholder: "请输入手机号",
+                        maxlength: "11",
+                        onFocus: _cache[5] || (_cache[5] = ($event) => $data.focusedField = "phone"),
+                        onBlur: _cache[6] || (_cache[6] = ($event) => $data.focusedField = ""),
+                        required: ""
+                      },
+                      null,
+                      544
+                      /* NEED_HYDRATION, NEED_PATCH */
+                    ), [
+                      [vue.vModelText, $data.form.phone]
+                    ]),
+                    vue.createElementVNode("view", { class: "input-border" })
+                  ],
+                  2
+                  /* CLASS */
+                ),
+                $data.errors.phone ? (vue.openBlock(), vue.createElementBlock(
+                  "view",
+                  {
+                    key: 0,
+                    class: "error-message"
+                  },
+                  vue.toDisplayString($data.errors.phone),
+                  1
+                  /* TEXT */
+                )) : vue.createCommentVNode("v-if", true)
+              ]),
+              vue.createCommentVNode(" 验证码输入 "),
+              vue.createElementVNode("view", { class: "form-group" }, [
+                vue.createElementVNode("view", { class: "input-label" }, [
+                  vue.createElementVNode("text", { class: "label-icon" }, "🔐"),
+                  vue.createElementVNode("text", { class: "label-text" }, "验证码")
+                ]),
+                vue.createElementVNode(
+                  "view",
+                  {
+                    class: vue.normalizeClass(["input-wrapper verification-wrapper", { "focused": $data.focusedField === "code", "error": $data.errors.code }])
+                  },
+                  [
+                    vue.withDirectives(vue.createElementVNode(
+                      "input",
+                      {
+                        type: "number",
+                        "onUpdate:modelValue": _cache[7] || (_cache[7] = ($event) => $data.form.code = $event),
+                        placeholder: "请输入验证码",
+                        maxlength: "6",
+                        onFocus: _cache[8] || (_cache[8] = ($event) => $data.focusedField = "code"),
+                        onBlur: _cache[9] || (_cache[9] = ($event) => $data.focusedField = ""),
+                        required: ""
+                      },
+                      null,
+                      544
+                      /* NEED_HYDRATION, NEED_PATCH */
+                    ), [
+                      [vue.vModelText, $data.form.code]
+                    ]),
+                    vue.createElementVNode("button", {
+                      class: vue.normalizeClass(["verification-btn", { "disabled": $data.countdown > 0 }]),
+                      onClick: _cache[10] || (_cache[10] = vue.withModifiers((...args) => $options.getCode && $options.getCode(...args), ["stop"])),
+                      disabled: $data.countdown > 0
+                    }, vue.toDisplayString($data.countdown > 0 ? `${$data.countdown}s` : "获取验证码"), 11, ["disabled"]),
+                    vue.createElementVNode("view", { class: "input-border" })
+                  ],
+                  2
+                  /* CLASS */
+                ),
+                $data.errors.code ? (vue.openBlock(), vue.createElementBlock(
+                  "view",
+                  {
+                    key: 0,
+                    class: "error-message"
+                  },
+                  vue.toDisplayString($data.errors.code),
+                  1
+                  /* TEXT */
+                )) : vue.createCommentVNode("v-if", true)
+              ]),
+              vue.createCommentVNode(" 密码输入 "),
+              vue.createElementVNode("view", { class: "form-group" }, [
+                vue.createElementVNode("view", { class: "input-label" }, [
+                  vue.createElementVNode("text", { class: "label-icon" }, "🔒"),
+                  vue.createElementVNode("text", { class: "label-text" }, "登录密码")
+                ]),
+                vue.createElementVNode(
+                  "view",
+                  {
+                    class: vue.normalizeClass(["input-wrapper", { "focused": $data.focusedField === "password", "error": $data.errors.password }])
+                  },
+                  [
+                    vue.withDirectives(vue.createElementVNode("input", {
+                      type: $data.showPassword ? "text" : "password",
+                      "onUpdate:modelValue": _cache[11] || (_cache[11] = ($event) => $data.form.password = $event),
+                      placeholder: "请输入登录密码",
+                      onFocus: _cache[12] || (_cache[12] = ($event) => $data.focusedField = "password"),
+                      onBlur: _cache[13] || (_cache[13] = ($event) => $data.focusedField = ""),
+                      required: ""
+                    }, null, 40, ["type"]), [
+                      [vue.vModelDynamic, $data.form.password]
+                    ]),
+                    vue.createElementVNode("button", {
+                      class: "password-toggle",
+                      onClick: _cache[14] || (_cache[14] = vue.withModifiers((...args) => $options.togglePassword && $options.togglePassword(...args), ["stop"]))
+                    }, [
+                      vue.createElementVNode(
+                        "text",
+                        { class: "toggle-icon" },
+                        vue.toDisplayString($data.showPassword ? "🙈" : "👁️"),
+                        1
+                        /* TEXT */
+                      )
+                    ]),
+                    vue.createElementVNode("view", { class: "input-border" })
+                  ],
+                  2
+                  /* CLASS */
+                ),
+                $data.errors.password ? (vue.openBlock(), vue.createElementBlock(
+                  "view",
+                  {
+                    key: 0,
+                    class: "error-message"
+                  },
+                  vue.toDisplayString($data.errors.password),
+                  1
+                  /* TEXT */
+                )) : vue.createCommentVNode("v-if", true)
+              ]),
+              vue.createCommentVNode(" 确认密码输入 "),
+              vue.createElementVNode("view", { class: "form-group" }, [
+                vue.createElementVNode("view", { class: "input-label" }, [
+                  vue.createElementVNode("text", { class: "label-icon" }, "🔒"),
+                  vue.createElementVNode("text", { class: "label-text" }, "确认密码")
+                ]),
+                vue.createElementVNode(
+                  "view",
+                  {
+                    class: vue.normalizeClass(["input-wrapper", { "focused": $data.focusedField === "confirmPassword", "error": $data.errors.confirmPassword }])
+                  },
+                  [
+                    vue.withDirectives(vue.createElementVNode("input", {
+                      type: $data.showConfirmPassword ? "text" : "password",
+                      "onUpdate:modelValue": _cache[15] || (_cache[15] = ($event) => $data.form.confirmPassword = $event),
+                      placeholder: "请再次输入密码",
+                      onFocus: _cache[16] || (_cache[16] = ($event) => $data.focusedField = "confirmPassword"),
+                      onBlur: _cache[17] || (_cache[17] = ($event) => $data.focusedField = ""),
+                      required: ""
+                    }, null, 40, ["type"]), [
+                      [vue.vModelDynamic, $data.form.confirmPassword]
+                    ]),
+                    vue.createElementVNode("button", {
+                      class: "password-toggle",
+                      onClick: _cache[18] || (_cache[18] = vue.withModifiers((...args) => $options.toggleConfirmPassword && $options.toggleConfirmPassword(...args), ["stop"]))
+                    }, [
+                      vue.createElementVNode(
+                        "text",
+                        { class: "toggle-icon" },
+                        vue.toDisplayString($data.showConfirmPassword ? "🙈" : "👁️"),
+                        1
+                        /* TEXT */
+                      )
+                    ]),
+                    vue.createElementVNode("view", { class: "input-border" })
+                  ],
+                  2
+                  /* CLASS */
+                ),
+                $data.errors.confirmPassword ? (vue.openBlock(), vue.createElementBlock(
+                  "view",
+                  {
+                    key: 0,
+                    class: "error-message"
+                  },
+                  vue.toDisplayString($data.errors.confirmPassword),
+                  1
+                  /* TEXT */
+                )) : vue.createCommentVNode("v-if", true)
+              ]),
+              vue.createCommentVNode(" 邮箱输入 "),
+              vue.createElementVNode("view", { class: "form-group" }, [
+                vue.createElementVNode("view", { class: "input-label" }, [
+                  vue.createElementVNode("text", { class: "label-icon" }, "📧"),
+                  vue.createElementVNode("text", { class: "label-text" }, "邮箱地址"),
+                  vue.createElementVNode("text", { class: "optional-tag" }, "选填")
+                ]),
+                vue.createElementVNode(
+                  "view",
+                  {
+                    class: vue.normalizeClass(["input-wrapper", { "focused": $data.focusedField === "email", "error": $data.errors.email }])
+                  },
+                  [
+                    vue.withDirectives(vue.createElementVNode(
+                      "input",
+                      {
+                        type: "email",
+                        "onUpdate:modelValue": _cache[19] || (_cache[19] = ($event) => $data.form.email = $event),
+                        placeholder: "请输入邮箱地址",
+                        onFocus: _cache[20] || (_cache[20] = ($event) => $data.focusedField = "email"),
+                        onBlur: _cache[21] || (_cache[21] = ($event) => $data.focusedField = "")
+                      },
+                      null,
+                      544
+                      /* NEED_HYDRATION, NEED_PATCH */
+                    ), [
+                      [vue.vModelText, $data.form.email]
+                    ]),
+                    vue.createElementVNode("view", { class: "input-border" })
+                  ],
+                  2
+                  /* CLASS */
+                ),
+                $data.errors.email ? (vue.openBlock(), vue.createElementBlock(
+                  "view",
+                  {
+                    key: 0,
+                    class: "error-message"
+                  },
+                  vue.toDisplayString($data.errors.email),
+                  1
+                  /* TEXT */
+                )) : vue.createCommentVNode("v-if", true)
+              ]),
+              vue.createCommentVNode(" 昵称输入 "),
+              vue.createElementVNode("view", { class: "form-group" }, [
+                vue.createElementVNode("view", { class: "input-label" }, [
+                  vue.createElementVNode("text", { class: "label-icon" }, "🎭"),
+                  vue.createElementVNode("text", { class: "label-text" }, "昵称"),
+                  vue.createElementVNode("text", { class: "optional-tag" }, "选填")
+                ]),
+                vue.createElementVNode(
+                  "view",
+                  {
+                    class: vue.normalizeClass(["input-wrapper", { "focused": $data.focusedField === "nickname", "error": $data.errors.nickname }])
+                  },
+                  [
+                    vue.withDirectives(vue.createElementVNode(
+                      "input",
+                      {
+                        type: "text",
+                        "onUpdate:modelValue": _cache[22] || (_cache[22] = ($event) => $data.form.nickname = $event),
+                        placeholder: "请输入昵称",
+                        maxlength: "20",
+                        onFocus: _cache[23] || (_cache[23] = ($event) => $data.focusedField = "nickname"),
+                        onBlur: _cache[24] || (_cache[24] = ($event) => $data.focusedField = "")
+                      },
+                      null,
+                      544
+                      /* NEED_HYDRATION, NEED_PATCH */
+                    ), [
+                      [vue.vModelText, $data.form.nickname]
+                    ]),
+                    vue.createElementVNode("view", { class: "input-border" })
+                  ],
+                  2
+                  /* CLASS */
+                ),
+                $data.errors.nickname ? (vue.openBlock(), vue.createElementBlock(
+                  "view",
+                  {
+                    key: 0,
+                    class: "error-message"
+                  },
+                  vue.toDisplayString($data.errors.nickname),
+                  1
+                  /* TEXT */
+                )) : vue.createCommentVNode("v-if", true)
+              ]),
+              vue.createCommentVNode(" 身份证号输入 "),
+              vue.createElementVNode("view", { class: "form-group" }, [
+                vue.createElementVNode("view", { class: "input-label" }, [
+                  vue.createElementVNode("text", { class: "label-icon" }, "🆔"),
+                  vue.createElementVNode("text", { class: "label-text" }, "身份证号")
+                ]),
+                vue.createElementVNode(
+                  "view",
+                  {
+                    class: vue.normalizeClass(["input-wrapper", { "focused": $data.focusedField === "idCard", "error": $data.errors.idCard }])
+                  },
+                  [
+                    vue.withDirectives(vue.createElementVNode(
+                      "input",
+                      {
+                        type: "text",
+                        "onUpdate:modelValue": _cache[25] || (_cache[25] = ($event) => $data.form.idCard = $event),
+                        placeholder: "请输入身份证号",
+                        maxlength: "18",
+                        onFocus: _cache[26] || (_cache[26] = ($event) => $data.focusedField = "idCard"),
+                        onBlur: _cache[27] || (_cache[27] = ($event) => $data.focusedField = ""),
+                        required: ""
+                      },
+                      null,
+                      544
+                      /* NEED_HYDRATION, NEED_PATCH */
+                    ), [
+                      [vue.vModelText, $data.form.idCard]
+                    ]),
+                    vue.createElementVNode("view", { class: "input-border" })
+                  ],
+                  2
+                  /* CLASS */
+                ),
+                $data.errors.idCard ? (vue.openBlock(), vue.createElementBlock(
+                  "view",
+                  {
+                    key: 0,
+                    class: "error-message"
+                  },
+                  vue.toDisplayString($data.errors.idCard),
+                  1
+                  /* TEXT */
+                )) : vue.createCommentVNode("v-if", true)
+              ]),
+              vue.createCommentVNode(" 注册按钮 "),
+              vue.createElementVNode("button", {
+                class: vue.normalizeClass(["register-btn", { "loading": $data.loading, "disabled": $data.loading }]),
+                "form-type": "submit",
+                disabled: $data.loading
+              }, [
+                vue.createElementVNode("view", { class: "btn-content" }, [
+                  !$data.loading ? (vue.openBlock(), vue.createElementBlock("view", {
+                    key: 0,
+                    class: "btn-icon"
+                  }, "✨")) : vue.createCommentVNode("v-if", true),
+                  $data.loading ? (vue.openBlock(), vue.createElementBlock("view", {
+                    key: 1,
+                    class: "btn-loading"
+                  }, [
+                    vue.createElementVNode("view", { class: "loading-spinner" })
+                  ])) : vue.createCommentVNode("v-if", true),
+                  vue.createElementVNode(
+                    "text",
+                    { class: "btn-text" },
+                    vue.toDisplayString($data.loading ? "注册中..." : "立即注册"),
+                    1
+                    /* TEXT */
+                  )
+                ])
+              ], 10, ["disabled"])
+            ],
+            32
+            /* NEED_HYDRATION */
+          )
+        ]),
+        vue.createCommentVNode(" 快速登录 "),
+        vue.createElementVNode("view", { class: "quick-login" }, [
+          vue.createElementVNode("text", { class: "quick-login-text" }, "已有账户？"),
+          vue.createElementVNode("navigator", {
+            url: "/pages/denglu/login",
+            "open-type": "navigate",
+            class: "quick-login-link"
+          }, [
+            vue.createElementVNode("text", { class: "link-text" }, "立即登录")
+          ])
+        ]),
+        vue.createCommentVNode(" 服务条款 "),
+        vue.createElementVNode("view", { class: "terms-section" }, [
+          vue.createElementVNode("view", {
+            class: "terms-checkbox",
+            onClick: _cache[29] || (_cache[29] = (...args) => $options.toggleTerms && $options.toggleTerms(...args))
+          }, [
+            vue.createElementVNode(
+              "view",
+              {
+                class: vue.normalizeClass(["checkbox", { "checked": $data.agreeTerms }])
+              },
+              [
+                $data.agreeTerms ? (vue.openBlock(), vue.createElementBlock("text", {
+                  key: 0,
+                  class: "checkbox-icon"
+                }, "✓")) : vue.createCommentVNode("v-if", true)
+              ],
+              2
+              /* CLASS */
+            ),
+            vue.createElementVNode("text", { class: "terms-text" }, "我已阅读并同意"),
+            vue.createElementVNode("text", { class: "terms-link" }, "《服务条款》"),
+            vue.createElementVNode("text", { class: "terms-text" }, "和"),
+            vue.createElementVNode("text", { class: "terms-link" }, "《隐私政策》")
+          ])
+        ])
       ]),
       vue.createCommentVNode(" 调试信息（开发环境） "),
       $data.showDebug ? (vue.openBlock(), vue.createElementBlock("view", {
@@ -4851,8 +5142,8 @@ if (uni.restoreGlobal) {
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesRegisterRegister = /* @__PURE__ */ _export_sfc(_sfc_main$C, [["render", _sfc_render$B], ["__scopeId", "data-v-97bb96ad"], ["__file", "E:/项目/yihangyidon/src/pages/register/register.vue"]]);
-  const _sfc_main$B = {
+  const PagesRegisterRegister = /* @__PURE__ */ _export_sfc(_sfc_main$M, [["render", _sfc_render$L], ["__scopeId", "data-v-97bb96ad"], ["__file", "E:/项目/yihangyidon/src/pages/register/register.vue"]]);
+  const _sfc_main$L = {
     data() {
       return {
         isLoggedIn: false,
@@ -5061,7 +5352,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$A(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$K(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", {
       class: "home-container",
       onClick: _cache[29] || (_cache[29] = (...args) => $options.closeSearchSuggestions && $options.closeSearchSuggestions(...args))
@@ -5353,7 +5644,7 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesIndexIndex = /* @__PURE__ */ _export_sfc(_sfc_main$B, [["render", _sfc_render$A], ["__scopeId", "data-v-83a5a03c"], ["__file", "E:/项目/yihangyidon/src/pages/index/index.vue"]]);
+  const PagesIndexIndex = /* @__PURE__ */ _export_sfc(_sfc_main$L, [["render", _sfc_render$K], ["__scopeId", "data-v-83a5a03c"], ["__file", "E:/项目/yihangyidon/src/pages/index/index.vue"]]);
   const scriptRel = "modulepreload";
   const assetsURL = function(dep) {
     return "/" + dep;
@@ -5419,7 +5710,7 @@ if (uni.restoreGlobal) {
   function canAccessPlatinumHotline(userInfo2) {
     return isPlatinumVip(userInfo2);
   }
-  const _sfc_main$A = {
+  const _sfc_main$K = {
     name: "ServiceModal",
     props: {
       visible: {
@@ -5524,7 +5815,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$z(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$J(_ctx, _cache, $props, $setup, $data, $options) {
     return $props.visible ? (vue.openBlock(), vue.createElementBlock("view", {
       key: 0,
       class: "service-modal",
@@ -5649,8 +5940,8 @@ if (uni.restoreGlobal) {
       )
     ])) : vue.createCommentVNode("v-if", true);
   }
-  const ServiceModal = /* @__PURE__ */ _export_sfc(_sfc_main$A, [["render", _sfc_render$z], ["__scopeId", "data-v-1f8e1b4e"], ["__file", "E:/项目/yihangyidon/src/components/common/ServiceModal.vue"]]);
-  const _sfc_main$z = {
+  const ServiceModal = /* @__PURE__ */ _export_sfc(_sfc_main$K, [["render", _sfc_render$J], ["__scopeId", "data-v-1f8e1b4e"], ["__file", "E:/项目/yihangyidon/src/components/common/ServiceModal.vue"]]);
+  const _sfc_main$J = {
     components: {
       ServiceModal
     },
@@ -5663,11 +5954,11 @@ if (uni.restoreGlobal) {
     onShow() {
       try {
         if (!forceCheckLogin()) {
-          formatAppLog("log", "at pages/user/user.vue:164", "个人中心：用户未登录，跳转到登录页面");
+          formatAppLog("log", "at pages/user/user.vue:174", "个人中心：用户未登录，跳转到登录页面");
           uni.reLaunch({
             url: "/pages/denglu/login",
             fail: (error) => {
-              formatAppLog("error", "at pages/user/user.vue:168", "个人中心跳转失败:", error);
+              formatAppLog("error", "at pages/user/user.vue:178", "个人中心跳转失败:", error);
               uni.navigateTo({ url: "/pages/denglu/login" });
             }
           });
@@ -5675,7 +5966,7 @@ if (uni.restoreGlobal) {
         }
         this.checkLoginStatus();
       } catch (error) {
-        formatAppLog("error", "at pages/user/user.vue:177", "个人中心onShow检查失败:", error);
+        formatAppLog("error", "at pages/user/user.vue:187", "个人中心onShow检查失败:", error);
         uni.reLaunch({
           url: "/pages/denglu/login",
           fail: () => {
@@ -5757,6 +6048,11 @@ if (uni.restoreGlobal) {
           url: "/pages/user/security"
         });
       },
+      goToAIWealthManager() {
+        uni.navigateTo({
+          url: "/pages/wealth/ai-wealth-manager"
+        });
+      },
       goToContact() {
         this.showServiceModal = true;
       },
@@ -5788,7 +6084,7 @@ if (uni.restoreGlobal) {
             confirmText: "确定"
           });
         } catch (error) {
-          formatAppLog("error", "at pages/user/user.vue:304", "查看退出记录失败:", error);
+          formatAppLog("error", "at pages/user/user.vue:319", "查看退出记录失败:", error);
           uni.showToast({
             title: "查看记录失败",
             icon: "none"
@@ -5811,7 +6107,7 @@ if (uni.restoreGlobal) {
               const importedUsers = module.users || module.getAllUsers();
               this.displayCreditCards(importedUsers);
             }).catch((error) => {
-              formatAppLog("error", "at pages/user/user.vue:334", "导入用户数据失败:", error);
+              formatAppLog("error", "at pages/user/user.vue:349", "导入用户数据失败:", error);
               uni.showToast({
                 title: "获取数据失败",
                 icon: "none"
@@ -5821,7 +6117,7 @@ if (uni.restoreGlobal) {
           }
           this.displayCreditCards(users2);
         } catch (error) {
-          formatAppLog("error", "at pages/user/user.vue:345", "获取信用卡信息失败:", error);
+          formatAppLog("error", "at pages/user/user.vue:360", "获取信用卡信息失败:", error);
           uni.showToast({
             title: "获取数据失败",
             icon: "none"
@@ -5895,7 +6191,7 @@ if (uni.restoreGlobal) {
           urls: [this.userInfo.avatar],
           current: this.userInfo.avatar,
           fail: (error) => {
-            formatAppLog("error", "at pages/user/user.vue:436", "预览头像失败:", error);
+            formatAppLog("error", "at pages/user/user.vue:451", "预览头像失败:", error);
             uni.showToast({
               title: "预览失败",
               icon: "none"
@@ -5905,7 +6201,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$y(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$I(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_ServiceModal = vue.resolveComponent("ServiceModal");
     return vue.openBlock(), vue.createElementBlock("view", { class: "user-page" }, [
       vue.createCommentVNode(" 顶部背景 "),
@@ -6068,6 +6364,19 @@ if (uni.restoreGlobal) {
                 vue.createElementVNode("text", { class: "menu-text" }, "安全设置")
               ]),
               vue.createElementVNode("text", { class: "arrow" }, ">")
+            ]),
+            vue.createElementVNode("view", {
+              class: "menu-item ai-wealth-item",
+              onClick: _cache[11] || (_cache[11] = (...args) => $options.goToAIWealthManager && $options.goToAIWealthManager(...args))
+            }, [
+              vue.createElementVNode("view", { class: "menu-left" }, [
+                vue.createElementVNode("text", { class: "menu-icon" }, "🤖"),
+                vue.createElementVNode("view", { class: "menu-text-container" }, [
+                  vue.createElementVNode("text", { class: "menu-text" }, "智能财富管家"),
+                  vue.createElementVNode("view", { class: "ai-badge" }, "AI")
+                ])
+              ]),
+              vue.createElementVNode("text", { class: "arrow" }, ">")
             ])
           ])
         ]),
@@ -6121,9 +6430,905 @@ if (uni.restoreGlobal) {
       }, null, 8, ["visible", "onClose"])
     ]);
   }
-  const PagesUserUser = /* @__PURE__ */ _export_sfc(_sfc_main$z, [["render", _sfc_render$y], ["__scopeId", "data-v-99b0ba47"], ["__file", "E:/项目/yihangyidon/src/pages/user/user.vue"]]);
+  const PagesUserUser = /* @__PURE__ */ _export_sfc(_sfc_main$J, [["render", _sfc_render$I], ["__scopeId", "data-v-99b0ba47"], ["__file", "E:/项目/yihangyidon/src/pages/user/user.vue"]]);
+  function getCurrentUserWealthData() {
+    var _a, _b;
+    let users2 = uni.getStorageSync("users");
+    if (!users2 || users2.length === 0) {
+      users2 = getUsersData();
+    }
+    const currentUserId = getCurrentUserId();
+    const currentUser = users2.find((user) => user.id === currentUserId) || users2[0];
+    return {
+      deposits: ((_a = currentUser.wealthProducts) == null ? void 0 : _a.deposits) || {
+        current: 0,
+        fixed: 0,
+        smart: 0
+      },
+      investments: ((_b = currentUser.wealthProducts) == null ? void 0 : _b.investments) || [],
+      investmentPortfolio: currentUser.investmentPortfolio || {
+        totalValue: 0,
+        totalReturn: 0,
+        returnRate: 0,
+        holdings: []
+      },
+      depositProducts: currentUser.depositProducts || {
+        current: {
+          rate: 0.35,
+          features: ["随时存取", "灵活方便", "安全可靠", "存款保险保障"],
+          riskWarning: "存款保险保障，风险极低"
+        },
+        fixed: [
+          { term: "3个月", rate: 1.85, minAmount: 1e3, features: ["保本保息", "收益稳定", "期限灵活"], riskWarning: "存款保险保障，风险极低" },
+          { term: "6个月", rate: 2.05, minAmount: 1e3, features: ["保本保息", "收益稳定", "期限灵活"], riskWarning: "存款保险保障，风险极低" },
+          { term: "1年", rate: 2.1, minAmount: 1e3, features: ["保本保息", "收益稳定", "期限灵活"], riskWarning: "存款保险保障，风险极低" },
+          { term: "2年", rate: 2.6, minAmount: 1e3, features: ["保本保息", "收益稳定", "期限灵活"], riskWarning: "存款保险保障，风险极低" },
+          { term: "3年", rate: 2.95, minAmount: 1e3, features: ["保本保息", "收益稳定", "期限灵活"], riskWarning: "存款保险保障，风险极低" },
+          { term: "5年", rate: 3.2, minAmount: 1e3, features: ["保本保息", "收益稳定", "期限灵活"], riskWarning: "存款保险保障，风险极低" }
+        ],
+        smart: {
+          rate: 2.8,
+          features: ["智能计息", "灵活存取", "收益优化", "自动转存"],
+          riskWarning: "存款保险保障，风险极低"
+        }
+      },
+      insuranceProducts: currentUser.insuranceProducts || {
+        categories: [
+          {
+            id: "life",
+            name: "人寿保险",
+            icon: "👨‍👩‍👧‍👦",
+            color: "#FF6B35",
+            products: [
+              {
+                id: "life001",
+                name: "农银终身寿险",
+                type: "终身寿险",
+                premium: 5e3,
+                coverage: 5e5,
+                term: "终身",
+                features: ["终身保障", "现金价值", "分红收益", "保单贷款"],
+                riskLevel: "低风险",
+                status: "在售",
+                description: "提供终身保障，具有现金价值和分红功能，适合长期规划"
+              },
+              {
+                id: "life002",
+                name: "农银定期寿险",
+                type: "定期寿险",
+                premium: 2e3,
+                coverage: 3e5,
+                term: "20年",
+                features: ["高保障", "低保费", "灵活选择", "可续保"],
+                riskLevel: "低风险",
+                status: "在售",
+                description: "高保障低保费，适合家庭经济支柱，保障期间灵活"
+              },
+              {
+                id: "life003",
+                name: "农银两全保险",
+                type: "两全保险",
+                premium: 8e3,
+                coverage: 2e5,
+                term: "30年",
+                features: ["生死两全", "满期返还", "分红收益", "疾病保障"],
+                riskLevel: "中风险",
+                status: "在售",
+                description: "生死两全保障，满期返还保费，兼具保障和储蓄功能"
+              }
+            ]
+          },
+          {
+            id: "health",
+            name: "健康保险",
+            icon: "🏥",
+            color: "#34C759",
+            products: [
+              {
+                id: "health001",
+                name: "农银重疾保险",
+                type: "重疾保险",
+                premium: 3e3,
+                coverage: 2e5,
+                term: "终身",
+                features: ["重疾保障", "轻症赔付", "豁免保费", "多次赔付"],
+                riskLevel: "中风险",
+                status: "在售",
+                description: "覆盖100种重疾，轻症豁免保费，提供全面健康保障"
+              },
+              {
+                id: "health002",
+                name: "农银医疗保险",
+                type: "医疗保险",
+                premium: 800,
+                coverage: 1e5,
+                term: "1年",
+                features: ["住院保障", "门诊报销", "无免赔额", "续保保证"],
+                riskLevel: "低风险",
+                status: "在售",
+                description: "住院医疗费用报销，门诊费用覆盖，无免赔额设计"
+              },
+              {
+                id: "health003",
+                name: "农银防癌保险",
+                type: "防癌保险",
+                premium: 1500,
+                coverage: 5e5,
+                term: "终身",
+                features: ["癌症保障", "原位癌赔付", "康复津贴", "绿色通道"],
+                riskLevel: "中风险",
+                status: "在售",
+                description: "专门针对癌症风险，提供高额保障和就医绿色通道"
+              }
+            ]
+          },
+          {
+            id: "accident",
+            name: "意外保险",
+            icon: "🛡️",
+            color: "#FF9500",
+            products: [
+              {
+                id: "accident001",
+                name: "农银综合意外险",
+                type: "意外保险",
+                premium: 200,
+                coverage: 1e5,
+                term: "1年",
+                features: ["意外身故", "意外伤残", "意外医疗", "住院津贴"],
+                riskLevel: "低风险",
+                status: "在售",
+                description: "全面意外保障，包含身故、伤残、医疗和住院津贴"
+              },
+              {
+                id: "accident002",
+                name: "农银交通意外险",
+                type: "交通意外险",
+                premium: 100,
+                coverage: 5e5,
+                term: "1年",
+                features: ["交通意外", "高额保障", "多种交通工具", "全球保障"],
+                riskLevel: "低风险",
+                status: "在售",
+                description: "专门保障交通意外，覆盖飞机、火车、汽车等多种交通工具"
+              }
+            ]
+          },
+          {
+            id: "property",
+            name: "财产保险",
+            icon: "🏠",
+            color: "#9C27B0",
+            products: [
+              {
+                id: "property001",
+                name: "农银家财保险",
+                type: "家财保险",
+                premium: 500,
+                coverage: 5e5,
+                term: "1年",
+                features: ["房屋保障", "室内财产", "盗抢保障", "水渍保障"],
+                riskLevel: "低风险",
+                status: "在售",
+                description: "保障家庭财产安全，覆盖房屋及室内财产损失"
+              },
+              {
+                id: "property002",
+                name: "住宅火灾及自然灾害保险",
+                type: "家财保险",
+                premium: 380,
+                coverage: 3e5,
+                term: "1年",
+                features: ["火灾爆炸", "台风暴雨", "冰雹洪水", "附加盗抢"],
+                riskLevel: "低风险",
+                status: "在售",
+                description: "针对住宅火灾与自然灾害造成的房屋及室内财产损失提供保障"
+              },
+              {
+                id: "property003",
+                name: "企业财产综合保险",
+                type: "企业财产险",
+                premium: 2600,
+                coverage: 5e6,
+                term: "1年",
+                features: ["房屋机器", "存货成品", "盗抢责任", "营业中断可选"],
+                riskLevel: "中风险",
+                status: "在售",
+                description: "适用于中小企业，对房屋、机器设备、存货等提供综合保障，可选营业中断险"
+              },
+              {
+                id: "property004",
+                name: "设备损坏保险（家商两用）",
+                type: "设备险",
+                premium: 980,
+                coverage: 1e6,
+                term: "1年",
+                features: ["意外损坏", "操作不当", "电涌短路", "零部件更换"],
+                riskLevel: "中风险",
+                status: "在售",
+                description: "对家用或商用设备因意外损坏、操作不当、电气故障造成的损失进行赔偿"
+              },
+              {
+                id: "property005",
+                name: "租客家财与第三者责任保险",
+                type: "家财责任险",
+                premium: 260,
+                coverage: 2e5,
+                term: "1年",
+                features: ["室内财产", "租客责任", "第三者责任", "水渍玻璃破碎"],
+                riskLevel: "低风险",
+                status: "在售",
+                description: "面向租住房人群，覆盖室内财产、租客责任与第三者责任等常见风险"
+              }
+            ]
+          }
+        ]
+      },
+      forexProducts: currentUser.forexProducts || {
+        majorPairs: [
+          {
+            code: "USD/CNY",
+            name: "美元/人民币",
+            price: "7.2345",
+            change: "+0.0123",
+            changePercent: "+0.17%",
+            trend: "up",
+            high: "7.2456",
+            low: "7.2100",
+            volume: "125.6M"
+          },
+          {
+            code: "EUR/CNY",
+            name: "欧元/人民币",
+            price: "7.8901",
+            change: "-0.0234",
+            changePercent: "-0.30%",
+            trend: "down",
+            high: "7.9200",
+            low: "7.8800",
+            volume: "89.3M"
+          },
+          {
+            code: "GBP/CNY",
+            name: "英镑/人民币",
+            price: "9.1234",
+            change: "+0.0456",
+            changePercent: "+0.50%",
+            trend: "up",
+            high: "9.1500",
+            low: "9.0800",
+            volume: "67.8M"
+          },
+          {
+            code: "JPY/CNY",
+            name: "日元/人民币",
+            price: "0.0489",
+            change: "-0.0001",
+            changePercent: "-0.20%",
+            trend: "down",
+            high: "0.0495",
+            low: "0.0485",
+            volume: "156.2M"
+          },
+          {
+            code: "AUD/CNY",
+            name: "澳元/人民币",
+            price: "4.7856",
+            change: "+0.0123",
+            changePercent: "+0.26%",
+            trend: "up",
+            high: "4.7900",
+            low: "4.7700",
+            volume: "45.7M"
+          },
+          {
+            code: "CAD/CNY",
+            name: "加元/人民币",
+            price: "5.3456",
+            change: "-0.0089",
+            changePercent: "-0.17%",
+            trend: "down",
+            high: "5.3600",
+            low: "5.3400",
+            volume: "32.1M"
+          }
+        ],
+        tradingPairs: [
+          {
+            id: "forex001",
+            pair: "USD/CNY",
+            buyPrice: "7.2345",
+            sellPrice: "7.2340",
+            spread: "0.0005",
+            status: "可交易",
+            minAmount: 100,
+            maxAmount: 5e4,
+            commission: 2e-4
+          },
+          {
+            id: "forex002",
+            pair: "EUR/CNY",
+            buyPrice: "7.8901",
+            sellPrice: "7.8896",
+            spread: "0.0005",
+            status: "可交易",
+            minAmount: 100,
+            maxAmount: 5e4,
+            commission: 2e-4
+          },
+          {
+            id: "forex003",
+            pair: "GBP/CNY",
+            buyPrice: "9.1234",
+            sellPrice: "9.1229",
+            spread: "0.0005",
+            status: "可交易",
+            minAmount: 100,
+            maxAmount: 5e4,
+            commission: 2e-4
+          },
+          {
+            id: "forex004",
+            pair: "JPY/CNY",
+            buyPrice: "0.0489",
+            sellPrice: "0.0488",
+            spread: "0.0001",
+            status: "可交易",
+            minAmount: 1e3,
+            maxAmount: 1e5,
+            commission: 1e-4
+          },
+          {
+            id: "forex005",
+            pair: "AUD/CNY",
+            buyPrice: "4.7856",
+            sellPrice: "4.7850",
+            spread: "0.0006",
+            status: "可交易",
+            minAmount: 100,
+            maxAmount: 5e4,
+            commission: 2e-4
+          }
+        ],
+        marketInfo: {
+          lastUpdate: "2024-01-15T15:30:00Z",
+          marketStatus: "开放",
+          nextClose: "2024-01-15T23:00:00Z",
+          tradingHours: "周一至周五 09:00-23:00"
+        }
+      }
+    };
+  }
+  function getDepositProducts() {
+    const wealthData = getCurrentUserWealthData();
+    return wealthData.depositProducts;
+  }
+  function getWealthProducts() {
+    const wealthData = getCurrentUserWealthData();
+    return wealthData.investments;
+  }
+  function getInsuranceProducts() {
+    const wealthData = getCurrentUserWealthData();
+    return wealthData.insuranceProducts;
+  }
+  function getForexProducts() {
+    const wealthData = getCurrentUserWealthData();
+    return wealthData.forexProducts;
+  }
+  function getDepositRates() {
+    var _a, _b, _c, _d, _e, _f;
+    const depositProducts = getDepositProducts();
+    return {
+      current: {
+        rate: ((_a = depositProducts.current) == null ? void 0 : _a.rate) || 0.35,
+        features: ((_b = depositProducts.current) == null ? void 0 : _b.features) || ["随时存取", "灵活方便", "安全可靠"],
+        riskWarning: ((_c = depositProducts.current) == null ? void 0 : _c.riskWarning) || "存款保险保障，风险极低"
+      },
+      fixed: depositProducts.fixed || [
+        { term: "3个月", rate: 1.85, minAmount: 1e3, features: ["保本保息", "收益稳定", "期限灵活"], riskWarning: "存款保险保障，风险极低" },
+        { term: "6个月", rate: 2.05, minAmount: 1e3, features: ["保本保息", "收益稳定", "期限灵活"], riskWarning: "存款保险保障，风险极低" },
+        { term: "1年", rate: 2.1, minAmount: 1e3, features: ["保本保息", "收益稳定", "期限灵活"], riskWarning: "存款保险保障，风险极低" },
+        { term: "2年", rate: 2.6, minAmount: 1e3, features: ["保本保息", "收益稳定", "期限灵活"], riskWarning: "存款保险保障，风险极低" },
+        { term: "3年", rate: 2.95, minAmount: 1e3, features: ["保本保息", "收益稳定", "期限灵活"], riskWarning: "存款保险保障，风险极低" },
+        { term: "5年", rate: 3.2, minAmount: 1e3, features: ["保本保息", "收益稳定", "期限灵活"], riskWarning: "存款保险保障，风险极低" }
+      ],
+      smart: {
+        rate: ((_d = depositProducts.smart) == null ? void 0 : _d.rate) || 2.8,
+        features: ((_e = depositProducts.smart) == null ? void 0 : _e.features) || ["智能计息", "灵活存取", "收益优化"],
+        riskWarning: ((_f = depositProducts.smart) == null ? void 0 : _f.riskWarning) || "存款保险保障，风险极低"
+      }
+    };
+  }
+  function getWealthProductCategories() {
+    const investments = getWealthProducts();
+    const categories = [
+      {
+        id: "low-risk",
+        name: "低风险理财",
+        icon: "🛡️",
+        color: "#34C759",
+        products: investments.filter((inv) => inv.rate <= 4).map((inv) => ({
+          id: inv.id,
+          name: inv.name,
+          type: inv.type,
+          yield: inv.rate,
+          minAmount: 1e3,
+          term: inv.term,
+          riskLevel: "低风险",
+          features: ["保本保息", "收益稳定", "风险极低"],
+          status: inv.status,
+          description: "适合稳健型投资者，风险极低，收益稳定"
+        }))
+      },
+      {
+        id: "medium-risk",
+        name: "中风险理财",
+        icon: "⚖️",
+        color: "#FF9500",
+        products: investments.filter((inv) => inv.rate > 4 && inv.rate <= 6).map((inv) => ({
+          id: inv.id,
+          name: inv.name,
+          type: inv.type,
+          yield: inv.rate,
+          minAmount: 5e3,
+          term: inv.term,
+          riskLevel: "中风险",
+          features: ["收益较高", "风险适中", "期限灵活"],
+          status: inv.status,
+          description: "适合平衡型投资者，风险适中，收益较高"
+        }))
+      },
+      {
+        id: "high-risk",
+        name: "高风险理财",
+        icon: "🚀",
+        color: "#FF3B30",
+        products: investments.filter((inv) => inv.rate > 6).map((inv) => ({
+          id: inv.id,
+          name: inv.name,
+          type: inv.type,
+          yield: inv.rate,
+          minAmount: 1e4,
+          term: inv.term,
+          riskLevel: "高风险",
+          features: ["高收益", "高风险", "专业投资"],
+          status: inv.status,
+          description: "适合激进型投资者，高风险高收益"
+        }))
+      }
+    ];
+    if (investments.length === 0) {
+      return [
+        {
+          id: "low-risk",
+          name: "稳健型理财",
+          icon: "🛡️",
+          color: "#34C759",
+          products: [
+            {
+              id: "w001",
+              name: "农银稳健优选第68期",
+              type: "净值型",
+              yield: 3.2,
+              minAmount: 1e4,
+              term: "90天",
+              riskLevel: "低风险",
+              features: ["保本保息", "收益稳定", "风险极低", "银行担保"],
+              status: "在售",
+              description: "适合稳健型投资者，风险极低，收益稳定，银行提供本金保障"
+            },
+            {
+              id: "w002",
+              name: "农银灵活理财T+1",
+              type: "货币型",
+              yield: 2.65,
+              minAmount: 1e3,
+              term: "开放式",
+              riskLevel: "低风险",
+              features: ["随时存取", "灵活方便", "安全可靠", "T+1到账"],
+              status: "在售",
+              description: "开放式理财产品，随时申购赎回，T+1到账，适合短期资金管理"
+            },
+            {
+              id: "w003",
+              name: "农银安心宝30天",
+              type: "固定收益",
+              yield: 2.85,
+              minAmount: 5e3,
+              term: "30天",
+              riskLevel: "低风险",
+              features: ["保本保息", "收益稳定", "期限灵活", "自动续存"],
+              status: "在售",
+              description: "30天短期理财产品，保本保息，适合短期闲置资金"
+            }
+          ]
+        },
+        {
+          id: "medium-risk",
+          name: "平衡型理财",
+          icon: "⚖️",
+          color: "#FF9500",
+          products: [
+            {
+              id: "w004",
+              name: "农银进取增强半年期",
+              type: "混合型",
+              yield: 4.1,
+              minAmount: 1e4,
+              term: "180天",
+              riskLevel: "中风险",
+              features: ["收益较高", "风险适中", "期限灵活", "专业管理"],
+              status: "在售",
+              description: "混合型理财产品，投资于债券和货币市场工具，风险适中收益较高"
+            },
+            {
+              id: "w005",
+              name: "农银成长优选一年期",
+              type: "权益型",
+              yield: 4.5,
+              minAmount: 2e4,
+              term: "365天",
+              riskLevel: "中风险",
+              features: ["收益较高", "风险适中", "期限灵活", "成长潜力"],
+              status: "在售",
+              description: "权益类理财产品，投资于优质企业债券和股票，具有成长潜力"
+            },
+            {
+              id: "w006",
+              name: "农银价值发现180天",
+              type: "混合型",
+              yield: 3.95,
+              minAmount: 15e3,
+              term: "180天",
+              riskLevel: "中风险",
+              features: ["价值投资", "风险适中", "期限适中", "专业选股"],
+              status: "在售",
+              description: "价值投资理念，精选优质标的，风险适中收益稳定"
+            }
+          ]
+        },
+        {
+          id: "high-risk",
+          name: "进取型理财",
+          icon: "🚀",
+          color: "#FF3B30",
+          products: [
+            {
+              id: "w007",
+              name: "农银价值发现两年期",
+              type: "权益型",
+              yield: 5.8,
+              minAmount: 5e4,
+              term: "730天",
+              riskLevel: "高风险",
+              features: ["高收益", "高风险", "专业投资", "长期持有"],
+              status: "在售",
+              description: "长期价值投资产品，投资于优质成长企业，适合风险承受能力强的投资者"
+            },
+            {
+              id: "w008",
+              name: "农银科技成长三年期",
+              type: "权益型",
+              yield: 6.2,
+              minAmount: 1e5,
+              term: "1095天",
+              riskLevel: "高风险",
+              features: ["高收益", "高风险", "科技主题", "成长潜力"],
+              status: "在售",
+              description: "科技主题投资产品，专注于科技创新企业，具有较高成长潜力"
+            },
+            {
+              id: "w009",
+              name: "农银新兴产业一年期",
+              type: "权益型",
+              yield: 5.5,
+              minAmount: 8e4,
+              term: "365天",
+              riskLevel: "高风险",
+              features: ["新兴产业", "高收益", "高风险", "主题投资"],
+              status: "在售",
+              description: "新兴产业主题投资，涵盖新能源、生物医药等新兴领域"
+            }
+          ]
+        }
+      ];
+    }
+    return categories;
+  }
+  function getInsuranceCategories() {
+    const insuranceProducts = getInsuranceProducts();
+    return insuranceProducts.categories || [];
+  }
+  function getForexMajorPairs() {
+    const forexProducts = getForexProducts();
+    return forexProducts.majorPairs || [];
+  }
+  function getForexTradingPairs() {
+    const forexProducts = getForexProducts();
+    return forexProducts.tradingPairs || [];
+  }
+  function updateUserWealthData(userId, wealthData) {
+    try {
+      const success = updateUser(userId, wealthData);
+      if (success) {
+        syncWealthDataToStorage(userId, wealthData);
+        uni.$emit("wealthDataUpdated", { userId, wealthData });
+        formatAppLog("log", "at api/wealth.js:711", "财富数据更新成功:", userId, wealthData);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      formatAppLog("error", "at api/wealth.js:716", "更新财富数据失败:", error);
+      return false;
+    }
+  }
+  function syncWealthDataToStorage(userId, wealthData) {
+    try {
+      const localWealthData = getStorage("wealthData", true) || {};
+      localWealthData[userId] = {
+        ...localWealthData[userId],
+        ...wealthData,
+        lastUpdateTime: (/* @__PURE__ */ new Date()).toISOString()
+      };
+      setStorage("wealthData", localWealthData, true);
+      formatAppLog("log", "at api/wealth.js:741", "财富数据已同步到本地存储:", userId);
+    } catch (error) {
+      formatAppLog("error", "at api/wealth.js:743", "同步财富数据到本地存储失败:", error);
+    }
+  }
+  function getWealthDataFromStorage(userId) {
+    try {
+      const localWealthData = getStorage("wealthData", true) || {};
+      return localWealthData[userId] || null;
+    } catch (error) {
+      formatAppLog("error", "at api/wealth.js:757", "从本地存储获取财富数据失败:", error);
+      return null;
+    }
+  }
+  function syncStorageToUserData(userId) {
+    try {
+      const localWealthData = getWealthDataFromStorage(userId);
+      if (localWealthData) {
+        updateUser(userId, localWealthData);
+        formatAppLog("log", "at api/wealth.js:771", "本地存储财富数据已同步到用户数据:", userId);
+      }
+    } catch (error) {
+      formatAppLog("error", "at api/wealth.js:774", "同步本地存储到用户数据失败:", error);
+    }
+  }
+  function addInvestmentRecord(userId, investment) {
+    try {
+      const users2 = getUsersData();
+      const user = users2.find((user2) => user2.id === userId);
+      if (user) {
+        if (!user.wealthProducts) {
+          user.wealthProducts = { investments: [] };
+        }
+        if (!user.wealthProducts.investments) {
+          user.wealthProducts.investments = [];
+        }
+        const newInvestment = {
+          ...investment,
+          id: `inv${Date.now()}`,
+          purchaseDate: (/* @__PURE__ */ new Date()).toISOString(),
+          status: "持有中"
+        };
+        user.wealthProducts.investments.push(newInvestment);
+        updateUserWealthData(userId, { wealthProducts: user.wealthProducts });
+        updateInvestmentPortfolio(userId);
+        formatAppLog("log", "at api/wealth.js:811", "投资记录添加成功:", newInvestment);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      formatAppLog("error", "at api/wealth.js:816", "添加投资记录失败:", error);
+      return false;
+    }
+  }
+  function updateInvestmentPortfolio(userId) {
+    try {
+      const users2 = getUsersData();
+      const user = users2.find((user2) => user2.id === userId);
+      if (user && user.wealthProducts && user.wealthProducts.investments) {
+        const investments = user.wealthProducts.investments;
+        const totalValue = investments.reduce((sum, inv) => sum + (inv.currentValue || inv.amount), 0);
+        const totalAmount = investments.reduce((sum, inv) => sum + inv.amount, 0);
+        const totalReturn = totalValue - totalAmount;
+        const returnRate = totalAmount > 0 ? totalReturn / totalAmount * 100 : 0;
+        const investmentPortfolio = {
+          totalValue,
+          totalReturn,
+          returnRate: parseFloat(returnRate.toFixed(2)),
+          holdings: investments
+        };
+        updateUserWealthData(userId, { investmentPortfolio });
+      }
+    } catch (error) {
+      formatAppLog("error", "at api/wealth.js:849", "更新投资组合失败:", error);
+    }
+  }
+  function addDepositRecord(userId, type, amount) {
+    try {
+      const users2 = getUsersData();
+      const user = users2.find((user2) => user2.id === userId);
+      if (user) {
+        if (!user.wealthProducts) {
+          user.wealthProducts = { deposits: { current: 0, fixed: 0, smart: 0 } };
+        }
+        if (!user.wealthProducts.deposits) {
+          user.wealthProducts.deposits = { current: 0, fixed: 0, smart: 0 };
+        }
+        user.wealthProducts.deposits[type] = (user.wealthProducts.deposits[type] || 0) + amount;
+        updateUserWealthData(userId, { wealthProducts: user.wealthProducts });
+        updateUserBalance(userId, -amount, `存款-${type}`);
+        formatAppLog("log", "at api/wealth.js:881", "存款记录添加成功:", { type, amount });
+        return true;
+      }
+      return false;
+    } catch (error) {
+      formatAppLog("error", "at api/wealth.js:886", "添加存款记录失败:", error);
+      return false;
+    }
+  }
+  function updateUserBalance(userId, amount, description) {
+    try {
+      const users2 = getUsersData();
+      const user = users2.find((user2) => user2.id === userId);
+      if (user) {
+        user.balance = (user.balance || 0) + amount;
+        if (!user.transactionRecords) {
+          user.transactionRecords = [];
+        }
+        const transaction = {
+          id: Date.now(),
+          type: amount > 0 ? "income" : "expense",
+          amount: Math.abs(amount),
+          description,
+          balance: user.balance,
+          timestamp: (/* @__PURE__ */ new Date()).toISOString(),
+          icon: amount > 0 ? "💰" : "💳",
+          title: description,
+          time: (/* @__PURE__ */ new Date()).toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" })
+        };
+        user.transactionRecords.unshift(transaction);
+        updateUser(userId, {
+          balance: user.balance,
+          transactionRecords: user.transactionRecords
+        });
+        uni.$emit("balanceUpdated", { userId, balance: user.balance, transaction });
+        formatAppLog("log", "at api/wealth.js:933", "用户余额更新成功:", { userId, balance: user.balance });
+      }
+    } catch (error) {
+      formatAppLog("error", "at api/wealth.js:936", "更新用户余额失败:", error);
+    }
+  }
+  function getCurrentUserId() {
+    try {
+      const userInfo2 = uni.getStorageSync("userInfo");
+      return (userInfo2 == null ? void 0 : userInfo2.id) || "u001";
+    } catch (error) {
+      formatAppLog("error", "at api/wealth.js:949", "获取当前用户ID失败:", error);
+      return "u001";
+    }
+  }
+  function initWealthDataSync() {
+    try {
+      const userId = getCurrentUserId();
+      syncStorageToUserData(userId);
+      uni.$on("wealthDataUpdated", (data) => {
+        formatAppLog("log", "at api/wealth.js:967", "财富数据更新事件:", data);
+      });
+      uni.$on("balanceUpdated", (data) => {
+        formatAppLog("log", "at api/wealth.js:972", "余额更新事件:", data);
+      });
+      formatAppLog("log", "at api/wealth.js:976", "财富数据同步初始化完成");
+    } catch (error) {
+      formatAppLog("error", "at api/wealth.js:978", "初始化财富数据同步失败:", error);
+    }
+  }
+  function purchaseWealthProduct(userId, product, amount) {
+    try {
+      const users2 = getUsersData();
+      const user = users2.find((user2) => user2.id === userId);
+      if (!user || user.balance < amount) {
+        formatAppLog("log", "at api/wealth.js:995", "余额不足，无法购买");
+        return false;
+      }
+      const investment = {
+        name: product.name,
+        type: product.type || "理财产品",
+        amount,
+        rate: product.rate || 0,
+        term: product.term || "开放式",
+        currentValue: amount
+        // 初始价值等于购买金额
+      };
+      const success = addInvestmentRecord(userId, investment);
+      if (success) {
+        updateUserBalance(userId, -amount, `购买${product.name}`);
+        formatAppLog("log", "at api/wealth.js:1016", "理财产品购买成功:", { product: product.name, amount });
+        return true;
+      }
+      return false;
+    } catch (error) {
+      formatAppLog("error", "at api/wealth.js:1022", "购买理财产品失败:", error);
+      return false;
+    }
+  }
+  function purchaseInsuranceProduct(userId, product) {
+    try {
+      const premium = product.premium || 0;
+      const users2 = getUsersData();
+      const user = users2.find((user2) => user2.id === userId);
+      if (!user || user.balance < premium) {
+        formatAppLog("log", "at api/wealth.js:1041", "余额不足，无法购买保险");
+        return false;
+      }
+      updateUserBalance(userId, -premium, `购买${product.name}保险`);
+      formatAppLog("log", "at api/wealth.js:1049", "保险产品购买成功:", { product: product.name, premium });
+      return true;
+    } catch (error) {
+      formatAppLog("error", "at api/wealth.js:1052", "购买保险产品失败:", error);
+      return false;
+    }
+  }
+  function checkAndFixUserDataConsistency() {
+    try {
+      formatAppLog("log", "at utils/data-consistency.js:12", "🔍 开始检查用户数据一致性...");
+      const currentUserId = uni.getStorageSync("currentUserId");
+      const users2 = uni.getStorageSync("users") || [];
+      const userInfo2 = uni.getStorageSync("userInfo");
+      formatAppLog("log", "at utils/data-consistency.js:19", "当前用户ID:", currentUserId);
+      formatAppLog("log", "at utils/data-consistency.js:20", "存储的用户信息:", userInfo2);
+      if (!currentUserId) {
+        formatAppLog("log", "at utils/data-consistency.js:24", "⚠️ 用户未登录，跳过数据一致性检查");
+        return null;
+      }
+      const dbUser = users2.find((user) => user.id === currentUserId);
+      if (!dbUser) {
+        formatAppLog("warn", "at utils/data-consistency.js:32", "⚠️ 数据库中未找到用户:", currentUserId);
+        return null;
+      }
+      const isConsistent = userInfo2 && userInfo2.id === dbUser.id && userInfo2.username === dbUser.username && userInfo2.phone === dbUser.phone;
+      if (isConsistent) {
+        formatAppLog("log", "at utils/data-consistency.js:43", "✅ 用户数据一致，无需修复");
+        return userInfo2;
+      }
+      formatAppLog("log", "at utils/data-consistency.js:48", "🔧 发现数据不一致，开始修复...");
+      formatAppLog("log", "at utils/data-consistency.js:49", "数据库用户:", dbUser.username, "余额:", dbUser.balance);
+      formatAppLog("log", "at utils/data-consistency.js:50", "存储用户:", userInfo2 == null ? void 0 : userInfo2.username, "余额:", userInfo2 == null ? void 0 : userInfo2.balance);
+      const fixedUserInfo = {
+        ...userInfo2,
+        // 保持当前用户信息
+        ...dbUser,
+        // 用数据库数据覆盖
+        // 确保关键字段不变
+        id: userInfo2.id,
+        username: userInfo2.username,
+        phone: userInfo2.phone,
+        // 确保登录状态正确
+        isLoggedIn: true
+      };
+      uni.setStorageSync("userInfo", fixedUserInfo);
+      uni.setStorageSync("currentUser", fixedUserInfo);
+      const userIndex = users2.findIndex((user) => user.id === currentUserId);
+      if (userIndex !== -1) {
+        users2[userIndex] = { ...users2[userIndex], ...fixedUserInfo };
+        uni.setStorageSync("users", users2);
+      }
+      formatAppLog("log", "at utils/data-consistency.js:75", "✅ 用户数据修复完成:", {
+        username: fixedUserInfo.username,
+        balance: fixedUserInfo.balance,
+        phone: fixedUserInfo.phone
+      });
+      return fixedUserInfo;
+    } catch (error) {
+      formatAppLog("error", "at utils/data-consistency.js:84", "❌ 数据一致性检查失败:", error);
+      return null;
+    }
+  }
   const _imports_0$1 = "/static/tabbar/service.png";
-  const _sfc_main$y = {
+  const _sfc_main$I = {
     components: {
       ServiceModal
     },
@@ -6147,33 +7352,17 @@ if (uni.restoreGlobal) {
         // 客服
         serviceHotline: "95599",
         serviceHours: "7×24小时在线",
-        totalAssets: "125,438.52",
-        yesterdayProfit: "+35.78",
+        totalAssets: "0.00",
+        yesterdayProfit: "+0.00",
         depositSummary: {
-          current: "23,560.20",
-          fixed: "80,000.00",
-          smart: "8,520.32"
+          current: "0.00",
+          fixed: "0.00",
+          smart: "0.00"
         },
-        depositProducts: [
-          { id: "d1", name: "整存整取", term: "3个月", minAmount: 1e3, rate: 1.85 },
-          { id: "d2", name: "整存整取", term: "1年", minAmount: 1e3, rate: 2.1 },
-          { id: "d3", name: "大额存单", term: "3年", minAmount: 2e5, rate: 2.95 }
-        ],
-        wealthProducts: [
-          { id: "w1", name: "稳健优选第68期", risk: "低", term: "90天", minAmount: 1e4, yield: 3.2 },
-          { id: "w2", name: "灵活理财T+1", risk: "低", term: "开放式", minAmount: 1e3, yield: 2.65 },
-          { id: "w3", name: "进取增强半年期", risk: "中", term: "180天", minAmount: 1e4, yield: 4.1 }
-        ],
-        insuranceList: [
-          { id: "i1", name: "安心医疗险", type: "health", typeText: "医疗险", desc: "百万保额·报销广", premium: 268 },
-          { id: "i2", name: "家庭意外险", type: "accident", typeText: "意外险", desc: "全家保障·一年期", premium: 199 },
-          { id: "i3", name: "重疾守护", type: "critical", typeText: "重疾险", desc: "重大疾病全面保障", premium: 860 }
-        ],
-        forexList: [
-          { code: "USD/CNY", price: "7.2375", change: 0.12 },
-          { code: "EUR/CNY", price: "7.8801", change: -0.08 },
-          { code: "JPY/CNY", price: "0.0468", change: 0.02 }
-        ],
+        depositProducts: [],
+        wealthProducts: [],
+        insuranceList: [],
+        forexList: [],
         // 热点资讯（示例静态数据，可后续接入后端/抓取）
         newsList: [
           {
@@ -6216,9 +7405,10 @@ if (uni.restoreGlobal) {
       };
     },
     onLoad() {
-      formatAppLog("log", "at pages/wealth/wealth.vue:334", "财富页面加载");
+      formatAppLog("log", "at pages/wealth/wealth.vue:318", "财富页面加载");
       this.ensureLoginStatus();
       this.initDataSync();
+      this.loadWealthData();
     },
     methods: {
       // 确保登录状态
@@ -6226,17 +7416,33 @@ if (uni.restoreGlobal) {
         const isLoggedIn2 = uni.getStorageSync("isLoggedIn");
         const userInfo2 = uni.getStorageSync("userInfo");
         if (!isLoggedIn2 || !userInfo2) {
-          const defaultUser = {
-            id: "u001",
-            username: "张小明",
-            phone: "13999999999",
-            balance: 15e4,
-            nickname: "小明"
-          };
-          uni.setStorageSync("userInfo", defaultUser);
-          uni.setStorageSync("isLoggedIn", true);
-          uni.setStorageSync("currentUser", defaultUser);
-          formatAppLog("log", "at pages/wealth/wealth.vue:356", "已设置临时登录状态用于测试");
+          const consistentUserInfo = checkAndFixUserDataConsistency();
+          if (consistentUserInfo) {
+            uni.setStorageSync("isLoggedIn", true);
+            formatAppLog("log", "at pages/wealth/wealth.vue:336", "已设置真实用户登录状态:", consistentUserInfo.username, "余额:", consistentUserInfo.balance);
+          } else {
+            const defaultUser = {
+              id: "u001",
+              username: "李华",
+              phone: "13888888888",
+              balance: 28e4,
+              nickname: "华华",
+              realName: "李华",
+              email: "lihua@example.com",
+              gender: "女",
+              birthDate: "1995-03-15",
+              address: "北京市朝阳区建国门外大街1号"
+            };
+            uni.setStorageSync("userInfo", defaultUser);
+            uni.setStorageSync("isLoggedIn", true);
+            uni.setStorageSync("currentUser", defaultUser);
+            formatAppLog("log", "at pages/wealth/wealth.vue:356", "已设置默认用户登录状态用于测试");
+          }
+        } else {
+          const consistentUserInfo = checkAndFixUserDataConsistency();
+          if (consistentUserInfo) {
+            formatAppLog("log", "at pages/wealth/wealth.vue:362", "用户数据一致性检查完成:", consistentUserInfo.username, "余额:", consistentUserInfo.balance);
+          }
         }
       },
       onSwiperClick(idx) {
@@ -6317,20 +7523,131 @@ if (uni.restoreGlobal) {
         };
         const url = pageMap[pageType];
         if (url) {
-          uni.navigateTo({
-            url,
-            fail: (err) => {
-              formatAppLog("error", "at pages/wealth/wealth.vue:449", "页面跳转失败:", err);
-              uni.showToast({ title: "页面跳转失败", icon: "none" });
-            }
-          });
+          setTimeout(() => {
+            uni.navigateTo({
+              url,
+              success: () => {
+                formatAppLog("log", "at pages/wealth/wealth.vue:458", "页面跳转成功:", url);
+              },
+              fail: (err) => {
+                formatAppLog("error", "at pages/wealth/wealth.vue:461", "页面跳转失败:", err);
+                uni.redirectTo({
+                  url,
+                  fail: (err2) => {
+                    formatAppLog("error", "at pages/wealth/wealth.vue:466", "重定向也失败:", err2);
+                    uni.showToast({ title: "页面跳转失败", icon: "none" });
+                  }
+                });
+              }
+            });
+          }, 100);
         } else {
           uni.showToast({ title: "页面不存在", icon: "none" });
+        }
+      },
+      // 初始化数据同步
+      initDataSync() {
+        initWealthDataSync();
+        uni.$on("depositSuccess", (data) => {
+          formatAppLog("log", "at pages/wealth/wealth.vue:485", "财富页面收到存款成功事件:", data);
+        });
+        uni.$on("purchaseSuccess", (data) => {
+          formatAppLog("log", "at pages/wealth/wealth.vue:490", "财富页面收到购买成功事件:", data);
+        });
+        uni.$on("insurancePurchaseSuccess", (data) => {
+          formatAppLog("log", "at pages/wealth/wealth.vue:495", "财富页面收到保险购买成功事件:", data);
+        });
+        uni.$on("balanceUpdated", (data) => {
+          formatAppLog("log", "at pages/wealth/wealth.vue:500", "财富页面收到余额更新事件:", data);
+          this.loadWealthData();
+        });
+      },
+      // 从user.json加载财富数据
+      loadWealthData() {
+        try {
+          const wealthData = getCurrentUserWealthData();
+          formatAppLog("log", "at pages/wealth/wealth.vue:510", "加载财富数据:", wealthData);
+          if (wealthData.deposits) {
+            this.depositSummary = {
+              current: wealthData.deposits.current ? wealthData.deposits.current.toLocaleString() : "0.00",
+              fixed: wealthData.deposits.fixed ? wealthData.deposits.fixed.toLocaleString() : "0.00",
+              smart: wealthData.deposits.smart ? wealthData.deposits.smart.toLocaleString() : "0.00"
+            };
+          }
+          if (wealthData.depositProducts && wealthData.depositProducts.fixed) {
+            this.depositProducts = wealthData.depositProducts.fixed.map((product, index) => ({
+              id: `d${index + 1}`,
+              name: "整存整取",
+              term: product.term,
+              minAmount: product.minAmount,
+              rate: product.rate
+            }));
+          }
+          if (wealthData.investments) {
+            this.wealthProducts = wealthData.investments.map((investment, index) => ({
+              id: `w${index + 1}`,
+              name: investment.name,
+              risk: investment.rate <= 4 ? "低" : investment.rate <= 6 ? "中" : "高",
+              term: investment.term,
+              minAmount: 1e3,
+              yield: investment.rate
+            }));
+          }
+          if (wealthData.insuranceProducts && wealthData.insuranceProducts.categories) {
+            this.insuranceList = [];
+            wealthData.insuranceProducts.categories.forEach((category) => {
+              category.products.forEach((product) => {
+                this.insuranceList.push({
+                  id: product.id,
+                  name: product.name,
+                  type: category.id,
+                  typeText: category.name,
+                  desc: product.features ? product.features.join("·") : "",
+                  premium: product.premium
+                });
+              });
+            });
+          }
+          if (wealthData.forexProducts && wealthData.forexProducts.majorPairs) {
+            this.forexList = wealthData.forexProducts.majorPairs.map((pair) => ({
+              code: pair.code,
+              price: pair.price,
+              change: parseFloat(pair.change)
+            }));
+          }
+          this.calculateTotalAssets(wealthData);
+          formatAppLog("log", "at pages/wealth/wealth.vue:573", "财富数据加载完成");
+        } catch (error) {
+          formatAppLog("error", "at pages/wealth/wealth.vue:575", "加载财富数据失败:", error);
+        }
+      },
+      // 计算总资产
+      calculateTotalAssets(wealthData) {
+        var _a;
+        try {
+          let totalAssets = 0;
+          if (wealthData.deposits) {
+            totalAssets += wealthData.deposits.current || 0;
+            totalAssets += wealthData.deposits.fixed || 0;
+            totalAssets += wealthData.deposits.smart || 0;
+          }
+          if (wealthData.investmentPortfolio && wealthData.investmentPortfolio.totalValue) {
+            totalAssets += wealthData.investmentPortfolio.totalValue;
+          }
+          this.totalAssets = totalAssets.toLocaleString("zh-CN", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+          });
+          const yesterdayReturn = ((_a = wealthData.investmentPortfolio) == null ? void 0 : _a.totalReturn) || 0;
+          this.yesterdayProfit = yesterdayReturn >= 0 ? `+${yesterdayReturn.toFixed(2)}` : `${yesterdayReturn.toFixed(2)}`;
+          formatAppLog("log", "at pages/wealth/wealth.vue:606", "总资产计算完成:", this.totalAssets);
+        } catch (error) {
+          formatAppLog("error", "at pages/wealth/wealth.vue:608", "计算总资产失败:", error);
         }
       }
     }
   };
-  function _sfc_render$x(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$H(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_ServiceModal = vue.resolveComponent("ServiceModal");
     return vue.openBlock(), vue.createElementBlock("view", { class: "wealth-container" }, [
       vue.createCommentVNode(" 资产概览轮播（图片版） "),
@@ -6841,8 +8158,8 @@ if (uni.restoreGlobal) {
       }, null, 8, ["visible", "onClose"])
     ]);
   }
-  const PagesWealthWealth = /* @__PURE__ */ _export_sfc(_sfc_main$y, [["render", _sfc_render$x], ["__scopeId", "data-v-a00d3a3e"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/wealth.vue"]]);
-  const _sfc_main$x = {
+  const PagesWealthWealth = /* @__PURE__ */ _export_sfc(_sfc_main$I, [["render", _sfc_render$H], ["__scopeId", "data-v-a00d3a3e"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/wealth.vue"]]);
+  const _sfc_main$H = {
     name: "LifePage",
     data() {
       return {
@@ -7552,7 +8869,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$w(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$G(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "life-page" }, [
       vue.createCommentVNode(" 头部标题区域 "),
       vue.createElementVNode("view", { class: "header-section" }, [
@@ -7941,7 +9258,7 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesLifeLife = /* @__PURE__ */ _export_sfc(_sfc_main$x, [["render", _sfc_render$w], ["__scopeId", "data-v-980f0516"], ["__file", "E:/项目/yihangyidon/src/pages/life/life.vue"]]);
+  const PagesLifeLife = /* @__PURE__ */ _export_sfc(_sfc_main$H, [["render", _sfc_render$G], ["__scopeId", "data-v-980f0516"], ["__file", "E:/项目/yihangyidon/src/pages/life/life.vue"]]);
   const SILICONFLOW_API_KEY = "sk-fkzxlpblcjigbzitanooofmnfmvvedobfdvvxqdbbdodntdt";
   const API_BASE_URL = "https://api.siliconflow.cn/v1";
   const sessionHistory = {};
@@ -8123,7 +9440,7 @@ if (uni.restoreGlobal) {
   };
   const _imports_0 = "/static/wealth/aiavatar.png";
   const _imports_1 = "/static/wealth/useravatar.jpg";
-  const _sfc_main$w = {
+  const _sfc_main$G = {
     data() {
       return {
         draft: "",
@@ -8535,7 +9852,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$v(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$F(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "chat-page" }, [
       vue.createElementVNode("view", { class: "chat-header" }, [
         vue.createElementVNode("text", { class: "title" }, "AI 智能客服"),
@@ -8740,8 +10057,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesServiceChat = /* @__PURE__ */ _export_sfc(_sfc_main$w, [["render", _sfc_render$v], ["__scopeId", "data-v-e19cce9b"], ["__file", "E:/项目/yihangyidon/src/pages/service/chat.vue"]]);
-  const _sfc_main$v = {
+  const PagesServiceChat = /* @__PURE__ */ _export_sfc(_sfc_main$G, [["render", _sfc_render$F], ["__scopeId", "data-v-e19cce9b"], ["__file", "E:/项目/yihangyidon/src/pages/service/chat.vue"]]);
+  const _sfc_main$F = {
     data() {
       return {
         searchKeyword: "",
@@ -8779,7 +10096,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$u(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$E(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "help-center" }, [
       vue.createCommentVNode(" 顶部搜索栏 "),
       vue.createElementVNode("view", { class: "search-header" }, [
@@ -9056,8 +10373,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesHelpHelpCenter = /* @__PURE__ */ _export_sfc(_sfc_main$v, [["render", _sfc_render$u], ["__scopeId", "data-v-292cc293"], ["__file", "E:/项目/yihangyidon/src/pages/help/help-center.vue"]]);
-  const _sfc_main$u = {
+  const PagesHelpHelpCenter = /* @__PURE__ */ _export_sfc(_sfc_main$F, [["render", _sfc_render$E], ["__scopeId", "data-v-292cc293"], ["__file", "E:/项目/yihangyidon/src/pages/help/help-center.vue"]]);
+  const _sfc_main$E = {
     data() {
       return {
         helpId: "",
@@ -9219,7 +10536,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$t(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$D(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "help-detail" }, [
       vue.createCommentVNode(" 顶部导航 "),
       vue.createElementVNode("view", { class: "detail-header" }, [
@@ -9393,7 +10710,7 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesHelpHelpDetail = /* @__PURE__ */ _export_sfc(_sfc_main$u, [["render", _sfc_render$t], ["__scopeId", "data-v-ba096d18"], ["__file", "E:/项目/yihangyidon/src/pages/help/help-detail.vue"]]);
+  const PagesHelpHelpDetail = /* @__PURE__ */ _export_sfc(_sfc_main$E, [["render", _sfc_render$D], ["__scopeId", "data-v-ba096d18"], ["__file", "E:/项目/yihangyidon/src/pages/help/help-detail.vue"]]);
   function getUserBalance() {
     return new Promise((resolve, reject) => {
       try {
@@ -9555,7 +10872,7 @@ if (uni.restoreGlobal) {
       }
     });
   }
-  const _sfc_main$t = {
+  const _sfc_main$D = {
     name: "PaymentPasswordModal",
     props: {
       visible: {
@@ -9606,17 +10923,38 @@ if (uni.restoreGlobal) {
         this.loading = false;
       },
       focusInput() {
+        formatAppLog("log", "at components/common/PaymentPasswordModal.vue:152", "尝试获得输入框焦点");
+        if (this.$refs.passwordInputMobile) {
+          try {
+            this.$refs.passwordInputMobile.focus();
+            formatAppLog("log", "at components/common/PaymentPasswordModal.vue:158", "移动端输入框焦点设置成功");
+            return;
+          } catch (error) {
+            formatAppLog("error", "at components/common/PaymentPasswordModal.vue:161", "设置移动端输入框焦点失败:", error);
+          }
+        }
         if (this.$refs.passwordInput) {
-          this.$refs.passwordInput.focus();
+          try {
+            this.$refs.passwordInput.focus();
+            formatAppLog("log", "at components/common/PaymentPasswordModal.vue:169", "隐藏输入框焦点设置成功");
+          } catch (error) {
+            formatAppLog("error", "at components/common/PaymentPasswordModal.vue:171", "设置隐藏输入框焦点失败:", error);
+          }
+        } else {
+          formatAppLog("error", "at components/common/PaymentPasswordModal.vue:174", "输入框引用不存在");
         }
       },
       onInputFocus() {
+        formatAppLog("log", "at components/common/PaymentPasswordModal.vue:179", "输入框获得焦点");
       },
       onInputBlur() {
+        formatAppLog("log", "at components/common/PaymentPasswordModal.vue:183", "输入框失去焦点");
       },
       onPasswordInput() {
+        formatAppLog("log", "at components/common/PaymentPasswordModal.vue:187", "密码输入:", this.currentPassword);
         this.errorMessage = "";
         if (this.currentPassword.length === 6) {
+          formatAppLog("log", "at components/common/PaymentPasswordModal.vue:192", "密码输入完成，开始验证");
           this.verifyPassword();
         }
       },
@@ -9654,7 +10992,7 @@ if (uni.restoreGlobal) {
             this.loading = false;
           }
         } catch (error) {
-          formatAppLog("error", "at components/common/PaymentPasswordModal.vue:198", "支付验证失败:", error);
+          formatAppLog("error", "at components/common/PaymentPasswordModal.vue:240", "支付验证失败:", error);
           this.errorMessage = "验证失败，请重试";
           this.loading = false;
         }
@@ -9690,15 +11028,15 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$s(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$C(_ctx, _cache, $props, $setup, $data, $options) {
     return $props.visible ? (vue.openBlock(), vue.createElementBlock("view", {
       key: 0,
       class: "payment-password-modal",
-      onClick: _cache[8] || (_cache[8] = (...args) => $options.handleMaskClick && $options.handleMaskClick(...args))
+      onClick: _cache[15] || (_cache[15] = (...args) => $options.handleMaskClick && $options.handleMaskClick(...args))
     }, [
       vue.createElementVNode("view", {
         class: "modal-content",
-        onClick: _cache[7] || (_cache[7] = vue.withModifiers(() => {
+        onClick: _cache[14] || (_cache[14] = vue.withModifiers(() => {
         }, ["stop"]))
       }, [
         vue.createCommentVNode(" 弹窗头部 "),
@@ -9752,7 +11090,10 @@ if (uni.restoreGlobal) {
           vue.createCommentVNode(" 密码输入区域 "),
           vue.createElementVNode("view", { class: "password-input-section" }, [
             vue.createElementVNode("view", { class: "input-label" }, "请输入交易密码"),
-            vue.createElementVNode("view", { class: "password-dots" }, [
+            vue.createElementVNode("view", {
+              class: "password-dots",
+              onClick: _cache[1] || (_cache[1] = (...args) => $options.focusInput && $options.focusInput(...args))
+            }, [
               (vue.openBlock(true), vue.createElementBlock(
                 vue.Fragment,
                 null,
@@ -9780,12 +11121,38 @@ if (uni.restoreGlobal) {
               {
                 ref: "passwordInput",
                 type: "password",
-                "onUpdate:modelValue": _cache[1] || (_cache[1] = ($event) => $data.currentPassword = $event),
+                "onUpdate:modelValue": _cache[2] || (_cache[2] = ($event) => $data.currentPassword = $event),
                 maxlength: "6",
                 class: "hidden-input",
-                onInput: _cache[2] || (_cache[2] = (...args) => $options.onPasswordInput && $options.onPasswordInput(...args)),
-                onFocus: _cache[3] || (_cache[3] = (...args) => $options.onInputFocus && $options.onInputFocus(...args)),
-                onBlur: _cache[4] || (_cache[4] = (...args) => $options.onInputBlur && $options.onInputBlur(...args))
+                onInput: _cache[3] || (_cache[3] = (...args) => $options.onPasswordInput && $options.onPasswordInput(...args)),
+                onFocus: _cache[4] || (_cache[4] = (...args) => $options.onInputFocus && $options.onInputFocus(...args)),
+                onBlur: _cache[5] || (_cache[5] = (...args) => $options.onInputBlur && $options.onInputBlur(...args)),
+                onKeyup: _cache[6] || (_cache[6] = (...args) => $options.onPasswordInput && $options.onPasswordInput(...args)),
+                onKeydown: _cache[7] || (_cache[7] = (...args) => $options.onPasswordInput && $options.onPasswordInput(...args)),
+                inputmode: "numeric",
+                pattern: "[0-9]*"
+              },
+              null,
+              544
+              /* NEED_HYDRATION, NEED_PATCH */
+            ), [
+              [vue.vModelText, $data.currentPassword]
+            ]),
+            vue.createCommentVNode(" 备用输入框（用于移动端） "),
+            vue.withDirectives(vue.createElementVNode(
+              "input",
+              {
+                ref: "passwordInputMobile",
+                type: "tel",
+                "onUpdate:modelValue": _cache[8] || (_cache[8] = ($event) => $data.currentPassword = $event),
+                maxlength: "6",
+                class: "mobile-input",
+                onInput: _cache[9] || (_cache[9] = (...args) => $options.onPasswordInput && $options.onPasswordInput(...args)),
+                onFocus: _cache[10] || (_cache[10] = (...args) => $options.onInputFocus && $options.onInputFocus(...args)),
+                onBlur: _cache[11] || (_cache[11] = (...args) => $options.onInputBlur && $options.onInputBlur(...args)),
+                inputmode: "numeric",
+                pattern: "[0-9]*",
+                placeholder: "请输入6位数字密码"
               },
               null,
               544
@@ -9811,11 +11178,11 @@ if (uni.restoreGlobal) {
           vue.createElementVNode("view", { class: "modal-actions" }, [
             vue.createElementVNode("button", {
               class: "cancel-btn",
-              onClick: _cache[5] || (_cache[5] = (...args) => $options.closeModal && $options.closeModal(...args))
+              onClick: _cache[12] || (_cache[12] = (...args) => $options.closeModal && $options.closeModal(...args))
             }, "取消"),
             vue.createElementVNode("button", {
               class: "confirm-btn",
-              onClick: _cache[6] || (_cache[6] = (...args) => $options.confirmPayment && $options.confirmPayment(...args)),
+              onClick: _cache[13] || (_cache[13] = (...args) => $options.confirmPayment && $options.confirmPayment(...args)),
               disabled: $data.currentPassword.length !== 6 || $data.loading
             }, vue.toDisplayString($data.loading ? "验证中..." : "确认支付"), 9, ["disabled"])
           ])
@@ -9823,8 +11190,8 @@ if (uni.restoreGlobal) {
       ])
     ])) : vue.createCommentVNode("v-if", true);
   }
-  const PaymentPasswordModal = /* @__PURE__ */ _export_sfc(_sfc_main$t, [["render", _sfc_render$s], ["__scopeId", "data-v-c92603ac"], ["__file", "E:/项目/yihangyidon/src/components/common/PaymentPasswordModal.vue"]]);
-  const _sfc_main$s = {
+  const PaymentPasswordModal = /* @__PURE__ */ _export_sfc(_sfc_main$D, [["render", _sfc_render$C], ["__scopeId", "data-v-c92603ac"], ["__file", "E:/项目/yihangyidon/src/components/common/PaymentPasswordModal.vue"]]);
+  const _sfc_main$C = {
     components: {
       PaymentPasswordModal
     },
@@ -10264,7 +11631,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$r(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$B(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_PaymentPasswordModal = vue.resolveComponent("PaymentPasswordModal");
     return vue.openBlock(), vue.createElementBlock("view", { class: "transfer-page" }, [
       vue.createCommentVNode(" 顶部导航 "),
@@ -10620,8 +11987,8 @@ if (uni.restoreGlobal) {
       }, null, 8, ["visible", "amount", "payee", "description", "onPaymentConfirmed", "onClose"])
     ]);
   }
-  const PagesTransferTransfer = /* @__PURE__ */ _export_sfc(_sfc_main$s, [["render", _sfc_render$r], ["__scopeId", "data-v-d303ad3d"], ["__file", "E:/项目/yihangyidon/src/pages/transfer/transfer.vue"]]);
-  const _sfc_main$r = {
+  const PagesTransferTransfer = /* @__PURE__ */ _export_sfc(_sfc_main$C, [["render", _sfc_render$B], ["__scopeId", "data-v-d303ad3d"], ["__file", "E:/项目/yihangyidon/src/pages/transfer/transfer.vue"]]);
+  const _sfc_main$B = {
     data() {
       return {
         isLoginNeeded: false,
@@ -10867,7 +12234,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$q(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$A(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "account-page" }, [
       vue.createCommentVNode(" 顶部导航 "),
       vue.createElementVNode("view", { class: "nav-bar" }, [
@@ -11094,8 +12461,8 @@ if (uni.restoreGlobal) {
       ))
     ]);
   }
-  const PagesAccountAccount = /* @__PURE__ */ _export_sfc(_sfc_main$r, [["render", _sfc_render$q], ["__scopeId", "data-v-f7e9057f"], ["__file", "E:/项目/yihangyidon/src/pages/account/account.vue"]]);
-  const _sfc_main$q = {
+  const PagesAccountAccount = /* @__PURE__ */ _export_sfc(_sfc_main$B, [["render", _sfc_render$A], ["__scopeId", "data-v-f7e9057f"], ["__file", "E:/项目/yihangyidon/src/pages/account/account.vue"]]);
+  const _sfc_main$A = {
     name: "PaymentPage",
     data() {
       return {
@@ -11143,18 +12510,18 @@ if (uni.restoreGlobal) {
               status: record.status === "completed" ? "success" : "pending",
               statusText: record.status === "completed" ? "缴费成功" : "处理中"
             }));
-            formatAppLog("log", "at pages/payment/payment.vue:155", "✅ 生活缴费数据加载成功:", {
+            formatAppLog("log", "at pages/payment/payment.vue:153", "✅ 生活缴费数据加载成功:", {
               paymentRecords: this.paymentRecords.length,
               recentPayments: this.recentPayments.length,
               userBalance: currentUser.balance
             });
           } else {
-            formatAppLog("log", "at pages/payment/payment.vue:161", "❌ 未找到当前用户数据");
+            formatAppLog("log", "at pages/payment/payment.vue:159", "❌ 未找到当前用户数据");
             this.recentPayments = [];
             this.paymentRecords = [];
           }
         } catch (error) {
-          formatAppLog("error", "at pages/payment/payment.vue:166", "❌ 加载生活缴费数据失败:", error);
+          formatAppLog("error", "at pages/payment/payment.vue:164", "❌ 加载生活缴费数据失败:", error);
           this.recentPayments = [];
           this.paymentRecords = [];
         }
@@ -11162,26 +12529,22 @@ if (uni.restoreGlobal) {
       // 获取缴费类型
       getPaymentType(type) {
         const typeMap = {
-          手机充值: "phone",
-          电费: "electric",
-          水费: "water",
-          燃气费: "gas",
-          宽带费: "broadband",
-          有线电视费: "tv",
-          党费: "party"
+          "手机充值": "phone",
+          "电费": "electric",
+          "水费": "water",
+          "燃气费": "gas",
+          "党费": "party"
         };
         return typeMap[type] || "other";
       },
       // 获取缴费图标
       getPaymentIcon(type) {
         const iconMap = {
-          手机充值: "📱",
-          电费: "⚡",
-          水费: "💧",
-          燃气费: "🔥",
-          宽带费: "🌐",
-          有线电视费: "📺",
-          党费: "☭"
+          "手机充值": "📱",
+          "电费": "⚡",
+          "水费": "💧",
+          "燃气费": "🔥",
+          "党费": "☭"
         };
         return iconMap[type] || "💰";
       },
@@ -11191,13 +12554,15 @@ if (uni.restoreGlobal) {
         });
       },
       goToElectric() {
-        uni.navigateTo({
-          url: "/pages/electric/electric"
+        uni.showToast({
+          title: "电费缴费功能开发中",
+          icon: "none"
         });
       },
       goToGas() {
-        uni.navigateTo({
-          url: "/pages/gas/gas"
+        uni.showToast({
+          title: "燃气费缴费功能开发中",
+          icon: "none"
         });
       },
       goToPhone() {
@@ -11206,13 +12571,15 @@ if (uni.restoreGlobal) {
         });
       },
       goToBroadband() {
-        uni.navigateTo({
-          url: "/pages/broadband/broadband"
+        uni.showToast({
+          title: "宽带费缴费功能开发中",
+          icon: "none"
         });
       },
       goToTV() {
-        uni.navigateTo({
-          url: "/pages/tv/tv"
+        uni.showToast({
+          title: "有线电视缴费功能开发中",
+          icon: "none"
         });
       },
       goToPaymentManagement() {
@@ -11221,7 +12588,7 @@ if (uni.restoreGlobal) {
         });
       },
       goToPaymentDetail(payment) {
-        formatAppLog("log", "at pages/payment/payment.vue:243", "查看缴费详情:", payment);
+        formatAppLog("log", "at pages/payment/payment.vue:241", "查看缴费详情:", payment);
         uni.showToast({
           title: "缴费详情功能开发中",
           icon: "none"
@@ -11229,7 +12596,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$p(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$z(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "payment-page" }, [
       vue.createCommentVNode(" 头部区域 "),
       vue.createElementVNode("view", { class: "header" }, [
@@ -11375,8 +12742,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesPaymentPayment = /* @__PURE__ */ _export_sfc(_sfc_main$q, [["render", _sfc_render$p], ["__scopeId", "data-v-6e0fac4f"], ["__file", "E:/项目/yihangyidon/src/pages/payment/payment.vue"]]);
-  const _sfc_main$p = {
+  const PagesPaymentPayment = /* @__PURE__ */ _export_sfc(_sfc_main$A, [["render", _sfc_render$z], ["__scopeId", "data-v-6e0fac4f"], ["__file", "E:/项目/yihangyidon/src/pages/payment/payment.vue"]]);
+  const _sfc_main$z = {
     name: "WaterPage",
     data() {
       return {
@@ -11722,7 +13089,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$o(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$y(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "water-page" }, [
       vue.createCommentVNode(" 地区选择 "),
       vue.createElementVNode("view", { class: "location-section" }, [
@@ -11825,8 +13192,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesWaterWater = /* @__PURE__ */ _export_sfc(_sfc_main$p, [["render", _sfc_render$o], ["__scopeId", "data-v-ebd6dd79"], ["__file", "E:/项目/yihangyidon/src/pages/water/water.vue"]]);
-  const _sfc_main$o = {
+  const PagesWaterWater = /* @__PURE__ */ _export_sfc(_sfc_main$z, [["render", _sfc_render$y], ["__scopeId", "data-v-ebd6dd79"], ["__file", "E:/项目/yihangyidon/src/pages/water/water.vue"]]);
+  const _sfc_main$y = {
     name: "WaterPaymentPage",
     data() {
       return {
@@ -12049,7 +13416,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$n(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$x(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "water-payment-page" }, [
       vue.createCommentVNode(" 顶部厨房插画背景 "),
       vue.createElementVNode("view", { class: "header-section" }, [
@@ -12287,8 +13654,8 @@ if (uni.restoreGlobal) {
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesWaterPaymentWaterPayment = /* @__PURE__ */ _export_sfc(_sfc_main$o, [["render", _sfc_render$n], ["__scopeId", "data-v-16fc2ef4"], ["__file", "E:/项目/yihangyidon/src/pages/water-payment/water-payment.vue"]]);
-  const _sfc_main$n = {
+  const PagesWaterPaymentWaterPayment = /* @__PURE__ */ _export_sfc(_sfc_main$y, [["render", _sfc_render$x], ["__scopeId", "data-v-16fc2ef4"], ["__file", "E:/项目/yihangyidon/src/pages/water-payment/water-payment.vue"]]);
+  const _sfc_main$x = {
     name: "CitySelectPage",
     data() {
       return {
@@ -13180,7 +14547,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$m(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$w(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "city-select-page" }, [
       vue.createCommentVNode(" 搜索栏 "),
       vue.createElementVNode("view", { class: "search-section" }, [
@@ -13475,8 +14842,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesCitySelectCitySelect = /* @__PURE__ */ _export_sfc(_sfc_main$n, [["render", _sfc_render$m], ["__scopeId", "data-v-66878741"], ["__file", "E:/项目/yihangyidon/src/pages/city-select/city-select.vue"]]);
-  const _sfc_main$m = {
+  const PagesCitySelectCitySelect = /* @__PURE__ */ _export_sfc(_sfc_main$x, [["render", _sfc_render$w], ["__scopeId", "data-v-66878741"], ["__file", "E:/项目/yihangyidon/src/pages/city-select/city-select.vue"]]);
+  const _sfc_main$w = {
     name: "PaymentManagementPage",
     data() {
       return {
@@ -13882,7 +15249,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$l(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$v(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "payment-management-page" }, [
       vue.createCommentVNode(" 新增分组 "),
       vue.createElementVNode("view", { class: "add-group-section" }, [
@@ -14071,8 +15438,8 @@ if (uni.restoreGlobal) {
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesPaymentManagementPaymentManagement = /* @__PURE__ */ _export_sfc(_sfc_main$m, [["render", _sfc_render$l], ["__scopeId", "data-v-aea28279"], ["__file", "E:/项目/yihangyidon/src/pages/payment-management/payment-management.vue"]]);
-  const _sfc_main$l = {
+  const PagesPaymentManagementPaymentManagement = /* @__PURE__ */ _export_sfc(_sfc_main$w, [["render", _sfc_render$v], ["__scopeId", "data-v-aea28279"], ["__file", "E:/项目/yihangyidon/src/pages/payment-management/payment-management.vue"]]);
+  const _sfc_main$v = {
     name: "RechargePage",
     data() {
       return {
@@ -14285,7 +15652,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$k(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$u(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "recharge-page" }, [
       vue.createCommentVNode(" 手机号码区域 "),
       vue.createElementVNode("view", { class: "phone-section" }, [
@@ -14479,8 +15846,8 @@ if (uni.restoreGlobal) {
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesRechargeRecharge = /* @__PURE__ */ _export_sfc(_sfc_main$l, [["render", _sfc_render$k], ["__scopeId", "data-v-d370def1"], ["__file", "E:/项目/yihangyidon/src/pages/recharge/recharge.vue"]]);
-  const _sfc_main$k = {
+  const PagesRechargeRecharge = /* @__PURE__ */ _export_sfc(_sfc_main$v, [["render", _sfc_render$u], ["__scopeId", "data-v-d370def1"], ["__file", "E:/项目/yihangyidon/src/pages/recharge/recharge.vue"]]);
+  const _sfc_main$u = {
     name: "RechargePaymentPage",
     data() {
       return {
@@ -14825,7 +16192,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$j(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$t(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "payment-page" }, [
       vue.createCommentVNode(" 导航栏 "),
       vue.createElementVNode("view", { class: "nav-bar" }, [
@@ -15123,8 +16490,8 @@ if (uni.restoreGlobal) {
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesRechargePaymentRechargePayment = /* @__PURE__ */ _export_sfc(_sfc_main$k, [["render", _sfc_render$j], ["__scopeId", "data-v-e95b868e"], ["__file", "E:/项目/yihangyidon/src/pages/recharge-payment/recharge-payment.vue"]]);
-  const _sfc_main$j = {
+  const PagesRechargePaymentRechargePayment = /* @__PURE__ */ _export_sfc(_sfc_main$u, [["render", _sfc_render$t], ["__scopeId", "data-v-e95b868e"], ["__file", "E:/项目/yihangyidon/src/pages/recharge-payment/recharge-payment.vue"]]);
+  const _sfc_main$t = {
     name: "GovernmentPage",
     data() {
       return {
@@ -15342,7 +16709,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$i(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$s(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "government-page" }, [
       vue.createElementVNode("view", { class: "page-header" }, [
         vue.createElementVNode("text", { class: "header-title" }, "政务民生"),
@@ -15529,8 +16896,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesGovernmentGovernment = /* @__PURE__ */ _export_sfc(_sfc_main$j, [["render", _sfc_render$i], ["__scopeId", "data-v-55002ac7"], ["__file", "E:/项目/yihangyidon/src/pages/government/government.vue"]]);
-  const _sfc_main$i = {
+  const PagesGovernmentGovernment = /* @__PURE__ */ _export_sfc(_sfc_main$t, [["render", _sfc_render$s], ["__scopeId", "data-v-55002ac7"], ["__file", "E:/项目/yihangyidon/src/pages/government/government.vue"]]);
+  const _sfc_main$s = {
     name: "GamesPage",
     data() {
       return {
@@ -15760,7 +17127,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$h(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$r(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "games-page" }, [
       vue.createElementVNode("view", { class: "page-header" }, [
         vue.createElementVNode("text", { class: "header-title" }, "小豆乐园"),
@@ -16007,8 +17374,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesGamesGames = /* @__PURE__ */ _export_sfc(_sfc_main$i, [["render", _sfc_render$h], ["__scopeId", "data-v-5e0e9dd0"], ["__file", "E:/项目/yihangyidon/src/pages/games/games.vue"]]);
-  const _sfc_main$h = {
+  const PagesGamesGames = /* @__PURE__ */ _export_sfc(_sfc_main$s, [["render", _sfc_render$r], ["__scopeId", "data-v-5e0e9dd0"], ["__file", "E:/项目/yihangyidon/src/pages/games/games.vue"]]);
+  const _sfc_main$r = {
     data() {
       return {
         transferRecords: []
@@ -16101,7 +17468,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$g(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$q(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "history-page" }, [
       vue.createCommentVNode(" 顶部导航 "),
       vue.createElementVNode("view", { class: "nav-bar" }, [
@@ -16185,7 +17552,7 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesTransferHistory = /* @__PURE__ */ _export_sfc(_sfc_main$h, [["render", _sfc_render$g], ["__scopeId", "data-v-c9706b1b"], ["__file", "E:/项目/yihangyidon/src/pages/transfer/history.vue"]]);
+  const PagesTransferHistory = /* @__PURE__ */ _export_sfc(_sfc_main$r, [["render", _sfc_render$q], ["__scopeId", "data-v-c9706b1b"], ["__file", "E:/项目/yihangyidon/src/pages/transfer/history.vue"]]);
   const formatBankCard = (cardNumber, separator = " ") => {
     if (!cardNumber)
       return "";
@@ -16202,7 +17569,7 @@ if (uni.restoreGlobal) {
     const middle = "*".repeat(card.length - showStart - showEnd);
     return formatBankCard(start + middle + end);
   };
-  const _sfc_main$g = {
+  const _sfc_main$q = {
     name: "BankCard",
     props: {
       cardInfo: {
@@ -16277,7 +17644,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$f(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$p(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock(
       "view",
       {
@@ -16365,8 +17732,8 @@ if (uni.restoreGlobal) {
       /* CLASS */
     );
   }
-  const BankCard = /* @__PURE__ */ _export_sfc(_sfc_main$g, [["render", _sfc_render$f], ["__scopeId", "data-v-2f14f5e9"], ["__file", "E:/项目/yihangyidon/src/components/common/BankCard.vue"]]);
-  const _sfc_main$f = {
+  const BankCard = /* @__PURE__ */ _export_sfc(_sfc_main$q, [["render", _sfc_render$p], ["__scopeId", "data-v-2f14f5e9"], ["__file", "E:/项目/yihangyidon/src/components/common/BankCard.vue"]]);
+  const _sfc_main$p = {
     components: {
       BankCard
     },
@@ -16545,7 +17912,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$e(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$o(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_BankCard = vue.resolveComponent("BankCard");
     return vue.openBlock(), vue.createElementBlock("view", { class: "credit-card-container" }, [
       vue.createCommentVNode(" 页面头部 "),
@@ -16742,7 +18109,7 @@ if (uni.restoreGlobal) {
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesCreditCardCreditCard = /* @__PURE__ */ _export_sfc(_sfc_main$f, [["render", _sfc_render$e], ["__scopeId", "data-v-03264d9b"], ["__file", "E:/项目/yihangyidon/src/pages/credit-card/credit-card.vue"]]);
+  const PagesCreditCardCreditCard = /* @__PURE__ */ _export_sfc(_sfc_main$p, [["render", _sfc_render$o], ["__scopeId", "data-v-03264d9b"], ["__file", "E:/项目/yihangyidon/src/pages/credit-card/credit-card.vue"]]);
   function verifyPaymentPassword(password) {
     return new Promise((resolve, reject) => {
       var _a, _b;
@@ -16924,7 +18291,7 @@ if (uni.restoreGlobal) {
       formatAppLog("error", "at api/payment.js:258", "❌ 添加交易记录失败:", error);
     }
   }
-  const _sfc_main$e = {
+  const _sfc_main$o = {
     name: "RepaymentPasswordModal",
     props: {
       visible: {
@@ -17154,7 +18521,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$d(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$n(_ctx, _cache, $props, $setup, $data, $options) {
     return $props.visible ? (vue.openBlock(), vue.createElementBlock("view", {
       key: 0,
       class: "modal-overlay",
@@ -17314,8 +18681,8 @@ if (uni.restoreGlobal) {
       ])
     ])) : vue.createCommentVNode("v-if", true);
   }
-  const RepaymentPasswordModal = /* @__PURE__ */ _export_sfc(_sfc_main$e, [["render", _sfc_render$d], ["__scopeId", "data-v-d5beb455"], ["__file", "E:/项目/yihangyidon/src/components/common/RepaymentPasswordModal.vue"]]);
-  const _sfc_main$d = {
+  const RepaymentPasswordModal = /* @__PURE__ */ _export_sfc(_sfc_main$o, [["render", _sfc_render$n], ["__scopeId", "data-v-d5beb455"], ["__file", "E:/项目/yihangyidon/src/components/common/RepaymentPasswordModal.vue"]]);
+  const _sfc_main$n = {
     name: "CreditCardRepayment",
     components: {
       RepaymentPasswordModal
@@ -17448,7 +18815,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$c(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$m(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_RepaymentPasswordModal = vue.resolveComponent("RepaymentPasswordModal");
     return vue.openBlock(), vue.createElementBlock("view", { class: "repayment-container" }, [
       vue.createCommentVNode(" 页面头部 "),
@@ -17831,8 +19198,8 @@ if (uni.restoreGlobal) {
       }, null, 8, ["visible", "card-number", "repayment-amount", "onClose", "onRepaymentSuccess"])
     ]);
   }
-  const PagesCreditCardRepayment = /* @__PURE__ */ _export_sfc(_sfc_main$d, [["render", _sfc_render$c], ["__scopeId", "data-v-08d86d8e"], ["__file", "E:/项目/yihangyidon/src/pages/credit-card/repayment.vue"]]);
-  const _sfc_main$c = {
+  const PagesCreditCardRepayment = /* @__PURE__ */ _export_sfc(_sfc_main$n, [["render", _sfc_render$m], ["__scopeId", "data-v-08d86d8e"], ["__file", "E:/项目/yihangyidon/src/pages/credit-card/repayment.vue"]]);
+  const _sfc_main$m = {
     data() {
       return {
         type: "normal",
@@ -18130,7 +19497,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$b(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$l(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "balance-container" }, [
       vue.createCommentVNode(" 页面头部 "),
       vue.createElementVNode("view", { class: "page-header" }, [
@@ -18314,8 +19681,8 @@ if (uni.restoreGlobal) {
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesBalanceBalance = /* @__PURE__ */ _export_sfc(_sfc_main$c, [["render", _sfc_render$b], ["__scopeId", "data-v-a05d65b8"], ["__file", "E:/项目/yihangyidon/src/pages/balance/balance.vue"]]);
-  const _sfc_main$b = {
+  const PagesBalanceBalance = /* @__PURE__ */ _export_sfc(_sfc_main$m, [["render", _sfc_render$l], ["__scopeId", "data-v-a05d65b8"], ["__file", "E:/项目/yihangyidon/src/pages/balance/balance.vue"]]);
+  const _sfc_main$l = {
     data() {
       return {
         hasLoan: true,
@@ -18539,7 +19906,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$a(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$k(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "loan-container" }, [
       vue.createCommentVNode(" 页面头部 "),
       vue.createElementVNode("view", { class: "page-header" }, [
@@ -18786,8 +20153,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesLoanLoan = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["render", _sfc_render$a], ["__scopeId", "data-v-2fe4ed24"], ["__file", "E:/项目/yihangyidon/src/pages/loan/loan.vue"]]);
-  const _sfc_main$a = {
+  const PagesLoanLoan = /* @__PURE__ */ _export_sfc(_sfc_main$l, [["render", _sfc_render$k], ["__scopeId", "data-v-2fe4ed24"], ["__file", "E:/项目/yihangyidon/src/pages/loan/loan.vue"]]);
+  const _sfc_main$k = {
     name: "CardDetailModal",
     props: {
       visible: {
@@ -18855,8 +20222,8 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$9(_ctx, _cache, $props, $setup, $data, $options) {
-    var _a, _b, _c, _d, _e, _f, _g, _h;
+  function _sfc_render$j(_ctx, _cache, $props, $setup, $data, $options) {
+    var _a, _b, _c, _d, _e, _f, _g;
     return $props.visible ? (vue.openBlock(), vue.createElementBlock("view", {
       key: 0,
       class: "modal-overlay",
@@ -19121,8 +20488,8 @@ if (uni.restoreGlobal) {
       ])
     ])) : vue.createCommentVNode("v-if", true);
   }
-  const CardDetailModal = /* @__PURE__ */ _export_sfc(_sfc_main$a, [["render", _sfc_render$9], ["__scopeId", "data-v-fcf447e6"], ["__file", "E:/项目/yihangyidon/src/components/common/CardDetailModal.vue"]]);
-  const _sfc_main$9 = {
+  const CardDetailModal = /* @__PURE__ */ _export_sfc(_sfc_main$k, [["render", _sfc_render$j], ["__scopeId", "data-v-fcf447e6"], ["__file", "E:/项目/yihangyidon/src/components/common/CardDetailModal.vue"]]);
+  const _sfc_main$j = {
     name: "CreditCards",
     components: {
       CardDetailModal,
@@ -19315,7 +20682,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$8(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$i(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_CardDetailModal = vue.resolveComponent("CardDetailModal");
     const _component_RepaymentPasswordModal = vue.resolveComponent("RepaymentPasswordModal");
     return vue.openBlock(), vue.createElementBlock("view", { class: "credit-cards-page" }, [
@@ -19711,7 +21078,7 @@ if (uni.restoreGlobal) {
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesCreditCardsCreditCards = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["render", _sfc_render$8], ["__scopeId", "data-v-a750c574"], ["__file", "E:/项目/yihangyidon/src/pages/credit-cards/credit-cards.vue"]]);
+  const PagesCreditCardsCreditCards = /* @__PURE__ */ _export_sfc(_sfc_main$j, [["render", _sfc_render$i], ["__scopeId", "data-v-a750c574"], ["__file", "E:/项目/yihangyidon/src/pages/credit-cards/credit-cards.vue"]]);
   class SyncManager {
     constructor() {
       this.maxRetryCount = 3;
@@ -20004,7 +21371,7 @@ if (uni.restoreGlobal) {
     }
   }
   const syncManager = new SyncManager();
-  const _sfc_main$8 = {
+  const _sfc_main$i = {
     data() {
       return {
         profileData: {
@@ -20314,7 +21681,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$7(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$h(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "profile-page" }, [
       vue.createElementVNode("view", { class: "nav-bar" }, [
         vue.createElementVNode("view", {
@@ -20509,8 +21876,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesUserProfile = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["render", _sfc_render$7], ["__scopeId", "data-v-f6b4f04d"], ["__file", "E:/项目/yihangyidon/src/pages/user/profile.vue"]]);
-  const _sfc_main$7 = {
+  const PagesUserProfile = /* @__PURE__ */ _export_sfc(_sfc_main$i, [["render", _sfc_render$h], ["__scopeId", "data-v-f6b4f04d"], ["__file", "E:/项目/yihangyidon/src/pages/user/profile.vue"]]);
+  const _sfc_main$h = {
     data() {
       return {
         securityScore: 85,
@@ -21393,7 +22760,7 @@ IP：${event.ip}
       }
     }
   };
-  function _sfc_render$6(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$g(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "security-page" }, [
       vue.createCommentVNode(" 顶部导航栏 "),
       vue.createElementVNode("view", { class: "nav-bar" }, [
@@ -21959,8 +23326,8 @@ IP：${event.ip}
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesUserSecurity = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["render", _sfc_render$6], ["__scopeId", "data-v-b74f3c40"], ["__file", "E:/项目/yihangyidon/src/pages/user/security.vue"]]);
-  const _sfc_main$6 = {
+  const PagesUserSecurity = /* @__PURE__ */ _export_sfc(_sfc_main$h, [["render", _sfc_render$g], ["__scopeId", "data-v-b74f3c40"], ["__file", "E:/项目/yihangyidon/src/pages/user/security.vue"]]);
+  const _sfc_main$g = {
     data() {
       return {
         type: "login",
@@ -22171,7 +23538,7 @@ IP：${event.ip}
       }
     }
   };
-  function _sfc_render$5(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$f(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "change-password-page" }, [
       vue.createCommentVNode(" 顶部导航栏 "),
       vue.createElementVNode("view", { class: "nav-bar" }, [
@@ -22285,8 +23652,8 @@ IP：${event.ip}
       ])
     ]);
   }
-  const PagesUserChangePassword = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["render", _sfc_render$5], ["__scopeId", "data-v-df75db25"], ["__file", "E:/项目/yihangyidon/src/pages/user/change-password.vue"]]);
-  const _sfc_main$5 = {
+  const PagesUserChangePassword = /* @__PURE__ */ _export_sfc(_sfc_main$g, [["render", _sfc_render$f], ["__scopeId", "data-v-df75db25"], ["__file", "E:/项目/yihangyidon/src/pages/user/change-password.vue"]]);
+  const _sfc_main$f = {
     data() {
       return {
         latitude: 0,
@@ -22765,7 +24132,7 @@ IP：${event.ip}
       }
     }
   };
-  function _sfc_render$4(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$e(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "branch-page" }, [
       vue.createCommentVNode(" 搜索栏 "),
       vue.createElementVNode("view", { class: "search-section" }, [
@@ -23209,541 +24576,7626 @@ IP：${event.ip}
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesServiceBranch = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["render", _sfc_render$4], ["__scopeId", "data-v-51383fbf"], ["__file", "E:/项目/yihangyidon/src/pages/service/branch.vue"]]);
-  function getCurrentUserWealthData() {
-    var _a, _b;
-    const users2 = getUsersData();
-    const currentUser = users2.find((user) => user.isLoggedIn === true) || users2[0];
-    return {
-      deposits: ((_a = currentUser.wealthProducts) == null ? void 0 : _a.deposits) || {
-        current: 0,
-        fixed: 0,
-        smart: 0
-      },
-      investments: ((_b = currentUser.wealthProducts) == null ? void 0 : _b.investments) || [],
-      investmentPortfolio: currentUser.investmentPortfolio || {
-        totalValue: 0,
-        totalReturn: 0,
-        returnRate: 0,
-        holdings: []
-      },
-      depositProducts: currentUser.depositProducts || {
-        current: { rate: 0.35, features: [], riskWarning: "" },
-        fixed: [],
-        smart: { rate: 2.8, features: [], riskWarning: "" }
-      },
-      insuranceProducts: currentUser.insuranceProducts || {
-        categories: []
-      },
-      forexProducts: currentUser.forexProducts || {
-        majorPairs: [],
-        tradingPairs: []
+  const PagesServiceBranch = /* @__PURE__ */ _export_sfc(_sfc_main$f, [["render", _sfc_render$e], ["__scopeId", "data-v-51383fbf"], ["__file", "E:/项目/yihangyidon/src/pages/service/branch.vue"]]);
+  var config = {
+    version: "v2.5.0-20230101",
+    yAxisWidth: 15,
+    xAxisHeight: 22,
+    padding: [10, 10, 10, 10],
+    rotate: false,
+    fontSize: 13,
+    fontColor: "#666666",
+    dataPointShape: ["circle", "circle", "circle", "circle"],
+    color: ["#1890FF", "#91CB74", "#FAC858", "#EE6666", "#73C0DE", "#3CA272", "#FC8452", "#9A60B4", "#ea7ccc"],
+    linearColor: ["#0EE2F8", "#2BDCA8", "#FA7D8D", "#EB88E2", "#2AE3A0", "#0EE2F8", "#EB88E2", "#6773E3", "#F78A85"],
+    pieChartLinePadding: 15,
+    pieChartTextPadding: 5,
+    titleFontSize: 20,
+    subtitleFontSize: 15,
+    radarLabelTextMargin: 13
+  };
+  var assign = function(target, ...varArgs) {
+    if (target == null) {
+      throw new TypeError("[uCharts] Cannot convert undefined or null to object");
+    }
+    if (!varArgs || varArgs.length <= 0) {
+      return target;
+    }
+    function deepAssign(obj1, obj2) {
+      for (let key in obj2) {
+        obj1[key] = obj1[key] && obj1[key].toString() === "[object Object]" ? deepAssign(obj1[key], obj2[key]) : obj1[key] = obj2[key];
       }
-    };
-  }
-  function getDepositProducts() {
-    const wealthData = getCurrentUserWealthData();
-    return wealthData.depositProducts;
-  }
-  function getWealthProducts() {
-    const wealthData = getCurrentUserWealthData();
-    return wealthData.investments;
-  }
-  function getInsuranceProducts() {
-    const wealthData = getCurrentUserWealthData();
-    return wealthData.insuranceProducts;
-  }
-  function getForexProducts() {
-    const wealthData = getCurrentUserWealthData();
-    return wealthData.forexProducts;
-  }
-  function getDepositRates() {
-    var _a, _b, _c, _d, _e, _f;
-    const depositProducts = getDepositProducts();
-    return {
-      current: {
-        rate: ((_a = depositProducts.current) == null ? void 0 : _a.rate) || 0.35,
-        features: ((_b = depositProducts.current) == null ? void 0 : _b.features) || ["随时存取", "灵活方便", "安全可靠"],
-        riskWarning: ((_c = depositProducts.current) == null ? void 0 : _c.riskWarning) || "存款保险保障，风险极低"
-      },
-      fixed: depositProducts.fixed || [
-        { term: "3个月", rate: 1.85, minAmount: 1e3, features: ["保本保息", "收益稳定", "期限灵活"], riskWarning: "存款保险保障，风险极低" },
-        { term: "6个月", rate: 2.05, minAmount: 1e3, features: ["保本保息", "收益稳定", "期限灵活"], riskWarning: "存款保险保障，风险极低" },
-        { term: "1年", rate: 2.1, minAmount: 1e3, features: ["保本保息", "收益稳定", "期限灵活"], riskWarning: "存款保险保障，风险极低" },
-        { term: "2年", rate: 2.6, minAmount: 1e3, features: ["保本保息", "收益稳定", "期限灵活"], riskWarning: "存款保险保障，风险极低" },
-        { term: "3年", rate: 2.95, minAmount: 1e3, features: ["保本保息", "收益稳定", "期限灵活"], riskWarning: "存款保险保障，风险极低" },
-        { term: "5年", rate: 3.2, minAmount: 1e3, features: ["保本保息", "收益稳定", "期限灵活"], riskWarning: "存款保险保障，风险极低" }
-      ],
-      smart: {
-        rate: ((_d = depositProducts.smart) == null ? void 0 : _d.rate) || 2.8,
-        features: ((_e = depositProducts.smart) == null ? void 0 : _e.features) || ["智能计息", "灵活存取", "收益优化"],
-        riskWarning: ((_f = depositProducts.smart) == null ? void 0 : _f.riskWarning) || "存款保险保障，风险极低"
+      return obj1;
+    }
+    varArgs.forEach((val) => {
+      target = deepAssign(target, val);
+    });
+    return target;
+  };
+  var util = {
+    toFixed: function toFixed(num, limit) {
+      limit = limit || 2;
+      if (this.isFloat(num)) {
+        num = num.toFixed(limit);
       }
-    };
+      return num;
+    },
+    isFloat: function isFloat(num) {
+      return num % 1 !== 0;
+    },
+    approximatelyEqual: function approximatelyEqual(num1, num2) {
+      return Math.abs(num1 - num2) < 1e-10;
+    },
+    isSameSign: function isSameSign(num1, num2) {
+      return Math.abs(num1) === num1 && Math.abs(num2) === num2 || Math.abs(num1) !== num1 && Math.abs(num2) !== num2;
+    },
+    isSameXCoordinateArea: function isSameXCoordinateArea(p1, p2) {
+      return this.isSameSign(p1.x, p2.x);
+    },
+    isCollision: function isCollision(obj1, obj2) {
+      obj1.end = {};
+      obj1.end.x = obj1.start.x + obj1.width;
+      obj1.end.y = obj1.start.y - obj1.height;
+      obj2.end = {};
+      obj2.end.x = obj2.start.x + obj2.width;
+      obj2.end.y = obj2.start.y - obj2.height;
+      var flag = obj2.start.x > obj1.end.x || obj2.end.x < obj1.start.x || obj2.end.y > obj1.start.y || obj2.start.y < obj1.end.y;
+      return !flag;
+    }
+  };
+  function hexToRgb(hexValue, opc) {
+    var rgx = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+    var hex = hexValue.replace(rgx, function(m, r2, g2, b2) {
+      return r2 + r2 + g2 + g2 + b2 + b2;
+    });
+    var rgb = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    var r = parseInt(rgb[1], 16);
+    var g = parseInt(rgb[2], 16);
+    var b = parseInt(rgb[3], 16);
+    return "rgba(" + r + "," + g + "," + b + "," + opc + ")";
   }
-  function getWealthProductCategories() {
-    const investments = getWealthProducts();
-    const categories = [
-      {
-        id: "low-risk",
-        name: "低风险理财",
-        icon: "🛡️",
-        color: "#34C759",
-        products: investments.filter((inv) => inv.rate <= 4).map((inv) => ({
-          id: inv.id,
-          name: inv.name,
-          type: inv.type,
-          yield: inv.rate,
-          minAmount: 1e3,
-          term: inv.term,
-          riskLevel: "低风险",
-          features: ["保本保息", "收益稳定", "风险极低"],
-          status: inv.status,
-          description: "适合稳健型投资者，风险极低，收益稳定"
-        }))
-      },
-      {
-        id: "medium-risk",
-        name: "中风险理财",
-        icon: "⚖️",
-        color: "#FF9500",
-        products: investments.filter((inv) => inv.rate > 4 && inv.rate <= 6).map((inv) => ({
-          id: inv.id,
-          name: inv.name,
-          type: inv.type,
-          yield: inv.rate,
-          minAmount: 5e3,
-          term: inv.term,
-          riskLevel: "中风险",
-          features: ["收益较高", "风险适中", "期限灵活"],
-          status: inv.status,
-          description: "适合平衡型投资者，风险适中，收益较高"
-        }))
-      },
-      {
-        id: "high-risk",
-        name: "高风险理财",
-        icon: "🚀",
-        color: "#FF3B30",
-        products: investments.filter((inv) => inv.rate > 6).map((inv) => ({
-          id: inv.id,
-          name: inv.name,
-          type: inv.type,
-          yield: inv.rate,
-          minAmount: 1e4,
-          term: inv.term,
-          riskLevel: "高风险",
-          features: ["高收益", "高风险", "专业投资"],
-          status: inv.status,
-          description: "适合激进型投资者，高风险高收益"
-        }))
-      }
-    ];
-    if (investments.length === 0) {
-      return [
-        {
-          id: "low-risk",
-          name: "低风险理财",
-          icon: "🛡️",
-          color: "#34C759",
-          products: [
-            {
-              id: "default001",
-              name: "稳健理财A",
-              type: "理财产品",
-              yield: 3.8,
-              minAmount: 1e3,
-              term: "90天",
-              riskLevel: "低风险",
-              features: ["保本保息", "收益稳定", "风险极低"],
-              status: "在售",
-              description: "适合稳健型投资者，风险极低，收益稳定"
-            }
-          ]
-        },
-        {
-          id: "medium-risk",
-          name: "中风险理财",
-          icon: "⚖️",
-          color: "#FF9500",
-          products: [
-            {
-              id: "default002",
-              name: "平衡理财B",
-              type: "理财产品",
-              yield: 4.5,
-              minAmount: 5e3,
-              term: "180天",
-              riskLevel: "中风险",
-              features: ["收益较高", "风险适中", "期限灵活"],
-              status: "在售",
-              description: "适合平衡型投资者，风险适中，收益较高"
-            }
-          ]
-        },
-        {
-          id: "high-risk",
-          name: "高风险理财",
-          icon: "🚀",
-          color: "#FF3B30",
-          products: [
-            {
-              id: "default003",
-              name: "成长理财C",
-              type: "理财产品",
-              yield: 6.5,
-              minAmount: 1e4,
-              term: "365天",
-              riskLevel: "高风险",
-              features: ["高收益", "高风险", "专业投资"],
-              status: "在售",
-              description: "适合激进型投资者，高风险高收益"
-            }
-          ]
+  function findRange(num, type, limit) {
+    if (isNaN(num)) {
+      throw new Error("[uCharts] series数据需为Number格式");
+    }
+    limit = limit || 10;
+    type = type ? type : "upper";
+    var multiple = 1;
+    while (limit < 1) {
+      limit *= 10;
+      multiple *= 10;
+    }
+    if (type === "upper") {
+      num = Math.ceil(num * multiple);
+    } else {
+      num = Math.floor(num * multiple);
+    }
+    while (num % limit !== 0) {
+      if (type === "upper") {
+        if (num == num + 1) {
+          break;
         }
-      ];
+        num++;
+      } else {
+        num--;
+      }
+    }
+    return num / multiple;
+  }
+  function calCandleMA(dayArr, nameArr, colorArr, kdata) {
+    let seriesTemp = [];
+    for (let k = 0; k < dayArr.length; k++) {
+      let seriesItem = {
+        data: [],
+        name: nameArr[k],
+        color: colorArr[k]
+      };
+      for (let i = 0, len = kdata.length; i < len; i++) {
+        if (i < dayArr[k]) {
+          seriesItem.data.push(null);
+          continue;
+        }
+        let sum = 0;
+        for (let j = 0; j < dayArr[k]; j++) {
+          sum += kdata[i - j][1];
+        }
+        seriesItem.data.push(+(sum / dayArr[k]).toFixed(3));
+      }
+      seriesTemp.push(seriesItem);
+    }
+    return seriesTemp;
+  }
+  function calValidDistance(self, distance, chartData, config2, opts) {
+    var dataChartAreaWidth = opts.width - opts.area[1] - opts.area[3];
+    var dataChartWidth = chartData.eachSpacing * (opts.chartData.xAxisData.xAxisPoints.length - 1);
+    if (opts.type == "mount" && opts.extra && opts.extra.mount && opts.extra.mount.widthRatio && opts.extra.mount.widthRatio > 1) {
+      if (opts.extra.mount.widthRatio > 2)
+        opts.extra.mount.widthRatio = 2;
+      dataChartWidth += (opts.extra.mount.widthRatio - 1) * chartData.eachSpacing;
+    }
+    var validDistance = distance;
+    if (distance >= 0) {
+      validDistance = 0;
+      self.uevent.trigger("scrollLeft");
+      self.scrollOption.position = "left";
+      opts.xAxis.scrollPosition = "left";
+    } else if (Math.abs(distance) >= dataChartWidth - dataChartAreaWidth) {
+      validDistance = dataChartAreaWidth - dataChartWidth;
+      self.uevent.trigger("scrollRight");
+      self.scrollOption.position = "right";
+      opts.xAxis.scrollPosition = "right";
+    } else {
+      self.scrollOption.position = distance;
+      opts.xAxis.scrollPosition = distance;
+    }
+    return validDistance;
+  }
+  function isInAngleRange(angle, startAngle, endAngle) {
+    function adjust(angle2) {
+      while (angle2 < 0) {
+        angle2 += 2 * Math.PI;
+      }
+      while (angle2 > 2 * Math.PI) {
+        angle2 -= 2 * Math.PI;
+      }
+      return angle2;
+    }
+    angle = adjust(angle);
+    startAngle = adjust(startAngle);
+    endAngle = adjust(endAngle);
+    if (startAngle > endAngle) {
+      endAngle += 2 * Math.PI;
+      if (angle < startAngle) {
+        angle += 2 * Math.PI;
+      }
+    }
+    return angle >= startAngle && angle <= endAngle;
+  }
+  function createCurveControlPoints(points, i) {
+    function isNotMiddlePoint(points2, i2) {
+      if (points2[i2 - 1] && points2[i2 + 1]) {
+        return points2[i2].y >= Math.max(points2[i2 - 1].y, points2[i2 + 1].y) || points2[i2].y <= Math.min(
+          points2[i2 - 1].y,
+          points2[i2 + 1].y
+        );
+      } else {
+        return false;
+      }
+    }
+    function isNotMiddlePointX(points2, i2) {
+      if (points2[i2 - 1] && points2[i2 + 1]) {
+        return points2[i2].x >= Math.max(points2[i2 - 1].x, points2[i2 + 1].x) || points2[i2].x <= Math.min(
+          points2[i2 - 1].x,
+          points2[i2 + 1].x
+        );
+      } else {
+        return false;
+      }
+    }
+    var a = 0.2;
+    var b = 0.2;
+    var pAx = null;
+    var pAy = null;
+    var pBx = null;
+    var pBy = null;
+    if (i < 1) {
+      pAx = points[0].x + (points[1].x - points[0].x) * a;
+      pAy = points[0].y + (points[1].y - points[0].y) * a;
+    } else {
+      pAx = points[i].x + (points[i + 1].x - points[i - 1].x) * a;
+      pAy = points[i].y + (points[i + 1].y - points[i - 1].y) * a;
+    }
+    if (i > points.length - 3) {
+      var last = points.length - 1;
+      pBx = points[last].x - (points[last].x - points[last - 1].x) * b;
+      pBy = points[last].y - (points[last].y - points[last - 1].y) * b;
+    } else {
+      pBx = points[i + 1].x - (points[i + 2].x - points[i].x) * b;
+      pBy = points[i + 1].y - (points[i + 2].y - points[i].y) * b;
+    }
+    if (isNotMiddlePoint(points, i + 1)) {
+      pBy = points[i + 1].y;
+    }
+    if (isNotMiddlePoint(points, i)) {
+      pAy = points[i].y;
+    }
+    if (isNotMiddlePointX(points, i + 1)) {
+      pBx = points[i + 1].x;
+    }
+    if (isNotMiddlePointX(points, i)) {
+      pAx = points[i].x;
+    }
+    if (pAy >= Math.max(points[i].y, points[i + 1].y) || pAy <= Math.min(points[i].y, points[i + 1].y)) {
+      pAy = points[i].y;
+    }
+    if (pBy >= Math.max(points[i].y, points[i + 1].y) || pBy <= Math.min(points[i].y, points[i + 1].y)) {
+      pBy = points[i + 1].y;
+    }
+    if (pAx >= Math.max(points[i].x, points[i + 1].x) || pAx <= Math.min(points[i].x, points[i + 1].x)) {
+      pAx = points[i].x;
+    }
+    if (pBx >= Math.max(points[i].x, points[i + 1].x) || pBx <= Math.min(points[i].x, points[i + 1].x)) {
+      pBx = points[i + 1].x;
+    }
+    return {
+      ctrA: {
+        x: pAx,
+        y: pAy
+      },
+      ctrB: {
+        x: pBx,
+        y: pBy
+      }
+    };
+  }
+  function convertCoordinateOrigin(x, y, center) {
+    return {
+      x: center.x + x,
+      y: center.y - y
+    };
+  }
+  function avoidCollision(obj, target) {
+    if (target) {
+      while (util.isCollision(obj, target)) {
+        if (obj.start.x > 0) {
+          obj.start.y--;
+        } else if (obj.start.x < 0) {
+          obj.start.y++;
+        } else {
+          if (obj.start.y > 0) {
+            obj.start.y++;
+          } else {
+            obj.start.y--;
+          }
+        }
+      }
+    }
+    return obj;
+  }
+  function fixPieSeries(series, opts, config2) {
+    let pieSeriesArr = [];
+    if (series.length > 0 && series[0].data.constructor.toString().indexOf("Array") > -1) {
+      opts._pieSeries_ = series;
+      let oldseries = series[0].data;
+      for (var i = 0; i < oldseries.length; i++) {
+        oldseries[i].formatter = series[0].formatter;
+        oldseries[i].data = oldseries[i].value;
+        pieSeriesArr.push(oldseries[i]);
+      }
+      opts.series = pieSeriesArr;
+    } else {
+      pieSeriesArr = series;
+    }
+    return pieSeriesArr;
+  }
+  function fillSeries(series, opts, config2) {
+    var index = 0;
+    for (var i = 0; i < series.length; i++) {
+      let item = series[i];
+      if (!item.color) {
+        item.color = config2.color[index];
+        index = (index + 1) % config2.color.length;
+      }
+      if (!item.linearIndex) {
+        item.linearIndex = i;
+      }
+      if (!item.index) {
+        item.index = 0;
+      }
+      if (!item.type) {
+        item.type = opts.type;
+      }
+      if (typeof item.show == "undefined") {
+        item.show = true;
+      }
+      if (!item.type) {
+        item.type = opts.type;
+      }
+      if (!item.pointShape) {
+        item.pointShape = "circle";
+      }
+      if (!item.legendShape) {
+        switch (item.type) {
+          case "line":
+            item.legendShape = "line";
+            break;
+          case "column":
+          case "bar":
+            item.legendShape = "rect";
+            break;
+          case "area":
+          case "mount":
+            item.legendShape = "triangle";
+            break;
+          default:
+            item.legendShape = "circle";
+        }
+      }
+    }
+    return series;
+  }
+  function fillCustomColor(linearType, customColor, series, config2) {
+    var newcolor = customColor || [];
+    if (linearType == "custom" && newcolor.length == 0) {
+      newcolor = config2.linearColor;
+    }
+    if (linearType == "custom" && newcolor.length < series.length) {
+      let chazhi = series.length - newcolor.length;
+      for (var i = 0; i < chazhi; i++) {
+        newcolor.push(config2.linearColor[(i + 1) % config2.linearColor.length]);
+      }
+    }
+    return newcolor;
+  }
+  function getDataRange(minData, maxData) {
+    var limit = 0;
+    var range = maxData - minData;
+    if (range >= 1e4) {
+      limit = 1e3;
+    } else if (range >= 1e3) {
+      limit = 100;
+    } else if (range >= 100) {
+      limit = 10;
+    } else if (range >= 10) {
+      limit = 5;
+    } else if (range >= 1) {
+      limit = 1;
+    } else if (range >= 0.1) {
+      limit = 0.1;
+    } else if (range >= 0.01) {
+      limit = 0.01;
+    } else if (range >= 1e-3) {
+      limit = 1e-3;
+    } else if (range >= 1e-4) {
+      limit = 1e-4;
+    } else if (range >= 1e-5) {
+      limit = 1e-5;
+    } else {
+      limit = 1e-6;
+    }
+    return {
+      minRange: findRange(minData, "lower", limit),
+      maxRange: findRange(maxData, "upper", limit)
+    };
+  }
+  function measureText(text, fontSize, context) {
+    var width = 0;
+    text = String(text);
+    if (context !== false && context !== void 0 && context.setFontSize && context.measureText) {
+      context.setFontSize(fontSize);
+      return context.measureText(text).width;
+    } else {
+      var text = text.split("");
+      for (let i = 0; i < text.length; i++) {
+        let item = text[i];
+        if (/[a-zA-Z]/.test(item)) {
+          width += 7;
+        } else if (/[0-9]/.test(item)) {
+          width += 5.5;
+        } else if (/\./.test(item)) {
+          width += 2.7;
+        } else if (/-/.test(item)) {
+          width += 3.25;
+        } else if (/:/.test(item)) {
+          width += 2.5;
+        } else if (/[\u4e00-\u9fa5]/.test(item)) {
+          width += 10;
+        } else if (/\(|\)/.test(item)) {
+          width += 3.73;
+        } else if (/\s/.test(item)) {
+          width += 2.5;
+        } else if (/%/.test(item)) {
+          width += 8;
+        } else {
+          width += 10;
+        }
+      }
+      return width * fontSize / 10;
+    }
+  }
+  function dataCombine(series) {
+    return series.reduce(function(a, b) {
+      return (a.data ? a.data : a).concat(b.data);
+    }, []);
+  }
+  function dataCombineStack(series, len) {
+    var sum = new Array(len);
+    for (var j = 0; j < sum.length; j++) {
+      sum[j] = 0;
+    }
+    for (var i = 0; i < series.length; i++) {
+      for (var j = 0; j < sum.length; j++) {
+        sum[j] += series[i].data[j];
+      }
+    }
+    return series.reduce(function(a, b) {
+      return (a.data ? a.data : a).concat(b.data).concat(sum);
+    }, []);
+  }
+  function getTouches(touches, opts, e) {
+    let x, y;
+    if (touches.clientX) {
+      if (opts.rotate) {
+        y = opts.height - touches.clientX * opts.pix;
+        x = (touches.pageY - e.currentTarget.offsetTop - opts.height / opts.pix / 2 * (opts.pix - 1)) * opts.pix;
+      } else {
+        x = touches.clientX * opts.pix;
+        y = (touches.pageY - e.currentTarget.offsetTop - opts.height / opts.pix / 2 * (opts.pix - 1)) * opts.pix;
+      }
+    } else {
+      if (opts.rotate) {
+        y = opts.height - touches.x * opts.pix;
+        x = touches.y * opts.pix;
+      } else {
+        x = touches.x * opts.pix;
+        y = touches.y * opts.pix;
+      }
+    }
+    return {
+      x,
+      y
+    };
+  }
+  function getSeriesDataItem(series, index, group) {
+    var data = [];
+    var newSeries = [];
+    var indexIsArr = index.constructor.toString().indexOf("Array") > -1;
+    if (indexIsArr) {
+      let tempSeries = filterSeries(series);
+      for (var i = 0; i < group.length; i++) {
+        newSeries.push(tempSeries[group[i]]);
+      }
+    } else {
+      newSeries = series;
+    }
+    for (let i2 = 0; i2 < newSeries.length; i2++) {
+      let item = newSeries[i2];
+      let tmpindex = -1;
+      if (indexIsArr) {
+        tmpindex = index[i2];
+      } else {
+        tmpindex = index;
+      }
+      if (item.data[tmpindex] !== null && typeof item.data[tmpindex] !== "undefined" && item.show) {
+        let seriesItem = {};
+        seriesItem.color = item.color;
+        seriesItem.type = item.type;
+        seriesItem.style = item.style;
+        seriesItem.pointShape = item.pointShape;
+        seriesItem.disableLegend = item.disableLegend;
+        seriesItem.legendShape = item.legendShape;
+        seriesItem.name = item.name;
+        seriesItem.show = item.show;
+        seriesItem.data = item.formatter ? item.formatter(item.data[tmpindex]) : item.data[tmpindex];
+        data.push(seriesItem);
+      }
+    }
+    return data;
+  }
+  function getMaxTextListLength(list, fontSize, context) {
+    var lengthList = list.map(function(item) {
+      return measureText(item, fontSize, context);
+    });
+    return Math.max.apply(null, lengthList);
+  }
+  function getRadarCoordinateSeries(length) {
+    var eachAngle = 2 * Math.PI / length;
+    var CoordinateSeries = [];
+    for (var i = 0; i < length; i++) {
+      CoordinateSeries.push(eachAngle * i);
+    }
+    return CoordinateSeries.map(function(item) {
+      return -1 * item + Math.PI / 2;
+    });
+  }
+  function getToolTipData(seriesData, opts, index, group, categories) {
+    var option = arguments.length > 5 && arguments[5] !== void 0 ? arguments[5] : {};
+    var calPoints = opts.chartData.calPoints ? opts.chartData.calPoints : [];
+    let points = {};
+    if (group.length > 0) {
+      let filterPoints = [];
+      for (let i = 0; i < group.length; i++) {
+        filterPoints.push(calPoints[group[i]]);
+      }
+      points = filterPoints[0][index[0]];
+    } else {
+      for (let i = 0; i < calPoints.length; i++) {
+        if (calPoints[i][index]) {
+          points = calPoints[i][index];
+          break;
+        }
+      }
+    }
+    var textList = seriesData.map(function(item) {
+      let titleText = null;
+      if (opts.categories && opts.categories.length > 0) {
+        titleText = categories[index];
+      }
+      return {
+        text: option.formatter ? option.formatter(item, titleText, index, opts) : item.name + ": " + item.data,
+        color: item.color,
+        legendShape: opts.extra.tooltip.legendShape == "auto" ? item.legendShape : opts.extra.tooltip.legendShape
+      };
+    });
+    var offset = {
+      x: Math.round(points.x),
+      y: Math.round(points.y)
+    };
+    return {
+      textList,
+      offset
+    };
+  }
+  function getMixToolTipData(seriesData, opts, index, categories) {
+    var option = arguments.length > 4 && arguments[4] !== void 0 ? arguments[4] : {};
+    var points = opts.chartData.xAxisPoints[index] + opts.chartData.eachSpacing / 2;
+    var textList = seriesData.map(function(item) {
+      return {
+        text: option.formatter ? option.formatter(item, categories[index], index, opts) : item.name + ": " + item.data,
+        color: item.color,
+        disableLegend: item.disableLegend ? true : false,
+        legendShape: opts.extra.tooltip.legendShape == "auto" ? item.legendShape : opts.extra.tooltip.legendShape
+      };
+    });
+    textList = textList.filter(function(item) {
+      if (item.disableLegend !== true) {
+        return item;
+      }
+    });
+    var offset = {
+      x: Math.round(points),
+      y: 0
+    };
+    return {
+      textList,
+      offset
+    };
+  }
+  function getCandleToolTipData(series, seriesData, opts, index, categories, extra) {
+    var calPoints = opts.chartData.calPoints;
+    let upColor = extra.color.upFill;
+    let downColor = extra.color.downFill;
+    let color = [upColor, upColor, downColor, upColor];
+    var textList = [];
+    seriesData.map(function(item) {
+      if (index == 0) {
+        if (item.data[1] - item.data[0] < 0) {
+          color[1] = downColor;
+        } else {
+          color[1] = upColor;
+        }
+      } else {
+        if (item.data[0] < series[index - 1][1]) {
+          color[0] = downColor;
+        }
+        if (item.data[1] < item.data[0]) {
+          color[1] = downColor;
+        }
+        if (item.data[2] > series[index - 1][1]) {
+          color[2] = upColor;
+        }
+        if (item.data[3] < series[index - 1][1]) {
+          color[3] = downColor;
+        }
+      }
+      let text1 = {
+        text: "开盘：" + item.data[0],
+        color: color[0],
+        legendShape: opts.extra.tooltip.legendShape == "auto" ? item.legendShape : opts.extra.tooltip.legendShape
+      };
+      let text2 = {
+        text: "收盘：" + item.data[1],
+        color: color[1],
+        legendShape: opts.extra.tooltip.legendShape == "auto" ? item.legendShape : opts.extra.tooltip.legendShape
+      };
+      let text3 = {
+        text: "最低：" + item.data[2],
+        color: color[2],
+        legendShape: opts.extra.tooltip.legendShape == "auto" ? item.legendShape : opts.extra.tooltip.legendShape
+      };
+      let text4 = {
+        text: "最高：" + item.data[3],
+        color: color[3],
+        legendShape: opts.extra.tooltip.legendShape == "auto" ? item.legendShape : opts.extra.tooltip.legendShape
+      };
+      textList.push(text1, text2, text3, text4);
+    });
+    var validCalPoints = [];
+    var offset = {
+      x: 0,
+      y: 0
+    };
+    for (let i = 0; i < calPoints.length; i++) {
+      let points = calPoints[i];
+      if (typeof points[index] !== "undefined" && points[index] !== null) {
+        validCalPoints.push(points[index]);
+      }
+    }
+    offset.x = Math.round(validCalPoints[0][0].x);
+    return {
+      textList,
+      offset
+    };
+  }
+  function filterSeries(series) {
+    let tempSeries = [];
+    for (let i = 0; i < series.length; i++) {
+      if (series[i].show == true) {
+        tempSeries.push(series[i]);
+      }
+    }
+    return tempSeries;
+  }
+  function findCurrentIndex(currentPoints, calPoints, opts, config2) {
+    var offset = arguments.length > 4 && arguments[4] !== void 0 ? arguments[4] : 0;
+    var current = { index: -1, group: [] };
+    var spacing = opts.chartData.eachSpacing / 2;
+    let xAxisPoints = [];
+    if (calPoints && calPoints.length > 0) {
+      if (!opts.categories) {
+        spacing = 0;
+      } else {
+        for (let i = 1; i < opts.chartData.xAxisPoints.length; i++) {
+          xAxisPoints.push(opts.chartData.xAxisPoints[i] - spacing);
+        }
+        if ((opts.type == "line" || opts.type == "area") && opts.xAxis.boundaryGap == "justify") {
+          xAxisPoints = opts.chartData.xAxisPoints;
+        }
+      }
+      if (isInExactChartArea(currentPoints, opts)) {
+        if (!opts.categories) {
+          let timePoints = Array(calPoints.length);
+          for (let i = 0; i < calPoints.length; i++) {
+            timePoints[i] = Array(calPoints[i].length);
+            for (let j = 0; j < calPoints[i].length; j++) {
+              timePoints[i][j] = Math.abs(calPoints[i][j].x - currentPoints.x);
+            }
+          }
+          let pointValue = Array(timePoints.length);
+          let pointIndex = Array(timePoints.length);
+          for (let i = 0; i < timePoints.length; i++) {
+            pointValue[i] = Math.min.apply(null, timePoints[i]);
+            pointIndex[i] = timePoints[i].indexOf(pointValue[i]);
+          }
+          let minValue = Math.min.apply(null, pointValue);
+          current.index = [];
+          for (let i = 0; i < pointValue.length; i++) {
+            if (pointValue[i] == minValue) {
+              current.group.push(i);
+              current.index.push(pointIndex[i]);
+            }
+          }
+        } else {
+          xAxisPoints.forEach(function(item, index) {
+            if (currentPoints.x + offset + spacing > item) {
+              current.index = index;
+            }
+          });
+        }
+      }
+    }
+    return current;
+  }
+  function findBarChartCurrentIndex(currentPoints, calPoints, opts, config2) {
+    var offset = arguments.length > 4 && arguments[4] !== void 0 ? arguments[4] : 0;
+    var current = { index: -1, group: [] };
+    var spacing = opts.chartData.eachSpacing / 2;
+    let yAxisPoints = opts.chartData.yAxisPoints;
+    if (calPoints && calPoints.length > 0) {
+      if (isInExactChartArea(currentPoints, opts)) {
+        yAxisPoints.forEach(function(item, index) {
+          if (currentPoints.y + offset + spacing > item) {
+            current.index = index;
+          }
+        });
+      }
+    }
+    return current;
+  }
+  function findLegendIndex(currentPoints, legendData, opts) {
+    let currentIndex = -1;
+    let gap = 0;
+    if (isInExactLegendArea(currentPoints, legendData.area)) {
+      let points = legendData.points;
+      let index = -1;
+      for (let i = 0, len = points.length; i < len; i++) {
+        let item = points[i];
+        for (let j = 0; j < item.length; j++) {
+          index += 1;
+          let area = item[j]["area"];
+          if (area && currentPoints.x > area[0] - gap && currentPoints.x < area[2] + gap && currentPoints.y > area[1] - gap && currentPoints.y < area[3] + gap) {
+            currentIndex = index;
+            break;
+          }
+        }
+      }
+      return currentIndex;
+    }
+    return currentIndex;
+  }
+  function isInExactLegendArea(currentPoints, area) {
+    return currentPoints.x > area.start.x && currentPoints.x < area.end.x && currentPoints.y > area.start.y && currentPoints.y < area.end.y;
+  }
+  function isInExactChartArea(currentPoints, opts, config2) {
+    return currentPoints.x <= opts.width - opts.area[1] + 10 && currentPoints.x >= opts.area[3] - 10 && currentPoints.y >= opts.area[0] && currentPoints.y <= opts.height - opts.area[2];
+  }
+  function findRadarChartCurrentIndex(currentPoints, radarData, count) {
+    var eachAngleArea = 2 * Math.PI / count;
+    var currentIndex = -1;
+    if (isInExactPieChartArea(currentPoints, radarData.center, radarData.radius)) {
+      var fixAngle = function fixAngle2(angle2) {
+        if (angle2 < 0) {
+          angle2 += 2 * Math.PI;
+        }
+        if (angle2 > 2 * Math.PI) {
+          angle2 -= 2 * Math.PI;
+        }
+        return angle2;
+      };
+      var angle = Math.atan2(radarData.center.y - currentPoints.y, currentPoints.x - radarData.center.x);
+      angle = -1 * angle;
+      if (angle < 0) {
+        angle += 2 * Math.PI;
+      }
+      var angleList = radarData.angleList.map(function(item) {
+        item = fixAngle(-1 * item);
+        return item;
+      });
+      angleList.forEach(function(item, index) {
+        var rangeStart = fixAngle(item - eachAngleArea / 2);
+        var rangeEnd = fixAngle(item + eachAngleArea / 2);
+        if (rangeEnd < rangeStart) {
+          rangeEnd += 2 * Math.PI;
+        }
+        if (angle >= rangeStart && angle <= rangeEnd || angle + 2 * Math.PI >= rangeStart && angle + 2 * Math.PI <= rangeEnd) {
+          currentIndex = index;
+        }
+      });
+    }
+    return currentIndex;
+  }
+  function findFunnelChartCurrentIndex(currentPoints, funnelData) {
+    var currentIndex = -1;
+    for (var i = 0, len = funnelData.series.length; i < len; i++) {
+      var item = funnelData.series[i];
+      if (currentPoints.x > item.funnelArea[0] && currentPoints.x < item.funnelArea[2] && currentPoints.y > item.funnelArea[1] && currentPoints.y < item.funnelArea[3]) {
+        currentIndex = i;
+        break;
+      }
+    }
+    return currentIndex;
+  }
+  function findWordChartCurrentIndex(currentPoints, wordData) {
+    var currentIndex = -1;
+    for (var i = 0, len = wordData.length; i < len; i++) {
+      var item = wordData[i];
+      if (currentPoints.x > item.area[0] && currentPoints.x < item.area[2] && currentPoints.y > item.area[1] && currentPoints.y < item.area[3]) {
+        currentIndex = i;
+        break;
+      }
+    }
+    return currentIndex;
+  }
+  function findMapChartCurrentIndex(currentPoints, opts) {
+    var currentIndex = -1;
+    var cData = opts.chartData.mapData;
+    var data = opts.series;
+    var tmp = pointToCoordinate(currentPoints.y, currentPoints.x, cData.bounds, cData.scale, cData.xoffset, cData.yoffset);
+    var poi = [tmp.x, tmp.y];
+    for (var i = 0, len = data.length; i < len; i++) {
+      var item = data[i].geometry.coordinates;
+      if (isPoiWithinPoly(poi, item, opts.chartData.mapData.mercator)) {
+        currentIndex = i;
+        break;
+      }
+    }
+    return currentIndex;
+  }
+  function findRoseChartCurrentIndex(currentPoints, pieData, opts) {
+    var currentIndex = -1;
+    var series = getRoseDataPoints(opts._series_, opts.extra.rose.type, pieData.radius, pieData.radius);
+    if (pieData && pieData.center && isInExactPieChartArea(currentPoints, pieData.center, pieData.radius)) {
+      var angle = Math.atan2(pieData.center.y - currentPoints.y, currentPoints.x - pieData.center.x);
+      angle = -angle;
+      if (opts.extra.rose && opts.extra.rose.offsetAngle) {
+        angle = angle - opts.extra.rose.offsetAngle * Math.PI / 180;
+      }
+      for (var i = 0, len = series.length; i < len; i++) {
+        if (isInAngleRange(angle, series[i]._start_, series[i]._start_ + series[i]._rose_proportion_ * 2 * Math.PI)) {
+          currentIndex = i;
+          break;
+        }
+      }
+    }
+    return currentIndex;
+  }
+  function findPieChartCurrentIndex(currentPoints, pieData, opts) {
+    var currentIndex = -1;
+    var series = getPieDataPoints(pieData.series);
+    if (pieData && pieData.center && isInExactPieChartArea(currentPoints, pieData.center, pieData.radius)) {
+      var angle = Math.atan2(pieData.center.y - currentPoints.y, currentPoints.x - pieData.center.x);
+      angle = -angle;
+      if (opts.extra.pie && opts.extra.pie.offsetAngle) {
+        angle = angle - opts.extra.pie.offsetAngle * Math.PI / 180;
+      }
+      if (opts.extra.ring && opts.extra.ring.offsetAngle) {
+        angle = angle - opts.extra.ring.offsetAngle * Math.PI / 180;
+      }
+      for (var i = 0, len = series.length; i < len; i++) {
+        if (isInAngleRange(angle, series[i]._start_, series[i]._start_ + series[i]._proportion_ * 2 * Math.PI)) {
+          currentIndex = i;
+          break;
+        }
+      }
+    }
+    return currentIndex;
+  }
+  function isInExactPieChartArea(currentPoints, center, radius) {
+    return Math.pow(currentPoints.x - center.x, 2) + Math.pow(currentPoints.y - center.y, 2) <= Math.pow(radius, 2);
+  }
+  function splitPoints(points, eachSeries) {
+    var newPoints = [];
+    var items = [];
+    points.forEach(function(item, index) {
+      if (eachSeries.connectNulls) {
+        if (item !== null) {
+          items.push(item);
+        }
+      } else {
+        if (item !== null) {
+          items.push(item);
+        } else {
+          if (items.length) {
+            newPoints.push(items);
+          }
+          items = [];
+        }
+      }
+    });
+    if (items.length) {
+      newPoints.push(items);
+    }
+    return newPoints;
+  }
+  function calLegendData(series, opts, config2, chartData, context) {
+    let legendData = {
+      area: {
+        start: {
+          x: 0,
+          y: 0
+        },
+        end: {
+          x: 0,
+          y: 0
+        },
+        width: 0,
+        height: 0,
+        wholeWidth: 0,
+        wholeHeight: 0
+      },
+      points: [],
+      widthArr: [],
+      heightArr: []
+    };
+    if (opts.legend.show === false) {
+      chartData.legendData = legendData;
+      return legendData;
+    }
+    let padding = opts.legend.padding * opts.pix;
+    let margin = opts.legend.margin * opts.pix;
+    let fontSize = opts.legend.fontSize ? opts.legend.fontSize * opts.pix : config2.fontSize;
+    let shapeWidth = 15 * opts.pix;
+    let shapeRight = 5 * opts.pix;
+    let lineHeight = Math.max(opts.legend.lineHeight * opts.pix, fontSize);
+    if (opts.legend.position == "top" || opts.legend.position == "bottom") {
+      let legendList = [];
+      let widthCount = 0;
+      let widthCountArr = [];
+      let currentRow = [];
+      for (let i = 0; i < series.length; i++) {
+        let item = series[i];
+        const legendText = item.legendText ? item.legendText : item.name;
+        let itemWidth = shapeWidth + shapeRight + measureText(legendText || "undefined", fontSize, context) + opts.legend.itemGap * opts.pix;
+        if (widthCount + itemWidth > opts.width - opts.area[1] - opts.area[3]) {
+          legendList.push(currentRow);
+          widthCountArr.push(widthCount - opts.legend.itemGap * opts.pix);
+          widthCount = itemWidth;
+          currentRow = [item];
+        } else {
+          widthCount += itemWidth;
+          currentRow.push(item);
+        }
+      }
+      if (currentRow.length) {
+        legendList.push(currentRow);
+        widthCountArr.push(widthCount - opts.legend.itemGap * opts.pix);
+        legendData.widthArr = widthCountArr;
+        let legendWidth = Math.max.apply(null, widthCountArr);
+        switch (opts.legend.float) {
+          case "left":
+            legendData.area.start.x = opts.area[3];
+            legendData.area.end.x = opts.area[3] + legendWidth + 2 * padding;
+            break;
+          case "right":
+            legendData.area.start.x = opts.width - opts.area[1] - legendWidth - 2 * padding;
+            legendData.area.end.x = opts.width - opts.area[1];
+            break;
+          default:
+            legendData.area.start.x = (opts.width - legendWidth) / 2 - padding;
+            legendData.area.end.x = (opts.width + legendWidth) / 2 + padding;
+        }
+        legendData.area.width = legendWidth + 2 * padding;
+        legendData.area.wholeWidth = legendWidth + 2 * padding;
+        legendData.area.height = legendList.length * lineHeight + 2 * padding;
+        legendData.area.wholeHeight = legendList.length * lineHeight + 2 * padding + 2 * margin;
+        legendData.points = legendList;
+      }
+    } else {
+      let len = series.length;
+      let maxHeight = opts.height - opts.area[0] - opts.area[2] - 2 * margin - 2 * padding;
+      let maxLength = Math.min(Math.floor(maxHeight / lineHeight), len);
+      legendData.area.height = maxLength * lineHeight + padding * 2;
+      legendData.area.wholeHeight = maxLength * lineHeight + padding * 2;
+      switch (opts.legend.float) {
+        case "top":
+          legendData.area.start.y = opts.area[0] + margin;
+          legendData.area.end.y = opts.area[0] + margin + legendData.area.height;
+          break;
+        case "bottom":
+          legendData.area.start.y = opts.height - opts.area[2] - margin - legendData.area.height;
+          legendData.area.end.y = opts.height - opts.area[2] - margin;
+          break;
+        default:
+          legendData.area.start.y = (opts.height - legendData.area.height) / 2;
+          legendData.area.end.y = (opts.height + legendData.area.height) / 2;
+      }
+      let lineNum = len % maxLength === 0 ? len / maxLength : Math.floor(len / maxLength + 1);
+      let currentRow = [];
+      for (let i = 0; i < lineNum; i++) {
+        let temp = series.slice(i * maxLength, i * maxLength + maxLength);
+        currentRow.push(temp);
+      }
+      legendData.points = currentRow;
+      if (currentRow.length) {
+        for (let i = 0; i < currentRow.length; i++) {
+          let item = currentRow[i];
+          let maxWidth = 0;
+          for (let j = 0; j < item.length; j++) {
+            let itemWidth = shapeWidth + shapeRight + measureText(item[j].name || "undefined", fontSize, context) + opts.legend.itemGap * opts.pix;
+            if (itemWidth > maxWidth) {
+              maxWidth = itemWidth;
+            }
+          }
+          legendData.widthArr.push(maxWidth);
+          legendData.heightArr.push(item.length * lineHeight + padding * 2);
+        }
+        let legendWidth = 0;
+        for (let i = 0; i < legendData.widthArr.length; i++) {
+          legendWidth += legendData.widthArr[i];
+        }
+        legendData.area.width = legendWidth - opts.legend.itemGap * opts.pix + 2 * padding;
+        legendData.area.wholeWidth = legendData.area.width + padding;
+      }
+    }
+    switch (opts.legend.position) {
+      case "top":
+        legendData.area.start.y = opts.area[0] + margin;
+        legendData.area.end.y = opts.area[0] + margin + legendData.area.height;
+        break;
+      case "bottom":
+        legendData.area.start.y = opts.height - opts.area[2] - legendData.area.height - margin;
+        legendData.area.end.y = opts.height - opts.area[2] - margin;
+        break;
+      case "left":
+        legendData.area.start.x = opts.area[3];
+        legendData.area.end.x = opts.area[3] + legendData.area.width;
+        break;
+      case "right":
+        legendData.area.start.x = opts.width - opts.area[1] - legendData.area.width;
+        legendData.area.end.x = opts.width - opts.area[1];
+        break;
+    }
+    chartData.legendData = legendData;
+    return legendData;
+  }
+  function calCategoriesData(categories, opts, config2, eachSpacing, context) {
+    var result = {
+      angle: 0,
+      xAxisHeight: opts.xAxis.lineHeight * opts.pix + opts.xAxis.marginTop * opts.pix
+    };
+    var fontSize = opts.xAxis.fontSize * opts.pix;
+    var categoriesTextLenth = categories.map(function(item, index) {
+      var xitem = opts.xAxis.formatter ? opts.xAxis.formatter(item, index, opts) : item;
+      return measureText(String(xitem), fontSize, context);
+    });
+    var maxTextLength = Math.max.apply(this, categoriesTextLenth);
+    if (opts.xAxis.rotateLabel == true) {
+      result.angle = opts.xAxis.rotateAngle * Math.PI / 180;
+      let tempHeight = opts.xAxis.marginTop * opts.pix * 2 + Math.abs(maxTextLength * Math.sin(result.angle));
+      tempHeight = tempHeight < fontSize + opts.xAxis.marginTop * opts.pix * 2 ? tempHeight + opts.xAxis.marginTop * opts.pix * 2 : tempHeight;
+      result.xAxisHeight = tempHeight;
+    }
+    if (opts.enableScroll && opts.xAxis.scrollShow) {
+      result.xAxisHeight += 6 * opts.pix;
+    }
+    if (opts.xAxis.disabled) {
+      result.xAxisHeight = 0;
+    }
+    return result;
+  }
+  function getXAxisTextList(series, opts, config2, stack) {
+    var index = arguments.length > 4 && arguments[4] !== void 0 ? arguments[4] : -1;
+    var data;
+    if (stack == "stack") {
+      data = dataCombineStack(series, opts.categories.length);
+    } else {
+      data = dataCombine(series);
+    }
+    var sorted = [];
+    data = data.filter(function(item) {
+      if (typeof item === "object" && item !== null) {
+        if (item.constructor.toString().indexOf("Array") > -1) {
+          return item !== null;
+        } else {
+          return item.value !== null;
+        }
+      } else {
+        return item !== null;
+      }
+    });
+    data.map(function(item) {
+      if (typeof item === "object") {
+        if (item.constructor.toString().indexOf("Array") > -1) {
+          if (opts.type == "candle") {
+            item.map(function(subitem) {
+              sorted.push(subitem);
+            });
+          } else {
+            sorted.push(item[0]);
+          }
+        } else {
+          sorted.push(item.value);
+        }
+      } else {
+        sorted.push(item);
+      }
+    });
+    var minData = 0;
+    var maxData = 0;
+    if (sorted.length > 0) {
+      minData = Math.min.apply(this, sorted);
+      maxData = Math.max.apply(this, sorted);
+    }
+    if (index > -1) {
+      if (typeof opts.xAxis.data[index].min === "number") {
+        minData = Math.min(opts.xAxis.data[index].min, minData);
+      }
+      if (typeof opts.xAxis.data[index].max === "number") {
+        maxData = Math.max(opts.xAxis.data[index].max, maxData);
+      }
+    } else {
+      if (typeof opts.xAxis.min === "number") {
+        minData = Math.min(opts.xAxis.min, minData);
+      }
+      if (typeof opts.xAxis.max === "number") {
+        maxData = Math.max(opts.xAxis.max, maxData);
+      }
+    }
+    if (minData === maxData) {
+      var rangeSpan = maxData || 10;
+      maxData += rangeSpan;
+    }
+    var minRange = minData;
+    var maxRange = maxData;
+    var range = [];
+    var eachRange = (maxRange - minRange) / opts.xAxis.splitNumber;
+    for (var i = 0; i <= opts.xAxis.splitNumber; i++) {
+      range.push(minRange + eachRange * i);
+    }
+    return range;
+  }
+  function calXAxisData(series, opts, config2, context) {
+    var columnstyle = assign({}, {
+      type: ""
+    }, opts.extra.bar);
+    var result = {
+      angle: 0,
+      xAxisHeight: opts.xAxis.lineHeight * opts.pix + opts.xAxis.marginTop * opts.pix
+    };
+    result.ranges = getXAxisTextList(series, opts, config2, columnstyle.type);
+    result.rangesFormat = result.ranges.map(function(item) {
+      item = util.toFixed(item, 2);
+      return item;
+    });
+    var xAxisScaleValues = result.ranges.map(function(item) {
+      item = util.toFixed(item, 2);
+      return item;
+    });
+    result = Object.assign(result, getXAxisPoints(xAxisScaleValues, opts));
+    result.eachSpacing;
+    xAxisScaleValues.map(function(item) {
+      return measureText(item, opts.xAxis.fontSize * opts.pix, context);
+    });
+    if (opts.xAxis.disabled === true) {
+      result.xAxisHeight = 0;
+    }
+    return result;
+  }
+  function getRadarDataPoints(angleList, center, radius, series, opts) {
+    var process2 = arguments.length > 5 && arguments[5] !== void 0 ? arguments[5] : 1;
+    var radarOption = opts.extra.radar || {};
+    radarOption.max = radarOption.max || 0;
+    var maxData = Math.max(radarOption.max, Math.max.apply(null, dataCombine(series)));
+    var data = [];
+    for (let i = 0; i < series.length; i++) {
+      let each = series[i];
+      let listItem = {};
+      listItem.color = each.color;
+      listItem.legendShape = each.legendShape;
+      listItem.pointShape = each.pointShape;
+      listItem.data = [];
+      each.data.forEach(function(item, index) {
+        let tmp = {};
+        tmp.angle = angleList[index];
+        tmp.proportion = item / maxData;
+        tmp.value = item;
+        tmp.position = convertCoordinateOrigin(radius * tmp.proportion * process2 * Math.cos(tmp.angle), radius * tmp.proportion * process2 * Math.sin(tmp.angle), center);
+        listItem.data.push(tmp);
+      });
+      data.push(listItem);
+    }
+    return data;
+  }
+  function getPieDataPoints(series, radius) {
+    var process2 = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : 1;
+    var count = 0;
+    var _start_ = 0;
+    for (let i = 0; i < series.length; i++) {
+      let item = series[i];
+      item.data = item.data === null ? 0 : item.data;
+      count += item.data;
+    }
+    for (let i = 0; i < series.length; i++) {
+      let item = series[i];
+      item.data = item.data === null ? 0 : item.data;
+      if (count === 0) {
+        item._proportion_ = 1 / series.length * process2;
+      } else {
+        item._proportion_ = item.data / count * process2;
+      }
+      item._radius_ = radius;
+    }
+    for (let i = 0; i < series.length; i++) {
+      let item = series[i];
+      item._start_ = _start_;
+      _start_ += 2 * item._proportion_ * Math.PI;
+    }
+    return series;
+  }
+  function getFunnelDataPoints(series, radius, option, eachSpacing) {
+    var process2 = arguments.length > 4 && arguments[4] !== void 0 ? arguments[4] : 1;
+    for (let i = 0; i < series.length; i++) {
+      if (option.type == "funnel") {
+        series[i].radius = series[i].data / series[0].data * radius * process2;
+      } else {
+        series[i].radius = eachSpacing * (series.length - i) / (eachSpacing * series.length) * radius * process2;
+      }
+      series[i]._proportion_ = series[i].data / series[0].data;
+    }
+    return series;
+  }
+  function getRoseDataPoints(series, type, minRadius, radius) {
+    var process2 = arguments.length > 4 && arguments[4] !== void 0 ? arguments[4] : 1;
+    var count = 0;
+    var _start_ = 0;
+    var dataArr = [];
+    for (let i = 0; i < series.length; i++) {
+      let item = series[i];
+      item.data = item.data === null ? 0 : item.data;
+      count += item.data;
+      dataArr.push(item.data);
+    }
+    var minData = Math.min.apply(null, dataArr);
+    var maxData = Math.max.apply(null, dataArr);
+    var radiusLength = radius - minRadius;
+    for (let i = 0; i < series.length; i++) {
+      let item = series[i];
+      item.data = item.data === null ? 0 : item.data;
+      if (count === 0) {
+        item._proportion_ = 1 / series.length * process2;
+        item._rose_proportion_ = 1 / series.length * process2;
+      } else {
+        item._proportion_ = item.data / count * process2;
+        if (type == "area") {
+          item._rose_proportion_ = 1 / series.length * process2;
+        } else {
+          item._rose_proportion_ = item.data / count * process2;
+        }
+      }
+      item._radius_ = minRadius + radiusLength * ((item.data - minData) / (maxData - minData)) || radius;
+    }
+    for (let i = 0; i < series.length; i++) {
+      let item = series[i];
+      item._start_ = _start_;
+      _start_ += 2 * item._rose_proportion_ * Math.PI;
+    }
+    return series;
+  }
+  function getArcbarDataPoints(series, arcbarOption) {
+    var process2 = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : 1;
+    if (process2 == 1) {
+      process2 = 0.999999;
+    }
+    for (let i = 0; i < series.length; i++) {
+      let item = series[i];
+      item.data = item.data === null ? 0 : item.data;
+      let totalAngle;
+      if (arcbarOption.type == "circle") {
+        totalAngle = 2;
+      } else {
+        if (arcbarOption.direction == "ccw") {
+          if (arcbarOption.startAngle < arcbarOption.endAngle) {
+            totalAngle = 2 + arcbarOption.startAngle - arcbarOption.endAngle;
+          } else {
+            totalAngle = arcbarOption.startAngle - arcbarOption.endAngle;
+          }
+        } else {
+          if (arcbarOption.endAngle < arcbarOption.startAngle) {
+            totalAngle = 2 + arcbarOption.endAngle - arcbarOption.startAngle;
+          } else {
+            totalAngle = arcbarOption.startAngle - arcbarOption.endAngle;
+          }
+        }
+      }
+      item._proportion_ = totalAngle * item.data * process2 + arcbarOption.startAngle;
+      if (arcbarOption.direction == "ccw") {
+        item._proportion_ = arcbarOption.startAngle - totalAngle * item.data * process2;
+      }
+      if (item._proportion_ >= 2) {
+        item._proportion_ = item._proportion_ % 2;
+      }
+    }
+    return series;
+  }
+  function getGaugeArcbarDataPoints(series, arcbarOption) {
+    var process2 = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : 1;
+    if (process2 == 1) {
+      process2 = 0.999999;
+    }
+    for (let i = 0; i < series.length; i++) {
+      let item = series[i];
+      item.data = item.data === null ? 0 : item.data;
+      let totalAngle;
+      if (arcbarOption.type == "circle") {
+        totalAngle = 2;
+      } else {
+        if (arcbarOption.endAngle < arcbarOption.startAngle) {
+          totalAngle = 2 + arcbarOption.endAngle - arcbarOption.startAngle;
+        } else {
+          totalAngle = arcbarOption.startAngle - arcbarOption.endAngle;
+        }
+      }
+      item._proportion_ = totalAngle * item.data * process2 + arcbarOption.startAngle;
+      if (item._proportion_ >= 2) {
+        item._proportion_ = item._proportion_ % 2;
+      }
+    }
+    return series;
+  }
+  function getGaugeAxisPoints(categories, startAngle, endAngle) {
+    let totalAngle;
+    if (endAngle < startAngle) {
+      totalAngle = 2 + endAngle - startAngle;
+    } else {
+      totalAngle = startAngle - endAngle;
+    }
+    let tempStartAngle = startAngle;
+    for (let i = 0; i < categories.length; i++) {
+      categories[i].value = categories[i].value === null ? 0 : categories[i].value;
+      categories[i]._startAngle_ = tempStartAngle;
+      categories[i]._endAngle_ = totalAngle * categories[i].value + startAngle;
+      if (categories[i]._endAngle_ >= 2) {
+        categories[i]._endAngle_ = categories[i]._endAngle_ % 2;
+      }
+      tempStartAngle = categories[i]._endAngle_;
     }
     return categories;
   }
-  function getInsuranceCategories() {
-    const insuranceProducts = getInsuranceProducts();
-    return insuranceProducts.categories || [];
-  }
-  function getForexMajorPairs() {
-    const forexProducts = getForexProducts();
-    return forexProducts.majorPairs || [];
-  }
-  function getForexTradingPairs() {
-    const forexProducts = getForexProducts();
-    return forexProducts.tradingPairs || [];
-  }
-  function updateUserWealthData(userId, wealthData) {
-    try {
-      const success = updateUser(userId, wealthData);
-      if (success) {
-        syncWealthDataToStorage(userId, wealthData);
-        uni.$emit("wealthDataUpdated", { userId, wealthData });
-        formatAppLog("log", "at api/wealth.js:298", "财富数据更新成功:", userId, wealthData);
-        return true;
+  function getGaugeDataPoints(series, categories, gaugeOption) {
+    let process2 = arguments.length > 3 && arguments[3] !== void 0 ? arguments[3] : 1;
+    for (let i = 0; i < series.length; i++) {
+      let item = series[i];
+      item.data = item.data === null ? 0 : item.data;
+      if (gaugeOption.pointer.color == "auto") {
+        for (let i2 = 0; i2 < categories.length; i2++) {
+          if (item.data <= categories[i2].value) {
+            item.color = categories[i2].color;
+            break;
+          }
+        }
+      } else {
+        item.color = gaugeOption.pointer.color;
       }
-      return false;
-    } catch (error) {
-      formatAppLog("error", "at api/wealth.js:303", "更新财富数据失败:", error);
-      return false;
+      let totalAngle;
+      if (gaugeOption.endAngle < gaugeOption.startAngle) {
+        totalAngle = 2 + gaugeOption.endAngle - gaugeOption.startAngle;
+      } else {
+        totalAngle = gaugeOption.startAngle - gaugeOption.endAngle;
+      }
+      item._endAngle_ = totalAngle * item.data + gaugeOption.startAngle;
+      item._oldAngle_ = gaugeOption.oldAngle;
+      if (gaugeOption.oldAngle < gaugeOption.endAngle) {
+        item._oldAngle_ += 2;
+      }
+      if (item.data >= gaugeOption.oldData) {
+        item._proportion_ = (item._endAngle_ - item._oldAngle_) * process2 + gaugeOption.oldAngle;
+      } else {
+        item._proportion_ = item._oldAngle_ - (item._oldAngle_ - item._endAngle_) * process2;
+      }
+      if (item._proportion_ >= 2) {
+        item._proportion_ = item._proportion_ % 2;
+      }
     }
+    return series;
   }
-  function syncWealthDataToStorage(userId, wealthData) {
-    try {
-      const localWealthData = getStorage("wealthData", true) || {};
-      localWealthData[userId] = {
-        ...localWealthData[userId],
-        ...wealthData,
-        lastUpdateTime: (/* @__PURE__ */ new Date()).toISOString()
+  function getPieTextMaxLength(series, config2, context, opts) {
+    series = getPieDataPoints(series);
+    let maxLength = 0;
+    for (let i = 0; i < series.length; i++) {
+      let item = series[i];
+      let text = item.formatter ? item.formatter(+item._proportion_.toFixed(2)) : util.toFixed(item._proportion_ * 100) + "%";
+      maxLength = Math.max(maxLength, measureText(text, item.textSize * opts.pix || config2.fontSize, context));
+    }
+    return maxLength;
+  }
+  function fixColumeData(points, eachSpacing, columnLen, index, config2, opts) {
+    return points.map(function(item) {
+      if (item === null) {
+        return null;
+      }
+      var seriesGap = 0;
+      var categoryGap = 0;
+      if (opts.type == "mix") {
+        seriesGap = opts.extra.mix.column.seriesGap * opts.pix || 0;
+        categoryGap = opts.extra.mix.column.categoryGap * opts.pix || 0;
+      } else {
+        seriesGap = opts.extra.column.seriesGap * opts.pix || 0;
+        categoryGap = opts.extra.column.categoryGap * opts.pix || 0;
+      }
+      seriesGap = Math.min(seriesGap, eachSpacing / columnLen);
+      categoryGap = Math.min(categoryGap, eachSpacing / columnLen);
+      item.width = Math.ceil((eachSpacing - 2 * categoryGap - seriesGap * (columnLen - 1)) / columnLen);
+      if (opts.extra.mix && opts.extra.mix.column.width && +opts.extra.mix.column.width > 0) {
+        item.width = Math.min(item.width, +opts.extra.mix.column.width * opts.pix);
+      }
+      if (opts.extra.column && opts.extra.column.width && +opts.extra.column.width > 0) {
+        item.width = Math.min(item.width, +opts.extra.column.width * opts.pix);
+      }
+      if (item.width <= 0) {
+        item.width = 1;
+      }
+      item.x += (index + 0.5 - columnLen / 2) * (item.width + seriesGap);
+      return item;
+    });
+  }
+  function fixBarData(points, eachSpacing, columnLen, index, config2, opts) {
+    return points.map(function(item) {
+      if (item === null) {
+        return null;
+      }
+      var seriesGap = 0;
+      var categoryGap = 0;
+      seriesGap = opts.extra.bar.seriesGap * opts.pix || 0;
+      categoryGap = opts.extra.bar.categoryGap * opts.pix || 0;
+      seriesGap = Math.min(seriesGap, eachSpacing / columnLen);
+      categoryGap = Math.min(categoryGap, eachSpacing / columnLen);
+      item.width = Math.ceil((eachSpacing - 2 * categoryGap - seriesGap * (columnLen - 1)) / columnLen);
+      if (opts.extra.bar && opts.extra.bar.width && +opts.extra.bar.width > 0) {
+        item.width = Math.min(item.width, +opts.extra.bar.width * opts.pix);
+      }
+      if (item.width <= 0) {
+        item.width = 1;
+      }
+      item.y += (index + 0.5 - columnLen / 2) * (item.width + seriesGap);
+      return item;
+    });
+  }
+  function fixColumeMeterData(points, eachSpacing, columnLen, index, config2, opts, border) {
+    var categoryGap = opts.extra.column.categoryGap * opts.pix || 0;
+    return points.map(function(item) {
+      if (item === null) {
+        return null;
+      }
+      item.width = eachSpacing - 2 * categoryGap;
+      if (opts.extra.column && opts.extra.column.width && +opts.extra.column.width > 0) {
+        item.width = Math.min(item.width, +opts.extra.column.width * opts.pix);
+      }
+      if (index > 0) {
+        item.width -= border;
+      }
+      return item;
+    });
+  }
+  function fixColumeStackData(points, eachSpacing, columnLen, index, config2, opts, series) {
+    var categoryGap = opts.extra.column.categoryGap * opts.pix || 0;
+    return points.map(function(item, indexn) {
+      if (item === null) {
+        return null;
+      }
+      item.width = Math.ceil(eachSpacing - 2 * categoryGap);
+      if (opts.extra.column && opts.extra.column.width && +opts.extra.column.width > 0) {
+        item.width = Math.min(item.width, +opts.extra.column.width * opts.pix);
+      }
+      if (item.width <= 0) {
+        item.width = 1;
+      }
+      return item;
+    });
+  }
+  function fixBarStackData(points, eachSpacing, columnLen, index, config2, opts, series) {
+    var categoryGap = opts.extra.bar.categoryGap * opts.pix || 0;
+    return points.map(function(item, indexn) {
+      if (item === null) {
+        return null;
+      }
+      item.width = Math.ceil(eachSpacing - 2 * categoryGap);
+      if (opts.extra.bar && opts.extra.bar.width && +opts.extra.bar.width > 0) {
+        item.width = Math.min(item.width, +opts.extra.bar.width * opts.pix);
+      }
+      if (item.width <= 0) {
+        item.width = 1;
+      }
+      return item;
+    });
+  }
+  function getXAxisPoints(categories, opts, config2) {
+    var spacingValid = opts.width - opts.area[1] - opts.area[3];
+    var dataCount = opts.enableScroll ? Math.min(opts.xAxis.itemCount, categories.length) : categories.length;
+    if ((opts.type == "line" || opts.type == "area" || opts.type == "scatter" || opts.type == "bubble" || opts.type == "bar") && dataCount > 1 && opts.xAxis.boundaryGap == "justify") {
+      dataCount -= 1;
+    }
+    var widthRatio = 0;
+    if (opts.type == "mount" && opts.extra && opts.extra.mount && opts.extra.mount.widthRatio && opts.extra.mount.widthRatio > 1) {
+      if (opts.extra.mount.widthRatio > 2)
+        opts.extra.mount.widthRatio = 2;
+      widthRatio = opts.extra.mount.widthRatio - 1;
+      dataCount += widthRatio;
+    }
+    var eachSpacing = spacingValid / dataCount;
+    var xAxisPoints = [];
+    var startX = opts.area[3];
+    var endX = opts.width - opts.area[1];
+    categories.forEach(function(item, index) {
+      xAxisPoints.push(startX + widthRatio / 2 * eachSpacing + index * eachSpacing);
+    });
+    if (opts.xAxis.boundaryGap !== "justify") {
+      if (opts.enableScroll === true) {
+        xAxisPoints.push(startX + widthRatio * eachSpacing + categories.length * eachSpacing);
+      } else {
+        xAxisPoints.push(endX);
+      }
+    }
+    return {
+      xAxisPoints,
+      startX,
+      endX,
+      eachSpacing
+    };
+  }
+  function getCandleDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config2) {
+    var process2 = arguments.length > 7 && arguments[7] !== void 0 ? arguments[7] : 1;
+    var points = [];
+    var validHeight = opts.height - opts.area[0] - opts.area[2];
+    data.forEach(function(item, index) {
+      if (item === null) {
+        points.push(null);
+      } else {
+        var cPoints = [];
+        item.forEach(function(items, indexs) {
+          var point = {};
+          point.x = xAxisPoints[index] + Math.round(eachSpacing / 2);
+          var value = items.value || items;
+          var height = validHeight * (value - minRange) / (maxRange - minRange);
+          height *= process2;
+          point.y = opts.height - Math.round(height) - opts.area[2];
+          cPoints.push(point);
+        });
+        points.push(cPoints);
+      }
+    });
+    return points;
+  }
+  function getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config2) {
+    var process2 = arguments.length > 7 && arguments[7] !== void 0 ? arguments[7] : 1;
+    var boundaryGap = "center";
+    if (opts.type == "line" || opts.type == "area" || opts.type == "scatter" || opts.type == "bubble") {
+      boundaryGap = opts.xAxis.boundaryGap;
+    }
+    var points = [];
+    var validHeight = opts.height - opts.area[0] - opts.area[2];
+    var validWidth = opts.width - opts.area[1] - opts.area[3];
+    data.forEach(function(item, index) {
+      if (item === null) {
+        points.push(null);
+      } else {
+        var point = {};
+        point.color = item.color;
+        point.x = xAxisPoints[index];
+        var value = item;
+        if (typeof item === "object" && item !== null) {
+          if (item.constructor.toString().indexOf("Array") > -1) {
+            let xranges, xminRange, xmaxRange;
+            xranges = [].concat(opts.chartData.xAxisData.ranges);
+            xminRange = xranges.shift();
+            xmaxRange = xranges.pop();
+            value = item[1];
+            point.x = opts.area[3] + validWidth * (item[0] - xminRange) / (xmaxRange - xminRange);
+            if (opts.type == "bubble") {
+              point.r = item[2];
+              point.t = item[3];
+            }
+          } else {
+            value = item.value;
+          }
+        }
+        if (boundaryGap == "center") {
+          point.x += eachSpacing / 2;
+        }
+        var height = validHeight * (value - minRange) / (maxRange - minRange);
+        height *= process2;
+        point.y = opts.height - height - opts.area[2];
+        points.push(point);
+      }
+    });
+    return points;
+  }
+  function getLineDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config2, lineOption, process2) {
+    var process2 = arguments.length > 8 && arguments[8] !== void 0 ? arguments[8] : 1;
+    var boundaryGap = opts.xAxis.boundaryGap;
+    var points = [];
+    var validHeight = opts.height - opts.area[0] - opts.area[2];
+    var validWidth = opts.width - opts.area[1] - opts.area[3];
+    data.forEach(function(item, index) {
+      if (item === null) {
+        points.push(null);
+      } else {
+        var point = {};
+        point.color = item.color;
+        if (lineOption.animation == "vertical") {
+          point.x = xAxisPoints[index];
+          var value = item;
+          if (typeof item === "object" && item !== null) {
+            if (item.constructor.toString().indexOf("Array") > -1) {
+              let xranges, xminRange, xmaxRange;
+              xranges = [].concat(opts.chartData.xAxisData.ranges);
+              xminRange = xranges.shift();
+              xmaxRange = xranges.pop();
+              value = item[1];
+              point.x = opts.area[3] + validWidth * (item[0] - xminRange) / (xmaxRange - xminRange);
+            } else {
+              value = item.value;
+            }
+          }
+          if (boundaryGap == "center") {
+            point.x += eachSpacing / 2;
+          }
+          var height = validHeight * (value - minRange) / (maxRange - minRange);
+          height *= process2;
+          point.y = opts.height - height - opts.area[2];
+          points.push(point);
+        } else {
+          point.x = xAxisPoints[0] + eachSpacing * index * process2;
+          var value = item;
+          if (boundaryGap == "center") {
+            point.x += eachSpacing / 2;
+          }
+          var height = validHeight * (value - minRange) / (maxRange - minRange);
+          point.y = opts.height - height - opts.area[2];
+          points.push(point);
+        }
+      }
+    });
+    return points;
+  }
+  function getColumnDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config2, zeroPoints, process2) {
+    var process2 = arguments.length > 8 && arguments[8] !== void 0 ? arguments[8] : 1;
+    var points = [];
+    var validHeight = opts.height - opts.area[0] - opts.area[2];
+    var validWidth = opts.width - opts.area[1] - opts.area[3];
+    data.forEach(function(item, index) {
+      if (item === null) {
+        points.push(null);
+      } else {
+        var point = {};
+        point.color = item.color;
+        point.x = xAxisPoints[index];
+        var value = item;
+        if (typeof item === "object" && item !== null) {
+          if (item.constructor.toString().indexOf("Array") > -1) {
+            let xranges, xminRange, xmaxRange;
+            xranges = [].concat(opts.chartData.xAxisData.ranges);
+            xminRange = xranges.shift();
+            xmaxRange = xranges.pop();
+            value = item[1];
+            point.x = opts.area[3] + validWidth * (item[0] - xminRange) / (xmaxRange - xminRange);
+          } else {
+            value = item.value;
+          }
+        }
+        point.x += eachSpacing / 2;
+        var height = validHeight * (value * process2 - minRange) / (maxRange - minRange);
+        point.y = opts.height - height - opts.area[2];
+        points.push(point);
+      }
+    });
+    return points;
+  }
+  function getMountDataPoints(series, minRange, maxRange, xAxisPoints, eachSpacing, opts, mountOption, zeroPoints) {
+    var process2 = arguments.length > 8 && arguments[8] !== void 0 ? arguments[8] : 1;
+    var points = [];
+    var validHeight = opts.height - opts.area[0] - opts.area[2];
+    opts.width - opts.area[1] - opts.area[3];
+    var mountWidth = eachSpacing * mountOption.widthRatio;
+    series.forEach(function(item, index) {
+      if (item === null) {
+        points.push(null);
+      } else {
+        var point = {};
+        point.color = item.color;
+        point.x = xAxisPoints[index];
+        point.x += eachSpacing / 2;
+        var value = item.data;
+        var height = validHeight * (value * process2 - minRange) / (maxRange - minRange);
+        point.y = opts.height - height - opts.area[2];
+        point.value = value;
+        point.width = mountWidth;
+        points.push(point);
+      }
+    });
+    return points;
+  }
+  function getBarDataPoints(data, minRange, maxRange, yAxisPoints, eachSpacing, opts, config2) {
+    var process2 = arguments.length > 7 && arguments[7] !== void 0 ? arguments[7] : 1;
+    var points = [];
+    opts.height - opts.area[0] - opts.area[2];
+    var validWidth = opts.width - opts.area[1] - opts.area[3];
+    data.forEach(function(item, index) {
+      if (item === null) {
+        points.push(null);
+      } else {
+        var point = {};
+        point.color = item.color;
+        point.y = yAxisPoints[index];
+        var value = item;
+        if (typeof item === "object" && item !== null) {
+          value = item.value;
+        }
+        var height = validWidth * (value - minRange) / (maxRange - minRange);
+        height *= process2;
+        point.height = height;
+        point.value = value;
+        point.x = height + opts.area[3];
+        points.push(point);
+      }
+    });
+    return points;
+  }
+  function getStackDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config2, seriesIndex, stackSeries) {
+    var process2 = arguments.length > 9 && arguments[9] !== void 0 ? arguments[9] : 1;
+    var points = [];
+    var validHeight = opts.height - opts.area[0] - opts.area[2];
+    data.forEach(function(item, index) {
+      if (item === null) {
+        points.push(null);
+      } else {
+        var point = {};
+        point.color = item.color;
+        point.x = xAxisPoints[index] + Math.round(eachSpacing / 2);
+        if (seriesIndex > 0) {
+          var value = 0;
+          for (let i = 0; i <= seriesIndex; i++) {
+            value += stackSeries[i].data[index];
+          }
+          var value0 = value - item;
+          var height = validHeight * (value - minRange) / (maxRange - minRange);
+          var height0 = validHeight * (value0 - minRange) / (maxRange - minRange);
+        } else {
+          var value = item;
+          if (typeof item === "object" && item !== null) {
+            value = item.value;
+          }
+          var height = validHeight * (value - minRange) / (maxRange - minRange);
+          var height0 = 0;
+        }
+        var heightc = height0;
+        height *= process2;
+        heightc *= process2;
+        point.y = opts.height - Math.round(height) - opts.area[2];
+        point.y0 = opts.height - Math.round(heightc) - opts.area[2];
+        points.push(point);
+      }
+    });
+    return points;
+  }
+  function getBarStackDataPoints(data, minRange, maxRange, yAxisPoints, eachSpacing, opts, config2, seriesIndex, stackSeries) {
+    var process2 = arguments.length > 9 && arguments[9] !== void 0 ? arguments[9] : 1;
+    var points = [];
+    var validHeight = opts.width - opts.area[1] - opts.area[3];
+    data.forEach(function(item, index) {
+      if (item === null) {
+        points.push(null);
+      } else {
+        var point = {};
+        point.color = item.color;
+        point.y = yAxisPoints[index];
+        if (seriesIndex > 0) {
+          var value = 0;
+          for (let i = 0; i <= seriesIndex; i++) {
+            value += stackSeries[i].data[index];
+          }
+          var value0 = value - item;
+          var height = validHeight * (value - minRange) / (maxRange - minRange);
+          var height0 = validHeight * (value0 - minRange) / (maxRange - minRange);
+        } else {
+          var value = item;
+          if (typeof item === "object" && item !== null) {
+            value = item.value;
+          }
+          var height = validHeight * (value - minRange) / (maxRange - minRange);
+          var height0 = 0;
+        }
+        var heightc = height0;
+        height *= process2;
+        heightc *= process2;
+        point.height = height - heightc;
+        point.x = opts.area[3] + height;
+        point.x0 = opts.area[3] + heightc;
+        points.push(point);
+      }
+    });
+    return points;
+  }
+  function getYAxisTextList(series, opts, config2, stack, yData) {
+    var data;
+    if (stack == "stack") {
+      data = dataCombineStack(series, opts.categories.length);
+    } else {
+      data = dataCombine(series);
+    }
+    var sorted = [];
+    data = data.filter(function(item) {
+      if (typeof item === "object" && item !== null) {
+        if (item.constructor.toString().indexOf("Array") > -1) {
+          return item !== null;
+        } else {
+          return item.value !== null;
+        }
+      } else {
+        return item !== null;
+      }
+    });
+    data.map(function(item) {
+      if (typeof item === "object") {
+        if (item.constructor.toString().indexOf("Array") > -1) {
+          if (opts.type == "candle") {
+            item.map(function(subitem) {
+              sorted.push(subitem);
+            });
+          } else {
+            sorted.push(item[1]);
+          }
+        } else {
+          sorted.push(item.value);
+        }
+      } else {
+        sorted.push(item);
+      }
+    });
+    var minData = yData.min || 0;
+    var maxData = yData.max || 0;
+    if (sorted.length > 0) {
+      minData = Math.min.apply(this, sorted);
+      maxData = Math.max.apply(this, sorted);
+    }
+    if (minData === maxData) {
+      if (maxData == 0) {
+        maxData = 10;
+      } else {
+        minData = 0;
+      }
+    }
+    var dataRange = getDataRange(minData, maxData);
+    var minRange = yData.min === void 0 || yData.min === null ? dataRange.minRange : yData.min;
+    var maxRange = yData.max === void 0 || yData.max === null ? dataRange.maxRange : yData.max;
+    var eachRange = (maxRange - minRange) / opts.yAxis.splitNumber;
+    var range = [];
+    for (var i = 0; i <= opts.yAxis.splitNumber; i++) {
+      range.push(minRange + eachRange * i);
+    }
+    return range.reverse();
+  }
+  function calYAxisData(series, opts, config2, context) {
+    var columnstyle = assign({}, {
+      type: ""
+    }, opts.extra.column);
+    var YLength = opts.yAxis.data.length;
+    var newSeries = new Array(YLength);
+    if (YLength > 0) {
+      for (let i = 0; i < YLength; i++) {
+        newSeries[i] = [];
+        for (let j = 0; j < series.length; j++) {
+          if (series[j].index == i) {
+            newSeries[i].push(series[j]);
+          }
+        }
+      }
+      var rangesArr = new Array(YLength);
+      var rangesFormatArr = new Array(YLength);
+      var yAxisWidthArr = new Array(YLength);
+      for (let i = 0; i < YLength; i++) {
+        let yData = opts.yAxis.data[i];
+        if (opts.yAxis.disabled == true) {
+          yData.disabled = true;
+        }
+        if (yData.type === "categories") {
+          if (!yData.formatter) {
+            yData.formatter = (val, index, opts2) => {
+              return val + (yData.unit || "");
+            };
+          }
+          yData.categories = yData.categories || opts.categories;
+          rangesArr[i] = yData.categories;
+        } else {
+          if (!yData.formatter) {
+            yData.formatter = (val, index, opts2) => {
+              return util.toFixed(val, yData.tofix || 0) + (yData.unit || "");
+            };
+          }
+          rangesArr[i] = getYAxisTextList(newSeries[i], opts, config2, columnstyle.type, yData);
+        }
+        let yAxisFontSizes = yData.fontSize * opts.pix || config2.fontSize;
+        yAxisWidthArr[i] = {
+          position: yData.position ? yData.position : "left",
+          width: 0
+        };
+        rangesFormatArr[i] = rangesArr[i].map(function(items, index) {
+          items = yData.formatter(items, index, opts);
+          yAxisWidthArr[i].width = Math.max(yAxisWidthArr[i].width, measureText(items, yAxisFontSizes, context) + 5);
+          return items;
+        });
+        let calibration = yData.calibration ? 4 * opts.pix : 0;
+        yAxisWidthArr[i].width += calibration + 3 * opts.pix;
+        if (yData.disabled === true) {
+          yAxisWidthArr[i].width = 0;
+        }
+      }
+    } else {
+      var rangesArr = new Array(1);
+      var rangesFormatArr = new Array(1);
+      var yAxisWidthArr = new Array(1);
+      if (opts.type === "bar") {
+        rangesArr[0] = opts.categories;
+        if (!opts.yAxis.formatter) {
+          opts.yAxis.formatter = (val, index, opts2) => {
+            return val + (opts2.yAxis.unit || "");
+          };
+        }
+      } else {
+        if (!opts.yAxis.formatter) {
+          opts.yAxis.formatter = (val, index, opts2) => {
+            return val.toFixed(opts2.yAxis.tofix) + (opts2.yAxis.unit || "");
+          };
+        }
+        rangesArr[0] = getYAxisTextList(series, opts, config2, columnstyle.type, {});
+      }
+      yAxisWidthArr[0] = {
+        position: "left",
+        width: 0
       };
-      setStorage("wealthData", localWealthData, true);
-      formatAppLog("log", "at api/wealth.js:328", "财富数据已同步到本地存储:", userId);
-    } catch (error) {
-      formatAppLog("error", "at api/wealth.js:330", "同步财富数据到本地存储失败:", error);
+      var yAxisFontSize = opts.yAxis.fontSize * opts.pix || config2.fontSize;
+      rangesFormatArr[0] = rangesArr[0].map(function(item, index) {
+        item = opts.yAxis.formatter(item, index, opts);
+        yAxisWidthArr[0].width = Math.max(yAxisWidthArr[0].width, measureText(item, yAxisFontSize, context) + 5);
+        return item;
+      });
+      yAxisWidthArr[0].width += 3 * opts.pix;
+      if (opts.yAxis.disabled === true) {
+        yAxisWidthArr[0] = {
+          position: "left",
+          width: 0
+        };
+        opts.yAxis.data[0] = {
+          disabled: true
+        };
+      } else {
+        opts.yAxis.data[0] = {
+          disabled: false,
+          position: "left",
+          max: opts.yAxis.max,
+          min: opts.yAxis.min,
+          formatter: opts.yAxis.formatter
+        };
+        if (opts.type === "bar") {
+          opts.yAxis.data[0].categories = opts.categories;
+          opts.yAxis.data[0].type = "categories";
+        }
+      }
+    }
+    return {
+      rangesFormat: rangesFormatArr,
+      ranges: rangesArr,
+      yAxisWidth: yAxisWidthArr
+    };
+  }
+  function calTooltipYAxisData(point, series, opts, config2, eachSpacing) {
+    let ranges = [].concat(opts.chartData.yAxisData.ranges);
+    let spacingValid = opts.height - opts.area[0] - opts.area[2];
+    let minAxis = opts.area[0];
+    let items = [];
+    for (let i = 0; i < ranges.length; i++) {
+      let maxVal = Math.max.apply(this, ranges[i]);
+      let minVal = Math.min.apply(this, ranges[i]);
+      let item = maxVal - (maxVal - minVal) * (point - minAxis) / spacingValid;
+      item = opts.yAxis.data && opts.yAxis.data[i].formatter ? opts.yAxis.data[i].formatter(item, i, opts) : item.toFixed(0);
+      items.push(String(item));
+    }
+    return items;
+  }
+  function calMarkLineData(points, opts) {
+    let minRange, maxRange;
+    let spacingValid = opts.height - opts.area[0] - opts.area[2];
+    for (let i = 0; i < points.length; i++) {
+      points[i].yAxisIndex = points[i].yAxisIndex ? points[i].yAxisIndex : 0;
+      let range = [].concat(opts.chartData.yAxisData.ranges[points[i].yAxisIndex]);
+      minRange = range.pop();
+      maxRange = range.shift();
+      let height = spacingValid * (points[i].value - minRange) / (maxRange - minRange);
+      points[i].y = opts.height - Math.round(height) - opts.area[2];
+    }
+    return points;
+  }
+  function contextRotate(context, opts) {
+    if (opts.rotateLock !== true) {
+      context.translate(opts.height, 0);
+      context.rotate(90 * Math.PI / 180);
+    } else if (opts._rotate_ !== true) {
+      context.translate(opts.height, 0);
+      context.rotate(90 * Math.PI / 180);
+      opts._rotate_ = true;
     }
   }
-  function getWealthDataFromStorage(userId) {
+  function drawPointShape(points, color, shape, context, opts) {
+    context.beginPath();
+    if (opts.dataPointShapeType == "hollow") {
+      context.setStrokeStyle(color);
+      context.setFillStyle(opts.background);
+      context.setLineWidth(2 * opts.pix);
+    } else {
+      context.setStrokeStyle("#ffffff");
+      context.setFillStyle(color);
+      context.setLineWidth(1 * opts.pix);
+    }
+    if (shape === "diamond") {
+      points.forEach(function(item, index) {
+        if (item !== null) {
+          context.moveTo(item.x, item.y - 4.5);
+          context.lineTo(item.x - 4.5, item.y);
+          context.lineTo(item.x, item.y + 4.5);
+          context.lineTo(item.x + 4.5, item.y);
+          context.lineTo(item.x, item.y - 4.5);
+        }
+      });
+    } else if (shape === "circle") {
+      points.forEach(function(item, index) {
+        if (item !== null) {
+          context.moveTo(item.x + 2.5 * opts.pix, item.y);
+          context.arc(item.x, item.y, 3 * opts.pix, 0, 2 * Math.PI, false);
+        }
+      });
+    } else if (shape === "square") {
+      points.forEach(function(item, index) {
+        if (item !== null) {
+          context.moveTo(item.x - 3.5, item.y - 3.5);
+          context.rect(item.x - 3.5, item.y - 3.5, 7, 7);
+        }
+      });
+    } else if (shape === "triangle") {
+      points.forEach(function(item, index) {
+        if (item !== null) {
+          context.moveTo(item.x, item.y - 4.5);
+          context.lineTo(item.x - 4.5, item.y + 4.5);
+          context.lineTo(item.x + 4.5, item.y + 4.5);
+          context.lineTo(item.x, item.y - 4.5);
+        }
+      });
+    } else if (shape === "none") {
+      return;
+    }
+    context.closePath();
+    context.fill();
+    context.stroke();
+  }
+  function drawActivePoint(points, color, shape, context, opts, option, seriesIndex) {
+    if (!opts.tooltip) {
+      return;
+    }
+    if (opts.tooltip.group.length > 0 && opts.tooltip.group.includes(seriesIndex) == false) {
+      return;
+    }
+    var pointIndex = typeof opts.tooltip.index === "number" ? opts.tooltip.index : opts.tooltip.index[opts.tooltip.group.indexOf(seriesIndex)];
+    context.beginPath();
+    if (option.activeType == "hollow") {
+      context.setStrokeStyle(color);
+      context.setFillStyle(opts.background);
+      context.setLineWidth(2 * opts.pix);
+    } else {
+      context.setStrokeStyle("#ffffff");
+      context.setFillStyle(color);
+      context.setLineWidth(1 * opts.pix);
+    }
+    if (shape === "diamond") {
+      points.forEach(function(item, index) {
+        if (item !== null && pointIndex == index) {
+          context.moveTo(item.x, item.y - 4.5);
+          context.lineTo(item.x - 4.5, item.y);
+          context.lineTo(item.x, item.y + 4.5);
+          context.lineTo(item.x + 4.5, item.y);
+          context.lineTo(item.x, item.y - 4.5);
+        }
+      });
+    } else if (shape === "circle") {
+      points.forEach(function(item, index) {
+        if (item !== null && pointIndex == index) {
+          context.moveTo(item.x + 2.5 * opts.pix, item.y);
+          context.arc(item.x, item.y, 3 * opts.pix, 0, 2 * Math.PI, false);
+        }
+      });
+    } else if (shape === "square") {
+      points.forEach(function(item, index) {
+        if (item !== null && pointIndex == index) {
+          context.moveTo(item.x - 3.5, item.y - 3.5);
+          context.rect(item.x - 3.5, item.y - 3.5, 7, 7);
+        }
+      });
+    } else if (shape === "triangle") {
+      points.forEach(function(item, index) {
+        if (item !== null && pointIndex == index) {
+          context.moveTo(item.x, item.y - 4.5);
+          context.lineTo(item.x - 4.5, item.y + 4.5);
+          context.lineTo(item.x + 4.5, item.y + 4.5);
+          context.lineTo(item.x, item.y - 4.5);
+        }
+      });
+    } else if (shape === "none") {
+      return;
+    }
+    context.closePath();
+    context.fill();
+    context.stroke();
+  }
+  function drawRingTitle(opts, config2, context, center) {
+    var titlefontSize = opts.title.fontSize || config2.titleFontSize;
+    var subtitlefontSize = opts.subtitle.fontSize || config2.subtitleFontSize;
+    var title = opts.title.name || "";
+    var subtitle = opts.subtitle.name || "";
+    var titleFontColor = opts.title.color || opts.fontColor;
+    var subtitleFontColor = opts.subtitle.color || opts.fontColor;
+    var titleHeight = title ? titlefontSize : 0;
+    var subtitleHeight = subtitle ? subtitlefontSize : 0;
+    var margin = 5;
+    if (subtitle) {
+      var textWidth = measureText(subtitle, subtitlefontSize * opts.pix, context);
+      var startX = center.x - textWidth / 2 + (opts.subtitle.offsetX || 0) * opts.pix;
+      var startY = center.y + subtitlefontSize * opts.pix / 2 + (opts.subtitle.offsetY || 0) * opts.pix;
+      if (title) {
+        startY += (titleHeight * opts.pix + margin) / 2;
+      }
+      context.beginPath();
+      context.setFontSize(subtitlefontSize * opts.pix);
+      context.setFillStyle(subtitleFontColor);
+      context.fillText(subtitle, startX, startY);
+      context.closePath();
+      context.stroke();
+    }
+    if (title) {
+      var _textWidth = measureText(title, titlefontSize * opts.pix, context);
+      var _startX = center.x - _textWidth / 2 + (opts.title.offsetX || 0);
+      var _startY = center.y + titlefontSize * opts.pix / 2 + (opts.title.offsetY || 0) * opts.pix;
+      if (subtitle) {
+        _startY -= (subtitleHeight * opts.pix + margin) / 2;
+      }
+      context.beginPath();
+      context.setFontSize(titlefontSize * opts.pix);
+      context.setFillStyle(titleFontColor);
+      context.fillText(title, _startX, _startY);
+      context.closePath();
+      context.stroke();
+    }
+  }
+  function drawPointText(points, series, config2, context, opts) {
+    var data = series.data;
+    var textOffset = series.textOffset ? series.textOffset : 0;
+    points.forEach(function(item, index) {
+      if (item !== null) {
+        context.beginPath();
+        var fontSize = series.textSize ? series.textSize * opts.pix : config2.fontSize;
+        context.setFontSize(fontSize);
+        context.setFillStyle(series.textColor || opts.fontColor);
+        var value = data[index];
+        if (typeof data[index] === "object" && data[index] !== null) {
+          if (data[index].constructor.toString().indexOf("Array") > -1) {
+            value = data[index][1];
+          } else {
+            value = data[index].value;
+          }
+        }
+        var formatVal = series.formatter ? series.formatter(value, index, series, opts) : value;
+        context.setTextAlign("center");
+        context.fillText(String(formatVal), item.x, item.y - 4 + textOffset * opts.pix);
+        context.closePath();
+        context.stroke();
+        context.setTextAlign("left");
+      }
+    });
+  }
+  function drawColumePointText(points, series, config2, context, opts) {
+    var data = series.data;
+    var textOffset = series.textOffset ? series.textOffset : 0;
+    var Position = opts.extra.column.labelPosition;
+    points.forEach(function(item, index) {
+      if (item !== null) {
+        context.beginPath();
+        var fontSize = series.textSize ? series.textSize * opts.pix : config2.fontSize;
+        context.setFontSize(fontSize);
+        context.setFillStyle(series.textColor || opts.fontColor);
+        var value = data[index];
+        if (typeof data[index] === "object" && data[index] !== null) {
+          if (data[index].constructor.toString().indexOf("Array") > -1) {
+            value = data[index][1];
+          } else {
+            value = data[index].value;
+          }
+        }
+        var formatVal = series.formatter ? series.formatter(value, index, series, opts) : value;
+        context.setTextAlign("center");
+        var startY = item.y - 4 * opts.pix + textOffset * opts.pix;
+        if (item.y > series.zeroPoints) {
+          startY = item.y + textOffset * opts.pix + fontSize;
+        }
+        if (Position == "insideTop") {
+          startY = item.y + fontSize + textOffset * opts.pix;
+          if (item.y > series.zeroPoints) {
+            startY = item.y - textOffset * opts.pix - 4 * opts.pix;
+          }
+        }
+        if (Position == "center") {
+          startY = item.y + textOffset * opts.pix + (opts.height - opts.area[2] - item.y + fontSize) / 2;
+          if (series.zeroPoints < opts.height - opts.area[2]) {
+            startY = item.y + textOffset * opts.pix + (series.zeroPoints - item.y + fontSize) / 2;
+          }
+          if (item.y > series.zeroPoints) {
+            startY = item.y - textOffset * opts.pix - (item.y - series.zeroPoints - fontSize) / 2;
+          }
+          if (opts.extra.column.type == "stack") {
+            startY = item.y + textOffset * opts.pix + (item.y0 - item.y + fontSize) / 2;
+          }
+        }
+        if (Position == "bottom") {
+          startY = opts.height - opts.area[2] + textOffset * opts.pix - 4 * opts.pix;
+          if (series.zeroPoints < opts.height - opts.area[2]) {
+            startY = series.zeroPoints + textOffset * opts.pix - 4 * opts.pix;
+          }
+          if (item.y > series.zeroPoints) {
+            startY = series.zeroPoints - textOffset * opts.pix + fontSize + 2 * opts.pix;
+          }
+          if (opts.extra.column.type == "stack") {
+            startY = item.y0 + textOffset * opts.pix - 4 * opts.pix;
+          }
+        }
+        context.fillText(String(formatVal), item.x, startY);
+        context.closePath();
+        context.stroke();
+        context.setTextAlign("left");
+      }
+    });
+  }
+  function drawMountPointText(points, series, config2, context, opts, zeroPoints) {
+    series.data;
+    var textOffset = series.textOffset ? series.textOffset : 0;
+    opts.extra.mount.labelPosition;
+    points.forEach(function(item, index) {
+      if (item !== null) {
+        context.beginPath();
+        var fontSize = series[index].textSize ? series[index].textSize * opts.pix : config2.fontSize;
+        context.setFontSize(fontSize);
+        context.setFillStyle(series[index].textColor || opts.fontColor);
+        var value = item.value;
+        var formatVal = series[index].formatter ? series[index].formatter(value, index, series, opts) : value;
+        context.setTextAlign("center");
+        var startY = item.y - 4 * opts.pix + textOffset * opts.pix;
+        if (item.y > zeroPoints) {
+          startY = item.y + textOffset * opts.pix + fontSize;
+        }
+        context.fillText(String(formatVal), item.x, startY);
+        context.closePath();
+        context.stroke();
+        context.setTextAlign("left");
+      }
+    });
+  }
+  function drawBarPointText(points, series, config2, context, opts) {
+    var data = series.data;
+    series.textOffset ? series.textOffset : 0;
+    points.forEach(function(item, index) {
+      if (item !== null) {
+        context.beginPath();
+        var fontSize = series.textSize ? series.textSize * opts.pix : config2.fontSize;
+        context.setFontSize(fontSize);
+        context.setFillStyle(series.textColor || opts.fontColor);
+        var value = data[index];
+        if (typeof data[index] === "object" && data[index] !== null) {
+          value = data[index].value;
+        }
+        var formatVal = series.formatter ? series.formatter(value, index, series, opts) : value;
+        context.setTextAlign("left");
+        context.fillText(String(formatVal), item.x + 4 * opts.pix, item.y + fontSize / 2 - 3);
+        context.closePath();
+        context.stroke();
+      }
+    });
+  }
+  function drawGaugeLabel(gaugeOption, radius, centerPosition, opts, config2, context) {
+    radius -= gaugeOption.width / 2 + gaugeOption.labelOffset * opts.pix;
+    radius = radius < 10 ? 10 : radius;
+    let totalAngle;
+    if (gaugeOption.endAngle < gaugeOption.startAngle) {
+      totalAngle = 2 + gaugeOption.endAngle - gaugeOption.startAngle;
+    } else {
+      totalAngle = gaugeOption.startAngle - gaugeOption.endAngle;
+    }
+    let splitAngle = totalAngle / gaugeOption.splitLine.splitNumber;
+    let totalNumber = gaugeOption.endNumber - gaugeOption.startNumber;
+    let splitNumber = totalNumber / gaugeOption.splitLine.splitNumber;
+    let nowAngle = gaugeOption.startAngle;
+    let nowNumber = gaugeOption.startNumber;
+    for (let i = 0; i < gaugeOption.splitLine.splitNumber + 1; i++) {
+      var pos = {
+        x: radius * Math.cos(nowAngle * Math.PI),
+        y: radius * Math.sin(nowAngle * Math.PI)
+      };
+      var labelText = gaugeOption.formatter ? gaugeOption.formatter(nowNumber, i, opts) : nowNumber;
+      pos.x += centerPosition.x - measureText(labelText, config2.fontSize, context) / 2;
+      pos.y += centerPosition.y;
+      var startX = pos.x;
+      var startY = pos.y;
+      context.beginPath();
+      context.setFontSize(config2.fontSize);
+      context.setFillStyle(gaugeOption.labelColor || opts.fontColor);
+      context.fillText(labelText, startX, startY + config2.fontSize / 2);
+      context.closePath();
+      context.stroke();
+      nowAngle += splitAngle;
+      if (nowAngle >= 2) {
+        nowAngle = nowAngle % 2;
+      }
+      nowNumber += splitNumber;
+    }
+  }
+  function drawRadarLabel(angleList, radius, centerPosition, opts, config2, context) {
+    var radarOption = opts.extra.radar || {};
+    angleList.forEach(function(angle, index) {
+      if (radarOption.labelPointShow === true && opts.categories[index] !== "") {
+        var posPoint = {
+          x: radius * Math.cos(angle),
+          y: radius * Math.sin(angle)
+        };
+        var posPointAxis = convertCoordinateOrigin(posPoint.x, posPoint.y, centerPosition);
+        context.setFillStyle(radarOption.labelPointColor);
+        context.beginPath();
+        context.arc(posPointAxis.x, posPointAxis.y, radarOption.labelPointRadius * opts.pix, 0, 2 * Math.PI, false);
+        context.closePath();
+        context.fill();
+      }
+      if (radarOption.labelShow === true) {
+        var pos = {
+          x: (radius + config2.radarLabelTextMargin * opts.pix) * Math.cos(angle),
+          y: (radius + config2.radarLabelTextMargin * opts.pix) * Math.sin(angle)
+        };
+        var posRelativeCanvas = convertCoordinateOrigin(pos.x, pos.y, centerPosition);
+        var startX = posRelativeCanvas.x;
+        var startY = posRelativeCanvas.y;
+        if (util.approximatelyEqual(pos.x, 0)) {
+          startX -= measureText(opts.categories[index] || "", config2.fontSize, context) / 2;
+        } else if (pos.x < 0) {
+          startX -= measureText(opts.categories[index] || "", config2.fontSize, context);
+        }
+        context.beginPath();
+        context.setFontSize(config2.fontSize);
+        context.setFillStyle(radarOption.labelColor || opts.fontColor);
+        context.fillText(opts.categories[index] || "", startX, startY + config2.fontSize / 2);
+        context.closePath();
+        context.stroke();
+      }
+    });
+  }
+  function drawPieText(series, opts, config2, context, radius, center) {
+    var lineRadius = config2.pieChartLinePadding;
+    var textObjectCollection = [];
+    var lastTextObject = null;
+    var seriesConvert = series.map(function(item, index) {
+      var text = item.formatter ? item.formatter(item, index, series, opts) : util.toFixed(item._proportion_.toFixed(4) * 100) + "%";
+      text = item.labelText ? item.labelText : text;
+      var arc = 2 * Math.PI - (item._start_ + 2 * Math.PI * item._proportion_ / 2);
+      if (item._rose_proportion_) {
+        arc = 2 * Math.PI - (item._start_ + 2 * Math.PI * item._rose_proportion_ / 2);
+      }
+      var color = item.color;
+      var radius2 = item._radius_;
+      return {
+        arc,
+        text,
+        color,
+        radius: radius2,
+        textColor: item.textColor,
+        textSize: item.textSize,
+        labelShow: item.labelShow
+      };
+    });
+    for (let i = 0; i < seriesConvert.length; i++) {
+      let item = seriesConvert[i];
+      let orginX1 = Math.cos(item.arc) * (item.radius + lineRadius);
+      let orginY1 = Math.sin(item.arc) * (item.radius + lineRadius);
+      let orginX2 = Math.cos(item.arc) * item.radius;
+      let orginY2 = Math.sin(item.arc) * item.radius;
+      let orginX3 = orginX1 >= 0 ? orginX1 + config2.pieChartTextPadding : orginX1 - config2.pieChartTextPadding;
+      let orginY3 = orginY1;
+      let textWidth = measureText(item.text, item.textSize * opts.pix || config2.fontSize, context);
+      let startY = orginY3;
+      if (lastTextObject && util.isSameXCoordinateArea(lastTextObject.start, {
+        x: orginX3
+      })) {
+        if (orginX3 > 0) {
+          startY = Math.min(orginY3, lastTextObject.start.y);
+        } else if (orginX1 < 0) {
+          startY = Math.max(orginY3, lastTextObject.start.y);
+        } else {
+          if (orginY3 > 0) {
+            startY = Math.max(orginY3, lastTextObject.start.y);
+          } else {
+            startY = Math.min(orginY3, lastTextObject.start.y);
+          }
+        }
+      }
+      if (orginX3 < 0) {
+        orginX3 -= textWidth;
+      }
+      let textObject = {
+        lineStart: {
+          x: orginX2,
+          y: orginY2
+        },
+        lineEnd: {
+          x: orginX1,
+          y: orginY1
+        },
+        start: {
+          x: orginX3,
+          y: startY
+        },
+        width: textWidth,
+        height: config2.fontSize,
+        text: item.text,
+        color: item.color,
+        textColor: item.textColor,
+        textSize: item.textSize
+      };
+      lastTextObject = avoidCollision(textObject, lastTextObject);
+      textObjectCollection.push(lastTextObject);
+    }
+    for (let i = 0; i < textObjectCollection.length; i++) {
+      if (seriesConvert[i].labelShow === false) {
+        continue;
+      }
+      let item = textObjectCollection[i];
+      let lineStartPoistion = convertCoordinateOrigin(item.lineStart.x, item.lineStart.y, center);
+      let lineEndPoistion = convertCoordinateOrigin(item.lineEnd.x, item.lineEnd.y, center);
+      let textPosition = convertCoordinateOrigin(item.start.x, item.start.y, center);
+      context.setLineWidth(1 * opts.pix);
+      context.setFontSize(item.textSize * opts.pix || config2.fontSize);
+      context.beginPath();
+      context.setStrokeStyle(item.color);
+      context.setFillStyle(item.color);
+      context.moveTo(lineStartPoistion.x, lineStartPoistion.y);
+      let curveStartX = item.start.x < 0 ? textPosition.x + item.width : textPosition.x;
+      let textStartX = item.start.x < 0 ? textPosition.x - 5 : textPosition.x + 5;
+      context.quadraticCurveTo(lineEndPoistion.x, lineEndPoistion.y, curveStartX, textPosition.y);
+      context.moveTo(lineStartPoistion.x, lineStartPoistion.y);
+      context.stroke();
+      context.closePath();
+      context.beginPath();
+      context.moveTo(textPosition.x + item.width, textPosition.y);
+      context.arc(curveStartX, textPosition.y, 2 * opts.pix, 0, 2 * Math.PI);
+      context.closePath();
+      context.fill();
+      context.beginPath();
+      context.setFontSize(item.textSize * opts.pix || config2.fontSize);
+      context.setFillStyle(item.textColor || opts.fontColor);
+      context.fillText(item.text, textStartX, textPosition.y + 3);
+      context.closePath();
+      context.stroke();
+      context.closePath();
+    }
+  }
+  function drawToolTipSplitLine(offsetX, opts, config2, context) {
+    var toolTipOption = opts.extra.tooltip || {};
+    toolTipOption.gridType = toolTipOption.gridType == void 0 ? "solid" : toolTipOption.gridType;
+    toolTipOption.dashLength = toolTipOption.dashLength == void 0 ? 4 : toolTipOption.dashLength;
+    var startY = opts.area[0];
+    var endY = opts.height - opts.area[2];
+    if (toolTipOption.gridType == "dash") {
+      context.setLineDash([toolTipOption.dashLength, toolTipOption.dashLength]);
+    }
+    context.setStrokeStyle(toolTipOption.gridColor || "#cccccc");
+    context.setLineWidth(1 * opts.pix);
+    context.beginPath();
+    context.moveTo(offsetX, startY);
+    context.lineTo(offsetX, endY);
+    context.stroke();
+    context.setLineDash([]);
+    if (toolTipOption.xAxisLabel) {
+      let labelText = opts.categories[opts.tooltip.index];
+      context.setFontSize(config2.fontSize);
+      let textWidth = measureText(labelText, config2.fontSize, context);
+      let textX = offsetX - 0.5 * textWidth;
+      let textY = endY + 2 * opts.pix;
+      context.beginPath();
+      context.setFillStyle(hexToRgb(toolTipOption.labelBgColor || config2.toolTipBackground, toolTipOption.labelBgOpacity || config2.toolTipOpacity));
+      context.setStrokeStyle(toolTipOption.labelBgColor || config2.toolTipBackground);
+      context.setLineWidth(1 * opts.pix);
+      context.rect(textX - toolTipOption.boxPadding * opts.pix, textY, textWidth + 2 * toolTipOption.boxPadding * opts.pix, config2.fontSize + 2 * toolTipOption.boxPadding * opts.pix);
+      context.closePath();
+      context.stroke();
+      context.fill();
+      context.beginPath();
+      context.setFontSize(config2.fontSize);
+      context.setFillStyle(toolTipOption.labelFontColor || opts.fontColor);
+      context.fillText(String(labelText), textX, textY + toolTipOption.boxPadding * opts.pix + config2.fontSize);
+      context.closePath();
+      context.stroke();
+    }
+  }
+  function drawMarkLine(opts, config2, context) {
+    let markLineOption = assign({}, {
+      type: "solid",
+      dashLength: 4,
+      data: []
+    }, opts.extra.markLine);
+    let startX = opts.area[3];
+    let endX = opts.width - opts.area[1];
+    let points = calMarkLineData(markLineOption.data, opts);
+    for (let i = 0; i < points.length; i++) {
+      let item = assign({}, {
+        lineColor: "#DE4A42",
+        showLabel: false,
+        labelFontSize: 13,
+        labelPadding: 6,
+        labelFontColor: "#666666",
+        labelBgColor: "#DFE8FF",
+        labelBgOpacity: 0.8,
+        labelAlign: "left",
+        labelOffsetX: 0,
+        labelOffsetY: 0
+      }, points[i]);
+      if (markLineOption.type == "dash") {
+        context.setLineDash([markLineOption.dashLength, markLineOption.dashLength]);
+      }
+      context.setStrokeStyle(item.lineColor);
+      context.setLineWidth(1 * opts.pix);
+      context.beginPath();
+      context.moveTo(startX, item.y);
+      context.lineTo(endX, item.y);
+      context.stroke();
+      context.setLineDash([]);
+      if (item.showLabel) {
+        let fontSize = item.labelFontSize * opts.pix;
+        let labelText = item.labelText ? item.labelText : item.value;
+        context.setFontSize(fontSize);
+        let textWidth = measureText(labelText, fontSize, context);
+        let bgWidth = textWidth + item.labelPadding * opts.pix * 2;
+        let bgStartX = item.labelAlign == "left" ? opts.area[3] - bgWidth : opts.width - opts.area[1];
+        bgStartX += item.labelOffsetX;
+        let bgStartY = item.y - 0.5 * fontSize - item.labelPadding * opts.pix;
+        bgStartY += item.labelOffsetY;
+        let textX = bgStartX + item.labelPadding * opts.pix;
+        item.y;
+        context.setFillStyle(hexToRgb(item.labelBgColor, item.labelBgOpacity));
+        context.setStrokeStyle(item.labelBgColor);
+        context.setLineWidth(1 * opts.pix);
+        context.beginPath();
+        context.rect(bgStartX, bgStartY, bgWidth, fontSize + 2 * item.labelPadding * opts.pix);
+        context.closePath();
+        context.stroke();
+        context.fill();
+        context.setFontSize(fontSize);
+        context.setTextAlign("left");
+        context.setFillStyle(item.labelFontColor);
+        context.fillText(String(labelText), textX, bgStartY + fontSize + item.labelPadding * opts.pix / 2);
+        context.stroke();
+        context.setTextAlign("left");
+      }
+    }
+  }
+  function drawToolTipHorizentalLine(opts, config2, context, eachSpacing, xAxisPoints) {
+    var toolTipOption = assign({}, {
+      gridType: "solid",
+      dashLength: 4
+    }, opts.extra.tooltip);
+    var startX = opts.area[3];
+    var endX = opts.width - opts.area[1];
+    if (toolTipOption.gridType == "dash") {
+      context.setLineDash([toolTipOption.dashLength, toolTipOption.dashLength]);
+    }
+    context.setStrokeStyle(toolTipOption.gridColor || "#cccccc");
+    context.setLineWidth(1 * opts.pix);
+    context.beginPath();
+    context.moveTo(startX, opts.tooltip.offset.y);
+    context.lineTo(endX, opts.tooltip.offset.y);
+    context.stroke();
+    context.setLineDash([]);
+    if (toolTipOption.yAxisLabel) {
+      let boxPadding = toolTipOption.boxPadding * opts.pix;
+      let labelText = calTooltipYAxisData(opts.tooltip.offset.y, opts.series, opts);
+      let widthArr = opts.chartData.yAxisData.yAxisWidth;
+      let tStartLeft = opts.area[3];
+      let tStartRight = opts.width - opts.area[1];
+      for (let i = 0; i < labelText.length; i++) {
+        context.setFontSize(toolTipOption.fontSize * opts.pix);
+        let textWidth = measureText(labelText[i], toolTipOption.fontSize * opts.pix, context);
+        let bgStartX, bgEndX, bgWidth;
+        if (widthArr[i].position == "left") {
+          bgStartX = tStartLeft - (textWidth + boxPadding * 2) - 2 * opts.pix;
+          bgEndX = Math.max(bgStartX, bgStartX + textWidth + boxPadding * 2);
+        } else {
+          bgStartX = tStartRight + 2 * opts.pix;
+          bgEndX = Math.max(bgStartX + widthArr[i].width, bgStartX + textWidth + boxPadding * 2);
+        }
+        bgWidth = bgEndX - bgStartX;
+        let textX = bgStartX + (bgWidth - textWidth) / 2;
+        let textY = opts.tooltip.offset.y;
+        context.beginPath();
+        context.setFillStyle(hexToRgb(toolTipOption.labelBgColor || config2.toolTipBackground, toolTipOption.labelBgOpacity || config2.toolTipOpacity));
+        context.setStrokeStyle(toolTipOption.labelBgColor || config2.toolTipBackground);
+        context.setLineWidth(1 * opts.pix);
+        context.rect(bgStartX, textY - 0.5 * config2.fontSize - boxPadding, bgWidth, config2.fontSize + 2 * boxPadding);
+        context.closePath();
+        context.stroke();
+        context.fill();
+        context.beginPath();
+        context.setFontSize(config2.fontSize);
+        context.setFillStyle(toolTipOption.labelFontColor || opts.fontColor);
+        context.fillText(labelText[i], textX, textY + 0.5 * config2.fontSize);
+        context.closePath();
+        context.stroke();
+        if (widthArr[i].position == "left") {
+          tStartLeft -= widthArr[i].width + opts.yAxis.padding * opts.pix;
+        } else {
+          tStartRight += widthArr[i].width + opts.yAxis.padding * opts.pix;
+        }
+      }
+    }
+  }
+  function drawToolTipSplitArea(offsetX, opts, config2, context, eachSpacing) {
+    var toolTipOption = assign({}, {
+      activeBgColor: "#000000",
+      activeBgOpacity: 0.08,
+      activeWidth: eachSpacing
+    }, opts.extra.column);
+    toolTipOption.activeWidth = toolTipOption.activeWidth > eachSpacing ? eachSpacing : toolTipOption.activeWidth;
+    var startY = opts.area[0];
+    var endY = opts.height - opts.area[2];
+    context.beginPath();
+    context.setFillStyle(hexToRgb(toolTipOption.activeBgColor, toolTipOption.activeBgOpacity));
+    context.rect(offsetX - toolTipOption.activeWidth / 2, startY, toolTipOption.activeWidth, endY - startY);
+    context.closePath();
+    context.fill();
+    context.setFillStyle("#FFFFFF");
+  }
+  function drawBarToolTipSplitArea(offsetX, opts, config2, context, eachSpacing) {
+    var toolTipOption = assign({}, {
+      activeBgColor: "#000000",
+      activeBgOpacity: 0.08
+    }, opts.extra.bar);
+    var startX = opts.area[3];
+    var endX = opts.width - opts.area[1];
+    context.beginPath();
+    context.setFillStyle(hexToRgb(toolTipOption.activeBgColor, toolTipOption.activeBgOpacity));
+    context.rect(startX, offsetX - eachSpacing / 2, endX - startX, eachSpacing);
+    context.closePath();
+    context.fill();
+    context.setFillStyle("#FFFFFF");
+  }
+  function drawToolTip(textList, offset, opts, config2, context, eachSpacing, xAxisPoints) {
+    var toolTipOption = assign({}, {
+      showBox: true,
+      showArrow: true,
+      showCategory: false,
+      bgColor: "#000000",
+      bgOpacity: 0.7,
+      borderColor: "#000000",
+      borderWidth: 0,
+      borderRadius: 0,
+      borderOpacity: 0.7,
+      boxPadding: 3,
+      fontColor: "#FFFFFF",
+      fontSize: 13,
+      lineHeight: 20,
+      legendShow: true,
+      legendShape: "auto",
+      splitLine: true
+    }, opts.extra.tooltip);
+    if (toolTipOption.showCategory == true && opts.categories) {
+      textList.unshift({ text: opts.categories[opts.tooltip.index], color: null });
+    }
+    var fontSize = toolTipOption.fontSize * opts.pix;
+    var lineHeight = toolTipOption.lineHeight * opts.pix;
+    var boxPadding = toolTipOption.boxPadding * opts.pix;
+    var legendWidth = fontSize;
+    var legendMarginRight = 5 * opts.pix;
+    if (toolTipOption.legendShow == false) {
+      legendWidth = 0;
+      legendMarginRight = 0;
+    }
+    var arrowWidth = toolTipOption.showArrow ? 8 * opts.pix : 0;
+    var isOverRightBorder = false;
+    if (opts.type == "line" || opts.type == "mount" || opts.type == "area" || opts.type == "candle" || opts.type == "mix") {
+      if (toolTipOption.splitLine == true) {
+        drawToolTipSplitLine(opts.tooltip.offset.x, opts, config2, context);
+      }
+    }
+    offset = assign({
+      x: 0,
+      y: 0
+    }, offset);
+    offset.y -= 8 * opts.pix;
+    var textWidth = textList.map(function(item) {
+      return measureText(item.text, fontSize, context);
+    });
+    var toolTipWidth = legendWidth + legendMarginRight + 4 * boxPadding + Math.max.apply(null, textWidth);
+    var toolTipHeight = 2 * boxPadding + textList.length * lineHeight;
+    if (toolTipOption.showBox == false) {
+      return;
+    }
+    if (offset.x - Math.abs(opts._scrollDistance_ || 0) + arrowWidth + toolTipWidth > opts.width) {
+      isOverRightBorder = true;
+    }
+    if (toolTipHeight + offset.y > opts.height) {
+      offset.y = opts.height - toolTipHeight;
+    }
+    context.beginPath();
+    context.setFillStyle(hexToRgb(toolTipOption.bgColor, toolTipOption.bgOpacity));
+    context.setLineWidth(toolTipOption.borderWidth * opts.pix);
+    context.setStrokeStyle(hexToRgb(toolTipOption.borderColor, toolTipOption.borderOpacity));
+    var radius = toolTipOption.borderRadius;
+    if (isOverRightBorder) {
+      if (toolTipWidth + arrowWidth > opts.width) {
+        offset.x = opts.width + Math.abs(opts._scrollDistance_ || 0) + arrowWidth + (toolTipWidth - opts.width);
+      }
+      if (toolTipWidth > offset.x) {
+        offset.x = opts.width + Math.abs(opts._scrollDistance_ || 0) + arrowWidth + (toolTipWidth - opts.width);
+      }
+      if (toolTipOption.showArrow) {
+        context.moveTo(offset.x, offset.y + 10 * opts.pix);
+        context.lineTo(offset.x - arrowWidth, offset.y + 10 * opts.pix + 5 * opts.pix);
+      }
+      context.arc(offset.x - arrowWidth - radius, offset.y + toolTipHeight - radius, radius, 0, Math.PI / 2, false);
+      context.arc(
+        offset.x - arrowWidth - Math.round(toolTipWidth) + radius,
+        offset.y + toolTipHeight - radius,
+        radius,
+        Math.PI / 2,
+        Math.PI,
+        false
+      );
+      context.arc(offset.x - arrowWidth - Math.round(toolTipWidth) + radius, offset.y + radius, radius, -Math.PI, -Math.PI / 2, false);
+      context.arc(offset.x - arrowWidth - radius, offset.y + radius, radius, -Math.PI / 2, 0, false);
+      if (toolTipOption.showArrow) {
+        context.lineTo(offset.x - arrowWidth, offset.y + 10 * opts.pix - 5 * opts.pix);
+        context.lineTo(offset.x, offset.y + 10 * opts.pix);
+      }
+    } else {
+      if (toolTipOption.showArrow) {
+        context.moveTo(offset.x, offset.y + 10 * opts.pix);
+        context.lineTo(offset.x + arrowWidth, offset.y + 10 * opts.pix - 5 * opts.pix);
+      }
+      context.arc(offset.x + arrowWidth + radius, offset.y + radius, radius, -Math.PI, -Math.PI / 2, false);
+      context.arc(
+        offset.x + arrowWidth + Math.round(toolTipWidth) - radius,
+        offset.y + radius,
+        radius,
+        -Math.PI / 2,
+        0,
+        false
+      );
+      context.arc(
+        offset.x + arrowWidth + Math.round(toolTipWidth) - radius,
+        offset.y + toolTipHeight - radius,
+        radius,
+        0,
+        Math.PI / 2,
+        false
+      );
+      context.arc(offset.x + arrowWidth + radius, offset.y + toolTipHeight - radius, radius, Math.PI / 2, Math.PI, false);
+      if (toolTipOption.showArrow) {
+        context.lineTo(offset.x + arrowWidth, offset.y + 10 * opts.pix + 5 * opts.pix);
+        context.lineTo(offset.x, offset.y + 10 * opts.pix);
+      }
+    }
+    context.closePath();
+    context.fill();
+    if (toolTipOption.borderWidth > 0) {
+      context.stroke();
+    }
+    if (toolTipOption.legendShow) {
+      textList.forEach(function(item, index) {
+        if (item.color !== null) {
+          context.beginPath();
+          context.setFillStyle(item.color);
+          var startX = offset.x + arrowWidth + 2 * boxPadding;
+          var startY = offset.y + (lineHeight - fontSize) / 2 + lineHeight * index + boxPadding + 1;
+          if (isOverRightBorder) {
+            startX = offset.x - toolTipWidth - arrowWidth + 2 * boxPadding;
+          }
+          switch (item.legendShape) {
+            case "line":
+              context.moveTo(startX, startY + 0.5 * legendWidth - 2 * opts.pix);
+              context.fillRect(startX, startY + 0.5 * legendWidth - 2 * opts.pix, legendWidth, 4 * opts.pix);
+              break;
+            case "triangle":
+              context.moveTo(startX + 7.5 * opts.pix, startY + 0.5 * legendWidth - 5 * opts.pix);
+              context.lineTo(startX + 2.5 * opts.pix, startY + 0.5 * legendWidth + 5 * opts.pix);
+              context.lineTo(startX + 12.5 * opts.pix, startY + 0.5 * legendWidth + 5 * opts.pix);
+              context.lineTo(startX + 7.5 * opts.pix, startY + 0.5 * legendWidth - 5 * opts.pix);
+              break;
+            case "diamond":
+              context.moveTo(startX + 7.5 * opts.pix, startY + 0.5 * legendWidth - 5 * opts.pix);
+              context.lineTo(startX + 2.5 * opts.pix, startY + 0.5 * legendWidth);
+              context.lineTo(startX + 7.5 * opts.pix, startY + 0.5 * legendWidth + 5 * opts.pix);
+              context.lineTo(startX + 12.5 * opts.pix, startY + 0.5 * legendWidth);
+              context.lineTo(startX + 7.5 * opts.pix, startY + 0.5 * legendWidth - 5 * opts.pix);
+              break;
+            case "circle":
+              context.moveTo(startX + 7.5 * opts.pix, startY + 0.5 * legendWidth);
+              context.arc(startX + 7.5 * opts.pix, startY + 0.5 * legendWidth, 5 * opts.pix, 0, 2 * Math.PI);
+              break;
+            case "rect":
+              context.moveTo(startX, startY + 0.5 * legendWidth - 5 * opts.pix);
+              context.fillRect(startX, startY + 0.5 * legendWidth - 5 * opts.pix, 15 * opts.pix, 10 * opts.pix);
+              break;
+            case "square":
+              context.moveTo(startX + 2 * opts.pix, startY + 0.5 * legendWidth - 5 * opts.pix);
+              context.fillRect(startX + 2 * opts.pix, startY + 0.5 * legendWidth - 5 * opts.pix, 10 * opts.pix, 10 * opts.pix);
+              break;
+            default:
+              context.moveTo(startX, startY + 0.5 * legendWidth - 5 * opts.pix);
+              context.fillRect(startX, startY + 0.5 * legendWidth - 5 * opts.pix, 15 * opts.pix, 10 * opts.pix);
+          }
+          context.closePath();
+          context.fill();
+        }
+      });
+    }
+    textList.forEach(function(item, index) {
+      var startX = offset.x + arrowWidth + 2 * boxPadding + legendWidth + legendMarginRight;
+      if (isOverRightBorder) {
+        startX = offset.x - toolTipWidth - arrowWidth + 2 * boxPadding + legendWidth + legendMarginRight;
+      }
+      var startY = offset.y + lineHeight * index + (lineHeight - fontSize) / 2 - 1 + boxPadding + fontSize;
+      context.beginPath();
+      context.setFontSize(fontSize);
+      context.setTextBaseline("normal");
+      context.setFillStyle(toolTipOption.fontColor);
+      context.fillText(item.text, startX, startY);
+      context.closePath();
+      context.stroke();
+    });
+  }
+  function drawColumnDataPoints(series, opts, config2, context) {
+    let process2 = arguments.length > 4 && arguments[4] !== void 0 ? arguments[4] : 1;
+    let xAxisData = opts.chartData.xAxisData, xAxisPoints = xAxisData.xAxisPoints, eachSpacing = xAxisData.eachSpacing;
+    let columnOption = assign({}, {
+      type: "group",
+      width: eachSpacing / 2,
+      meterBorder: 4,
+      meterFillColor: "#FFFFFF",
+      barBorderCircle: false,
+      barBorderRadius: [],
+      seriesGap: 2,
+      linearType: "none",
+      linearOpacity: 1,
+      customColor: [],
+      colorStop: 0,
+      labelPosition: "outside"
+    }, opts.extra.column);
+    let calPoints = [];
+    context.save();
+    let leftNum = -2;
+    let rightNum = xAxisPoints.length + 2;
+    if (opts._scrollDistance_ && opts._scrollDistance_ !== 0 && opts.enableScroll === true) {
+      context.translate(opts._scrollDistance_, 0);
+      leftNum = Math.floor(-opts._scrollDistance_ / eachSpacing) - 2;
+      rightNum = leftNum + opts.xAxis.itemCount + 4;
+    }
+    if (opts.tooltip && opts.tooltip.textList && opts.tooltip.textList.length && process2 === 1) {
+      drawToolTipSplitArea(opts.tooltip.offset.x, opts, config2, context, eachSpacing);
+    }
+    columnOption.customColor = fillCustomColor(columnOption.linearType, columnOption.customColor, series, config2);
+    series.forEach(function(eachSeries, seriesIndex) {
+      let ranges, minRange, maxRange;
+      ranges = [].concat(opts.chartData.yAxisData.ranges[eachSeries.index]);
+      minRange = ranges.pop();
+      maxRange = ranges.shift();
+      let spacingValid = opts.height - opts.area[0] - opts.area[2];
+      let zeroHeight = spacingValid * (0 - minRange) / (maxRange - minRange);
+      let zeroPoints = opts.height - Math.round(zeroHeight) - opts.area[2];
+      eachSeries.zeroPoints = zeroPoints;
+      var data = eachSeries.data;
+      switch (columnOption.type) {
+        case "group":
+          var points = getColumnDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config2, zeroPoints, process2);
+          var tooltipPoints = getStackDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config2, seriesIndex, series, process2);
+          calPoints.push(tooltipPoints);
+          points = fixColumeData(points, eachSpacing, series.length, seriesIndex, config2, opts);
+          for (let i = 0; i < points.length; i++) {
+            let item = points[i];
+            if (item !== null && i > leftNum && i < rightNum) {
+              var startX = item.x - item.width / 2;
+              var height = opts.height - item.y - opts.area[2];
+              context.beginPath();
+              var fillColor = item.color || eachSeries.color;
+              var strokeColor = item.color || eachSeries.color;
+              if (columnOption.linearType !== "none") {
+                var grd = context.createLinearGradient(startX, item.y, startX, zeroPoints);
+                if (columnOption.linearType == "opacity") {
+                  grd.addColorStop(0, hexToRgb(fillColor, columnOption.linearOpacity));
+                  grd.addColorStop(1, hexToRgb(fillColor, 1));
+                } else {
+                  grd.addColorStop(0, hexToRgb(columnOption.customColor[eachSeries.linearIndex], columnOption.linearOpacity));
+                  grd.addColorStop(columnOption.colorStop, hexToRgb(columnOption.customColor[eachSeries.linearIndex], columnOption.linearOpacity));
+                  grd.addColorStop(1, hexToRgb(fillColor, 1));
+                }
+                fillColor = grd;
+              }
+              if (columnOption.barBorderRadius && columnOption.barBorderRadius.length === 4 || columnOption.barBorderCircle === true) {
+                const left = startX;
+                const top = item.y > zeroPoints ? zeroPoints : item.y;
+                const width = item.width;
+                const height2 = Math.abs(zeroPoints - item.y);
+                if (columnOption.barBorderCircle) {
+                  columnOption.barBorderRadius = [width / 2, width / 2, 0, 0];
+                }
+                if (item.y > zeroPoints) {
+                  columnOption.barBorderRadius = [0, 0, width / 2, width / 2];
+                }
+                let [r0, r1, r2, r3] = columnOption.barBorderRadius;
+                let minRadius = Math.min(width / 2, height2 / 2);
+                r0 = r0 > minRadius ? minRadius : r0;
+                r1 = r1 > minRadius ? minRadius : r1;
+                r2 = r2 > minRadius ? minRadius : r2;
+                r3 = r3 > minRadius ? minRadius : r3;
+                r0 = r0 < 0 ? 0 : r0;
+                r1 = r1 < 0 ? 0 : r1;
+                r2 = r2 < 0 ? 0 : r2;
+                r3 = r3 < 0 ? 0 : r3;
+                context.arc(left + r0, top + r0, r0, -Math.PI, -Math.PI / 2);
+                context.arc(left + width - r1, top + r1, r1, -Math.PI / 2, 0);
+                context.arc(left + width - r2, top + height2 - r2, r2, 0, Math.PI / 2);
+                context.arc(left + r3, top + height2 - r3, r3, Math.PI / 2, Math.PI);
+              } else {
+                context.moveTo(startX, item.y);
+                context.lineTo(startX + item.width, item.y);
+                context.lineTo(startX + item.width, zeroPoints);
+                context.lineTo(startX, zeroPoints);
+                context.lineTo(startX, item.y);
+                context.setLineWidth(1);
+                context.setStrokeStyle(strokeColor);
+              }
+              context.setFillStyle(fillColor);
+              context.closePath();
+              context.fill();
+            }
+          }
+          break;
+        case "stack":
+          var points = getStackDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config2, seriesIndex, series, process2);
+          calPoints.push(points);
+          points = fixColumeStackData(points, eachSpacing, series.length, seriesIndex, config2, opts);
+          for (let i = 0; i < points.length; i++) {
+            let item = points[i];
+            if (item !== null && i > leftNum && i < rightNum) {
+              context.beginPath();
+              var fillColor = item.color || eachSeries.color;
+              var startX = item.x - item.width / 2 + 1;
+              var height = opts.height - item.y - opts.area[2];
+              var height0 = opts.height - item.y0 - opts.area[2];
+              if (seriesIndex > 0) {
+                height -= height0;
+              }
+              context.setFillStyle(fillColor);
+              context.moveTo(startX, item.y);
+              context.fillRect(startX, item.y, item.width, height);
+              context.closePath();
+              context.fill();
+            }
+          }
+          break;
+        case "meter":
+          var points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config2, process2);
+          calPoints.push(points);
+          points = fixColumeMeterData(points, eachSpacing, series.length, seriesIndex, config2, opts, columnOption.meterBorder);
+          for (let i = 0; i < points.length; i++) {
+            let item = points[i];
+            if (item !== null && i > leftNum && i < rightNum) {
+              context.beginPath();
+              if (seriesIndex == 0 && columnOption.meterBorder > 0) {
+                context.setStrokeStyle(eachSeries.color);
+                context.setLineWidth(columnOption.meterBorder * opts.pix);
+              }
+              if (seriesIndex == 0) {
+                context.setFillStyle(columnOption.meterFillColor);
+              } else {
+                context.setFillStyle(item.color || eachSeries.color);
+              }
+              var startX = item.x - item.width / 2;
+              var height = opts.height - item.y - opts.area[2];
+              if (columnOption.barBorderRadius && columnOption.barBorderRadius.length === 4 || columnOption.barBorderCircle === true) {
+                const left = startX;
+                const top = item.y;
+                const width = item.width;
+                const height2 = zeroPoints - item.y;
+                if (columnOption.barBorderCircle) {
+                  columnOption.barBorderRadius = [width / 2, width / 2, 0, 0];
+                }
+                let [r0, r1, r2, r3] = columnOption.barBorderRadius;
+                let minRadius = Math.min(width / 2, height2 / 2);
+                r0 = r0 > minRadius ? minRadius : r0;
+                r1 = r1 > minRadius ? minRadius : r1;
+                r2 = r2 > minRadius ? minRadius : r2;
+                r3 = r3 > minRadius ? minRadius : r3;
+                r0 = r0 < 0 ? 0 : r0;
+                r1 = r1 < 0 ? 0 : r1;
+                r2 = r2 < 0 ? 0 : r2;
+                r3 = r3 < 0 ? 0 : r3;
+                context.arc(left + r0, top + r0, r0, -Math.PI, -Math.PI / 2);
+                context.arc(left + width - r1, top + r1, r1, -Math.PI / 2, 0);
+                context.arc(left + width - r2, top + height2 - r2, r2, 0, Math.PI / 2);
+                context.arc(left + r3, top + height2 - r3, r3, Math.PI / 2, Math.PI);
+                context.fill();
+              } else {
+                context.moveTo(startX, item.y);
+                context.lineTo(startX + item.width, item.y);
+                context.lineTo(startX + item.width, zeroPoints);
+                context.lineTo(startX, zeroPoints);
+                context.lineTo(startX, item.y);
+                context.fill();
+              }
+              if (seriesIndex == 0 && columnOption.meterBorder > 0) {
+                context.closePath();
+                context.stroke();
+              }
+            }
+          }
+          break;
+      }
+    });
+    if (opts.dataLabel !== false && process2 === 1) {
+      series.forEach(function(eachSeries, seriesIndex) {
+        let ranges, minRange, maxRange;
+        ranges = [].concat(opts.chartData.yAxisData.ranges[eachSeries.index]);
+        minRange = ranges.pop();
+        maxRange = ranges.shift();
+        var data = eachSeries.data;
+        switch (columnOption.type) {
+          case "group":
+            var points = getColumnDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config2, process2);
+            points = fixColumeData(points, eachSpacing, series.length, seriesIndex, config2, opts);
+            drawColumePointText(points, eachSeries, config2, context, opts);
+            break;
+          case "stack":
+            var points = getStackDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config2, seriesIndex, series, process2);
+            drawColumePointText(points, eachSeries, config2, context, opts);
+            break;
+          case "meter":
+            var points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config2, process2);
+            drawColumePointText(points, eachSeries, config2, context, opts);
+            break;
+        }
+      });
+    }
+    context.restore();
+    return {
+      xAxisPoints,
+      calPoints,
+      eachSpacing
+    };
+  }
+  function drawMountDataPoints(series, opts, config2, context) {
+    let process2 = arguments.length > 4 && arguments[4] !== void 0 ? arguments[4] : 1;
+    let xAxisData = opts.chartData.xAxisData, xAxisPoints = xAxisData.xAxisPoints, eachSpacing = xAxisData.eachSpacing;
+    let mountOption = assign({}, {
+      type: "mount",
+      widthRatio: 1,
+      borderWidth: 1,
+      barBorderCircle: false,
+      barBorderRadius: [],
+      linearType: "none",
+      linearOpacity: 1,
+      customColor: [],
+      colorStop: 0
+    }, opts.extra.mount);
+    mountOption.widthRatio = mountOption.widthRatio <= 0 ? 0 : mountOption.widthRatio;
+    mountOption.widthRatio = mountOption.widthRatio >= 2 ? 2 : mountOption.widthRatio;
+    context.save();
+    let leftNum = -2;
+    let rightNum = xAxisPoints.length + 2;
+    if (opts._scrollDistance_ && opts._scrollDistance_ !== 0 && opts.enableScroll === true) {
+      context.translate(opts._scrollDistance_, 0);
+      leftNum = Math.floor(-opts._scrollDistance_ / eachSpacing) - 2;
+      rightNum = leftNum + opts.xAxis.itemCount + 4;
+    }
+    mountOption.customColor = fillCustomColor(mountOption.linearType, mountOption.customColor, series, config2);
+    let ranges, minRange, maxRange;
+    ranges = [].concat(opts.chartData.yAxisData.ranges[0]);
+    minRange = ranges.pop();
+    maxRange = ranges.shift();
+    let spacingValid = opts.height - opts.area[0] - opts.area[2];
+    let zeroHeight = spacingValid * (0 - minRange) / (maxRange - minRange);
+    let zeroPoints = opts.height - Math.round(zeroHeight) - opts.area[2];
+    var points = getMountDataPoints(series, minRange, maxRange, xAxisPoints, eachSpacing, opts, mountOption, zeroPoints, process2);
+    switch (mountOption.type) {
+      case "bar":
+        for (let i = 0; i < points.length; i++) {
+          let item = points[i];
+          if (item !== null && i > leftNum && i < rightNum) {
+            var startX = item.x - eachSpacing * mountOption.widthRatio / 2;
+            var height = opts.height - item.y - opts.area[2];
+            context.beginPath();
+            var fillColor = item.color || series[i].color;
+            var strokeColor = item.color || series[i].color;
+            if (mountOption.linearType !== "none") {
+              var grd = context.createLinearGradient(startX, item.y, startX, zeroPoints);
+              if (mountOption.linearType == "opacity") {
+                grd.addColorStop(0, hexToRgb(fillColor, mountOption.linearOpacity));
+                grd.addColorStop(1, hexToRgb(fillColor, 1));
+              } else {
+                grd.addColorStop(0, hexToRgb(mountOption.customColor[series[i].linearIndex], mountOption.linearOpacity));
+                grd.addColorStop(mountOption.colorStop, hexToRgb(mountOption.customColor[series[i].linearIndex], mountOption.linearOpacity));
+                grd.addColorStop(1, hexToRgb(fillColor, 1));
+              }
+              fillColor = grd;
+            }
+            if (mountOption.barBorderRadius && mountOption.barBorderRadius.length === 4 || mountOption.barBorderCircle === true) {
+              const left = startX;
+              const top = item.y > zeroPoints ? zeroPoints : item.y;
+              const width = item.width;
+              const height2 = Math.abs(zeroPoints - item.y);
+              if (mountOption.barBorderCircle) {
+                mountOption.barBorderRadius = [width / 2, width / 2, 0, 0];
+              }
+              if (item.y > zeroPoints) {
+                mountOption.barBorderRadius = [0, 0, width / 2, width / 2];
+              }
+              let [r0, r1, r2, r3] = mountOption.barBorderRadius;
+              let minRadius = Math.min(width / 2, height2 / 2);
+              r0 = r0 > minRadius ? minRadius : r0;
+              r1 = r1 > minRadius ? minRadius : r1;
+              r2 = r2 > minRadius ? minRadius : r2;
+              r3 = r3 > minRadius ? minRadius : r3;
+              r0 = r0 < 0 ? 0 : r0;
+              r1 = r1 < 0 ? 0 : r1;
+              r2 = r2 < 0 ? 0 : r2;
+              r3 = r3 < 0 ? 0 : r3;
+              context.arc(left + r0, top + r0, r0, -Math.PI, -Math.PI / 2);
+              context.arc(left + width - r1, top + r1, r1, -Math.PI / 2, 0);
+              context.arc(left + width - r2, top + height2 - r2, r2, 0, Math.PI / 2);
+              context.arc(left + r3, top + height2 - r3, r3, Math.PI / 2, Math.PI);
+            } else {
+              context.moveTo(startX, item.y);
+              context.lineTo(startX + item.width, item.y);
+              context.lineTo(startX + item.width, zeroPoints);
+              context.lineTo(startX, zeroPoints);
+              context.lineTo(startX, item.y);
+            }
+            context.setStrokeStyle(strokeColor);
+            context.setFillStyle(fillColor);
+            if (mountOption.borderWidth > 0) {
+              context.setLineWidth(mountOption.borderWidth * opts.pix);
+              context.closePath();
+              context.stroke();
+            }
+            context.fill();
+          }
+        }
+        break;
+      case "triangle":
+        for (let i = 0; i < points.length; i++) {
+          let item = points[i];
+          if (item !== null && i > leftNum && i < rightNum) {
+            var startX = item.x - eachSpacing * mountOption.widthRatio / 2;
+            var height = opts.height - item.y - opts.area[2];
+            context.beginPath();
+            var fillColor = item.color || series[i].color;
+            var strokeColor = item.color || series[i].color;
+            if (mountOption.linearType !== "none") {
+              var grd = context.createLinearGradient(startX, item.y, startX, zeroPoints);
+              if (mountOption.linearType == "opacity") {
+                grd.addColorStop(0, hexToRgb(fillColor, mountOption.linearOpacity));
+                grd.addColorStop(1, hexToRgb(fillColor, 1));
+              } else {
+                grd.addColorStop(0, hexToRgb(mountOption.customColor[series[i].linearIndex], mountOption.linearOpacity));
+                grd.addColorStop(mountOption.colorStop, hexToRgb(mountOption.customColor[series[i].linearIndex], mountOption.linearOpacity));
+                grd.addColorStop(1, hexToRgb(fillColor, 1));
+              }
+              fillColor = grd;
+            }
+            context.moveTo(startX, zeroPoints);
+            context.lineTo(item.x, item.y);
+            context.lineTo(startX + item.width, zeroPoints);
+            context.setStrokeStyle(strokeColor);
+            context.setFillStyle(fillColor);
+            if (mountOption.borderWidth > 0) {
+              context.setLineWidth(mountOption.borderWidth * opts.pix);
+              context.stroke();
+            }
+            context.fill();
+          }
+        }
+        break;
+      case "mount":
+        for (let i = 0; i < points.length; i++) {
+          let item = points[i];
+          if (item !== null && i > leftNum && i < rightNum) {
+            var startX = item.x - eachSpacing * mountOption.widthRatio / 2;
+            var height = opts.height - item.y - opts.area[2];
+            context.beginPath();
+            var fillColor = item.color || series[i].color;
+            var strokeColor = item.color || series[i].color;
+            if (mountOption.linearType !== "none") {
+              var grd = context.createLinearGradient(startX, item.y, startX, zeroPoints);
+              if (mountOption.linearType == "opacity") {
+                grd.addColorStop(0, hexToRgb(fillColor, mountOption.linearOpacity));
+                grd.addColorStop(1, hexToRgb(fillColor, 1));
+              } else {
+                grd.addColorStop(0, hexToRgb(mountOption.customColor[series[i].linearIndex], mountOption.linearOpacity));
+                grd.addColorStop(mountOption.colorStop, hexToRgb(mountOption.customColor[series[i].linearIndex], mountOption.linearOpacity));
+                grd.addColorStop(1, hexToRgb(fillColor, 1));
+              }
+              fillColor = grd;
+            }
+            context.moveTo(startX, zeroPoints);
+            context.bezierCurveTo(item.x - item.width / 4, zeroPoints, item.x - item.width / 4, item.y, item.x, item.y);
+            context.bezierCurveTo(item.x + item.width / 4, item.y, item.x + item.width / 4, zeroPoints, startX + item.width, zeroPoints);
+            context.setStrokeStyle(strokeColor);
+            context.setFillStyle(fillColor);
+            if (mountOption.borderWidth > 0) {
+              context.setLineWidth(mountOption.borderWidth * opts.pix);
+              context.stroke();
+            }
+            context.fill();
+          }
+        }
+        break;
+      case "sharp":
+        for (let i = 0; i < points.length; i++) {
+          let item = points[i];
+          if (item !== null && i > leftNum && i < rightNum) {
+            var startX = item.x - eachSpacing * mountOption.widthRatio / 2;
+            var height = opts.height - item.y - opts.area[2];
+            context.beginPath();
+            var fillColor = item.color || series[i].color;
+            var strokeColor = item.color || series[i].color;
+            if (mountOption.linearType !== "none") {
+              var grd = context.createLinearGradient(startX, item.y, startX, zeroPoints);
+              if (mountOption.linearType == "opacity") {
+                grd.addColorStop(0, hexToRgb(fillColor, mountOption.linearOpacity));
+                grd.addColorStop(1, hexToRgb(fillColor, 1));
+              } else {
+                grd.addColorStop(0, hexToRgb(mountOption.customColor[series[i].linearIndex], mountOption.linearOpacity));
+                grd.addColorStop(mountOption.colorStop, hexToRgb(mountOption.customColor[series[i].linearIndex], mountOption.linearOpacity));
+                grd.addColorStop(1, hexToRgb(fillColor, 1));
+              }
+              fillColor = grd;
+            }
+            context.moveTo(startX, zeroPoints);
+            context.quadraticCurveTo(item.x - 0, zeroPoints - height / 4, item.x, item.y);
+            context.quadraticCurveTo(item.x + 0, zeroPoints - height / 4, startX + item.width, zeroPoints);
+            context.setStrokeStyle(strokeColor);
+            context.setFillStyle(fillColor);
+            if (mountOption.borderWidth > 0) {
+              context.setLineWidth(mountOption.borderWidth * opts.pix);
+              context.stroke();
+            }
+            context.fill();
+          }
+        }
+        break;
+    }
+    if (opts.dataLabel !== false && process2 === 1) {
+      let ranges2, minRange2, maxRange2;
+      ranges2 = [].concat(opts.chartData.yAxisData.ranges[0]);
+      minRange2 = ranges2.pop();
+      maxRange2 = ranges2.shift();
+      var points = getMountDataPoints(series, minRange2, maxRange2, xAxisPoints, eachSpacing, opts, mountOption, zeroPoints, process2);
+      drawMountPointText(points, series, config2, context, opts, zeroPoints);
+    }
+    context.restore();
+    return {
+      xAxisPoints,
+      calPoints: points,
+      eachSpacing
+    };
+  }
+  function drawBarDataPoints(series, opts, config2, context) {
+    let process2 = arguments.length > 4 && arguments[4] !== void 0 ? arguments[4] : 1;
+    let yAxisPoints = [];
+    let eachSpacing = (opts.height - opts.area[0] - opts.area[2]) / opts.categories.length;
+    for (let i = 0; i < opts.categories.length; i++) {
+      yAxisPoints.push(opts.area[0] + eachSpacing / 2 + eachSpacing * i);
+    }
+    let columnOption = assign({}, {
+      type: "group",
+      width: eachSpacing / 2,
+      meterBorder: 4,
+      meterFillColor: "#FFFFFF",
+      barBorderCircle: false,
+      barBorderRadius: [],
+      seriesGap: 2,
+      linearType: "none",
+      linearOpacity: 1,
+      customColor: [],
+      colorStop: 0
+    }, opts.extra.bar);
+    let calPoints = [];
+    context.save();
+    let leftNum = -2;
+    let rightNum = yAxisPoints.length + 2;
+    if (opts.tooltip && opts.tooltip.textList && opts.tooltip.textList.length && process2 === 1) {
+      drawBarToolTipSplitArea(opts.tooltip.offset.y, opts, config2, context, eachSpacing);
+    }
+    columnOption.customColor = fillCustomColor(columnOption.linearType, columnOption.customColor, series, config2);
+    series.forEach(function(eachSeries, seriesIndex) {
+      let ranges, minRange, maxRange;
+      ranges = [].concat(opts.chartData.xAxisData.ranges);
+      maxRange = ranges.pop();
+      minRange = ranges.shift();
+      var data = eachSeries.data;
+      switch (columnOption.type) {
+        case "group":
+          var points = getBarDataPoints(data, minRange, maxRange, yAxisPoints, eachSpacing, opts, config2, process2);
+          var tooltipPoints = getBarStackDataPoints(data, minRange, maxRange, yAxisPoints, eachSpacing, opts, config2, seriesIndex, series, process2);
+          calPoints.push(tooltipPoints);
+          points = fixBarData(points, eachSpacing, series.length, seriesIndex, config2, opts);
+          for (let i = 0; i < points.length; i++) {
+            let item = points[i];
+            if (item !== null && i > leftNum && i < rightNum) {
+              var startX = opts.area[3];
+              var startY = item.y - item.width / 2;
+              item.height;
+              context.beginPath();
+              var fillColor = item.color || eachSeries.color;
+              var strokeColor = item.color || eachSeries.color;
+              if (columnOption.linearType !== "none") {
+                var grd = context.createLinearGradient(startX, item.y, item.x, item.y);
+                if (columnOption.linearType == "opacity") {
+                  grd.addColorStop(0, hexToRgb(fillColor, columnOption.linearOpacity));
+                  grd.addColorStop(1, hexToRgb(fillColor, 1));
+                } else {
+                  grd.addColorStop(0, hexToRgb(columnOption.customColor[eachSeries.linearIndex], columnOption.linearOpacity));
+                  grd.addColorStop(columnOption.colorStop, hexToRgb(columnOption.customColor[eachSeries.linearIndex], columnOption.linearOpacity));
+                  grd.addColorStop(1, hexToRgb(fillColor, 1));
+                }
+                fillColor = grd;
+              }
+              if (columnOption.barBorderRadius && columnOption.barBorderRadius.length === 4 || columnOption.barBorderCircle === true) {
+                const left = startX;
+                const width = item.width;
+                const top = item.y - item.width / 2;
+                const height = item.height;
+                if (columnOption.barBorderCircle) {
+                  columnOption.barBorderRadius = [width / 2, width / 2, 0, 0];
+                }
+                let [r0, r1, r2, r3] = columnOption.barBorderRadius;
+                let minRadius = Math.min(width / 2, height / 2);
+                r0 = r0 > minRadius ? minRadius : r0;
+                r1 = r1 > minRadius ? minRadius : r1;
+                r2 = r2 > minRadius ? minRadius : r2;
+                r3 = r3 > minRadius ? minRadius : r3;
+                r0 = r0 < 0 ? 0 : r0;
+                r1 = r1 < 0 ? 0 : r1;
+                r2 = r2 < 0 ? 0 : r2;
+                r3 = r3 < 0 ? 0 : r3;
+                context.arc(left + r3, top + r3, r3, -Math.PI, -Math.PI / 2);
+                context.arc(item.x - r0, top + r0, r0, -Math.PI / 2, 0);
+                context.arc(item.x - r1, top + width - r1, r1, 0, Math.PI / 2);
+                context.arc(left + r2, top + width - r2, r2, Math.PI / 2, Math.PI);
+              } else {
+                context.moveTo(startX, startY);
+                context.lineTo(item.x, startY);
+                context.lineTo(item.x, startY + item.width);
+                context.lineTo(startX, startY + item.width);
+                context.lineTo(startX, startY);
+                context.setLineWidth(1);
+                context.setStrokeStyle(strokeColor);
+              }
+              context.setFillStyle(fillColor);
+              context.closePath();
+              context.fill();
+            }
+          }
+          break;
+        case "stack":
+          var points = getBarStackDataPoints(data, minRange, maxRange, yAxisPoints, eachSpacing, opts, config2, seriesIndex, series, process2);
+          calPoints.push(points);
+          points = fixBarStackData(points, eachSpacing, series.length, seriesIndex, config2, opts);
+          for (let i = 0; i < points.length; i++) {
+            let item = points[i];
+            if (item !== null && i > leftNum && i < rightNum) {
+              context.beginPath();
+              var fillColor = item.color || eachSeries.color;
+              var startX = item.x0;
+              context.setFillStyle(fillColor);
+              context.moveTo(startX, item.y - item.width / 2);
+              context.fillRect(startX, item.y - item.width / 2, item.height, item.width);
+              context.closePath();
+              context.fill();
+            }
+          }
+          break;
+      }
+    });
+    if (opts.dataLabel !== false && process2 === 1) {
+      series.forEach(function(eachSeries, seriesIndex) {
+        let ranges, minRange, maxRange;
+        ranges = [].concat(opts.chartData.xAxisData.ranges);
+        maxRange = ranges.pop();
+        minRange = ranges.shift();
+        var data = eachSeries.data;
+        switch (columnOption.type) {
+          case "group":
+            var points = getBarDataPoints(data, minRange, maxRange, yAxisPoints, eachSpacing, opts, config2, process2);
+            points = fixBarData(points, eachSpacing, series.length, seriesIndex, config2, opts);
+            drawBarPointText(points, eachSeries, config2, context, opts);
+            break;
+          case "stack":
+            var points = getBarStackDataPoints(data, minRange, maxRange, yAxisPoints, eachSpacing, opts, config2, seriesIndex, series, process2);
+            drawBarPointText(points, eachSeries, config2, context, opts);
+            break;
+        }
+      });
+    }
+    return {
+      yAxisPoints,
+      calPoints,
+      eachSpacing
+    };
+  }
+  function drawCandleDataPoints(series, seriesMA, opts, config2, context) {
+    var process2 = arguments.length > 5 && arguments[5] !== void 0 ? arguments[5] : 1;
+    var candleOption = assign({}, {
+      color: {},
+      average: {}
+    }, opts.extra.candle);
+    candleOption.color = assign({}, {
+      upLine: "#f04864",
+      upFill: "#f04864",
+      downLine: "#2fc25b",
+      downFill: "#2fc25b"
+    }, candleOption.color);
+    candleOption.average = assign({}, {
+      show: false,
+      name: [],
+      day: [],
+      color: config2.color
+    }, candleOption.average);
+    opts.extra.candle = candleOption;
+    let xAxisData = opts.chartData.xAxisData, xAxisPoints = xAxisData.xAxisPoints, eachSpacing = xAxisData.eachSpacing;
+    let calPoints = [];
+    context.save();
+    let leftNum = -2;
+    let rightNum = xAxisPoints.length + 2;
+    let leftSpace = 0;
+    let rightSpace = opts.width + eachSpacing;
+    if (opts._scrollDistance_ && opts._scrollDistance_ !== 0 && opts.enableScroll === true) {
+      context.translate(opts._scrollDistance_, 0);
+      leftNum = Math.floor(-opts._scrollDistance_ / eachSpacing) - 2;
+      rightNum = leftNum + opts.xAxis.itemCount + 4;
+      leftSpace = -opts._scrollDistance_ - eachSpacing * 2 + opts.area[3];
+      rightSpace = leftSpace + (opts.xAxis.itemCount + 4) * eachSpacing;
+    }
+    if (candleOption.average.show || seriesMA) {
+      seriesMA.forEach(function(eachSeries, seriesIndex) {
+        let ranges, minRange, maxRange;
+        ranges = [].concat(opts.chartData.yAxisData.ranges[eachSeries.index]);
+        minRange = ranges.pop();
+        maxRange = ranges.shift();
+        var data = eachSeries.data;
+        var points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config2, process2);
+        var splitPointList = splitPoints(points, eachSeries);
+        for (let i = 0; i < splitPointList.length; i++) {
+          let points2 = splitPointList[i];
+          context.beginPath();
+          context.setStrokeStyle(eachSeries.color);
+          context.setLineWidth(1);
+          if (points2.length === 1) {
+            context.moveTo(points2[0].x, points2[0].y);
+            context.arc(points2[0].x, points2[0].y, 1, 0, 2 * Math.PI);
+          } else {
+            context.moveTo(points2[0].x, points2[0].y);
+            let startPoint = 0;
+            for (let j = 0; j < points2.length; j++) {
+              let item = points2[j];
+              if (startPoint == 0 && item.x > leftSpace) {
+                context.moveTo(item.x, item.y);
+                startPoint = 1;
+              }
+              if (j > 0 && item.x > leftSpace && item.x < rightSpace) {
+                var ctrlPoint = createCurveControlPoints(points2, j - 1);
+                context.bezierCurveTo(
+                  ctrlPoint.ctrA.x,
+                  ctrlPoint.ctrA.y,
+                  ctrlPoint.ctrB.x,
+                  ctrlPoint.ctrB.y,
+                  item.x,
+                  item.y
+                );
+              }
+            }
+            context.moveTo(points2[0].x, points2[0].y);
+          }
+          context.closePath();
+          context.stroke();
+        }
+      });
+    }
+    series.forEach(function(eachSeries, seriesIndex) {
+      let ranges, minRange, maxRange;
+      ranges = [].concat(opts.chartData.yAxisData.ranges[eachSeries.index]);
+      minRange = ranges.pop();
+      maxRange = ranges.shift();
+      var data = eachSeries.data;
+      var points = getCandleDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config2, process2);
+      calPoints.push(points);
+      var splitPointList = splitPoints(points, eachSeries);
+      for (let i = 0; i < splitPointList[0].length; i++) {
+        if (i > leftNum && i < rightNum) {
+          let item = splitPointList[0][i];
+          context.beginPath();
+          if (data[i][1] - data[i][0] > 0) {
+            context.setStrokeStyle(candleOption.color.upLine);
+            context.setFillStyle(candleOption.color.upFill);
+            context.setLineWidth(1 * opts.pix);
+            context.moveTo(item[3].x, item[3].y);
+            context.lineTo(item[1].x, item[1].y);
+            context.lineTo(item[1].x - eachSpacing / 4, item[1].y);
+            context.lineTo(item[0].x - eachSpacing / 4, item[0].y);
+            context.lineTo(item[0].x, item[0].y);
+            context.lineTo(item[2].x, item[2].y);
+            context.lineTo(item[0].x, item[0].y);
+            context.lineTo(item[0].x + eachSpacing / 4, item[0].y);
+            context.lineTo(item[1].x + eachSpacing / 4, item[1].y);
+            context.lineTo(item[1].x, item[1].y);
+            context.moveTo(item[3].x, item[3].y);
+          } else {
+            context.setStrokeStyle(candleOption.color.downLine);
+            context.setFillStyle(candleOption.color.downFill);
+            context.setLineWidth(1 * opts.pix);
+            context.moveTo(item[3].x, item[3].y);
+            context.lineTo(item[0].x, item[0].y);
+            context.lineTo(item[0].x - eachSpacing / 4, item[0].y);
+            context.lineTo(item[1].x - eachSpacing / 4, item[1].y);
+            context.lineTo(item[1].x, item[1].y);
+            context.lineTo(item[2].x, item[2].y);
+            context.lineTo(item[1].x, item[1].y);
+            context.lineTo(item[1].x + eachSpacing / 4, item[1].y);
+            context.lineTo(item[0].x + eachSpacing / 4, item[0].y);
+            context.lineTo(item[0].x, item[0].y);
+            context.moveTo(item[3].x, item[3].y);
+          }
+          context.closePath();
+          context.fill();
+          context.stroke();
+        }
+      }
+    });
+    context.restore();
+    return {
+      xAxisPoints,
+      calPoints,
+      eachSpacing
+    };
+  }
+  function drawAreaDataPoints(series, opts, config2, context) {
+    var process2 = arguments.length > 4 && arguments[4] !== void 0 ? arguments[4] : 1;
+    var areaOption = assign({}, {
+      type: "straight",
+      opacity: 0.2,
+      addLine: false,
+      width: 2,
+      gradient: false,
+      activeType: "none"
+    }, opts.extra.area);
+    let xAxisData = opts.chartData.xAxisData, xAxisPoints = xAxisData.xAxisPoints, eachSpacing = xAxisData.eachSpacing;
+    let endY = opts.height - opts.area[2];
+    let calPoints = [];
+    context.save();
+    let leftSpace = 0;
+    let rightSpace = opts.width + eachSpacing;
+    if (opts._scrollDistance_ && opts._scrollDistance_ !== 0 && opts.enableScroll === true) {
+      context.translate(opts._scrollDistance_, 0);
+      leftSpace = -opts._scrollDistance_ - eachSpacing * 2 + opts.area[3];
+      rightSpace = leftSpace + (opts.xAxis.itemCount + 4) * eachSpacing;
+    }
+    series.forEach(function(eachSeries, seriesIndex) {
+      let ranges, minRange, maxRange;
+      ranges = [].concat(opts.chartData.yAxisData.ranges[eachSeries.index]);
+      minRange = ranges.pop();
+      maxRange = ranges.shift();
+      let data = eachSeries.data;
+      let points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config2, process2);
+      calPoints.push(points);
+      let splitPointList = splitPoints(points, eachSeries);
+      for (let i = 0; i < splitPointList.length; i++) {
+        let points2 = splitPointList[i];
+        context.beginPath();
+        context.setStrokeStyle(hexToRgb(eachSeries.color, areaOption.opacity));
+        if (areaOption.gradient) {
+          let gradient = context.createLinearGradient(0, opts.area[0], 0, opts.height - opts.area[2]);
+          gradient.addColorStop("0", hexToRgb(eachSeries.color, areaOption.opacity));
+          gradient.addColorStop("1.0", hexToRgb("#FFFFFF", 0.1));
+          context.setFillStyle(gradient);
+        } else {
+          context.setFillStyle(hexToRgb(eachSeries.color, areaOption.opacity));
+        }
+        context.setLineWidth(areaOption.width * opts.pix);
+        if (points2.length > 1) {
+          let firstPoint = points2[0];
+          let lastPoint = points2[points2.length - 1];
+          context.moveTo(firstPoint.x, firstPoint.y);
+          let startPoint = 0;
+          if (areaOption.type === "curve") {
+            for (let j = 0; j < points2.length; j++) {
+              let item = points2[j];
+              if (startPoint == 0 && item.x > leftSpace) {
+                context.moveTo(item.x, item.y);
+                startPoint = 1;
+              }
+              if (j > 0 && item.x > leftSpace && item.x < rightSpace) {
+                let ctrlPoint = createCurveControlPoints(points2, j - 1);
+                context.bezierCurveTo(ctrlPoint.ctrA.x, ctrlPoint.ctrA.y, ctrlPoint.ctrB.x, ctrlPoint.ctrB.y, item.x, item.y);
+              }
+            }
+          }
+          if (areaOption.type === "straight") {
+            for (let j = 0; j < points2.length; j++) {
+              let item = points2[j];
+              if (startPoint == 0 && item.x > leftSpace) {
+                context.moveTo(item.x, item.y);
+                startPoint = 1;
+              }
+              if (j > 0 && item.x > leftSpace && item.x < rightSpace) {
+                context.lineTo(item.x, item.y);
+              }
+            }
+          }
+          if (areaOption.type === "step") {
+            for (let j = 0; j < points2.length; j++) {
+              let item = points2[j];
+              if (startPoint == 0 && item.x > leftSpace) {
+                context.moveTo(item.x, item.y);
+                startPoint = 1;
+              }
+              if (j > 0 && item.x > leftSpace && item.x < rightSpace) {
+                context.lineTo(item.x, points2[j - 1].y);
+                context.lineTo(item.x, item.y);
+              }
+            }
+          }
+          context.lineTo(lastPoint.x, endY);
+          context.lineTo(firstPoint.x, endY);
+          context.lineTo(firstPoint.x, firstPoint.y);
+        } else {
+          let item = points2[0];
+          context.moveTo(item.x - eachSpacing / 2, item.y);
+        }
+        context.closePath();
+        context.fill();
+        if (areaOption.addLine) {
+          if (eachSeries.lineType == "dash") {
+            let dashLength = eachSeries.dashLength ? eachSeries.dashLength : 8;
+            dashLength *= opts.pix;
+            context.setLineDash([dashLength, dashLength]);
+          }
+          context.beginPath();
+          context.setStrokeStyle(eachSeries.color);
+          context.setLineWidth(areaOption.width * opts.pix);
+          if (points2.length === 1) {
+            context.moveTo(points2[0].x, points2[0].y);
+          } else {
+            context.moveTo(points2[0].x, points2[0].y);
+            let startPoint = 0;
+            if (areaOption.type === "curve") {
+              for (let j = 0; j < points2.length; j++) {
+                let item = points2[j];
+                if (startPoint == 0 && item.x > leftSpace) {
+                  context.moveTo(item.x, item.y);
+                  startPoint = 1;
+                }
+                if (j > 0 && item.x > leftSpace && item.x < rightSpace) {
+                  let ctrlPoint = createCurveControlPoints(points2, j - 1);
+                  context.bezierCurveTo(ctrlPoint.ctrA.x, ctrlPoint.ctrA.y, ctrlPoint.ctrB.x, ctrlPoint.ctrB.y, item.x, item.y);
+                }
+              }
+            }
+            if (areaOption.type === "straight") {
+              for (let j = 0; j < points2.length; j++) {
+                let item = points2[j];
+                if (startPoint == 0 && item.x > leftSpace) {
+                  context.moveTo(item.x, item.y);
+                  startPoint = 1;
+                }
+                if (j > 0 && item.x > leftSpace && item.x < rightSpace) {
+                  context.lineTo(item.x, item.y);
+                }
+              }
+            }
+            if (areaOption.type === "step") {
+              for (let j = 0; j < points2.length; j++) {
+                let item = points2[j];
+                if (startPoint == 0 && item.x > leftSpace) {
+                  context.moveTo(item.x, item.y);
+                  startPoint = 1;
+                }
+                if (j > 0 && item.x > leftSpace && item.x < rightSpace) {
+                  context.lineTo(item.x, points2[j - 1].y);
+                  context.lineTo(item.x, item.y);
+                }
+              }
+            }
+            context.moveTo(points2[0].x, points2[0].y);
+          }
+          context.stroke();
+          context.setLineDash([]);
+        }
+      }
+      if (opts.dataPointShape !== false) {
+        drawPointShape(points, eachSeries.color, eachSeries.pointShape, context, opts);
+      }
+      drawActivePoint(points, eachSeries.color, eachSeries.pointShape, context, opts, areaOption, seriesIndex);
+    });
+    if (opts.dataLabel !== false && process2 === 1) {
+      series.forEach(function(eachSeries, seriesIndex) {
+        let ranges, minRange, maxRange;
+        ranges = [].concat(opts.chartData.yAxisData.ranges[eachSeries.index]);
+        minRange = ranges.pop();
+        maxRange = ranges.shift();
+        var data = eachSeries.data;
+        var points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config2, process2);
+        drawPointText(points, eachSeries, config2, context, opts);
+      });
+    }
+    context.restore();
+    return {
+      xAxisPoints,
+      calPoints,
+      eachSpacing
+    };
+  }
+  function drawScatterDataPoints(series, opts, config2, context) {
+    var process2 = arguments.length > 4 && arguments[4] !== void 0 ? arguments[4] : 1;
+    assign({}, {
+      type: "circle"
+    }, opts.extra.scatter);
+    let xAxisData = opts.chartData.xAxisData, xAxisPoints = xAxisData.xAxisPoints, eachSpacing = xAxisData.eachSpacing;
+    var calPoints = [];
+    context.save();
+    let leftSpace = 0;
+    opts.width + eachSpacing;
+    if (opts._scrollDistance_ && opts._scrollDistance_ !== 0 && opts.enableScroll === true) {
+      context.translate(opts._scrollDistance_, 0);
+      leftSpace = -opts._scrollDistance_ - eachSpacing * 2 + opts.area[3];
+      leftSpace + (opts.xAxis.itemCount + 4) * eachSpacing;
+    }
+    series.forEach(function(eachSeries, seriesIndex) {
+      let ranges, minRange, maxRange;
+      ranges = [].concat(opts.chartData.yAxisData.ranges[eachSeries.index]);
+      minRange = ranges.pop();
+      maxRange = ranges.shift();
+      var data = eachSeries.data;
+      var points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config2, process2);
+      context.beginPath();
+      context.setStrokeStyle(eachSeries.color);
+      context.setFillStyle(eachSeries.color);
+      context.setLineWidth(1 * opts.pix);
+      var shape = eachSeries.pointShape;
+      if (shape === "diamond") {
+        points.forEach(function(item, index) {
+          if (item !== null) {
+            context.moveTo(item.x, item.y - 4.5);
+            context.lineTo(item.x - 4.5, item.y);
+            context.lineTo(item.x, item.y + 4.5);
+            context.lineTo(item.x + 4.5, item.y);
+            context.lineTo(item.x, item.y - 4.5);
+          }
+        });
+      } else if (shape === "circle") {
+        points.forEach(function(item, index) {
+          if (item !== null) {
+            context.moveTo(item.x + 2.5 * opts.pix, item.y);
+            context.arc(item.x, item.y, 3 * opts.pix, 0, 2 * Math.PI, false);
+          }
+        });
+      } else if (shape === "square") {
+        points.forEach(function(item, index) {
+          if (item !== null) {
+            context.moveTo(item.x - 3.5, item.y - 3.5);
+            context.rect(item.x - 3.5, item.y - 3.5, 7, 7);
+          }
+        });
+      } else if (shape === "triangle") {
+        points.forEach(function(item, index) {
+          if (item !== null) {
+            context.moveTo(item.x, item.y - 4.5);
+            context.lineTo(item.x - 4.5, item.y + 4.5);
+            context.lineTo(item.x + 4.5, item.y + 4.5);
+            context.lineTo(item.x, item.y - 4.5);
+          }
+        });
+      } else if (shape === "triangle") {
+        return;
+      }
+      context.closePath();
+      context.fill();
+      context.stroke();
+    });
+    if (opts.dataLabel !== false && process2 === 1) {
+      series.forEach(function(eachSeries, seriesIndex) {
+        let ranges, minRange, maxRange;
+        ranges = [].concat(opts.chartData.yAxisData.ranges[eachSeries.index]);
+        minRange = ranges.pop();
+        maxRange = ranges.shift();
+        var data = eachSeries.data;
+        var points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config2, process2);
+        drawPointText(points, eachSeries, config2, context, opts);
+      });
+    }
+    context.restore();
+    return {
+      xAxisPoints,
+      calPoints,
+      eachSpacing
+    };
+  }
+  function drawBubbleDataPoints(series, opts, config2, context) {
+    var process2 = arguments.length > 4 && arguments[4] !== void 0 ? arguments[4] : 1;
+    var bubbleOption = assign({}, {
+      opacity: 1,
+      border: 2
+    }, opts.extra.bubble);
+    let xAxisData = opts.chartData.xAxisData, xAxisPoints = xAxisData.xAxisPoints, eachSpacing = xAxisData.eachSpacing;
+    var calPoints = [];
+    context.save();
+    let leftSpace = 0;
+    opts.width + eachSpacing;
+    if (opts._scrollDistance_ && opts._scrollDistance_ !== 0 && opts.enableScroll === true) {
+      context.translate(opts._scrollDistance_, 0);
+      leftSpace = -opts._scrollDistance_ - eachSpacing * 2 + opts.area[3];
+      leftSpace + (opts.xAxis.itemCount + 4) * eachSpacing;
+    }
+    series.forEach(function(eachSeries, seriesIndex) {
+      let ranges, minRange, maxRange;
+      ranges = [].concat(opts.chartData.yAxisData.ranges[eachSeries.index]);
+      minRange = ranges.pop();
+      maxRange = ranges.shift();
+      var data = eachSeries.data;
+      var points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config2, process2);
+      context.beginPath();
+      context.setStrokeStyle(eachSeries.color);
+      context.setLineWidth(bubbleOption.border * opts.pix);
+      context.setFillStyle(hexToRgb(eachSeries.color, bubbleOption.opacity));
+      points.forEach(function(item, index) {
+        context.moveTo(item.x + item.r, item.y);
+        context.arc(item.x, item.y, item.r * opts.pix, 0, 2 * Math.PI, false);
+      });
+      context.closePath();
+      context.fill();
+      context.stroke();
+      if (opts.dataLabel !== false && process2 === 1) {
+        points.forEach(function(item, index) {
+          context.beginPath();
+          var fontSize = eachSeries.textSize * opts.pix || config2.fontSize;
+          context.setFontSize(fontSize);
+          context.setFillStyle(eachSeries.textColor || "#FFFFFF");
+          context.setTextAlign("center");
+          context.fillText(String(item.t), item.x, item.y + fontSize / 2);
+          context.closePath();
+          context.stroke();
+          context.setTextAlign("left");
+        });
+      }
+    });
+    context.restore();
+    return {
+      xAxisPoints,
+      calPoints,
+      eachSpacing
+    };
+  }
+  function drawLineDataPoints(series, opts, config2, context) {
+    var process2 = arguments.length > 4 && arguments[4] !== void 0 ? arguments[4] : 1;
+    var lineOption = assign({}, {
+      type: "straight",
+      width: 2,
+      activeType: "none",
+      linearType: "none",
+      onShadow: false,
+      animation: "vertical"
+    }, opts.extra.line);
+    lineOption.width *= opts.pix;
+    let xAxisData = opts.chartData.xAxisData, xAxisPoints = xAxisData.xAxisPoints, eachSpacing = xAxisData.eachSpacing;
+    var calPoints = [];
+    context.save();
+    let leftSpace = 0;
+    let rightSpace = opts.width + eachSpacing;
+    if (opts._scrollDistance_ && opts._scrollDistance_ !== 0 && opts.enableScroll === true) {
+      context.translate(opts._scrollDistance_, 0);
+      leftSpace = -opts._scrollDistance_ - eachSpacing * 2 + opts.area[3];
+      rightSpace = leftSpace + (opts.xAxis.itemCount + 4) * eachSpacing;
+    }
+    series.forEach(function(eachSeries, seriesIndex) {
+      context.beginPath();
+      context.setStrokeStyle(eachSeries.color);
+      context.moveTo(-1e4, -1e4);
+      context.lineTo(-10001, -10001);
+      context.stroke();
+      let ranges, minRange, maxRange;
+      ranges = [].concat(opts.chartData.yAxisData.ranges[eachSeries.index]);
+      minRange = ranges.pop();
+      maxRange = ranges.shift();
+      var data = eachSeries.data;
+      var points = getLineDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config2, lineOption, process2);
+      calPoints.push(points);
+      var splitPointList = splitPoints(points, eachSeries);
+      if (eachSeries.lineType == "dash") {
+        let dashLength = eachSeries.dashLength ? eachSeries.dashLength : 8;
+        dashLength *= opts.pix;
+        context.setLineDash([dashLength, dashLength]);
+      }
+      context.beginPath();
+      var strokeColor = eachSeries.color;
+      if (lineOption.linearType !== "none" && eachSeries.linearColor && eachSeries.linearColor.length > 0) {
+        var grd = context.createLinearGradient(opts.chartData.xAxisData.startX, opts.height / 2, opts.chartData.xAxisData.endX, opts.height / 2);
+        for (var i = 0; i < eachSeries.linearColor.length; i++) {
+          grd.addColorStop(eachSeries.linearColor[i][0], hexToRgb(eachSeries.linearColor[i][1], 1));
+        }
+        strokeColor = grd;
+      }
+      context.setStrokeStyle(strokeColor);
+      if (lineOption.onShadow == true && eachSeries.setShadow && eachSeries.setShadow.length > 0) {
+        context.setShadow(eachSeries.setShadow[0], eachSeries.setShadow[1], eachSeries.setShadow[2], eachSeries.setShadow[3]);
+      } else {
+        context.setShadow(0, 0, 0, "rgba(0,0,0,0)");
+      }
+      context.setLineWidth(lineOption.width);
+      splitPointList.forEach(function(points2, index) {
+        if (points2.length === 1) {
+          context.moveTo(points2[0].x, points2[0].y);
+        } else {
+          context.moveTo(points2[0].x, points2[0].y);
+          let startPoint = 0;
+          if (lineOption.type === "curve") {
+            for (let j = 0; j < points2.length; j++) {
+              let item = points2[j];
+              if (startPoint == 0 && item.x > leftSpace) {
+                context.moveTo(item.x, item.y);
+                startPoint = 1;
+              }
+              if (j > 0 && item.x > leftSpace && item.x < rightSpace) {
+                var ctrlPoint = createCurveControlPoints(points2, j - 1);
+                context.bezierCurveTo(ctrlPoint.ctrA.x, ctrlPoint.ctrA.y, ctrlPoint.ctrB.x, ctrlPoint.ctrB.y, item.x, item.y);
+              }
+            }
+          }
+          if (lineOption.type === "straight") {
+            for (let j = 0; j < points2.length; j++) {
+              let item = points2[j];
+              if (startPoint == 0 && item.x > leftSpace) {
+                context.moveTo(item.x, item.y);
+                startPoint = 1;
+              }
+              if (j > 0 && item.x > leftSpace && item.x < rightSpace) {
+                context.lineTo(item.x, item.y);
+              }
+            }
+          }
+          if (lineOption.type === "step") {
+            for (let j = 0; j < points2.length; j++) {
+              let item = points2[j];
+              if (startPoint == 0 && item.x > leftSpace) {
+                context.moveTo(item.x, item.y);
+                startPoint = 1;
+              }
+              if (j > 0 && item.x > leftSpace && item.x < rightSpace) {
+                context.lineTo(item.x, points2[j - 1].y);
+                context.lineTo(item.x, item.y);
+              }
+            }
+          }
+          context.moveTo(points2[0].x, points2[0].y);
+        }
+      });
+      context.stroke();
+      context.setLineDash([]);
+      if (opts.dataPointShape !== false) {
+        drawPointShape(points, eachSeries.color, eachSeries.pointShape, context, opts);
+      }
+      drawActivePoint(points, eachSeries.color, eachSeries.pointShape, context, opts, lineOption);
+    });
+    if (opts.dataLabel !== false && process2 === 1) {
+      series.forEach(function(eachSeries, seriesIndex) {
+        let ranges, minRange, maxRange;
+        ranges = [].concat(opts.chartData.yAxisData.ranges[eachSeries.index]);
+        minRange = ranges.pop();
+        maxRange = ranges.shift();
+        var data = eachSeries.data;
+        var points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config2, process2);
+        drawPointText(points, eachSeries, config2, context, opts);
+      });
+    }
+    context.restore();
+    return {
+      xAxisPoints,
+      calPoints,
+      eachSpacing
+    };
+  }
+  function drawMixDataPoints(series, opts, config2, context) {
+    let process2 = arguments.length > 4 && arguments[4] !== void 0 ? arguments[4] : 1;
+    let xAxisData = opts.chartData.xAxisData, xAxisPoints = xAxisData.xAxisPoints, eachSpacing = xAxisData.eachSpacing;
+    let columnOption = assign({}, {
+      width: eachSpacing / 2,
+      barBorderCircle: false,
+      barBorderRadius: [],
+      seriesGap: 2,
+      linearType: "none",
+      linearOpacity: 1,
+      customColor: [],
+      colorStop: 0
+    }, opts.extra.mix.column);
+    let areaOption = assign({}, {
+      opacity: 0.2,
+      gradient: false
+    }, opts.extra.mix.area);
+    let lineOption = assign({}, {
+      width: 2
+    }, opts.extra.mix.line);
+    let endY = opts.height - opts.area[2];
+    let calPoints = [];
+    var columnIndex = 0;
+    var columnLength = 0;
+    series.forEach(function(eachSeries, seriesIndex) {
+      if (eachSeries.type == "column") {
+        columnLength += 1;
+      }
+    });
+    context.save();
+    let leftNum = -2;
+    let rightNum = xAxisPoints.length + 2;
+    let leftSpace = 0;
+    let rightSpace = opts.width + eachSpacing;
+    if (opts._scrollDistance_ && opts._scrollDistance_ !== 0 && opts.enableScroll === true) {
+      context.translate(opts._scrollDistance_, 0);
+      leftNum = Math.floor(-opts._scrollDistance_ / eachSpacing) - 2;
+      rightNum = leftNum + opts.xAxis.itemCount + 4;
+      leftSpace = -opts._scrollDistance_ - eachSpacing * 2 + opts.area[3];
+      rightSpace = leftSpace + (opts.xAxis.itemCount + 4) * eachSpacing;
+    }
+    columnOption.customColor = fillCustomColor(columnOption.linearType, columnOption.customColor, series, config2);
+    series.forEach(function(eachSeries, seriesIndex) {
+      let ranges, minRange, maxRange;
+      ranges = [].concat(opts.chartData.yAxisData.ranges[eachSeries.index]);
+      minRange = ranges.pop();
+      maxRange = ranges.shift();
+      var data = eachSeries.data;
+      var points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config2, process2);
+      calPoints.push(points);
+      if (eachSeries.type == "column") {
+        points = fixColumeData(points, eachSpacing, columnLength, columnIndex, config2, opts);
+        for (let i = 0; i < points.length; i++) {
+          let item = points[i];
+          if (item !== null && i > leftNum && i < rightNum) {
+            var startX = item.x - item.width / 2;
+            opts.height - item.y - opts.area[2];
+            context.beginPath();
+            var fillColor = item.color || eachSeries.color;
+            var strokeColor = item.color || eachSeries.color;
+            if (columnOption.linearType !== "none") {
+              var grd = context.createLinearGradient(startX, item.y, startX, opts.height - opts.area[2]);
+              if (columnOption.linearType == "opacity") {
+                grd.addColorStop(0, hexToRgb(fillColor, columnOption.linearOpacity));
+                grd.addColorStop(1, hexToRgb(fillColor, 1));
+              } else {
+                grd.addColorStop(0, hexToRgb(columnOption.customColor[eachSeries.linearIndex], columnOption.linearOpacity));
+                grd.addColorStop(columnOption.colorStop, hexToRgb(columnOption.customColor[eachSeries.linearIndex], columnOption.linearOpacity));
+                grd.addColorStop(1, hexToRgb(fillColor, 1));
+              }
+              fillColor = grd;
+            }
+            if (columnOption.barBorderRadius && columnOption.barBorderRadius.length === 4 || columnOption.barBorderCircle) {
+              const left = startX;
+              const top = item.y;
+              const width = item.width;
+              const height = opts.height - opts.area[2] - item.y;
+              if (columnOption.barBorderCircle) {
+                columnOption.barBorderRadius = [width / 2, width / 2, 0, 0];
+              }
+              let [r0, r1, r2, r3] = columnOption.barBorderRadius;
+              let minRadius = Math.min(width / 2, height / 2);
+              r0 = r0 > minRadius ? minRadius : r0;
+              r1 = r1 > minRadius ? minRadius : r1;
+              r2 = r2 > minRadius ? minRadius : r2;
+              r3 = r3 > minRadius ? minRadius : r3;
+              r0 = r0 < 0 ? 0 : r0;
+              r1 = r1 < 0 ? 0 : r1;
+              r2 = r2 < 0 ? 0 : r2;
+              r3 = r3 < 0 ? 0 : r3;
+              context.arc(left + r0, top + r0, r0, -Math.PI, -Math.PI / 2);
+              context.arc(left + width - r1, top + r1, r1, -Math.PI / 2, 0);
+              context.arc(left + width - r2, top + height - r2, r2, 0, Math.PI / 2);
+              context.arc(left + r3, top + height - r3, r3, Math.PI / 2, Math.PI);
+            } else {
+              context.moveTo(startX, item.y);
+              context.lineTo(startX + item.width, item.y);
+              context.lineTo(startX + item.width, opts.height - opts.area[2]);
+              context.lineTo(startX, opts.height - opts.area[2]);
+              context.lineTo(startX, item.y);
+              context.setLineWidth(1);
+              context.setStrokeStyle(strokeColor);
+            }
+            context.setFillStyle(fillColor);
+            context.closePath();
+            context.fill();
+          }
+        }
+        columnIndex += 1;
+      }
+      if (eachSeries.type == "area") {
+        let splitPointList2 = splitPoints(points, eachSeries);
+        for (let i = 0; i < splitPointList2.length; i++) {
+          let points2 = splitPointList2[i];
+          context.beginPath();
+          context.setStrokeStyle(eachSeries.color);
+          context.setStrokeStyle(hexToRgb(eachSeries.color, areaOption.opacity));
+          if (areaOption.gradient) {
+            let gradient = context.createLinearGradient(0, opts.area[0], 0, opts.height - opts.area[2]);
+            gradient.addColorStop("0", hexToRgb(eachSeries.color, areaOption.opacity));
+            gradient.addColorStop("1.0", hexToRgb("#FFFFFF", 0.1));
+            context.setFillStyle(gradient);
+          } else {
+            context.setFillStyle(hexToRgb(eachSeries.color, areaOption.opacity));
+          }
+          context.setLineWidth(2 * opts.pix);
+          if (points2.length > 1) {
+            var firstPoint = points2[0];
+            let lastPoint = points2[points2.length - 1];
+            context.moveTo(firstPoint.x, firstPoint.y);
+            let startPoint = 0;
+            if (eachSeries.style === "curve") {
+              for (let j = 0; j < points2.length; j++) {
+                let item = points2[j];
+                if (startPoint == 0 && item.x > leftSpace) {
+                  context.moveTo(item.x, item.y);
+                  startPoint = 1;
+                }
+                if (j > 0 && item.x > leftSpace && item.x < rightSpace) {
+                  var ctrlPoint = createCurveControlPoints(points2, j - 1);
+                  context.bezierCurveTo(ctrlPoint.ctrA.x, ctrlPoint.ctrA.y, ctrlPoint.ctrB.x, ctrlPoint.ctrB.y, item.x, item.y);
+                }
+              }
+            } else {
+              for (let j = 0; j < points2.length; j++) {
+                let item = points2[j];
+                if (startPoint == 0 && item.x > leftSpace) {
+                  context.moveTo(item.x, item.y);
+                  startPoint = 1;
+                }
+                if (j > 0 && item.x > leftSpace && item.x < rightSpace) {
+                  context.lineTo(item.x, item.y);
+                }
+              }
+            }
+            context.lineTo(lastPoint.x, endY);
+            context.lineTo(firstPoint.x, endY);
+            context.lineTo(firstPoint.x, firstPoint.y);
+          } else {
+            let item = points2[0];
+            context.moveTo(item.x - eachSpacing / 2, item.y);
+          }
+          context.closePath();
+          context.fill();
+        }
+      }
+      if (eachSeries.type == "line") {
+        var splitPointList = splitPoints(points, eachSeries);
+        splitPointList.forEach(function(points2, index) {
+          if (eachSeries.lineType == "dash") {
+            let dashLength = eachSeries.dashLength ? eachSeries.dashLength : 8;
+            dashLength *= opts.pix;
+            context.setLineDash([dashLength, dashLength]);
+          }
+          context.beginPath();
+          context.setStrokeStyle(eachSeries.color);
+          context.setLineWidth(lineOption.width * opts.pix);
+          if (points2.length === 1) {
+            context.moveTo(points2[0].x, points2[0].y);
+          } else {
+            context.moveTo(points2[0].x, points2[0].y);
+            let startPoint = 0;
+            if (eachSeries.style == "curve") {
+              for (let j = 0; j < points2.length; j++) {
+                let item = points2[j];
+                if (startPoint == 0 && item.x > leftSpace) {
+                  context.moveTo(item.x, item.y);
+                  startPoint = 1;
+                }
+                if (j > 0 && item.x > leftSpace && item.x < rightSpace) {
+                  var ctrlPoint2 = createCurveControlPoints(points2, j - 1);
+                  context.bezierCurveTo(
+                    ctrlPoint2.ctrA.x,
+                    ctrlPoint2.ctrA.y,
+                    ctrlPoint2.ctrB.x,
+                    ctrlPoint2.ctrB.y,
+                    item.x,
+                    item.y
+                  );
+                }
+              }
+            } else {
+              for (let j = 0; j < points2.length; j++) {
+                let item = points2[j];
+                if (startPoint == 0 && item.x > leftSpace) {
+                  context.moveTo(item.x, item.y);
+                  startPoint = 1;
+                }
+                if (j > 0 && item.x > leftSpace && item.x < rightSpace) {
+                  context.lineTo(item.x, item.y);
+                }
+              }
+            }
+            context.moveTo(points2[0].x, points2[0].y);
+          }
+          context.stroke();
+          context.setLineDash([]);
+        });
+      }
+      if (eachSeries.type == "point") {
+        eachSeries.addPoint = true;
+      }
+      if (eachSeries.addPoint == true && eachSeries.type !== "column") {
+        drawPointShape(points, eachSeries.color, eachSeries.pointShape, context, opts);
+      }
+    });
+    if (opts.dataLabel !== false && process2 === 1) {
+      var columnIndex = 0;
+      series.forEach(function(eachSeries, seriesIndex) {
+        let ranges, minRange, maxRange;
+        ranges = [].concat(opts.chartData.yAxisData.ranges[eachSeries.index]);
+        minRange = ranges.pop();
+        maxRange = ranges.shift();
+        var data = eachSeries.data;
+        var points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config2, process2);
+        if (eachSeries.type !== "column") {
+          drawPointText(points, eachSeries, config2, context, opts);
+        } else {
+          points = fixColumeData(points, eachSpacing, columnLength, columnIndex, config2, opts);
+          drawPointText(points, eachSeries, config2, context, opts);
+          columnIndex += 1;
+        }
+      });
+    }
+    context.restore();
+    return {
+      xAxisPoints,
+      calPoints,
+      eachSpacing
+    };
+  }
+  function drawToolTipBridge(opts, config2, context, process2, eachSpacing, xAxisPoints) {
+    var toolTipOption = opts.extra.tooltip || {};
+    if (toolTipOption.horizentalLine && opts.tooltip && process2 === 1 && (opts.type == "line" || opts.type == "area" || opts.type == "column" || opts.type == "mount" || opts.type == "candle" || opts.type == "mix")) {
+      drawToolTipHorizentalLine(opts, config2, context);
+    }
+    context.save();
+    if (opts._scrollDistance_ && opts._scrollDistance_ !== 0 && opts.enableScroll === true) {
+      context.translate(opts._scrollDistance_, 0);
+    }
+    if (opts.tooltip && opts.tooltip.textList && opts.tooltip.textList.length && process2 === 1) {
+      drawToolTip(opts.tooltip.textList, opts.tooltip.offset, opts, config2, context);
+    }
+    context.restore();
+  }
+  function drawXAxis(categories, opts, config2, context) {
+    let xAxisData = opts.chartData.xAxisData, xAxisPoints = xAxisData.xAxisPoints, startX = xAxisData.startX, endX = xAxisData.endX, eachSpacing = xAxisData.eachSpacing;
+    var boundaryGap = "center";
+    if (opts.type == "bar" || opts.type == "line" || opts.type == "area" || opts.type == "scatter" || opts.type == "bubble") {
+      boundaryGap = opts.xAxis.boundaryGap;
+    }
+    var startY = opts.height - opts.area[2];
+    var endY = opts.area[0];
+    if (opts.enableScroll && opts.xAxis.scrollShow) {
+      var scrollY = opts.height - opts.area[2] + config2.xAxisHeight;
+      var scrollScreenWidth = endX - startX;
+      var scrollTotalWidth = eachSpacing * (xAxisPoints.length - 1);
+      if (opts.type == "mount" && opts.extra && opts.extra.mount && opts.extra.mount.widthRatio && opts.extra.mount.widthRatio > 1) {
+        if (opts.extra.mount.widthRatio > 2)
+          opts.extra.mount.widthRatio = 2;
+        scrollTotalWidth += (opts.extra.mount.widthRatio - 1) * eachSpacing;
+      }
+      var scrollWidth = scrollScreenWidth * scrollScreenWidth / scrollTotalWidth;
+      var scrollLeft = 0;
+      if (opts._scrollDistance_) {
+        scrollLeft = -opts._scrollDistance_ * scrollScreenWidth / scrollTotalWidth;
+      }
+      context.beginPath();
+      context.setLineCap("round");
+      context.setLineWidth(6 * opts.pix);
+      context.setStrokeStyle(opts.xAxis.scrollBackgroundColor || "#EFEBEF");
+      context.moveTo(startX, scrollY);
+      context.lineTo(endX, scrollY);
+      context.stroke();
+      context.closePath();
+      context.beginPath();
+      context.setLineCap("round");
+      context.setLineWidth(6 * opts.pix);
+      context.setStrokeStyle(opts.xAxis.scrollColor || "#A6A6A6");
+      context.moveTo(startX + scrollLeft, scrollY);
+      context.lineTo(startX + scrollLeft + scrollWidth, scrollY);
+      context.stroke();
+      context.closePath();
+      context.setLineCap("butt");
+    }
+    context.save();
+    if (opts._scrollDistance_ && opts._scrollDistance_ !== 0) {
+      context.translate(opts._scrollDistance_, 0);
+    }
+    if (opts.xAxis.calibration === true) {
+      context.setStrokeStyle(opts.xAxis.gridColor || "#cccccc");
+      context.setLineCap("butt");
+      context.setLineWidth(1 * opts.pix);
+      xAxisPoints.forEach(function(item, index) {
+        if (index > 0) {
+          context.beginPath();
+          context.moveTo(item - eachSpacing / 2, startY);
+          context.lineTo(item - eachSpacing / 2, startY + 3 * opts.pix);
+          context.closePath();
+          context.stroke();
+        }
+      });
+    }
+    if (opts.xAxis.disableGrid !== true) {
+      context.setStrokeStyle(opts.xAxis.gridColor || "#cccccc");
+      context.setLineCap("butt");
+      context.setLineWidth(1 * opts.pix);
+      if (opts.xAxis.gridType == "dash") {
+        context.setLineDash([opts.xAxis.dashLength * opts.pix, opts.xAxis.dashLength * opts.pix]);
+      }
+      opts.xAxis.gridEval = opts.xAxis.gridEval || 1;
+      xAxisPoints.forEach(function(item, index) {
+        if (index % opts.xAxis.gridEval == 0) {
+          context.beginPath();
+          context.moveTo(item, startY);
+          context.lineTo(item, endY);
+          context.stroke();
+        }
+      });
+      context.setLineDash([]);
+    }
+    if (opts.xAxis.disabled !== true) {
+      let maxXAxisListLength = categories.length;
+      if (opts.xAxis.labelCount) {
+        if (opts.xAxis.itemCount) {
+          maxXAxisListLength = Math.ceil(categories.length / opts.xAxis.itemCount * opts.xAxis.labelCount);
+        } else {
+          maxXAxisListLength = opts.xAxis.labelCount;
+        }
+        maxXAxisListLength -= 1;
+      }
+      let ratio = Math.ceil(categories.length / maxXAxisListLength);
+      let newCategories = [];
+      let cgLength = categories.length;
+      for (let i = 0; i < cgLength; i++) {
+        if (i % ratio !== 0) {
+          newCategories.push("");
+        } else {
+          newCategories.push(categories[i]);
+        }
+      }
+      newCategories[cgLength - 1] = categories[cgLength - 1];
+      var xAxisFontSize = opts.xAxis.fontSize * opts.pix || config2.fontSize;
+      if (config2._xAxisTextAngle_ === 0) {
+        newCategories.forEach(function(item, index) {
+          var xitem = opts.xAxis.formatter ? opts.xAxis.formatter(item, index, opts) : item;
+          var offset = -measureText(String(xitem), xAxisFontSize, context) / 2;
+          if (boundaryGap == "center") {
+            offset += eachSpacing / 2;
+          }
+          if (opts.xAxis.scrollShow) {
+            6 * opts.pix;
+          }
+          var _scrollDistance_ = opts._scrollDistance_ || 0;
+          var truePoints = boundaryGap == "center" ? xAxisPoints[index] + eachSpacing / 2 : xAxisPoints[index];
+          if (truePoints - Math.abs(_scrollDistance_) >= opts.area[3] - 1 && truePoints - Math.abs(_scrollDistance_) <= opts.width - opts.area[1] + 1) {
+            context.beginPath();
+            context.setFontSize(xAxisFontSize);
+            context.setFillStyle(opts.xAxis.fontColor || opts.fontColor);
+            context.fillText(String(xitem), xAxisPoints[index] + offset, startY + opts.xAxis.marginTop * opts.pix + (opts.xAxis.lineHeight - opts.xAxis.fontSize) * opts.pix / 2 + opts.xAxis.fontSize * opts.pix);
+            context.closePath();
+            context.stroke();
+          }
+        });
+      } else {
+        newCategories.forEach(function(item, index) {
+          var xitem = opts.xAxis.formatter ? opts.xAxis.formatter(item) : item;
+          var _scrollDistance_ = opts._scrollDistance_ || 0;
+          var truePoints = boundaryGap == "center" ? xAxisPoints[index] + eachSpacing / 2 : xAxisPoints[index];
+          if (truePoints - Math.abs(_scrollDistance_) >= opts.area[3] - 1 && truePoints - Math.abs(_scrollDistance_) <= opts.width - opts.area[1] + 1) {
+            context.save();
+            context.beginPath();
+            context.setFontSize(xAxisFontSize);
+            context.setFillStyle(opts.xAxis.fontColor || opts.fontColor);
+            var textWidth = measureText(String(xitem), xAxisFontSize, context);
+            var offsetX = xAxisPoints[index];
+            if (boundaryGap == "center") {
+              offsetX = xAxisPoints[index] + eachSpacing / 2;
+            }
+            if (opts.xAxis.scrollShow) {
+              6 * opts.pix;
+            }
+            var offsetY = startY + opts.xAxis.marginTop * opts.pix + xAxisFontSize - xAxisFontSize * Math.abs(Math.sin(config2._xAxisTextAngle_));
+            if (opts.xAxis.rotateAngle < 0) {
+              offsetX -= xAxisFontSize / 2;
+              textWidth = 0;
+            } else {
+              offsetX += xAxisFontSize / 2;
+              textWidth = -textWidth;
+            }
+            context.translate(offsetX, offsetY);
+            context.rotate(-1 * config2._xAxisTextAngle_);
+            context.fillText(String(xitem), textWidth, 0);
+            context.closePath();
+            context.stroke();
+            context.restore();
+          }
+        });
+      }
+    }
+    context.restore();
+    if (opts.xAxis.title) {
+      context.beginPath();
+      context.setFontSize(opts.xAxis.titleFontSize * opts.pix);
+      context.setFillStyle(opts.xAxis.titleFontColor);
+      context.fillText(String(opts.xAxis.title), opts.width - opts.area[1] + opts.xAxis.titleOffsetX * opts.pix, opts.height - opts.area[2] + opts.xAxis.marginTop * opts.pix + (opts.xAxis.lineHeight - opts.xAxis.titleFontSize) * opts.pix / 2 + (opts.xAxis.titleFontSize + opts.xAxis.titleOffsetY) * opts.pix);
+      context.closePath();
+      context.stroke();
+    }
+    if (opts.xAxis.axisLine) {
+      context.beginPath();
+      context.setStrokeStyle(opts.xAxis.axisLineColor);
+      context.setLineWidth(1 * opts.pix);
+      context.moveTo(startX, opts.height - opts.area[2]);
+      context.lineTo(endX, opts.height - opts.area[2]);
+      context.stroke();
+    }
+  }
+  function drawYAxisGrid(categories, opts, config2, context) {
+    if (opts.yAxis.disableGrid === true) {
+      return;
+    }
+    let spacingValid = opts.height - opts.area[0] - opts.area[2];
+    let eachSpacing = spacingValid / opts.yAxis.splitNumber;
+    let startX = opts.area[3];
+    let xAxisPoints = opts.chartData.xAxisData.xAxisPoints, xAxiseachSpacing = opts.chartData.xAxisData.eachSpacing;
+    let TotalWidth = xAxiseachSpacing * (xAxisPoints.length - 1);
+    if (opts.type == "mount" && opts.extra && opts.extra.mount && opts.extra.mount.widthRatio && opts.extra.mount.widthRatio > 1) {
+      if (opts.extra.mount.widthRatio > 2)
+        opts.extra.mount.widthRatio = 2;
+      TotalWidth += (opts.extra.mount.widthRatio - 1) * xAxiseachSpacing;
+    }
+    let endX = startX + TotalWidth;
+    let points = [];
+    let startY = 1;
+    if (opts.xAxis.axisLine === false) {
+      startY = 0;
+    }
+    for (let i = startY; i < opts.yAxis.splitNumber + 1; i++) {
+      points.push(opts.height - opts.area[2] - eachSpacing * i);
+    }
+    context.save();
+    if (opts._scrollDistance_ && opts._scrollDistance_ !== 0) {
+      context.translate(opts._scrollDistance_, 0);
+    }
+    if (opts.yAxis.gridType == "dash") {
+      context.setLineDash([opts.yAxis.dashLength * opts.pix, opts.yAxis.dashLength * opts.pix]);
+    }
+    context.setStrokeStyle(opts.yAxis.gridColor);
+    context.setLineWidth(1 * opts.pix);
+    points.forEach(function(item, index) {
+      context.beginPath();
+      context.moveTo(startX, item);
+      context.lineTo(endX, item);
+      context.stroke();
+    });
+    context.setLineDash([]);
+    context.restore();
+  }
+  function drawYAxis(series, opts, config2, context) {
+    if (opts.yAxis.disabled === true) {
+      return;
+    }
+    var spacingValid = opts.height - opts.area[0] - opts.area[2];
+    var eachSpacing = spacingValid / opts.yAxis.splitNumber;
+    var startX = opts.area[3];
+    var endX = opts.width - opts.area[1];
+    var endY = opts.height - opts.area[2];
+    context.beginPath();
+    context.setFillStyle(opts.background);
+    if (opts.enableScroll == true && opts.xAxis.scrollPosition && opts.xAxis.scrollPosition !== "left") {
+      context.fillRect(0, 0, startX, endY + 2 * opts.pix);
+    }
+    if (opts.enableScroll == true && opts.xAxis.scrollPosition && opts.xAxis.scrollPosition !== "right") {
+      context.fillRect(endX, 0, opts.width, endY + 2 * opts.pix);
+    }
+    context.closePath();
+    context.stroke();
+    let tStartLeft = opts.area[3];
+    let tStartRight = opts.width - opts.area[1];
+    let tStartCenter = opts.area[3] + (opts.width - opts.area[1] - opts.area[3]) / 2;
+    if (opts.yAxis.data) {
+      for (let i = 0; i < opts.yAxis.data.length; i++) {
+        let yData = opts.yAxis.data[i];
+        var points = [];
+        if (yData.type === "categories") {
+          for (let i2 = 0; i2 <= yData.categories.length; i2++) {
+            points.push(opts.area[0] + spacingValid / yData.categories.length / 2 + spacingValid / yData.categories.length * i2);
+          }
+        } else {
+          for (let i2 = 0; i2 <= opts.yAxis.splitNumber; i2++) {
+            points.push(opts.area[0] + eachSpacing * i2);
+          }
+        }
+        if (yData.disabled !== true) {
+          let rangesFormat = opts.chartData.yAxisData.rangesFormat[i];
+          let yAxisFontSize = yData.fontSize ? yData.fontSize * opts.pix : config2.fontSize;
+          let yAxisWidth = opts.chartData.yAxisData.yAxisWidth[i];
+          let textAlign = yData.textAlign || "right";
+          rangesFormat.forEach(function(item, index) {
+            var pos = points[index];
+            context.beginPath();
+            context.setFontSize(yAxisFontSize);
+            context.setLineWidth(1 * opts.pix);
+            context.setStrokeStyle(yData.axisLineColor || "#cccccc");
+            context.setFillStyle(yData.fontColor || opts.fontColor);
+            let tmpstrat = 0;
+            let gapwidth = 4 * opts.pix;
+            if (yAxisWidth.position == "left") {
+              if (yData.calibration == true) {
+                context.moveTo(tStartLeft, pos);
+                context.lineTo(tStartLeft - 3 * opts.pix, pos);
+                gapwidth += 3 * opts.pix;
+              }
+              switch (textAlign) {
+                case "left":
+                  context.setTextAlign("left");
+                  tmpstrat = tStartLeft - yAxisWidth.width;
+                  break;
+                case "right":
+                  context.setTextAlign("right");
+                  tmpstrat = tStartLeft - gapwidth;
+                  break;
+                default:
+                  context.setTextAlign("center");
+                  tmpstrat = tStartLeft - yAxisWidth.width / 2;
+              }
+              context.fillText(String(item), tmpstrat, pos + yAxisFontSize / 2 - 3 * opts.pix);
+            } else if (yAxisWidth.position == "right") {
+              if (yData.calibration == true) {
+                context.moveTo(tStartRight, pos);
+                context.lineTo(tStartRight + 3 * opts.pix, pos);
+                gapwidth += 3 * opts.pix;
+              }
+              switch (textAlign) {
+                case "left":
+                  context.setTextAlign("left");
+                  tmpstrat = tStartRight + gapwidth;
+                  break;
+                case "right":
+                  context.setTextAlign("right");
+                  tmpstrat = tStartRight + yAxisWidth.width;
+                  break;
+                default:
+                  context.setTextAlign("center");
+                  tmpstrat = tStartRight + yAxisWidth.width / 2;
+              }
+              context.fillText(String(item), tmpstrat, pos + yAxisFontSize / 2 - 3 * opts.pix);
+            } else if (yAxisWidth.position == "center") {
+              if (yData.calibration == true) {
+                context.moveTo(tStartCenter, pos);
+                context.lineTo(tStartCenter - 3 * opts.pix, pos);
+                gapwidth += 3 * opts.pix;
+              }
+              switch (textAlign) {
+                case "left":
+                  context.setTextAlign("left");
+                  tmpstrat = tStartCenter - yAxisWidth.width;
+                  break;
+                case "right":
+                  context.setTextAlign("right");
+                  tmpstrat = tStartCenter - gapwidth;
+                  break;
+                default:
+                  context.setTextAlign("center");
+                  tmpstrat = tStartCenter - yAxisWidth.width / 2;
+              }
+              context.fillText(String(item), tmpstrat, pos + yAxisFontSize / 2 - 3 * opts.pix);
+            }
+            context.closePath();
+            context.stroke();
+            context.setTextAlign("left");
+          });
+          if (yData.axisLine !== false) {
+            context.beginPath();
+            context.setStrokeStyle(yData.axisLineColor || "#cccccc");
+            context.setLineWidth(1 * opts.pix);
+            if (yAxisWidth.position == "left") {
+              context.moveTo(tStartLeft, opts.height - opts.area[2]);
+              context.lineTo(tStartLeft, opts.area[0]);
+            } else if (yAxisWidth.position == "right") {
+              context.moveTo(tStartRight, opts.height - opts.area[2]);
+              context.lineTo(tStartRight, opts.area[0]);
+            } else if (yAxisWidth.position == "center") {
+              context.moveTo(tStartCenter, opts.height - opts.area[2]);
+              context.lineTo(tStartCenter, opts.area[0]);
+            }
+            context.stroke();
+          }
+          if (opts.yAxis.showTitle) {
+            let titleFontSize = yData.titleFontSize * opts.pix || config2.fontSize;
+            let title = yData.title;
+            context.beginPath();
+            context.setFontSize(titleFontSize);
+            context.setFillStyle(yData.titleFontColor || opts.fontColor);
+            if (yAxisWidth.position == "left") {
+              context.fillText(title, tStartLeft - measureText(title, titleFontSize, context) / 2 + (yData.titleOffsetX || 0), opts.area[0] - (10 - (yData.titleOffsetY || 0)) * opts.pix);
+            } else if (yAxisWidth.position == "right") {
+              context.fillText(title, tStartRight - measureText(title, titleFontSize, context) / 2 + (yData.titleOffsetX || 0), opts.area[0] - (10 - (yData.titleOffsetY || 0)) * opts.pix);
+            } else if (yAxisWidth.position == "center") {
+              context.fillText(title, tStartCenter - measureText(title, titleFontSize, context) / 2 + (yData.titleOffsetX || 0), opts.area[0] - (10 - (yData.titleOffsetY || 0)) * opts.pix);
+            }
+            context.closePath();
+            context.stroke();
+          }
+          if (yAxisWidth.position == "left") {
+            tStartLeft -= yAxisWidth.width + opts.yAxis.padding * opts.pix;
+          } else {
+            tStartRight += yAxisWidth.width + opts.yAxis.padding * opts.pix;
+          }
+        }
+      }
+    }
+  }
+  function drawLegend(series, opts, config2, context, chartData) {
+    if (opts.legend.show === false) {
+      return;
+    }
+    let legendData = chartData.legendData;
+    let legendList = legendData.points;
+    let legendArea = legendData.area;
+    let padding = opts.legend.padding * opts.pix;
+    let fontSize = opts.legend.fontSize * opts.pix;
+    let shapeWidth = 15 * opts.pix;
+    let shapeRight = 5 * opts.pix;
+    let itemGap = opts.legend.itemGap * opts.pix;
+    let lineHeight = Math.max(opts.legend.lineHeight * opts.pix, fontSize);
+    context.beginPath();
+    context.setLineWidth(opts.legend.borderWidth * opts.pix);
+    context.setStrokeStyle(opts.legend.borderColor);
+    context.setFillStyle(opts.legend.backgroundColor);
+    context.moveTo(legendArea.start.x, legendArea.start.y);
+    context.rect(legendArea.start.x, legendArea.start.y, legendArea.width, legendArea.height);
+    context.closePath();
+    context.fill();
+    context.stroke();
+    legendList.forEach(function(itemList, listIndex) {
+      let width = 0;
+      let height = 0;
+      width = legendData.widthArr[listIndex];
+      height = legendData.heightArr[listIndex];
+      let startX = 0;
+      let startY = 0;
+      if (opts.legend.position == "top" || opts.legend.position == "bottom") {
+        switch (opts.legend.float) {
+          case "left":
+            startX = legendArea.start.x + padding;
+            break;
+          case "right":
+            startX = legendArea.start.x + legendArea.width - width;
+            break;
+          default:
+            startX = legendArea.start.x + (legendArea.width - width) / 2;
+        }
+        startY = legendArea.start.y + padding + listIndex * lineHeight;
+      } else {
+        if (listIndex == 0) {
+          width = 0;
+        } else {
+          width = legendData.widthArr[listIndex - 1];
+        }
+        startX = legendArea.start.x + padding + width;
+        startY = legendArea.start.y + padding + (legendArea.height - height) / 2;
+      }
+      context.setFontSize(config2.fontSize);
+      for (let i = 0; i < itemList.length; i++) {
+        let item = itemList[i];
+        item.area = [0, 0, 0, 0];
+        item.area[0] = startX;
+        item.area[1] = startY;
+        item.area[3] = startY + lineHeight;
+        context.beginPath();
+        context.setLineWidth(1 * opts.pix);
+        context.setStrokeStyle(item.show ? item.color : opts.legend.hiddenColor);
+        context.setFillStyle(item.show ? item.color : opts.legend.hiddenColor);
+        switch (item.legendShape) {
+          case "line":
+            context.moveTo(startX, startY + 0.5 * lineHeight - 2 * opts.pix);
+            context.fillRect(startX, startY + 0.5 * lineHeight - 2 * opts.pix, 15 * opts.pix, 4 * opts.pix);
+            break;
+          case "triangle":
+            context.moveTo(startX + 7.5 * opts.pix, startY + 0.5 * lineHeight - 5 * opts.pix);
+            context.lineTo(startX + 2.5 * opts.pix, startY + 0.5 * lineHeight + 5 * opts.pix);
+            context.lineTo(startX + 12.5 * opts.pix, startY + 0.5 * lineHeight + 5 * opts.pix);
+            context.lineTo(startX + 7.5 * opts.pix, startY + 0.5 * lineHeight - 5 * opts.pix);
+            break;
+          case "diamond":
+            context.moveTo(startX + 7.5 * opts.pix, startY + 0.5 * lineHeight - 5 * opts.pix);
+            context.lineTo(startX + 2.5 * opts.pix, startY + 0.5 * lineHeight);
+            context.lineTo(startX + 7.5 * opts.pix, startY + 0.5 * lineHeight + 5 * opts.pix);
+            context.lineTo(startX + 12.5 * opts.pix, startY + 0.5 * lineHeight);
+            context.lineTo(startX + 7.5 * opts.pix, startY + 0.5 * lineHeight - 5 * opts.pix);
+            break;
+          case "circle":
+            context.moveTo(startX + 7.5 * opts.pix, startY + 0.5 * lineHeight);
+            context.arc(startX + 7.5 * opts.pix, startY + 0.5 * lineHeight, 5 * opts.pix, 0, 2 * Math.PI);
+            break;
+          case "rect":
+            context.moveTo(startX, startY + 0.5 * lineHeight - 5 * opts.pix);
+            context.fillRect(startX, startY + 0.5 * lineHeight - 5 * opts.pix, 15 * opts.pix, 10 * opts.pix);
+            break;
+          case "square":
+            context.moveTo(startX + 5 * opts.pix, startY + 0.5 * lineHeight - 5 * opts.pix);
+            context.fillRect(startX + 5 * opts.pix, startY + 0.5 * lineHeight - 5 * opts.pix, 10 * opts.pix, 10 * opts.pix);
+            break;
+          case "none":
+            break;
+          default:
+            context.moveTo(startX, startY + 0.5 * lineHeight - 5 * opts.pix);
+            context.fillRect(startX, startY + 0.5 * lineHeight - 5 * opts.pix, 15 * opts.pix, 10 * opts.pix);
+        }
+        context.closePath();
+        context.fill();
+        context.stroke();
+        startX += shapeWidth + shapeRight;
+        let fontTrans = 0.5 * lineHeight + 0.5 * fontSize - 2;
+        const legendText = item.legendText ? item.legendText : item.name;
+        context.beginPath();
+        context.setFontSize(fontSize);
+        context.setFillStyle(item.show ? opts.legend.fontColor : opts.legend.hiddenColor);
+        context.fillText(legendText, startX, startY + fontTrans);
+        context.closePath();
+        context.stroke();
+        if (opts.legend.position == "top" || opts.legend.position == "bottom") {
+          startX += measureText(legendText, fontSize, context) + itemGap;
+          item.area[2] = startX;
+        } else {
+          item.area[2] = startX + measureText(legendText, fontSize, context) + itemGap;
+          startX -= shapeWidth + shapeRight;
+          startY += lineHeight;
+        }
+      }
+    });
+  }
+  function drawPieDataPoints(series, opts, config2, context) {
+    var process2 = arguments.length > 4 && arguments[4] !== void 0 ? arguments[4] : 1;
+    var pieOption = assign({}, {
+      activeOpacity: 0.5,
+      activeRadius: 10,
+      offsetAngle: 0,
+      labelWidth: 15,
+      ringWidth: 30,
+      customRadius: 0,
+      border: false,
+      borderWidth: 2,
+      borderColor: "#FFFFFF",
+      centerColor: "#FFFFFF",
+      linearType: "none",
+      customColor: []
+    }, opts.type == "pie" ? opts.extra.pie : opts.extra.ring);
+    var centerPosition = {
+      x: opts.area[3] + (opts.width - opts.area[1] - opts.area[3]) / 2,
+      y: opts.area[0] + (opts.height - opts.area[0] - opts.area[2]) / 2
+    };
+    if (config2.pieChartLinePadding == 0) {
+      config2.pieChartLinePadding = pieOption.activeRadius * opts.pix;
+    }
+    var radius = Math.min((opts.width - opts.area[1] - opts.area[3]) / 2 - config2.pieChartLinePadding - config2.pieChartTextPadding - config2._pieTextMaxLength_, (opts.height - opts.area[0] - opts.area[2]) / 2 - config2.pieChartLinePadding - config2.pieChartTextPadding);
+    radius = radius < 10 ? 10 : radius;
+    if (pieOption.customRadius > 0) {
+      radius = pieOption.customRadius * opts.pix;
+    }
+    series = getPieDataPoints(series, radius, process2);
+    var activeRadius = pieOption.activeRadius * opts.pix;
+    pieOption.customColor = fillCustomColor(pieOption.linearType, pieOption.customColor, series, config2);
+    series = series.map(function(eachSeries) {
+      eachSeries._start_ += pieOption.offsetAngle * Math.PI / 180;
+      return eachSeries;
+    });
+    series.forEach(function(eachSeries, seriesIndex) {
+      if (opts.tooltip) {
+        if (opts.tooltip.index == seriesIndex) {
+          context.beginPath();
+          context.setFillStyle(hexToRgb(eachSeries.color, pieOption.activeOpacity || 0.5));
+          context.moveTo(centerPosition.x, centerPosition.y);
+          context.arc(centerPosition.x, centerPosition.y, eachSeries._radius_ + activeRadius, eachSeries._start_, eachSeries._start_ + 2 * eachSeries._proportion_ * Math.PI);
+          context.closePath();
+          context.fill();
+        }
+      }
+      context.beginPath();
+      context.setLineWidth(pieOption.borderWidth * opts.pix);
+      context.lineJoin = "round";
+      context.setStrokeStyle(pieOption.borderColor);
+      var fillcolor = eachSeries.color;
+      if (pieOption.linearType == "custom") {
+        var grd;
+        if (context.createCircularGradient) {
+          grd = context.createCircularGradient(centerPosition.x, centerPosition.y, eachSeries._radius_);
+        } else {
+          grd = context.createRadialGradient(centerPosition.x, centerPosition.y, 0, centerPosition.x, centerPosition.y, eachSeries._radius_);
+        }
+        grd.addColorStop(0, hexToRgb(pieOption.customColor[eachSeries.linearIndex], 1));
+        grd.addColorStop(1, hexToRgb(eachSeries.color, 1));
+        fillcolor = grd;
+      }
+      context.setFillStyle(fillcolor);
+      context.moveTo(centerPosition.x, centerPosition.y);
+      context.arc(centerPosition.x, centerPosition.y, eachSeries._radius_, eachSeries._start_, eachSeries._start_ + 2 * eachSeries._proportion_ * Math.PI);
+      context.closePath();
+      context.fill();
+      if (pieOption.border == true) {
+        context.stroke();
+      }
+    });
+    if (opts.type === "ring") {
+      var innerPieWidth = radius * 0.6;
+      if (typeof pieOption.ringWidth === "number" && pieOption.ringWidth > 0) {
+        innerPieWidth = Math.max(0, radius - pieOption.ringWidth * opts.pix);
+      }
+      context.beginPath();
+      context.setFillStyle(pieOption.centerColor);
+      context.moveTo(centerPosition.x, centerPosition.y);
+      context.arc(centerPosition.x, centerPosition.y, innerPieWidth, 0, 2 * Math.PI);
+      context.closePath();
+      context.fill();
+    }
+    if (opts.dataLabel !== false && process2 === 1) {
+      drawPieText(series, opts, config2, context, radius, centerPosition);
+    }
+    if (process2 === 1 && opts.type === "ring") {
+      drawRingTitle(opts, config2, context, centerPosition);
+    }
+    return {
+      center: centerPosition,
+      radius,
+      series
+    };
+  }
+  function drawRoseDataPoints(series, opts, config2, context) {
+    var process2 = arguments.length > 4 && arguments[4] !== void 0 ? arguments[4] : 1;
+    var roseOption = assign({}, {
+      type: "area",
+      activeOpacity: 0.5,
+      activeRadius: 10,
+      offsetAngle: 0,
+      labelWidth: 15,
+      border: false,
+      borderWidth: 2,
+      borderColor: "#FFFFFF",
+      linearType: "none",
+      customColor: []
+    }, opts.extra.rose);
+    if (config2.pieChartLinePadding == 0) {
+      config2.pieChartLinePadding = roseOption.activeRadius * opts.pix;
+    }
+    var centerPosition = {
+      x: opts.area[3] + (opts.width - opts.area[1] - opts.area[3]) / 2,
+      y: opts.area[0] + (opts.height - opts.area[0] - opts.area[2]) / 2
+    };
+    var radius = Math.min((opts.width - opts.area[1] - opts.area[3]) / 2 - config2.pieChartLinePadding - config2.pieChartTextPadding - config2._pieTextMaxLength_, (opts.height - opts.area[0] - opts.area[2]) / 2 - config2.pieChartLinePadding - config2.pieChartTextPadding);
+    radius = radius < 10 ? 10 : radius;
+    var minRadius = roseOption.minRadius || radius * 0.5;
+    if (radius < minRadius) {
+      radius = minRadius + 10;
+    }
+    series = getRoseDataPoints(series, roseOption.type, minRadius, radius, process2);
+    var activeRadius = roseOption.activeRadius * opts.pix;
+    roseOption.customColor = fillCustomColor(roseOption.linearType, roseOption.customColor, series, config2);
+    series = series.map(function(eachSeries) {
+      eachSeries._start_ += (roseOption.offsetAngle || 0) * Math.PI / 180;
+      return eachSeries;
+    });
+    series.forEach(function(eachSeries, seriesIndex) {
+      if (opts.tooltip) {
+        if (opts.tooltip.index == seriesIndex) {
+          context.beginPath();
+          context.setFillStyle(hexToRgb(eachSeries.color, roseOption.activeOpacity || 0.5));
+          context.moveTo(centerPosition.x, centerPosition.y);
+          context.arc(centerPosition.x, centerPosition.y, activeRadius + eachSeries._radius_, eachSeries._start_, eachSeries._start_ + 2 * eachSeries._rose_proportion_ * Math.PI);
+          context.closePath();
+          context.fill();
+        }
+      }
+      context.beginPath();
+      context.setLineWidth(roseOption.borderWidth * opts.pix);
+      context.lineJoin = "round";
+      context.setStrokeStyle(roseOption.borderColor);
+      var fillcolor = eachSeries.color;
+      if (roseOption.linearType == "custom") {
+        var grd;
+        if (context.createCircularGradient) {
+          grd = context.createCircularGradient(centerPosition.x, centerPosition.y, eachSeries._radius_);
+        } else {
+          grd = context.createRadialGradient(centerPosition.x, centerPosition.y, 0, centerPosition.x, centerPosition.y, eachSeries._radius_);
+        }
+        grd.addColorStop(0, hexToRgb(roseOption.customColor[eachSeries.linearIndex], 1));
+        grd.addColorStop(1, hexToRgb(eachSeries.color, 1));
+        fillcolor = grd;
+      }
+      context.setFillStyle(fillcolor);
+      context.moveTo(centerPosition.x, centerPosition.y);
+      context.arc(centerPosition.x, centerPosition.y, eachSeries._radius_, eachSeries._start_, eachSeries._start_ + 2 * eachSeries._rose_proportion_ * Math.PI);
+      context.closePath();
+      context.fill();
+      if (roseOption.border == true) {
+        context.stroke();
+      }
+    });
+    if (opts.dataLabel !== false && process2 === 1) {
+      drawPieText(series, opts, config2, context, radius, centerPosition);
+    }
+    return {
+      center: centerPosition,
+      radius,
+      series
+    };
+  }
+  function drawArcbarDataPoints(series, opts, config2, context) {
+    var process2 = arguments.length > 4 && arguments[4] !== void 0 ? arguments[4] : 1;
+    var arcbarOption = assign({}, {
+      startAngle: 0.75,
+      endAngle: 0.25,
+      type: "default",
+      direction: "cw",
+      lineCap: "round",
+      width: 12,
+      gap: 2,
+      linearType: "none",
+      customColor: []
+    }, opts.extra.arcbar);
+    series = getArcbarDataPoints(series, arcbarOption, process2);
+    var centerPosition;
+    if (arcbarOption.centerX || arcbarOption.centerY) {
+      centerPosition = {
+        x: arcbarOption.centerX ? arcbarOption.centerX : opts.width / 2,
+        y: arcbarOption.centerY ? arcbarOption.centerY : opts.height / 2
+      };
+    } else {
+      centerPosition = {
+        x: opts.width / 2,
+        y: opts.height / 2
+      };
+    }
+    var radius;
+    if (arcbarOption.radius) {
+      radius = arcbarOption.radius;
+    } else {
+      radius = Math.min(centerPosition.x, centerPosition.y);
+      radius -= 5 * opts.pix;
+      radius -= arcbarOption.width / 2;
+    }
+    radius = radius < 10 ? 10 : radius;
+    arcbarOption.customColor = fillCustomColor(arcbarOption.linearType, arcbarOption.customColor, series, config2);
+    for (let i = 0; i < series.length; i++) {
+      let eachSeries = series[i];
+      context.setLineWidth(arcbarOption.width * opts.pix);
+      context.setStrokeStyle(arcbarOption.backgroundColor || "#E9E9E9");
+      context.setLineCap(arcbarOption.lineCap);
+      context.beginPath();
+      if (arcbarOption.type == "default") {
+        context.arc(centerPosition.x, centerPosition.y, radius - (arcbarOption.width * opts.pix + arcbarOption.gap * opts.pix) * i, arcbarOption.startAngle * Math.PI, arcbarOption.endAngle * Math.PI, arcbarOption.direction == "ccw");
+      } else {
+        context.arc(centerPosition.x, centerPosition.y, radius - (arcbarOption.width * opts.pix + arcbarOption.gap * opts.pix) * i, 0, 2 * Math.PI, arcbarOption.direction == "ccw");
+      }
+      context.stroke();
+      var fillColor = eachSeries.color;
+      if (arcbarOption.linearType == "custom") {
+        var grd = context.createLinearGradient(centerPosition.x - radius, centerPosition.y, centerPosition.x + radius, centerPosition.y);
+        grd.addColorStop(1, hexToRgb(arcbarOption.customColor[eachSeries.linearIndex], 1));
+        grd.addColorStop(0, hexToRgb(eachSeries.color, 1));
+        fillColor = grd;
+      }
+      context.setLineWidth(arcbarOption.width * opts.pix);
+      context.setStrokeStyle(fillColor);
+      context.setLineCap(arcbarOption.lineCap);
+      context.beginPath();
+      context.arc(centerPosition.x, centerPosition.y, radius - (arcbarOption.width * opts.pix + arcbarOption.gap * opts.pix) * i, arcbarOption.startAngle * Math.PI, eachSeries._proportion_ * Math.PI, arcbarOption.direction == "ccw");
+      context.stroke();
+    }
+    drawRingTitle(opts, config2, context, centerPosition);
+    return {
+      center: centerPosition,
+      radius,
+      series
+    };
+  }
+  function drawGaugeDataPoints(categories, series, opts, config2, context) {
+    var process2 = arguments.length > 5 && arguments[5] !== void 0 ? arguments[5] : 1;
+    var gaugeOption = assign({}, {
+      type: "default",
+      startAngle: 0.75,
+      endAngle: 0.25,
+      width: 15,
+      labelOffset: 13,
+      splitLine: {
+        fixRadius: 0,
+        splitNumber: 10,
+        width: 15,
+        color: "#FFFFFF",
+        childNumber: 5,
+        childWidth: 5
+      },
+      pointer: {
+        width: 15,
+        color: "auto"
+      }
+    }, opts.extra.gauge);
+    if (gaugeOption.oldAngle == void 0) {
+      gaugeOption.oldAngle = gaugeOption.startAngle;
+    }
+    if (gaugeOption.oldData == void 0) {
+      gaugeOption.oldData = 0;
+    }
+    categories = getGaugeAxisPoints(categories, gaugeOption.startAngle, gaugeOption.endAngle);
+    var centerPosition = {
+      x: opts.width / 2,
+      y: opts.height / 2
+    };
+    var radius = Math.min(centerPosition.x, centerPosition.y);
+    radius -= 5 * opts.pix;
+    radius -= gaugeOption.width / 2;
+    radius = radius < 10 ? 10 : radius;
+    var innerRadius = radius - gaugeOption.width;
+    var totalAngle = 0;
+    if (gaugeOption.type == "progress") {
+      var pieRadius = radius - gaugeOption.width * 3;
+      context.beginPath();
+      let gradient = context.createLinearGradient(centerPosition.x, centerPosition.y - pieRadius, centerPosition.x, centerPosition.y + pieRadius);
+      gradient.addColorStop("0", hexToRgb(series[0].color, 0.3));
+      gradient.addColorStop("1.0", hexToRgb("#FFFFFF", 0.1));
+      context.setFillStyle(gradient);
+      context.arc(centerPosition.x, centerPosition.y, pieRadius, 0, 2 * Math.PI, false);
+      context.fill();
+      context.setLineWidth(gaugeOption.width);
+      context.setStrokeStyle(hexToRgb(series[0].color, 0.3));
+      context.setLineCap("round");
+      context.beginPath();
+      context.arc(centerPosition.x, centerPosition.y, innerRadius, gaugeOption.startAngle * Math.PI, gaugeOption.endAngle * Math.PI, false);
+      context.stroke();
+      if (gaugeOption.endAngle < gaugeOption.startAngle) {
+        totalAngle = 2 + gaugeOption.endAngle - gaugeOption.startAngle;
+      } else {
+        totalAngle = gaugeOption.startAngle - gaugeOption.endAngle;
+      }
+      totalAngle / gaugeOption.splitLine.splitNumber;
+      let childAngle = totalAngle / gaugeOption.splitLine.splitNumber / gaugeOption.splitLine.childNumber;
+      let startX = -radius - gaugeOption.width * 0.5 - gaugeOption.splitLine.fixRadius;
+      let endX = -radius - gaugeOption.width - gaugeOption.splitLine.fixRadius + gaugeOption.splitLine.width;
+      context.save();
+      context.translate(centerPosition.x, centerPosition.y);
+      context.rotate((gaugeOption.startAngle - 1) * Math.PI);
+      let len = gaugeOption.splitLine.splitNumber * gaugeOption.splitLine.childNumber + 1;
+      let proc = series[0].data * process2;
+      for (let i = 0; i < len; i++) {
+        context.beginPath();
+        if (proc > i / len) {
+          context.setStrokeStyle(hexToRgb(series[0].color, 1));
+        } else {
+          context.setStrokeStyle(hexToRgb(series[0].color, 0.3));
+        }
+        context.setLineWidth(3 * opts.pix);
+        context.moveTo(startX, 0);
+        context.lineTo(endX, 0);
+        context.stroke();
+        context.rotate(childAngle * Math.PI);
+      }
+      context.restore();
+      series = getGaugeArcbarDataPoints(series, gaugeOption, process2);
+      context.setLineWidth(gaugeOption.width);
+      context.setStrokeStyle(series[0].color);
+      context.setLineCap("round");
+      context.beginPath();
+      context.arc(centerPosition.x, centerPosition.y, innerRadius, gaugeOption.startAngle * Math.PI, series[0]._proportion_ * Math.PI, false);
+      context.stroke();
+      let pointerRadius = radius - gaugeOption.width * 2.5;
+      context.save();
+      context.translate(centerPosition.x, centerPosition.y);
+      context.rotate((series[0]._proportion_ - 1) * Math.PI);
+      context.beginPath();
+      context.setLineWidth(gaugeOption.width / 3);
+      let gradient3 = context.createLinearGradient(0, -pointerRadius * 0.6, 0, pointerRadius * 0.6);
+      gradient3.addColorStop("0", hexToRgb("#FFFFFF", 0));
+      gradient3.addColorStop("0.5", hexToRgb(series[0].color, 1));
+      gradient3.addColorStop("1.0", hexToRgb("#FFFFFF", 0));
+      context.setStrokeStyle(gradient3);
+      context.arc(0, 0, pointerRadius, 0.85 * Math.PI, 1.15 * Math.PI, false);
+      context.stroke();
+      context.beginPath();
+      context.setLineWidth(1);
+      context.setStrokeStyle(series[0].color);
+      context.setFillStyle(series[0].color);
+      context.moveTo(-pointerRadius - gaugeOption.width / 3 / 2, -4);
+      context.lineTo(-pointerRadius - gaugeOption.width / 3 / 2 - 4, 0);
+      context.lineTo(-pointerRadius - gaugeOption.width / 3 / 2, 4);
+      context.lineTo(-pointerRadius - gaugeOption.width / 3 / 2, -4);
+      context.stroke();
+      context.fill();
+      context.restore();
+    } else {
+      context.setLineWidth(gaugeOption.width);
+      context.setLineCap("butt");
+      for (let i = 0; i < categories.length; i++) {
+        let eachCategories = categories[i];
+        context.beginPath();
+        context.setStrokeStyle(eachCategories.color);
+        context.arc(centerPosition.x, centerPosition.y, radius, eachCategories._startAngle_ * Math.PI, eachCategories._endAngle_ * Math.PI, false);
+        context.stroke();
+      }
+      context.save();
+      if (gaugeOption.endAngle < gaugeOption.startAngle) {
+        totalAngle = 2 + gaugeOption.endAngle - gaugeOption.startAngle;
+      } else {
+        totalAngle = gaugeOption.startAngle - gaugeOption.endAngle;
+      }
+      let splitAngle = totalAngle / gaugeOption.splitLine.splitNumber;
+      let childAngle = totalAngle / gaugeOption.splitLine.splitNumber / gaugeOption.splitLine.childNumber;
+      let startX = -radius - gaugeOption.width * 0.5 - gaugeOption.splitLine.fixRadius;
+      let endX = -radius - gaugeOption.width * 0.5 - gaugeOption.splitLine.fixRadius + gaugeOption.splitLine.width;
+      let childendX = -radius - gaugeOption.width * 0.5 - gaugeOption.splitLine.fixRadius + gaugeOption.splitLine.childWidth;
+      context.translate(centerPosition.x, centerPosition.y);
+      context.rotate((gaugeOption.startAngle - 1) * Math.PI);
+      for (let i = 0; i < gaugeOption.splitLine.splitNumber + 1; i++) {
+        context.beginPath();
+        context.setStrokeStyle(gaugeOption.splitLine.color);
+        context.setLineWidth(2 * opts.pix);
+        context.moveTo(startX, 0);
+        context.lineTo(endX, 0);
+        context.stroke();
+        context.rotate(splitAngle * Math.PI);
+      }
+      context.restore();
+      context.save();
+      context.translate(centerPosition.x, centerPosition.y);
+      context.rotate((gaugeOption.startAngle - 1) * Math.PI);
+      for (let i = 0; i < gaugeOption.splitLine.splitNumber * gaugeOption.splitLine.childNumber + 1; i++) {
+        context.beginPath();
+        context.setStrokeStyle(gaugeOption.splitLine.color);
+        context.setLineWidth(1 * opts.pix);
+        context.moveTo(startX, 0);
+        context.lineTo(childendX, 0);
+        context.stroke();
+        context.rotate(childAngle * Math.PI);
+      }
+      context.restore();
+      series = getGaugeDataPoints(series, categories, gaugeOption, process2);
+      for (let i = 0; i < series.length; i++) {
+        let eachSeries = series[i];
+        context.save();
+        context.translate(centerPosition.x, centerPosition.y);
+        context.rotate((eachSeries._proportion_ - 1) * Math.PI);
+        context.beginPath();
+        context.setFillStyle(eachSeries.color);
+        context.moveTo(gaugeOption.pointer.width, 0);
+        context.lineTo(0, -gaugeOption.pointer.width / 2);
+        context.lineTo(-innerRadius, 0);
+        context.lineTo(0, gaugeOption.pointer.width / 2);
+        context.lineTo(gaugeOption.pointer.width, 0);
+        context.closePath();
+        context.fill();
+        context.beginPath();
+        context.setFillStyle("#FFFFFF");
+        context.arc(0, 0, gaugeOption.pointer.width / 6, 0, 2 * Math.PI, false);
+        context.fill();
+        context.restore();
+      }
+      if (opts.dataLabel !== false) {
+        drawGaugeLabel(gaugeOption, radius, centerPosition, opts, config2, context);
+      }
+    }
+    drawRingTitle(opts, config2, context, centerPosition);
+    if (process2 === 1 && opts.type === "gauge") {
+      opts.extra.gauge.oldAngle = series[0]._proportion_;
+      opts.extra.gauge.oldData = series[0].data;
+    }
+    return {
+      center: centerPosition,
+      radius,
+      innerRadius,
+      categories,
+      totalAngle
+    };
+  }
+  function drawRadarDataPoints(series, opts, config2, context) {
+    var process2 = arguments.length > 4 && arguments[4] !== void 0 ? arguments[4] : 1;
+    var radarOption = assign({}, {
+      gridColor: "#cccccc",
+      gridType: "radar",
+      gridEval: 1,
+      axisLabel: false,
+      axisLabelTofix: 0,
+      labelShow: true,
+      labelColor: "#666666",
+      labelPointShow: false,
+      labelPointRadius: 3,
+      labelPointColor: "#cccccc",
+      opacity: 0.2,
+      gridCount: 3,
+      border: false,
+      borderWidth: 2,
+      linearType: "none",
+      customColor: []
+    }, opts.extra.radar);
+    var coordinateAngle = getRadarCoordinateSeries(opts.categories.length);
+    var centerPosition = {
+      x: opts.area[3] + (opts.width - opts.area[1] - opts.area[3]) / 2,
+      y: opts.area[0] + (opts.height - opts.area[0] - opts.area[2]) / 2
+    };
+    var xr = (opts.width - opts.area[1] - opts.area[3]) / 2;
+    var yr = (opts.height - opts.area[0] - opts.area[2]) / 2;
+    var radius = Math.min(xr - (getMaxTextListLength(opts.categories, config2.fontSize, context) + config2.radarLabelTextMargin), yr - config2.radarLabelTextMargin);
+    radius -= config2.radarLabelTextMargin * opts.pix;
+    radius = radius < 10 ? 10 : radius;
+    radius = radarOption.radius ? radarOption.radius : radius;
+    context.beginPath();
+    context.setLineWidth(1 * opts.pix);
+    context.setStrokeStyle(radarOption.gridColor);
+    coordinateAngle.forEach(function(angle, index) {
+      var pos = convertCoordinateOrigin(radius * Math.cos(angle), radius * Math.sin(angle), centerPosition);
+      context.moveTo(centerPosition.x, centerPosition.y);
+      if (index % radarOption.gridEval == 0) {
+        context.lineTo(pos.x, pos.y);
+      }
+    });
+    context.stroke();
+    context.closePath();
+    var _loop = function _loop2(i2) {
+      var startPos = {};
+      context.beginPath();
+      context.setLineWidth(1 * opts.pix);
+      context.setStrokeStyle(radarOption.gridColor);
+      if (radarOption.gridType == "radar") {
+        coordinateAngle.forEach(function(angle, index) {
+          var pos2 = convertCoordinateOrigin(radius / radarOption.gridCount * i2 * Math.cos(angle), radius / radarOption.gridCount * i2 * Math.sin(angle), centerPosition);
+          if (index === 0) {
+            startPos = pos2;
+            context.moveTo(pos2.x, pos2.y);
+          } else {
+            context.lineTo(pos2.x, pos2.y);
+          }
+        });
+        context.lineTo(startPos.x, startPos.y);
+      } else {
+        var pos = convertCoordinateOrigin(radius / radarOption.gridCount * i2 * Math.cos(1.5), radius / radarOption.gridCount * i2 * Math.sin(1.5), centerPosition);
+        context.arc(centerPosition.x, centerPosition.y, centerPosition.y - pos.y, 0, 2 * Math.PI, false);
+      }
+      context.stroke();
+      context.closePath();
+    };
+    for (var i = 1; i <= radarOption.gridCount; i++) {
+      _loop(i);
+    }
+    radarOption.customColor = fillCustomColor(radarOption.linearType, radarOption.customColor, series, config2);
+    var radarDataPoints = getRadarDataPoints(coordinateAngle, centerPosition, radius, series, opts, process2);
+    radarDataPoints.forEach(function(eachSeries, seriesIndex) {
+      context.beginPath();
+      context.setLineWidth(radarOption.borderWidth * opts.pix);
+      context.setStrokeStyle(eachSeries.color);
+      var fillcolor = hexToRgb(eachSeries.color, radarOption.opacity);
+      if (radarOption.linearType == "custom") {
+        var grd;
+        if (context.createCircularGradient) {
+          grd = context.createCircularGradient(centerPosition.x, centerPosition.y, radius);
+        } else {
+          grd = context.createRadialGradient(centerPosition.x, centerPosition.y, 0, centerPosition.x, centerPosition.y, radius);
+        }
+        grd.addColorStop(0, hexToRgb(radarOption.customColor[series[seriesIndex].linearIndex], radarOption.opacity));
+        grd.addColorStop(1, hexToRgb(eachSeries.color, radarOption.opacity));
+        fillcolor = grd;
+      }
+      context.setFillStyle(fillcolor);
+      eachSeries.data.forEach(function(item, index) {
+        if (index === 0) {
+          context.moveTo(item.position.x, item.position.y);
+        } else {
+          context.lineTo(item.position.x, item.position.y);
+        }
+      });
+      context.closePath();
+      context.fill();
+      if (radarOption.border === true) {
+        context.stroke();
+      }
+      context.closePath();
+      if (opts.dataPointShape !== false) {
+        var points = eachSeries.data.map(function(item) {
+          return item.position;
+        });
+        drawPointShape(points, eachSeries.color, eachSeries.pointShape, context, opts);
+      }
+    });
+    if (radarOption.axisLabel === true) {
+      const maxData = Math.max(radarOption.max, Math.max.apply(null, dataCombine(series)));
+      const stepLength = radius / radarOption.gridCount;
+      const fontSize = opts.fontSize * opts.pix;
+      context.setFontSize(fontSize);
+      context.setFillStyle(opts.fontColor);
+      context.setTextAlign("left");
+      for (var i = 0; i < radarOption.gridCount + 1; i++) {
+        let label = i * maxData / radarOption.gridCount;
+        label = label.toFixed(radarOption.axisLabelTofix);
+        context.fillText(String(label), centerPosition.x + 3 * opts.pix, centerPosition.y - i * stepLength + fontSize / 2);
+      }
+    }
+    drawRadarLabel(coordinateAngle, radius, centerPosition, opts, config2, context);
+    if (opts.dataLabel !== false && process2 === 1) {
+      radarDataPoints.forEach(function(eachSeries, seriesIndex) {
+        context.beginPath();
+        var fontSize = eachSeries.textSize * opts.pix || config2.fontSize;
+        context.setFontSize(fontSize);
+        context.setFillStyle(eachSeries.textColor || opts.fontColor);
+        eachSeries.data.forEach(function(item, index) {
+          if (Math.abs(item.position.x - centerPosition.x) < 2) {
+            if (item.position.y < centerPosition.y) {
+              context.setTextAlign("center");
+              context.fillText(item.value, item.position.x, item.position.y - 4);
+            } else {
+              context.setTextAlign("center");
+              context.fillText(item.value, item.position.x, item.position.y + fontSize + 2);
+            }
+          } else {
+            if (item.position.x < centerPosition.x) {
+              context.setTextAlign("right");
+              context.fillText(item.value, item.position.x - 4, item.position.y + fontSize / 2 - 2);
+            } else {
+              context.setTextAlign("left");
+              context.fillText(item.value, item.position.x + 4, item.position.y + fontSize / 2 - 2);
+            }
+          }
+        });
+        context.closePath();
+        context.stroke();
+      });
+      context.setTextAlign("left");
+    }
+    return {
+      center: centerPosition,
+      radius,
+      angleList: coordinateAngle
+    };
+  }
+  function lonlat2mercator(longitude, latitude) {
+    var mercator = Array(2);
+    var x = longitude * 2003750834e-2 / 180;
+    var y = Math.log(Math.tan((90 + latitude) * Math.PI / 360)) / (Math.PI / 180);
+    y = y * 2003750834e-2 / 180;
+    mercator[0] = x;
+    mercator[1] = y;
+    return mercator;
+  }
+  function getBoundingBox(data) {
+    var bounds = {}, coords;
+    bounds.xMin = 180;
+    bounds.xMax = 0;
+    bounds.yMin = 90;
+    bounds.yMax = 0;
+    for (var i = 0; i < data.length; i++) {
+      var coorda = data[i].geometry.coordinates;
+      for (var k = 0; k < coorda.length; k++) {
+        coords = coorda[k];
+        if (coords.length == 1) {
+          coords = coords[0];
+        }
+        for (var j = 0; j < coords.length; j++) {
+          var longitude = coords[j][0];
+          var latitude = coords[j][1];
+          var point = {
+            x: longitude,
+            y: latitude
+          };
+          bounds.xMin = bounds.xMin < point.x ? bounds.xMin : point.x;
+          bounds.xMax = bounds.xMax > point.x ? bounds.xMax : point.x;
+          bounds.yMin = bounds.yMin < point.y ? bounds.yMin : point.y;
+          bounds.yMax = bounds.yMax > point.y ? bounds.yMax : point.y;
+        }
+      }
+    }
+    return bounds;
+  }
+  function coordinateToPoint(latitude, longitude, bounds, scale, xoffset, yoffset) {
+    return {
+      x: (longitude - bounds.xMin) * scale + xoffset,
+      y: (bounds.yMax - latitude) * scale + yoffset
+    };
+  }
+  function pointToCoordinate(pointY, pointX, bounds, scale, xoffset, yoffset) {
+    return {
+      x: (pointX - xoffset) / scale + bounds.xMin,
+      y: bounds.yMax - (pointY - yoffset) / scale
+    };
+  }
+  function isRayIntersectsSegment(poi, s_poi, e_poi) {
+    if (s_poi[1] == e_poi[1]) {
+      return false;
+    }
+    if (s_poi[1] > poi[1] && e_poi[1] > poi[1]) {
+      return false;
+    }
+    if (s_poi[1] < poi[1] && e_poi[1] < poi[1]) {
+      return false;
+    }
+    if (s_poi[1] == poi[1] && e_poi[1] > poi[1]) {
+      return false;
+    }
+    if (e_poi[1] == poi[1] && s_poi[1] > poi[1]) {
+      return false;
+    }
+    if (s_poi[0] < poi[0] && e_poi[1] < poi[1]) {
+      return false;
+    }
+    let xseg = e_poi[0] - (e_poi[0] - s_poi[0]) * (e_poi[1] - poi[1]) / (e_poi[1] - s_poi[1]);
+    if (xseg < poi[0]) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+  function isPoiWithinPoly(poi, poly, mercator) {
+    let sinsc = 0;
+    for (let i = 0; i < poly.length; i++) {
+      let epoly = poly[i][0];
+      if (poly.length == 1) {
+        epoly = poly[i][0];
+      }
+      for (let j = 0; j < epoly.length - 1; j++) {
+        let s_poi = epoly[j];
+        let e_poi = epoly[j + 1];
+        if (mercator) {
+          s_poi = lonlat2mercator(epoly[j][0], epoly[j][1]);
+          e_poi = lonlat2mercator(epoly[j + 1][0], epoly[j + 1][1]);
+        }
+        if (isRayIntersectsSegment(poi, s_poi, e_poi)) {
+          sinsc += 1;
+        }
+      }
+    }
+    if (sinsc % 2 == 1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  function drawMapDataPoints(series, opts, config2, context) {
+    var mapOption = assign({}, {
+      border: true,
+      mercator: false,
+      borderWidth: 1,
+      active: true,
+      borderColor: "#666666",
+      fillOpacity: 0.6,
+      activeBorderColor: "#f04864",
+      activeFillColor: "#facc14",
+      activeFillOpacity: 1
+    }, opts.extra.map);
+    var coords, point;
+    var data = series;
+    var bounds = getBoundingBox(data);
+    if (mapOption.mercator) {
+      var max = lonlat2mercator(bounds.xMax, bounds.yMax);
+      var min = lonlat2mercator(bounds.xMin, bounds.yMin);
+      bounds.xMax = max[0];
+      bounds.yMax = max[1];
+      bounds.xMin = min[0];
+      bounds.yMin = min[1];
+    }
+    var xScale = opts.width / Math.abs(bounds.xMax - bounds.xMin);
+    var yScale = opts.height / Math.abs(bounds.yMax - bounds.yMin);
+    var scale = xScale < yScale ? xScale : yScale;
+    var xoffset = opts.width / 2 - Math.abs(bounds.xMax - bounds.xMin) / 2 * scale;
+    var yoffset = opts.height / 2 - Math.abs(bounds.yMax - bounds.yMin) / 2 * scale;
+    for (var i = 0; i < data.length; i++) {
+      context.beginPath();
+      context.setLineWidth(mapOption.borderWidth * opts.pix);
+      context.setStrokeStyle(mapOption.borderColor);
+      context.setFillStyle(hexToRgb(series[i].color, series[i].fillOpacity || mapOption.fillOpacity));
+      if (mapOption.active == true && opts.tooltip) {
+        if (opts.tooltip.index == i) {
+          context.setStrokeStyle(mapOption.activeBorderColor);
+          context.setFillStyle(hexToRgb(mapOption.activeFillColor, mapOption.activeFillOpacity));
+        }
+      }
+      var coorda = data[i].geometry.coordinates;
+      for (var k = 0; k < coorda.length; k++) {
+        coords = coorda[k];
+        if (coords.length == 1) {
+          coords = coords[0];
+        }
+        for (var j = 0; j < coords.length; j++) {
+          var gaosi = Array(2);
+          if (mapOption.mercator) {
+            gaosi = lonlat2mercator(coords[j][0], coords[j][1]);
+          } else {
+            gaosi = coords[j];
+          }
+          point = coordinateToPoint(gaosi[1], gaosi[0], bounds, scale, xoffset, yoffset);
+          if (j === 0) {
+            context.beginPath();
+            context.moveTo(point.x, point.y);
+          } else {
+            context.lineTo(point.x, point.y);
+          }
+        }
+        context.fill();
+        if (mapOption.border == true) {
+          context.stroke();
+        }
+      }
+    }
+    if (opts.dataLabel == true) {
+      for (var i = 0; i < data.length; i++) {
+        var centerPoint = data[i].properties.centroid;
+        if (centerPoint) {
+          if (mapOption.mercator) {
+            centerPoint = lonlat2mercator(data[i].properties.centroid[0], data[i].properties.centroid[1]);
+          }
+          point = coordinateToPoint(centerPoint[1], centerPoint[0], bounds, scale, xoffset, yoffset);
+          let fontSize = data[i].textSize * opts.pix || config2.fontSize;
+          let fontColor = data[i].textColor || opts.fontColor;
+          if (mapOption.active && mapOption.activeTextColor && opts.tooltip && opts.tooltip.index == i) {
+            fontColor = mapOption.activeTextColor;
+          }
+          let text = data[i].properties.name;
+          context.beginPath();
+          context.setFontSize(fontSize);
+          context.setFillStyle(fontColor);
+          context.fillText(text, point.x - measureText(text, fontSize, context) / 2, point.y + fontSize / 2);
+          context.closePath();
+          context.stroke();
+        }
+      }
+    }
+    opts.chartData.mapData = {
+      bounds,
+      scale,
+      xoffset,
+      yoffset,
+      mercator: mapOption.mercator
+    };
+    drawToolTipBridge(opts, config2, context, 1);
+    context.draw();
+  }
+  function normalInt(min, max, iter) {
+    iter = iter == 0 ? 1 : iter;
+    var arr = [];
+    for (var i = 0; i < iter; i++) {
+      arr[i] = Math.random();
+    }
+    return Math.floor(arr.reduce(function(i2, j) {
+      return i2 + j;
+    }) / iter * (max - min)) + min;
+  }
+  function collisionNew(area, points, width, height) {
+    var isIn = false;
+    for (let i = 0; i < points.length; i++) {
+      if (points[i].area) {
+        if (area[3] < points[i].area[1] || area[0] > points[i].area[2] || area[1] > points[i].area[3] || area[2] < points[i].area[0]) {
+          if (area[0] < 0 || area[1] < 0 || area[2] > width || area[3] > height) {
+            isIn = true;
+            break;
+          } else {
+            isIn = false;
+          }
+        } else {
+          isIn = true;
+          break;
+        }
+      }
+    }
+    return isIn;
+  }
+  function getWordCloudPoint(opts, type, context) {
+    let points = opts.series;
+    switch (type) {
+      case "normal":
+        for (let i = 0; i < points.length; i++) {
+          let text = points[i].name;
+          let tHeight = points[i].textSize * opts.pix;
+          let tWidth = measureText(text, tHeight, context);
+          let x, y;
+          let area;
+          let breaknum = 0;
+          while (true) {
+            breaknum++;
+            x = normalInt(-opts.width / 2, opts.width / 2, 5) - tWidth / 2;
+            y = normalInt(-opts.height / 2, opts.height / 2, 5) + tHeight / 2;
+            area = [
+              x - 5 + opts.width / 2,
+              y - 5 - tHeight + opts.height / 2,
+              x + tWidth + 5 + opts.width / 2,
+              y + 5 + opts.height / 2
+            ];
+            let isCollision = collisionNew(area, points, opts.width, opts.height);
+            if (!isCollision)
+              break;
+            if (breaknum == 1e3) {
+              area = [-100, -100, -100, -100];
+              break;
+            }
+          }
+          points[i].area = area;
+        }
+        break;
+      case "vertical":
+        let Spin = function() {
+          if (Math.random() > 0.7) {
+            return true;
+          } else {
+            return false;
+          }
+        };
+        for (let i = 0; i < points.length; i++) {
+          let text = points[i].name;
+          let tHeight = points[i].textSize * opts.pix;
+          let tWidth = measureText(text, tHeight, context);
+          let isSpin = Spin();
+          let x, y, area, areav;
+          let breaknum = 0;
+          while (true) {
+            breaknum++;
+            let isCollision;
+            if (isSpin) {
+              x = normalInt(-opts.width / 2, opts.width / 2, 5) - tWidth / 2;
+              y = normalInt(-opts.height / 2, opts.height / 2, 5) + tHeight / 2;
+              area = [y - 5 - tWidth + opts.width / 2, -x - 5 + opts.height / 2, y + 5 + opts.width / 2, -x + tHeight + 5 + opts.height / 2];
+              areav = [opts.width - (opts.width / 2 - opts.height / 2) - (-x + tHeight + 5 + opts.height / 2) - 5, opts.height / 2 - opts.width / 2 + (y - 5 - tWidth + opts.width / 2) - 5, opts.width - (opts.width / 2 - opts.height / 2) - (-x + tHeight + 5 + opts.height / 2) + tHeight, opts.height / 2 - opts.width / 2 + (y - 5 - tWidth + opts.width / 2) + tWidth + 5];
+              isCollision = collisionNew(areav, points, opts.height, opts.width);
+            } else {
+              x = normalInt(-opts.width / 2, opts.width / 2, 5) - tWidth / 2;
+              y = normalInt(-opts.height / 2, opts.height / 2, 5) + tHeight / 2;
+              area = [x - 5 + opts.width / 2, y - 5 - tHeight + opts.height / 2, x + tWidth + 5 + opts.width / 2, y + 5 + opts.height / 2];
+              isCollision = collisionNew(area, points, opts.width, opts.height);
+            }
+            if (!isCollision)
+              break;
+            if (breaknum == 1e3) {
+              area = [-1e3, -1e3, -1e3, -1e3];
+              break;
+            }
+          }
+          if (isSpin) {
+            points[i].area = areav;
+            points[i].areav = area;
+          } else {
+            points[i].area = area;
+          }
+          points[i].rotate = isSpin;
+        }
+        break;
+    }
+    return points;
+  }
+  function drawWordCloudDataPoints(series, opts, config2, context) {
+    let process2 = arguments.length > 4 && arguments[4] !== void 0 ? arguments[4] : 1;
+    let wordOption = assign({}, {
+      type: "normal",
+      autoColors: true
+    }, opts.extra.word);
+    if (!opts.chartData.wordCloudData) {
+      opts.chartData.wordCloudData = getWordCloudPoint(opts, wordOption.type, context);
+    }
+    context.beginPath();
+    context.setFillStyle(opts.background);
+    context.rect(0, 0, opts.width, opts.height);
+    context.fill();
+    context.save();
+    let points = opts.chartData.wordCloudData;
+    context.translate(opts.width / 2, opts.height / 2);
+    for (let i = 0; i < points.length; i++) {
+      context.save();
+      if (points[i].rotate) {
+        context.rotate(90 * Math.PI / 180);
+      }
+      let text = points[i].name;
+      let tHeight = points[i].textSize * opts.pix;
+      let tWidth = measureText(text, tHeight, context);
+      context.beginPath();
+      context.setStrokeStyle(points[i].color);
+      context.setFillStyle(points[i].color);
+      context.setFontSize(tHeight);
+      if (points[i].rotate) {
+        if (points[i].areav[0] > 0) {
+          if (opts.tooltip) {
+            if (opts.tooltip.index == i) {
+              context.strokeText(text, (points[i].areav[0] + 5 - opts.width / 2) * process2 - tWidth * (1 - process2) / 2, (points[i].areav[1] + 5 + tHeight - opts.height / 2) * process2);
+            } else {
+              context.fillText(text, (points[i].areav[0] + 5 - opts.width / 2) * process2 - tWidth * (1 - process2) / 2, (points[i].areav[1] + 5 + tHeight - opts.height / 2) * process2);
+            }
+          } else {
+            context.fillText(text, (points[i].areav[0] + 5 - opts.width / 2) * process2 - tWidth * (1 - process2) / 2, (points[i].areav[1] + 5 + tHeight - opts.height / 2) * process2);
+          }
+        }
+      } else {
+        if (points[i].area[0] > 0) {
+          if (opts.tooltip) {
+            if (opts.tooltip.index == i) {
+              context.strokeText(text, (points[i].area[0] + 5 - opts.width / 2) * process2 - tWidth * (1 - process2) / 2, (points[i].area[1] + 5 + tHeight - opts.height / 2) * process2);
+            } else {
+              context.fillText(text, (points[i].area[0] + 5 - opts.width / 2) * process2 - tWidth * (1 - process2) / 2, (points[i].area[1] + 5 + tHeight - opts.height / 2) * process2);
+            }
+          } else {
+            context.fillText(text, (points[i].area[0] + 5 - opts.width / 2) * process2 - tWidth * (1 - process2) / 2, (points[i].area[1] + 5 + tHeight - opts.height / 2) * process2);
+          }
+        }
+      }
+      context.stroke();
+      context.restore();
+    }
+    context.restore();
+  }
+  function drawFunnelDataPoints(series, opts, config2, context) {
+    let process2 = arguments.length > 4 && arguments[4] !== void 0 ? arguments[4] : 1;
+    let funnelOption = assign({}, {
+      type: "funnel",
+      activeWidth: 10,
+      activeOpacity: 0.3,
+      border: false,
+      borderWidth: 2,
+      borderColor: "#FFFFFF",
+      fillOpacity: 1,
+      minSize: 0,
+      labelAlign: "right",
+      linearType: "none",
+      customColor: []
+    }, opts.extra.funnel);
+    let eachSpacing = (opts.height - opts.area[0] - opts.area[2]) / series.length;
+    let centerPosition = {
+      x: opts.area[3] + (opts.width - opts.area[1] - opts.area[3]) / 2,
+      y: opts.height - opts.area[2]
+    };
+    let activeWidth = funnelOption.activeWidth * opts.pix;
+    let radius = Math.min((opts.width - opts.area[1] - opts.area[3]) / 2 - activeWidth, (opts.height - opts.area[0] - opts.area[2]) / 2 - activeWidth);
+    let seriesNew = getFunnelDataPoints(series, radius, funnelOption, eachSpacing, process2);
+    context.save();
+    context.translate(centerPosition.x, centerPosition.y);
+    funnelOption.customColor = fillCustomColor(funnelOption.linearType, funnelOption.customColor, series, config2);
+    if (funnelOption.type == "pyramid") {
+      for (let i = 0; i < seriesNew.length; i++) {
+        if (i == seriesNew.length - 1) {
+          if (opts.tooltip) {
+            if (opts.tooltip.index == i) {
+              context.beginPath();
+              context.setFillStyle(hexToRgb(seriesNew[i].color, funnelOption.activeOpacity));
+              context.moveTo(-activeWidth, -eachSpacing);
+              context.lineTo(-seriesNew[i].radius - activeWidth, 0);
+              context.lineTo(seriesNew[i].radius + activeWidth, 0);
+              context.lineTo(activeWidth, -eachSpacing);
+              context.lineTo(-activeWidth, -eachSpacing);
+              context.closePath();
+              context.fill();
+            }
+          }
+          seriesNew[i].funnelArea = [centerPosition.x - seriesNew[i].radius, centerPosition.y - eachSpacing * (i + 1), centerPosition.x + seriesNew[i].radius, centerPosition.y - eachSpacing * i];
+          context.beginPath();
+          context.setLineWidth(funnelOption.borderWidth * opts.pix);
+          context.setStrokeStyle(funnelOption.borderColor);
+          var fillColor = hexToRgb(seriesNew[i].color, funnelOption.fillOpacity);
+          if (funnelOption.linearType == "custom") {
+            var grd = context.createLinearGradient(seriesNew[i].radius, -eachSpacing, -seriesNew[i].radius, -eachSpacing);
+            grd.addColorStop(0, hexToRgb(seriesNew[i].color, funnelOption.fillOpacity));
+            grd.addColorStop(0.5, hexToRgb(funnelOption.customColor[seriesNew[i].linearIndex], funnelOption.fillOpacity));
+            grd.addColorStop(1, hexToRgb(seriesNew[i].color, funnelOption.fillOpacity));
+            fillColor = grd;
+          }
+          context.setFillStyle(fillColor);
+          context.moveTo(0, -eachSpacing);
+          context.lineTo(-seriesNew[i].radius, 0);
+          context.lineTo(seriesNew[i].radius, 0);
+          context.lineTo(0, -eachSpacing);
+          context.closePath();
+          context.fill();
+          if (funnelOption.border == true) {
+            context.stroke();
+          }
+        } else {
+          if (opts.tooltip) {
+            if (opts.tooltip.index == i) {
+              context.beginPath();
+              context.setFillStyle(hexToRgb(seriesNew[i].color, funnelOption.activeOpacity));
+              context.moveTo(0, 0);
+              context.lineTo(-seriesNew[i].radius - activeWidth, 0);
+              context.lineTo(-seriesNew[i + 1].radius - activeWidth, -eachSpacing);
+              context.lineTo(seriesNew[i + 1].radius + activeWidth, -eachSpacing);
+              context.lineTo(seriesNew[i].radius + activeWidth, 0);
+              context.lineTo(0, 0);
+              context.closePath();
+              context.fill();
+            }
+          }
+          seriesNew[i].funnelArea = [centerPosition.x - seriesNew[i].radius, centerPosition.y - eachSpacing * (i + 1), centerPosition.x + seriesNew[i].radius, centerPosition.y - eachSpacing * i];
+          context.beginPath();
+          context.setLineWidth(funnelOption.borderWidth * opts.pix);
+          context.setStrokeStyle(funnelOption.borderColor);
+          var fillColor = hexToRgb(seriesNew[i].color, funnelOption.fillOpacity);
+          if (funnelOption.linearType == "custom") {
+            var grd = context.createLinearGradient(seriesNew[i].radius, -eachSpacing, -seriesNew[i].radius, -eachSpacing);
+            grd.addColorStop(0, hexToRgb(seriesNew[i].color, funnelOption.fillOpacity));
+            grd.addColorStop(0.5, hexToRgb(funnelOption.customColor[seriesNew[i].linearIndex], funnelOption.fillOpacity));
+            grd.addColorStop(1, hexToRgb(seriesNew[i].color, funnelOption.fillOpacity));
+            fillColor = grd;
+          }
+          context.setFillStyle(fillColor);
+          context.moveTo(0, 0);
+          context.lineTo(-seriesNew[i].radius, 0);
+          context.lineTo(-seriesNew[i + 1].radius, -eachSpacing);
+          context.lineTo(seriesNew[i + 1].radius, -eachSpacing);
+          context.lineTo(seriesNew[i].radius, 0);
+          context.lineTo(0, 0);
+          context.closePath();
+          context.fill();
+          if (funnelOption.border == true) {
+            context.stroke();
+          }
+        }
+        context.translate(0, -eachSpacing);
+      }
+    } else {
+      context.translate(0, -(seriesNew.length - 1) * eachSpacing);
+      for (let i = 0; i < seriesNew.length; i++) {
+        if (i == seriesNew.length - 1) {
+          if (opts.tooltip) {
+            if (opts.tooltip.index == i) {
+              context.beginPath();
+              context.setFillStyle(hexToRgb(seriesNew[i].color, funnelOption.activeOpacity));
+              context.moveTo(-activeWidth - funnelOption.minSize / 2, 0);
+              context.lineTo(-seriesNew[i].radius - activeWidth, -eachSpacing);
+              context.lineTo(seriesNew[i].radius + activeWidth, -eachSpacing);
+              context.lineTo(activeWidth + funnelOption.minSize / 2, 0);
+              context.lineTo(-activeWidth - funnelOption.minSize / 2, 0);
+              context.closePath();
+              context.fill();
+            }
+          }
+          seriesNew[i].funnelArea = [centerPosition.x - seriesNew[i].radius, centerPosition.y - eachSpacing, centerPosition.x + seriesNew[i].radius, centerPosition.y];
+          context.beginPath();
+          context.setLineWidth(funnelOption.borderWidth * opts.pix);
+          context.setStrokeStyle(funnelOption.borderColor);
+          var fillColor = hexToRgb(seriesNew[i].color, funnelOption.fillOpacity);
+          if (funnelOption.linearType == "custom") {
+            var grd = context.createLinearGradient(seriesNew[i].radius, -eachSpacing, -seriesNew[i].radius, -eachSpacing);
+            grd.addColorStop(0, hexToRgb(seriesNew[i].color, funnelOption.fillOpacity));
+            grd.addColorStop(0.5, hexToRgb(funnelOption.customColor[seriesNew[i].linearIndex], funnelOption.fillOpacity));
+            grd.addColorStop(1, hexToRgb(seriesNew[i].color, funnelOption.fillOpacity));
+            fillColor = grd;
+          }
+          context.setFillStyle(fillColor);
+          context.moveTo(0, 0);
+          context.lineTo(-funnelOption.minSize / 2, 0);
+          context.lineTo(-seriesNew[i].radius, -eachSpacing);
+          context.lineTo(seriesNew[i].radius, -eachSpacing);
+          context.lineTo(funnelOption.minSize / 2, 0);
+          context.lineTo(0, 0);
+          context.closePath();
+          context.fill();
+          if (funnelOption.border == true) {
+            context.stroke();
+          }
+        } else {
+          if (opts.tooltip) {
+            if (opts.tooltip.index == i) {
+              context.beginPath();
+              context.setFillStyle(hexToRgb(seriesNew[i].color, funnelOption.activeOpacity));
+              context.moveTo(0, 0);
+              context.lineTo(-seriesNew[i + 1].radius - activeWidth, 0);
+              context.lineTo(-seriesNew[i].radius - activeWidth, -eachSpacing);
+              context.lineTo(seriesNew[i].radius + activeWidth, -eachSpacing);
+              context.lineTo(seriesNew[i + 1].radius + activeWidth, 0);
+              context.lineTo(0, 0);
+              context.closePath();
+              context.fill();
+            }
+          }
+          seriesNew[i].funnelArea = [centerPosition.x - seriesNew[i].radius, centerPosition.y - eachSpacing * (seriesNew.length - i), centerPosition.x + seriesNew[i].radius, centerPosition.y - eachSpacing * (seriesNew.length - i - 1)];
+          context.beginPath();
+          context.setLineWidth(funnelOption.borderWidth * opts.pix);
+          context.setStrokeStyle(funnelOption.borderColor);
+          var fillColor = hexToRgb(seriesNew[i].color, funnelOption.fillOpacity);
+          if (funnelOption.linearType == "custom") {
+            var grd = context.createLinearGradient(seriesNew[i].radius, -eachSpacing, -seriesNew[i].radius, -eachSpacing);
+            grd.addColorStop(0, hexToRgb(seriesNew[i].color, funnelOption.fillOpacity));
+            grd.addColorStop(0.5, hexToRgb(funnelOption.customColor[seriesNew[i].linearIndex], funnelOption.fillOpacity));
+            grd.addColorStop(1, hexToRgb(seriesNew[i].color, funnelOption.fillOpacity));
+            fillColor = grd;
+          }
+          context.setFillStyle(fillColor);
+          context.moveTo(0, 0);
+          context.lineTo(-seriesNew[i + 1].radius, 0);
+          context.lineTo(-seriesNew[i].radius, -eachSpacing);
+          context.lineTo(seriesNew[i].radius, -eachSpacing);
+          context.lineTo(seriesNew[i + 1].radius, 0);
+          context.lineTo(0, 0);
+          context.closePath();
+          context.fill();
+          if (funnelOption.border == true) {
+            context.stroke();
+          }
+        }
+        context.translate(0, eachSpacing);
+      }
+    }
+    context.restore();
+    if (opts.dataLabel !== false && process2 === 1) {
+      drawFunnelText(seriesNew, opts, context, eachSpacing, funnelOption.labelAlign, activeWidth, centerPosition);
+    }
+    if (process2 === 1) {
+      drawFunnelCenterText(seriesNew, opts, context, eachSpacing, funnelOption.labelAlign, activeWidth, centerPosition);
+    }
+    return {
+      center: centerPosition,
+      radius,
+      series: seriesNew
+    };
+  }
+  function drawFunnelText(series, opts, context, eachSpacing, labelAlign, activeWidth, centerPosition) {
+    for (let i = 0; i < series.length; i++) {
+      let item = series[i];
+      if (item.labelShow === false) {
+        continue;
+      }
+      let startX, endX, startY, fontSize;
+      let text = item.formatter ? item.formatter(item, i, series, opts) : util.toFixed(item._proportion_ * 100) + "%";
+      text = item.labelText ? item.labelText : text;
+      if (labelAlign == "right") {
+        if (i == series.length - 1) {
+          startX = (item.funnelArea[2] + centerPosition.x) / 2;
+        } else {
+          startX = (item.funnelArea[2] + series[i + 1].funnelArea[2]) / 2;
+        }
+        endX = startX + activeWidth * 2;
+        startY = item.funnelArea[1] + eachSpacing / 2;
+        fontSize = item.textSize * opts.pix || opts.fontSize * opts.pix;
+        context.setLineWidth(1 * opts.pix);
+        context.setStrokeStyle(item.color);
+        context.setFillStyle(item.color);
+        context.beginPath();
+        context.moveTo(startX, startY);
+        context.lineTo(endX, startY);
+        context.stroke();
+        context.closePath();
+        context.beginPath();
+        context.moveTo(endX, startY);
+        context.arc(endX, startY, 2 * opts.pix, 0, 2 * Math.PI);
+        context.closePath();
+        context.fill();
+        context.beginPath();
+        context.setFontSize(fontSize);
+        context.setFillStyle(item.textColor || opts.fontColor);
+        context.fillText(text, endX + 5, startY + fontSize / 2 - 2);
+        context.closePath();
+        context.stroke();
+        context.closePath();
+      }
+      if (labelAlign == "left") {
+        if (i == series.length - 1) {
+          startX = (item.funnelArea[0] + centerPosition.x) / 2;
+        } else {
+          startX = (item.funnelArea[0] + series[i + 1].funnelArea[0]) / 2;
+        }
+        endX = startX - activeWidth * 2;
+        startY = item.funnelArea[1] + eachSpacing / 2;
+        fontSize = item.textSize * opts.pix || opts.fontSize * opts.pix;
+        context.setLineWidth(1 * opts.pix);
+        context.setStrokeStyle(item.color);
+        context.setFillStyle(item.color);
+        context.beginPath();
+        context.moveTo(startX, startY);
+        context.lineTo(endX, startY);
+        context.stroke();
+        context.closePath();
+        context.beginPath();
+        context.moveTo(endX, startY);
+        context.arc(endX, startY, 2, 0, 2 * Math.PI);
+        context.closePath();
+        context.fill();
+        context.beginPath();
+        context.setFontSize(fontSize);
+        context.setFillStyle(item.textColor || opts.fontColor);
+        context.fillText(text, endX - 5 - measureText(text, fontSize, context), startY + fontSize / 2 - 2);
+        context.closePath();
+        context.stroke();
+        context.closePath();
+      }
+    }
+  }
+  function drawFunnelCenterText(series, opts, context, eachSpacing, labelAlign, activeWidth, centerPosition) {
+    for (let i = 0; i < series.length; i++) {
+      let item = series[i];
+      let startY, fontSize;
+      if (item.centerText) {
+        startY = item.funnelArea[1] + eachSpacing / 2;
+        fontSize = item.centerTextSize * opts.pix || opts.fontSize * opts.pix;
+        context.beginPath();
+        context.setFontSize(fontSize);
+        context.setFillStyle(item.centerTextColor || "#FFFFFF");
+        context.fillText(item.centerText, centerPosition.x - measureText(item.centerText, fontSize, context) / 2, startY + fontSize / 2 - 2);
+        context.closePath();
+        context.stroke();
+        context.closePath();
+      }
+    }
+  }
+  function drawCanvas(opts, context) {
+    context.save();
+    context.translate(0, 0.5);
+    context.restore();
+    context.draw();
+  }
+  var Timing = {
+    easeIn: function easeIn(pos) {
+      return Math.pow(pos, 3);
+    },
+    easeOut: function easeOut(pos) {
+      return Math.pow(pos - 1, 3) + 1;
+    },
+    easeInOut: function easeInOut(pos) {
+      if ((pos /= 0.5) < 1) {
+        return 0.5 * Math.pow(pos, 3);
+      } else {
+        return 0.5 * (Math.pow(pos - 2, 3) + 2);
+      }
+    },
+    linear: function linear(pos) {
+      return pos;
+    }
+  };
+  function Animation(opts) {
+    this.isStop = false;
+    opts.duration = typeof opts.duration === "undefined" ? 1e3 : opts.duration;
+    opts.timing = opts.timing || "easeInOut";
+    var delay = 17;
+    function createAnimationFrame() {
+      if (typeof setTimeout !== "undefined") {
+        return function(step, delay2) {
+          setTimeout(function() {
+            var timeStamp = +/* @__PURE__ */ new Date();
+            step(timeStamp);
+          }, delay2);
+        };
+      } else if (typeof requestAnimationFrame !== "undefined") {
+        return requestAnimationFrame;
+      } else {
+        return function(step) {
+          step(null);
+        };
+      }
+    }
+    var animationFrame = createAnimationFrame();
+    var startTimeStamp = null;
+    var _step = function step(timestamp) {
+      if (timestamp === null || this.isStop === true) {
+        opts.onProcess && opts.onProcess(1);
+        opts.onAnimationFinish && opts.onAnimationFinish();
+        return;
+      }
+      if (startTimeStamp === null) {
+        startTimeStamp = timestamp;
+      }
+      if (timestamp - startTimeStamp < opts.duration) {
+        var process2 = (timestamp - startTimeStamp) / opts.duration;
+        var timingFunction = Timing[opts.timing];
+        process2 = timingFunction(process2);
+        opts.onProcess && opts.onProcess(process2);
+        animationFrame(_step, delay);
+      } else {
+        opts.onProcess && opts.onProcess(1);
+        opts.onAnimationFinish && opts.onAnimationFinish();
+      }
+    };
+    _step = _step.bind(this);
+    animationFrame(_step, delay);
+  }
+  Animation.prototype.stop = function() {
+    this.isStop = true;
+  };
+  function drawCharts(type, opts, config2, context) {
+    var _this = this;
+    var series = opts.series;
+    if (type === "pie" || type === "ring" || type === "mount" || type === "rose" || type === "funnel") {
+      series = fixPieSeries(series, opts);
+    }
+    var categories = opts.categories;
+    if (type === "mount") {
+      categories = [];
+      for (let j = 0; j < series.length; j++) {
+        if (series[j].show !== false)
+          categories.push(series[j].name);
+      }
+      opts.categories = categories;
+    }
+    series = fillSeries(series, opts, config2);
+    var duration = opts.animation ? opts.duration : 0;
+    _this.animationInstance && _this.animationInstance.stop();
+    var seriesMA = null;
+    if (type == "candle") {
+      let average = assign({}, opts.extra.candle.average);
+      if (average.show) {
+        seriesMA = calCandleMA(average.day, average.name, average.color, series[0].data);
+        seriesMA = fillSeries(seriesMA, opts, config2);
+        opts.seriesMA = seriesMA;
+      } else if (opts.seriesMA) {
+        seriesMA = opts.seriesMA = fillSeries(opts.seriesMA, opts, config2);
+      } else {
+        seriesMA = series;
+      }
+    } else {
+      seriesMA = series;
+    }
+    opts._series_ = series = filterSeries(series);
+    opts.area = new Array(4);
+    for (let j = 0; j < 4; j++) {
+      opts.area[j] = opts.padding[j] * opts.pix;
+    }
+    var _calLegendData = calLegendData(seriesMA, opts, config2, opts.chartData, context), legendHeight = _calLegendData.area.wholeHeight, legendWidth = _calLegendData.area.wholeWidth;
+    switch (opts.legend.position) {
+      case "top":
+        opts.area[0] += legendHeight;
+        break;
+      case "bottom":
+        opts.area[2] += legendHeight;
+        break;
+      case "left":
+        opts.area[3] += legendWidth;
+        break;
+      case "right":
+        opts.area[1] += legendWidth;
+        break;
+    }
+    let _calYAxisData = {}, yAxisWidth = 0;
+    if (opts.type === "line" || opts.type === "column" || opts.type === "mount" || opts.type === "area" || opts.type === "mix" || opts.type === "candle" || opts.type === "scatter" || opts.type === "bubble" || opts.type === "bar") {
+      _calYAxisData = calYAxisData(series, opts, config2, context);
+      yAxisWidth = _calYAxisData.yAxisWidth;
+      if (opts.yAxis.showTitle) {
+        let maxTitleHeight = 0;
+        for (let i = 0; i < opts.yAxis.data.length; i++) {
+          maxTitleHeight = Math.max(maxTitleHeight, opts.yAxis.data[i].titleFontSize ? opts.yAxis.data[i].titleFontSize * opts.pix : config2.fontSize);
+        }
+        opts.area[0] += maxTitleHeight;
+      }
+      let rightIndex = 0, leftIndex = 0;
+      for (let i = 0; i < yAxisWidth.length; i++) {
+        if (yAxisWidth[i].position == "left") {
+          if (leftIndex > 0) {
+            opts.area[3] += yAxisWidth[i].width + opts.yAxis.padding * opts.pix;
+          } else {
+            opts.area[3] += yAxisWidth[i].width;
+          }
+          leftIndex += 1;
+        } else if (yAxisWidth[i].position == "right") {
+          if (rightIndex > 0) {
+            opts.area[1] += yAxisWidth[i].width + opts.yAxis.padding * opts.pix;
+          } else {
+            opts.area[1] += yAxisWidth[i].width;
+          }
+          rightIndex += 1;
+        }
+      }
+    } else {
+      config2.yAxisWidth = yAxisWidth;
+    }
+    opts.chartData.yAxisData = _calYAxisData;
+    if (opts.categories && opts.categories.length && opts.type !== "radar" && opts.type !== "gauge" && opts.type !== "bar") {
+      opts.chartData.xAxisData = getXAxisPoints(opts.categories, opts);
+      let _calCategoriesData = calCategoriesData(opts.categories, opts, config2, opts.chartData.xAxisData.eachSpacing, context), xAxisHeight = _calCategoriesData.xAxisHeight, angle = _calCategoriesData.angle;
+      config2.xAxisHeight = xAxisHeight;
+      config2._xAxisTextAngle_ = angle;
+      opts.area[2] += xAxisHeight;
+      opts.chartData.categoriesData = _calCategoriesData;
+    } else {
+      if (opts.type === "line" || opts.type === "area" || opts.type === "scatter" || opts.type === "bubble" || opts.type === "bar") {
+        opts.chartData.xAxisData = calXAxisData(series, opts, config2, context);
+        categories = opts.chartData.xAxisData.rangesFormat;
+        let _calCategoriesData = calCategoriesData(categories, opts, config2, opts.chartData.xAxisData.eachSpacing, context), xAxisHeight = _calCategoriesData.xAxisHeight, angle = _calCategoriesData.angle;
+        config2.xAxisHeight = xAxisHeight;
+        config2._xAxisTextAngle_ = angle;
+        opts.area[2] += xAxisHeight;
+        opts.chartData.categoriesData = _calCategoriesData;
+      } else {
+        opts.chartData.xAxisData = {
+          xAxisPoints: []
+        };
+      }
+    }
+    if (opts.enableScroll && opts.xAxis.scrollAlign == "right" && opts._scrollDistance_ === void 0) {
+      let offsetLeft = 0, xAxisPoints = opts.chartData.xAxisData.xAxisPoints, startX = opts.chartData.xAxisData.startX, endX = opts.chartData.xAxisData.endX, eachSpacing = opts.chartData.xAxisData.eachSpacing;
+      let totalWidth = eachSpacing * (xAxisPoints.length - 1);
+      let screenWidth = endX - startX;
+      offsetLeft = screenWidth - totalWidth;
+      _this.scrollOption.currentOffset = offsetLeft;
+      _this.scrollOption.startTouchX = offsetLeft;
+      _this.scrollOption.distance = 0;
+      _this.scrollOption.lastMoveTime = 0;
+      opts._scrollDistance_ = offsetLeft;
+    }
+    if (type === "pie" || type === "ring" || type === "rose") {
+      config2._pieTextMaxLength_ = opts.dataLabel === false ? 0 : getPieTextMaxLength(seriesMA, config2, context, opts);
+    }
+    switch (type) {
+      case "word":
+        this.animationInstance = new Animation({
+          timing: opts.timing,
+          duration,
+          onProcess: function(process2) {
+            context.clearRect(0, 0, opts.width, opts.height);
+            if (opts.rotate) {
+              contextRotate(context, opts);
+            }
+            drawWordCloudDataPoints(series, opts, config2, context, process2);
+            drawCanvas(opts, context);
+          },
+          onAnimationFinish: function onAnimationFinish() {
+            _this.uevent.trigger("renderComplete");
+          }
+        });
+        break;
+      case "map":
+        context.clearRect(0, 0, opts.width, opts.height);
+        drawMapDataPoints(series, opts, config2, context);
+        setTimeout(() => {
+          this.uevent.trigger("renderComplete");
+        }, 50);
+        break;
+      case "funnel":
+        this.animationInstance = new Animation({
+          timing: opts.timing,
+          duration,
+          onProcess: function(process2) {
+            context.clearRect(0, 0, opts.width, opts.height);
+            if (opts.rotate) {
+              contextRotate(context, opts);
+            }
+            opts.chartData.funnelData = drawFunnelDataPoints(series, opts, config2, context, process2);
+            drawLegend(opts.series, opts, config2, context, opts.chartData);
+            drawToolTipBridge(opts, config2, context, process2);
+            drawCanvas(opts, context);
+          },
+          onAnimationFinish: function onAnimationFinish() {
+            _this.uevent.trigger("renderComplete");
+          }
+        });
+        break;
+      case "line":
+        this.animationInstance = new Animation({
+          timing: opts.timing,
+          duration,
+          onProcess: function onProcess(process2) {
+            context.clearRect(0, 0, opts.width, opts.height);
+            if (opts.rotate) {
+              contextRotate(context, opts);
+            }
+            drawYAxisGrid(categories, opts, config2, context);
+            drawXAxis(categories, opts, config2, context);
+            var _drawLineDataPoints = drawLineDataPoints(series, opts, config2, context, process2), xAxisPoints = _drawLineDataPoints.xAxisPoints, calPoints = _drawLineDataPoints.calPoints, eachSpacing = _drawLineDataPoints.eachSpacing;
+            opts.chartData.xAxisPoints = xAxisPoints;
+            opts.chartData.calPoints = calPoints;
+            opts.chartData.eachSpacing = eachSpacing;
+            drawYAxis(series, opts, config2, context);
+            if (opts.enableMarkLine !== false && process2 === 1) {
+              drawMarkLine(opts, config2, context);
+            }
+            drawLegend(opts.series, opts, config2, context, opts.chartData);
+            drawToolTipBridge(opts, config2, context, process2);
+            drawCanvas(opts, context);
+          },
+          onAnimationFinish: function onAnimationFinish() {
+            _this.uevent.trigger("renderComplete");
+          }
+        });
+        break;
+      case "scatter":
+        this.animationInstance = new Animation({
+          timing: opts.timing,
+          duration,
+          onProcess: function onProcess(process2) {
+            context.clearRect(0, 0, opts.width, opts.height);
+            if (opts.rotate) {
+              contextRotate(context, opts);
+            }
+            drawYAxisGrid(categories, opts, config2, context);
+            drawXAxis(categories, opts, config2, context);
+            var _drawScatterDataPoints = drawScatterDataPoints(series, opts, config2, context, process2), xAxisPoints = _drawScatterDataPoints.xAxisPoints, calPoints = _drawScatterDataPoints.calPoints, eachSpacing = _drawScatterDataPoints.eachSpacing;
+            opts.chartData.xAxisPoints = xAxisPoints;
+            opts.chartData.calPoints = calPoints;
+            opts.chartData.eachSpacing = eachSpacing;
+            drawYAxis(series, opts, config2, context);
+            if (opts.enableMarkLine !== false && process2 === 1) {
+              drawMarkLine(opts, config2, context);
+            }
+            drawLegend(opts.series, opts, config2, context, opts.chartData);
+            drawToolTipBridge(opts, config2, context, process2);
+            drawCanvas(opts, context);
+          },
+          onAnimationFinish: function onAnimationFinish() {
+            _this.uevent.trigger("renderComplete");
+          }
+        });
+        break;
+      case "bubble":
+        this.animationInstance = new Animation({
+          timing: opts.timing,
+          duration,
+          onProcess: function onProcess(process2) {
+            context.clearRect(0, 0, opts.width, opts.height);
+            if (opts.rotate) {
+              contextRotate(context, opts);
+            }
+            drawYAxisGrid(categories, opts, config2, context);
+            drawXAxis(categories, opts, config2, context);
+            var _drawBubbleDataPoints = drawBubbleDataPoints(series, opts, config2, context, process2), xAxisPoints = _drawBubbleDataPoints.xAxisPoints, calPoints = _drawBubbleDataPoints.calPoints, eachSpacing = _drawBubbleDataPoints.eachSpacing;
+            opts.chartData.xAxisPoints = xAxisPoints;
+            opts.chartData.calPoints = calPoints;
+            opts.chartData.eachSpacing = eachSpacing;
+            drawYAxis(series, opts, config2, context);
+            if (opts.enableMarkLine !== false && process2 === 1) {
+              drawMarkLine(opts, config2, context);
+            }
+            drawLegend(opts.series, opts, config2, context, opts.chartData);
+            drawToolTipBridge(opts, config2, context, process2);
+            drawCanvas(opts, context);
+          },
+          onAnimationFinish: function onAnimationFinish() {
+            _this.uevent.trigger("renderComplete");
+          }
+        });
+        break;
+      case "mix":
+        this.animationInstance = new Animation({
+          timing: opts.timing,
+          duration,
+          onProcess: function onProcess(process2) {
+            context.clearRect(0, 0, opts.width, opts.height);
+            if (opts.rotate) {
+              contextRotate(context, opts);
+            }
+            drawYAxisGrid(categories, opts, config2, context);
+            drawXAxis(categories, opts, config2, context);
+            var _drawMixDataPoints = drawMixDataPoints(series, opts, config2, context, process2), xAxisPoints = _drawMixDataPoints.xAxisPoints, calPoints = _drawMixDataPoints.calPoints, eachSpacing = _drawMixDataPoints.eachSpacing;
+            opts.chartData.xAxisPoints = xAxisPoints;
+            opts.chartData.calPoints = calPoints;
+            opts.chartData.eachSpacing = eachSpacing;
+            drawYAxis(series, opts, config2, context);
+            if (opts.enableMarkLine !== false && process2 === 1) {
+              drawMarkLine(opts, config2, context);
+            }
+            drawLegend(opts.series, opts, config2, context, opts.chartData);
+            drawToolTipBridge(opts, config2, context, process2);
+            drawCanvas(opts, context);
+          },
+          onAnimationFinish: function onAnimationFinish() {
+            _this.uevent.trigger("renderComplete");
+          }
+        });
+        break;
+      case "column":
+        this.animationInstance = new Animation({
+          timing: opts.timing,
+          duration,
+          onProcess: function onProcess(process2) {
+            context.clearRect(0, 0, opts.width, opts.height);
+            if (opts.rotate) {
+              contextRotate(context, opts);
+            }
+            drawYAxisGrid(categories, opts, config2, context);
+            drawXAxis(categories, opts, config2, context);
+            var _drawColumnDataPoints = drawColumnDataPoints(series, opts, config2, context, process2), xAxisPoints = _drawColumnDataPoints.xAxisPoints, calPoints = _drawColumnDataPoints.calPoints, eachSpacing = _drawColumnDataPoints.eachSpacing;
+            opts.chartData.xAxisPoints = xAxisPoints;
+            opts.chartData.calPoints = calPoints;
+            opts.chartData.eachSpacing = eachSpacing;
+            drawYAxis(series, opts, config2, context);
+            if (opts.enableMarkLine !== false && process2 === 1) {
+              drawMarkLine(opts, config2, context);
+            }
+            drawLegend(opts.series, opts, config2, context, opts.chartData);
+            drawToolTipBridge(opts, config2, context, process2);
+            drawCanvas(opts, context);
+          },
+          onAnimationFinish: function onAnimationFinish() {
+            _this.uevent.trigger("renderComplete");
+          }
+        });
+        break;
+      case "mount":
+        this.animationInstance = new Animation({
+          timing: opts.timing,
+          duration,
+          onProcess: function onProcess(process2) {
+            context.clearRect(0, 0, opts.width, opts.height);
+            if (opts.rotate) {
+              contextRotate(context, opts);
+            }
+            drawYAxisGrid(categories, opts, config2, context);
+            drawXAxis(categories, opts, config2, context);
+            var _drawMountDataPoints = drawMountDataPoints(series, opts, config2, context, process2), xAxisPoints = _drawMountDataPoints.xAxisPoints, calPoints = _drawMountDataPoints.calPoints, eachSpacing = _drawMountDataPoints.eachSpacing;
+            opts.chartData.xAxisPoints = xAxisPoints;
+            opts.chartData.calPoints = calPoints;
+            opts.chartData.eachSpacing = eachSpacing;
+            drawYAxis(series, opts, config2, context);
+            if (opts.enableMarkLine !== false && process2 === 1) {
+              drawMarkLine(opts, config2, context);
+            }
+            drawLegend(opts.series, opts, config2, context, opts.chartData);
+            drawToolTipBridge(opts, config2, context, process2);
+            drawCanvas(opts, context);
+          },
+          onAnimationFinish: function onAnimationFinish() {
+            _this.uevent.trigger("renderComplete");
+          }
+        });
+        break;
+      case "bar":
+        this.animationInstance = new Animation({
+          timing: opts.timing,
+          duration,
+          onProcess: function onProcess(process2) {
+            context.clearRect(0, 0, opts.width, opts.height);
+            if (opts.rotate) {
+              contextRotate(context, opts);
+            }
+            drawXAxis(categories, opts, config2, context);
+            var _drawBarDataPoints = drawBarDataPoints(series, opts, config2, context, process2), yAxisPoints = _drawBarDataPoints.yAxisPoints, calPoints = _drawBarDataPoints.calPoints, eachSpacing = _drawBarDataPoints.eachSpacing;
+            opts.chartData.yAxisPoints = yAxisPoints;
+            opts.chartData.xAxisPoints = opts.chartData.xAxisData.xAxisPoints;
+            opts.chartData.calPoints = calPoints;
+            opts.chartData.eachSpacing = eachSpacing;
+            drawYAxis(series, opts, config2, context);
+            if (opts.enableMarkLine !== false && process2 === 1) {
+              drawMarkLine(opts, config2, context);
+            }
+            drawLegend(opts.series, opts, config2, context, opts.chartData);
+            drawToolTipBridge(opts, config2, context, process2);
+            drawCanvas(opts, context);
+          },
+          onAnimationFinish: function onAnimationFinish() {
+            _this.uevent.trigger("renderComplete");
+          }
+        });
+        break;
+      case "area":
+        this.animationInstance = new Animation({
+          timing: opts.timing,
+          duration,
+          onProcess: function onProcess(process2) {
+            context.clearRect(0, 0, opts.width, opts.height);
+            if (opts.rotate) {
+              contextRotate(context, opts);
+            }
+            drawYAxisGrid(categories, opts, config2, context);
+            drawXAxis(categories, opts, config2, context);
+            var _drawAreaDataPoints = drawAreaDataPoints(series, opts, config2, context, process2), xAxisPoints = _drawAreaDataPoints.xAxisPoints, calPoints = _drawAreaDataPoints.calPoints, eachSpacing = _drawAreaDataPoints.eachSpacing;
+            opts.chartData.xAxisPoints = xAxisPoints;
+            opts.chartData.calPoints = calPoints;
+            opts.chartData.eachSpacing = eachSpacing;
+            drawYAxis(series, opts, config2, context);
+            if (opts.enableMarkLine !== false && process2 === 1) {
+              drawMarkLine(opts, config2, context);
+            }
+            drawLegend(opts.series, opts, config2, context, opts.chartData);
+            drawToolTipBridge(opts, config2, context, process2);
+            drawCanvas(opts, context);
+          },
+          onAnimationFinish: function onAnimationFinish() {
+            _this.uevent.trigger("renderComplete");
+          }
+        });
+        break;
+      case "ring":
+        this.animationInstance = new Animation({
+          timing: opts.timing,
+          duration,
+          onProcess: function onProcess(process2) {
+            context.clearRect(0, 0, opts.width, opts.height);
+            if (opts.rotate) {
+              contextRotate(context, opts);
+            }
+            opts.chartData.pieData = drawPieDataPoints(series, opts, config2, context, process2);
+            drawLegend(opts.series, opts, config2, context, opts.chartData);
+            drawToolTipBridge(opts, config2, context, process2);
+            drawCanvas(opts, context);
+          },
+          onAnimationFinish: function onAnimationFinish() {
+            _this.uevent.trigger("renderComplete");
+          }
+        });
+        break;
+      case "pie":
+        this.animationInstance = new Animation({
+          timing: opts.timing,
+          duration,
+          onProcess: function onProcess(process2) {
+            context.clearRect(0, 0, opts.width, opts.height);
+            if (opts.rotate) {
+              contextRotate(context, opts);
+            }
+            opts.chartData.pieData = drawPieDataPoints(series, opts, config2, context, process2);
+            drawLegend(opts.series, opts, config2, context, opts.chartData);
+            drawToolTipBridge(opts, config2, context, process2);
+            drawCanvas(opts, context);
+          },
+          onAnimationFinish: function onAnimationFinish() {
+            _this.uevent.trigger("renderComplete");
+          }
+        });
+        break;
+      case "rose":
+        this.animationInstance = new Animation({
+          timing: opts.timing,
+          duration,
+          onProcess: function onProcess(process2) {
+            context.clearRect(0, 0, opts.width, opts.height);
+            if (opts.rotate) {
+              contextRotate(context, opts);
+            }
+            opts.chartData.pieData = drawRoseDataPoints(series, opts, config2, context, process2);
+            drawLegend(opts.series, opts, config2, context, opts.chartData);
+            drawToolTipBridge(opts, config2, context, process2);
+            drawCanvas(opts, context);
+          },
+          onAnimationFinish: function onAnimationFinish() {
+            _this.uevent.trigger("renderComplete");
+          }
+        });
+        break;
+      case "radar":
+        this.animationInstance = new Animation({
+          timing: opts.timing,
+          duration,
+          onProcess: function onProcess(process2) {
+            context.clearRect(0, 0, opts.width, opts.height);
+            if (opts.rotate) {
+              contextRotate(context, opts);
+            }
+            opts.chartData.radarData = drawRadarDataPoints(series, opts, config2, context, process2);
+            drawLegend(opts.series, opts, config2, context, opts.chartData);
+            drawToolTipBridge(opts, config2, context, process2);
+            drawCanvas(opts, context);
+          },
+          onAnimationFinish: function onAnimationFinish() {
+            _this.uevent.trigger("renderComplete");
+          }
+        });
+        break;
+      case "arcbar":
+        this.animationInstance = new Animation({
+          timing: opts.timing,
+          duration,
+          onProcess: function onProcess(process2) {
+            context.clearRect(0, 0, opts.width, opts.height);
+            if (opts.rotate) {
+              contextRotate(context, opts);
+            }
+            opts.chartData.arcbarData = drawArcbarDataPoints(series, opts, config2, context, process2);
+            drawCanvas(opts, context);
+          },
+          onAnimationFinish: function onAnimationFinish() {
+            _this.uevent.trigger("renderComplete");
+          }
+        });
+        break;
+      case "gauge":
+        this.animationInstance = new Animation({
+          timing: opts.timing,
+          duration,
+          onProcess: function onProcess(process2) {
+            context.clearRect(0, 0, opts.width, opts.height);
+            if (opts.rotate) {
+              contextRotate(context, opts);
+            }
+            opts.chartData.gaugeData = drawGaugeDataPoints(categories, series, opts, config2, context, process2);
+            drawCanvas(opts, context);
+          },
+          onAnimationFinish: function onAnimationFinish() {
+            _this.uevent.trigger("renderComplete");
+          }
+        });
+        break;
+      case "candle":
+        this.animationInstance = new Animation({
+          timing: opts.timing,
+          duration,
+          onProcess: function onProcess(process2) {
+            context.clearRect(0, 0, opts.width, opts.height);
+            if (opts.rotate) {
+              contextRotate(context, opts);
+            }
+            drawYAxisGrid(categories, opts, config2, context);
+            drawXAxis(categories, opts, config2, context);
+            var _drawCandleDataPoints = drawCandleDataPoints(series, seriesMA, opts, config2, context, process2), xAxisPoints = _drawCandleDataPoints.xAxisPoints, calPoints = _drawCandleDataPoints.calPoints, eachSpacing = _drawCandleDataPoints.eachSpacing;
+            opts.chartData.xAxisPoints = xAxisPoints;
+            opts.chartData.calPoints = calPoints;
+            opts.chartData.eachSpacing = eachSpacing;
+            drawYAxis(series, opts, config2, context);
+            if (opts.enableMarkLine !== false && process2 === 1) {
+              drawMarkLine(opts, config2, context);
+            }
+            if (seriesMA) {
+              drawLegend(seriesMA, opts, config2, context, opts.chartData);
+            } else {
+              drawLegend(opts.series, opts, config2, context, opts.chartData);
+            }
+            drawToolTipBridge(opts, config2, context, process2);
+            drawCanvas(opts, context);
+          },
+          onAnimationFinish: function onAnimationFinish() {
+            _this.uevent.trigger("renderComplete");
+          }
+        });
+        break;
+    }
+  }
+  function uChartsEvent() {
+    this.events = {};
+  }
+  uChartsEvent.prototype.addEventListener = function(type, listener) {
+    this.events[type] = this.events[type] || [];
+    this.events[type].push(listener);
+  };
+  uChartsEvent.prototype.delEventListener = function(type) {
+    this.events[type] = [];
+  };
+  uChartsEvent.prototype.trigger = function() {
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+    var type = args[0];
+    var params = args.slice(1);
+    if (!!this.events[type]) {
+      this.events[type].forEach(function(listener) {
+        try {
+          listener.apply(null, params);
+        } catch (e) {
+        }
+      });
+    }
+  };
+  var uCharts = function uCharts2(opts) {
+    opts.pix = opts.pixelRatio ? opts.pixelRatio : 1;
+    opts.fontSize = opts.fontSize ? opts.fontSize : 13;
+    opts.fontColor = opts.fontColor ? opts.fontColor : config.fontColor;
+    if (opts.background == "" || opts.background == "none") {
+      opts.background = "#FFFFFF";
+    }
+    opts.title = assign({}, opts.title);
+    opts.subtitle = assign({}, opts.subtitle);
+    opts.duration = opts.duration ? opts.duration : 1e3;
+    opts.yAxis = assign({}, {
+      data: [],
+      showTitle: false,
+      disabled: false,
+      disableGrid: false,
+      gridSet: "number",
+      splitNumber: 5,
+      gridType: "solid",
+      dashLength: 4 * opts.pix,
+      gridColor: "#cccccc",
+      padding: 10,
+      fontColor: "#666666"
+    }, opts.yAxis);
+    opts.xAxis = assign({}, {
+      rotateLabel: false,
+      rotateAngle: 45,
+      disabled: false,
+      disableGrid: false,
+      splitNumber: 5,
+      calibration: false,
+      fontColor: "#666666",
+      fontSize: 13,
+      lineHeight: 20,
+      marginTop: 0,
+      gridType: "solid",
+      dashLength: 4,
+      scrollAlign: "left",
+      boundaryGap: "center",
+      axisLine: true,
+      axisLineColor: "#cccccc",
+      titleFontSize: 13,
+      titleOffsetY: 0,
+      titleOffsetX: 0,
+      titleFontColor: "#666666"
+    }, opts.xAxis);
+    opts.xAxis.scrollPosition = opts.xAxis.scrollAlign;
+    opts.legend = assign({}, {
+      show: true,
+      position: "bottom",
+      float: "center",
+      backgroundColor: "rgba(0,0,0,0)",
+      borderColor: "rgba(0,0,0,0)",
+      borderWidth: 0,
+      padding: 5,
+      margin: 5,
+      itemGap: 10,
+      fontSize: opts.fontSize,
+      lineHeight: opts.fontSize,
+      fontColor: opts.fontColor,
+      formatter: {},
+      hiddenColor: "#CECECE"
+    }, opts.legend);
+    opts.extra = assign({
+      tooltip: {
+        legendShape: "auto"
+      }
+    }, opts.extra);
+    opts.rotate = opts.rotate ? true : false;
+    opts.animation = opts.animation ? true : false;
+    opts.rotate = opts.rotate ? true : false;
+    opts.canvas2d = opts.canvas2d ? true : false;
+    let config$$1 = assign({}, config);
+    config$$1.color = opts.color ? opts.color : config$$1.color;
+    if (opts.type == "pie") {
+      config$$1.pieChartLinePadding = opts.dataLabel === false ? 0 : opts.extra.pie.labelWidth * opts.pix || config$$1.pieChartLinePadding * opts.pix;
+    }
+    if (opts.type == "ring") {
+      config$$1.pieChartLinePadding = opts.dataLabel === false ? 0 : opts.extra.ring.labelWidth * opts.pix || config$$1.pieChartLinePadding * opts.pix;
+    }
+    if (opts.type == "rose") {
+      config$$1.pieChartLinePadding = opts.dataLabel === false ? 0 : opts.extra.rose.labelWidth * opts.pix || config$$1.pieChartLinePadding * opts.pix;
+    }
+    config$$1.pieChartTextPadding = opts.dataLabel === false ? 0 : config$$1.pieChartTextPadding * opts.pix;
+    config$$1.rotate = opts.rotate;
+    if (opts.rotate) {
+      let tempWidth = opts.width;
+      let tempHeight = opts.height;
+      opts.width = tempHeight;
+      opts.height = tempWidth;
+    }
+    opts.padding = opts.padding ? opts.padding : config$$1.padding;
+    config$$1.yAxisWidth = config.yAxisWidth * opts.pix;
+    config$$1.fontSize = opts.fontSize * opts.pix;
+    config$$1.titleFontSize = config.titleFontSize * opts.pix;
+    config$$1.subtitleFontSize = config.subtitleFontSize * opts.pix;
+    if (!opts.context) {
+      throw new Error("[uCharts] 未获取到context！注意：v2.0版本后，需要自行获取canvas的绘图上下文并传入opts.context！");
+    }
+    this.context = opts.context;
+    if (!this.context.setTextAlign) {
+      this.context.setStrokeStyle = function(e) {
+        return this.strokeStyle = e;
+      };
+      this.context.setLineWidth = function(e) {
+        return this.lineWidth = e;
+      };
+      this.context.setLineCap = function(e) {
+        return this.lineCap = e;
+      };
+      this.context.setFontSize = function(e) {
+        return this.font = e + "px sans-serif";
+      };
+      this.context.setFillStyle = function(e) {
+        return this.fillStyle = e;
+      };
+      this.context.setTextAlign = function(e) {
+        return this.textAlign = e;
+      };
+      this.context.setTextBaseline = function(e) {
+        return this.textBaseline = e;
+      };
+      this.context.setShadow = function(offsetX, offsetY, blur, color) {
+        this.shadowColor = color;
+        this.shadowOffsetX = offsetX;
+        this.shadowOffsetY = offsetY;
+        this.shadowBlur = blur;
+      };
+      this.context.draw = function() {
+      };
+    }
+    if (!this.context.setLineDash) {
+      this.context.setLineDash = function(e) {
+      };
+    }
+    opts.chartData = {};
+    this.uevent = new uChartsEvent();
+    this.scrollOption = {
+      currentOffset: 0,
+      startTouchX: 0,
+      distance: 0,
+      lastMoveTime: 0
+    };
+    this.opts = opts;
+    this.config = config$$1;
+    drawCharts.call(this, opts.type, opts, config$$1, this.context);
+  };
+  uCharts.prototype.updateData = function() {
+    let data = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {};
+    this.opts = assign({}, this.opts, data);
+    this.opts.updateData = true;
+    let scrollPosition = data.scrollPosition || "current";
+    switch (scrollPosition) {
+      case "current":
+        this.opts._scrollDistance_ = this.scrollOption.currentOffset;
+        break;
+      case "left":
+        this.opts._scrollDistance_ = 0;
+        this.scrollOption = {
+          currentOffset: 0,
+          startTouchX: 0,
+          distance: 0,
+          lastMoveTime: 0
+        };
+        break;
+      case "right":
+        let _calYAxisData = calYAxisData(this.opts.series, this.opts, this.config, this.context), yAxisWidth = _calYAxisData.yAxisWidth;
+        this.config.yAxisWidth = yAxisWidth;
+        let offsetLeft = 0;
+        let _getXAxisPoints0 = getXAxisPoints(this.opts.categories, this.opts, this.config), xAxisPoints = _getXAxisPoints0.xAxisPoints, startX = _getXAxisPoints0.startX, endX = _getXAxisPoints0.endX, eachSpacing = _getXAxisPoints0.eachSpacing;
+        let totalWidth = eachSpacing * (xAxisPoints.length - 1);
+        let screenWidth = endX - startX;
+        offsetLeft = screenWidth - totalWidth;
+        this.scrollOption = {
+          currentOffset: offsetLeft,
+          startTouchX: offsetLeft,
+          distance: 0,
+          lastMoveTime: 0
+        };
+        this.opts._scrollDistance_ = offsetLeft;
+        break;
+    }
+    drawCharts.call(this, this.opts.type, this.opts, this.config, this.context);
+  };
+  uCharts.prototype.zoom = function() {
+    var val = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : this.opts.xAxis.itemCount;
+    if (this.opts.enableScroll !== true) {
+      console.log("[uCharts] 请启用滚动条后使用");
+      return;
+    }
+    let centerPoint = Math.round(Math.abs(this.scrollOption.currentOffset) / this.opts.chartData.eachSpacing) + Math.round(this.opts.xAxis.itemCount / 2);
+    this.opts.animation = false;
+    this.opts.xAxis.itemCount = val.itemCount;
+    let _calYAxisData = calYAxisData(this.opts.series, this.opts, this.config, this.context), yAxisWidth = _calYAxisData.yAxisWidth;
+    this.config.yAxisWidth = yAxisWidth;
+    let offsetLeft = 0;
+    let _getXAxisPoints0 = getXAxisPoints(this.opts.categories, this.opts, this.config), xAxisPoints = _getXAxisPoints0.xAxisPoints, startX = _getXAxisPoints0.startX, endX = _getXAxisPoints0.endX, eachSpacing = _getXAxisPoints0.eachSpacing;
+    let centerLeft = eachSpacing * centerPoint;
+    let screenWidth = endX - startX;
+    let MaxLeft = screenWidth - eachSpacing * (xAxisPoints.length - 1);
+    offsetLeft = screenWidth / 2 - centerLeft;
+    if (offsetLeft > 0) {
+      offsetLeft = 0;
+    }
+    if (offsetLeft < MaxLeft) {
+      offsetLeft = MaxLeft;
+    }
+    this.scrollOption = {
+      currentOffset: offsetLeft,
+      startTouchX: 0,
+      distance: 0,
+      lastMoveTime: 0
+    };
+    calValidDistance(this, offsetLeft, this.opts.chartData, this.config, this.opts);
+    this.opts._scrollDistance_ = offsetLeft;
+    drawCharts.call(this, this.opts.type, this.opts, this.config, this.context);
+  };
+  uCharts.prototype.dobuleZoom = function(e) {
+    if (this.opts.enableScroll !== true) {
+      console.log("[uCharts] 请启用滚动条后使用");
+      return;
+    }
+    const tcs = e.changedTouches;
+    if (tcs.length < 2) {
+      return;
+    }
+    for (var i = 0; i < tcs.length; i++) {
+      tcs[i].x = tcs[i].x ? tcs[i].x : tcs[i].clientX;
+      tcs[i].y = tcs[i].y ? tcs[i].y : tcs[i].clientY;
+    }
+    const ntcs = [getTouches(tcs[0], this.opts, e), getTouches(tcs[1], this.opts, e)];
+    const xlength = Math.abs(ntcs[0].x - ntcs[1].x);
+    if (!this.scrollOption.moveCount) {
+      let cts0 = { changedTouches: [{ x: tcs[0].x, y: this.opts.area[0] / this.opts.pix + 2 }] };
+      let cts1 = { changedTouches: [{ x: tcs[1].x, y: this.opts.area[0] / this.opts.pix + 2 }] };
+      if (this.opts.rotate) {
+        cts0 = { changedTouches: [{ x: this.opts.height / this.opts.pix - this.opts.area[0] / this.opts.pix - 2, y: tcs[0].y }] };
+        cts1 = { changedTouches: [{ x: this.opts.height / this.opts.pix - this.opts.area[0] / this.opts.pix - 2, y: tcs[1].y }] };
+      }
+      const moveCurrent1 = this.getCurrentDataIndex(cts0).index;
+      const moveCurrent2 = this.getCurrentDataIndex(cts1).index;
+      const moveCount = Math.abs(moveCurrent1 - moveCurrent2);
+      this.scrollOption.moveCount = moveCount;
+      this.scrollOption.moveCurrent1 = Math.min(moveCurrent1, moveCurrent2);
+      this.scrollOption.moveCurrent2 = Math.max(moveCurrent1, moveCurrent2);
+      return;
+    }
+    let currentEachSpacing = xlength / this.scrollOption.moveCount;
+    let itemCount = (this.opts.width - this.opts.area[1] - this.opts.area[3]) / currentEachSpacing;
+    itemCount = itemCount <= 2 ? 2 : itemCount;
+    itemCount = itemCount >= this.opts.categories.length ? this.opts.categories.length : itemCount;
+    this.opts.animation = false;
+    this.opts.xAxis.itemCount = itemCount;
+    let offsetLeft = 0;
+    let _getXAxisPoints0 = getXAxisPoints(this.opts.categories, this.opts, this.config), xAxisPoints = _getXAxisPoints0.xAxisPoints, startX = _getXAxisPoints0.startX, endX = _getXAxisPoints0.endX, eachSpacing = _getXAxisPoints0.eachSpacing;
+    let currentLeft = eachSpacing * this.scrollOption.moveCurrent1;
+    let screenWidth = endX - startX;
+    let MaxLeft = screenWidth - eachSpacing * (xAxisPoints.length - 1);
+    offsetLeft = -currentLeft + Math.min(ntcs[0].x, ntcs[1].x) - this.opts.area[3] - eachSpacing;
+    if (offsetLeft > 0) {
+      offsetLeft = 0;
+    }
+    if (offsetLeft < MaxLeft) {
+      offsetLeft = MaxLeft;
+    }
+    this.scrollOption.currentOffset = offsetLeft;
+    this.scrollOption.startTouchX = 0;
+    this.scrollOption.distance = 0;
+    calValidDistance(this, offsetLeft, this.opts.chartData, this.config, this.opts);
+    this.opts._scrollDistance_ = offsetLeft;
+    drawCharts.call(this, this.opts.type, this.opts, this.config, this.context);
+  };
+  uCharts.prototype.stopAnimation = function() {
+    this.animationInstance && this.animationInstance.stop();
+  };
+  uCharts.prototype.addEventListener = function(type, listener) {
+    this.uevent.addEventListener(type, listener);
+  };
+  uCharts.prototype.delEventListener = function(type) {
+    this.uevent.delEventListener(type);
+  };
+  uCharts.prototype.getCurrentDataIndex = function(e) {
+    var touches = null;
+    if (e.changedTouches) {
+      touches = e.changedTouches[0];
+    } else {
+      touches = e.mp.changedTouches[0];
+    }
+    if (touches) {
+      let _touches$ = getTouches(touches, this.opts, e);
+      if (this.opts.type === "pie" || this.opts.type === "ring") {
+        return findPieChartCurrentIndex({
+          x: _touches$.x,
+          y: _touches$.y
+        }, this.opts.chartData.pieData, this.opts);
+      } else if (this.opts.type === "rose") {
+        return findRoseChartCurrentIndex({
+          x: _touches$.x,
+          y: _touches$.y
+        }, this.opts.chartData.pieData, this.opts);
+      } else if (this.opts.type === "radar") {
+        return findRadarChartCurrentIndex({
+          x: _touches$.x,
+          y: _touches$.y
+        }, this.opts.chartData.radarData, this.opts.categories.length);
+      } else if (this.opts.type === "funnel") {
+        return findFunnelChartCurrentIndex({
+          x: _touches$.x,
+          y: _touches$.y
+        }, this.opts.chartData.funnelData);
+      } else if (this.opts.type === "map") {
+        return findMapChartCurrentIndex({
+          x: _touches$.x,
+          y: _touches$.y
+        }, this.opts);
+      } else if (this.opts.type === "word") {
+        return findWordChartCurrentIndex({
+          x: _touches$.x,
+          y: _touches$.y
+        }, this.opts.chartData.wordCloudData);
+      } else if (this.opts.type === "bar") {
+        return findBarChartCurrentIndex({
+          x: _touches$.x,
+          y: _touches$.y
+        }, this.opts.chartData.calPoints, this.opts, this.config, Math.abs(this.scrollOption.currentOffset));
+      } else {
+        return findCurrentIndex({
+          x: _touches$.x,
+          y: _touches$.y
+        }, this.opts.chartData.calPoints, this.opts, this.config, Math.abs(this.scrollOption.currentOffset));
+      }
+    }
+    return -1;
+  };
+  uCharts.prototype.getLegendDataIndex = function(e) {
+    var touches = null;
+    if (e.changedTouches) {
+      touches = e.changedTouches[0];
+    } else {
+      touches = e.mp.changedTouches[0];
+    }
+    if (touches) {
+      let _touches$ = getTouches(touches, this.opts, e);
+      return findLegendIndex({
+        x: _touches$.x,
+        y: _touches$.y
+      }, this.opts.chartData.legendData);
+    }
+    return -1;
+  };
+  uCharts.prototype.touchLegend = function(e) {
+    var option = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
+    var touches = null;
+    if (e.changedTouches) {
+      touches = e.changedTouches[0];
+    } else {
+      touches = e.mp.changedTouches[0];
+    }
+    if (touches) {
+      getTouches(touches, this.opts, e);
+      var index = this.getLegendDataIndex(e);
+      if (index >= 0) {
+        if (this.opts.type == "candle") {
+          this.opts.seriesMA[index].show = !this.opts.seriesMA[index].show;
+        } else {
+          this.opts.series[index].show = !this.opts.series[index].show;
+        }
+        this.opts.animation = option.animation ? true : false;
+        this.opts._scrollDistance_ = this.scrollOption.currentOffset;
+        drawCharts.call(this, this.opts.type, this.opts, this.config, this.context);
+      }
+    }
+  };
+  uCharts.prototype.showToolTip = function(e) {
+    var option = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
+    var touches = null;
+    if (e.changedTouches) {
+      touches = e.changedTouches[0];
+    } else {
+      touches = e.mp.changedTouches[0];
+    }
+    if (!touches) {
+      console.log("[uCharts] 未获取到event坐标信息");
+    }
+    var _touches$ = getTouches(touches, this.opts, e);
+    var currentOffset = this.scrollOption.currentOffset;
+    var opts = assign({}, this.opts, {
+      _scrollDistance_: currentOffset,
+      animation: false
+    });
+    if (this.opts.type === "line" || this.opts.type === "area" || this.opts.type === "column" || this.opts.type === "scatter" || this.opts.type === "bubble") {
+      var current = this.getCurrentDataIndex(e);
+      var index = option.index == void 0 ? current.index : option.index;
+      if (index > -1 || index.length > 0) {
+        var seriesData = getSeriesDataItem(this.opts.series, index, current.group);
+        if (seriesData.length !== 0) {
+          var _getToolTipData = getToolTipData(seriesData, this.opts, index, current.group, this.opts.categories, option), textList = _getToolTipData.textList, offset = _getToolTipData.offset;
+          offset.y = _touches$.y;
+          opts.tooltip = {
+            textList: option.textList !== void 0 ? option.textList : textList,
+            offset: option.offset !== void 0 ? option.offset : offset,
+            option,
+            index,
+            group: current.group
+          };
+        }
+      }
+      drawCharts.call(this, opts.type, opts, this.config, this.context);
+    }
+    if (this.opts.type === "mount") {
+      var index = option.index == void 0 ? this.getCurrentDataIndex(e).index : option.index;
+      if (index > -1) {
+        var opts = assign({}, this.opts, { animation: false });
+        var seriesData = assign({}, opts._series_[index]);
+        var textList = [{
+          text: option.formatter ? option.formatter(seriesData, void 0, index, opts) : seriesData.name + ": " + seriesData.data,
+          color: seriesData.color,
+          legendShape: this.opts.extra.tooltip.legendShape == "auto" ? seriesData.legendShape : this.opts.extra.tooltip.legendShape
+        }];
+        var offset = {
+          x: opts.chartData.calPoints[index].x,
+          y: _touches$.y
+        };
+        opts.tooltip = {
+          textList: option.textList ? option.textList : textList,
+          offset: option.offset !== void 0 ? option.offset : offset,
+          option,
+          index
+        };
+      }
+      drawCharts.call(this, opts.type, opts, this.config, this.context);
+    }
+    if (this.opts.type === "bar") {
+      var current = this.getCurrentDataIndex(e);
+      var index = option.index == void 0 ? current.index : option.index;
+      if (index > -1 || index.length > 0) {
+        var seriesData = getSeriesDataItem(this.opts.series, index, current.group);
+        if (seriesData.length !== 0) {
+          var _getToolTipData = getToolTipData(seriesData, this.opts, index, current.group, this.opts.categories, option), textList = _getToolTipData.textList, offset = _getToolTipData.offset;
+          offset.x = _touches$.x;
+          opts.tooltip = {
+            textList: option.textList !== void 0 ? option.textList : textList,
+            offset: option.offset !== void 0 ? option.offset : offset,
+            option,
+            index
+          };
+        }
+      }
+      drawCharts.call(this, opts.type, opts, this.config, this.context);
+    }
+    if (this.opts.type === "mix") {
+      var current = this.getCurrentDataIndex(e);
+      var index = option.index == void 0 ? current.index : option.index;
+      if (index > -1) {
+        var currentOffset = this.scrollOption.currentOffset;
+        var opts = assign({}, this.opts, {
+          _scrollDistance_: currentOffset,
+          animation: false
+        });
+        var seriesData = getSeriesDataItem(this.opts.series, index);
+        if (seriesData.length !== 0) {
+          var _getMixToolTipData = getMixToolTipData(seriesData, this.opts, index, this.opts.categories, option), textList = _getMixToolTipData.textList, offset = _getMixToolTipData.offset;
+          offset.y = _touches$.y;
+          opts.tooltip = {
+            textList: option.textList ? option.textList : textList,
+            offset: option.offset !== void 0 ? option.offset : offset,
+            option,
+            index
+          };
+        }
+      }
+      drawCharts.call(this, opts.type, opts, this.config, this.context);
+    }
+    if (this.opts.type === "candle") {
+      var current = this.getCurrentDataIndex(e);
+      var index = option.index == void 0 ? current.index : option.index;
+      if (index > -1) {
+        var currentOffset = this.scrollOption.currentOffset;
+        var opts = assign({}, this.opts, {
+          _scrollDistance_: currentOffset,
+          animation: false
+        });
+        var seriesData = getSeriesDataItem(this.opts.series, index);
+        if (seriesData.length !== 0) {
+          var _getToolTipData = getCandleToolTipData(this.opts.series[0].data, seriesData, this.opts, index, this.opts.categories, this.opts.extra.candle), textList = _getToolTipData.textList, offset = _getToolTipData.offset;
+          offset.y = _touches$.y;
+          opts.tooltip = {
+            textList: option.textList ? option.textList : textList,
+            offset: option.offset !== void 0 ? option.offset : offset,
+            option,
+            index
+          };
+        }
+      }
+      drawCharts.call(this, opts.type, opts, this.config, this.context);
+    }
+    if (this.opts.type === "pie" || this.opts.type === "ring" || this.opts.type === "rose" || this.opts.type === "funnel") {
+      var index = option.index == void 0 ? this.getCurrentDataIndex(e) : option.index;
+      if (index > -1) {
+        var opts = assign({}, this.opts, { animation: false });
+        var seriesData = assign({}, opts._series_[index]);
+        var textList = [{
+          text: option.formatter ? option.formatter(seriesData, void 0, index, opts) : seriesData.name + ": " + seriesData.data,
+          color: seriesData.color,
+          legendShape: this.opts.extra.tooltip.legendShape == "auto" ? seriesData.legendShape : this.opts.extra.tooltip.legendShape
+        }];
+        var offset = {
+          x: _touches$.x,
+          y: _touches$.y
+        };
+        opts.tooltip = {
+          textList: option.textList ? option.textList : textList,
+          offset: option.offset !== void 0 ? option.offset : offset,
+          option,
+          index
+        };
+      }
+      drawCharts.call(this, opts.type, opts, this.config, this.context);
+    }
+    if (this.opts.type === "map") {
+      var index = option.index == void 0 ? this.getCurrentDataIndex(e) : option.index;
+      if (index > -1) {
+        var opts = assign({}, this.opts, { animation: false });
+        var seriesData = assign({}, this.opts.series[index]);
+        seriesData.name = seriesData.properties.name;
+        var textList = [{
+          text: option.formatter ? option.formatter(seriesData, void 0, index, this.opts) : seriesData.name,
+          color: seriesData.color,
+          legendShape: this.opts.extra.tooltip.legendShape == "auto" ? seriesData.legendShape : this.opts.extra.tooltip.legendShape
+        }];
+        var offset = {
+          x: _touches$.x,
+          y: _touches$.y
+        };
+        opts.tooltip = {
+          textList: option.textList ? option.textList : textList,
+          offset: option.offset !== void 0 ? option.offset : offset,
+          option,
+          index
+        };
+      }
+      opts.updateData = false;
+      drawCharts.call(this, opts.type, opts, this.config, this.context);
+    }
+    if (this.opts.type === "word") {
+      var index = option.index == void 0 ? this.getCurrentDataIndex(e) : option.index;
+      if (index > -1) {
+        var opts = assign({}, this.opts, { animation: false });
+        var seriesData = assign({}, this.opts.series[index]);
+        var textList = [{
+          text: option.formatter ? option.formatter(seriesData, void 0, index, this.opts) : seriesData.name,
+          color: seriesData.color,
+          legendShape: this.opts.extra.tooltip.legendShape == "auto" ? seriesData.legendShape : this.opts.extra.tooltip.legendShape
+        }];
+        var offset = {
+          x: _touches$.x,
+          y: _touches$.y
+        };
+        opts.tooltip = {
+          textList: option.textList ? option.textList : textList,
+          offset: option.offset !== void 0 ? option.offset : offset,
+          option,
+          index
+        };
+      }
+      opts.updateData = false;
+      drawCharts.call(this, opts.type, opts, this.config, this.context);
+    }
+    if (this.opts.type === "radar") {
+      var index = option.index == void 0 ? this.getCurrentDataIndex(e) : option.index;
+      if (index > -1) {
+        var opts = assign({}, this.opts, { animation: false });
+        var seriesData = getSeriesDataItem(this.opts.series, index);
+        if (seriesData.length !== 0) {
+          var textList = seriesData.map((item) => {
+            return {
+              text: option.formatter ? option.formatter(item, this.opts.categories[index], index, this.opts) : item.name + ": " + item.data,
+              color: item.color,
+              legendShape: this.opts.extra.tooltip.legendShape == "auto" ? item.legendShape : this.opts.extra.tooltip.legendShape
+            };
+          });
+          var offset = {
+            x: _touches$.x,
+            y: _touches$.y
+          };
+          opts.tooltip = {
+            textList: option.textList ? option.textList : textList,
+            offset: option.offset !== void 0 ? option.offset : offset,
+            option,
+            index
+          };
+        }
+      }
+      drawCharts.call(this, opts.type, opts, this.config, this.context);
+    }
+  };
+  uCharts.prototype.translate = function(distance) {
+    this.scrollOption = {
+      currentOffset: distance,
+      startTouchX: distance,
+      distance: 0,
+      lastMoveTime: 0
+    };
+    let opts = assign({}, this.opts, {
+      _scrollDistance_: distance,
+      animation: false
+    });
+    drawCharts.call(this, this.opts.type, opts, this.config, this.context);
+  };
+  uCharts.prototype.scrollStart = function(e) {
+    var touches = null;
+    if (e.changedTouches) {
+      touches = e.changedTouches[0];
+    } else {
+      touches = e.mp.changedTouches[0];
+    }
+    var _touches$ = getTouches(touches, this.opts, e);
+    if (touches && this.opts.enableScroll === true) {
+      this.scrollOption.startTouchX = _touches$.x;
+    }
+  };
+  uCharts.prototype.scroll = function(e) {
+    if (this.scrollOption.lastMoveTime === 0) {
+      this.scrollOption.lastMoveTime = Date.now();
+    }
+    let Limit = this.opts.touchMoveLimit || 60;
+    let currMoveTime = Date.now();
+    let duration = currMoveTime - this.scrollOption.lastMoveTime;
+    if (duration < Math.floor(1e3 / Limit))
+      return;
+    if (this.scrollOption.startTouchX == 0)
+      return;
+    this.scrollOption.lastMoveTime = currMoveTime;
+    var touches = null;
+    if (e.changedTouches) {
+      touches = e.changedTouches[0];
+    } else {
+      touches = e.mp.changedTouches[0];
+    }
+    if (touches && this.opts.enableScroll === true) {
+      var _touches$ = getTouches(touches, this.opts, e);
+      var _distance;
+      _distance = _touches$.x - this.scrollOption.startTouchX;
+      var currentOffset = this.scrollOption.currentOffset;
+      var validDistance = calValidDistance(this, currentOffset + _distance, this.opts.chartData, this.config, this.opts);
+      this.scrollOption.distance = _distance = validDistance - currentOffset;
+      var opts = assign({}, this.opts, {
+        _scrollDistance_: currentOffset + _distance,
+        animation: false
+      });
+      this.opts = opts;
+      drawCharts.call(this, opts.type, opts, this.config, this.context);
+      return currentOffset + _distance;
+    }
+  };
+  uCharts.prototype.scrollEnd = function(e) {
+    if (this.opts.enableScroll === true) {
+      var _scrollOption = this.scrollOption, currentOffset = _scrollOption.currentOffset, distance = _scrollOption.distance;
+      this.scrollOption.currentOffset = currentOffset + distance;
+      this.scrollOption.distance = 0;
+      this.scrollOption.moveCount = 0;
+    }
+  };
+  function initUCharts(canvasId, option, context) {
     try {
-      const localWealthData = getStorage("wealthData", true) || {};
-      return localWealthData[userId] || null;
+      formatAppLog("log", "at utils/ucharts.js:16", "🎨 初始化uCharts图表:", canvasId);
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          try {
+            const ctx = uni.createCanvasContext(canvasId, context);
+            const systemInfo = uni.getSystemInfoSync();
+            const width = systemInfo.windowWidth - 40;
+            const height = 200;
+            const chart = new uCharts({
+              type: option.type || "line",
+              context: ctx,
+              width,
+              height,
+              ...option
+            });
+            formatAppLog("log", "at utils/ucharts.js:39", "✅ uCharts图表渲染成功 (App-Plus)");
+            resolve(chart);
+          } catch (error) {
+            formatAppLog("error", "at utils/ucharts.js:42", "App-Plus: uCharts初始化失败:", error);
+            resolve(null);
+          }
+        }, 300);
+      });
     } catch (error) {
-      formatAppLog("error", "at api/wealth.js:344", "从本地存储获取财富数据失败:", error);
+      formatAppLog("error", "at utils/ucharts.js:111", "❌ uCharts图表初始化失败:", error);
       return null;
     }
   }
-  function syncStorageToUserData(userId) {
-    try {
-      const localWealthData = getWealthDataFromStorage(userId);
-      if (localWealthData) {
-        updateUser(userId, localWealthData);
-        formatAppLog("log", "at api/wealth.js:358", "本地存储财富数据已同步到用户数据:", userId);
-      }
-    } catch (error) {
-      formatAppLog("error", "at api/wealth.js:361", "同步本地存储到用户数据失败:", error);
-    }
-  }
-  function addInvestmentRecord(userId, investment) {
-    try {
-      const users2 = getUsersData();
-      const user = users2.find((user2) => user2.id === userId);
-      if (user) {
-        if (!user.wealthProducts) {
-          user.wealthProducts = { investments: [] };
+  function createDepositRateChart(depositData) {
+    const fixedData = (depositData == null ? void 0 : depositData.fixed) || [];
+    const categories = fixedData.map((item) => item.term) || ["3个月", "6个月", "1年", "2年", "3年", "5年"];
+    const series = [{
+      name: "存款利率",
+      data: fixedData.map((item) => item.rate) || [1.85, 2.05, 2.1, 2.6, 2.95, 3.2],
+      color: "#007AFF"
+    }];
+    return {
+      type: "area",
+      categories,
+      series,
+      color: ["#007AFF"],
+      animation: true,
+      background: "#fff",
+      padding: [15, 15, 15, 15],
+      xAxis: {
+        disableGrid: false
+      },
+      yAxis: {
+        disableGrid: false
+      },
+      extra: {
+        area: {
+          type: "curve",
+          opacity: 0.3,
+          addLine: true,
+          width: 2,
+          gradient: true,
+          activeType: "hollow"
         }
-        if (!user.wealthProducts.investments) {
-          user.wealthProducts.investments = [];
+      }
+    };
+  }
+  function createWealthProductChart(productCategories) {
+    const categories = (productCategories == null ? void 0 : productCategories.map((category) => category.name)) || ["低风险理财", "中风险理财", "高风险理财"];
+    const values = (productCategories == null ? void 0 : productCategories.map((category) => {
+      const products = category.products || [];
+      const totalYield = products.reduce((sum, product) => sum + (product.yield || 0), 0);
+      const avg = products.length > 0 ? totalYield / products.length : 0;
+      return parseFloat(avg.toFixed(2));
+    })) || [3.2, 3.8, 4.1];
+    const series = [{ name: "平均收益率", data: values, color: "#34C759" }];
+    const peak = values.length ? Math.max.apply(null, values) : 0;
+    const yMax = parseFloat(Math.max(peak * 1.15, peak + 0.2).toFixed(2));
+    return {
+      type: "bar",
+      categories,
+      series,
+      color: ["#34C759", "#FF9500", "#FF3B30"],
+      animation: true,
+      background: "#fff",
+      padding: [15, 20, 18, 20],
+      dataLabel: true,
+      xAxis: {
+        // 数值轴（横向）
+        disableGrid: false,
+        fontSize: 10,
+        rotateLabel: false,
+        min: 0,
+        max: yMax,
+        tofix: 2,
+        format: (val) => typeof val === "number" ? val.toFixed(2) : String(val)
+      },
+      yAxis: {
+        // 类目轴（纵向）
+        disableGrid: false,
+        fontSize: 10
+      },
+      extra: {
+        bar: {
+          type: "group",
+          width: 20,
+          activeBgColor: "#000000",
+          activeBgOpacity: 0.1,
+          labelPosition: "right",
+          dataLabel: true,
+          // 开启渐变填充
+          gradient: true
         }
-        const newInvestment = {
-          ...investment,
-          id: `inv${Date.now()}`,
-          purchaseDate: (/* @__PURE__ */ new Date()).toISOString(),
-          status: "持有中"
-        };
-        user.wealthProducts.investments.push(newInvestment);
-        updateUserWealthData(userId, { wealthProducts: user.wealthProducts });
-        updateInvestmentPortfolio(userId);
-        formatAppLog("log", "at api/wealth.js:398", "投资记录添加成功:", newInvestment);
-        return true;
       }
-      return false;
-    } catch (error) {
-      formatAppLog("error", "at api/wealth.js:403", "添加投资记录失败:", error);
-      return false;
-    }
+    };
   }
-  function updateInvestmentPortfolio(userId) {
-    try {
-      const users2 = getUsersData();
-      const user = users2.find((user2) => user2.id === userId);
-      if (user && user.wealthProducts && user.wealthProducts.investments) {
-        const investments = user.wealthProducts.investments;
-        const totalValue = investments.reduce((sum, inv) => sum + (inv.currentValue || inv.amount), 0);
-        const totalAmount = investments.reduce((sum, inv) => sum + inv.amount, 0);
-        const totalReturn = totalValue - totalAmount;
-        const returnRate = totalAmount > 0 ? totalReturn / totalAmount * 100 : 0;
-        const investmentPortfolio = {
-          totalValue,
-          totalReturn,
-          returnRate: parseFloat(returnRate.toFixed(2)),
-          holdings: investments
-        };
-        updateUserWealthData(userId, { investmentPortfolio });
-      }
-    } catch (error) {
-      formatAppLog("error", "at api/wealth.js:436", "更新投资组合失败:", error);
-    }
-  }
-  function addDepositRecord(userId, type, amount) {
-    try {
-      const users2 = getUsersData();
-      const user = users2.find((user2) => user2.id === userId);
-      if (user) {
-        if (!user.wealthProducts) {
-          user.wealthProducts = { deposits: { current: 0, fixed: 0, smart: 0 } };
-        }
-        if (!user.wealthProducts.deposits) {
-          user.wealthProducts.deposits = { current: 0, fixed: 0, smart: 0 };
-        }
-        user.wealthProducts.deposits[type] = (user.wealthProducts.deposits[type] || 0) + amount;
-        updateUserWealthData(userId, { wealthProducts: user.wealthProducts });
-        updateUserBalance(userId, -amount, `存款-${type}`);
-        formatAppLog("log", "at api/wealth.js:468", "存款记录添加成功:", { type, amount });
-        return true;
-      }
-      return false;
-    } catch (error) {
-      formatAppLog("error", "at api/wealth.js:473", "添加存款记录失败:", error);
-      return false;
-    }
-  }
-  function updateUserBalance(userId, amount, description) {
-    try {
-      const users2 = getUsersData();
-      const user = users2.find((user2) => user2.id === userId);
-      if (user) {
-        user.balance = (user.balance || 0) + amount;
-        if (!user.transactionRecords) {
-          user.transactionRecords = [];
-        }
-        const transaction = {
-          id: Date.now(),
-          type: amount > 0 ? "income" : "expense",
-          amount: Math.abs(amount),
-          description,
-          balance: user.balance,
-          timestamp: (/* @__PURE__ */ new Date()).toISOString(),
-          icon: amount > 0 ? "💰" : "💳",
-          title: description,
-          time: (/* @__PURE__ */ new Date()).toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" })
-        };
-        user.transactionRecords.unshift(transaction);
-        updateUser(userId, {
-          balance: user.balance,
-          transactionRecords: user.transactionRecords
-        });
-        uni.$emit("balanceUpdated", { userId, balance: user.balance, transaction });
-        formatAppLog("log", "at api/wealth.js:520", "用户余额更新成功:", { userId, balance: user.balance });
-      }
-    } catch (error) {
-      formatAppLog("error", "at api/wealth.js:523", "更新用户余额失败:", error);
-    }
-  }
-  function getCurrentUserId() {
-    try {
-      const userInfo2 = uni.getStorageSync("userInfo");
-      return (userInfo2 == null ? void 0 : userInfo2.id) || "u001";
-    } catch (error) {
-      formatAppLog("error", "at api/wealth.js:536", "获取当前用户ID失败:", error);
-      return "u001";
-    }
-  }
-  function initWealthDataSync() {
-    try {
-      const userId = getCurrentUserId();
-      syncStorageToUserData(userId);
-      uni.$on("wealthDataUpdated", (data) => {
-        formatAppLog("log", "at api/wealth.js:554", "财富数据更新事件:", data);
-      });
-      uni.$on("balanceUpdated", (data) => {
-        formatAppLog("log", "at api/wealth.js:559", "余额更新事件:", data);
-      });
-      formatAppLog("log", "at api/wealth.js:563", "财富数据同步初始化完成");
-    } catch (error) {
-      formatAppLog("error", "at api/wealth.js:565", "初始化财富数据同步失败:", error);
-    }
-  }
-  function purchaseWealthProduct(userId, product, amount) {
-    try {
-      const users2 = getUsersData();
-      const user = users2.find((user2) => user2.id === userId);
-      if (!user || user.balance < amount) {
-        formatAppLog("log", "at api/wealth.js:582", "余额不足，无法购买");
-        return false;
-      }
-      const investment = {
-        name: product.name,
-        type: product.type || "理财产品",
-        amount,
-        rate: product.rate || 0,
-        term: product.term || "开放式",
-        currentValue: amount
-        // 初始价值等于购买金额
+  function createInsuranceChart(data) {
+    const categories = (data == null ? void 0 : data.categories) || [];
+    const chartData = categories.map((category) => {
+      const products = category.products || [];
+      const totalPremium = products.reduce((sum, product) => sum + (product.premium || 0), 0);
+      const avgPremium = products.length > 0 ? totalPremium / products.length : 0;
+      return {
+        name: category.name,
+        value: avgPremium,
+        color: category.color || "#FF6B35"
       };
-      const success = addInvestmentRecord(userId, investment);
-      if (success) {
-        updateUserBalance(userId, -amount, `购买${product.name}`);
-        formatAppLog("log", "at api/wealth.js:603", "理财产品购买成功:", { product: product.name, amount });
-        return true;
+    });
+    return {
+      type: "pie",
+      series: [{
+        name: "平均保费",
+        data: chartData,
+        type: "pie"
+      }],
+      color: chartData.map((item) => item.color),
+      animation: true,
+      background: "#fff",
+      padding: [15, 15, 15, 15],
+      // 关闭内置图例，改用自定义一行图例
+      legend: {
+        show: false
+      },
+      extra: {
+        pie: {
+          type: "ring",
+          ringWidth: 30,
+          ringRadius: 60,
+          activeOpacity: 0.5,
+          activeRadius: 10,
+          offsetAngle: 0,
+          labelWidth: 15,
+          border: true,
+          borderWidth: 3,
+          borderColor: "#FFFFFF",
+          // 开启渐变，让每个扇区有更柔和的过渡
+          gradient: true,
+          linearType: "radial"
+        }
       }
-      return false;
-    } catch (error) {
-      formatAppLog("error", "at api/wealth.js:609", "购买理财产品失败:", error);
-      return false;
-    }
+    };
   }
-  function drawSimpleLineChart(canvasId, data, context) {
-    try {
-      formatAppLog("log", "at utils/simple-chart.js:14", "🎨 绘制简单折线图:", canvasId);
-      const query = uni.createSelectorQuery().in(context);
-      query.select(`#${canvasId}`).fields({ node: true, size: true }).exec((res) => {
-        if (res[0]) {
-          const canvas = res[0].node;
-          const ctx = canvas.getContext("2d");
-          const dpr = uni.getSystemInfoSync().pixelRatio;
-          canvas.width = res[0].width * dpr;
-          canvas.height = res[0].height * dpr;
-          ctx.scale(dpr, dpr);
-          drawLineChart(ctx, res[0].width, res[0].height, data);
+  function createForexChart(forexData) {
+    if (forexData && forexData.history && Array.isArray(forexData.history.dates) && Array.isArray(forexData.history.values)) {
+      const categories2 = forexData.history.dates;
+      const series2 = [{
+        name: forexData.history.name || "汇率",
+        data: forexData.history.values,
+        color: "#FF6B35"
+      }];
+      const pairName = (forexData.history.name || "").toUpperCase();
+      const isUSD = pairName.includes("USD/CNY");
+      const isEUR = pairName.includes("EUR/CNY");
+      const isJPY = pairName.includes("JPY/CNY");
+      let baseMin = 0, baseMax = 1;
+      if (isUSD) {
+        baseMin = 6;
+        baseMax = 8;
+      } else if (isEUR) {
+        baseMin = 7;
+        baseMax = 9;
+      } else if (isJPY) {
+        baseMin = 0;
+        baseMax = 1;
+      }
+      const vals = Array.isArray(series2[0].data) ? series2[0].data : [];
+      let dMin = vals.length ? Math.min.apply(null, vals) : baseMin;
+      let dMax = vals.length ? Math.max.apply(null, vals) : baseMax;
+      dMin = Math.max(baseMin, Math.floor(dMin * 100) / 100);
+      dMax = Math.min(baseMax, Math.ceil(dMax * 100) / 100);
+      const minSpan = isJPY ? 0.02 : 0.2;
+      if (dMax - dMin < minSpan) {
+        const mid = (dMax + dMin) / 2;
+        dMin = Math.max(baseMin, parseFloat((mid - minSpan / 2).toFixed(2)));
+        dMax = Math.min(baseMax, parseFloat((mid + minSpan / 2).toFixed(2)));
+        if (dMax - dMin < minSpan) {
+          dMax = Math.min(baseMax, parseFloat((dMin + minSpan).toFixed(2)));
         }
-      });
-    } catch (error) {
-      formatAppLog("error", "at utils/simple-chart.js:45", "绘制简单图表失败:", error);
-    }
-  }
-  function drawLineChart(ctx, width, height, data) {
-    const padding = 40;
-    const chartWidth = width - padding * 2;
-    const chartHeight = height - padding * 2;
-    ctx.clearRect(0, 0, width, height);
-    ctx.fillStyle = "#f8f9fa";
-    ctx.fillRect(0, 0, width, height);
-    ctx.strokeStyle = "#ddd";
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(padding, padding);
-    ctx.lineTo(padding, height - padding);
-    ctx.lineTo(width - padding, height - padding);
-    ctx.stroke();
-    if (data && data.length > 0) {
-      const maxValue = Math.max(...data);
-      const minValue = Math.min(...data);
-      const valueRange = maxValue - minValue || 1;
-      ctx.strokeStyle = "#1976d2";
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      data.forEach((value, index) => {
-        const x = padding + index / (data.length - 1) * chartWidth;
-        const y = height - padding - (value - minValue) / valueRange * chartHeight;
-        if (index === 0) {
-          ctx.moveTo(x, y);
-        } else {
-          ctx.lineTo(x, y);
+      }
+      const yMin = dMin;
+      const yMax = dMax;
+      const yTicks = 5;
+      const yDec = 4;
+      return {
+        type: "area",
+        categories: categories2,
+        series: series2,
+        color: ["#FF6B35"],
+        animation: true,
+        background: "#fff",
+        // 增加右侧内边距，避免尾标签溢出（进一步左移尾标签）
+        padding: [12, 44, 12, 12],
+        dataLabel: false,
+        xAxis: {
+          disableGrid: false,
+          boundaryGap: "center",
+          // 仅显示首尾标签
+          itemCount: categories2.length,
+          scrollShow: true,
+          scrollAlign: "left",
+          fontSize: 10,
+          rotateLabel: false,
+          formatter: (val, index) => {
+            if (index === 0)
+              return val;
+            if (index === categories2.length - 1)
+              return val;
+            return "";
+          }
+        },
+        yAxis: {
+          disableGrid: false,
+          splitNumber: yTicks,
+          fontSize: 10,
+          min: yMin,
+          max: yMax,
+          // 强制显示小数刻度
+          tofix: yDec,
+          format: (val, index) => typeof val === "number" ? val.toFixed(yDec) : String(val)
+        },
+        extra: {
+          area: {
+            type: "curve",
+            opacity: 0.2,
+            addLine: true,
+            width: 2,
+            gradient: true,
+            activeType: "hollow",
+            dataLabel: false
+          }
         }
-      });
-      ctx.stroke();
-      ctx.fillStyle = "#1976d2";
-      data.forEach((value, index) => {
-        const x = padding + index / (data.length - 1) * chartWidth;
-        const y = height - padding - (value - minValue) / valueRange * chartHeight;
-        ctx.beginPath();
-        ctx.arc(x, y, 3, 0, 2 * Math.PI);
-        ctx.fill();
-      });
+      };
     }
-    ctx.fillStyle = "#333";
-    ctx.font = "14px sans-serif";
-    ctx.textAlign = "center";
-    ctx.fillText("数据趋势图", width / 2, 20);
-  }
-  function drawSimpleBarChart(canvasId, data, context) {
-    try {
-      formatAppLog("log", "at utils/simple-chart.js:127", "🎨 绘制简单柱状图:", canvasId);
-      const query = uni.createSelectorQuery().in(context);
-      query.select(`#${canvasId}`).fields({ node: true, size: true }).exec((res) => {
-        if (res[0]) {
-          const canvas = res[0].node;
-          const ctx = canvas.getContext("2d");
-          const dpr = uni.getSystemInfoSync().pixelRatio;
-          canvas.width = res[0].width * dpr;
-          canvas.height = res[0].height * dpr;
-          ctx.scale(dpr, dpr);
-          drawBarChart(ctx, res[0].width, res[0].height, data);
+    const majorPairs = (forexData == null ? void 0 : forexData.majorPairs) || [];
+    const categories = majorPairs.map((pair) => pair.code) || ["USD/CNY", "EUR/CNY", "GBP/CNY", "JPY/CNY"];
+    const series = [{
+      name: "汇率",
+      data: majorPairs.map((pair) => parseFloat(pair.price)) || [7.2345, 7.8901, 9.1234, 0.0489],
+      color: "#FF6B35"
+    }];
+    let ovMin = Number.POSITIVE_INFINITY;
+    let ovMax = Number.NEGATIVE_INFINITY;
+    for (const code of categories) {
+      if (code.includes("USD/CNY")) {
+        ovMin = Math.min(ovMin, 6);
+        ovMax = Math.max(ovMax, 8);
+      } else if (code.includes("EUR/CNY")) {
+        ovMin = Math.min(ovMin, 7);
+        ovMax = Math.max(ovMax, 9);
+      } else if (code.includes("JPY/CNY")) {
+        ovMin = Math.min(ovMin, 0);
+        ovMax = Math.max(ovMax, 1);
+      }
+    }
+    if (!isFinite(ovMin) || !isFinite(ovMax)) {
+      ovMin = 0;
+      ovMax = 1;
+    }
+    const ovVals = Array.isArray(series[0].data) ? series[0].data : [];
+    let oMin = ovVals.length ? Math.min.apply(null, ovVals) : ovMin;
+    let oMax = ovVals.length ? Math.max.apply(null, ovVals) : ovMax;
+    oMin = Math.max(ovMin, Math.floor(oMin * 100) / 100);
+    oMax = Math.min(ovMax, Math.ceil(oMax * 100) / 100);
+    if (oMax - oMin < 0.2 && !(ovMin === 0 && ovMax === 1)) {
+      const mid = (oMax + oMin) / 2;
+      oMin = Math.max(ovMin, parseFloat((mid - 0.1).toFixed(2)));
+      oMax = Math.min(ovMax, parseFloat((mid + 0.1).toFixed(2)));
+    }
+    if (ovMin === 0 && ovMax === 1 && oMax - oMin < 0.02) {
+      oMax = Math.min(1, parseFloat((oMin + 0.02).toFixed(2)));
+    }
+    const ovTick = 5;
+    return {
+      type: "area",
+      categories,
+      series,
+      color: ["#FF6B35", "#34C759", "#FF9500", "#007AFF", "#AF52DE", "#FF2D92"],
+      animation: true,
+      background: "#fff",
+      // 增加右侧内边距，避免尾标签溢出（进一步左移尾标签）
+      padding: [12, 44, 12, 12],
+      dataLabel: false,
+      xAxis: {
+        disableGrid: false,
+        itemCount: categories.length,
+        fontSize: 10,
+        rotateLabel: false,
+        formatter: (val, index) => {
+          if (index === 0)
+            return val;
+          if (index === categories.length - 1)
+            return val;
+          return "";
         }
-      });
-    } catch (error) {
-      formatAppLog("error", "at utils/simple-chart.js:157", "绘制简单柱状图失败:", error);
-    }
+      },
+      yAxis: {
+        disableGrid: false,
+        splitNumber: ovTick,
+        fontSize: 10,
+        min: oMin,
+        max: oMax,
+        tofix: 4,
+        format: (val, index) => typeof val === "number" ? val.toFixed(4) : String(val)
+      },
+      extra: {
+        area: {
+          type: "curve",
+          opacity: 0.2,
+          addLine: true,
+          width: 2,
+          gradient: true,
+          activeType: "hollow",
+          dataLabel: false
+        }
+      }
+    };
   }
-  function drawBarChart(ctx, width, height, data) {
-    const padding = 40;
-    const chartWidth = width - padding * 2;
-    const chartHeight = height - padding * 2;
-    ctx.clearRect(0, 0, width, height);
-    ctx.fillStyle = "#f8f9fa";
-    ctx.fillRect(0, 0, width, height);
-    ctx.strokeStyle = "#ddd";
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(padding, padding);
-    ctx.lineTo(padding, height - padding);
-    ctx.lineTo(width - padding, height - padding);
-    ctx.stroke();
-    if (data && data.length > 0) {
-      const maxValue = Math.max(...data);
-      const barWidth = chartWidth / data.length * 0.8;
-      const barSpacing = chartWidth / data.length * 0.2;
-      data.forEach((value, index) => {
-        const x = padding + index * (barWidth + barSpacing) + barSpacing / 2;
-        const barHeight = value / maxValue * chartHeight;
-        const y = height - padding - barHeight;
-        ctx.fillStyle = "#42a5f5";
-        ctx.fillRect(x, y, barWidth, barHeight);
-        ctx.fillStyle = "#333";
-        ctx.font = "10px sans-serif";
-        ctx.textAlign = "center";
-        ctx.fillText(value.toString(), x + barWidth / 2, y - 5);
-      });
-    }
-    ctx.fillStyle = "#333";
-    ctx.font = "14px sans-serif";
-    ctx.textAlign = "center";
-    ctx.fillText("数据对比图", width / 2, 20);
-  }
-  const _sfc_main$4 = {
+  const _sfc_main$e = {
     data() {
       return {
         hideAmount: false,
@@ -23890,12 +32342,6 @@ IP：${event.ip}
       this.initDataSync();
     },
     methods: {
-      goBack() {
-        uni.navigateBack();
-      },
-      onRefresh() {
-        this.loadDepositData();
-      },
       toggleAmountVisibility() {
         this.hideAmount = !this.hideAmount;
       },
@@ -23904,9 +32350,9 @@ IP：${event.ip}
           this.loading = true;
           uni.showLoading({ title: "加载中..." });
           const depositData = getDepositRates();
-          formatAppLog("log", "at pages/wealth/deposit.vue:560", "存款数据:", depositData);
+          formatAppLog("log", "at pages/wealth/deposit.vue:531", "存款数据:", depositData);
           if (!depositData.fixed || depositData.fixed.length === 0) {
-            formatAppLog("log", "at pages/wealth/deposit.vue:564", "定期存款数据为空，使用默认数据");
+            formatAppLog("log", "at pages/wealth/deposit.vue:535", "定期存款数据为空，使用默认数据");
             depositData.fixed = [
               { term: "3个月", rate: 1.85 },
               { term: "6个月", rate: 2.05 },
@@ -23921,43 +32367,30 @@ IP：${event.ip}
           uni.hideLoading();
           this.loading = false;
         } catch (error) {
-          formatAppLog("error", "at pages/wealth/deposit.vue:584", "加载存款数据失败:", error);
+          formatAppLog("error", "at pages/wealth/deposit.vue:555", "加载存款数据失败:", error);
           uni.hideLoading();
           uni.showToast({ title: "加载失败", icon: "none" });
           this.loading = false;
         }
       },
       async initChart(chartConfig) {
-        var _a, _b, _c, _d;
         try {
-          formatAppLog("log", "at pages/wealth/deposit.vue:593", "🎨 开始渲染存款利率图表");
+          formatAppLog("log", "at pages/wealth/deposit.vue:564", "🎨 开始渲染存款利率图表");
           await this.$nextTick();
           await new Promise((resolve) => setTimeout(resolve, 200));
-          const chartData = ((_b = (_a = this.depositData) == null ? void 0 : _a.fixed) == null ? void 0 : _b.map((item) => item.rate)) || [1.85, 2.05, 2.1, 2.6, 2.95, 3.2];
-          const labels = ((_d = (_c = this.depositData) == null ? void 0 : _c.fixed) == null ? void 0 : _d.map((item) => item.term)) || ["3个月", "6个月", "1年", "2年", "3年", "5年"];
-          drawSimpleLineChart("depositRateChart", {
-            data: chartData,
-            labels,
-            title: "存款利率趋势",
-            yAxisLabel: "利率(%)",
-            colors: ["#007AFF"]
-          });
-          formatAppLog("log", "at pages/wealth/deposit.vue:613", "✅ 存款利率图表渲染成功");
+          const option = createDepositRateChart(this.depositData);
+          this.chartInstance = await initUCharts("depositRateChart", option, this);
+          if (this.chartInstance) {
+            formatAppLog("log", "at pages/wealth/deposit.vue:577", "✅ 存款利率图表渲染成功 (uCharts)");
+          } else {
+            formatAppLog("warn", "at pages/wealth/deposit.vue:579", "❌ uCharts图表渲染失败");
+          }
         } catch (error) {
-          formatAppLog("error", "at pages/wealth/deposit.vue:616", "❌ 图表渲染失败:", error);
-          const defaultData = [1.85, 2.05, 2.1, 2.6, 2.95, 3.2];
-          const defaultLabels = ["3个月", "6个月", "1年", "2年", "3年", "5年"];
-          drawSimpleLineChart("depositRateChart", {
-            data: defaultData,
-            labels: defaultLabels,
-            title: "存款利率趋势",
-            yAxisLabel: "利率(%)",
-            colors: ["#007AFF"]
-          });
+          formatAppLog("error", "at pages/wealth/deposit.vue:583", "❌ 图表渲染失败:", error);
         }
       },
       onChartTouch(e) {
-        formatAppLog("log", "at pages/wealth/deposit.vue:632", "图表触摸事件:", e);
+        formatAppLog("log", "at pages/wealth/deposit.vue:588", "图表触摸事件:", e);
       },
       onProductDetail(product) {
         uni.navigateTo({
@@ -24114,13 +32547,13 @@ IP：${event.ip}
             title: "存款失败，请重试",
             icon: "none"
           });
-          formatAppLog("error", "at pages/wealth/deposit.vue:822", "存款处理失败:", error);
+          formatAppLog("error", "at pages/wealth/deposit.vue:778", "存款处理失败:", error);
         }
       },
       // 获取存款类型
       getDepositType(productName) {
         if (!productName || typeof productName !== "string") {
-          formatAppLog("warn", "at pages/wealth/deposit.vue:829", "产品名称为空或无效:", productName);
+          formatAppLog("warn", "at pages/wealth/deposit.vue:785", "产品名称为空或无效:", productName);
           return "current";
         }
         if (productName.includes("活期"))
@@ -24135,7 +32568,7 @@ IP：${event.ip}
       initDataSync() {
         initWealthDataSync();
         uni.$on("balanceUpdated", (data) => {
-          formatAppLog("log", "at pages/wealth/deposit.vue:846", "存款页面收到余额更新事件:", data);
+          formatAppLog("log", "at pages/wealth/deposit.vue:802", "存款页面收到余额更新事件:", data);
         });
       },
       calculateInterest() {
@@ -24158,33 +32591,15 @@ IP：${event.ip}
       }
     }
   };
-  function _sfc_render$3(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$d(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "deposit-page" }, [
-      vue.createCommentVNode(" 头部导航 "),
-      vue.createElementVNode("view", { class: "header" }, [
-        vue.createElementVNode("view", { class: "nav-bar" }, [
-          vue.createElementVNode("view", {
-            class: "nav-left",
-            onClick: _cache[0] || (_cache[0] = (...args) => $options.goBack && $options.goBack(...args))
-          }, [
-            vue.createElementVNode("text", { class: "nav-icon" }, "‹")
-          ]),
-          vue.createElementVNode("text", { class: "nav-title" }, "存款产品"),
-          vue.createElementVNode("view", { class: "nav-right" }, [
-            vue.createElementVNode("text", {
-              class: "nav-icon",
-              onClick: _cache[1] || (_cache[1] = (...args) => $options.onRefresh && $options.onRefresh(...args))
-            }, "⟳")
-          ])
-        ])
-      ]),
       vue.createCommentVNode(" 我的存款概览 "),
       vue.createElementVNode("view", { class: "overview-card" }, [
         vue.createElementVNode("view", { class: "overview-header" }, [
           vue.createElementVNode("text", { class: "overview-title" }, "我的存款"),
           vue.createElementVNode("view", {
             class: "amount-toggle",
-            onClick: _cache[2] || (_cache[2] = (...args) => $options.toggleAmountVisibility && $options.toggleAmountVisibility(...args))
+            onClick: _cache[0] || (_cache[0] = (...args) => $options.toggleAmountVisibility && $options.toggleAmountVisibility(...args))
           }, [
             vue.createElementVNode(
               "text",
@@ -24235,7 +32650,7 @@ IP：${event.ip}
       vue.createElementVNode("view", { class: "quick-actions" }, [
         vue.createElementVNode("view", {
           class: "action-item",
-          onClick: _cache[3] || (_cache[3] = ($event) => $options.onQuickDeposit("current"))
+          onClick: _cache[1] || (_cache[1] = ($event) => $options.onQuickDeposit("current"))
         }, [
           vue.createElementVNode("view", { class: "action-icon current" }, "💰"),
           vue.createElementVNode("text", { class: "action-text" }, "活期存款"),
@@ -24243,7 +32658,7 @@ IP：${event.ip}
         ]),
         vue.createElementVNode("view", {
           class: "action-item",
-          onClick: _cache[4] || (_cache[4] = ($event) => $options.onQuickDeposit("fixed"))
+          onClick: _cache[2] || (_cache[2] = ($event) => $options.onQuickDeposit("fixed"))
         }, [
           vue.createElementVNode("view", { class: "action-icon fixed" }, "🏦"),
           vue.createElementVNode("text", { class: "action-text" }, "定期存款"),
@@ -24251,7 +32666,7 @@ IP：${event.ip}
         ]),
         vue.createElementVNode("view", {
           class: "action-item",
-          onClick: _cache[5] || (_cache[5] = ($event) => $options.onQuickDeposit("smart"))
+          onClick: _cache[3] || (_cache[3] = ($event) => $options.onQuickDeposit("smart"))
         }, [
           vue.createElementVNode("view", { class: "action-icon smart" }, "🧠"),
           vue.createElementVNode("text", { class: "action-text" }, "智能存款"),
@@ -24259,7 +32674,7 @@ IP：${event.ip}
         ]),
         vue.createElementVNode("view", {
           class: "action-item",
-          onClick: _cache[6] || (_cache[6] = (...args) => $options.onDepositCalculator && $options.onDepositCalculator(...args))
+          onClick: _cache[4] || (_cache[4] = (...args) => $options.onDepositCalculator && $options.onDepositCalculator(...args))
         }, [
           vue.createElementVNode("view", { class: "action-icon calc" }, "🧮"),
           vue.createElementVNode("text", { class: "action-text" }, "收益计算"),
@@ -24277,9 +32692,9 @@ IP：${event.ip}
             "canvas",
             {
               id: "depositRateChart",
-              type: "2d",
+              "canvas-id": "depositRateChart",
               class: "chart-canvas",
-              onTouchstart: _cache[7] || (_cache[7] = (...args) => $options.onChartTouch && $options.onChartTouch(...args))
+              onTouchstart: _cache[5] || (_cache[5] = (...args) => $options.onChartTouch && $options.onChartTouch(...args))
             },
             null,
             32
@@ -24449,7 +32864,7 @@ IP：${event.ip}
               {
                 class: "form-input",
                 type: "number",
-                "onUpdate:modelValue": _cache[8] || (_cache[8] = ($event) => $data.calculator.amount = $event),
+                "onUpdate:modelValue": _cache[6] || (_cache[6] = ($event) => $data.calculator.amount = $event),
                 placeholder: "请输入存款金额"
               },
               null,
@@ -24464,7 +32879,7 @@ IP：${event.ip}
             vue.createElementVNode("picker", {
               value: $data.calculator.termIndex,
               range: $data.calculator.terms,
-              onChange: _cache[9] || (_cache[9] = (...args) => $options.onTermChange && $options.onTermChange(...args))
+              onChange: _cache[7] || (_cache[7] = (...args) => $options.onTermChange && $options.onTermChange(...args))
             }, [
               vue.createElementVNode(
                 "view",
@@ -24482,7 +32897,7 @@ IP：${event.ip}
               {
                 class: "form-input",
                 type: "digit",
-                "onUpdate:modelValue": _cache[10] || (_cache[10] = ($event) => $data.calculator.rate = $event),
+                "onUpdate:modelValue": _cache[8] || (_cache[8] = ($event) => $data.calculator.rate = $event),
                 placeholder: "请输入年化利率"
               },
               null,
@@ -24494,7 +32909,7 @@ IP：${event.ip}
           ]),
           vue.createElementVNode("button", {
             class: "calculate-btn",
-            onClick: _cache[11] || (_cache[11] = (...args) => $options.calculateInterest && $options.calculateInterest(...args))
+            onClick: _cache[9] || (_cache[9] = (...args) => $options.calculateInterest && $options.calculateInterest(...args))
           }, "计算收益")
         ]),
         $data.calculator.result ? (vue.openBlock(), vue.createElementBlock("view", {
@@ -24573,11 +32988,11 @@ IP：${event.ip}
       $data.showDetailModal ? (vue.openBlock(), vue.createElementBlock("view", {
         key: 0,
         class: "deposit-detail-modal",
-        onClick: _cache[16] || (_cache[16] = (...args) => $options.closeDetailModal && $options.closeDetailModal(...args))
+        onClick: _cache[14] || (_cache[14] = (...args) => $options.closeDetailModal && $options.closeDetailModal(...args))
       }, [
         vue.createElementVNode("view", {
           class: "modal-content",
-          onClick: _cache[15] || (_cache[15] = vue.withModifiers(() => {
+          onClick: _cache[13] || (_cache[13] = vue.withModifiers(() => {
           }, ["stop"]))
         }, [
           vue.createElementVNode("view", { class: "modal-header" }, [
@@ -24590,7 +33005,7 @@ IP：${event.ip}
             ),
             vue.createElementVNode("text", {
               class: "modal-close",
-              onClick: _cache[12] || (_cache[12] = (...args) => $options.closeDetailModal && $options.closeDetailModal(...args))
+              onClick: _cache[10] || (_cache[10] = (...args) => $options.closeDetailModal && $options.closeDetailModal(...args))
             }, "×")
           ]),
           vue.createElementVNode("view", { class: "modal-body" }, [
@@ -24671,11 +33086,11 @@ IP：${event.ip}
           vue.createElementVNode("view", { class: "modal-footer" }, [
             vue.createElementVNode("button", {
               class: "modal-btn secondary",
-              onClick: _cache[13] || (_cache[13] = (...args) => $options.closeDetailModal && $options.closeDetailModal(...args))
+              onClick: _cache[11] || (_cache[11] = (...args) => $options.closeDetailModal && $options.closeDetailModal(...args))
             }, "取消"),
             vue.createElementVNode("button", {
               class: "modal-btn primary",
-              onClick: _cache[14] || (_cache[14] = ($event) => $options.onDepositNow($data.selectedProduct))
+              onClick: _cache[12] || (_cache[12] = ($event) => $options.onDepositNow($data.selectedProduct))
             }, "立即存入")
           ])
         ])
@@ -24684,18 +33099,18 @@ IP：${event.ip}
       $data.showCalculatorModal ? (vue.openBlock(), vue.createElementBlock("view", {
         key: 1,
         class: "calculator-modal",
-        onClick: _cache[26] || (_cache[26] = (...args) => $options.closeCalculatorModal && $options.closeCalculatorModal(...args))
+        onClick: _cache[24] || (_cache[24] = (...args) => $options.closeCalculatorModal && $options.closeCalculatorModal(...args))
       }, [
         vue.createElementVNode("view", {
           class: "modal-content",
-          onClick: _cache[25] || (_cache[25] = vue.withModifiers(() => {
+          onClick: _cache[23] || (_cache[23] = vue.withModifiers(() => {
           }, ["stop"]))
         }, [
           vue.createElementVNode("view", { class: "modal-header" }, [
             vue.createElementVNode("text", { class: "modal-title" }, "存款收益计算器"),
             vue.createElementVNode("text", {
               class: "modal-close",
-              onClick: _cache[17] || (_cache[17] = (...args) => $options.closeCalculatorModal && $options.closeCalculatorModal(...args))
+              onClick: _cache[15] || (_cache[15] = (...args) => $options.closeCalculatorModal && $options.closeCalculatorModal(...args))
             }, "×")
           ]),
           vue.createElementVNode("view", { class: "modal-body" }, [
@@ -24705,10 +33120,10 @@ IP：${event.ip}
                 "input",
                 {
                   class: "calc-input",
-                  "onUpdate:modelValue": _cache[18] || (_cache[18] = ($event) => $data.calcAmount = $event),
+                  "onUpdate:modelValue": _cache[16] || (_cache[16] = ($event) => $data.calcAmount = $event),
                   type: "number",
                   placeholder: "请输入存款金额",
-                  onInput: _cache[19] || (_cache[19] = (...args) => $options.calculateInterest && $options.calculateInterest(...args))
+                  onInput: _cache[17] || (_cache[17] = (...args) => $options.calculateInterest && $options.calculateInterest(...args))
                 },
                 null,
                 544
@@ -24723,7 +33138,7 @@ IP：${event.ip}
                 value: $data.calcTermIndex,
                 range: $data.calcTerms,
                 "range-key": "label",
-                onChange: _cache[20] || (_cache[20] = (...args) => $options.onTermChange && $options.onTermChange(...args))
+                onChange: _cache[18] || (_cache[18] = (...args) => $options.onTermChange && $options.onTermChange(...args))
               }, [
                 vue.createElementVNode("view", { class: "calc-picker" }, [
                   vue.createTextVNode(
@@ -24741,10 +33156,10 @@ IP：${event.ip}
                 "input",
                 {
                   class: "calc-input",
-                  "onUpdate:modelValue": _cache[21] || (_cache[21] = ($event) => $data.calcRate = $event),
+                  "onUpdate:modelValue": _cache[19] || (_cache[19] = ($event) => $data.calcRate = $event),
                   type: "number",
                   placeholder: "请输入年化利率",
-                  onInput: _cache[22] || (_cache[22] = (...args) => $options.calculateInterest && $options.calculateInterest(...args))
+                  onInput: _cache[20] || (_cache[20] = (...args) => $options.calculateInterest && $options.calculateInterest(...args))
                 },
                 null,
                 544
@@ -24782,11 +33197,11 @@ IP：${event.ip}
           vue.createElementVNode("view", { class: "modal-footer" }, [
             vue.createElementVNode("button", {
               class: "modal-btn secondary",
-              onClick: _cache[23] || (_cache[23] = (...args) => $options.closeCalculatorModal && $options.closeCalculatorModal(...args))
+              onClick: _cache[21] || (_cache[21] = (...args) => $options.closeCalculatorModal && $options.closeCalculatorModal(...args))
             }, "关闭"),
             vue.createElementVNode("button", {
               class: "modal-btn primary",
-              onClick: _cache[24] || (_cache[24] = (...args) => $options.onApplyCalculation && $options.onApplyCalculation(...args))
+              onClick: _cache[22] || (_cache[22] = (...args) => $options.onApplyCalculation && $options.onApplyCalculation(...args))
             }, "应用计算")
           ])
         ])
@@ -24795,18 +33210,18 @@ IP：${event.ip}
       $data.showConfirmModal ? (vue.openBlock(), vue.createElementBlock("view", {
         key: 2,
         class: "deposit-confirm-modal",
-        onClick: _cache[32] || (_cache[32] = (...args) => $options.closeConfirmModal && $options.closeConfirmModal(...args))
+        onClick: _cache[30] || (_cache[30] = (...args) => $options.closeConfirmModal && $options.closeConfirmModal(...args))
       }, [
         vue.createElementVNode("view", {
           class: "modal-content",
-          onClick: _cache[31] || (_cache[31] = vue.withModifiers(() => {
+          onClick: _cache[29] || (_cache[29] = vue.withModifiers(() => {
           }, ["stop"]))
         }, [
           vue.createElementVNode("view", { class: "modal-header" }, [
             vue.createElementVNode("text", { class: "modal-title" }, "确认存款"),
             vue.createElementVNode("text", {
               class: "modal-close",
-              onClick: _cache[27] || (_cache[27] = (...args) => $options.closeConfirmModal && $options.closeConfirmModal(...args))
+              onClick: _cache[25] || (_cache[25] = (...args) => $options.closeConfirmModal && $options.closeConfirmModal(...args))
             }, "×")
           ]),
           vue.createElementVNode("view", { class: "modal-body" }, [
@@ -24846,7 +33261,7 @@ IP：${event.ip}
                 "input",
                 {
                   class: "confirm-input",
-                  "onUpdate:modelValue": _cache[28] || (_cache[28] = ($event) => $data.confirmAmount = $event),
+                  "onUpdate:modelValue": _cache[26] || (_cache[26] = ($event) => $data.confirmAmount = $event),
                   type: "number",
                   placeholder: "请输入存款金额"
                 },
@@ -24871,24 +33286,23 @@ IP：${event.ip}
           vue.createElementVNode("view", { class: "modal-footer" }, [
             vue.createElementVNode("button", {
               class: "modal-btn secondary",
-              onClick: _cache[29] || (_cache[29] = (...args) => $options.closeConfirmModal && $options.closeConfirmModal(...args))
+              onClick: _cache[27] || (_cache[27] = (...args) => $options.closeConfirmModal && $options.closeConfirmModal(...args))
             }, "取消"),
             vue.createElementVNode("button", {
               class: "modal-btn primary",
-              onClick: _cache[30] || (_cache[30] = (...args) => $options.onConfirmDeposit && $options.onConfirmDeposit(...args))
+              onClick: _cache[28] || (_cache[28] = (...args) => $options.onConfirmDeposit && $options.onConfirmDeposit(...args))
             }, "确认存入")
           ])
         ])
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesWealthDeposit = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["render", _sfc_render$3], ["__scopeId", "data-v-76c36c1f"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/deposit.vue"]]);
-  const _sfc_main$3 = {
+  const PagesWealthDeposit = /* @__PURE__ */ _export_sfc(_sfc_main$e, [["render", _sfc_render$d], ["__scopeId", "data-v-76c36c1f"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/deposit.vue"]]);
+  const _sfc_main$d = {
     data() {
       return {
         loading: false,
         activeFilter: "all",
-        chartPeriod: "7d",
         productData: null,
         chartInstance: null,
         // 筛选和排序
@@ -24915,86 +33329,7 @@ IP：${event.ip}
           avgYield: 3.45,
           productCount: 156
         },
-        productCategories: [
-          {
-            name: "稳健型",
-            products: [
-              {
-                id: "w1",
-                name: "稳健优选第68期",
-                risk: "低",
-                term: "90天",
-                minAmount: 1e4,
-                yield: 3.2,
-                type: "净值型"
-              },
-              {
-                id: "w2",
-                name: "灵活理财T+1",
-                risk: "低",
-                term: "开放式",
-                minAmount: 1e3,
-                yield: 2.65,
-                type: "货币型"
-              },
-              {
-                id: "w3",
-                name: "安心宝30天",
-                risk: "低",
-                term: "30天",
-                minAmount: 5e3,
-                yield: 2.85,
-                type: "固定收益"
-              }
-            ]
-          },
-          {
-            name: "平衡型",
-            products: [
-              {
-                id: "w4",
-                name: "进取增强半年期",
-                risk: "中",
-                term: "180天",
-                minAmount: 1e4,
-                yield: 4.1,
-                type: "混合型"
-              },
-              {
-                id: "w5",
-                name: "成长优选一年期",
-                risk: "中",
-                term: "365天",
-                minAmount: 2e4,
-                yield: 4.5,
-                type: "权益型"
-              }
-            ]
-          },
-          {
-            name: "进取型",
-            products: [
-              {
-                id: "w6",
-                name: "价值发现两年期",
-                risk: "高",
-                term: "730天",
-                minAmount: 5e4,
-                yield: 5.8,
-                type: "权益型"
-              },
-              {
-                id: "w7",
-                name: "科技成长三年期",
-                risk: "高",
-                term: "1095天",
-                minAmount: 1e5,
-                yield: 6.2,
-                type: "权益型"
-              }
-            ]
-          }
-        ]
+        productCategories: []
       };
     },
     computed: {
@@ -25025,18 +33360,12 @@ IP：${event.ip}
       this.initDataSync();
     },
     methods: {
-      goBack() {
-        uni.navigateBack();
-      },
-      onRefresh() {
-        this.loadProductData();
-      },
       async loadProductData() {
         try {
           this.loading = true;
           uni.showLoading({ title: "加载中..." });
           const productCategories = getWealthProductCategories();
-          formatAppLog("log", "at pages/wealth/product.vue:501", "理财产品数据:", productCategories);
+          formatAppLog("log", "at pages/wealth/product.vue:361", "理财产品数据:", productCategories);
           this.productCategories = productCategories;
           const totalProducts = productCategories.reduce((sum, cat) => sum + cat.products.length, 0);
           const avgYield = productCategories.reduce((sum, cat) => {
@@ -25052,35 +33381,35 @@ IP：${event.ip}
           uni.hideLoading();
           this.loading = false;
         } catch (error) {
-          formatAppLog("error", "at pages/wealth/product.vue:525", "加载理财产品数据失败:", error);
+          formatAppLog("error", "at pages/wealth/product.vue:385", "加载理财产品数据失败:", error);
           uni.hideLoading();
           uni.showToast({ title: "加载失败", icon: "none" });
           this.loading = false;
         }
       },
-      initChart(chartConfig) {
-        var _a;
+      async initChart(chartConfig) {
         try {
-          formatAppLog("log", "at pages/wealth/product.vue:534", "开始渲染理财产品图表");
-          const chartData = ((_a = this.productCategories) == null ? void 0 : _a.map((category) => {
-            const products = category.products || [];
-            const totalYield = products.reduce((sum, product) => sum + (product.yield || 0), 0);
-            return products.length > 0 ? totalYield / products.length : 0;
-          })) || [3.2, 3.8, 4.1];
-          drawSimpleBarChart("yieldChart", chartData, this);
-          formatAppLog("log", "at pages/wealth/product.vue:544", "理财产品图表渲染成功");
+          formatAppLog("log", "at pages/wealth/product.vue:394", "🎨 开始渲染理财产品图表");
+          await this.$nextTick();
+          await new Promise((resolve) => setTimeout(resolve, 200));
+          const option = createWealthProductChart(this.productCategories);
+          this.chartInstance = await initUCharts("yieldChart", option, this);
+          if (this.chartInstance) {
+            formatAppLog("log", "at pages/wealth/product.vue:407", "✅ 理财产品图表渲染成功 (uCharts)");
+          } else {
+            formatAppLog("warn", "at pages/wealth/product.vue:409", "❌ uCharts图表渲染失败");
+          }
         } catch (error) {
-          formatAppLog("error", "at pages/wealth/product.vue:547", "图表渲染失败:", error);
-          const defaultData = [3.2, 3.8, 4.1];
-          drawSimpleBarChart("yieldChart", defaultData, this);
+          formatAppLog("error", "at pages/wealth/product.vue:413", "❌ 图表渲染失败:", error);
         }
       },
       onChartTouch(e) {
-        formatAppLog("log", "at pages/wealth/product.vue:555", "图表触摸事件:", e);
+        formatAppLog("log", "at pages/wealth/product.vue:418", "图表触摸事件:", e);
       },
       // 筛选和排序方法
       setFilter(filter) {
         this.activeFilter = filter;
+        formatAppLog("log", "at pages/wealth/product.vue:424", "筛选条件变更:", filter);
       },
       onSortChange(e) {
         this.sortIndex = e.detail.value;
@@ -25209,44 +33538,25 @@ IP：${event.ip}
             title: "申购失败，请重试",
             icon: "none"
           });
-          formatAppLog("error", "at pages/wealth/product.vue:717", "申购处理失败:", error);
+          formatAppLog("error", "at pages/wealth/product.vue:581", "申购处理失败:", error);
         }
       },
       // 初始化数据同步
       initDataSync() {
         initWealthDataSync();
         uni.$on("balanceUpdated", (data) => {
-          formatAppLog("log", "at pages/wealth/product.vue:728", "理财页面收到余额更新事件:", data);
+          formatAppLog("log", "at pages/wealth/product.vue:592", "理财页面收到余额更新事件:", data);
         });
       }
     }
   };
-  function _sfc_render$2(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$c(_ctx, _cache, $props, $setup, $data, $options) {
     var _a;
     return vue.openBlock(), vue.createElementBlock("view", { class: "product-page" }, [
-      vue.createCommentVNode(" 头部导航 "),
-      vue.createElementVNode("view", { class: "header" }, [
-        vue.createElementVNode("view", { class: "nav-bar" }, [
-          vue.createElementVNode("view", {
-            class: "nav-left",
-            onClick: _cache[0] || (_cache[0] = (...args) => $options.goBack && $options.goBack(...args))
-          }, [
-            vue.createElementVNode("text", { class: "nav-icon" }, "‹")
-          ]),
-          vue.createElementVNode("text", { class: "nav-title" }, "理财产品"),
-          vue.createElementVNode("view", { class: "nav-right" }, [
-            vue.createElementVNode("text", {
-              class: "nav-icon",
-              onClick: _cache[1] || (_cache[1] = (...args) => $options.onRefresh && $options.onRefresh(...args))
-            }, "⟳")
-          ])
-        ])
-      ]),
       vue.createCommentVNode(" 市场概览 "),
       vue.createElementVNode("view", { class: "market-overview" }, [
         vue.createElementVNode("view", { class: "overview-header" }, [
-          vue.createElementVNode("text", { class: "overview-title" }, "理财市场概览"),
-          vue.createElementVNode("text", { class: "overview-subtitle" }, "实时数据")
+          vue.createElementVNode("text", { class: "overview-title" }, "理财市场概览")
         ]),
         vue.createElementVNode("view", { class: "overview-stats" }, [
           vue.createElementVNode("view", { class: "stat-item" }, [
@@ -25281,50 +33591,19 @@ IP：${event.ip}
           ])
         ])
       ]),
-      vue.createCommentVNode(" 收益率趋势图表 "),
+      vue.createCommentVNode(" 产品类型收益率对比混合图表 "),
       vue.createElementVNode("view", { class: "chart-card" }, [
         vue.createElementVNode("view", { class: "chart-header" }, [
-          vue.createElementVNode("text", { class: "chart-title" }, "理财产品收益率趋势"),
-          vue.createElementVNode("view", { class: "chart-tabs" }, [
-            vue.createElementVNode(
-              "text",
-              {
-                class: vue.normalizeClass(["chart-tab", { active: $data.chartPeriod === "7d" }]),
-                onClick: _cache[2] || (_cache[2] = ($event) => $data.chartPeriod = "7d")
-              },
-              "7天",
-              2
-              /* CLASS */
-            ),
-            vue.createElementVNode(
-              "text",
-              {
-                class: vue.normalizeClass(["chart-tab", { active: $data.chartPeriod === "30d" }]),
-                onClick: _cache[3] || (_cache[3] = ($event) => $data.chartPeriod = "30d")
-              },
-              "30天",
-              2
-              /* CLASS */
-            ),
-            vue.createElementVNode(
-              "text",
-              {
-                class: vue.normalizeClass(["chart-tab", { active: $data.chartPeriod === "90d" }]),
-                onClick: _cache[4] || (_cache[4] = ($event) => $data.chartPeriod = "90d")
-              },
-              "90天",
-              2
-              /* CLASS */
-            )
-          ])
+          vue.createElementVNode("text", { class: "chart-title" }, "产品类型收益率对比")
         ]),
         vue.createElementVNode("view", { class: "chart-container" }, [
           vue.createElementVNode(
             "canvas",
             {
+              id: "yieldChart",
               "canvas-id": "yieldChart",
               class: "chart-canvas",
-              onTouchstart: _cache[5] || (_cache[5] = (...args) => $options.onChartTouch && $options.onChartTouch(...args))
+              onTouchstart: _cache[0] || (_cache[0] = (...args) => $options.onChartTouch && $options.onChartTouch(...args))
             },
             null,
             32
@@ -25343,7 +33622,7 @@ IP：${event.ip}
               "view",
               {
                 class: vue.normalizeClass(["filter-item", { active: $data.activeFilter === "all" }]),
-                onClick: _cache[6] || (_cache[6] = ($event) => $data.activeFilter = "all")
+                onClick: _cache[1] || (_cache[1] = ($event) => $options.setFilter("all"))
               },
               " 全部 ",
               2
@@ -25353,7 +33632,7 @@ IP：${event.ip}
               "view",
               {
                 class: vue.normalizeClass(["filter-item", { active: $data.activeFilter === "low" }]),
-                onClick: _cache[7] || (_cache[7] = ($event) => $data.activeFilter = "low")
+                onClick: _cache[2] || (_cache[2] = ($event) => $options.setFilter("low"))
               },
               " 低风险 ",
               2
@@ -25363,7 +33642,7 @@ IP：${event.ip}
               "view",
               {
                 class: vue.normalizeClass(["filter-item", { active: $data.activeFilter === "medium" }]),
-                onClick: _cache[8] || (_cache[8] = ($event) => $data.activeFilter = "medium")
+                onClick: _cache[3] || (_cache[3] = ($event) => $options.setFilter("medium"))
               },
               " 中风险 ",
               2
@@ -25373,7 +33652,7 @@ IP：${event.ip}
               "view",
               {
                 class: vue.normalizeClass(["filter-item", { active: $data.activeFilter === "high" }]),
-                onClick: _cache[9] || (_cache[9] = ($event) => $data.activeFilter = "high")
+                onClick: _cache[4] || (_cache[4] = ($event) => $options.setFilter("high"))
               },
               " 高风险 ",
               2
@@ -25382,56 +33661,14 @@ IP：${event.ip}
           ])
         ])
       ]),
-      vue.createCommentVNode(" 快速筛选 "),
+      vue.createCommentVNode(" 排序选项 "),
       vue.createElementVNode("view", { class: "filter-section" }, [
-        vue.createElementVNode("view", { class: "filter-tabs" }, [
-          vue.createElementVNode(
-            "text",
-            {
-              class: vue.normalizeClass(["filter-tab", { active: $data.activeFilter === "all" }]),
-              onClick: _cache[10] || (_cache[10] = ($event) => $options.setFilter("all"))
-            },
-            "全部",
-            2
-            /* CLASS */
-          ),
-          vue.createElementVNode(
-            "text",
-            {
-              class: vue.normalizeClass(["filter-tab", { active: $data.activeFilter === "low" }]),
-              onClick: _cache[11] || (_cache[11] = ($event) => $options.setFilter("low"))
-            },
-            "低风险",
-            2
-            /* CLASS */
-          ),
-          vue.createElementVNode(
-            "text",
-            {
-              class: vue.normalizeClass(["filter-tab", { active: $data.activeFilter === "medium" }]),
-              onClick: _cache[12] || (_cache[12] = ($event) => $options.setFilter("medium"))
-            },
-            "中风险",
-            2
-            /* CLASS */
-          ),
-          vue.createElementVNode(
-            "text",
-            {
-              class: vue.normalizeClass(["filter-tab", { active: $data.activeFilter === "high" }]),
-              onClick: _cache[13] || (_cache[13] = ($event) => $options.setFilter("high"))
-            },
-            "高风险",
-            2
-            /* CLASS */
-          )
-        ]),
         vue.createElementVNode("view", { class: "sort-options" }, [
           vue.createElementVNode("picker", {
             value: $data.sortIndex,
             range: $data.sortOptions,
             "range-key": "label",
-            onChange: _cache[14] || (_cache[14] = (...args) => $options.onSortChange && $options.onSortChange(...args))
+            onChange: _cache[5] || (_cache[5] = (...args) => $options.onSortChange && $options.onSortChange(...args))
           }, [
             vue.createElementVNode("view", { class: "sort-picker" }, [
               vue.createElementVNode("text", { class: "sort-label" }, "排序："),
@@ -25593,11 +33830,11 @@ IP：${event.ip}
       $data.showDetailModal ? (vue.openBlock(), vue.createElementBlock("view", {
         key: 0,
         class: "product-detail-modal",
-        onClick: _cache[19] || (_cache[19] = (...args) => $options.closeDetailModal && $options.closeDetailModal(...args))
+        onClick: _cache[10] || (_cache[10] = (...args) => $options.closeDetailModal && $options.closeDetailModal(...args))
       }, [
         vue.createElementVNode("view", {
           class: "modal-content",
-          onClick: _cache[18] || (_cache[18] = vue.withModifiers(() => {
+          onClick: _cache[9] || (_cache[9] = vue.withModifiers(() => {
           }, ["stop"]))
         }, [
           vue.createElementVNode("view", { class: "modal-header" }, [
@@ -25610,7 +33847,7 @@ IP：${event.ip}
             ),
             vue.createElementVNode("text", {
               class: "modal-close",
-              onClick: _cache[15] || (_cache[15] = (...args) => $options.closeDetailModal && $options.closeDetailModal(...args))
+              onClick: _cache[6] || (_cache[6] = (...args) => $options.closeDetailModal && $options.closeDetailModal(...args))
             }, "×")
           ]),
           vue.createElementVNode("view", { class: "modal-body" }, [
@@ -25686,11 +33923,11 @@ IP：${event.ip}
           vue.createElementVNode("view", { class: "modal-footer" }, [
             vue.createElementVNode("button", {
               class: "modal-btn secondary",
-              onClick: _cache[16] || (_cache[16] = (...args) => $options.closeDetailModal && $options.closeDetailModal(...args))
+              onClick: _cache[7] || (_cache[7] = (...args) => $options.closeDetailModal && $options.closeDetailModal(...args))
             }, "关闭"),
             vue.createElementVNode("button", {
               class: "modal-btn primary",
-              onClick: _cache[17] || (_cache[17] = ($event) => $options.onProductBuy($data.selectedProduct))
+              onClick: _cache[8] || (_cache[8] = ($event) => $options.onProductBuy($data.selectedProduct))
             }, "立即申购")
           ])
         ])
@@ -25699,18 +33936,18 @@ IP：${event.ip}
       $data.showPurchaseModal ? (vue.openBlock(), vue.createElementBlock("view", {
         key: 1,
         class: "purchase-modal",
-        onClick: _cache[27] || (_cache[27] = (...args) => $options.closePurchaseModal && $options.closePurchaseModal(...args))
+        onClick: _cache[18] || (_cache[18] = (...args) => $options.closePurchaseModal && $options.closePurchaseModal(...args))
       }, [
         vue.createElementVNode("view", {
           class: "modal-content",
-          onClick: _cache[26] || (_cache[26] = vue.withModifiers(() => {
+          onClick: _cache[17] || (_cache[17] = vue.withModifiers(() => {
           }, ["stop"]))
         }, [
           vue.createElementVNode("view", { class: "modal-header" }, [
             vue.createElementVNode("text", { class: "modal-title" }, "确认申购"),
             vue.createElementVNode("text", {
               class: "modal-close",
-              onClick: _cache[20] || (_cache[20] = (...args) => $options.closePurchaseModal && $options.closePurchaseModal(...args))
+              onClick: _cache[11] || (_cache[11] = (...args) => $options.closePurchaseModal && $options.closePurchaseModal(...args))
             }, "×")
           ]),
           vue.createElementVNode("view", { class: "modal-body" }, [
@@ -25751,7 +33988,7 @@ IP：${event.ip}
                   "input",
                   {
                     class: "amount-input",
-                    "onUpdate:modelValue": _cache[21] || (_cache[21] = ($event) => $data.purchaseAmount = $event),
+                    "onUpdate:modelValue": _cache[12] || (_cache[12] = ($event) => $data.purchaseAmount = $event),
                     type: "number",
                     placeholder: "请输入申购金额"
                   },
@@ -25776,7 +34013,7 @@ IP：${event.ip}
             vue.createElementVNode("view", { class: "agreement-section" }, [
               vue.createElementVNode("view", {
                 class: "agreement-item",
-                onClick: _cache[22] || (_cache[22] = ($event) => $options.toggleAgreement("risk"))
+                onClick: _cache[13] || (_cache[13] = ($event) => $options.toggleAgreement("risk"))
               }, [
                 vue.createElementVNode(
                   "text",
@@ -25791,7 +34028,7 @@ IP：${event.ip}
               ]),
               vue.createElementVNode("view", {
                 class: "agreement-item",
-                onClick: _cache[23] || (_cache[23] = ($event) => $options.toggleAgreement("terms"))
+                onClick: _cache[14] || (_cache[14] = ($event) => $options.toggleAgreement("terms"))
               }, [
                 vue.createElementVNode(
                   "text",
@@ -25809,13 +34046,13 @@ IP：${event.ip}
           vue.createElementVNode("view", { class: "modal-footer" }, [
             vue.createElementVNode("button", {
               class: "modal-btn secondary",
-              onClick: _cache[24] || (_cache[24] = (...args) => $options.closePurchaseModal && $options.closePurchaseModal(...args))
+              onClick: _cache[15] || (_cache[15] = (...args) => $options.closePurchaseModal && $options.closePurchaseModal(...args))
             }, "取消"),
             vue.createElementVNode(
               "button",
               {
                 class: vue.normalizeClass(["modal-btn primary", { disabled: !$options.canPurchase }]),
-                onClick: _cache[25] || (_cache[25] = (...args) => $options.onConfirmPurchase && $options.onConfirmPurchase(...args))
+                onClick: _cache[16] || (_cache[16] = (...args) => $options.onConfirmPurchase && $options.onConfirmPurchase(...args))
               },
               "确认申购",
               2
@@ -25826,8 +34063,8 @@ IP：${event.ip}
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesWealthProduct = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["render", _sfc_render$2], ["__scopeId", "data-v-080bb83e"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/product.vue"]]);
-  const _sfc_main$2 = {
+  const PagesWealthProduct = /* @__PURE__ */ _export_sfc(_sfc_main$d, [["render", _sfc_render$c], ["__scopeId", "data-v-080bb83e"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/product.vue"]]);
+  const _sfc_main$c = {
     data() {
       return {
         loading: false,
@@ -25997,18 +34234,12 @@ IP：${event.ip}
       this.initDataSync();
     },
     methods: {
-      goBack() {
-        uni.navigateBack();
-      },
-      onRefresh() {
-        this.loadInsuranceData();
-      },
       async loadInsuranceData() {
         try {
           this.loading = true;
           uni.showLoading({ title: "加载中..." });
           const insuranceCategories = getInsuranceCategories();
-          formatAppLog("log", "at pages/wealth/insurance.vue:378", "保险产品数据:", insuranceCategories);
+          formatAppLog("log", "at pages/wealth/insurance.vue:377", "保险产品数据:", insuranceCategories);
           this.insuranceCategories = insuranceCategories;
           const totalProducts = insuranceCategories.reduce((sum, cat) => sum + cat.products.length, 0);
           const avgPremium = insuranceCategories.reduce((sum, cat) => {
@@ -26024,7 +34255,7 @@ IP：${event.ip}
           uni.hideLoading();
           this.loading = false;
         } catch (error) {
-          formatAppLog("error", "at pages/wealth/insurance.vue:402", "加载保险产品数据失败:", error);
+          formatAppLog("error", "at pages/wealth/insurance.vue:401", "加载保险产品数据失败:", error);
           uni.hideLoading();
           uni.showToast({ title: "加载失败", icon: "none" });
           this.loading = false;
@@ -26032,24 +34263,18 @@ IP：${event.ip}
       },
       async initChart(insuranceCategories) {
         try {
-          formatAppLog("log", "at pages/wealth/insurance.vue:411", "🎨 开始渲染保险图表");
+          formatAppLog("log", "at pages/wealth/insurance.vue:410", "🎨 开始渲染保险图表");
           await this.$nextTick();
           await new Promise((resolve) => setTimeout(resolve, 200));
-          const chartData = insuranceCategories.map((category) => {
-            const avgPremium = category.products.reduce((sum, product) => sum + product.premium, 0) / category.products.length;
-            return avgPremium;
-          });
-          const labels = insuranceCategories.map((category) => category.name);
-          drawSimpleBarChart("insuranceChart", {
-            data: chartData,
-            labels,
-            title: "保险产品平均保费",
-            yAxisLabel: "保费(元)",
-            colors: ["#FF6B35", "#34C759", "#FF9500"]
-          });
-          formatAppLog("log", "at pages/wealth/insurance.vue:436", "✅ 保险图表渲染成功");
+          const option = createInsuranceChart({ categories: insuranceCategories });
+          this.chartInstance = await initUCharts("insuranceChart", option, this);
+          if (this.chartInstance) {
+            formatAppLog("log", "at pages/wealth/insurance.vue:423", "✅ 保险图表渲染成功 (uCharts)");
+          } else {
+            formatAppLog("warn", "at pages/wealth/insurance.vue:425", "❌ uCharts图表渲染失败");
+          }
         } catch (error) {
-          formatAppLog("error", "at pages/wealth/insurance.vue:438", "❌ 保险图表渲染失败:", error);
+          formatAppLog("error", "at pages/wealth/insurance.vue:428", "❌ 保险图表渲染失败:", error);
           this.showChartFallback("保险产品保费数据加载失败");
         }
       },
@@ -26065,7 +34290,7 @@ IP：${event.ip}
         }
       },
       onChartTouch(e) {
-        formatAppLog("log", "at pages/wealth/insurance.vue:457", "图表触摸事件:", e);
+        formatAppLog("log", "at pages/wealth/insurance.vue:447", "图表触摸事件:", e);
       },
       onProductDetail(product) {
         uni.navigateTo({
@@ -26119,38 +34344,20 @@ IP：${event.ip}
             title: "投保失败，请重试",
             icon: "none"
           });
-          formatAppLog("error", "at pages/wealth/insurance.vue:524", "投保处理失败:", error);
+          formatAppLog("error", "at pages/wealth/insurance.vue:514", "投保处理失败:", error);
         }
       },
       // 初始化数据同步
       initDataSync() {
         initWealthDataSync();
         uni.$on("balanceUpdated", (data) => {
-          formatAppLog("log", "at pages/wealth/insurance.vue:535", "保险页面收到余额更新事件:", data);
+          formatAppLog("log", "at pages/wealth/insurance.vue:525", "保险页面收到余额更新事件:", data);
         });
       }
     }
   };
-  function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$b(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "insurance-page" }, [
-      vue.createCommentVNode(" 头部导航 "),
-      vue.createElementVNode("view", { class: "header" }, [
-        vue.createElementVNode("view", { class: "nav-bar" }, [
-          vue.createElementVNode("view", {
-            class: "nav-left",
-            onClick: _cache[0] || (_cache[0] = (...args) => $options.goBack && $options.goBack(...args))
-          }, [
-            vue.createElementVNode("text", { class: "nav-icon" }, "‹")
-          ]),
-          vue.createElementVNode("text", { class: "nav-title" }, "保险产品"),
-          vue.createElementVNode("view", { class: "nav-right" }, [
-            vue.createElementVNode("text", {
-              class: "nav-icon",
-              onClick: _cache[1] || (_cache[1] = (...args) => $options.onRefresh && $options.onRefresh(...args))
-            }, "⟳")
-          ])
-        ])
-      ]),
       vue.createCommentVNode(" 保险市场概览 "),
       vue.createElementVNode("view", { class: "market-overview" }, [
         vue.createElementVNode("view", { class: "overview-header" }, [
@@ -26200,15 +34407,59 @@ IP：${event.ip}
           vue.createElementVNode(
             "canvas",
             {
+              id: "insuranceChart",
               "canvas-id": "insuranceChart",
               class: "chart-canvas",
-              onTouchstart: _cache[2] || (_cache[2] = (...args) => $options.onChartTouch && $options.onChartTouch(...args))
+              onTouchstart: _cache[0] || (_cache[0] = (...args) => $options.onChartTouch && $options.onChartTouch(...args))
             },
             null,
             32
             /* NEED_HYDRATION */
           )
-        ])
+        ]),
+        vue.createCommentVNode(" 一行图例 "),
+        _ctx.insuranceCategories && _ctx.insuranceCategories.length ? (vue.openBlock(), vue.createElementBlock("view", {
+          key: 0,
+          class: "legend-row"
+        }, [
+          vue.createElementVNode("scroll-view", {
+            class: "legend-scroll",
+            "scroll-x": "true"
+          }, [
+            vue.createElementVNode("view", { class: "legend-list" }, [
+              (vue.openBlock(true), vue.createElementBlock(
+                vue.Fragment,
+                null,
+                vue.renderList(_ctx.insuranceCategories, (cat) => {
+                  return vue.openBlock(), vue.createElementBlock("view", {
+                    class: "legend-item",
+                    key: cat.id
+                  }, [
+                    vue.createElementVNode(
+                      "text",
+                      {
+                        class: "legend-dot",
+                        style: vue.normalizeStyle({ background: cat.color })
+                      },
+                      null,
+                      4
+                      /* STYLE */
+                    ),
+                    vue.createElementVNode(
+                      "text",
+                      { class: "legend-name" },
+                      vue.toDisplayString(cat.name),
+                      1
+                      /* TEXT */
+                    )
+                  ]);
+                }),
+                128
+                /* KEYED_FRAGMENT */
+              ))
+            ])
+          ])
+        ])) : vue.createCommentVNode("v-if", true)
       ]),
       vue.createCommentVNode(" 保险类型筛选 "),
       vue.createElementVNode("view", { class: "filter-section" }, [
@@ -26221,7 +34472,7 @@ IP：${event.ip}
               "view",
               {
                 class: vue.normalizeClass(["filter-item", { active: $data.activeFilter === "all" }]),
-                onClick: _cache[3] || (_cache[3] = ($event) => $data.activeFilter = "all")
+                onClick: _cache[1] || (_cache[1] = ($event) => $data.activeFilter = "all")
               },
               " 全部 ",
               2
@@ -26231,7 +34482,7 @@ IP：${event.ip}
               "view",
               {
                 class: vue.normalizeClass(["filter-item", { active: $data.activeFilter === "health" }]),
-                onClick: _cache[4] || (_cache[4] = ($event) => $data.activeFilter = "health")
+                onClick: _cache[2] || (_cache[2] = ($event) => $data.activeFilter = "health")
               },
               " 健康险 ",
               2
@@ -26241,7 +34492,7 @@ IP：${event.ip}
               "view",
               {
                 class: vue.normalizeClass(["filter-item", { active: $data.activeFilter === "accident" }]),
-                onClick: _cache[5] || (_cache[5] = ($event) => $data.activeFilter = "accident")
+                onClick: _cache[3] || (_cache[3] = ($event) => $data.activeFilter = "accident")
               },
               " 意外险 ",
               2
@@ -26251,9 +34502,19 @@ IP：${event.ip}
               "view",
               {
                 class: vue.normalizeClass(["filter-item", { active: $data.activeFilter === "life" }]),
-                onClick: _cache[6] || (_cache[6] = ($event) => $data.activeFilter = "life")
+                onClick: _cache[4] || (_cache[4] = ($event) => $data.activeFilter = "life")
               },
               " 寿险 ",
+              2
+              /* CLASS */
+            ),
+            vue.createElementVNode(
+              "view",
+              {
+                class: vue.normalizeClass(["filter-item", { active: $data.activeFilter === "property" }]),
+                onClick: _cache[5] || (_cache[5] = ($event) => $data.activeFilter = "property")
+              },
+              " 财产险 ",
               2
               /* CLASS */
             )
@@ -26481,147 +34742,8 @@ IP：${event.ip}
       ])
     ]);
   }
-  const PagesWealthInsurance = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["render", _sfc_render$1], ["__scopeId", "data-v-64b05542"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/insurance.vue"]]);
-  function updateChartData(chartInstance, newData, chartType) {
-    if (!chartInstance || !newData) {
-      formatAppLog("log", "at utils/chartUpdater.js:14", "图表实例或数据无效");
-      return;
-    }
-    formatAppLog("log", "at utils/chartUpdater.js:18", "开始更新图表数据:", chartType);
-    try {
-      switch (chartType) {
-        case "deposit":
-          updateDepositChart(chartInstance, newData);
-          break;
-        case "product":
-          updateProductChart(chartInstance, newData);
-          break;
-        case "insurance":
-          updateInsuranceChart(chartInstance, newData);
-          break;
-        case "forex":
-          updateForexChart(chartInstance, newData);
-          break;
-        default:
-          formatAppLog("log", "at utils/chartUpdater.js:35", "未知的图表类型:", chartType);
-      }
-    } catch (error) {
-      formatAppLog("error", "at utils/chartUpdater.js:38", "更新图表数据失败:", error);
-    }
-  }
-  function updateDepositChart(chartInstance, data) {
-    if (!data.fixed)
-      return;
-    const categories = Object.keys(data.fixed);
-    const values = Object.values(data.fixed);
-    chartInstance.setOption({
-      xAxis: {
-        data: categories
-      },
-      series: [{
-        data: values,
-        animation: true,
-        animationDuration: 1e3,
-        animationEasing: "cubicOut"
-      }]
-    }, true);
-  }
-  function updateProductChart(chartInstance, data) {
-    if (!data.products)
-      return;
-    const products = data.products.slice(0, 8);
-    const names = products.map((p) => p.name.length > 6 ? p.name.substring(0, 6) + "..." : p.name);
-    const rates = products.map((p) => p.expectedReturn);
-    chartInstance.setOption({
-      xAxis: {
-        data: names
-      },
-      series: [{
-        data: rates,
-        animation: true,
-        animationDuration: 1e3,
-        animationEasing: "cubicOut"
-      }]
-    }, true);
-  }
-  function updateInsuranceChart(chartInstance, data) {
-    if (!data.products)
-      return;
-    const products = data.products.slice(0, 6);
-    const names = products.map((p) => p.name.length > 8 ? p.name.substring(0, 8) + "..." : p.name);
-    const premiums = products.map((p) => p.monthlyPremium);
-    chartInstance.setOption({
-      xAxis: {
-        data: names
-      },
-      series: [{
-        data: premiums,
-        animation: true,
-        animationDuration: 1e3,
-        animationEasing: "cubicOut"
-      }]
-    }, true);
-  }
-  function updateForexChart(chartInstance, data) {
-    if (!data.majorPairs)
-      return;
-    const pairs = data.majorPairs.slice(0, 6);
-    const names = pairs.map((p) => p.code);
-    const prices = pairs.map((p) => parseFloat(p.price));
-    chartInstance.setOption({
-      xAxis: {
-        data: names
-      },
-      series: [{
-        data: prices,
-        animation: true,
-        animationDuration: 1e3,
-        animationEasing: "cubicOut"
-      }]
-    }, true);
-  }
-  function createChartUpdater(chartInstance, dataFetcher, chartType, interval = 3e4) {
-    let updateTimer = null;
-    let isUpdating = false;
-    const updateChart = async () => {
-      if (isUpdating)
-        return;
-      isUpdating = true;
-      try {
-        formatAppLog("log", "at utils/chartUpdater.js:150", `开始定时更新${chartType}图表数据...`);
-        const newData = await dataFetcher();
-        updateChartData(chartInstance, newData, chartType);
-        formatAppLog("log", "at utils/chartUpdater.js:153", `${chartType}图表数据更新完成`);
-      } catch (error) {
-        formatAppLog("error", "at utils/chartUpdater.js:155", `更新${chartType}图表数据失败:`, error);
-      } finally {
-        isUpdating = false;
-      }
-    };
-    const start = () => {
-      if (updateTimer)
-        return;
-      updateTimer = setInterval(updateChart, interval);
-      formatAppLog("log", "at utils/chartUpdater.js:164", `${chartType}图表定时更新已启动，间隔: ${interval}ms`);
-    };
-    const stop = () => {
-      if (updateTimer) {
-        clearInterval(updateTimer);
-        updateTimer = null;
-        formatAppLog("log", "at utils/chartUpdater.js:171", `${chartType}图表定时更新已停止`);
-      }
-    };
-    const destroy = () => {
-      stop();
-    };
-    return {
-      start,
-      stop,
-      destroy,
-      update: updateChart
-    };
-  }
-  const _sfc_main$1 = {
+  const PagesWealthInsurance = /* @__PURE__ */ _export_sfc(_sfc_main$c, [["render", _sfc_render$b], ["__scopeId", "data-v-64b05542"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/insurance.vue"]]);
+  const _sfc_main$b = {
     data() {
       return {
         loading: false,
@@ -26696,12 +34818,6 @@ IP：${event.ip}
       }
     },
     methods: {
-      goBack() {
-        uni.navigateBack();
-      },
-      onRefresh() {
-        this.loadForexData();
-      },
       async loadForexData() {
         try {
           this.loading = true;
@@ -26714,18 +34830,158 @@ IP：${event.ip}
             marketStatus: "正常交易",
             lastUpdate: (/* @__PURE__ */ new Date()).toISOString()
           };
-          formatAppLog("log", "at pages/wealth/forex.vue:320", "外汇数据:", forexData);
+          formatAppLog("log", "at pages/wealth/forex.vue:304", "外汇数据:", forexData);
           this.forexData = forexData;
-          await this.initChart(forexData);
+          await this.switchCurrency("USD");
           this.startSimpleAutoUpdate();
           uni.hideLoading();
           this.loading = false;
         } catch (error) {
-          formatAppLog("error", "at pages/wealth/forex.vue:334", "加载外汇数据失败:", error);
+          formatAppLog("error", "at pages/wealth/forex.vue:318", "加载外汇数据失败:", error);
           uni.hideLoading();
           uni.showToast({ title: "加载失败", icon: "none" });
           this.loading = false;
         }
+      },
+      // 切换币种并拉取近30天历史（在线优先，离线回退）
+      async switchCurrency(code) {
+        try {
+          this.selectedPair = `${code}/CNY`;
+          const end = /* @__PURE__ */ new Date();
+          const start = /* @__PURE__ */ new Date();
+          start.setDate(end.getDate() - 29);
+          const fmt = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+          const startStr = fmt(start);
+          const endStr = fmt(end);
+          const fullDates = [];
+          for (let i = 29; i >= 0; i--) {
+            const d = /* @__PURE__ */ new Date();
+            d.setDate(d.getDate() - i);
+            fullDates.push(fmt(d));
+          }
+          const base = code;
+          const symbol = "CNY";
+          const loadFromCache = () => {
+            try {
+              const cacheKey = `forex_history_${code}`;
+              const cached2 = uni.getStorageSync(cacheKey);
+              if (cached2 && cached2.dates && cached2.values && cached2.dates.length === cached2.values.length) {
+                return cached2;
+              }
+            } catch (e) {
+            }
+            return null;
+          };
+          const saveToCache = (payload) => {
+            try {
+              const cacheKey = `forex_history_${code}`;
+              uni.setStorageSync(cacheKey, payload);
+            } catch (e) {
+            }
+          };
+          const fillMissing = (datesArr, valuesMap) => {
+            const filledValues = new Array(datesArr.length);
+            for (let i = 0; i < datesArr.length; i++) {
+              const d = datesArr[i];
+              const v = valuesMap[d];
+              filledValues[i] = typeof v === "number" && !Number.isNaN(v) ? v : null;
+            }
+            let firstIdx = filledValues.findIndex((v) => v !== null);
+            if (firstIdx === -1) {
+              return filledValues.map(() => 0);
+            }
+            for (let i = 0; i < firstIdx; i++) {
+              filledValues[i] = filledValues[firstIdx];
+            }
+            for (let i = firstIdx + 1; i < filledValues.length; i++) {
+              if (filledValues[i] === null)
+                filledValues[i] = filledValues[i - 1];
+            }
+            return filledValues;
+          };
+          const networkData = await this.fetchHistoryFromProviders({ base, symbol, startStr, endStr });
+          let dates = fullDates.slice();
+          let values = [];
+          if (networkData && networkData.rates) {
+            const map = {};
+            const keys = Object.keys(networkData.rates);
+            const respBase = networkData.base || base;
+            for (const k of keys) {
+              const rec = networkData.rates[k];
+              let val = null;
+              if (respBase === base) {
+                val = Number(rec && rec[symbol]);
+              } else {
+                const toCny = Number(rec && rec[symbol]);
+                const toBase = Number(rec && rec[base]);
+                if (!Number.isNaN(toCny) && !Number.isNaN(toBase) && toBase !== 0) {
+                  val = toCny / toBase;
+                }
+              }
+              if (typeof val === "number" && !Number.isNaN(val))
+                map[k] = val;
+            }
+            values = fillMissing(dates, map);
+            const payload = { history: { name: `${code}/CNY`, dates, values } };
+            saveToCache(payload.history);
+            formatAppLog("log", "at pages/wealth/forex.vue:416", "📈 加载到历史数据:", code, "首末值:", values[0], values[values.length - 1]);
+            await this.initChart(payload);
+            return;
+          }
+          const cached = loadFromCache();
+          if (cached) {
+            const valuesMap = {};
+            for (let i = 0; i < cached.dates.length; i++) {
+              valuesMap[cached.dates[i]] = cached.values[i];
+            }
+            values = fillMissing(dates, valuesMap);
+            formatAppLog("log", "at pages/wealth/forex.vue:430", "📦 使用缓存数据:", code, "首末值:", values[0], values[values.length - 1]);
+            await this.initChart({ history: { name: `${code}/CNY`, dates, values } });
+            return;
+          }
+          uni.showToast({ title: "无法获取汇率数据", icon: "none" });
+        } catch (err) {
+          formatAppLog("error", "at pages/wealth/forex.vue:438", "切换币种失败:", err);
+          uni.showToast({ title: "切换失败", icon: "none" });
+        }
+      },
+      // 依次尝试多个公共汇率数据源，返回 { rates: { 'YYYY-MM-DD': { [symbol]: number } } }
+      fetchHistoryFromProviders({ base, symbol, startStr, endStr }) {
+        const tryHost = (urlBuilder, mapper) => new Promise((resolve) => {
+          const url = urlBuilder();
+          uni.request({
+            url,
+            method: "GET",
+            timeout: 8e3,
+            success: (res) => {
+              try {
+                if (res && res.statusCode === 200 && res.data) {
+                  const mapped = mapper(res.data);
+                  if (mapped && mapped.rates && Object.keys(mapped.rates).length) {
+                    resolve(mapped);
+                    return;
+                  }
+                }
+              } catch (e) {
+              }
+              resolve(null);
+            },
+            fail: () => resolve(null)
+          });
+        });
+        const p1 = () => tryHost(
+          () => `https://api.exchangerate.host/timeseries?base=${base}&symbols=${symbol}&start_date=${startStr}&end_date=${endStr}`,
+          (data) => ({ rates: data && data.rates ? data.rates : null })
+        );
+        const p2 = () => tryHost(
+          () => `https://api.frankfurter.app/${startStr}..${endStr}?from=${base}&to=${symbol}`,
+          (data) => {
+            if (!data || !data.rates)
+              return null;
+            return { rates: data.rates };
+          }
+        );
+        return p1().then((r) => r || p2());
       },
       // 启动简单自动更新
       startSimpleAutoUpdate() {
@@ -26736,7 +34992,7 @@ IP：${event.ip}
           this.updateTimer = setInterval(() => {
             this.loadForexData();
           }, this.updateInterval);
-          formatAppLog("log", "at pages/wealth/forex.vue:351", "外汇数据自动更新已启动");
+          formatAppLog("log", "at pages/wealth/forex.vue:496", "外汇数据自动更新已启动");
         }
       },
       // 停止自动更新
@@ -26744,37 +35000,44 @@ IP：${event.ip}
         if (this.updateTimer) {
           clearInterval(this.updateTimer);
           this.updateTimer = null;
-          formatAppLog("log", "at pages/wealth/forex.vue:360", "外汇数据自动更新已停止");
-        }
-      },
-      // 切换自动更新
-      toggleAutoUpdate() {
-        this.autoUpdate = !this.autoUpdate;
-        if (this.autoUpdate) {
-          this.startSimpleAutoUpdate();
-          uni.showToast({ title: "自动更新已开启", icon: "success" });
-        } else {
-          this.stopAutoUpdate();
-          uni.showToast({ title: "自动更新已关闭", icon: "none" });
+          formatAppLog("log", "at pages/wealth/forex.vue:505", "外汇数据自动更新已停止");
         }
       },
       async initChart(forexData) {
+        var _a, _b, _c, _d, _e, _f;
         try {
-          formatAppLog("log", "at pages/wealth/forex.vue:378", "🎨 开始渲染外汇图表");
+          formatAppLog("log", "at pages/wealth/forex.vue:512", "🎨 开始渲染外汇图表");
           await this.$nextTick();
           await new Promise((resolve) => setTimeout(resolve, 200));
-          const chartData = forexData.majorPairs.map((pair) => parseFloat(pair.price));
-          const labels = forexData.majorPairs.map((pair) => pair.code);
-          drawSimpleLineChart("forexChart", {
-            data: chartData,
-            labels,
-            title: "主要货币对汇率",
-            yAxisLabel: "汇率",
-            colors: ["#FF6B35", "#34C759", "#FF9500", "#007AFF", "#AF52DE", "#FF2D92"]
-          });
-          formatAppLog("log", "at pages/wealth/forex.vue:399", "✅ 外汇图表渲染成功");
+          const option = createForexChart(forexData);
+          const isHistory = !!(forexData && forexData.history);
+          const pairName = isHistory ? forexData.history.name || this.selectedPair : this.selectedPair;
+          const code = (pairName || "USD/CNY").split("/")[0];
+          const idMap = { USD: "forexChartUSD", EUR: "forexChartEUR", JPY: "forexChartJPY" };
+          const instMapKey = { USD: "chartInstanceUSD", EUR: "chartInstanceEUR", JPY: "chartInstanceJPY" };
+          const canvasId = idMap[code] || "forexChartUSD";
+          const instKey = instMapKey[code] || "chartInstanceUSD";
+          if (this[instKey] && typeof this[instKey].updateData === "function" && isHistory) {
+            formatAppLog("log", "at pages/wealth/forex.vue:531", "🔄 更新图表数据:", pairName, "范围:", (_b = (_a = forexData.history) == null ? void 0 : _a.dates) == null ? void 0 : _b[0], "→", (_f = (_c = forexData.history) == null ? void 0 : _c.dates) == null ? void 0 : _f[((_e = (_d = forexData.history) == null ? void 0 : _d.dates) == null ? void 0 : _e.length) - 1]);
+            try {
+              this[instKey].updateData({
+                categories: option.categories,
+                series: option.series
+              });
+            } catch (e) {
+              formatAppLog("warn", "at pages/wealth/forex.vue:538", "updateData失败，重新初始化图表", e);
+              this[instKey] = await initUCharts(canvasId, option, this);
+            }
+          } else {
+            this[instKey] = await initUCharts(canvasId, option, this);
+          }
+          if (this[instKey]) {
+            formatAppLog("log", "at pages/wealth/forex.vue:546", "✅ 外汇图表渲染成功 (uCharts)");
+          } else {
+            formatAppLog("warn", "at pages/wealth/forex.vue:548", "❌ uCharts图表渲染失败");
+          }
         } catch (error) {
-          formatAppLog("error", "at pages/wealth/forex.vue:401", "❌ 外汇图表渲染失败:", error);
+          formatAppLog("error", "at pages/wealth/forex.vue:551", "❌ 外汇图表渲染失败:", error);
           this.showChartFallback("外汇汇率数据加载失败");
         }
       },
@@ -26790,7 +35053,7 @@ IP：${event.ip}
         }
       },
       onChartTouch(e) {
-        formatAppLog("log", "at pages/wealth/forex.vue:420", "图表触摸事件:", e);
+        formatAppLog("log", "at pages/wealth/forex.vue:570", "图表触摸事件:", e);
       },
       formatTime(timeString) {
         const date = new Date(timeString);
@@ -26858,36 +35121,8 @@ IP：${event.ip}
       }
     }
   };
-  function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$a(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "forex-page" }, [
-      vue.createCommentVNode(" 头部导航 "),
-      vue.createElementVNode("view", { class: "header" }, [
-        vue.createElementVNode("view", { class: "nav-bar" }, [
-          vue.createElementVNode("view", {
-            class: "nav-left",
-            onClick: _cache[0] || (_cache[0] = (...args) => $options.goBack && $options.goBack(...args))
-          }, [
-            vue.createElementVNode("text", { class: "nav-icon" }, "‹")
-          ]),
-          vue.createElementVNode("text", { class: "nav-title" }, "外汇交易"),
-          vue.createElementVNode("view", { class: "nav-right" }, [
-            vue.createElementVNode(
-              "text",
-              {
-                class: vue.normalizeClass(["nav-icon", { active: $data.autoUpdate }]),
-                onClick: _cache[1] || (_cache[1] = (...args) => $options.toggleAutoUpdate && $options.toggleAutoUpdate(...args))
-              },
-              "⏰",
-              2
-              /* CLASS */
-            ),
-            vue.createElementVNode("text", {
-              class: "nav-icon",
-              onClick: _cache[2] || (_cache[2] = (...args) => $options.onRefresh && $options.onRefresh(...args))
-            }, "⟳")
-          ])
-        ])
-      ]),
       vue.createCommentVNode(" 市场状态 "),
       vue.createElementVNode("view", { class: "market-status" }, [
         vue.createElementVNode("view", { class: "status-header" }, [
@@ -26912,20 +35147,22 @@ IP：${event.ip}
               /* CLASS */
             )
           ]),
-          vue.createElementVNode(
+          $options.marketStatus.lastUpdate && $options.formatTime($options.marketStatus.lastUpdate) !== "Invalid Date" ? (vue.openBlock(), vue.createElementBlock(
             "text",
-            { class: "last-update" },
+            {
+              key: 0,
+              class: "last-update"
+            },
             "最后更新: " + vue.toDisplayString($options.formatTime($options.marketStatus.lastUpdate)),
             1
             /* TEXT */
-          )
+          )) : vue.createCommentVNode("v-if", true)
         ])
       ]),
       vue.createCommentVNode(" 主要货币对 "),
       vue.createElementVNode("view", { class: "major-pairs" }, [
         vue.createElementVNode("view", { class: "pairs-header" }, [
-          vue.createElementVNode("text", { class: "pairs-title" }, "主要货币对"),
-          vue.createElementVNode("text", { class: "pairs-subtitle" }, "实时汇率")
+          vue.createElementVNode("text", { class: "pairs-title" }, "主要货币对")
         ]),
         vue.createElementVNode("view", { class: "pairs-list" }, [
           (vue.openBlock(true), vue.createElementBlock(
@@ -26995,33 +35232,38 @@ IP：${event.ip}
       vue.createCommentVNode(" 汇率走势图表 "),
       vue.createElementVNode("view", { class: "chart-card" }, [
         vue.createElementVNode("view", { class: "chart-header" }, [
-          vue.createElementVNode("text", { class: "chart-title" }, "汇率走势图"),
-          vue.createElementVNode("view", { class: "chart-tabs" }, [
+          vue.createElementVNode("text", { class: "chart-title" }, "汇率走势图")
+        ]),
+        vue.createElementVNode("view", { class: "chart-toolbar" }, [
+          vue.createElementVNode("view", { class: "toolbar-buttons" }, [
             vue.createElementVNode(
-              "text",
+              "button",
               {
-                class: vue.normalizeClass(["chart-tab", { active: $data.selectedPair === "USD/CNY" }]),
-                onClick: _cache[3] || (_cache[3] = ($event) => $data.selectedPair = "USD/CNY")
+                size: "mini",
+                class: vue.normalizeClass({ active: $data.selectedPair === "USD/CNY" }),
+                onClick: _cache[0] || (_cache[0] = ($event) => $options.switchCurrency("USD"))
               },
               "美元/人民币",
               2
               /* CLASS */
             ),
             vue.createElementVNode(
-              "text",
+              "button",
               {
-                class: vue.normalizeClass(["chart-tab", { active: $data.selectedPair === "EUR/CNY" }]),
-                onClick: _cache[4] || (_cache[4] = ($event) => $data.selectedPair = "EUR/CNY")
+                size: "mini",
+                class: vue.normalizeClass({ active: $data.selectedPair === "EUR/CNY" }),
+                onClick: _cache[1] || (_cache[1] = ($event) => $options.switchCurrency("EUR"))
               },
               "欧元/人民币",
               2
               /* CLASS */
             ),
             vue.createElementVNode(
-              "text",
+              "button",
               {
-                class: vue.normalizeClass(["chart-tab", { active: $data.selectedPair === "JPY/CNY" }]),
-                onClick: _cache[5] || (_cache[5] = ($event) => $data.selectedPair = "JPY/CNY")
+                size: "mini",
+                class: vue.normalizeClass({ active: $data.selectedPair === "JPY/CNY" }),
+                onClick: _cache[2] || (_cache[2] = ($event) => $options.switchCurrency("JPY"))
               },
               "日元/人民币",
               2
@@ -27030,17 +35272,45 @@ IP：${event.ip}
           ])
         ]),
         vue.createElementVNode("view", { class: "chart-container" }, [
-          vue.createElementVNode(
+          $data.selectedPair === "USD/CNY" ? (vue.openBlock(), vue.createElementBlock(
             "canvas",
             {
-              "canvas-id": "forexChart",
+              key: 0,
+              id: "forexChartUSD",
+              "canvas-id": "forexChartUSD",
               class: "chart-canvas",
-              onTouchstart: _cache[6] || (_cache[6] = (...args) => $options.onChartTouch && $options.onChartTouch(...args))
+              onTouchstart: _cache[3] || (_cache[3] = (...args) => $options.onChartTouch && $options.onChartTouch(...args))
             },
             null,
             32
             /* NEED_HYDRATION */
-          )
+          )) : vue.createCommentVNode("v-if", true),
+          $data.selectedPair === "EUR/CNY" ? (vue.openBlock(), vue.createElementBlock(
+            "canvas",
+            {
+              key: 1,
+              id: "forexChartEUR",
+              "canvas-id": "forexChartEUR",
+              class: "chart-canvas",
+              onTouchstart: _cache[4] || (_cache[4] = (...args) => $options.onChartTouch && $options.onChartTouch(...args))
+            },
+            null,
+            32
+            /* NEED_HYDRATION */
+          )) : vue.createCommentVNode("v-if", true),
+          $data.selectedPair === "JPY/CNY" ? (vue.openBlock(), vue.createElementBlock(
+            "canvas",
+            {
+              key: 2,
+              id: "forexChartJPY",
+              "canvas-id": "forexChartJPY",
+              class: "chart-canvas",
+              onTouchstart: _cache[5] || (_cache[5] = (...args) => $options.onChartTouch && $options.onChartTouch(...args))
+            },
+            null,
+            32
+            /* NEED_HYDRATION */
+          )) : vue.createCommentVNode("v-if", true)
         ])
       ]),
       vue.createCommentVNode(" 外汇工具 "),
@@ -27052,28 +35322,28 @@ IP：${event.ip}
         vue.createElementVNode("view", { class: "tools-grid" }, [
           vue.createElementVNode("view", {
             class: "tool-item",
-            onClick: _cache[7] || (_cache[7] = ($event) => $options.onOpenTool("calculator"))
+            onClick: _cache[6] || (_cache[6] = ($event) => $options.onOpenTool("calculator"))
           }, [
             vue.createElementVNode("view", { class: "tool-icon" }, "🧮"),
             vue.createElementVNode("text", { class: "tool-text" }, "汇率计算器")
           ]),
           vue.createElementVNode("view", {
             class: "tool-item",
-            onClick: _cache[8] || (_cache[8] = ($event) => $options.onOpenTool("converter"))
+            onClick: _cache[7] || (_cache[7] = ($event) => $options.onOpenTool("converter"))
           }, [
             vue.createElementVNode("view", { class: "tool-icon" }, "💱"),
             vue.createElementVNode("text", { class: "tool-text" }, "货币转换")
           ]),
           vue.createElementVNode("view", {
             class: "tool-item",
-            onClick: _cache[9] || (_cache[9] = ($event) => $options.onOpenTool("calendar"))
+            onClick: _cache[8] || (_cache[8] = ($event) => $options.onOpenTool("calendar"))
           }, [
             vue.createElementVNode("view", { class: "tool-icon" }, "📅"),
             vue.createElementVNode("text", { class: "tool-text" }, "财经日历")
           ]),
           vue.createElementVNode("view", {
             class: "tool-item",
-            onClick: _cache[10] || (_cache[10] = ($event) => $options.onOpenTool("news"))
+            onClick: _cache[9] || (_cache[9] = ($event) => $options.onOpenTool("news"))
           }, [
             vue.createElementVNode("view", { class: "tool-icon" }, "📰"),
             vue.createElementVNode("text", { class: "tool-text" }, "外汇资讯")
@@ -27092,7 +35362,7 @@ IP：${event.ip}
             vue.createElementVNode("picker", {
               value: $data.calculator.fromIndex,
               range: $data.currencyList,
-              onChange: _cache[11] || (_cache[11] = (...args) => $options.onFromCurrencyChange && $options.onFromCurrencyChange(...args))
+              onChange: _cache[10] || (_cache[10] = (...args) => $options.onFromCurrencyChange && $options.onFromCurrencyChange(...args))
             }, [
               vue.createElementVNode(
                 "view",
@@ -27108,7 +35378,7 @@ IP：${event.ip}
             vue.createElementVNode("picker", {
               value: $data.calculator.toIndex,
               range: $data.currencyList,
-              onChange: _cache[12] || (_cache[12] = (...args) => $options.onToCurrencyChange && $options.onToCurrencyChange(...args))
+              onChange: _cache[11] || (_cache[11] = (...args) => $options.onToCurrencyChange && $options.onToCurrencyChange(...args))
             }, [
               vue.createElementVNode(
                 "view",
@@ -27126,7 +35396,7 @@ IP：${event.ip}
               {
                 class: "form-input",
                 type: "number",
-                "onUpdate:modelValue": _cache[13] || (_cache[13] = ($event) => $data.calculator.amount = $event),
+                "onUpdate:modelValue": _cache[12] || (_cache[12] = ($event) => $data.calculator.amount = $event),
                 placeholder: "请输入金额"
               },
               null,
@@ -27138,7 +35408,7 @@ IP：${event.ip}
           ]),
           vue.createElementVNode("button", {
             class: "calculate-btn",
-            onClick: _cache[14] || (_cache[14] = (...args) => $options.calculateExchange && $options.calculateExchange(...args))
+            onClick: _cache[13] || (_cache[13] = (...args) => $options.calculateExchange && $options.calculateExchange(...args))
           }, "计算")
         ]),
         $data.calculator.result ? (vue.openBlock(), vue.createElementBlock("view", {
@@ -27223,7 +35493,8831 @@ IP：${event.ip}
       ])
     ]);
   }
-  const PagesWealthForex = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["render", _sfc_render], ["__scopeId", "data-v-3af541aa"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/forex.vue"]]);
+  const PagesWealthForex = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["render", _sfc_render$a], ["__scopeId", "data-v-3af541aa"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/forex.vue"]]);
+  const _sfc_main$a = {
+    data() {
+      return {
+        product: {},
+        coverageDetails: [],
+        notices: []
+      };
+    },
+    onLoad(options) {
+      this.loadProductDetail(options);
+    },
+    methods: {
+      goBack() {
+        uni.navigateBack();
+      },
+      onShare() {
+        uni.showToast({
+          title: "分享功能开发中",
+          icon: "none"
+        });
+      },
+      loadProductDetail(options) {
+        const productId = options.id || "health001";
+        const productName = options.name || "重疾保险";
+        this.product = {
+          id: productId,
+          name: productName,
+          type: "健康保险",
+          premium: 3e3,
+          coverage: 2e5,
+          term: "终身",
+          features: ["重疾保障", "轻症赔付", "豁免保费", "现金价值"],
+          riskLevel: "中风险",
+          status: "在售",
+          icon: "🏥"
+        };
+        this.setCoverageDetails();
+        this.setNotices();
+      },
+      setCoverageDetails() {
+        if (this.product.type === "健康保险") {
+          this.coverageDetails = [
+            {
+              name: "重大疾病保障",
+              amount: 2e5,
+              description: "涵盖100种重大疾病，确诊即赔"
+            },
+            {
+              name: "轻症疾病保障",
+              amount: 4e4,
+              description: "涵盖50种轻症疾病，按保额20%赔付"
+            },
+            {
+              name: "身故保障",
+              amount: 2e5,
+              description: "因疾病或意外导致身故，按保额赔付"
+            },
+            {
+              name: "保费豁免",
+              amount: 0,
+              description: "确诊轻症或重疾后，后续保费免交"
+            }
+          ];
+        } else if (this.product.type === "人寿保险") {
+          this.coverageDetails = [
+            {
+              name: "身故保障",
+              amount: this.product.coverage,
+              description: "因疾病或意外导致身故，按保额赔付"
+            },
+            {
+              name: "全残保障",
+              amount: this.product.coverage,
+              description: "因疾病或意外导致全残，按保额赔付"
+            },
+            {
+              name: "现金价值",
+              amount: 0,
+              description: "保单具有现金价值，可申请保单贷款"
+            }
+          ];
+        } else {
+          this.coverageDetails = [
+            {
+              name: "意外身故",
+              amount: this.product.coverage,
+              description: "因意外导致身故，按保额赔付"
+            },
+            {
+              name: "意外伤残",
+              amount: this.product.coverage,
+              description: "因意外导致伤残，按伤残等级赔付"
+            },
+            {
+              name: "意外医疗",
+              amount: 1e4,
+              description: "因意外产生的医疗费用，实报实销"
+            }
+          ];
+        }
+      },
+      setNotices() {
+        this.notices = [
+          "投保年龄：18-60周岁",
+          "缴费方式：年缴/月缴可选",
+          "等待期：90天（意外伤害无等待期）",
+          "健康告知：请如实告知健康状况",
+          "犹豫期：15天，犹豫期内可全额退保",
+          "理赔时效：资料齐全后10个工作日内赔付"
+        ];
+      },
+      onConsult() {
+        uni.navigateTo({
+          url: "/pages/service/chat"
+        });
+      },
+      onPurchase() {
+        uni.showModal({
+          title: "确认投保",
+          content: `确定要购买${this.product.name}吗？
+保费：¥${this.product.premium}/年`,
+          success: (res) => {
+            if (res.confirm) {
+              this.processPurchase();
+            }
+          }
+        });
+      },
+      async processPurchase() {
+        uni.showLoading({ title: "投保处理中..." });
+        try {
+          const userId = getCurrentUserId();
+          const success = purchaseInsuranceProduct(userId, this.product);
+          setTimeout(() => {
+            uni.hideLoading();
+            if (success) {
+              uni.showToast({
+                title: "投保成功",
+                icon: "success"
+              });
+              setTimeout(() => {
+                uni.navigateTo({
+                  url: "/pages/wealth/insurance-success?productName=" + this.product.name
+                });
+              }, 1500);
+            } else {
+              uni.showToast({
+                title: "投保失败，请重试",
+                icon: "none"
+              });
+            }
+          }, 1500);
+        } catch (error) {
+          uni.hideLoading();
+          uni.showToast({
+            title: "投保失败，请重试",
+            icon: "none"
+          });
+          formatAppLog("error", "at pages/wealth/insurance-detail.vue:283", "投保处理失败:", error);
+        }
+      },
+      formatNumber(num) {
+        if (num >= 1e4) {
+          return (num / 1e4).toFixed(1) + "万";
+        }
+        return num.toString();
+      }
+    }
+  };
+  function _sfc_render$9(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("view", { class: "insurance-detail-page" }, [
+      vue.createCommentVNode(" 头部导航 "),
+      vue.createElementVNode("view", { class: "header" }, [
+        vue.createElementVNode("view", { class: "nav-bar" }, [
+          vue.createElementVNode("view", {
+            class: "nav-left",
+            onClick: _cache[0] || (_cache[0] = (...args) => $options.goBack && $options.goBack(...args))
+          }, [
+            vue.createElementVNode("text", { class: "nav-icon" }, "‹")
+          ]),
+          vue.createElementVNode("text", { class: "nav-title" }, "保险详情"),
+          vue.createElementVNode("view", { class: "nav-right" }, [
+            vue.createElementVNode("text", {
+              class: "nav-icon",
+              onClick: _cache[1] || (_cache[1] = (...args) => $options.onShare && $options.onShare(...args))
+            }, "⤴")
+          ])
+        ])
+      ]),
+      vue.createCommentVNode(" 产品基本信息 "),
+      vue.createElementVNode("view", { class: "product-info" }, [
+        vue.createElementVNode("view", { class: "product-header" }, [
+          vue.createElementVNode(
+            "view",
+            { class: "product-icon" },
+            vue.toDisplayString($data.product.icon || "🛡️"),
+            1
+            /* TEXT */
+          ),
+          vue.createElementVNode("view", { class: "product-basic" }, [
+            vue.createElementVNode(
+              "text",
+              { class: "product-name" },
+              vue.toDisplayString($data.product.name),
+              1
+              /* TEXT */
+            ),
+            vue.createElementVNode(
+              "text",
+              { class: "product-type" },
+              vue.toDisplayString($data.product.type),
+              1
+              /* TEXT */
+            ),
+            vue.createElementVNode("view", { class: "product-tags" }, [
+              vue.createElementVNode(
+                "text",
+                {
+                  class: vue.normalizeClass(["tag", "tag-" + $data.product.riskLevel])
+                },
+                vue.toDisplayString($data.product.riskLevel),
+                3
+                /* TEXT, CLASS */
+              ),
+              vue.createElementVNode(
+                "text",
+                { class: "tag tag-status" },
+                vue.toDisplayString($data.product.status),
+                1
+                /* TEXT */
+              )
+            ])
+          ])
+        ]),
+        vue.createElementVNode("view", { class: "product-highlights" }, [
+          vue.createElementVNode("view", { class: "highlight-item" }, [
+            vue.createElementVNode("text", { class: "highlight-label" }, "保费"),
+            vue.createElementVNode(
+              "text",
+              { class: "highlight-value" },
+              "¥" + vue.toDisplayString($data.product.premium) + "/年",
+              1
+              /* TEXT */
+            )
+          ]),
+          vue.createElementVNode("view", { class: "highlight-item" }, [
+            vue.createElementVNode("text", { class: "highlight-label" }, "保额"),
+            vue.createElementVNode(
+              "text",
+              { class: "highlight-value" },
+              "¥" + vue.toDisplayString($options.formatNumber($data.product.coverage)),
+              1
+              /* TEXT */
+            )
+          ]),
+          vue.createElementVNode("view", { class: "highlight-item" }, [
+            vue.createElementVNode("text", { class: "highlight-label" }, "保障期限"),
+            vue.createElementVNode(
+              "text",
+              { class: "highlight-value" },
+              vue.toDisplayString($data.product.term),
+              1
+              /* TEXT */
+            )
+          ])
+        ])
+      ]),
+      vue.createCommentVNode(" 产品特色 "),
+      vue.createElementVNode("view", { class: "product-features" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "产品特色"),
+        vue.createElementVNode("view", { class: "features-list" }, [
+          (vue.openBlock(true), vue.createElementBlock(
+            vue.Fragment,
+            null,
+            vue.renderList($data.product.features, (feature, index) => {
+              return vue.openBlock(), vue.createElementBlock("view", {
+                class: "feature-item",
+                key: index
+              }, [
+                vue.createElementVNode("text", { class: "feature-icon" }, "✓"),
+                vue.createElementVNode(
+                  "text",
+                  { class: "feature-text" },
+                  vue.toDisplayString(feature),
+                  1
+                  /* TEXT */
+                )
+              ]);
+            }),
+            128
+            /* KEYED_FRAGMENT */
+          ))
+        ])
+      ]),
+      vue.createCommentVNode(" 保障内容 "),
+      vue.createElementVNode("view", { class: "coverage-details" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "保障内容"),
+        vue.createElementVNode("view", { class: "coverage-list" }, [
+          (vue.openBlock(true), vue.createElementBlock(
+            vue.Fragment,
+            null,
+            vue.renderList($data.coverageDetails, (coverage, index) => {
+              return vue.openBlock(), vue.createElementBlock("view", {
+                class: "coverage-item",
+                key: index
+              }, [
+                vue.createElementVNode("view", { class: "coverage-header" }, [
+                  vue.createElementVNode(
+                    "text",
+                    { class: "coverage-name" },
+                    vue.toDisplayString(coverage.name),
+                    1
+                    /* TEXT */
+                  ),
+                  vue.createElementVNode(
+                    "text",
+                    { class: "coverage-amount" },
+                    "¥" + vue.toDisplayString($options.formatNumber(coverage.amount)),
+                    1
+                    /* TEXT */
+                  )
+                ]),
+                vue.createElementVNode(
+                  "text",
+                  { class: "coverage-desc" },
+                  vue.toDisplayString(coverage.description),
+                  1
+                  /* TEXT */
+                )
+              ]);
+            }),
+            128
+            /* KEYED_FRAGMENT */
+          ))
+        ])
+      ]),
+      vue.createCommentVNode(" 投保须知 "),
+      vue.createElementVNode("view", { class: "notice-section" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "投保须知"),
+        vue.createElementVNode("view", { class: "notice-list" }, [
+          (vue.openBlock(true), vue.createElementBlock(
+            vue.Fragment,
+            null,
+            vue.renderList($data.notices, (notice, index) => {
+              return vue.openBlock(), vue.createElementBlock("view", {
+                class: "notice-item",
+                key: index
+              }, [
+                vue.createElementVNode(
+                  "text",
+                  { class: "notice-number" },
+                  vue.toDisplayString(index + 1),
+                  1
+                  /* TEXT */
+                ),
+                vue.createElementVNode(
+                  "text",
+                  { class: "notice-text" },
+                  vue.toDisplayString(notice),
+                  1
+                  /* TEXT */
+                )
+              ]);
+            }),
+            128
+            /* KEYED_FRAGMENT */
+          ))
+        ])
+      ]),
+      vue.createCommentVNode(" 风险提示 "),
+      vue.createElementVNode("view", { class: "risk-warning" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "风险提示"),
+        vue.createElementVNode("view", { class: "warning-content" }, [
+          vue.createElementVNode("text", { class: "warning-text" }, "• 保险产品存在投资风险，请根据自身风险承受能力谨慎选择"),
+          vue.createElementVNode("text", { class: "warning-text" }, "• 投保前请仔细阅读保险条款，了解产品特性和风险"),
+          vue.createElementVNode("text", { class: "warning-text" }, "• 保险收益不保证，实际收益可能低于预期"),
+          vue.createElementVNode("text", { class: "warning-text" }, "• 请确保投保信息的真实性和完整性")
+        ])
+      ]),
+      vue.createCommentVNode(" 底部操作栏 "),
+      vue.createElementVNode("view", { class: "bottom-actions" }, [
+        vue.createElementVNode("view", { class: "action-left" }, [
+          vue.createElementVNode("button", {
+            class: "action-btn secondary",
+            onClick: _cache[2] || (_cache[2] = (...args) => $options.onConsult && $options.onConsult(...args))
+          }, "咨询客服")
+        ]),
+        vue.createElementVNode("view", { class: "action-right" }, [
+          vue.createElementVNode("button", {
+            class: "action-btn primary",
+            onClick: _cache[3] || (_cache[3] = (...args) => $options.onPurchase && $options.onPurchase(...args))
+          }, "立即投保")
+        ])
+      ])
+    ]);
+  }
+  const PagesWealthInsuranceDetail = /* @__PURE__ */ _export_sfc(_sfc_main$a, [["render", _sfc_render$9], ["__scopeId", "data-v-cbee9a92"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/insurance-detail.vue"]]);
+  const _sfc_main$9 = {
+    data() {
+      return {
+        productName: "",
+        premium: 0,
+        term: "",
+        policyNumber: "",
+        purchaseTime: ""
+      };
+    },
+    onLoad(options) {
+      this.initData(options);
+    },
+    methods: {
+      initData(options) {
+        this.productName = options.productName || "重疾保险";
+        this.premium = options.premium || 3e3;
+        this.term = options.term || "终身";
+        this.policyNumber = this.generatePolicyNumber();
+        this.purchaseTime = this.formatTime(/* @__PURE__ */ new Date());
+      },
+      generatePolicyNumber() {
+        const timestamp = Date.now();
+        const random = Math.floor(Math.random() * 1e3);
+        return `IC${timestamp}${random.toString().padStart(3, "0")}`;
+      },
+      formatTime(date) {
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, "0");
+        const day = date.getDate().toString().padStart(2, "0");
+        const hour = date.getHours().toString().padStart(2, "0");
+        const minute = date.getMinutes().toString().padStart(2, "0");
+        return `${year}-${month}-${day} ${hour}:${minute}`;
+      },
+      onViewPolicy() {
+        uni.showToast({
+          title: "保单功能开发中",
+          icon: "none"
+        });
+      },
+      onBackHome() {
+        uni.reLaunch({
+          url: "/pages/index/index"
+        });
+      }
+    }
+  };
+  function _sfc_render$8(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("view", { class: "insurance-success-page" }, [
+      vue.createCommentVNode(" 成功状态 "),
+      vue.createElementVNode("view", { class: "success-status" }, [
+        vue.createElementVNode("view", { class: "success-icon" }, "✅"),
+        vue.createElementVNode("text", { class: "success-title" }, "投保成功"),
+        vue.createElementVNode("text", { class: "success-subtitle" }, "您的保险申请已提交，请耐心等待审核")
+      ]),
+      vue.createCommentVNode(" 投保信息 "),
+      vue.createElementVNode("view", { class: "policy-info" }, [
+        vue.createElementVNode("view", { class: "info-header" }, [
+          vue.createElementVNode("text", { class: "info-title" }, "投保信息"),
+          vue.createElementVNode(
+            "text",
+            { class: "policy-number" },
+            "保单号：" + vue.toDisplayString($data.policyNumber),
+            1
+            /* TEXT */
+          )
+        ]),
+        vue.createElementVNode("view", { class: "info-list" }, [
+          vue.createElementVNode("view", { class: "info-item" }, [
+            vue.createElementVNode("text", { class: "info-label" }, "产品名称"),
+            vue.createElementVNode(
+              "text",
+              { class: "info-value" },
+              vue.toDisplayString($data.productName),
+              1
+              /* TEXT */
+            )
+          ]),
+          vue.createElementVNode("view", { class: "info-item" }, [
+            vue.createElementVNode("text", { class: "info-label" }, "投保金额"),
+            vue.createElementVNode(
+              "text",
+              { class: "info-value" },
+              "¥" + vue.toDisplayString($data.premium) + "/年",
+              1
+              /* TEXT */
+            )
+          ]),
+          vue.createElementVNode("view", { class: "info-item" }, [
+            vue.createElementVNode("text", { class: "info-label" }, "保障期限"),
+            vue.createElementVNode(
+              "text",
+              { class: "info-value" },
+              vue.toDisplayString($data.term),
+              1
+              /* TEXT */
+            )
+          ]),
+          vue.createElementVNode("view", { class: "info-item" }, [
+            vue.createElementVNode("text", { class: "info-label" }, "投保时间"),
+            vue.createElementVNode(
+              "text",
+              { class: "info-value" },
+              vue.toDisplayString($data.purchaseTime),
+              1
+              /* TEXT */
+            )
+          ]),
+          vue.createElementVNode("view", { class: "info-item" }, [
+            vue.createElementVNode("text", { class: "info-label" }, "审核状态"),
+            vue.createElementVNode("text", { class: "info-value status-pending" }, "审核中")
+          ])
+        ])
+      ]),
+      vue.createCommentVNode(" 后续步骤 "),
+      vue.createElementVNode("view", { class: "next-steps" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "后续步骤"),
+        vue.createElementVNode("view", { class: "steps-list" }, [
+          vue.createElementVNode("view", { class: "step-item" }, [
+            vue.createElementVNode("view", { class: "step-number" }, "1"),
+            vue.createElementVNode("view", { class: "step-content" }, [
+              vue.createElementVNode("text", { class: "step-title" }, "等待审核"),
+              vue.createElementVNode("text", { class: "step-desc" }, "我们将在1-3个工作日内完成审核")
+            ])
+          ]),
+          vue.createElementVNode("view", { class: "step-item" }, [
+            vue.createElementVNode("view", { class: "step-number" }, "2"),
+            vue.createElementVNode("view", { class: "step-content" }, [
+              vue.createElementVNode("text", { class: "step-title" }, "签署合同"),
+              vue.createElementVNode("text", { class: "step-desc" }, "审核通过后，请签署电子保险合同")
+            ])
+          ]),
+          vue.createElementVNode("view", { class: "step-item" }, [
+            vue.createElementVNode("view", { class: "step-number" }, "3"),
+            vue.createElementVNode("view", { class: "step-content" }, [
+              vue.createElementVNode("text", { class: "step-title" }, "保单生效"),
+              vue.createElementVNode("text", { class: "step-desc" }, "合同签署后，保单正式生效")
+            ])
+          ])
+        ])
+      ]),
+      vue.createCommentVNode(" 重要提醒 "),
+      vue.createElementVNode("view", { class: "important-notice" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "重要提醒"),
+        vue.createElementVNode("view", { class: "notice-content" }, [
+          vue.createElementVNode("text", { class: "notice-text" }, "• 请保持手机畅通，我们会及时通知您审核结果"),
+          vue.createElementVNode("text", { class: "notice-text" }, "• 如有疑问，可随时联系客服：400-123-4567"),
+          vue.createElementVNode("text", { class: "notice-text" }, '• 保单生效后，您可在"我的保单"中查看详情')
+        ])
+      ]),
+      vue.createCommentVNode(" 底部操作 "),
+      vue.createElementVNode("view", { class: "bottom-actions" }, [
+        vue.createElementVNode("button", {
+          class: "action-btn secondary",
+          onClick: _cache[0] || (_cache[0] = (...args) => $options.onViewPolicy && $options.onViewPolicy(...args))
+        }, "查看保单"),
+        vue.createElementVNode("button", {
+          class: "action-btn primary",
+          onClick: _cache[1] || (_cache[1] = (...args) => $options.onBackHome && $options.onBackHome(...args))
+        }, "返回首页")
+      ])
+    ]);
+  }
+  const PagesWealthInsuranceSuccess = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["render", _sfc_render$8], ["__scopeId", "data-v-6999dc6e"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/insurance-success.vue"]]);
+  class ThemeManager {
+    constructor() {
+      this.currentTheme = this.getStoredTheme() || "system";
+      this.themeConfigs = {
+        light: {
+          name: "明亮主题",
+          colors: {
+            primary: "#4caf50",
+            secondary: "#2196f3",
+            background: "#f5f5f5",
+            cardBackground: "#ffffff",
+            textColor: "#333333",
+            textSecondary: "#666666",
+            borderColor: "#e0e0e0",
+            shadowColor: "rgba(0, 0, 0, 0.1)",
+            success: "#4caf50",
+            warning: "#ff9800",
+            error: "#f44336",
+            info: "#2196f3"
+          }
+        },
+        dark: {
+          name: "暗黑主题",
+          colors: {
+            primary: "#4caf50",
+            secondary: "#2196f3",
+            background: "#121212",
+            cardBackground: "#1e1e1e",
+            textColor: "#ffffff",
+            textSecondary: "#b0b0b0",
+            borderColor: "#333333",
+            shadowColor: "rgba(0, 0, 0, 0.3)",
+            success: "#4caf50",
+            warning: "#ff9800",
+            error: "#f44336",
+            info: "#2196f3"
+          }
+        },
+        system: {
+          name: "跟随系统",
+          colors: {}
+        }
+      };
+      this.init();
+    }
+    /**
+     * 初始化主题管理器
+     */
+    init() {
+      this.applyTheme(this.currentTheme);
+      this.setupSystemThemeListener();
+      this.setupStorageListener();
+    }
+    /**
+     * 获取存储的主题
+     */
+    getStoredTheme() {
+      try {
+        if (typeof uni !== "undefined") {
+          return uni.getStorageSync("app_theme");
+        } else if (typeof localStorage !== "undefined") {
+          return localStorage.getItem("app_theme");
+        }
+      } catch (error) {
+        formatAppLog("error", "at utils/theme.js:73", "获取存储主题失败:", error);
+      }
+      return null;
+    }
+    /**
+     * 存储主题设置
+     */
+    setStoredTheme(theme) {
+      try {
+        if (typeof uni !== "undefined") {
+          uni.setStorageSync("app_theme", theme);
+        } else if (typeof localStorage !== "undefined") {
+          localStorage.setItem("app_theme", theme);
+        }
+      } catch (error) {
+        formatAppLog("error", "at utils/theme.js:89", "存储主题失败:", error);
+      }
+    }
+    /**
+     * 获取当前主题
+     */
+    getCurrentTheme() {
+      return this.currentTheme;
+    }
+    /**
+     * 获取主题配置
+     */
+    getThemeConfig(theme) {
+      if (theme === "system") {
+        const systemTheme = this.getSystemTheme();
+        return this.themeConfigs[systemTheme];
+      }
+      return this.themeConfigs[theme] || this.themeConfigs.light;
+    }
+    /**
+     * 获取系统主题
+     */
+    getSystemTheme() {
+      try {
+        if (typeof window !== "undefined" && window.matchMedia) {
+          return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+      } catch (error) {
+        formatAppLog("error", "at utils/theme.js:120", "获取系统主题失败:", error);
+      }
+      return "light";
+    }
+    /**
+     * 应用主题
+     */
+    applyTheme(theme) {
+      try {
+        this.currentTheme = theme;
+        this.setStoredTheme(theme);
+        const actualTheme = theme === "system" ? this.getSystemTheme() : theme;
+        const config2 = this.getThemeConfig(actualTheme);
+        this.setCSSVariables(config2.colors);
+        this.setPageClasses(actualTheme);
+        this.triggerThemeChange(theme, config2);
+        formatAppLog("log", "at utils/theme.js:145", "主题已应用:", theme, "实际主题:", actualTheme);
+      } catch (error) {
+        formatAppLog("error", "at utils/theme.js:147", "应用主题失败:", error);
+      }
+    }
+    /**
+     * 设置CSS变量
+     */
+    setCSSVariables(colors) {
+      try {
+        if (typeof document !== "undefined" && document.documentElement) {
+          const root = document.documentElement;
+          Object.entries(colors).forEach(([key, value]) => {
+            root.style.setProperty(`--theme-${key}`, value);
+          });
+          root.style.setProperty("--theme-glass-bg", colors.cardBackground + "80");
+          root.style.setProperty("--theme-glass-border", colors.borderColor + "40");
+          root.style.setProperty("--theme-shadow-sm", `0 2rpx 8rpx ${colors.shadowColor}`);
+          root.style.setProperty("--theme-shadow-md", `0 4rpx 12rpx ${colors.shadowColor}`);
+          root.style.setProperty("--theme-shadow-lg", `0 8rpx 24rpx ${colors.shadowColor}`);
+        }
+      } catch (error) {
+        formatAppLog("error", "at utils/theme.js:171", "设置CSS变量失败:", error);
+      }
+    }
+    /**
+     * 设置页面类名
+     */
+    setPageClasses(theme) {
+      try {
+        if (typeof document !== "undefined" && document.body) {
+          const body = document.body;
+          body.classList.remove("theme-light", "theme-dark", "theme-system");
+          body.classList.add(`theme-${theme}`);
+          if (theme === "dark") {
+            body.classList.add("dark");
+          } else {
+            body.classList.remove("dark");
+          }
+        }
+      } catch (error) {
+        formatAppLog("error", "at utils/theme.js:197", "设置页面类名失败:", error);
+      }
+    }
+    /**
+     * 触发主题变化事件
+     */
+    triggerThemeChange(theme, config2) {
+      try {
+        if (typeof window !== "undefined") {
+          const event = new CustomEvent("themeChange", {
+            detail: { theme, config: config2 }
+          });
+          window.dispatchEvent(event);
+        }
+        if (typeof getApp !== "undefined") {
+          const app = getApp();
+          if (app && app.globalData) {
+            app.globalData.currentTheme = theme;
+            app.globalData.themeConfig = config2;
+          }
+        }
+      } catch (error) {
+        formatAppLog("error", "at utils/theme.js:223", "触发主题变化事件失败:", error);
+      }
+    }
+    /**
+     * 设置系统主题监听器
+     */
+    setupSystemThemeListener() {
+      try {
+        if (typeof window !== "undefined" && window.matchMedia) {
+          const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+          const handleSystemThemeChange = (e) => {
+            if (this.currentTheme === "system") {
+              this.applyTheme("system");
+            }
+          };
+          mediaQuery.addEventListener("change", handleSystemThemeChange);
+        }
+      } catch (error) {
+        formatAppLog("error", "at utils/theme.js:244", "设置系统主题监听器失败:", error);
+      }
+    }
+    /**
+     * 设置存储监听器
+     */
+    setupStorageListener() {
+      try {
+        if (typeof window !== "undefined") {
+          const handleStorageChange = (e) => {
+            if (e.key === "app_theme" && e.newValue !== this.currentTheme) {
+              this.applyTheme(e.newValue);
+            }
+          };
+          window.addEventListener("storage", handleStorageChange);
+        }
+      } catch (error) {
+        formatAppLog("error", "at utils/theme.js:263", "设置存储监听器失败:", error);
+      }
+    }
+    /**
+     * 切换主题
+     */
+    switchTheme(theme) {
+      if (this.themeConfigs[theme]) {
+        this.applyTheme(theme);
+      } else {
+        formatAppLog("error", "at utils/theme.js:274", "未知主题:", theme);
+      }
+    }
+    /**
+     * 获取可用主题列表
+     */
+    getAvailableThemes() {
+      return Object.keys(this.themeConfigs).map((key) => ({
+        key,
+        name: this.themeConfigs[key].name
+      }));
+    }
+  }
+  const themeManager = new ThemeManager();
+  const themeMixin = {
+    data() {
+      return {
+        currentTheme: themeManager.getCurrentTheme(),
+        themeColors: themeManager.getThemeConfig(themeManager.getCurrentTheme()).colors
+      };
+    },
+    onLoad() {
+      this.applyCurrentTheme();
+    },
+    onShow() {
+      this.checkThemeChange();
+    },
+    methods: {
+      /**
+       * 应用当前主题
+       */
+      applyCurrentTheme() {
+        try {
+          const currentTheme = themeManager.getCurrentTheme();
+          const themeConfig = themeManager.getThemeConfig(currentTheme);
+          this.currentTheme = currentTheme;
+          this.themeColors = themeConfig.colors;
+          this.setPageTheme(currentTheme);
+        } catch (error) {
+          formatAppLog("error", "at mixins/theme-mixin.js:41", "应用当前主题失败:", error);
+        }
+      },
+      /**
+       * 检查主题变化
+       */
+      checkThemeChange() {
+        try {
+          const currentTheme = themeManager.getCurrentTheme();
+          if (this.currentTheme !== currentTheme) {
+            this.applyCurrentTheme();
+          }
+        } catch (error) {
+          formatAppLog("error", "at mixins/theme-mixin.js:55", "检查主题变化失败:", error);
+        }
+      },
+      /**
+       * 设置页面主题
+       */
+      setPageTheme(theme) {
+        try {
+          if (typeof document !== "undefined" && document.body) {
+            const body = document.body;
+            body.classList.remove("theme-light", "theme-dark", "theme-system");
+            body.classList.add(`theme-${theme}`);
+            if (theme === "dark") {
+              body.classList.add("dark");
+            } else {
+              body.classList.remove("dark");
+            }
+          }
+          this.currentTheme = theme;
+          const themeConfig = themeManager.getThemeConfig(theme);
+          this.themeColors = themeConfig.colors;
+          formatAppLog("log", "at mixins/theme-mixin.js:87", "页面主题已更新:", theme);
+        } catch (error) {
+          formatAppLog("error", "at mixins/theme-mixin.js:89", "设置页面主题失败:", error);
+        }
+      },
+      /**
+       * 更新主题（供外部调用）
+       */
+      updateTheme(theme) {
+        this.setPageTheme(theme);
+      },
+      /**
+       * 获取主题样式类
+       */
+      getThemeClass(baseClass = "") {
+        return `${baseClass} theme-${this.currentTheme}`.trim();
+      },
+      /**
+       * 获取主题样式
+       */
+      getThemeStyle() {
+        return {
+          "--theme-primary": this.themeColors.primary,
+          "--theme-secondary": this.themeColors.secondary,
+          "--theme-background": this.themeColors.background,
+          "--theme-card-background": this.themeColors.cardBackground,
+          "--theme-text-color": this.themeColors.textColor,
+          "--theme-text-secondary": this.themeColors.textSecondary,
+          "--theme-border-color": this.themeColors.borderColor,
+          "--theme-shadow-color": this.themeColors.shadowColor
+        };
+      }
+    }
+  };
+  const ZHIPU_API_KEY = "e35b142ca46a41c6b9dba61aaeeb7bab.FBAPapUnBuplkDry";
+  const ZHIPU_API_URL = "https://open.bigmodel.cn/api/paas/v4/chat/completions";
+  class ZhipuAIService {
+    constructor() {
+      this.apiKey = ZHIPU_API_KEY;
+      this.baseURL = ZHIPU_API_URL;
+    }
+    /**
+     * 发送请求到智谱AI
+     */
+    async sendRequest(messages, options = {}) {
+      try {
+        const response = await uni.request({
+          url: this.baseURL,
+          method: "POST",
+          header: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${this.apiKey}`
+          },
+          data: {
+            model: "glm-4",
+            messages,
+            temperature: options.temperature || 0.7,
+            max_tokens: options.max_tokens || 2e3,
+            stream: false,
+            ...options
+          }
+        });
+        if (response.statusCode === 200 && response.data.choices && response.data.choices.length > 0) {
+          return {
+            success: true,
+            content: response.data.choices[0].message.content,
+            usage: response.data.usage
+          };
+        } else {
+          throw new Error(`API请求失败: ${response.statusCode}`);
+        }
+      } catch (error) {
+        formatAppLog("error", "at api/zhipu-ai.js:47", "智谱AI API请求错误:", error);
+        return {
+          success: false,
+          error: error.message || "网络请求失败"
+        };
+      }
+    }
+    /**
+     * 分析用户财务状况
+     */
+    async analyzeFinancialStatus(userData) {
+      const prompt = `作为专业的财富管理AI顾问，请分析以下用户数据并提供专业的财务建议：
+
+用户数据：
+- 总资产：¥${userData.totalAssets}
+- 风险偏好：${userData.riskProfile}
+- 年龄：${userData.age || "未知"}
+- 收入：¥${userData.monthlyIncome || "未知"}/月
+- 支出：¥${userData.monthlyExpense || "未知"}/月
+- 投资组合：${JSON.stringify(userData.portfolio)}
+
+请从以下角度进行分析：
+1. 资产配置合理性评估
+2. 风险收益分析
+3. 具体优化建议
+4. 未来规划建议
+
+请用专业但易懂的语言回答，并提供具体的数据支撑。`;
+      const messages = [
+        {
+          role: "system",
+          content: "你是一位专业的财富管理顾问，具有丰富的金融知识和投资经验。请为用户提供专业、实用的财务建议。"
+        },
+        {
+          role: "user",
+          content: prompt
+        }
+      ];
+      return await this.sendRequest(messages, { temperature: 0.3 });
+    }
+    /**
+     * 生成投资建议
+     */
+    async generateInvestmentAdvice(marketData, userProfile) {
+      const prompt = `基于当前市场情况和用户画像，请生成个性化的投资建议：
+
+市场数据：
+${JSON.stringify(marketData, null, 2)}
+
+用户画像：
+- 风险承受能力：${userProfile.riskTolerance}
+- 投资目标：${userProfile.investmentGoals}
+- 投资期限：${userProfile.investmentHorizon}
+- 当前资产：¥${userProfile.currentAssets}
+
+请提供：
+1. 市场趋势分析
+2. 推荐投资策略
+3. 具体产品建议
+4. 风险提示
+5. 预期收益评估`;
+      const messages = [
+        {
+          role: "system",
+          content: "你是一位资深的投资顾问，擅长市场分析和投资策略制定。请基于数据和用户需求提供专业建议。"
+        },
+        {
+          role: "user",
+          content: prompt
+        }
+      ];
+      return await this.sendRequest(messages, { temperature: 0.4 });
+    }
+    /**
+     * 智能对话
+     */
+    async chatWithAI(userMessage, context = {}) {
+      const systemPrompt = `你是智能财富管家AI助手，专门帮助用户进行财富管理和投资决策。
+
+你的能力包括：
+1. 财务分析和建议
+2. 投资组合优化
+3. 风险管理和评估
+4. 市场趋势分析
+5. 理财规划指导
+
+请用专业、友好、易懂的语言与用户交流，并提供实用的建议。如果用户询问超出财务范围的问题，请礼貌地引导回财富管理话题。
+
+当前用户上下文：
+${JSON.stringify(context, null, 2)}`;
+      const messages = [
+        {
+          role: "system",
+          content: systemPrompt
+        },
+        {
+          role: "user",
+          content: userMessage
+        }
+      ];
+      return await this.sendRequest(messages, { temperature: 0.6 });
+    }
+    /**
+     * 生成财务报告
+     */
+    async generateFinancialReport(userData, timeRange = "monthly") {
+      const prompt = `请为用户生成一份详细的财务报告：
+
+用户数据：
+${JSON.stringify(userData, null, 2)}
+
+报告周期：${timeRange}
+
+请包含以下内容：
+1. 财务状况总览
+2. 收入支出分析
+3. 投资表现评估
+4. 风险分析
+5. 改进建议
+6. 未来规划
+
+请用专业的财务报告格式，包含数据分析和具体建议。`;
+      const messages = [
+        {
+          role: "system",
+          content: "你是一位专业的财务分析师，擅长制作详细的财务报告。请提供专业、全面的分析。"
+        },
+        {
+          role: "user",
+          content: prompt
+        }
+      ];
+      return await this.sendRequest(messages, { temperature: 0.2 });
+    }
+    /**
+     * 风险评估
+     */
+    async assessRisk(userData, marketConditions) {
+      const prompt = `请对用户进行全面的风险评估：
+
+用户数据：
+${JSON.stringify(userData, null, 2)}
+
+市场环境：
+${JSON.stringify(marketConditions, null, 2)}
+
+请评估：
+1. 个人风险承受能力
+2. 投资组合风险水平
+3. 市场风险影响
+4. 流动性风险
+5. 信用风险
+6. 风险缓解建议
+
+请提供量化的风险评分（1-10分）和具体建议。`;
+      const messages = [
+        {
+          role: "system",
+          content: "你是一位专业的风险管理专家，擅长识别和评估各种金融风险。请提供准确的风险评估。"
+        },
+        {
+          role: "user",
+          content: prompt
+        }
+      ];
+      return await this.sendRequest(messages, { temperature: 0.3 });
+    }
+  }
+  const zhipuAI = new ZhipuAIService();
+  class ProjectDataAnalyzer {
+    constructor() {
+      this.userData = null;
+      this.projectData = null;
+    }
+    /**
+     * 收集用户所有数据
+     */
+    async collectAllUserData() {
+      try {
+        const userInfo2 = this.getUserInfo();
+        const accountData = this.getAccountData();
+        const transactionData = this.getTransactionData();
+        const investmentData = this.getInvestmentData();
+        const goalData = this.getGoalData();
+        const spendingData = this.getSpendingData();
+        this.userData = {
+          userInfo: userInfo2,
+          accountData,
+          transactionData,
+          investmentData,
+          goalData,
+          spendingData,
+          timestamp: (/* @__PURE__ */ new Date()).toISOString()
+        };
+        return this.userData;
+      } catch (error) {
+        formatAppLog("error", "at utils/project-data-analyzer.js:49", "收集用户数据失败:", error);
+        throw error;
+      }
+    }
+    /**
+     * 获取用户基本信息
+     */
+    getUserInfo() {
+      try {
+        const userInfo2 = uni.getStorageSync("userInfo") || {};
+        const loginInfo = uni.getStorageSync("loginInfo") || {};
+        return {
+          username: userInfo2.username || loginInfo.username || "用户",
+          phone: userInfo2.phone || loginInfo.phone || "",
+          email: userInfo2.email || "",
+          age: userInfo2.age || 30,
+          occupation: userInfo2.occupation || "未知",
+          monthlyIncome: userInfo2.monthlyIncome || 0,
+          monthlyExpense: userInfo2.monthlyExpense || 0,
+          riskProfile: userInfo2.riskProfile || "平衡型",
+          investmentGoals: userInfo2.investmentGoals || ["财富增值"],
+          investmentHorizon: userInfo2.investmentHorizon || "中长期"
+        };
+      } catch (error) {
+        formatAppLog("error", "at utils/project-data-analyzer.js:75", "获取用户信息失败:", error);
+        return {};
+      }
+    }
+    /**
+     * 获取账户数据
+     */
+    getAccountData() {
+      try {
+        const balance = uni.getStorageSync("userBalance") || 0;
+        const accounts = uni.getStorageSync("userAccounts") || [];
+        return {
+          totalBalance: balance,
+          accounts,
+          accountCount: accounts.length,
+          primaryAccount: accounts.find((acc) => acc.isPrimary) || accounts[0] || null
+        };
+      } catch (error) {
+        formatAppLog("error", "at utils/project-data-analyzer.js:95", "获取账户数据失败:", error);
+        return { totalBalance: 0, accounts: [], accountCount: 0 };
+      }
+    }
+    /**
+     * 获取交易记录
+     */
+    getTransactionData() {
+      try {
+        const transactions = uni.getStorageSync("userTransactions") || [];
+        const recentTransactions = transactions.slice(-50);
+        const transactionAnalysis = this.analyzeTransactions(recentTransactions);
+        return {
+          totalTransactions: transactions.length,
+          recentTransactions,
+          analysis: transactionAnalysis
+        };
+      } catch (error) {
+        formatAppLog("error", "at utils/project-data-analyzer.js:117", "获取交易数据失败:", error);
+        return { totalTransactions: 0, recentTransactions: [], analysis: {} };
+      }
+    }
+    /**
+     * 获取投资数据
+     */
+    getInvestmentData() {
+      try {
+        const investments = uni.getStorageSync("userInvestments") || [];
+        const portfolio = uni.getStorageSync("userPortfolio") || {};
+        const performance = this.calculateInvestmentPerformance(investments);
+        return {
+          investments,
+          portfolio,
+          performance,
+          totalInvested: investments.reduce((sum, inv) => sum + (inv.amount || 0), 0),
+          currentValue: investments.reduce((sum, inv) => sum + (inv.currentValue || inv.amount || 0), 0)
+        };
+      } catch (error) {
+        formatAppLog("error", "at utils/project-data-analyzer.js:141", "获取投资数据失败:", error);
+        return { investments: [], portfolio: {}, performance: {}, totalInvested: 0, currentValue: 0 };
+      }
+    }
+    /**
+     * 获取目标数据
+     */
+    getGoalData() {
+      try {
+        const goals = uni.getStorageSync("userGoals") || [];
+        const activeGoals = goals.filter((goal) => goal.status === "active");
+        const completedGoals = goals.filter((goal) => goal.status === "completed");
+        return {
+          totalGoals: goals.length,
+          activeGoals,
+          completedGoals,
+          goalProgress: this.calculateGoalProgress(activeGoals)
+        };
+      } catch (error) {
+        formatAppLog("error", "at utils/project-data-analyzer.js:162", "获取目标数据失败:", error);
+        return { totalGoals: 0, activeGoals: [], completedGoals: [], goalProgress: 0 };
+      }
+    }
+    /**
+     * 获取消费数据
+     */
+    getSpendingData() {
+      try {
+        const spending = uni.getStorageSync("userSpending") || [];
+        const categories = uni.getStorageSync("spendingCategories") || [];
+        const spendingAnalysis = this.analyzeSpending(spending, categories);
+        return {
+          spending,
+          categories,
+          analysis: spendingAnalysis,
+          monthlySpending: this.calculateMonthlySpending(spending)
+        };
+      } catch (error) {
+        formatAppLog("error", "at utils/project-data-analyzer.js:185", "获取消费数据失败:", error);
+        return { spending: [], categories: [], analysis: {}, monthlySpending: 0 };
+      }
+    }
+    /**
+     * 分析交易模式
+     */
+    analyzeTransactions(transactions) {
+      if (!transactions || transactions.length === 0) {
+        return {
+          totalAmount: 0,
+          averageAmount: 0,
+          frequency: 0,
+          topCategories: [],
+          trends: {}
+        };
+      }
+      const totalAmount = transactions.reduce((sum, t) => sum + (t.amount || 0), 0);
+      const averageAmount = totalAmount / transactions.length;
+      const categoryStats = {};
+      transactions.forEach((t) => {
+        const category = t.category || "其他";
+        categoryStats[category] = (categoryStats[category] || 0) + 1;
+      });
+      const topCategories = Object.entries(categoryStats).sort(([, a], [, b]) => b - a).slice(0, 5).map(([category, count]) => ({ category, count }));
+      return {
+        totalAmount,
+        averageAmount,
+        frequency: transactions.length,
+        topCategories,
+        trends: this.calculateTrends(transactions)
+      };
+    }
+    /**
+     * 计算投资表现
+     */
+    calculateInvestmentPerformance(investments) {
+      if (!investments || investments.length === 0) {
+        return {
+          totalReturn: 0,
+          returnRate: 0,
+          bestPerformer: null,
+          worstPerformer: null
+        };
+      }
+      let totalReturn = 0;
+      let totalInvested = 0;
+      let bestReturn = -Infinity;
+      let worstReturn = Infinity;
+      let bestPerformer = null;
+      let worstPerformer = null;
+      investments.forEach((inv) => {
+        const invested = inv.amount || 0;
+        const current = inv.currentValue || inv.amount || 0;
+        const return_ = current - invested;
+        const returnRate = invested > 0 ? return_ / invested * 100 : 0;
+        totalReturn += return_;
+        totalInvested += invested;
+        if (returnRate > bestReturn) {
+          bestReturn = returnRate;
+          bestPerformer = inv;
+        }
+        if (returnRate < worstReturn) {
+          worstReturn = returnRate;
+          worstPerformer = inv;
+        }
+      });
+      const overallReturnRate = totalInvested > 0 ? totalReturn / totalInvested * 100 : 0;
+      return {
+        totalReturn,
+        returnRate: overallReturnRate,
+        bestPerformer: bestPerformer ? { ...bestPerformer, returnRate: bestReturn } : null,
+        worstPerformer: worstPerformer ? { ...worstPerformer, returnRate: worstReturn } : null
+      };
+    }
+    /**
+     * 计算目标进度
+     */
+    calculateGoalProgress(goals) {
+      if (!goals || goals.length === 0)
+        return 0;
+      const totalProgress = goals.reduce((sum, goal) => {
+        return sum + (goal.progress || 0);
+      }, 0);
+      return totalProgress / goals.length;
+    }
+    /**
+     * 分析消费模式
+     */
+    analyzeSpending(spending, categories) {
+      if (!spending || spending.length === 0) {
+        return {
+          totalSpent: 0,
+          averageSpent: 0,
+          topCategories: [],
+          monthlyTrend: []
+        };
+      }
+      const totalSpent = spending.reduce((sum, s) => sum + (s.amount || 0), 0);
+      const averageSpent = totalSpent / spending.length;
+      const categoryStats = {};
+      spending.forEach((s) => {
+        const category = s.category || "其他";
+        categoryStats[category] = (categoryStats[category] || 0) + (s.amount || 0);
+      });
+      const topCategories = Object.entries(categoryStats).sort(([, a], [, b]) => b - a).slice(0, 5).map(([category, amount]) => ({ category, amount }));
+      return {
+        totalSpent,
+        averageSpent,
+        topCategories,
+        monthlyTrend: this.calculateMonthlyTrend(spending)
+      };
+    }
+    /**
+     * 计算月度消费
+     */
+    calculateMonthlySpending(spending) {
+      if (!spending || spending.length === 0)
+        return 0;
+      const currentMonth = (/* @__PURE__ */ new Date()).getMonth();
+      const currentYear = (/* @__PURE__ */ new Date()).getFullYear();
+      const monthlySpending = spending.filter((s) => {
+        const date = new Date(s.date || s.timestamp);
+        return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
+      });
+      return monthlySpending.reduce((sum, s) => sum + (s.amount || 0), 0);
+    }
+    /**
+     * 计算趋势
+     */
+    calculateTrends(data) {
+      if (!data || data.length < 2)
+        return {};
+      const sorted = data.sort((a, b) => new Date(a.date || a.timestamp) - new Date(b.date || b.timestamp));
+      const first = sorted[0];
+      const last = sorted[sorted.length - 1];
+      const firstAmount = first.amount || 0;
+      const lastAmount = last.amount || 0;
+      const trend = lastAmount > firstAmount ? "increasing" : lastAmount < firstAmount ? "decreasing" : "stable";
+      const changeRate = firstAmount > 0 ? (lastAmount - firstAmount) / firstAmount * 100 : 0;
+      return {
+        trend,
+        changeRate,
+        firstValue: firstAmount,
+        lastValue: lastAmount
+      };
+    }
+    /**
+     * 计算月度趋势
+     */
+    calculateMonthlyTrend(spending) {
+      if (!spending || spending.length === 0)
+        return [];
+      const monthlyData = {};
+      spending.forEach((s) => {
+        const date = new Date(s.date || s.timestamp);
+        const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+        monthlyData[monthKey] = (monthlyData[monthKey] || 0) + (s.amount || 0);
+      });
+      return Object.entries(monthlyData).sort(([a], [b]) => a.localeCompare(b)).map(([month, amount]) => ({ month, amount }));
+    }
+    /**
+     * 使用AI分析数据
+     */
+    async analyzeWithAI() {
+      try {
+        if (!this.userData) {
+          await this.collectAllUserData();
+        }
+        const analysis = await zhipuAI.analyzeFinancialStatus({
+          totalAssets: this.userData.accountData.totalBalance,
+          riskProfile: this.userData.userInfo.riskProfile,
+          age: this.userData.userInfo.age,
+          monthlyIncome: this.userData.userInfo.monthlyIncome,
+          monthlyExpense: this.userData.userInfo.monthlyExpense,
+          portfolio: this.userData.investmentData.portfolio,
+          investments: this.userData.investmentData.investments,
+          goals: this.userData.goalData.activeGoals,
+          spending: this.userData.spendingData.analysis
+        });
+        return {
+          success: analysis.success,
+          data: this.userData,
+          aiAnalysis: analysis.content,
+          error: analysis.error
+        };
+      } catch (error) {
+        formatAppLog("error", "at utils/project-data-analyzer.js:414", "AI分析失败:", error);
+        return {
+          success: false,
+          error: error.message
+        };
+      }
+    }
+    /**
+     * 生成智能建议
+     */
+    async generateSmartAdvice() {
+      try {
+        if (!this.userData) {
+          await this.collectAllUserData();
+        }
+        const advice = await zhipuAI.generateInvestmentAdvice(
+          {
+            marketTrend: "stable",
+            interestRate: 3.5,
+            inflation: 2.1
+          },
+          {
+            riskTolerance: this.userData.userInfo.riskProfile,
+            investmentGoals: this.userData.userInfo.investmentGoals,
+            investmentHorizon: this.userData.userInfo.investmentHorizon,
+            currentAssets: this.userData.accountData.totalBalance
+          }
+        );
+        return {
+          success: advice.success,
+          advice: advice.content,
+          error: advice.error
+        };
+      } catch (error) {
+        formatAppLog("error", "at utils/project-data-analyzer.js:451", "生成建议失败:", error);
+        return {
+          success: false,
+          error: error.message
+        };
+      }
+    }
+  }
+  const projectDataAnalyzer = new ProjectDataAnalyzer();
+  class DataPermissionManager {
+    constructor() {
+      this.permissions = {
+        read: {
+          userInfo: false,
+          accountData: false,
+          transactions: false,
+          investments: false,
+          goals: false,
+          spending: false,
+          all: false
+        },
+        write: {
+          updateProfile: false,
+          createGoal: false,
+          updateGoal: false,
+          createInvestment: false,
+          updateInvestment: false,
+          createTransaction: false,
+          all: false
+        },
+        analyze: {
+          financialAnalysis: false,
+          riskAssessment: false,
+          investmentAdvice: false,
+          spendingAnalysis: false,
+          all: false
+        }
+      };
+      this.consentHistory = [];
+      this.loadPermissions();
+    }
+    /**
+     * 加载已保存的权限设置
+     */
+    loadPermissions() {
+      try {
+        const savedPermissions = uni.getStorageSync("ai_data_permissions");
+        if (savedPermissions) {
+          this.permissions = { ...this.permissions, ...savedPermissions };
+        }
+      } catch (error) {
+        formatAppLog("error", "at utils/data-permission-manager.js:50", "加载权限设置失败:", error);
+      }
+    }
+    /**
+     * 保存权限设置
+     */
+    savePermissions() {
+      try {
+        uni.setStorageSync("ai_data_permissions", this.permissions);
+        this.recordConsent("permissions_updated", this.permissions);
+      } catch (error) {
+        formatAppLog("error", "at utils/data-permission-manager.js:62", "保存权限设置失败:", error);
+      }
+    }
+    /**
+     * 记录用户同意操作
+     */
+    recordConsent(action, data) {
+      const consent = {
+        timestamp: (/* @__PURE__ */ new Date()).toISOString(),
+        action,
+        data,
+        ip: "local"
+      };
+      this.consentHistory.push(consent);
+      try {
+        uni.setStorageSync("ai_consent_history", this.consentHistory);
+      } catch (error) {
+        formatAppLog("error", "at utils/data-permission-manager.js:81", "记录同意操作失败:", error);
+      }
+    }
+    /**
+     * 请求数据访问权限
+     */
+    async requestDataAccess(dataType, purpose) {
+      return new Promise((resolve, reject) => {
+        const message = this.getPermissionMessage(dataType, purpose);
+        uni.showModal({
+          title: "数据访问请求",
+          content: message,
+          confirmText: "同意",
+          cancelText: "拒绝",
+          success: (res) => {
+            if (res.confirm) {
+              this.grantPermission(dataType);
+              this.recordConsent("data_access_granted", { dataType, purpose });
+              resolve(true);
+            } else {
+              this.recordConsent("data_access_denied", { dataType, purpose });
+              resolve(false);
+            }
+          },
+          fail: () => {
+            reject(new Error("权限请求失败"));
+          }
+        });
+      });
+    }
+    /**
+     * 获取权限请求消息
+     */
+    getPermissionMessage(dataType, purpose) {
+      const messages = {
+        userInfo: "AI需要访问您的基本信息（年龄、收入、风险偏好等）来提供个性化的理财建议。",
+        accountData: "AI需要访问您的账户数据（余额、账户信息等）来进行财务分析。",
+        transactions: "AI需要访问您的交易记录来分析消费模式和投资行为。",
+        investments: "AI需要访问您的投资数据来评估投资组合表现。",
+        goals: "AI需要访问您的理财目标来制定相应的投资策略。",
+        spending: "AI需要访问您的消费数据来优化支出结构。",
+        all: "AI需要访问您的所有财务数据来提供全面的财富管理服务。"
+      };
+      const purposeMessages = {
+        analysis: "用于财务分析和风险评估",
+        advice: "用于生成个性化投资建议",
+        optimization: "用于优化资产配置",
+        planning: "用于制定理财规划"
+      };
+      return `${messages[dataType] || messages.all}
+
+目的：${purposeMessages[purpose] || purpose}`;
+    }
+    /**
+     * 授予权限
+     */
+    grantPermission(dataType) {
+      if (dataType === "all") {
+        Object.keys(this.permissions.read).forEach((key) => {
+          this.permissions.read[key] = true;
+        });
+        Object.keys(this.permissions.write).forEach((key) => {
+          this.permissions.write[key] = true;
+        });
+        Object.keys(this.permissions.analyze).forEach((key) => {
+          this.permissions.analyze[key] = true;
+        });
+      } else {
+        if (this.permissions.read.hasOwnProperty(dataType)) {
+          this.permissions.read[dataType] = true;
+        }
+        if (this.permissions.write.hasOwnProperty(dataType)) {
+          this.permissions.write[dataType] = true;
+        }
+        if (this.permissions.analyze.hasOwnProperty(dataType)) {
+          this.permissions.analyze[dataType] = true;
+        }
+      }
+      this.savePermissions();
+    }
+    /**
+     * 撤销权限
+     */
+    revokePermission(dataType) {
+      if (dataType === "all") {
+        Object.keys(this.permissions.read).forEach((key) => {
+          this.permissions.read[key] = false;
+        });
+        Object.keys(this.permissions.write).forEach((key) => {
+          this.permissions.write[key] = false;
+        });
+        Object.keys(this.permissions.analyze).forEach((key) => {
+          this.permissions.analyze[key] = false;
+        });
+      } else {
+        if (this.permissions.read.hasOwnProperty(dataType)) {
+          this.permissions.read[dataType] = false;
+        }
+        if (this.permissions.write.hasOwnProperty(dataType)) {
+          this.permissions.write[dataType] = false;
+        }
+        if (this.permissions.analyze.hasOwnProperty(dataType)) {
+          this.permissions.analyze[dataType] = false;
+        }
+      }
+      this.savePermissions();
+      this.recordConsent("permission_revoked", { dataType });
+    }
+    /**
+     * 检查权限
+     */
+    hasPermission(type, dataType) {
+      if (this.permissions[type] && this.permissions[type][dataType]) {
+        return true;
+      }
+      if (this.permissions[type] && this.permissions[type].all) {
+        return true;
+      }
+      return false;
+    }
+    /**
+     * 获取权限状态
+     */
+    getPermissionStatus() {
+      return {
+        permissions: this.permissions,
+        consentHistory: this.consentHistory,
+        lastUpdated: this.consentHistory.length > 0 ? this.consentHistory[this.consentHistory.length - 1].timestamp : null
+      };
+    }
+    /**
+     * 重置所有权限
+     */
+    resetAllPermissions() {
+      this.permissions = {
+        read: {
+          userInfo: false,
+          accountData: false,
+          transactions: false,
+          investments: false,
+          goals: false,
+          spending: false,
+          all: false
+        },
+        write: {
+          updateProfile: false,
+          createGoal: false,
+          updateGoal: false,
+          createInvestment: false,
+          updateInvestment: false,
+          createTransaction: false,
+          all: false
+        },
+        analyze: {
+          financialAnalysis: false,
+          riskAssessment: false,
+          investmentAdvice: false,
+          spendingAnalysis: false,
+          all: false
+        }
+      };
+      this.savePermissions();
+      this.recordConsent("all_permissions_reset", {});
+    }
+    /**
+     * 批量请求权限
+     */
+    async requestMultiplePermissions(permissions) {
+      const results = {};
+      for (const permission of permissions) {
+        const granted = await this.requestDataAccess(permission.dataType, permission.purpose);
+        results[permission.dataType] = granted;
+      }
+      return results;
+    }
+    /**
+     * 获取权限摘要
+     */
+    getPermissionSummary() {
+      const readCount = Object.values(this.permissions.read).filter(Boolean).length;
+      const writeCount = Object.values(this.permissions.write).filter(Boolean).length;
+      const analyzeCount = Object.values(this.permissions.analyze).filter(Boolean).length;
+      return {
+        totalPermissions: readCount + writeCount + analyzeCount,
+        readPermissions: readCount,
+        writePermissions: writeCount,
+        analyzePermissions: analyzeCount,
+        hasFullAccess: this.permissions.read.all && this.permissions.write.all && this.permissions.analyze.all
+      };
+    }
+  }
+  const dataPermissionManager = new DataPermissionManager();
+  class UserDataLoader {
+    constructor() {
+      this.userData = null;
+      this.currentUser = null;
+    }
+    /**
+     * 加载所有用户数据
+     */
+    async loadAllUsers() {
+      try {
+        formatAppLog("log", "at utils/user-data-loader.js:18", "尝试从user.json加载用户数据");
+        this.userData = await this.getMockUserData();
+        return this.userData;
+      } catch (error) {
+        formatAppLog("error", "at utils/user-data-loader.js:22", "加载用户数据失败:", error);
+        this.userData = [];
+        return [];
+      }
+    }
+    /**
+     * 根据用户ID获取用户数据
+     */
+    async getUserById(userId) {
+      try {
+        if (!this.userData) {
+          await this.loadAllUsers();
+        }
+        const user = this.userData.find((u) => u.id === userId);
+        if (user) {
+          this.currentUser = user;
+          return user;
+        } else {
+          throw new Error(`用户不存在: ${userId}`);
+        }
+      } catch (error) {
+        formatAppLog("error", "at utils/user-data-loader.js:46", "获取用户数据失败:", error);
+        return null;
+      }
+    }
+    /**
+     * 根据手机号获取用户数据
+     */
+    async getUserByPhone(phone) {
+      try {
+        if (!this.userData) {
+          await this.loadAllUsers();
+        }
+        const user = this.userData.find((u) => u.phone === phone);
+        if (user) {
+          this.currentUser = user;
+          return user;
+        } else {
+          throw new Error(`用户不存在: ${phone}`);
+        }
+      } catch (error) {
+        formatAppLog("error", "at utils/user-data-loader.js:68", "获取用户数据失败:", error);
+        return null;
+      }
+    }
+    /**
+     * 根据用户名获取用户数据
+     */
+    async getUserByUsername(username) {
+      try {
+        if (!this.userData) {
+          await this.loadAllUsers();
+        }
+        const user = this.userData.find((u) => u.username === username);
+        if (user) {
+          this.currentUser = user;
+          return user;
+        } else {
+          throw new Error(`用户不存在: ${username}`);
+        }
+      } catch (error) {
+        formatAppLog("error", "at utils/user-data-loader.js:90", "获取用户数据失败:", error);
+        return null;
+      }
+    }
+    /**
+     * 获取当前登录用户数据
+     */
+    getCurrentUser() {
+      if (this.currentUser) {
+        return this.currentUser;
+      }
+      const loginInfo = uni.getStorageSync("loginInfo");
+      if (loginInfo && loginInfo.username) {
+        return this.getUserByUsername(loginInfo.username);
+      }
+      return null;
+    }
+    /**
+     * 获取用户完整财务数据
+     */
+    async getUserFinancialData(userId) {
+      var _a, _b, _c, _d, _e, _f, _g;
+      try {
+        const user = await this.getUserById(userId);
+        if (!user) {
+          throw new Error("用户不存在");
+        }
+        return {
+          // 基本信息
+          userInfo: {
+            id: user.id,
+            username: user.username,
+            phone: user.phone,
+            email: user.email,
+            realName: user.realName,
+            gender: user.gender,
+            birthDate: user.birthDate,
+            address: user.address,
+            avatar: user.avatar,
+            status: user.status,
+            createTime: user.createTime,
+            lastLoginTime: user.lastLoginTime
+          },
+          // 账户数据
+          accountData: {
+            balance: user.balance,
+            bankAccounts: user.bankAccounts || [],
+            totalBalance: user.balance,
+            accountCount: (user.bankAccounts || []).length
+          },
+          // 信用卡数据
+          creditCardData: {
+            cards: user.creditCards || [],
+            totalCreditLimit: (user.creditCards || []).reduce((sum, card) => sum + (card.creditLimit || 0), 0),
+            usedCreditLimit: (user.creditCards || []).reduce((sum, card) => sum + (card.currentBalance || 0), 0),
+            availableCredit: (user.creditCards || []).reduce((sum, card) => sum + (card.availableCredit || 0), 0),
+            cardCount: (user.creditCards || []).length
+          },
+          // 交易数据
+          transactionData: {
+            records: user.transactionRecords || [],
+            totalTransactions: (user.transactionRecords || []).length,
+            totalAmount: (user.transactionRecords || []).reduce((sum, t) => sum + (t.amount || 0), 0),
+            averageAmount: (user.transactionRecords || []).length > 0 ? (user.transactionRecords || []).reduce((sum, t) => sum + (t.amount || 0), 0) / (user.transactionRecords || []).length : 0
+          },
+          // 投资数据
+          investmentData: {
+            portfolio: user.investmentPortfolio || {},
+            wealthProducts: user.wealthProducts || {},
+            totalInvested: (((_a = user.investmentPortfolio) == null ? void 0 : _a.holdings) || []).reduce((sum, inv) => sum + (inv.amount || 0), 0),
+            currentValue: (((_b = user.investmentPortfolio) == null ? void 0 : _b.holdings) || []).reduce((sum, inv) => sum + (inv.currentValue || inv.amount || 0), 0),
+            totalReturn: (((_c = user.investmentPortfolio) == null ? void 0 : _c.holdings) || []).reduce((sum, inv) => sum + ((inv.currentValue || inv.amount || 0) - (inv.amount || 0)), 0),
+            returnRate: ((_d = user.investmentPortfolio) == null ? void 0 : _d.returnRate) || 0
+          },
+          // 转账数据
+          transferData: {
+            records: user.transferRecords || [],
+            frequentContacts: user.frequentContacts || [],
+            totalTransfers: (user.transferRecords || []).length,
+            totalTransferAmount: (user.transferRecords || []).reduce((sum, t) => sum + (t.amount || 0), 0)
+          },
+          // 支付数据
+          paymentData: {
+            records: user.paymentRecords || [],
+            lifeServices: user.lifeServices || {},
+            totalPayments: (user.paymentRecords || []).length,
+            totalPaymentAmount: (user.paymentRecords || []).reduce((sum, p) => sum + (p.amount || 0), 0)
+          },
+          // 安全设置
+          securityData: {
+            settings: user.securitySettings || {},
+            biometricEnabled: ((_e = user.securitySettings) == null ? void 0 : _e.biometricEnabled) || false,
+            twoFactorEnabled: ((_f = user.securitySettings) == null ? void 0 : _f.twoFactorEnabled) || false,
+            transactionLimit: ((_g = user.securitySettings) == null ? void 0 : _g.transactionLimit) || 0
+          },
+          // 时间戳
+          loadedAt: (/* @__PURE__ */ new Date()).toISOString()
+        };
+      } catch (error) {
+        formatAppLog("error", "at utils/user-data-loader.js:203", "获取用户财务数据失败:", error);
+        throw error;
+      }
+    }
+    /**
+     * 更新用户数据
+     */
+    async updateUserData(userId, updateData) {
+      try {
+        if (!this.userData) {
+          await this.loadAllUsers();
+        }
+        const userIndex = this.userData.findIndex((u) => u.id === userId);
+        if (userIndex === -1) {
+          throw new Error("用户不存在");
+        }
+        this.userData[userIndex] = {
+          ...this.userData[userIndex],
+          ...updateData,
+          lastUpdateTime: (/* @__PURE__ */ new Date()).toISOString()
+        };
+        if (this.currentUser && this.currentUser.id === userId) {
+          this.currentUser = this.userData[userIndex];
+        }
+        uni.setStorageSync("userData", this.userData);
+        return this.userData[userIndex];
+      } catch (error) {
+        formatAppLog("error", "at utils/user-data-loader.js:239", "更新用户数据失败:", error);
+        throw error;
+      }
+    }
+    /**
+     * 添加交易记录
+     */
+    async addTransaction(userId, transaction) {
+      try {
+        const user = await this.getUserById(userId);
+        if (!user) {
+          throw new Error("用户不存在");
+        }
+        const newTransaction = {
+          id: Date.now(),
+          ...transaction,
+          timestamp: (/* @__PURE__ */ new Date()).toISOString()
+        };
+        if (!user.transactionRecords) {
+          user.transactionRecords = [];
+        }
+        user.transactionRecords.push(newTransaction);
+        if (transaction.type === "income") {
+          user.balance += transaction.amount;
+        } else if (transaction.type === "expense") {
+          user.balance -= transaction.amount;
+        }
+        await this.updateUserData(userId, user);
+        return newTransaction;
+      } catch (error) {
+        formatAppLog("error", "at utils/user-data-loader.js:277", "添加交易记录失败:", error);
+        throw error;
+      }
+    }
+    /**
+     * 添加投资记录
+     */
+    async addInvestment(userId, investment) {
+      try {
+        const user = await this.getUserById(userId);
+        if (!user) {
+          throw new Error("用户不存在");
+        }
+        const newInvestment = {
+          id: `inv${Date.now()}`,
+          ...investment,
+          purchaseDate: (/* @__PURE__ */ new Date()).toISOString(),
+          status: "持有中",
+          currentValue: investment.amount || 0
+        };
+        if (!user.investmentPortfolio) {
+          user.investmentPortfolio = {
+            totalValue: 0,
+            totalReturn: 0,
+            returnRate: 0,
+            holdings: []
+          };
+        }
+        if (!user.investmentPortfolio.holdings) {
+          user.investmentPortfolio.holdings = [];
+        }
+        user.investmentPortfolio.holdings.push(newInvestment);
+        user.investmentPortfolio.totalValue = user.investmentPortfolio.holdings.reduce((sum, inv) => sum + (inv.currentValue || inv.amount || 0), 0);
+        user.investmentPortfolio.totalReturn = user.investmentPortfolio.holdings.reduce((sum, inv) => sum + ((inv.currentValue || inv.amount || 0) - (inv.amount || 0)), 0);
+        user.investmentPortfolio.returnRate = user.investmentPortfolio.totalValue > 0 ? user.investmentPortfolio.totalReturn / user.investmentPortfolio.totalValue * 100 : 0;
+        await this.updateUserData(userId, user);
+        return newInvestment;
+      } catch (error) {
+        formatAppLog("error", "at utils/user-data-loader.js:324", "添加投资记录失败:", error);
+        throw error;
+      }
+    }
+    /**
+     * 获取模拟用户数据（备用）
+     */
+    async getMockUserData() {
+      try {
+        const response = await fetch("/db/user.json");
+        if (response.ok) {
+          const userData = await response.json();
+          return userData;
+        }
+      } catch (error) {
+        formatAppLog("error", "at utils/user-data-loader.js:341", "加载user.json失败，使用默认数据:", error);
+      }
+      return [
+        {
+          id: "u001",
+          username: "李华",
+          phone: "13888888888",
+          password: "123456",
+          transactionPassword: "888888",
+          balance: 28e4,
+          nickname: "华华",
+          email: "lihua@example.com",
+          idCard: "110101199503151234",
+          avatar: "/static/wealth/useravatar.jpg",
+          status: "active",
+          createTime: "2024-01-10T08:30:00.000Z",
+          lastLoginTime: "2024-01-20T16:45:00.000Z",
+          realName: "李华",
+          gender: "女",
+          birthDate: "1995-03-15",
+          address: "北京市朝阳区建国门外大街1号",
+          avatarUpdateTime: "2024-01-15T14:20:00.000Z",
+          lastUpdateTime: "2024-01-15T14:20:00.000Z",
+          securitySettings: {
+            biometricEnabled: true,
+            smsVerificationEnabled: true,
+            accountLockEnabled: true,
+            twoFactorEnabled: true,
+            securityNotificationsEnabled: true,
+            transactionLimit: 1e5,
+            passwordUpdateTime: "2024-01-10T00:00:00.000Z",
+            transactionPasswordUpdateTime: "2024-01-10T00:00:00.000Z",
+            securityQuestionsSet: true,
+            emergencyContactSet: true,
+            loginDevices: [
+              {
+                id: 1,
+                name: "iPhone 15 Pro",
+                lastLogin: "2024-01-15T14:20:00.000Z",
+                location: "上海市",
+                status: "active",
+                ip: "192.168.1.200",
+                deviceType: "mobile"
+              }
+            ],
+            securityEvents: [
+              {
+                id: 1,
+                type: "login",
+                description: "账户登录",
+                timestamp: "2024-01-15T14:20:00.000Z",
+                location: "上海市",
+                ip: "192.168.1.200",
+                status: "success"
+              }
+            ],
+            securityQuestions: [
+              {
+                question: "您的小学名称是什么？",
+                answer: "实验小学"
+              }
+            ],
+            emergencyContact: {
+              name: "张大明",
+              phone: "13800138000",
+              relationship: "父亲"
+            },
+            twoFactorSecret: "JBSWY3DPEHPK3PXP"
+          },
+          creditCards: [
+            {
+              id: "cc001",
+              cardNumber: "6222 9999 9999 9999",
+              cardType: "白金卡",
+              cardBrand: "银联",
+              creditLimit: 1e5,
+              availableCredit: 85e3,
+              currentBalance: 15e3,
+              minPayment: 1500,
+              statementDate: "20",
+              dueDate: "2024-02-10",
+              lastStatementDate: "2024-01-20",
+              cardStatus: "active",
+              cardHolder: "李华",
+              expiryDate: "2029-09-30",
+              cvv: "456",
+              annualFee: 500,
+              interestRate: 4e-4,
+              cashAdvanceLimit: 5e4,
+              rewardsPoints: 3200,
+              cardColor: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+              createTime: "2023-01-15T00:00:00.000Z",
+              lastUsedTime: "2024-01-15T14:20:00.000Z",
+              monthlySpending: 8500,
+              transactionCount: 23,
+              topCategory: "餐饮",
+              securityFeatures: {
+                chipEnabled: true,
+                contactlessEnabled: true,
+                onlineShoppingEnabled: true,
+                internationalEnabled: true
+              }
+            }
+          ],
+          transactionRecords: [
+            {
+              id: 1,
+              type: "income",
+              amount: 15e3,
+              description: "工资收入",
+              balance: 28e4,
+              timestamp: "2024-01-15T09:00:00.000Z",
+              icon: "💰",
+              title: "工资收入",
+              time: "09:00"
+            },
+            {
+              id: 2,
+              type: "expense",
+              amount: 2e3,
+              description: "信用卡还款",
+              balance: 148e3,
+              timestamp: "2024-01-12T11:45:00.000Z",
+              icon: "💳",
+              title: "信用卡还款",
+              time: "11:45"
+            }
+          ],
+          wealthProducts: {
+            deposits: {
+              current: 3e4,
+              fixed: 5e4,
+              smart: 2e4
+            },
+            investments: [
+              {
+                id: "inv002",
+                name: "稳健理财B",
+                type: "理财产品",
+                amount: 2e4,
+                rate: 4.5,
+                term: "180天",
+                purchaseDate: "2024-01-05T00:00:00.000Z",
+                maturityDate: "2024-07-05T00:00:00.000Z",
+                status: "持有中"
+              }
+            ]
+          },
+          investmentPortfolio: {
+            totalValue: 1e5,
+            totalReturn: 4500,
+            returnRate: 4.5,
+            holdings: [
+              {
+                id: "inv001",
+                name: "稳健理财A",
+                type: "理财产品",
+                amount: 3e4,
+                rate: 3.8,
+                term: "90天",
+                purchaseDate: "2024-01-01T00:00:00.000Z",
+                maturityDate: "2024-04-01T00:00:00.000Z",
+                status: "持有中",
+                currentValue: 30285
+              },
+              {
+                id: "inv002",
+                name: "稳健理财B",
+                type: "理财产品",
+                amount: 2e4,
+                rate: 4.5,
+                term: "180天",
+                purchaseDate: "2024-01-05T00:00:00.000Z",
+                maturityDate: "2024-07-05T00:00:00.000Z",
+                status: "持有中",
+                currentValue: 20450
+              },
+              {
+                id: "inv003",
+                name: "灵活理财C",
+                type: "货币基金",
+                amount: 5e4,
+                rate: 2.8,
+                term: "开放式",
+                purchaseDate: "2023-12-01T00:00:00.000Z",
+                maturityDate: null,
+                status: "持有中",
+                currentValue: 51140
+              }
+            ]
+          },
+          bankAccounts: [
+            {
+              accountNumber: "6228480012345678901",
+              accountName: "李华",
+              bankName: "中国农业银行",
+              accountType: "储蓄卡",
+              balance: 28e4,
+              currency: "CNY",
+              status: "active",
+              openDate: "2020-03-15T00:00:00.000Z",
+              branchName: "上海陆家嘴支行"
+            }
+          ],
+          transferRecords: [
+            {
+              id: "t001",
+              type: "outgoing",
+              amount: 5e3,
+              recipient: "李小红",
+              recipientAccount: "6228480012345678903",
+              description: "生活费转账",
+              status: "completed",
+              timestamp: "2024-01-14T10:30:00.000Z",
+              fee: 2.5
+            }
+          ],
+          paymentRecords: [
+            {
+              id: "p001",
+              type: "手机充值",
+              amount: 100,
+              phoneNumber: "13999999999",
+              status: "completed",
+              timestamp: "2024-01-10T14:20:00.000Z",
+              operator: "中国移动"
+            }
+          ]
+        },
+        {
+          id: "u002",
+          username: "李小红",
+          phone: "13777777777",
+          password: "password123",
+          transactionPassword: "789012",
+          balance: 8e4,
+          nickname: "小红",
+          email: "lixiaohong@example.com",
+          idCard: "110101199303031789",
+          avatar: "/static/wealth/useravatar.jpg",
+          status: "active",
+          createTime: "2024-01-03T16:45:00.000Z",
+          lastLoginTime: "2024-01-14T11:10:00.000Z",
+          realName: "李小红",
+          gender: "女",
+          birthDate: "1993-03-03",
+          address: "广州市天河区珠江新城花城大道85号",
+          avatarUpdateTime: "2024-01-14T11:10:00.000Z",
+          lastUpdateTime: "2024-01-14T11:10:00.000Z",
+          securitySettings: {
+            biometricEnabled: false,
+            smsVerificationEnabled: true,
+            accountLockEnabled: false,
+            twoFactorEnabled: false,
+            securityNotificationsEnabled: false,
+            transactionLimit: 2e5,
+            passwordUpdateTime: "2023-12-01T00:00:00.000Z",
+            transactionPasswordUpdateTime: "2023-12-01T00:00:00.000Z",
+            securityQuestionsSet: false,
+            emergencyContactSet: false,
+            loginDevices: [
+              {
+                id: 1,
+                name: "Samsung Galaxy S24",
+                lastLogin: "2024-01-14T11:10:00.000Z",
+                location: "广州市",
+                status: "active",
+                ip: "192.168.1.300",
+                deviceType: "mobile"
+              }
+            ],
+            securityEvents: [
+              {
+                id: 1,
+                type: "login",
+                description: "账户登录",
+                timestamp: "2024-01-14T11:10:00.000Z",
+                location: "广州市",
+                ip: "192.168.1.300",
+                status: "success"
+              }
+            ],
+            securityQuestions: [],
+            emergencyContact: null,
+            twoFactorSecret: null
+          },
+          creditCards: [
+            {
+              cardNumber: "6222 6666 6666 6666",
+              cardType: "钻石卡",
+              cardBrand: "银联",
+              creditLimit: 2e5,
+              availableCredit: 18e4,
+              currentBalance: 2e4,
+              minPayment: 2e3,
+              statementDate: "10",
+              dueDate: "2024-02-01",
+              lastStatementDate: "2024-01-10",
+              cardStatus: "active",
+              cardHolder: "李小红",
+              expiryDate: "2030-03-31",
+              cvv: "321",
+              annualFee: 1e3,
+              interestRate: 3e-4,
+              cashAdvanceLimit: 1e5,
+              rewardsPoints: 6800,
+              cardColor: "#FF69B4"
+            }
+          ],
+          transactionRecords: [
+            {
+              id: 1,
+              type: "income",
+              amount: 12e3,
+              description: "工资收入",
+              balance: 8e4,
+              timestamp: "2024-01-14T09:00:00.000Z",
+              icon: "💰",
+              title: "工资收入",
+              time: "09:00"
+            },
+            {
+              id: 2,
+              type: "expense",
+              amount: 1e3,
+              description: "生活缴费",
+              balance: 79e3,
+              timestamp: "2024-01-11T16:45:00.000Z",
+              icon: "🏠",
+              title: "电费缴费",
+              time: "16:45"
+            }
+          ],
+          wealthProducts: {
+            deposits: {
+              current: 2e4,
+              fixed: 3e4,
+              smart: 15e3
+            },
+            investments: [
+              {
+                id: "inv004",
+                name: "高收益理财C",
+                type: "理财产品",
+                amount: 15e3,
+                rate: 5.2,
+                term: "365天",
+                purchaseDate: "2024-01-01T00:00:00.000Z",
+                maturityDate: "2025-01-01T00:00:00.000Z",
+                status: "持有中"
+              }
+            ]
+          },
+          investmentPortfolio: {
+            totalValue: 65e3,
+            totalReturn: 2800,
+            returnRate: 4.3,
+            holdings: [
+              {
+                id: "inv004",
+                name: "高收益理财C",
+                type: "理财产品",
+                amount: 15e3,
+                rate: 5.2,
+                term: "365天",
+                purchaseDate: "2024-01-01T00:00:00.000Z",
+                maturityDate: "2025-01-01T00:00:00.000Z",
+                status: "持有中",
+                currentValue: 15780
+              }
+            ]
+          },
+          bankAccounts: [
+            {
+              accountNumber: "6228480012345678903",
+              accountName: "李小红",
+              bankName: "中国农业银行",
+              accountType: "储蓄卡",
+              balance: 8e4,
+              currency: "CNY",
+              status: "active",
+              openDate: "2021-05-20T00:00:00.000Z",
+              branchName: "广州珠江新城支行"
+            }
+          ],
+          transferRecords: [
+            {
+              id: "t003",
+              type: "incoming",
+              amount: 5e3,
+              sender: "李华",
+              senderAccount: "6228480012345678901",
+              description: "生活费转账",
+              status: "completed",
+              timestamp: "2024-01-14T10:30:00.000Z",
+              fee: 0
+            }
+          ],
+          paymentRecords: [
+            {
+              id: "p004",
+              type: "手机充值",
+              amount: 200,
+              phoneNumber: "13777777777",
+              status: "completed",
+              timestamp: "2024-01-05T16:30:00.000Z",
+              operator: "中国联通"
+            }
+          ]
+        }
+      ];
+    }
+    /**
+     * 搜索用户
+     */
+    async searchUsers(keyword) {
+      try {
+        if (!this.userData) {
+          await this.loadAllUsers();
+        }
+        const results = this.userData.filter(
+          (user) => user.username.includes(keyword) || user.phone.includes(keyword) || user.realName.includes(keyword) || user.email.includes(keyword)
+        );
+        return results;
+      } catch (error) {
+        formatAppLog("error", "at utils/user-data-loader.js:774", "搜索用户失败:", error);
+        return [];
+      }
+    }
+    /**
+     * 获取用户统计信息
+     */
+    async getUserStats() {
+      try {
+        if (!this.userData) {
+          await this.loadAllUsers();
+        }
+        const stats = {
+          totalUsers: this.userData.length,
+          activeUsers: this.userData.filter((u) => u.status === "active").length,
+          totalBalance: this.userData.reduce((sum, u) => sum + (u.balance || 0), 0),
+          averageBalance: this.userData.length > 0 ? this.userData.reduce((sum, u) => sum + (u.balance || 0), 0) / this.userData.length : 0,
+          totalInvestments: this.userData.reduce((sum, u) => {
+            var _a;
+            return sum + (((_a = u.investmentPortfolio) == null ? void 0 : _a.totalValue) || 0);
+          }, 0),
+          totalCreditLimit: this.userData.reduce((sum, u) => sum + (u.creditCards || []).reduce((cardSum, card) => cardSum + (card.creditLimit || 0), 0), 0)
+        };
+        return stats;
+      } catch (error) {
+        formatAppLog("error", "at utils/user-data-loader.js:799", "获取用户统计失败:", error);
+        return null;
+      }
+    }
+  }
+  const userDataLoader = new UserDataLoader();
+  class EnhancedDataOperator {
+    constructor() {
+      this.permissionManager = dataPermissionManager;
+    }
+    /**
+     * 智能数据收集 - 获取所有用户数据
+     */
+    async collectAllUserData() {
+      try {
+        if (!this.permissionManager.hasPermission("read", "all")) {
+          const granted = await this.permissionManager.requestDataAccess("all", "analysis");
+          if (!granted) {
+            throw new Error("用户拒绝了数据访问权限");
+          }
+        }
+        const loginInfo = uni.getStorageSync("loginInfo") || {};
+        const currentUserId = loginInfo.userId || "u001";
+        const userFinancialData = await userDataLoader.getUserFinancialData(currentUserId);
+        if (!userFinancialData) {
+          throw new Error("无法加载用户数据");
+        }
+        const allData = {
+          // 从 user.json 获取的真实数据
+          userInfo: userFinancialData.userInfo,
+          accountData: userFinancialData.accountData,
+          creditCardData: userFinancialData.creditCardData,
+          transactionData: userFinancialData.transactionData,
+          investmentData: userFinancialData.investmentData,
+          transferData: userFinancialData.transferData,
+          paymentData: userFinancialData.paymentData,
+          securityData: userFinancialData.securityData,
+          // 补充的本地数据
+          goalData: this.getGoalData(),
+          spendingData: this.getSpendingData(),
+          systemData: this.getSystemData(),
+          // 数据来源标识
+          dataSource: "user.json",
+          userId: currentUserId,
+          // 时间戳
+          collectedAt: (/* @__PURE__ */ new Date()).toISOString()
+        };
+        this.permissionManager.recordConsent("data_collected", {
+          dataTypes: Object.keys(allData),
+          timestamp: allData.collectedAt,
+          userId: currentUserId,
+          dataSource: "user.json"
+        });
+        formatAppLog("log", "at utils/enhanced-data-operator.js:71", "从 user.json 收集用户数据成功:", allData);
+        return allData;
+      } catch (error) {
+        formatAppLog("error", "at utils/enhanced-data-operator.js:74", "收集用户数据失败:", error);
+        throw error;
+      }
+    }
+    /**
+     * 获取用户基本信息
+     */
+    getUserInfo() {
+      const userInfo2 = uni.getStorageSync("userInfo") || {};
+      const loginInfo = uni.getStorageSync("loginInfo") || {};
+      return {
+        username: userInfo2.username || loginInfo.username || "用户",
+        phone: userInfo2.phone || loginInfo.phone || "",
+        email: userInfo2.email || "",
+        age: userInfo2.age || 30,
+        occupation: userInfo2.occupation || "未知",
+        monthlyIncome: userInfo2.monthlyIncome || 0,
+        monthlyExpense: userInfo2.monthlyExpense || 0,
+        riskProfile: userInfo2.riskProfile || "平衡型",
+        investmentGoals: userInfo2.investmentGoals || ["财富增值"],
+        investmentHorizon: userInfo2.investmentHorizon || "中长期",
+        emergencyFund: userInfo2.emergencyFund || 0,
+        debtAmount: userInfo2.debtAmount || 0,
+        creditScore: userInfo2.creditScore || 0
+      };
+    }
+    /**
+     * 获取账户数据
+     */
+    getAccountData() {
+      const balance = uni.getStorageSync("userBalance") || 0;
+      const accounts = uni.getStorageSync("userAccounts") || [];
+      const cards = uni.getStorageSync("userCards") || [];
+      return {
+        totalBalance: balance,
+        accounts,
+        cards,
+        accountCount: accounts.length,
+        cardCount: cards.length,
+        primaryAccount: accounts.find((acc) => acc.isPrimary) || accounts[0] || null,
+        totalCreditLimit: cards.reduce((sum, card) => sum + (card.creditLimit || 0), 0),
+        usedCreditLimit: cards.reduce((sum, card) => sum + (card.usedAmount || 0), 0)
+      };
+    }
+    /**
+     * 获取交易数据
+     */
+    getTransactionData() {
+      const transactions = uni.getStorageSync("userTransactions") || [];
+      const recentTransactions = transactions.slice(-100);
+      return {
+        totalTransactions: transactions.length,
+        recentTransactions,
+        totalAmount: transactions.reduce((sum, t) => sum + (t.amount || 0), 0),
+        averageAmount: transactions.length > 0 ? transactions.reduce((sum, t) => sum + (t.amount || 0), 0) / transactions.length : 0,
+        categories: this.analyzeTransactionCategories(transactions),
+        trends: this.analyzeTransactionTrends(transactions)
+      };
+    }
+    /**
+     * 获取投资数据
+     */
+    getInvestmentData() {
+      const investments = uni.getStorageSync("userInvestments") || [];
+      const portfolio = uni.getStorageSync("userPortfolio") || {};
+      return {
+        investments,
+        portfolio,
+        totalInvested: investments.reduce((sum, inv) => sum + (inv.amount || 0), 0),
+        currentValue: investments.reduce((sum, inv) => sum + (inv.currentValue || inv.amount || 0), 0),
+        totalReturn: investments.reduce((sum, inv) => sum + ((inv.currentValue || inv.amount || 0) - (inv.amount || 0)), 0),
+        returnRate: this.calculateReturnRate(investments),
+        performance: this.calculateInvestmentPerformance(investments)
+      };
+    }
+    /**
+     * 获取目标数据
+     */
+    getGoalData() {
+      const goals = uni.getStorageSync("userGoals") || [];
+      const activeGoals = goals.filter((goal) => goal.status === "active");
+      const completedGoals = goals.filter((goal) => goal.status === "completed");
+      return {
+        totalGoals: goals.length,
+        activeGoals,
+        completedGoals,
+        totalTargetAmount: activeGoals.reduce((sum, goal) => sum + (goal.target || 0), 0),
+        totalSavedAmount: activeGoals.reduce((sum, goal) => sum + (goal.current || 0), 0),
+        averageProgress: this.calculateAverageProgress(activeGoals),
+        goalCategories: this.analyzeGoalCategories(goals)
+      };
+    }
+    /**
+     * 获取消费数据
+     */
+    getSpendingData() {
+      const spending = uni.getStorageSync("userSpending") || [];
+      const categories = uni.getStorageSync("spendingCategories") || [];
+      return {
+        spending,
+        categories,
+        totalSpent: spending.reduce((sum, s) => sum + (s.amount || 0), 0),
+        monthlySpending: this.calculateMonthlySpending(spending),
+        categoryAnalysis: this.analyzeSpendingCategories(spending),
+        trends: this.analyzeSpendingTrends(spending)
+      };
+    }
+    /**
+     * 获取系统数据
+     */
+    getSystemData() {
+      return {
+        appVersion: "1.0.0",
+        platform: uni.getSystemInfoSync().platform,
+        language: uni.getSystemInfoSync().language,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        lastLogin: uni.getStorageSync("lastLogin") || null,
+        sessionDuration: this.calculateSessionDuration(),
+        deviceInfo: uni.getSystemInfoSync()
+      };
+    }
+    /**
+     * AI智能数据操作 - 在用户同意后直接操作数据
+     */
+    async performDataOperation(operation, data) {
+      try {
+        if (!this.permissionManager.hasPermission("write", operation.type)) {
+          const granted = await this.permissionManager.requestDataAccess(operation.dataType, operation.purpose);
+          if (!granted) {
+            throw new Error("用户拒绝了数据操作权限");
+          }
+        }
+        let result;
+        switch (operation.type) {
+          case "updateProfile":
+            result = await this.updateUserProfile(data);
+            break;
+          case "createGoal":
+            result = await this.createGoal(data);
+            break;
+          case "updateGoal":
+            result = await this.updateGoal(data);
+            break;
+          case "createInvestment":
+            result = await this.createInvestment(data);
+            break;
+          case "updateInvestment":
+            result = await this.updateInvestment(data);
+            break;
+          case "createTransaction":
+            result = await this.createTransaction(data);
+            break;
+          default:
+            throw new Error(`不支持的操作类型: ${operation.type}`);
+        }
+        this.permissionManager.recordConsent("data_operation", {
+          operation: operation.type,
+          data,
+          result
+        });
+        return result;
+      } catch (error) {
+        formatAppLog("error", "at utils/enhanced-data-operator.js:255", "数据操作失败:", error);
+        throw error;
+      }
+    }
+    /**
+     * 更新用户资料
+     */
+    async updateUserProfile(profileData) {
+      try {
+        const currentProfile = uni.getStorageSync("userInfo") || {};
+        const updatedProfile = { ...currentProfile, ...profileData };
+        uni.setStorageSync("userInfo", updatedProfile);
+        return {
+          success: true,
+          message: "用户资料更新成功",
+          data: updatedProfile
+        };
+      } catch (error) {
+        throw new Error("更新用户资料失败");
+      }
+    }
+    /**
+     * 创建理财目标
+     */
+    async createGoal(goalData) {
+      try {
+        const goals = uni.getStorageSync("userGoals") || [];
+        const newGoal = {
+          id: Date.now(),
+          ...goalData,
+          status: "active",
+          createdAt: (/* @__PURE__ */ new Date()).toISOString(),
+          progress: 0
+        };
+        goals.push(newGoal);
+        uni.setStorageSync("userGoals", goals);
+        return {
+          success: true,
+          message: "理财目标创建成功",
+          data: newGoal
+        };
+      } catch (error) {
+        throw new Error("创建理财目标失败");
+      }
+    }
+    /**
+     * 更新理财目标
+     */
+    async updateGoal(goalData) {
+      try {
+        const goals = uni.getStorageSync("userGoals") || [];
+        const goalIndex = goals.findIndex((goal) => goal.id === goalData.id);
+        if (goalIndex === -1) {
+          throw new Error("目标不存在");
+        }
+        goals[goalIndex] = { ...goals[goalIndex], ...goalData, updatedAt: (/* @__PURE__ */ new Date()).toISOString() };
+        uni.setStorageSync("userGoals", goals);
+        return {
+          success: true,
+          message: "理财目标更新成功",
+          data: goals[goalIndex]
+        };
+      } catch (error) {
+        throw new Error("更新理财目标失败");
+      }
+    }
+    /**
+     * 创建投资记录
+     */
+    async createInvestment(investmentData) {
+      try {
+        const loginInfo = uni.getStorageSync("loginInfo") || {};
+        const currentUserId = loginInfo.userId || "u001";
+        const newInvestment = await userDataLoader.addInvestment(currentUserId, investmentData);
+        return {
+          success: true,
+          message: "投资记录创建成功",
+          data: newInvestment
+        };
+      } catch (error) {
+        formatAppLog("error", "at utils/enhanced-data-operator.js:350", "创建投资记录失败:", error);
+        throw new Error("创建投资记录失败");
+      }
+    }
+    /**
+     * 更新投资记录
+     */
+    async updateInvestment(investmentData) {
+      try {
+        const investments = uni.getStorageSync("userInvestments") || [];
+        const investmentIndex = investments.findIndex((inv) => inv.id === investmentData.id);
+        if (investmentIndex === -1) {
+          throw new Error("投资记录不存在");
+        }
+        investments[investmentIndex] = { ...investments[investmentIndex], ...investmentData, updatedAt: (/* @__PURE__ */ new Date()).toISOString() };
+        uni.setStorageSync("userInvestments", investments);
+        return {
+          success: true,
+          message: "投资记录更新成功",
+          data: investments[investmentIndex]
+        };
+      } catch (error) {
+        throw new Error("更新投资记录失败");
+      }
+    }
+    /**
+     * 创建交易记录
+     */
+    async createTransaction(transactionData) {
+      try {
+        const loginInfo = uni.getStorageSync("loginInfo") || {};
+        const currentUserId = loginInfo.userId || "u001";
+        const newTransaction = await userDataLoader.addTransaction(currentUserId, transactionData);
+        return {
+          success: true,
+          message: "交易记录创建成功",
+          data: newTransaction
+        };
+      } catch (error) {
+        formatAppLog("error", "at utils/enhanced-data-operator.js:398", "创建交易记录失败:", error);
+        throw new Error("创建交易记录失败");
+      }
+    }
+    /**
+     * AI智能建议执行 - 自动执行AI建议
+     */
+    async executeAISuggestion(suggestion) {
+      try {
+        const aiResponse = await zhipuAI.chatWithAI(
+          `请分析以下建议并提供具体的执行步骤：${JSON.stringify(suggestion)}`,
+          { context: "suggestion_execution" }
+        );
+        if (!aiResponse.success) {
+          throw new Error("AI分析失败");
+        }
+        const executionResult = await this.performSuggestionExecution(suggestion, aiResponse.content);
+        return {
+          success: true,
+          message: "AI建议执行成功",
+          suggestion,
+          aiAnalysis: aiResponse.content,
+          executionResult
+        };
+      } catch (error) {
+        formatAppLog("error", "at utils/enhanced-data-operator.js:429", "执行AI建议失败:", error);
+        throw error;
+      }
+    }
+    /**
+     * 执行建议
+     */
+    async performSuggestionExecution(suggestion, aiAnalysis) {
+      const results = [];
+      if (suggestion.type === "create_goal") {
+        const result = await this.createGoal(suggestion.goalData);
+        results.push(result);
+      } else if (suggestion.type === "update_investment") {
+        const result = await this.updateInvestment(suggestion.investmentData);
+        results.push(result);
+      } else if (suggestion.type === "create_transaction") {
+        const result = await this.createTransaction(suggestion.transactionData);
+        results.push(result);
+      }
+      return results;
+    }
+    // 辅助方法
+    analyzeTransactionCategories(transactions) {
+      const categories = {};
+      transactions.forEach((t) => {
+        const category = t.category || "其他";
+        categories[category] = (categories[category] || 0) + 1;
+      });
+      return categories;
+    }
+    analyzeTransactionTrends(transactions) {
+      return {
+        monthlyTrend: this.calculateMonthlyTrend(transactions),
+        categoryTrend: this.calculateCategoryTrend(transactions)
+      };
+    }
+    calculateReturnRate(investments) {
+      if (investments.length === 0)
+        return 0;
+      const totalInvested = investments.reduce((sum, inv) => sum + (inv.amount || 0), 0);
+      const totalCurrent = investments.reduce((sum, inv) => sum + (inv.currentValue || inv.amount || 0), 0);
+      return totalInvested > 0 ? (totalCurrent - totalInvested) / totalInvested * 100 : 0;
+    }
+    calculateInvestmentPerformance(investments) {
+      return {
+        bestPerformer: this.findBestPerformer(investments),
+        worstPerformer: this.findWorstPerformer(investments),
+        averageReturn: this.calculateAverageReturn(investments)
+      };
+    }
+    calculateAverageProgress(goals) {
+      if (goals.length === 0)
+        return 0;
+      const totalProgress = goals.reduce((sum, goal) => sum + (goal.progress || 0), 0);
+      return totalProgress / goals.length;
+    }
+    analyzeGoalCategories(goals) {
+      const categories = {};
+      goals.forEach((goal) => {
+        const category = goal.category || "其他";
+        categories[category] = (categories[category] || 0) + 1;
+      });
+      return categories;
+    }
+    calculateMonthlySpending(spending) {
+      const currentMonth = (/* @__PURE__ */ new Date()).getMonth();
+      const currentYear = (/* @__PURE__ */ new Date()).getFullYear();
+      return spending.filter((s) => {
+        const date = new Date(s.date || s.timestamp);
+        return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
+      }).reduce((sum, s) => sum + (s.amount || 0), 0);
+    }
+    analyzeSpendingCategories(spending) {
+      const categories = {};
+      spending.forEach((s) => {
+        const category = s.category || "其他";
+        categories[category] = (categories[category] || 0) + (s.amount || 0);
+      });
+      return categories;
+    }
+    analyzeSpendingTrends(spending) {
+      return {
+        monthlyTrend: this.calculateMonthlyTrend(spending),
+        categoryTrend: this.calculateCategoryTrend(spending)
+      };
+    }
+    calculateSessionDuration() {
+      const sessionStart = uni.getStorageSync("sessionStart");
+      if (sessionStart) {
+        return Date.now() - sessionStart;
+      }
+      return 0;
+    }
+    calculateMonthlyTrend(data) {
+      return [];
+    }
+    calculateCategoryTrend(data) {
+      return {};
+    }
+    findBestPerformer(investments) {
+      if (investments.length === 0)
+        return null;
+      return investments.reduce((best, current) => {
+        const currentReturn = (current.currentValue || current.amount || 0) - (current.amount || 0);
+        const bestReturn = (best.currentValue || best.amount || 0) - (best.amount || 0);
+        return currentReturn > bestReturn ? current : best;
+      });
+    }
+    findWorstPerformer(investments) {
+      if (investments.length === 0)
+        return null;
+      return investments.reduce((worst, current) => {
+        const currentReturn = (current.currentValue || current.amount || 0) - (current.amount || 0);
+        const worstReturn = (worst.currentValue || worst.amount || 0) - (worst.amount || 0);
+        return currentReturn < worstReturn ? current : worst;
+      });
+    }
+    calculateAverageReturn(investments) {
+      if (investments.length === 0)
+        return 0;
+      const totalReturn = investments.reduce((sum, inv) => {
+        return sum + ((inv.currentValue || inv.amount || 0) - (inv.amount || 0));
+      }, 0);
+      return totalReturn / investments.length;
+    }
+  }
+  const enhancedDataOperator = new EnhancedDataOperator();
+  class ScrollControl {
+    constructor() {
+      this.isLocked = false;
+      this.originalOverflow = "";
+      this.originalPosition = "";
+      this.originalTop = "";
+      this.scrollTop = 0;
+      this.lockCount = 0;
+    }
+    /**
+     * 锁定页面滚动
+     * @param {Object} options 配置选项
+     */
+    lockScroll(options = {}) {
+      if (this.isLocked) {
+        this.lockCount++;
+        return;
+      }
+      try {
+        this.scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+        const body = document.body;
+        const html = document.documentElement;
+        this.originalOverflow = body.style.overflow;
+        this.originalPosition = body.style.position;
+        this.originalTop = body.style.top;
+        body.style.overflow = "hidden";
+        body.style.position = "fixed";
+        body.style.top = `-${this.scrollTop}px`;
+        body.style.width = "100%";
+        if (options.preventIOSBounce !== false) {
+          body.style.webkitOverflowScrolling = "auto";
+          html.style.overflow = "hidden";
+          html.style.position = "fixed";
+          html.style.top = `-${this.scrollTop}px`;
+          html.style.width = "100%";
+        }
+        this.isLocked = true;
+        this.lockCount = 1;
+        formatAppLog("log", "at utils/scroll-control.js:56", "页面滚动已锁定");
+      } catch (error) {
+        formatAppLog("error", "at utils/scroll-control.js:58", "锁定滚动失败:", error);
+      }
+    }
+    /**
+     * 解锁页面滚动
+     */
+    unlockScroll() {
+      if (!this.isLocked) {
+        return;
+      }
+      this.lockCount--;
+      if (this.lockCount > 0) {
+        return;
+      }
+      try {
+        const body = document.body;
+        const html = document.documentElement;
+        body.style.overflow = this.originalOverflow;
+        body.style.position = this.originalPosition;
+        body.style.top = this.originalTop;
+        body.style.width = "";
+        body.style.webkitOverflowScrolling = "";
+        html.style.overflow = "";
+        html.style.position = "";
+        html.style.top = "";
+        html.style.width = "";
+        window.scrollTo(0, this.scrollTop);
+        this.isLocked = false;
+        this.lockCount = 0;
+        formatAppLog("log", "at utils/scroll-control.js:98", "页面滚动已解锁");
+      } catch (error) {
+        formatAppLog("error", "at utils/scroll-control.js:100", "解锁滚动失败:", error);
+      }
+    }
+    /**
+     * 处理聊天界面的滚动控制
+     * @param {boolean} isOpen 是否打开聊天界面
+     * @param {HTMLElement} chatContainer 聊天容器元素
+     */
+    handleChatScroll(isOpen, chatContainer) {
+      if (isOpen) {
+        this.lockScroll();
+        if (chatContainer) {
+          chatContainer.style.overflowY = "auto";
+          chatContainer.style.webkitOverflowScrolling = "touch";
+        }
+      } else {
+        this.unlockScroll();
+      }
+    }
+    /**
+     * 强制解锁所有滚动锁定
+     */
+    forceUnlock() {
+      try {
+        const body = document.body;
+        const html = document.documentElement;
+        body.style.overflow = "";
+        body.style.position = "";
+        body.style.top = "";
+        body.style.width = "";
+        body.style.webkitOverflowScrolling = "";
+        html.style.overflow = "";
+        html.style.position = "";
+        html.style.top = "";
+        html.style.width = "";
+        this.isLocked = false;
+        this.lockCount = 0;
+        formatAppLog("log", "at utils/scroll-control.js:146", "强制解锁页面滚动");
+      } catch (error) {
+        formatAppLog("error", "at utils/scroll-control.js:148", "强制解锁滚动失败:", error);
+      }
+    }
+    /**
+     * 获取当前锁定状态
+     */
+    getLockStatus() {
+      return {
+        isLocked: this.isLocked,
+        lockCount: this.lockCount,
+        scrollTop: this.scrollTop
+      };
+    }
+    /**
+     * 处理页面可见性变化
+     */
+    handleVisibilityChange() {
+      if (document.hidden && this.isLocked) {
+        this.forceUnlock();
+      }
+    }
+    /**
+     * 处理页面卸载
+     */
+    handlePageUnload() {
+      this.forceUnlock();
+    }
+  }
+  const scrollControl = new ScrollControl();
+  if (typeof document !== "undefined") {
+    document.addEventListener("visibilitychange", () => {
+      scrollControl.handleVisibilityChange();
+    });
+    window.addEventListener("beforeunload", () => {
+      scrollControl.handlePageUnload();
+    });
+    window.addEventListener("pagehide", () => {
+      scrollControl.handlePageUnload();
+    });
+  }
+  const _sfc_main$8 = {
+    name: "AIWealthManager",
+    mixins: [themeMixin],
+    data() {
+      return {
+        showChat: false,
+        inputMessage: "",
+        isLoading: false,
+        aiAnalysis: null,
+        smartAdvice: null,
+        projectData: null,
+        permissionStatus: null,
+        hasFullAccess: false,
+        availableUsers: [],
+        selectedUserId: "u001",
+        currentUserInfo: null,
+        chatMessages: [
+          {
+            type: "ai",
+            content: "您好！我是您的AI财富管家，很高兴为您服务！我可以帮您分析财务状况、提供投资建议、解答理财问题。有什么我可以帮助您的吗？",
+            time: "刚刚"
+          }
+        ],
+        quickQuestions: [
+          "我的财务状况如何？",
+          "有什么投资建议？",
+          "如何优化资产配置？",
+          "帮我分析一下风险"
+        ],
+        userWealth: {
+          totalAssets: 125689.23,
+          changeType: "positive",
+          changePercent: 3.2
+        },
+        wealthBreakdown: [
+          { icon: "💰", label: "活期存款", amount: 32541.78, percent: 26, color: "#4CAF50" },
+          { icon: "🏦", label: "定期存款", amount: 8e4, percent: 64, color: "#2196F3" },
+          { icon: "📈", label: "投资理财", amount: 13147.45, percent: 10, color: "#FF9800" }
+        ],
+        aiAnalysis: [
+          {
+            type: "success",
+            icon: "✅",
+            title: "财务健康度优秀",
+            description: "您的储蓄率达到35%，超出健康标准，建议考虑投资增值",
+            action: "查看投资建议"
+          },
+          {
+            type: "warning",
+            icon: "⚠️",
+            title: "消费结构优化",
+            description: "外卖支出占比25%，建议使用农行生活缴费享满减优惠",
+            action: "立即优化"
+          },
+          {
+            type: "info",
+            icon: "💡",
+            title: "闲置资金发现",
+            description: "发现3笔闲置资金，建议转入农银时时付获得更高收益",
+            action: "查看详情"
+          }
+        ],
+        allocationData: [
+          { name: "现金类", percent: 30, color: "#4CAF50" },
+          { name: "债券类", percent: 40, color: "#2196F3" },
+          { name: "股票类", percent: 20, color: "#FF9800" },
+          { name: "另类投资", percent: 10, color: "#9C27B0" }
+        ],
+        userGoals: [
+          {
+            icon: "🏠",
+            title: "购房首付",
+            target: 5e5,
+            progress: 65,
+            timeline: "2026年8月",
+            color: "#4CAF50"
+          },
+          {
+            icon: "🎓",
+            title: "教育基金",
+            target: 15e4,
+            progress: 40,
+            timeline: "2028年6月",
+            color: "#2196F3"
+          },
+          {
+            icon: "🌴",
+            title: "退休规划",
+            target: 1e6,
+            progress: 25,
+            timeline: "2040年12月",
+            color: "#FF9800"
+          }
+        ],
+        smartSuggestions: [
+          {
+            priority: "high",
+            priorityText: "高优先级",
+            title: "优化资产配置",
+            description: "建议将部分现金转入农银汇理平衡基金，预期年化收益6-8%",
+            benefit: "年化收益提升2-3%"
+          },
+          {
+            priority: "medium",
+            priorityText: "中优先级",
+            title: "增加定投金额",
+            description: "基于您的收入增长，建议将定投金额从2000元提升至3000元",
+            benefit: "目标达成时间提前6个月"
+          },
+          {
+            priority: "low",
+            priorityText: "低优先级",
+            title: "保险配置建议",
+            description: "建议配置重疾险和意外险，完善家庭保障体系",
+            benefit: "风险保障提升80%"
+          }
+        ],
+        assignedAdvisor: {
+          name: "张理财",
+          title: "高级理财顾问",
+          experience: "8年从业经验",
+          rating: 4.8,
+          avatar: "/static/wealth/useravatar.jpg"
+        }
+      };
+    },
+    async onLoad() {
+      await this.loadAvailableUsers();
+      await this.checkPermissions();
+      await this.loadProjectData();
+      await this.generateAIAnalysis();
+    },
+    onUnload() {
+      scrollControl.unlockScroll();
+    },
+    onHide() {
+      scrollControl.unlockScroll();
+    },
+    onShow() {
+    },
+    methods: {
+      goBack() {
+        uni.navigateBack({
+          delta: 1
+        });
+      },
+      /**
+       * 加载可用用户列表
+       */
+      async loadAvailableUsers() {
+        try {
+          const users2 = await userDataLoader.loadAllUsers();
+          this.availableUsers = users2.map((user) => ({
+            id: user.id,
+            username: user.username,
+            realName: user.realName,
+            phone: user.phone,
+            balance: user.balance,
+            avatar: user.avatar
+          }));
+          if (this.availableUsers.length > 0) {
+            this.selectedUserId = this.availableUsers[0].id;
+            this.currentUserInfo = this.availableUsers[0];
+          }
+          formatAppLog("log", "at pages/wealth/ai-wealth-manager.vue:499", "可用用户列表:", this.availableUsers);
+        } catch (error) {
+          formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:501", "加载用户列表失败:", error);
+          this.availableUsers = [
+            {
+              id: "u001",
+              username: "李华",
+              realName: "李华",
+              phone: "13888888888",
+              balance: 28e4,
+              avatar: "/static/wealth/useravatar.jpg"
+            }
+          ];
+          this.selectedUserId = "u001";
+          this.currentUserInfo = this.availableUsers[0];
+        }
+      },
+      /**
+       * 切换用户
+       */
+      async switchUser(userId) {
+        try {
+          this.selectedUserId = userId;
+          this.currentUserInfo = this.availableUsers.find((u) => u.id === userId);
+          uni.setStorageSync("loginInfo", {
+            userId,
+            username: this.currentUserInfo.username
+          });
+          await this.loadProjectData();
+          await this.generateAIAnalysis();
+          uni.showToast({
+            title: `已切换到${this.currentUserInfo.realName}`,
+            icon: "success"
+          });
+        } catch (error) {
+          formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:541", "切换用户失败:", error);
+        }
+      },
+      /**
+       * 显示用户选择器
+       */
+      showUserSelector() {
+        const userList = this.availableUsers.map(
+          (user) => `${user.realName} (${user.username}) - 余额: ¥${user.balance.toLocaleString()}`
+        );
+        uni.showActionSheet({
+          itemList: userList,
+          success: (res) => {
+            const selectedUser = this.availableUsers[res.tapIndex];
+            this.switchUser(selectedUser.id);
+          }
+        });
+      },
+      /**
+       * 检查权限状态
+       */
+      async checkPermissions() {
+        try {
+          this.permissionStatus = dataPermissionManager.getPermissionStatus();
+          this.hasFullAccess = dataPermissionManager.getPermissionSummary().hasFullAccess;
+          formatAppLog("log", "at pages/wealth/ai-wealth-manager.vue:571", "权限状态:", this.permissionStatus);
+        } catch (error) {
+          formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:573", "检查权限失败:", error);
+        }
+      },
+      /**
+       * 请求完整数据访问权限
+       */
+      async requestFullAccess() {
+        try {
+          const granted = await dataPermissionManager.requestDataAccess("all", "analysis");
+          if (granted) {
+            this.hasFullAccess = true;
+            this.permissionStatus = dataPermissionManager.getPermissionStatus();
+            uni.showToast({
+              title: "权限授予成功",
+              icon: "success"
+            });
+            await this.loadProjectData();
+            await this.generateAIAnalysis();
+          } else {
+            uni.showToast({
+              title: "权限被拒绝",
+              icon: "none"
+            });
+          }
+        } catch (error) {
+          formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:602", "请求权限失败:", error);
+          uni.showToast({
+            title: "权限请求失败",
+            icon: "error"
+          });
+        }
+      },
+      /**
+       * 管理数据权限
+       */
+      managePermissions() {
+        uni.showModal({
+          title: "数据权限管理",
+          content: "您希望如何管理AI对您数据的访问权限？",
+          confirmText: "查看权限",
+          cancelText: "重置权限",
+          success: (res) => {
+            if (res.confirm) {
+              this.showPermissionDetails();
+            } else {
+              this.resetPermissions();
+            }
+          }
+        });
+      },
+      /**
+       * 显示权限详情
+       */
+      showPermissionDetails() {
+        const summary = dataPermissionManager.getPermissionSummary();
+        const content = `当前权限状态：
+      
+读取权限：${summary.readPermissions}项
+写入权限：${summary.writePermissions}项
+分析权限：${summary.analyzePermissions}项
+
+${this.hasFullAccess ? "✅ 已授予完整访问权限" : "❌ 未授予完整访问权限"}`;
+        uni.showModal({
+          title: "权限详情",
+          content,
+          showCancel: false
+        });
+      },
+      /**
+       * 重置所有权限
+       */
+      resetPermissions() {
+        uni.showModal({
+          title: "重置权限",
+          content: "确定要重置所有数据访问权限吗？这将撤销AI对您数据的所有访问权限。",
+          success: (res) => {
+            if (res.confirm) {
+              dataPermissionManager.resetAllPermissions();
+              this.hasFullAccess = false;
+              this.permissionStatus = dataPermissionManager.getPermissionStatus();
+              uni.showToast({
+                title: "权限已重置",
+                icon: "success"
+              });
+            }
+          }
+        });
+      },
+      /**
+       * 加载项目数据
+       */
+      async loadProjectData() {
+        try {
+          this.isLoading = true;
+          const data = await enhancedDataOperator.collectAllUserData();
+          this.projectData = data;
+          this.userWealth.totalAssets = data.accountData.totalBalance;
+          this.userWealth.changePercent = data.investmentData.returnRate || 3.2;
+          this.userWealth.changeType = this.userWealth.changePercent >= 0 ? "positive" : "negative";
+          formatAppLog("log", "at pages/wealth/ai-wealth-manager.vue:687", "项目数据加载完成:", data);
+        } catch (error) {
+          formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:689", "加载项目数据失败:", error);
+          this.userWealth.totalAssets = 15e4;
+          this.userWealth.changePercent = 3.2;
+          this.userWealth.changeType = "positive";
+          if (error.message.includes("权限")) {
+            try {
+              await this.requestFullAccess();
+            } catch (permissionError) {
+              formatAppLog("log", "at pages/wealth/ai-wealth-manager.vue:702", "权限请求被拒绝，使用默认数据");
+            }
+          }
+        } finally {
+          this.isLoading = false;
+        }
+      },
+      /**
+       * 生成AI分析
+       */
+      async generateAIAnalysis() {
+        try {
+          this.isLoading = true;
+          const analysis = await projectDataAnalyzer.analyzeWithAI();
+          if (analysis.success) {
+            this.aiAnalysis = analysis.aiAnalysis;
+            formatAppLog("log", "at pages/wealth/ai-wealth-manager.vue:720", "AI分析完成:", analysis.aiAnalysis);
+          } else {
+            formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:722", "AI分析失败:", analysis.error);
+          }
+        } catch (error) {
+          formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:725", "生成AI分析失败:", error);
+        } finally {
+          this.isLoading = false;
+        }
+      },
+      /**
+       * 获取智能建议
+       */
+      async getSmartAdvice() {
+        try {
+          this.isLoading = true;
+          const userAnalysis = this.analyzeUserFinancialStatus();
+          const marketAnalysis = await this.getMarketTrendAnalysis();
+          const personalizedAdvice = this.generatePersonalizedAdvice(userAnalysis, marketAnalysis);
+          this.showAdviceModal(personalizedAdvice);
+        } catch (error) {
+          formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:751", "获取智能建议失败:", error);
+          uni.showToast({
+            title: "网络错误，请重试",
+            icon: "none"
+          });
+        } finally {
+          this.isLoading = false;
+        }
+      },
+      analyzeUserFinancialStatus() {
+        const totalAssets = this.userWealth.totalAssets || 28e4;
+        const monthlyIncome = 15e3;
+        const monthlyExpenses = 8e3;
+        const emergencyFund = 5e4;
+        return {
+          totalAssets,
+          monthlyIncome,
+          monthlyExpenses,
+          emergencyFund,
+          savingsRate: ((monthlyIncome - monthlyExpenses) / monthlyIncome * 100).toFixed(1),
+          debtToIncomeRatio: 0.3,
+          // 模拟负债收入比
+          riskCapacity: this.calculateRiskCapacity(totalAssets, monthlyIncome),
+          liquidityRatio: (emergencyFund / monthlyExpenses).toFixed(1)
+        };
+      },
+      calculateRiskCapacity(assets, income) {
+        if (assets > 5e5 && income > 2e4)
+          return "high";
+        if (assets > 2e5 && income > 1e4)
+          return "medium";
+        return "low";
+      },
+      async getMarketTrendAnalysis() {
+        return {
+          marketTrend: "bullish",
+          volatility: "medium",
+          interestRate: 3.5,
+          inflationRate: 2.1,
+          recommendedAllocation: {
+            stocks: 25,
+            bonds: 35,
+            cash: 25,
+            alternatives: 15
+          }
+        };
+      },
+      generatePersonalizedAdvice(userAnalysis, marketAnalysis) {
+        const advice = {
+          title: "个性化财富建议",
+          summary: "",
+          recommendations: [],
+          riskAssessment: "",
+          nextSteps: []
+        };
+        if (userAnalysis.savingsRate < 20) {
+          advice.recommendations.push({
+            type: "savings",
+            title: "提高储蓄率",
+            description: `当前储蓄率${userAnalysis.savingsRate}%，建议提升至20%以上`,
+            priority: "high",
+            action: "制定预算计划，减少非必要支出"
+          });
+        }
+        if (userAnalysis.liquidityRatio < 6) {
+          advice.recommendations.push({
+            type: "emergency",
+            title: "建立应急基金",
+            description: `建议储备6个月的生活费用作为应急基金`,
+            priority: "high",
+            action: "将部分资金转入货币基金"
+          });
+        }
+        if (userAnalysis.riskCapacity === "high") {
+          advice.recommendations.push({
+            type: "investment",
+            title: "优化投资组合",
+            description: "基于您的风险承受能力，建议增加股票类资产配置",
+            priority: "medium",
+            action: "考虑定投指数基金"
+          });
+        }
+        if (marketAnalysis.marketTrend === "bullish") {
+          advice.recommendations.push({
+            type: "market",
+            title: "把握市场机会",
+            description: "当前市场趋势向好，适合适度增加权益类投资",
+            priority: "medium",
+            action: "关注优质成长股和指数基金"
+          });
+        }
+        advice.summary = `基于您的财务状况分析，我们为您提供了${advice.recommendations.length}项个性化建议`;
+        advice.riskAssessment = `您的风险承受能力为${userAnalysis.riskCapacity}，建议采用稳健型投资策略`;
+        advice.nextSteps = ["制定详细投资计划", "设置自动定投", "定期评估投资表现"];
+        return advice;
+      },
+      showAdviceModal(advice) {
+        const adviceData = {
+          title: advice.title,
+          summary: advice.summary,
+          recommendations: advice.recommendations,
+          riskAssessment: advice.riskAssessment,
+          nextSteps: advice.nextSteps
+        };
+        uni.setStorageSync("currentAdvice", adviceData);
+        uni.navigateTo({
+          url: "/pages/wealth/advice-detail"
+        });
+      },
+      /**
+       * 生成财务报告
+       */
+      async generateFinancialReport() {
+        try {
+          this.isLoading = true;
+          const report = await zhipuAI.generateFinancialReport(this.projectData, "monthly");
+          if (report.success) {
+            uni.showModal({
+              title: "财务分析报告",
+              content: report.content,
+              showCancel: false
+            });
+          } else {
+            uni.showToast({
+              title: "生成报告失败",
+              icon: "error"
+            });
+          }
+        } catch (error) {
+          formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:900", "生成财务报告失败:", error);
+          uni.showToast({
+            title: "网络错误",
+            icon: "error"
+          });
+        } finally {
+          this.isLoading = false;
+        }
+      },
+      /**
+       * 风险评估
+       */
+      async assessRisk() {
+        try {
+          this.isLoading = true;
+          const riskAssessment = await zhipuAI.assessRisk(
+            this.projectData,
+            {
+              marketVolatility: "medium",
+              interestRate: 3.5,
+              inflation: 2.1,
+              economicOutlook: "stable"
+            }
+          );
+          if (riskAssessment.success) {
+            uni.showModal({
+              title: "风险评估报告",
+              content: riskAssessment.content,
+              showCancel: false
+            });
+          } else {
+            uni.showToast({
+              title: "风险评估失败",
+              icon: "error"
+            });
+          }
+        } catch (error) {
+          formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:939", "风险评估失败:", error);
+          uni.showToast({
+            title: "网络错误",
+            icon: "error"
+          });
+        } finally {
+          this.isLoading = false;
+        }
+      },
+      /**
+       * 执行AI建议
+       */
+      async executeAISuggestion(suggestion) {
+        try {
+          this.isLoading = true;
+          const result = await enhancedDataOperator.executeAISuggestion(suggestion);
+          if (result.success) {
+            uni.showModal({
+              title: "AI建议执行成功",
+              content: result.message,
+              showCancel: false
+            });
+            await this.loadProjectData();
+          } else {
+            uni.showToast({
+              title: "执行建议失败",
+              icon: "error"
+            });
+          }
+        } catch (error) {
+          formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:975", "执行AI建议失败:", error);
+          uni.showToast({
+            title: "执行失败",
+            icon: "error"
+          });
+        } finally {
+          this.isLoading = false;
+        }
+      },
+      /**
+       * 智能数据操作
+       */
+      async performDataOperation(operation, data) {
+        try {
+          this.isLoading = true;
+          const result = await enhancedDataOperator.performDataOperation(operation, data);
+          if (result.success) {
+            uni.showToast({
+              title: result.message,
+              icon: "success"
+            });
+            await this.loadProjectData();
+          } else {
+            uni.showToast({
+              title: "操作失败",
+              icon: "error"
+            });
+          }
+        } catch (error) {
+          formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:1009", "数据操作失败:", error);
+          uni.showToast({
+            title: "操作失败",
+            icon: "error"
+          });
+        } finally {
+          this.isLoading = false;
+        }
+      },
+      formatNumber(num) {
+        return num.toLocaleString("zh-CN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      },
+      getSegmentStart(index) {
+        let start = 0;
+        for (let i = 0; i < index; i++) {
+          start += this.wealthBreakdown[i].percent;
+        }
+        return start;
+      },
+      toggleChat() {
+        this.showChat = !this.showChat;
+        if (this.showChat) {
+          scrollControl.handleChatScroll(true, this.$refs.chatContainer);
+        } else {
+          scrollControl.handleChatScroll(false, this.$refs.chatContainer);
+        }
+      },
+      closeChat() {
+        this.showChat = false;
+        scrollControl.handleChatScroll(false, this.$refs.chatContainer);
+      },
+      async sendMessage() {
+        if (!this.inputMessage.trim())
+          return;
+        this.chatMessages.push({
+          type: "user",
+          content: this.inputMessage,
+          time: this.getCurrentTime()
+        });
+        const userMessage = this.inputMessage;
+        this.inputMessage = "";
+        try {
+          const response = await zhipuAI.chatWithAI(userMessage, {
+            userData: this.projectData,
+            currentWealth: this.userWealth,
+            context: "wealth_management"
+          });
+          if (response.success) {
+            this.chatMessages.push({
+              type: "ai",
+              content: response.content,
+              time: this.getCurrentTime()
+            });
+          } else {
+            const fallbackResponse = this.generateAIResponse(userMessage);
+            this.chatMessages.push({
+              type: "ai",
+              content: fallbackResponse,
+              time: this.getCurrentTime()
+            });
+          }
+        } catch (error) {
+          formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:1080", "AI对话失败:", error);
+          const fallbackResponse = this.generateAIResponse(userMessage);
+          this.chatMessages.push({
+            type: "ai",
+            content: fallbackResponse,
+            time: this.getCurrentTime()
+          });
+        }
+        this.scrollToBottom();
+      },
+      sendQuickQuestion(question) {
+        this.inputMessage = question;
+        this.sendMessage();
+      },
+      generateAIResponse(userMessage) {
+        const responses = {
+          "我的财务状况如何": "根据您的数据，您的财务状况整体良好。总资产125,689元，储蓄率达到35%，超出健康标准。建议适当增加投资比例以提升收益。",
+          "有什么投资建议": "基于您的风险偏好，我建议：1. 增加债券基金配置至40%；2. 考虑定投股票基金；3. 配置部分黄金作为避险资产。",
+          "如何优化资产配置": "当前现金配置偏高，建议：1. 减少5%现金配置；2. 增加债券类产品；3. 保持股票类配置不变。",
+          "帮我分析一下风险": "您的风险等级为中等，适合平衡型配置。建议定期评估风险承受能力，根据市场变化调整配置比例。"
+        };
+        for (const [key, response] of Object.entries(responses)) {
+          if (userMessage.includes(key)) {
+            return response;
+          }
+        }
+        return "感谢您的问题！作为您的AI财富管家，我可以帮您分析财务状况、提供投资建议、制定理财计划。请告诉我您具体想了解什么？";
+      },
+      getCurrentTime() {
+        const now = /* @__PURE__ */ new Date();
+        return `${now.getHours().toString().padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}`;
+      },
+      scrollToBottom() {
+        this.$nextTick(() => {
+          const chatMessages = this.$refs.chatMessages;
+          if (chatMessages) {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+          }
+        });
+      },
+      handleAnalysisAction(analysis) {
+        uni.showModal({
+          title: analysis.title,
+          content: analysis.description,
+          success: (res) => {
+            if (res.confirm) {
+              uni.showToast({
+                title: "操作已执行",
+                icon: "success"
+              });
+            }
+          }
+        });
+      },
+      viewGoalDetail(goal) {
+        uni.showModal({
+          title: goal.title,
+          content: `目标金额：¥${this.formatNumber(goal.target)}
+完成进度：${goal.progress}%
+时间期限：${goal.timeline}`,
+          showCancel: false
+        });
+      },
+      addNewGoal() {
+        uni.showToast({
+          title: "功能开发中",
+          icon: "none"
+        });
+      },
+      viewAllGoals() {
+        uni.showToast({
+          title: "目标管理功能暂不可用",
+          icon: "none",
+          duration: 2e3
+        });
+      },
+      applySuggestion(suggestion) {
+        uni.showModal({
+          title: suggestion.title,
+          content: suggestion.description,
+          success: (res) => {
+            if (res.confirm) {
+              uni.showToast({
+                title: "建议已应用",
+                icon: "success"
+              });
+            }
+          }
+        });
+      },
+      showAllocationDetail() {
+        uni.navigateTo({
+          url: "/pages/wealth/asset-allocation-detail"
+        });
+      },
+      autoRebalance() {
+        uni.showModal({
+          title: "一键调仓",
+          content: "系统将根据您的风险偏好和市场情况自动调整资产配置，确定继续吗？",
+          success: (res) => {
+            if (res.confirm) {
+              this.executeAutoRebalance();
+            }
+          }
+        });
+      },
+      executeAutoRebalance() {
+        uni.showLoading({ title: "正在分析市场..." });
+        setTimeout(() => {
+          uni.hideLoading();
+          uni.showLoading({ title: "正在调仓..." });
+          setTimeout(() => {
+            uni.hideLoading();
+            this.allocationData = [
+              { name: "现金类", percent: 25, color: "#4CAF50" },
+              { name: "债券类", percent: 35, color: "#2196F3" },
+              { name: "股票类", percent: 25, color: "#FF9800" },
+              { name: "另类投资", percent: 15, color: "#9C27B0" }
+            ];
+            uni.showModal({
+              title: "调仓完成",
+              content: "资产配置已根据市场情况优化调整，预期年化收益率提升至8.5%",
+              showCancel: false,
+              success: () => {
+                uni.navigateTo({
+                  url: "/pages/wealth/asset-allocation-detail"
+                });
+              }
+            });
+          }, 2e3);
+        }, 1500);
+      },
+      addNewGoal() {
+        uni.showToast({
+          title: "目标管理功能暂不可用",
+          icon: "none",
+          duration: 2e3
+        });
+      },
+      viewAllGoals() {
+        uni.navigateTo({
+          url: "/pages/wealth/goal-list"
+        });
+      },
+      applySuggestion(suggestion) {
+        uni.showModal({
+          title: "执行建议",
+          content: suggestion.description,
+          success: (res) => {
+            if (res.confirm) {
+              uni.showToast({
+                title: "建议已执行",
+                icon: "success"
+              });
+            }
+          }
+        });
+      },
+      contactAdvisor() {
+        uni.showModal({
+          title: "联系客户经理",
+          content: "是否拨打客户经理电话：15903724152？",
+          confirmText: "拨打",
+          cancelText: "取消",
+          success: (res) => {
+            if (res.confirm) {
+              uni.makePhoneCall({
+                phoneNumber: "15903724152",
+                success: () => {
+                  formatAppLog("log", "at pages/wealth/ai-wealth-manager.vue:1264", "拨打电话成功");
+                  uni.showToast({
+                    title: "正在拨打电话...",
+                    icon: "success"
+                  });
+                },
+                fail: (err) => {
+                  formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:1271", "拨打电话失败:", err);
+                  uni.showToast({
+                    title: "拨打电话失败",
+                    icon: "none"
+                  });
+                  uni.navigateTo({
+                    url: "/pages/wealth/advisor-chat"
+                  });
+                }
+              });
+            }
+          }
+        });
+      },
+      scheduleMeeting() {
+        uni.navigateTo({
+          url: "/pages/wealth/meeting-schedule"
+        });
+      }
+    }
+  };
+  function _sfc_render$7(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock(
+      "view",
+      {
+        class: vue.normalizeClass(["ai-wealth-manager", _ctx.getThemeClass()]),
+        style: vue.normalizeStyle(_ctx.getThemeStyle())
+      },
+      [
+        vue.createCommentVNode(" 顶部背景 "),
+        vue.createElementVNode("view", { class: "header-bg" }),
+        vue.createCommentVNode(" 顶部导航栏 "),
+        vue.createElementVNode("view", { class: "header-section" }, [
+          vue.createElementVNode("view", { class: "header-content" }, [
+            vue.createElementVNode("view", { class: "header-left" }, [
+              vue.createElementVNode("button", {
+                class: "back-btn",
+                onClick: _cache[0] || (_cache[0] = (...args) => $options.goBack && $options.goBack(...args))
+              }, [
+                vue.createElementVNode("text", { class: "back-icon" }, "←")
+              ]),
+              vue.createElementVNode("view", { class: "ai-avatar-container" }, [
+                vue.createElementVNode("image", {
+                  class: "ai-avatar",
+                  src: _imports_0,
+                  mode: "aspectFill"
+                }),
+                vue.createElementVNode("view", { class: "ai-status-dot" })
+              ]),
+              vue.createElementVNode("view", { class: "header-info" }, [
+                vue.createElementVNode("text", { class: "header-title" }, "智能财富管家"),
+                vue.createElementVNode("text", { class: "header-subtitle" }, "AI Wealth Manager")
+              ])
+            ]),
+            vue.createElementVNode("view", { class: "header-right" }, [
+              vue.createElementVNode("button", {
+                class: "chat-btn",
+                onClick: _cache[1] || (_cache[1] = (...args) => $options.toggleChat && $options.toggleChat(...args))
+              }, [
+                vue.createElementVNode("text", { class: "chat-icon" }, "💬")
+              ])
+            ])
+          ])
+        ]),
+        vue.createCommentVNode(" 财富概览卡片 "),
+        vue.createElementVNode("view", { class: "wealth-overview-card" }, [
+          vue.createElementVNode("view", { class: "wealth-header" }, [
+            vue.createElementVNode("view", { class: "wealth-info" }, [
+              vue.createElementVNode("text", { class: "wealth-label" }, "总资产"),
+              vue.createElementVNode(
+                "text",
+                { class: "wealth-amount" },
+                "¥" + vue.toDisplayString($options.formatNumber($data.userWealth.totalAssets)),
+                1
+                /* TEXT */
+              ),
+              vue.createElementVNode(
+                "view",
+                {
+                  class: vue.normalizeClass(["wealth-change", $data.userWealth.changeType])
+                },
+                [
+                  vue.createElementVNode(
+                    "text",
+                    { class: "change-icon" },
+                    vue.toDisplayString($data.userWealth.changeType === "positive" ? "↗" : "↘"),
+                    1
+                    /* TEXT */
+                  ),
+                  vue.createElementVNode(
+                    "text",
+                    { class: "change-text" },
+                    vue.toDisplayString($data.userWealth.changeType === "positive" ? "+" : "") + vue.toDisplayString($data.userWealth.changePercent) + "%",
+                    1
+                    /* TEXT */
+                  )
+                ],
+                2
+                /* CLASS */
+              )
+            ]),
+            vue.createElementVNode("view", { class: "wealth-chart" }, [
+              vue.createElementVNode("view", { class: "chart-circle" }, [
+                (vue.openBlock(true), vue.createElementBlock(
+                  vue.Fragment,
+                  null,
+                  vue.renderList($data.wealthBreakdown, (item, index) => {
+                    return vue.openBlock(), vue.createElementBlock(
+                      "view",
+                      {
+                        class: "chart-segment",
+                        key: index,
+                        style: vue.normalizeStyle({
+                          "--segment-color": item.color,
+                          "--segment-percent": item.percent,
+                          "--segment-start": $options.getSegmentStart(index)
+                        })
+                      },
+                      null,
+                      4
+                      /* STYLE */
+                    );
+                  }),
+                  128
+                  /* KEYED_FRAGMENT */
+                ))
+              ]),
+              vue.createElementVNode("view", { class: "chart-center" }, [
+                vue.createElementVNode("text", { class: "chart-total" }, "总资产"),
+                vue.createElementVNode(
+                  "text",
+                  { class: "chart-amount" },
+                  "¥" + vue.toDisplayString($options.formatNumber($data.userWealth.totalAssets)),
+                  1
+                  /* TEXT */
+                )
+              ])
+            ])
+          ]),
+          vue.createElementVNode("view", { class: "wealth-breakdown" }, [
+            (vue.openBlock(true), vue.createElementBlock(
+              vue.Fragment,
+              null,
+              vue.renderList($data.wealthBreakdown, (item, index) => {
+                return vue.openBlock(), vue.createElementBlock("view", {
+                  class: "breakdown-item",
+                  key: index
+                }, [
+                  vue.createElementVNode(
+                    "view",
+                    {
+                      class: "item-icon",
+                      style: vue.normalizeStyle({ backgroundColor: item.color })
+                    },
+                    [
+                      vue.createElementVNode(
+                        "text",
+                        { class: "icon" },
+                        vue.toDisplayString(item.icon),
+                        1
+                        /* TEXT */
+                      )
+                    ],
+                    4
+                    /* STYLE */
+                  ),
+                  vue.createElementVNode("view", { class: "item-content" }, [
+                    vue.createElementVNode(
+                      "text",
+                      { class: "item-label" },
+                      vue.toDisplayString(item.label),
+                      1
+                      /* TEXT */
+                    ),
+                    vue.createElementVNode(
+                      "text",
+                      { class: "item-amount" },
+                      "¥" + vue.toDisplayString($options.formatNumber(item.amount)),
+                      1
+                      /* TEXT */
+                    )
+                  ]),
+                  vue.createElementVNode(
+                    "text",
+                    { class: "item-percent" },
+                    vue.toDisplayString(item.percent) + "%",
+                    1
+                    /* TEXT */
+                  )
+                ]);
+              }),
+              128
+              /* KEYED_FRAGMENT */
+            ))
+          ])
+        ]),
+        vue.createCommentVNode(" AI智能分析 "),
+        vue.createElementVNode("view", { class: "ai-analysis-section" }, [
+          vue.createElementVNode("view", { class: "ai-header" }, [
+            vue.createElementVNode("view", { class: "ai-title-container" }, [
+              vue.createElementVNode("view", { class: "ai-icon" }, "🤖"),
+              vue.createElementVNode("view", { class: "ai-title-info" }, [
+                vue.createElementVNode("text", { class: "ai-title" }, "AI智能分析"),
+                vue.createElementVNode("text", { class: "ai-subtitle" }, "基于您的数据提供专业建议")
+              ])
+            ]),
+            vue.createElementVNode(
+              "view",
+              {
+                class: vue.normalizeClass(["ai-status", { active: !$data.isLoading }])
+              },
+              [
+                vue.createElementVNode("view", { class: "status-dot" }),
+                vue.createElementVNode(
+                  "text",
+                  { class: "status-text" },
+                  vue.toDisplayString($data.isLoading ? "分析中" : $data.hasFullAccess ? "已授权" : "未授权"),
+                  1
+                  /* TEXT */
+                )
+              ],
+              2
+              /* CLASS */
+            ),
+            vue.createCommentVNode(" 用户选择器 "),
+            $data.currentUserInfo ? (vue.openBlock(), vue.createElementBlock("view", {
+              key: 0,
+              class: "user-selector",
+              onClick: _cache[2] || (_cache[2] = (...args) => $options.showUserSelector && $options.showUserSelector(...args))
+            }, [
+              vue.createElementVNode("view", { class: "user-avatar" }, [
+                vue.createElementVNode("image", {
+                  src: $data.currentUserInfo.avatar,
+                  mode: "aspectFill"
+                }, null, 8, ["src"])
+              ]),
+              vue.createElementVNode("view", { class: "user-info" }, [
+                vue.createElementVNode(
+                  "text",
+                  { class: "user-name" },
+                  vue.toDisplayString($data.currentUserInfo.realName),
+                  1
+                  /* TEXT */
+                ),
+                vue.createElementVNode(
+                  "text",
+                  { class: "user-balance" },
+                  "余额: ¥" + vue.toDisplayString($data.currentUserInfo.balance.toLocaleString()),
+                  1
+                  /* TEXT */
+                )
+              ]),
+              vue.createElementVNode("view", { class: "user-arrow" }, [
+                vue.createElementVNode("text", { class: "arrow" }, "▼")
+              ])
+            ])) : vue.createCommentVNode("v-if", true)
+          ]),
+          vue.createElementVNode("view", { class: "ai-features" }, [
+            vue.createElementVNode(
+              "view",
+              {
+                class: vue.normalizeClass(["feature-card primary", { disabled: $data.isLoading }]),
+                onClick: _cache[3] || (_cache[3] = (...args) => $options.getSmartAdvice && $options.getSmartAdvice(...args))
+              },
+              [
+                vue.createElementVNode("view", { class: "feature-icon" }, [
+                  vue.createElementVNode("text", { class: "icon" }, "💡")
+                ]),
+                vue.createElementVNode("view", { class: "feature-content" }, [
+                  vue.createElementVNode("text", { class: "feature-title" }, "智能建议"),
+                  vue.createElementVNode("text", { class: "feature-desc" }, "获取个性化投资建议")
+                ]),
+                vue.createElementVNode("view", { class: "feature-arrow" }, [
+                  vue.createElementVNode("text", { class: "arrow" }, "→")
+                ])
+              ],
+              2
+              /* CLASS */
+            ),
+            vue.createElementVNode(
+              "view",
+              {
+                class: vue.normalizeClass(["feature-card", { disabled: $data.isLoading }]),
+                onClick: _cache[4] || (_cache[4] = (...args) => $options.generateFinancialReport && $options.generateFinancialReport(...args))
+              },
+              [
+                vue.createElementVNode("view", { class: "feature-icon" }, [
+                  vue.createElementVNode("text", { class: "icon" }, "📊")
+                ]),
+                vue.createElementVNode("view", { class: "feature-content" }, [
+                  vue.createElementVNode("text", { class: "feature-title" }, "财务报告"),
+                  vue.createElementVNode("text", { class: "feature-desc" }, "生成详细分析报告")
+                ]),
+                vue.createElementVNode("view", { class: "feature-arrow" }, [
+                  vue.createElementVNode("text", { class: "arrow" }, "→")
+                ])
+              ],
+              2
+              /* CLASS */
+            ),
+            vue.createElementVNode(
+              "view",
+              {
+                class: vue.normalizeClass(["feature-card", { disabled: $data.isLoading }]),
+                onClick: _cache[5] || (_cache[5] = (...args) => $options.assessRisk && $options.assessRisk(...args))
+              },
+              [
+                vue.createElementVNode("view", { class: "feature-icon" }, [
+                  vue.createElementVNode("text", { class: "icon" }, "🛡️")
+                ]),
+                vue.createElementVNode("view", { class: "feature-content" }, [
+                  vue.createElementVNode("text", { class: "feature-title" }, "风险评估"),
+                  vue.createElementVNode("text", { class: "feature-desc" }, "全面风险分析评估")
+                ]),
+                vue.createElementVNode("view", { class: "feature-arrow" }, [
+                  vue.createElementVNode("text", { class: "arrow" }, "→")
+                ])
+              ],
+              2
+              /* CLASS */
+            )
+          ]),
+          vue.createCommentVNode(" 权限管理 "),
+          !$data.hasFullAccess ? (vue.openBlock(), vue.createElementBlock("view", {
+            key: 0,
+            class: "permission-section"
+          }, [
+            vue.createElementVNode("view", { class: "permission-card" }, [
+              vue.createElementVNode("view", { class: "permission-icon" }, "🔐"),
+              vue.createElementVNode("view", { class: "permission-content" }, [
+                vue.createElementVNode("text", { class: "permission-title" }, "数据访问权限"),
+                vue.createElementVNode("text", { class: "permission-desc" }, "授予AI完整的数据访问权限以获得更好的服务体验")
+              ]),
+              vue.createElementVNode("button", {
+                class: "permission-btn",
+                onClick: _cache[6] || (_cache[6] = (...args) => $options.requestFullAccess && $options.requestFullAccess(...args)),
+                disabled: $data.isLoading
+              }, [
+                vue.createElementVNode("text", { class: "btn-text" }, "授予权限")
+              ], 8, ["disabled"])
+            ])
+          ])) : vue.createCommentVNode("v-if", true),
+          vue.createCommentVNode(" 权限管理按钮 "),
+          $data.hasFullAccess ? (vue.openBlock(), vue.createElementBlock("view", {
+            key: 1,
+            class: "permission-actions"
+          }, [
+            vue.createElementVNode("button", {
+              class: "permission-action-btn",
+              onClick: _cache[7] || (_cache[7] = (...args) => $options.managePermissions && $options.managePermissions(...args))
+            }, [
+              vue.createElementVNode("text", { class: "btn-icon" }, "⚙️"),
+              vue.createElementVNode("text", { class: "btn-text" }, "权限管理")
+            ])
+          ])) : vue.createCommentVNode("v-if", true)
+        ]),
+        vue.createCommentVNode(" 资产配置优化 "),
+        vue.createElementVNode("view", { class: "allocation-section" }, [
+          vue.createElementVNode("view", { class: "section-title" }, "资产配置优化"),
+          vue.createElementVNode("view", { class: "allocation-content" }, [
+            vue.createElementVNode("view", { class: "allocation-chart" }, [
+              vue.createElementVNode("view", { class: "chart-container" }, [
+                vue.createElementVNode(
+                  "view",
+                  {
+                    class: "pie-chart",
+                    ref: "pieChart"
+                  },
+                  null,
+                  512
+                  /* NEED_PATCH */
+                )
+              ]),
+              vue.createElementVNode("view", { class: "allocation-legend" }, [
+                (vue.openBlock(true), vue.createElementBlock(
+                  vue.Fragment,
+                  null,
+                  vue.renderList($data.allocationData, (item, index) => {
+                    return vue.openBlock(), vue.createElementBlock("view", {
+                      class: "legend-item",
+                      key: index
+                    }, [
+                      vue.createElementVNode(
+                        "view",
+                        {
+                          class: "legend-color",
+                          style: vue.normalizeStyle({ backgroundColor: item.color })
+                        },
+                        null,
+                        4
+                        /* STYLE */
+                      ),
+                      vue.createElementVNode(
+                        "text",
+                        { class: "legend-label" },
+                        vue.toDisplayString(item.name),
+                        1
+                        /* TEXT */
+                      ),
+                      vue.createElementVNode(
+                        "text",
+                        { class: "legend-percent" },
+                        vue.toDisplayString(item.percent) + "%",
+                        1
+                        /* TEXT */
+                      )
+                    ]);
+                  }),
+                  128
+                  /* KEYED_FRAGMENT */
+                ))
+              ])
+            ]),
+            vue.createElementVNode("view", { class: "allocation-actions" }, [
+              vue.createElementVNode("button", {
+                class: "action-btn primary",
+                onClick: _cache[8] || (_cache[8] = (...args) => $options.showAllocationDetail && $options.showAllocationDetail(...args))
+              }, "查看详细配置"),
+              vue.createElementVNode("button", {
+                class: "action-btn secondary",
+                onClick: _cache[9] || (_cache[9] = (...args) => $options.autoRebalance && $options.autoRebalance(...args))
+              }, "一键调仓")
+            ])
+          ])
+        ]),
+        vue.createCommentVNode(" 目标管理 "),
+        vue.createElementVNode("view", { class: "goals-section" }, [
+          vue.createElementVNode("view", { class: "section-title" }, "目标管理"),
+          vue.createElementVNode("view", { class: "goals-list" }, [
+            (vue.openBlock(true), vue.createElementBlock(
+              vue.Fragment,
+              null,
+              vue.renderList($data.userGoals, (goal, index) => {
+                return vue.openBlock(), vue.createElementBlock("view", {
+                  class: "goal-item",
+                  key: index,
+                  onClick: ($event) => $options.viewGoalDetail(goal)
+                }, [
+                  vue.createElementVNode("view", { class: "goal-left" }, [
+                    vue.createElementVNode(
+                      "view",
+                      {
+                        class: "goal-icon",
+                        style: vue.normalizeStyle({ backgroundColor: goal.color })
+                      },
+                      [
+                        vue.createElementVNode(
+                          "text",
+                          { class: "icon" },
+                          vue.toDisplayString(goal.icon),
+                          1
+                          /* TEXT */
+                        )
+                      ],
+                      4
+                      /* STYLE */
+                    ),
+                    vue.createElementVNode("view", { class: "goal-content" }, [
+                      vue.createElementVNode(
+                        "text",
+                        { class: "goal-title" },
+                        vue.toDisplayString(goal.title),
+                        1
+                        /* TEXT */
+                      ),
+                      vue.createElementVNode(
+                        "text",
+                        { class: "goal-target" },
+                        "目标：¥" + vue.toDisplayString($options.formatNumber(goal.target)),
+                        1
+                        /* TEXT */
+                      ),
+                      vue.createElementVNode("view", { class: "goal-progress" }, [
+                        vue.createElementVNode("view", { class: "progress-bar" }, [
+                          vue.createElementVNode(
+                            "view",
+                            {
+                              class: "progress-fill",
+                              style: vue.normalizeStyle({ width: goal.progress + "%", backgroundColor: goal.color })
+                            },
+                            null,
+                            4
+                            /* STYLE */
+                          )
+                        ]),
+                        vue.createElementVNode(
+                          "text",
+                          { class: "progress-text" },
+                          vue.toDisplayString(goal.progress) + "%",
+                          1
+                          /* TEXT */
+                        )
+                      ])
+                    ])
+                  ]),
+                  vue.createElementVNode("view", { class: "goal-right" }, [
+                    vue.createElementVNode(
+                      "text",
+                      { class: "goal-timeline" },
+                      vue.toDisplayString(goal.timeline),
+                      1
+                      /* TEXT */
+                    ),
+                    vue.createElementVNode("text", { class: "arrow" }, ">")
+                  ])
+                ], 8, ["onClick"]);
+              }),
+              128
+              /* KEYED_FRAGMENT */
+            ))
+          ]),
+          vue.createElementVNode("view", { class: "goal-actions" }, [
+            vue.createElementVNode("button", {
+              class: "action-btn primary",
+              onClick: _cache[10] || (_cache[10] = (...args) => $options.addNewGoal && $options.addNewGoal(...args))
+            }, "添加新目标"),
+            vue.createElementVNode("button", {
+              class: "action-btn secondary",
+              onClick: _cache[11] || (_cache[11] = (...args) => $options.viewAllGoals && $options.viewAllGoals(...args))
+            }, "查看所有目标")
+          ])
+        ]),
+        vue.createCommentVNode(" 智能建议 "),
+        vue.createElementVNode("view", { class: "suggestions-section" }, [
+          vue.createElementVNode("view", { class: "section-title" }, "智能建议"),
+          vue.createElementVNode("view", { class: "suggestions-list" }, [
+            (vue.openBlock(true), vue.createElementBlock(
+              vue.Fragment,
+              null,
+              vue.renderList($data.smartSuggestions, (suggestion, index) => {
+                return vue.openBlock(), vue.createElementBlock("view", {
+                  class: "suggestion-item",
+                  key: index,
+                  onClick: ($event) => $options.applySuggestion(suggestion)
+                }, [
+                  vue.createElementVNode("view", { class: "suggestion-left" }, [
+                    vue.createElementVNode(
+                      "view",
+                      {
+                        class: vue.normalizeClass(["suggestion-priority", suggestion.priority])
+                      },
+                      [
+                        vue.createElementVNode(
+                          "text",
+                          { class: "priority-text" },
+                          vue.toDisplayString(suggestion.priorityText),
+                          1
+                          /* TEXT */
+                        )
+                      ],
+                      2
+                      /* CLASS */
+                    ),
+                    vue.createElementVNode("view", { class: "suggestion-content" }, [
+                      vue.createElementVNode(
+                        "text",
+                        { class: "suggestion-title" },
+                        vue.toDisplayString(suggestion.title),
+                        1
+                        /* TEXT */
+                      ),
+                      vue.createElementVNode(
+                        "text",
+                        { class: "suggestion-desc" },
+                        vue.toDisplayString(suggestion.description),
+                        1
+                        /* TEXT */
+                      ),
+                      vue.createElementVNode(
+                        "text",
+                        { class: "suggestion-benefit" },
+                        "预期收益：" + vue.toDisplayString(suggestion.benefit),
+                        1
+                        /* TEXT */
+                      )
+                    ])
+                  ]),
+                  vue.createElementVNode("view", { class: "suggestion-right" }, [
+                    vue.createElementVNode("text", { class: "suggestion-action" }, "立即执行"),
+                    vue.createElementVNode("text", { class: "arrow" }, ">")
+                  ])
+                ], 8, ["onClick"]);
+              }),
+              128
+              /* KEYED_FRAGMENT */
+            ))
+          ])
+        ]),
+        vue.createCommentVNode(" 客户经理对接 "),
+        vue.createElementVNode("view", { class: "advisor-section" }, [
+          vue.createElementVNode("view", { class: "section-title" }, "专属客户经理"),
+          $data.assignedAdvisor ? (vue.openBlock(), vue.createElementBlock("view", {
+            key: 0,
+            class: "advisor-card"
+          }, [
+            vue.createElementVNode("view", { class: "advisor-info" }, [
+              vue.createElementVNode("image", {
+                class: "advisor-avatar",
+                src: $data.assignedAdvisor.avatar,
+                mode: "aspectFill"
+              }, null, 8, ["src"]),
+              vue.createElementVNode("view", { class: "advisor-details" }, [
+                vue.createElementVNode(
+                  "text",
+                  { class: "advisor-name" },
+                  vue.toDisplayString($data.assignedAdvisor.name),
+                  1
+                  /* TEXT */
+                ),
+                vue.createElementVNode(
+                  "text",
+                  { class: "advisor-title" },
+                  vue.toDisplayString($data.assignedAdvisor.title),
+                  1
+                  /* TEXT */
+                ),
+                vue.createElementVNode(
+                  "text",
+                  { class: "advisor-experience" },
+                  vue.toDisplayString($data.assignedAdvisor.experience),
+                  1
+                  /* TEXT */
+                ),
+                vue.createElementVNode("view", { class: "advisor-rating" }, [
+                  vue.createElementVNode("view", { class: "rating-stars" }, [
+                    (vue.openBlock(), vue.createElementBlock(
+                      vue.Fragment,
+                      null,
+                      vue.renderList(5, (n) => {
+                        return vue.createElementVNode(
+                          "text",
+                          {
+                            class: vue.normalizeClass(["star", { active: n <= $data.assignedAdvisor.rating }]),
+                            key: n
+                          },
+                          "★",
+                          2
+                          /* CLASS */
+                        );
+                      }),
+                      64
+                      /* STABLE_FRAGMENT */
+                    ))
+                  ]),
+                  vue.createElementVNode(
+                    "text",
+                    { class: "rating-text" },
+                    vue.toDisplayString($data.assignedAdvisor.rating) + "/5.0",
+                    1
+                    /* TEXT */
+                  )
+                ])
+              ])
+            ]),
+            vue.createElementVNode("view", { class: "advisor-actions" }, [
+              vue.createElementVNode("button", {
+                class: "action-btn primary",
+                onClick: _cache[12] || (_cache[12] = (...args) => $options.contactAdvisor && $options.contactAdvisor(...args))
+              }, "联系客户经理"),
+              vue.createElementVNode("button", {
+                class: "action-btn secondary",
+                onClick: _cache[13] || (_cache[13] = (...args) => $options.scheduleMeeting && $options.scheduleMeeting(...args))
+              }, "预约面谈")
+            ])
+          ])) : vue.createCommentVNode("v-if", true)
+        ]),
+        vue.createCommentVNode(" AI对话界面 "),
+        $data.showChat ? (vue.openBlock(), vue.createElementBlock("view", {
+          key: 0,
+          class: "ai-chat-overlay",
+          onClick: _cache[19] || (_cache[19] = (...args) => $options.closeChat && $options.closeChat(...args))
+        }, [
+          vue.createElementVNode(
+            "view",
+            {
+              class: "chat-container",
+              ref: "chatContainer",
+              onClick: _cache[18] || (_cache[18] = vue.withModifiers(() => {
+              }, ["stop"]))
+            },
+            [
+              vue.createElementVNode("view", { class: "chat-header" }, [
+                vue.createElementVNode("view", { class: "chat-avatar" }, [
+                  vue.createElementVNode("image", {
+                    class: "ai-avatar-small",
+                    src: _imports_0,
+                    mode: "aspectFill"
+                  }),
+                  vue.createElementVNode("view", { class: "ai-status-small" })
+                ]),
+                vue.createElementVNode("view", { class: "chat-info" }, [
+                  vue.createElementVNode("text", { class: "chat-name" }, "AI财富管家"),
+                  vue.createElementVNode("text", { class: "chat-status" }, "在线")
+                ]),
+                vue.createElementVNode("button", {
+                  class: "close-btn",
+                  onClick: _cache[14] || (_cache[14] = (...args) => $options.closeChat && $options.closeChat(...args))
+                }, "×")
+              ]),
+              vue.createElementVNode(
+                "view",
+                {
+                  class: "chat-messages",
+                  ref: "chatMessages"
+                },
+                [
+                  (vue.openBlock(true), vue.createElementBlock(
+                    vue.Fragment,
+                    null,
+                    vue.renderList($data.chatMessages, (message, index) => {
+                      return vue.openBlock(), vue.createElementBlock(
+                        "view",
+                        {
+                          class: vue.normalizeClass(["message-item", message.type]),
+                          key: index
+                        },
+                        [
+                          message.type === "ai" ? (vue.openBlock(), vue.createElementBlock("view", {
+                            key: 0,
+                            class: "message-avatar"
+                          }, [
+                            vue.createElementVNode("image", {
+                              class: "avatar-img",
+                              src: _imports_0,
+                              mode: "aspectFill"
+                            })
+                          ])) : vue.createCommentVNode("v-if", true),
+                          vue.createElementVNode("view", { class: "message-content" }, [
+                            vue.createElementVNode("view", { class: "message-bubble" }, [
+                              vue.createElementVNode(
+                                "text",
+                                { class: "message-text" },
+                                vue.toDisplayString(message.content),
+                                1
+                                /* TEXT */
+                              ),
+                              vue.createElementVNode(
+                                "text",
+                                { class: "message-time" },
+                                vue.toDisplayString(message.time),
+                                1
+                                /* TEXT */
+                              )
+                            ])
+                          ])
+                        ],
+                        2
+                        /* CLASS */
+                      );
+                    }),
+                    128
+                    /* KEYED_FRAGMENT */
+                  ))
+                ],
+                512
+                /* NEED_PATCH */
+              ),
+              vue.createElementVNode("view", { class: "chat-input" }, [
+                vue.createElementVNode("view", { class: "input-container" }, [
+                  vue.withDirectives(vue.createElementVNode(
+                    "input",
+                    {
+                      class: "message-input",
+                      "onUpdate:modelValue": _cache[15] || (_cache[15] = ($event) => $data.inputMessage = $event),
+                      placeholder: "输入您的问题...",
+                      onConfirm: _cache[16] || (_cache[16] = (...args) => $options.sendMessage && $options.sendMessage(...args))
+                    },
+                    null,
+                    544
+                    /* NEED_HYDRATION, NEED_PATCH */
+                  ), [
+                    [vue.vModelText, $data.inputMessage]
+                  ]),
+                  vue.createElementVNode("button", {
+                    class: "send-btn",
+                    onClick: _cache[17] || (_cache[17] = (...args) => $options.sendMessage && $options.sendMessage(...args)),
+                    disabled: !$data.inputMessage.trim()
+                  }, [
+                    vue.createElementVNode("text", { class: "send-icon" }, "📤")
+                  ], 8, ["disabled"])
+                ]),
+                vue.createElementVNode("view", { class: "quick-questions" }, [
+                  (vue.openBlock(true), vue.createElementBlock(
+                    vue.Fragment,
+                    null,
+                    vue.renderList($data.quickQuestions, (question, index) => {
+                      return vue.openBlock(), vue.createElementBlock("button", {
+                        class: "quick-btn",
+                        key: index,
+                        onClick: ($event) => $options.sendQuickQuestion(question)
+                      }, vue.toDisplayString(question), 9, ["onClick"]);
+                    }),
+                    128
+                    /* KEYED_FRAGMENT */
+                  ))
+                ])
+              ])
+            ],
+            512
+            /* NEED_PATCH */
+          )
+        ])) : vue.createCommentVNode("v-if", true)
+      ],
+      6
+      /* CLASS, STYLE */
+    );
+  }
+  const PagesWealthAiWealthManager = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["render", _sfc_render$7], ["__scopeId", "data-v-762ab66e"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/ai-wealth-manager.vue"]]);
+  const _sfc_main$7 = {
+    name: "MeetingSchedule",
+    data() {
+      return {
+        advisorInfo: {
+          name: "张经理",
+          title: "高级理财顾问",
+          avatar: "/static/wealth/advisor-avatar.jpg",
+          rating: 4.8,
+          experience: "8年",
+          clients: "500+",
+          successRate: 95
+        },
+        selectedDate: "",
+        selectedTime: "",
+        selectedLocation: "",
+        selectedTopics: [],
+        remark: "",
+        showDateModal: false,
+        showTimeModal: false,
+        locationOptions: [
+          {
+            id: "office",
+            name: "银行营业厅",
+            address: "北京市朝阳区建国门外大街1号",
+            icon: "🏦"
+          },
+          {
+            id: "online",
+            name: "在线视频",
+            address: "腾讯会议/钉钉视频",
+            icon: "💻"
+          },
+          {
+            id: "client",
+            name: "客户指定地点",
+            address: "您方便的地点",
+            icon: "📍"
+          }
+        ],
+        topicOptions: [
+          { id: "investment", name: "投资理财规划" },
+          { id: "insurance", name: "保险配置建议" },
+          { id: "retirement", name: "退休养老规划" },
+          { id: "education", name: "子女教育基金" },
+          { id: "tax", name: "税务优化策略" },
+          { id: "estate", name: "财富传承规划" },
+          { id: "other", name: "其他咨询" }
+        ],
+        availableDates: [],
+        availableTimes: [
+          { value: "09:00", label: "09:00-10:00" },
+          { value: "10:00", label: "10:00-11:00" },
+          { value: "11:00", label: "11:00-12:00" },
+          { value: "14:00", label: "14:00-15:00" },
+          { value: "15:00", label: "15:00-16:00" },
+          { value: "16:00", label: "16:00-17:00" }
+        ]
+      };
+    },
+    computed: {
+      canSubmit() {
+        return this.selectedDate && this.selectedTime && this.selectedLocation && this.selectedTopics.length > 0;
+      }
+    },
+    onLoad() {
+      this.generateAvailableDates();
+    },
+    methods: {
+      goBack() {
+        uni.navigateBack();
+      },
+      generateAvailableDates() {
+        const dates = [];
+        const today = /* @__PURE__ */ new Date();
+        const weekDays = ["日", "一", "二", "三", "四", "五", "六"];
+        for (let i = 1; i <= 14; i++) {
+          const date = new Date(today);
+          date.setDate(today.getDate() + i);
+          if (date.getDay() !== 0 && date.getDay() !== 6) {
+            dates.push({
+              value: this.formatDate(date),
+              day: date.getDate(),
+              week: weekDays[date.getDay()]
+            });
+          }
+        }
+        this.availableDates = dates;
+      },
+      formatDate(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
+      },
+      showDatePicker() {
+        formatAppLog("log", "at pages/wealth/meeting-schedule.vue:263", "showDatePicker 被调用");
+        this.showDateModal = true;
+      },
+      closeDatePicker() {
+        this.showDateModal = false;
+      },
+      selectDate(date) {
+        this.selectedDate = date;
+        this.closeDatePicker();
+      },
+      showTimePicker() {
+        formatAppLog("log", "at pages/wealth/meeting-schedule.vue:277", "showTimePicker 被调用");
+        this.showTimeModal = true;
+      },
+      closeTimePicker() {
+        this.showTimeModal = false;
+      },
+      selectTime(time) {
+        this.selectedTime = time;
+        this.closeTimePicker();
+      },
+      selectLocation(locationId) {
+        formatAppLog("log", "at pages/wealth/meeting-schedule.vue:291", "selectLocation 被调用:", locationId);
+        this.selectedLocation = locationId;
+      },
+      toggleTopic(topicId) {
+        const index = this.selectedTopics.indexOf(topicId);
+        if (index > -1) {
+          this.selectedTopics.splice(index, 1);
+        } else {
+          this.selectedTopics.push(topicId);
+        }
+      },
+      submitSchedule() {
+        if (!this.canSubmit) {
+          uni.showToast({
+            title: "请完善预约信息",
+            icon: "none"
+          });
+          return;
+        }
+        const scheduleData = {
+          advisor: this.advisorInfo.name,
+          date: this.selectedDate,
+          time: this.selectedTime,
+          location: this.locationOptions.find((l) => l.id === this.selectedLocation),
+          topics: this.selectedTopics.map(
+            (id) => this.topicOptions.find((t) => t.id === id).name
+          ),
+          remark: this.remark
+        };
+        const locationName = scheduleData.location.name;
+        const topicsText = scheduleData.topics.join("、");
+        uni.showModal({
+          title: "确认预约信息",
+          content: `客户经理：${scheduleData.advisor}
+面谈时间：${scheduleData.date} ${scheduleData.time}
+面谈地点：${locationName}
+面谈主题：${topicsText}`,
+          confirmText: "确认预约",
+          cancelText: "修改",
+          success: (res) => {
+            if (res.confirm) {
+              this.submitToServer(scheduleData);
+            }
+          }
+        });
+      },
+      async submitToServer(scheduleData) {
+        try {
+          uni.showLoading({
+            title: "提交中..."
+          });
+          await new Promise((resolve) => setTimeout(resolve, 2e3));
+          const schedules = uni.getStorageSync("meetingSchedules") || [];
+          schedules.push({
+            id: Date.now(),
+            ...scheduleData,
+            status: "pending",
+            createTime: (/* @__PURE__ */ new Date()).toISOString()
+          });
+          uni.setStorageSync("meetingSchedules", schedules);
+          uni.hideLoading();
+          uni.showModal({
+            title: "预约成功",
+            content: "您的面谈预约已提交，客户经理将在24小时内与您确认具体安排。",
+            showCancel: false,
+            confirmText: "确定",
+            success: () => {
+              uni.navigateBack();
+            }
+          });
+        } catch (error) {
+          uni.hideLoading();
+          formatAppLog("error", "at pages/wealth/meeting-schedule.vue:374", "提交预约失败:", error);
+          uni.showToast({
+            title: "提交失败，请重试",
+            icon: "none"
+          });
+        }
+      }
+    }
+  };
+  function _sfc_render$6(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("view", { class: "meeting-schedule-page" }, [
+      vue.createCommentVNode(" 顶部导航 "),
+      vue.createElementVNode("view", { class: "nav-bar" }, [
+        vue.createElementVNode("view", { class: "nav-left" }, [
+          vue.createElementVNode("button", {
+            class: "back-btn",
+            onClick: _cache[0] || (_cache[0] = (...args) => $options.goBack && $options.goBack(...args))
+          }, [
+            vue.createElementVNode("text", { class: "back-icon" }, "←")
+          ]),
+          vue.createElementVNode("text", { class: "nav-title" }, "预约面谈")
+        ])
+      ]),
+      vue.createCommentVNode(" 客户经理信息 "),
+      vue.createElementVNode("view", { class: "advisor-info-card" }, [
+        vue.createElementVNode("view", { class: "advisor-header" }, [
+          vue.createElementVNode("image", {
+            class: "advisor-avatar",
+            src: $data.advisorInfo.avatar,
+            mode: "aspectFill"
+          }, null, 8, ["src"]),
+          vue.createElementVNode("view", { class: "advisor-details" }, [
+            vue.createElementVNode(
+              "text",
+              { class: "advisor-name" },
+              vue.toDisplayString($data.advisorInfo.name),
+              1
+              /* TEXT */
+            ),
+            vue.createElementVNode(
+              "text",
+              { class: "advisor-title" },
+              vue.toDisplayString($data.advisorInfo.title),
+              1
+              /* TEXT */
+            ),
+            vue.createElementVNode("view", { class: "advisor-rating" }, [
+              vue.createElementVNode("text", { class: "rating-stars" }, "★★★★★"),
+              vue.createElementVNode(
+                "text",
+                { class: "rating-text" },
+                vue.toDisplayString($data.advisorInfo.rating) + "/5.0",
+                1
+                /* TEXT */
+              )
+            ])
+          ])
+        ]),
+        vue.createElementVNode("view", { class: "advisor-stats" }, [
+          vue.createElementVNode("view", { class: "stat-item" }, [
+            vue.createElementVNode(
+              "text",
+              { class: "stat-value" },
+              vue.toDisplayString($data.advisorInfo.experience),
+              1
+              /* TEXT */
+            ),
+            vue.createElementVNode("text", { class: "stat-label" }, "从业经验")
+          ]),
+          vue.createElementVNode("view", { class: "stat-item" }, [
+            vue.createElementVNode(
+              "text",
+              { class: "stat-value" },
+              vue.toDisplayString($data.advisorInfo.clients),
+              1
+              /* TEXT */
+            ),
+            vue.createElementVNode("text", { class: "stat-label" }, "服务客户")
+          ]),
+          vue.createElementVNode("view", { class: "stat-item" }, [
+            vue.createElementVNode(
+              "text",
+              { class: "stat-value" },
+              vue.toDisplayString($data.advisorInfo.successRate) + "%",
+              1
+              /* TEXT */
+            ),
+            vue.createElementVNode("text", { class: "stat-label" }, "成功率")
+          ])
+        ])
+      ]),
+      vue.createCommentVNode(" 预约表单 "),
+      vue.createElementVNode("view", { class: "schedule-form" }, [
+        vue.createElementVNode("view", { class: "form-section" }, [
+          vue.createElementVNode("text", { class: "section-title" }, "选择面谈时间"),
+          vue.createElementVNode("view", { class: "time-selector" }, [
+            vue.createElementVNode("view", {
+              class: "date-picker",
+              onClick: _cache[1] || (_cache[1] = (...args) => $options.showDatePicker && $options.showDatePicker(...args))
+            }, [
+              vue.createElementVNode("text", { class: "picker-label" }, "日期"),
+              vue.createElementVNode(
+                "text",
+                { class: "picker-value" },
+                vue.toDisplayString($data.selectedDate || "请选择日期"),
+                1
+                /* TEXT */
+              ),
+              vue.createElementVNode("text", { class: "picker-arrow" }, "▼")
+            ]),
+            vue.createElementVNode("view", {
+              class: "time-picker",
+              onClick: _cache[2] || (_cache[2] = (...args) => $options.showTimePicker && $options.showTimePicker(...args))
+            }, [
+              vue.createElementVNode("text", { class: "picker-label" }, "时间"),
+              vue.createElementVNode(
+                "text",
+                { class: "picker-value" },
+                vue.toDisplayString($data.selectedTime || "请选择时间"),
+                1
+                /* TEXT */
+              ),
+              vue.createElementVNode("text", { class: "picker-arrow" }, "▼")
+            ])
+          ])
+        ]),
+        vue.createElementVNode("view", { class: "form-section" }, [
+          vue.createElementVNode("text", { class: "section-title" }, "选择面谈地点"),
+          vue.createElementVNode("view", { class: "location-options" }, [
+            (vue.openBlock(true), vue.createElementBlock(
+              vue.Fragment,
+              null,
+              vue.renderList($data.locationOptions, (location) => {
+                return vue.openBlock(), vue.createElementBlock("view", {
+                  key: location.id,
+                  class: vue.normalizeClass(["location-option", { active: $data.selectedLocation === location.id }]),
+                  onClick: ($event) => $options.selectLocation(location.id)
+                }, [
+                  vue.createElementVNode(
+                    "view",
+                    { class: "location-icon" },
+                    vue.toDisplayString(location.icon),
+                    1
+                    /* TEXT */
+                  ),
+                  vue.createElementVNode("view", { class: "location-info" }, [
+                    vue.createElementVNode(
+                      "text",
+                      { class: "location-name" },
+                      vue.toDisplayString(location.name),
+                      1
+                      /* TEXT */
+                    ),
+                    vue.createElementVNode(
+                      "text",
+                      { class: "location-address" },
+                      vue.toDisplayString(location.address),
+                      1
+                      /* TEXT */
+                    )
+                  ]),
+                  $data.selectedLocation === location.id ? (vue.openBlock(), vue.createElementBlock("view", {
+                    key: 0,
+                    class: "location-status"
+                  }, "✓")) : vue.createCommentVNode("v-if", true)
+                ], 10, ["onClick"]);
+              }),
+              128
+              /* KEYED_FRAGMENT */
+            ))
+          ])
+        ]),
+        vue.createElementVNode("view", { class: "form-section" }, [
+          vue.createElementVNode("text", { class: "section-title" }, "面谈主题"),
+          vue.createElementVNode("view", { class: "topic-options" }, [
+            (vue.openBlock(true), vue.createElementBlock(
+              vue.Fragment,
+              null,
+              vue.renderList($data.topicOptions, (topic) => {
+                return vue.openBlock(), vue.createElementBlock("view", {
+                  key: topic.id,
+                  class: vue.normalizeClass(["topic-option", { active: $data.selectedTopics.includes(topic.id) }]),
+                  onClick: ($event) => $options.toggleTopic(topic.id)
+                }, [
+                  vue.createElementVNode(
+                    "text",
+                    { class: "topic-text" },
+                    vue.toDisplayString(topic.name),
+                    1
+                    /* TEXT */
+                  )
+                ], 10, ["onClick"]);
+              }),
+              128
+              /* KEYED_FRAGMENT */
+            ))
+          ])
+        ]),
+        vue.createElementVNode("view", { class: "form-section" }, [
+          vue.createElementVNode("text", { class: "section-title" }, "备注信息"),
+          vue.withDirectives(vue.createElementVNode(
+            "textarea",
+            {
+              class: "remark-input",
+              "onUpdate:modelValue": _cache[3] || (_cache[3] = ($event) => $data.remark = $event),
+              placeholder: "请简要描述您的需求或问题...",
+              maxlength: "200"
+            },
+            null,
+            512
+            /* NEED_PATCH */
+          ), [
+            [vue.vModelText, $data.remark]
+          ]),
+          vue.createElementVNode(
+            "text",
+            { class: "char-count" },
+            vue.toDisplayString($data.remark.length) + "/200",
+            1
+            /* TEXT */
+          )
+        ])
+      ]),
+      vue.createCommentVNode(" 底部操作 "),
+      vue.createElementVNode("view", { class: "bottom-actions" }, [
+        vue.createElementVNode("button", {
+          class: "submit-btn",
+          onClick: _cache[4] || (_cache[4] = (...args) => $options.submitSchedule && $options.submitSchedule(...args)),
+          disabled: !$options.canSubmit
+        }, " 确认预约 ", 8, ["disabled"])
+      ]),
+      vue.createCommentVNode(" 日期选择器 "),
+      $data.showDateModal ? (vue.openBlock(), vue.createElementBlock("view", {
+        key: 0,
+        class: "date-picker-modal",
+        onClick: _cache[7] || (_cache[7] = (...args) => $options.closeDatePicker && $options.closeDatePicker(...args))
+      }, [
+        vue.createElementVNode("view", {
+          class: "modal-content",
+          onClick: _cache[6] || (_cache[6] = vue.withModifiers(() => {
+          }, ["stop"]))
+        }, [
+          vue.createElementVNode("view", { class: "modal-header" }, [
+            vue.createElementVNode("text", { class: "modal-title" }, "选择日期"),
+            vue.createElementVNode("button", {
+              class: "close-btn",
+              onClick: _cache[5] || (_cache[5] = (...args) => $options.closeDatePicker && $options.closeDatePicker(...args))
+            }, "×")
+          ]),
+          vue.createElementVNode("view", { class: "date-grid" }, [
+            (vue.openBlock(true), vue.createElementBlock(
+              vue.Fragment,
+              null,
+              vue.renderList($data.availableDates, (date) => {
+                return vue.openBlock(), vue.createElementBlock("view", {
+                  key: date.value,
+                  class: vue.normalizeClass(["date-item", { active: $data.selectedDate === date.value }]),
+                  onClick: ($event) => $options.selectDate(date.value)
+                }, [
+                  vue.createElementVNode(
+                    "text",
+                    { class: "date-day" },
+                    vue.toDisplayString(date.day),
+                    1
+                    /* TEXT */
+                  ),
+                  vue.createElementVNode(
+                    "text",
+                    { class: "date-week" },
+                    vue.toDisplayString(date.week),
+                    1
+                    /* TEXT */
+                  )
+                ], 10, ["onClick"]);
+              }),
+              128
+              /* KEYED_FRAGMENT */
+            ))
+          ])
+        ])
+      ])) : vue.createCommentVNode("v-if", true),
+      vue.createCommentVNode(" 时间选择器 "),
+      $data.showTimeModal ? (vue.openBlock(), vue.createElementBlock("view", {
+        key: 1,
+        class: "time-picker-modal",
+        onClick: _cache[10] || (_cache[10] = (...args) => $options.closeTimePicker && $options.closeTimePicker(...args))
+      }, [
+        vue.createElementVNode("view", {
+          class: "modal-content",
+          onClick: _cache[9] || (_cache[9] = vue.withModifiers(() => {
+          }, ["stop"]))
+        }, [
+          vue.createElementVNode("view", { class: "modal-header" }, [
+            vue.createElementVNode("text", { class: "modal-title" }, "选择时间"),
+            vue.createElementVNode("button", {
+              class: "close-btn",
+              onClick: _cache[8] || (_cache[8] = (...args) => $options.closeTimePicker && $options.closeTimePicker(...args))
+            }, "×")
+          ]),
+          vue.createElementVNode("view", { class: "time-grid" }, [
+            (vue.openBlock(true), vue.createElementBlock(
+              vue.Fragment,
+              null,
+              vue.renderList($data.availableTimes, (time) => {
+                return vue.openBlock(), vue.createElementBlock("view", {
+                  key: time.value,
+                  class: vue.normalizeClass(["time-item", { active: $data.selectedTime === time.value }]),
+                  onClick: ($event) => $options.selectTime(time.value)
+                }, [
+                  vue.createElementVNode(
+                    "text",
+                    { class: "time-text" },
+                    vue.toDisplayString(time.label),
+                    1
+                    /* TEXT */
+                  )
+                ], 10, ["onClick"]);
+              }),
+              128
+              /* KEYED_FRAGMENT */
+            ))
+          ])
+        ])
+      ])) : vue.createCommentVNode("v-if", true)
+    ]);
+  }
+  const PagesWealthMeetingSchedule = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["render", _sfc_render$6], ["__scopeId", "data-v-7355c991"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/meeting-schedule.vue"]]);
+  const _sfc_main$6 = {
+    data() {
+      return {
+        totalAssets: 28e4,
+        changePercent: 3.2,
+        changeType: "positive",
+        selectedPeriod: "1M",
+        riskLevel: "medium",
+        riskScore: 6,
+        allocationData: [
+          {
+            name: "现金类",
+            percent: 30,
+            amount: 84e3,
+            color: "#4CAF50",
+            description: "货币基金、银行存款等低风险产品"
+          },
+          {
+            name: "债券类",
+            percent: 40,
+            amount: 112e3,
+            color: "#2196F3",
+            description: "国债、企业债、债券基金等"
+          },
+          {
+            name: "股票类",
+            percent: 20,
+            amount: 56e3,
+            color: "#FF9800",
+            description: "股票、股票型基金等"
+          },
+          {
+            name: "另类投资",
+            percent: 10,
+            amount: 28e3,
+            color: "#9C27B0",
+            description: "黄金、REITs、私募等"
+          }
+        ],
+        aiSuggestions: [
+          {
+            icon: "📈",
+            title: "增加股票配置",
+            priority: "high",
+            priorityText: "高优先级",
+            description: "基于当前市场环境，建议将股票配置从20%提升至25%，以获取更好的长期收益",
+            expectedReturn: "+2.3%",
+            color: "#FF9800"
+          },
+          {
+            icon: "🛡️",
+            title: "优化债券结构",
+            priority: "medium",
+            priorityText: "中优先级",
+            description: "建议增加短期债券配置，降低利率风险，提高流动性",
+            expectedReturn: "+0.8%",
+            color: "#2196F3"
+          },
+          {
+            icon: "💰",
+            title: "现金管理优化",
+            priority: "low",
+            priorityText: "低优先级",
+            description: "将部分现金转入货币基金，提高资金使用效率",
+            expectedReturn: "+0.5%",
+            color: "#4CAF50"
+          }
+        ],
+        riskFactors: [
+          { name: "市场风险", level: 70, color: "#FF5722" },
+          { name: "利率风险", level: 45, color: "#FF9800" },
+          { name: "信用风险", level: 30, color: "#4CAF50" },
+          { name: "流动性风险", level: 20, color: "#2196F3" }
+        ],
+        annualReturn: 8.5,
+        maxDrawdown: -5.2,
+        sharpeRatio: 1.2
+      };
+    },
+    computed: {
+      riskLevelText() {
+        const levels = {
+          low: "低风险",
+          medium: "中等风险",
+          high: "高风险"
+        };
+        return levels[this.riskLevel] || "中等风险";
+      }
+    },
+    onLoad() {
+      this.loadAllocationData();
+    },
+    methods: {
+      goBack() {
+        uni.navigateBack();
+      },
+      formatNumber(num) {
+        return Number(num).toLocaleString("zh-CN", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        });
+      },
+      loadAllocationData() {
+        formatAppLog("log", "at pages/wealth/asset-allocation-detail.vue:246", "加载资产配置数据");
+      },
+      adjustAllocation(item) {
+        uni.showModal({
+          title: `调整${item.name}配置`,
+          content: `当前配置：${item.percent}%
+建议范围：${this.getAllocationRange(item.name)}`,
+          editable: true,
+          placeholderText: "请输入新的配置比例",
+          success: (res) => {
+            if (res.confirm && res.content) {
+              const newPercent = parseFloat(res.content);
+              if (newPercent >= 0 && newPercent <= 100) {
+                this.updateAllocation(item.name, newPercent);
+              } else {
+                uni.showToast({
+                  title: "请输入0-100之间的数值",
+                  icon: "none"
+                });
+              }
+            }
+          }
+        });
+      },
+      getAllocationRange(assetType) {
+        const ranges = {
+          "现金类": "10-30%",
+          "债券类": "30-50%",
+          "股票类": "15-35%",
+          "另类投资": "5-15%"
+        };
+        return ranges[assetType] || "5-20%";
+      },
+      updateAllocation(assetType, newPercent) {
+        const item = this.allocationData.find((item2) => item2.name === assetType);
+        if (item) {
+          item.percent = newPercent;
+          item.amount = this.totalAssets * newPercent / 100;
+          uni.showToast({
+            title: "配置已更新",
+            icon: "success"
+          });
+        }
+      },
+      applySuggestion(suggestion) {
+        uni.showModal({
+          title: "应用建议",
+          content: `确定要应用"${suggestion.title}"建议吗？
+预期收益：${suggestion.expectedReturn}`,
+          success: (res) => {
+            if (res.confirm) {
+              this.executeSuggestion(suggestion);
+            }
+          }
+        });
+      },
+      executeSuggestion(suggestion) {
+        uni.showLoading({ title: "正在应用建议..." });
+        setTimeout(() => {
+          uni.hideLoading();
+          uni.showToast({
+            title: "建议已应用",
+            icon: "success"
+          });
+          if (suggestion.title.includes("股票")) {
+            const stockItem = this.allocationData.find((item) => item.name === "股票类");
+            if (stockItem) {
+              stockItem.percent = 25;
+              stockItem.amount = this.totalAssets * 0.25;
+            }
+          }
+        }, 2e3);
+      },
+      selectPeriod(period) {
+        this.selectedPeriod = period;
+        this.loadPerformanceData(period);
+      },
+      loadPerformanceData(period) {
+        formatAppLog("log", "at pages/wealth/asset-allocation-detail.vue:333", `加载${period}表现数据`);
+        uni.showLoading({ title: "正在加载数据..." });
+        const performanceData = {
+          "1M": {
+            annualReturn: 6.8,
+            maxDrawdown: -2.1,
+            sharpeRatio: 0.9
+          },
+          "3M": {
+            annualReturn: 8.5,
+            maxDrawdown: -5.2,
+            sharpeRatio: 1.2
+          },
+          "1Y": {
+            annualReturn: 12.3,
+            maxDrawdown: -8.7,
+            sharpeRatio: 1.5
+          }
+        };
+        setTimeout(() => {
+          const data = performanceData[period];
+          if (data) {
+            this.annualReturn = data.annualReturn;
+            this.maxDrawdown = data.maxDrawdown;
+            this.sharpeRatio = data.sharpeRatio;
+            formatAppLog("log", "at pages/wealth/asset-allocation-detail.vue:365", `已更新${period}数据:`, data);
+            uni.showToast({
+              title: `已切换到${this.getPeriodText(period)}数据`,
+              icon: "success",
+              duration: 1500
+            });
+          }
+          uni.hideLoading();
+        }, 800);
+      },
+      getPeriodText(period) {
+        const periodMap = {
+          "1M": "1个月",
+          "3M": "3个月",
+          "1Y": "1年"
+        };
+        return periodMap[period] || period;
+      },
+      autoRebalance() {
+        uni.showModal({
+          title: "一键调仓",
+          content: "系统将根据您的风险偏好和市场情况自动调整资产配置，确定继续吗？",
+          success: (res) => {
+            if (res.confirm) {
+              this.executeAutoRebalance();
+            }
+          }
+        });
+      },
+      executeAutoRebalance() {
+        uni.showLoading({ title: "正在调仓..." });
+        setTimeout(() => {
+          uni.hideLoading();
+          uni.showToast({
+            title: "调仓完成",
+            icon: "success"
+          });
+          this.allocationData = [
+            { name: "现金类", percent: 25, amount: 7e4, color: "#4CAF50" },
+            { name: "债券类", percent: 35, amount: 98e3, color: "#2196F3" },
+            { name: "股票类", percent: 25, amount: 7e4, color: "#FF9800" },
+            { name: "另类投资", percent: 15, amount: 42e3, color: "#9C27B0" }
+          ];
+        }, 3e3);
+      },
+      customRebalance() {
+        uni.navigateTo({
+          url: "/pages/wealth/custom-rebalance"
+        });
+      },
+      exportReport() {
+        uni.showModal({
+          title: "导出报告",
+          content: "选择报告格式",
+          showCancel: true,
+          cancelText: "取消",
+          confirmText: "生成PDF",
+          success: (res) => {
+            if (res.confirm) {
+              this.generatePDFReport();
+            } else if (res.cancel)
+              ;
+          }
+        });
+      },
+      generatePDFReport() {
+        uni.showLoading({ title: "正在生成PDF报告..." });
+        const reportData = this.generateReportData();
+        setTimeout(() => {
+          uni.hideLoading();
+          this.showReportPreview(reportData);
+          this.downloadReport(reportData);
+        }, 3e3);
+      },
+      generateReportData() {
+        const currentDate = (/* @__PURE__ */ new Date()).toLocaleDateString("zh-CN");
+        const currentTime = (/* @__PURE__ */ new Date()).toLocaleTimeString("zh-CN");
+        return {
+          title: "资产配置分析报告",
+          generateTime: `${currentDate} ${currentTime}`,
+          userInfo: {
+            totalAssets: this.totalAssets,
+            changePercent: this.changePercent,
+            changeType: this.changeType
+          },
+          allocationData: this.allocationData,
+          riskAssessment: {
+            level: this.riskLevel,
+            score: this.riskScore,
+            factors: this.riskFactors
+          },
+          performanceMetrics: {
+            annualReturn: this.annualReturn,
+            maxDrawdown: this.maxDrawdown,
+            sharpeRatio: this.sharpeRatio
+          },
+          aiSuggestions: this.aiSuggestions
+        };
+      },
+      showReportPreview(reportData) {
+        uni.setStorageSync("currentReport", reportData);
+        uni.navigateTo({
+          url: "/pages/wealth/report-preview"
+        });
+      },
+      downloadReport(reportData) {
+        const reportContent = this.formatReportContent(reportData);
+        const fileName = `资产配置报告_${(/* @__PURE__ */ new Date()).toISOString().slice(0, 10)}.txt`;
+        this.showDownloadLocation(fileName, reportContent, reportData);
+      },
+      showDownloadLocation(fileName, content, reportData) {
+        const downloadPath = this.getDownloadPath();
+        uni.showModal({
+          title: "报告生成完成",
+          content: `报告已生成完成！
+
+文件名：${fileName}
+生成时间：${reportData.generateTime}
+
+保存位置：${downloadPath}
+
+您可以在以下位置查看：
+• 文件管理器
+• 下载文件夹
+• 文档文件夹`,
+          showCancel: true,
+          cancelText: "查看报告",
+          confirmText: "打开文件夹",
+          success: (res) => {
+            if (res.confirm) {
+              this.openFileManager(downloadPath);
+            } else if (res.cancel) {
+              this.showReportContent(content);
+            }
+          }
+        });
+      },
+      getDownloadPath() {
+        return "/storage/emulated/0/Download/";
+      },
+      openFileManager(path) {
+        plus.io.requestFileSystem(plus.io.PUBLIC_DOWNLOADS, (fs) => {
+          plus.io.resolveLocalFileSystemURL(fs.root.fullPath, (entry) => {
+            plus.runtime.openURL(entry.toLocalURL());
+          });
+        });
+      },
+      formatReportContent(reportData) {
+        let content = "";
+        content += "=".repeat(50) + "\n";
+        content += `           ${reportData.title}
+`;
+        content += "=".repeat(50) + "\n\n";
+        content += `生成时间：${reportData.generateTime}
+`;
+        content += `报告类型：资产配置分析报告
+
+`;
+        content += "一、资产概览\n";
+        content += "-".repeat(30) + "\n";
+        content += `总资产：¥${this.formatNumber(reportData.userInfo.totalAssets)}
+`;
+        content += `收益率：${reportData.userInfo.changePercent}% (${reportData.userInfo.changeType === "positive" ? "上涨" : "下跌"})
+
+`;
+        content += "二、资产配置详情\n";
+        content += "-".repeat(30) + "\n";
+        reportData.allocationData.forEach((item, index) => {
+          content += `${index + 1}. ${item.name}
+`;
+          content += `   配置比例：${item.percent}%
+`;
+          content += `   配置金额：¥${this.formatNumber(item.amount)}
+`;
+          content += `   产品描述：${item.description}
+
+`;
+        });
+        content += "三、风险评估\n";
+        content += "-".repeat(30) + "\n";
+        content += `风险等级：${this.riskLevelText}
+`;
+        content += `风险评分：${reportData.riskAssessment.score}/10
+
+`;
+        content += "风险因素分析：\n";
+        reportData.riskAssessment.factors.forEach((factor) => {
+          content += `• ${factor.name}：${factor.level}%
+`;
+        });
+        content += "\n";
+        content += "四、历史表现\n";
+        content += "-".repeat(30) + "\n";
+        content += `年化收益率：${reportData.performanceMetrics.annualReturn}%
+`;
+        content += `最大回撤：${reportData.performanceMetrics.maxDrawdown}%
+`;
+        content += `夏普比率：${reportData.performanceMetrics.sharpeRatio}
+
+`;
+        content += "五、AI智能建议\n";
+        content += "-".repeat(30) + "\n";
+        reportData.aiSuggestions.forEach((suggestion, index) => {
+          content += `${index + 1}. ${suggestion.title}
+`;
+          content += `   优先级：${suggestion.priorityText}
+`;
+          content += `   建议内容：${suggestion.description}
+`;
+          content += `   预期收益：${suggestion.expectedReturn}
+
+`;
+        });
+        content += "=".repeat(50) + "\n";
+        content += "报告说明：\n";
+        content += "1. 本报告基于当前市场数据和用户资产配置生成\n";
+        content += "2. 投资有风险，建议仅供参考\n";
+        content += "3. 建议定期更新资产配置，优化投资组合\n";
+        content += "4. 如有疑问，请联系您的理财顾问\n\n";
+        content += `报告生成时间：${reportData.generateTime}
+`;
+        content += "=".repeat(50) + "\n";
+        return content;
+      },
+      showReportContent(content) {
+        uni.showModal({
+          title: "资产配置报告",
+          content: content.length > 500 ? content.substring(0, 500) + "...\n\n(内容过长，已截取部分显示)" : content,
+          showCancel: true,
+          cancelText: "关闭",
+          confirmText: "复制内容",
+          success: (res) => {
+            if (res.confirm) {
+              uni.setClipboardData({
+                data: content,
+                success: () => {
+                  uni.showToast({
+                    title: "报告内容已复制到剪贴板",
+                    icon: "success"
+                  });
+                }
+              });
+            }
+          }
+        });
+      }
+    }
+  };
+  function _sfc_render$5(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("view", { class: "allocation-detail-page" }, [
+      vue.createCommentVNode(" 顶部导航 "),
+      vue.createElementVNode("view", { class: "nav-bar" }, [
+        vue.createElementVNode("view", { class: "nav-left" }, [
+          vue.createElementVNode("button", {
+            class: "back-btn",
+            onClick: _cache[0] || (_cache[0] = (...args) => $options.goBack && $options.goBack(...args))
+          }, [
+            vue.createElementVNode("text", { class: "back-icon" }, "←")
+          ]),
+          vue.createElementVNode("text", { class: "nav-title" }, "资产配置详情")
+        ])
+      ]),
+      vue.createCommentVNode(" 资产概览 "),
+      vue.createElementVNode("view", { class: "overview-section" }, [
+        vue.createElementVNode("view", { class: "total-assets" }, [
+          vue.createElementVNode("text", { class: "total-label" }, "总资产"),
+          vue.createElementVNode(
+            "text",
+            { class: "total-amount" },
+            "¥" + vue.toDisplayString($options.formatNumber($data.totalAssets)),
+            1
+            /* TEXT */
+          ),
+          vue.createElementVNode(
+            "view",
+            {
+              class: vue.normalizeClass(["change-info", $data.changeType])
+            },
+            [
+              vue.createElementVNode(
+                "text",
+                { class: "change-arrow" },
+                vue.toDisplayString($data.changeType === "positive" ? "↗" : "↘"),
+                1
+                /* TEXT */
+              ),
+              vue.createElementVNode(
+                "text",
+                { class: "change-amount" },
+                vue.toDisplayString($data.changePercent) + "%",
+                1
+                /* TEXT */
+              )
+            ],
+            2
+            /* CLASS */
+          )
+        ])
+      ]),
+      vue.createCommentVNode(" 资产配置图表 "),
+      vue.createElementVNode("view", { class: "chart-section" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "资产配置分布"),
+        vue.createElementVNode("view", { class: "chart-container" }, [
+          vue.createElementVNode(
+            "view",
+            {
+              class: "pie-chart",
+              ref: "pieChart"
+            },
+            [
+              vue.createElementVNode("view", { class: "chart-center" }, [
+                vue.createElementVNode("text", { class: "center-label" }, "总资产"),
+                vue.createElementVNode(
+                  "text",
+                  { class: "center-amount" },
+                  "¥" + vue.toDisplayString($options.formatNumber($data.totalAssets)),
+                  1
+                  /* TEXT */
+                )
+              ])
+            ],
+            512
+            /* NEED_PATCH */
+          ),
+          vue.createElementVNode("view", { class: "chart-legend" }, [
+            (vue.openBlock(true), vue.createElementBlock(
+              vue.Fragment,
+              null,
+              vue.renderList($data.allocationData, (item, index) => {
+                return vue.openBlock(), vue.createElementBlock("view", {
+                  class: "legend-item",
+                  key: index
+                }, [
+                  vue.createElementVNode(
+                    "view",
+                    {
+                      class: "legend-color",
+                      style: vue.normalizeStyle({ backgroundColor: item.color })
+                    },
+                    null,
+                    4
+                    /* STYLE */
+                  ),
+                  vue.createElementVNode("view", { class: "legend-info" }, [
+                    vue.createElementVNode(
+                      "text",
+                      { class: "legend-name" },
+                      vue.toDisplayString(item.name),
+                      1
+                      /* TEXT */
+                    ),
+                    vue.createElementVNode(
+                      "text",
+                      { class: "legend-details" },
+                      vue.toDisplayString(item.percent) + "% · ¥" + vue.toDisplayString($options.formatNumber(item.amount)),
+                      1
+                      /* TEXT */
+                    )
+                  ]),
+                  vue.createElementVNode("view", { class: "legend-actions" }, [
+                    vue.createElementVNode("button", {
+                      class: "action-btn-small",
+                      onClick: ($event) => $options.adjustAllocation(item)
+                    }, "调整", 8, ["onClick"])
+                  ])
+                ]);
+              }),
+              128
+              /* KEYED_FRAGMENT */
+            ))
+          ])
+        ])
+      ]),
+      vue.createCommentVNode(" 智能建议 "),
+      vue.createElementVNode("view", { class: "suggestions-section" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "AI优化建议"),
+        vue.createElementVNode("view", { class: "suggestions-list" }, [
+          (vue.openBlock(true), vue.createElementBlock(
+            vue.Fragment,
+            null,
+            vue.renderList($data.aiSuggestions, (suggestion, index) => {
+              return vue.openBlock(), vue.createElementBlock("view", {
+                class: "suggestion-item",
+                key: index
+              }, [
+                vue.createElementVNode("view", { class: "suggestion-header" }, [
+                  vue.createElementVNode(
+                    "view",
+                    {
+                      class: "suggestion-icon",
+                      style: vue.normalizeStyle({ backgroundColor: suggestion.color })
+                    },
+                    [
+                      vue.createElementVNode(
+                        "text",
+                        { class: "icon" },
+                        vue.toDisplayString(suggestion.icon),
+                        1
+                        /* TEXT */
+                      )
+                    ],
+                    4
+                    /* STYLE */
+                  ),
+                  vue.createElementVNode("view", { class: "suggestion-info" }, [
+                    vue.createElementVNode(
+                      "text",
+                      { class: "suggestion-title" },
+                      vue.toDisplayString(suggestion.title),
+                      1
+                      /* TEXT */
+                    ),
+                    vue.createElementVNode(
+                      "text",
+                      {
+                        class: vue.normalizeClass(["suggestion-priority", suggestion.priority])
+                      },
+                      vue.toDisplayString(suggestion.priorityText),
+                      3
+                      /* TEXT, CLASS */
+                    )
+                  ]),
+                  vue.createElementVNode("button", {
+                    class: "apply-btn",
+                    onClick: ($event) => $options.applySuggestion(suggestion)
+                  }, "应用", 8, ["onClick"])
+                ]),
+                vue.createElementVNode(
+                  "text",
+                  { class: "suggestion-desc" },
+                  vue.toDisplayString(suggestion.description),
+                  1
+                  /* TEXT */
+                ),
+                vue.createElementVNode("view", { class: "suggestion-benefits" }, [
+                  vue.createElementVNode("text", { class: "benefit-label" }, "预期收益："),
+                  vue.createElementVNode(
+                    "text",
+                    { class: "benefit-value" },
+                    vue.toDisplayString(suggestion.expectedReturn),
+                    1
+                    /* TEXT */
+                  )
+                ])
+              ]);
+            }),
+            128
+            /* KEYED_FRAGMENT */
+          ))
+        ])
+      ]),
+      vue.createCommentVNode(" 风险评估 "),
+      vue.createElementVNode("view", { class: "risk-section" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "风险评估"),
+        vue.createElementVNode("view", { class: "risk-content" }, [
+          vue.createElementVNode("view", { class: "risk-level" }, [
+            vue.createElementVNode("text", { class: "risk-label" }, "当前风险等级"),
+            vue.createElementVNode(
+              "view",
+              {
+                class: vue.normalizeClass(["risk-indicator", $data.riskLevel])
+              },
+              [
+                vue.createElementVNode(
+                  "text",
+                  { class: "risk-text" },
+                  vue.toDisplayString($options.riskLevelText),
+                  1
+                  /* TEXT */
+                ),
+                vue.createElementVNode(
+                  "text",
+                  { class: "risk-score" },
+                  vue.toDisplayString($data.riskScore) + "/10",
+                  1
+                  /* TEXT */
+                )
+              ],
+              2
+              /* CLASS */
+            )
+          ]),
+          vue.createElementVNode("view", { class: "risk-factors" }, [
+            vue.createElementVNode("text", { class: "factors-title" }, "风险因素分析"),
+            (vue.openBlock(true), vue.createElementBlock(
+              vue.Fragment,
+              null,
+              vue.renderList($data.riskFactors, (factor, index) => {
+                return vue.openBlock(), vue.createElementBlock("view", {
+                  class: "factor-item",
+                  key: index
+                }, [
+                  vue.createElementVNode(
+                    "text",
+                    { class: "factor-name" },
+                    vue.toDisplayString(factor.name),
+                    1
+                    /* TEXT */
+                  ),
+                  vue.createElementVNode("view", { class: "factor-bar" }, [
+                    vue.createElementVNode(
+                      "view",
+                      {
+                        class: "factor-fill",
+                        style: vue.normalizeStyle({ width: factor.level + "%", backgroundColor: factor.color })
+                      },
+                      null,
+                      4
+                      /* STYLE */
+                    )
+                  ]),
+                  vue.createElementVNode(
+                    "text",
+                    { class: "factor-level" },
+                    vue.toDisplayString(factor.level) + "%",
+                    1
+                    /* TEXT */
+                  )
+                ]);
+              }),
+              128
+              /* KEYED_FRAGMENT */
+            ))
+          ])
+        ])
+      ]),
+      vue.createCommentVNode(" 历史表现 "),
+      vue.createElementVNode("view", { class: "performance-section" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "历史表现"),
+        vue.createElementVNode("view", { class: "performance-chart" }, [
+          vue.createElementVNode("view", { class: "chart-header" }, [
+            vue.createElementVNode("text", { class: "chart-title" }, "收益率走势"),
+            vue.createElementVNode("view", { class: "time-selector" }, [
+              vue.createElementVNode(
+                "button",
+                {
+                  class: vue.normalizeClass(["time-btn", { active: $data.selectedPeriod === "1M" }]),
+                  onClick: _cache[1] || (_cache[1] = ($event) => $options.selectPeriod("1M"))
+                },
+                "1月",
+                2
+                /* CLASS */
+              ),
+              vue.createElementVNode(
+                "button",
+                {
+                  class: vue.normalizeClass(["time-btn", { active: $data.selectedPeriod === "3M" }]),
+                  onClick: _cache[2] || (_cache[2] = ($event) => $options.selectPeriod("3M"))
+                },
+                "3月",
+                2
+                /* CLASS */
+              ),
+              vue.createElementVNode(
+                "button",
+                {
+                  class: vue.normalizeClass(["time-btn", { active: $data.selectedPeriod === "1Y" }]),
+                  onClick: _cache[3] || (_cache[3] = ($event) => $options.selectPeriod("1Y"))
+                },
+                "1年",
+                2
+                /* CLASS */
+              )
+            ])
+          ]),
+          vue.createElementVNode("view", { class: "performance-metrics" }, [
+            vue.createElementVNode("view", { class: "metric-item" }, [
+              vue.createElementVNode("text", { class: "metric-label" }, "年化收益率"),
+              vue.createElementVNode(
+                "text",
+                { class: "metric-value positive" },
+                vue.toDisplayString($data.annualReturn) + "%",
+                1
+                /* TEXT */
+              )
+            ]),
+            vue.createElementVNode("view", { class: "metric-item" }, [
+              vue.createElementVNode("text", { class: "metric-label" }, "最大回撤"),
+              vue.createElementVNode(
+                "text",
+                { class: "metric-value negative" },
+                vue.toDisplayString($data.maxDrawdown) + "%",
+                1
+                /* TEXT */
+              )
+            ]),
+            vue.createElementVNode("view", { class: "metric-item" }, [
+              vue.createElementVNode("text", { class: "metric-label" }, "夏普比率"),
+              vue.createElementVNode(
+                "text",
+                { class: "metric-value" },
+                vue.toDisplayString($data.sharpeRatio),
+                1
+                /* TEXT */
+              )
+            ])
+          ])
+        ])
+      ]),
+      vue.createCommentVNode(" 操作按钮 "),
+      vue.createElementVNode("view", { class: "action-section" }, [
+        vue.createElementVNode("button", {
+          class: "action-btn primary",
+          onClick: _cache[4] || (_cache[4] = (...args) => $options.autoRebalance && $options.autoRebalance(...args))
+        }, "一键调仓"),
+        vue.createElementVNode("button", {
+          class: "action-btn secondary",
+          onClick: _cache[5] || (_cache[5] = (...args) => $options.customRebalance && $options.customRebalance(...args))
+        }, "自定义调仓"),
+        vue.createElementVNode("button", {
+          class: "action-btn tertiary",
+          onClick: _cache[6] || (_cache[6] = (...args) => $options.exportReport && $options.exportReport(...args))
+        }, "导出报告")
+      ])
+    ]);
+  }
+  const PagesWealthAssetAllocationDetail = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["render", _sfc_render$5], ["__scopeId", "data-v-a3a51207"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/asset-allocation-detail.vue"]]);
+  const _sfc_main$5 = {
+    data() {
+      return {
+        adviceData: {
+          title: "个性化财富建议",
+          summary: "基于您的财务状况分析，我们为您提供了个性化建议",
+          recommendations: [],
+          riskAssessment: "",
+          nextSteps: []
+        }
+      };
+    },
+    onLoad() {
+      this.loadAdviceData();
+    },
+    methods: {
+      goBack() {
+        uni.navigateBack();
+      },
+      loadAdviceData() {
+        const storedAdvice = uni.getStorageSync("currentAdvice");
+        if (storedAdvice) {
+          this.adviceData = storedAdvice;
+        } else {
+          this.adviceData = {
+            title: "个性化财富建议",
+            summary: "基于您的财务状况分析，我们为您提供了4项个性化建议",
+            recommendations: [
+              {
+                type: "savings",
+                title: "提高储蓄率",
+                description: "当前储蓄率46.7%，建议提升至20%以上",
+                priority: "high",
+                action: "制定预算计划，减少非必要支出"
+              },
+              {
+                type: "emergency",
+                title: "建立应急基金",
+                description: "建议储备6个月的生活费用作为应急基金",
+                priority: "high",
+                action: "将部分资金转入货币基金"
+              },
+              {
+                type: "investment",
+                title: "优化投资组合",
+                description: "基于您的风险承受能力，建议增加股票类资产配置",
+                priority: "medium",
+                action: "考虑定投指数基金"
+              },
+              {
+                type: "market",
+                title: "把握市场机会",
+                description: "当前市场趋势向好，适合适度增加权益类投资",
+                priority: "medium",
+                action: "关注优质成长股和指数基金"
+              }
+            ],
+            riskAssessment: "您的风险承受能力为medium，建议采用稳健型投资策略",
+            nextSteps: ["制定详细投资计划", "设置自动定投", "定期评估投资表现"]
+          };
+        }
+      },
+      getPriorityColor(priority) {
+        const colors = {
+          high: "#F44336",
+          medium: "#FF9800",
+          low: "#4CAF50"
+        };
+        return colors[priority] || "#2196F3";
+      },
+      getPriorityText(priority) {
+        const texts = {
+          high: "高优先级",
+          medium: "中优先级",
+          low: "低优先级"
+        };
+        return texts[priority] || "中优先级";
+      },
+      getTypeIcon(type) {
+        const icons = {
+          savings: "💰",
+          emergency: "🛡️",
+          investment: "📈",
+          market: "📊",
+          debt: "💳",
+          insurance: "🏥"
+        };
+        return icons[type] || "💡";
+      },
+      applyRecommendations() {
+        uni.showModal({
+          title: "应用建议",
+          content: "确定要应用这些建议吗？系统将为您自动调整投资配置。",
+          success: (res) => {
+            if (res.confirm) {
+              uni.showLoading({ title: "正在应用建议..." });
+              setTimeout(() => {
+                uni.hideLoading();
+                uni.showToast({
+                  title: "建议已应用",
+                  icon: "success"
+                });
+                setTimeout(() => {
+                  uni.navigateTo({
+                    url: "/pages/wealth/asset-allocation-detail"
+                  });
+                }, 1500);
+              }, 2e3);
+            }
+          }
+        });
+      },
+      saveAdvice() {
+        const savedAdvice = uni.getStorageSync("savedAdvice") || [];
+        savedAdvice.unshift({
+          ...this.adviceData,
+          saveTime: (/* @__PURE__ */ new Date()).toISOString(),
+          id: Date.now()
+        });
+        if (savedAdvice.length > 10) {
+          savedAdvice.splice(10);
+        }
+        uni.setStorageSync("savedAdvice", savedAdvice);
+        uni.showToast({
+          title: "建议已保存",
+          icon: "success"
+        });
+      },
+      shareAdvice() {
+        uni.showActionSheet({
+          itemList: ["分享给朋友", "生成报告", "导出PDF"],
+          success: (res) => {
+            if (res.tapIndex === 0) {
+              uni.showToast({
+                title: "分享功能开发中",
+                icon: "none"
+              });
+            } else if (res.tapIndex === 1) {
+              uni.showToast({
+                title: "报告生成中...",
+                icon: "loading"
+              });
+            } else if (res.tapIndex === 2) {
+              uni.showToast({
+                title: "PDF导出功能开发中",
+                icon: "none"
+              });
+            }
+          }
+        });
+      }
+    }
+  };
+  function _sfc_render$4(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("view", { class: "advice-detail-page" }, [
+      vue.createCommentVNode(" 顶部导航 "),
+      vue.createElementVNode("view", { class: "nav-bar" }, [
+        vue.createElementVNode("view", { class: "nav-left" }, [
+          vue.createElementVNode("button", {
+            class: "back-btn",
+            onClick: _cache[0] || (_cache[0] = (...args) => $options.goBack && $options.goBack(...args))
+          }, [
+            vue.createElementVNode("text", { class: "back-icon" }, "←")
+          ]),
+          vue.createElementVNode("text", { class: "nav-title" }, "智能建议详情")
+        ])
+      ]),
+      vue.createCommentVNode(" 建议概览 "),
+      vue.createElementVNode("view", { class: "overview-section" }, [
+        vue.createElementVNode("view", { class: "advice-header" }, [
+          vue.createElementVNode(
+            "text",
+            { class: "advice-title" },
+            vue.toDisplayString($data.adviceData.title),
+            1
+            /* TEXT */
+          ),
+          vue.createElementVNode(
+            "text",
+            { class: "advice-summary" },
+            vue.toDisplayString($data.adviceData.summary),
+            1
+            /* TEXT */
+          )
+        ])
+      ]),
+      vue.createCommentVNode(" 风险评估 "),
+      $data.adviceData.riskAssessment ? (vue.openBlock(), vue.createElementBlock("view", {
+        key: 0,
+        class: "risk-section"
+      }, [
+        vue.createElementVNode("view", { class: "section-title" }, "风险评估"),
+        vue.createElementVNode("view", { class: "risk-content" }, [
+          vue.createElementVNode("view", { class: "risk-card" }, [
+            vue.createElementVNode("view", { class: "risk-icon" }, "🛡️"),
+            vue.createElementVNode(
+              "text",
+              { class: "risk-text" },
+              vue.toDisplayString($data.adviceData.riskAssessment),
+              1
+              /* TEXT */
+            )
+          ])
+        ])
+      ])) : vue.createCommentVNode("v-if", true),
+      vue.createCommentVNode(" 具体建议 "),
+      vue.createElementVNode("view", { class: "recommendations-section" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "具体建议"),
+        vue.createElementVNode("view", { class: "recommendations-list" }, [
+          (vue.openBlock(true), vue.createElementBlock(
+            vue.Fragment,
+            null,
+            vue.renderList($data.adviceData.recommendations, (rec, index) => {
+              return vue.openBlock(), vue.createElementBlock("view", {
+                class: "recommendation-item",
+                key: index
+              }, [
+                vue.createElementVNode("view", { class: "rec-header" }, [
+                  vue.createElementVNode(
+                    "view",
+                    {
+                      class: "rec-icon",
+                      style: vue.normalizeStyle({ backgroundColor: $options.getPriorityColor(rec.priority) })
+                    },
+                    [
+                      vue.createElementVNode(
+                        "text",
+                        { class: "icon" },
+                        vue.toDisplayString($options.getTypeIcon(rec.type)),
+                        1
+                        /* TEXT */
+                      )
+                    ],
+                    4
+                    /* STYLE */
+                  ),
+                  vue.createElementVNode("view", { class: "rec-info" }, [
+                    vue.createElementVNode(
+                      "text",
+                      { class: "rec-title" },
+                      vue.toDisplayString(rec.title),
+                      1
+                      /* TEXT */
+                    ),
+                    vue.createElementVNode(
+                      "text",
+                      {
+                        class: vue.normalizeClass(["rec-priority", rec.priority])
+                      },
+                      vue.toDisplayString($options.getPriorityText(rec.priority)),
+                      3
+                      /* TEXT, CLASS */
+                    )
+                  ])
+                ]),
+                vue.createElementVNode(
+                  "text",
+                  { class: "rec-description" },
+                  vue.toDisplayString(rec.description),
+                  1
+                  /* TEXT */
+                ),
+                vue.createElementVNode("view", { class: "rec-action" }, [
+                  vue.createElementVNode("text", { class: "action-label" }, "建议行动："),
+                  vue.createElementVNode(
+                    "text",
+                    { class: "action-text" },
+                    vue.toDisplayString(rec.action),
+                    1
+                    /* TEXT */
+                  )
+                ])
+              ]);
+            }),
+            128
+            /* KEYED_FRAGMENT */
+          ))
+        ])
+      ]),
+      vue.createCommentVNode(" 下一步计划 "),
+      $data.adviceData.nextSteps && $data.adviceData.nextSteps.length > 0 ? (vue.openBlock(), vue.createElementBlock("view", {
+        key: 1,
+        class: "next-steps-section"
+      }, [
+        vue.createElementVNode("view", { class: "section-title" }, "下一步计划"),
+        vue.createElementVNode("view", { class: "steps-list" }, [
+          (vue.openBlock(true), vue.createElementBlock(
+            vue.Fragment,
+            null,
+            vue.renderList($data.adviceData.nextSteps, (step, index) => {
+              return vue.openBlock(), vue.createElementBlock("view", {
+                class: "step-item",
+                key: index
+              }, [
+                vue.createElementVNode(
+                  "view",
+                  { class: "step-number" },
+                  vue.toDisplayString(index + 1),
+                  1
+                  /* TEXT */
+                ),
+                vue.createElementVNode(
+                  "text",
+                  { class: "step-text" },
+                  vue.toDisplayString(step),
+                  1
+                  /* TEXT */
+                )
+              ]);
+            }),
+            128
+            /* KEYED_FRAGMENT */
+          ))
+        ])
+      ])) : vue.createCommentVNode("v-if", true),
+      vue.createCommentVNode(" 市场洞察 "),
+      vue.createElementVNode("view", { class: "market-insights-section" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "市场洞察"),
+        vue.createElementVNode("view", { class: "insights-grid" }, [
+          vue.createElementVNode("view", { class: "insight-card" }, [
+            vue.createElementVNode("text", { class: "insight-label" }, "市场趋势"),
+            vue.createElementVNode("text", { class: "insight-value bullish" }, "看涨")
+          ]),
+          vue.createElementVNode("view", { class: "insight-card" }, [
+            vue.createElementVNode("text", { class: "insight-label" }, "波动率"),
+            vue.createElementVNode("text", { class: "insight-value" }, "中等")
+          ]),
+          vue.createElementVNode("view", { class: "insight-card" }, [
+            vue.createElementVNode("text", { class: "insight-label" }, "利率水平"),
+            vue.createElementVNode("text", { class: "insight-value" }, "3.5%")
+          ]),
+          vue.createElementVNode("view", { class: "insight-card" }, [
+            vue.createElementVNode("text", { class: "insight-label" }, "通胀率"),
+            vue.createElementVNode("text", { class: "insight-value" }, "2.1%")
+          ])
+        ])
+      ]),
+      vue.createCommentVNode(" 推荐配置 "),
+      vue.createElementVNode("view", { class: "allocation-section" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "推荐资产配置"),
+        vue.createElementVNode("view", { class: "allocation-chart" }, [
+          vue.createElementVNode("view", { class: "chart-container" }, [
+            vue.createElementVNode("view", { class: "pie-chart" }, [
+              vue.createElementVNode("view", { class: "chart-center" }, [
+                vue.createElementVNode("text", { class: "center-label" }, "推荐配置")
+              ])
+            ]),
+            vue.createElementVNode("view", { class: "allocation-legend" }, [
+              vue.createElementVNode("view", { class: "legend-item" }, [
+                vue.createElementVNode("view", {
+                  class: "legend-color",
+                  style: { "background-color": "#FF9800" }
+                }),
+                vue.createElementVNode("text", { class: "legend-name" }, "股票类"),
+                vue.createElementVNode("text", { class: "legend-percent" }, "25%")
+              ]),
+              vue.createElementVNode("view", { class: "legend-item" }, [
+                vue.createElementVNode("view", {
+                  class: "legend-color",
+                  style: { "background-color": "#2196F3" }
+                }),
+                vue.createElementVNode("text", { class: "legend-name" }, "债券类"),
+                vue.createElementVNode("text", { class: "legend-percent" }, "35%")
+              ]),
+              vue.createElementVNode("view", { class: "legend-item" }, [
+                vue.createElementVNode("view", {
+                  class: "legend-color",
+                  style: { "background-color": "#4CAF50" }
+                }),
+                vue.createElementVNode("text", { class: "legend-name" }, "现金类"),
+                vue.createElementVNode("text", { class: "legend-percent" }, "25%")
+              ]),
+              vue.createElementVNode("view", { class: "legend-item" }, [
+                vue.createElementVNode("view", {
+                  class: "legend-color",
+                  style: { "background-color": "#9C27B0" }
+                }),
+                vue.createElementVNode("text", { class: "legend-name" }, "另类投资"),
+                vue.createElementVNode("text", { class: "legend-percent" }, "15%")
+              ])
+            ])
+          ])
+        ])
+      ]),
+      vue.createCommentVNode(" 操作按钮 "),
+      vue.createElementVNode("view", { class: "action-section" }, [
+        vue.createElementVNode("button", {
+          class: "action-btn primary",
+          onClick: _cache[1] || (_cache[1] = (...args) => $options.applyRecommendations && $options.applyRecommendations(...args))
+        }, "应用建议"),
+        vue.createElementVNode("button", {
+          class: "action-btn secondary",
+          onClick: _cache[2] || (_cache[2] = (...args) => $options.saveAdvice && $options.saveAdvice(...args))
+        }, "保存建议"),
+        vue.createElementVNode("button", {
+          class: "action-btn tertiary",
+          onClick: _cache[3] || (_cache[3] = (...args) => $options.shareAdvice && $options.shareAdvice(...args))
+        }, "分享建议")
+      ])
+    ]);
+  }
+  const PagesWealthAdviceDetail = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["render", _sfc_render$4], ["__scopeId", "data-v-c28b21b5"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/advice-detail.vue"]]);
+  const _sfc_main$4 = {
+    data() {
+      return {
+        totalGoals: 4,
+        activeGoals: 3,
+        completedGoals: 1,
+        goalCategories: [
+          { id: 1, name: "购房", icon: "🏠", color: "#4CAF50" },
+          { id: 2, name: "教育", icon: "🎓", color: "#2196F3" },
+          { id: 3, name: "退休", icon: "🌴", color: "#FF9800" },
+          { id: 4, name: "旅行", icon: "✈️", color: "#9C27B0" },
+          { id: 5, name: "购车", icon: "🚗", color: "#F44336" },
+          { id: 6, name: "其他", icon: "💰", color: "#607D8B" }
+        ],
+        usageSteps: [
+          {
+            title: "设定目标",
+            description: '点击右上角"+"按钮，选择目标类型，输入目标金额和完成时间',
+            tips: "建议设定SMART目标：具体、可衡量、可实现、相关、有时限"
+          },
+          {
+            title: "定期存入",
+            description: '点击目标卡片上的"存入"按钮，定期向目标账户存入资金',
+            tips: "建议设置自动定投，让储蓄成为习惯"
+          },
+          {
+            title: "跟踪进度",
+            description: "在目标列表中查看进度条，了解完成情况",
+            tips: "定期检查进度，必要时调整目标或策略"
+          },
+          {
+            title: "完成目标",
+            description: "当存入金额达到目标时，系统会自动标记为已完成",
+            tips: "完成目标后，可以设定新的目标继续理财规划"
+          }
+        ],
+        features: [
+          {
+            icon: "📊",
+            title: "进度跟踪",
+            description: "实时显示目标完成进度，让您清楚了解距离目标还有多远",
+            example: "购房首付目标50万，已存32.5万，完成进度65%"
+          },
+          {
+            icon: "💰",
+            title: "快速存入",
+            description: "支持快速金额选择和自定义金额存入，操作简单便捷",
+            example: "点击1000、5000、10000等快速金额，或输入自定义金额"
+          },
+          {
+            icon: "🏷️",
+            title: "分类管理",
+            description: "按购房、教育、退休等类型分类管理，让目标更有条理",
+            example: "购房目标、教育基金、退休规划分别管理"
+          },
+          {
+            icon: "📅",
+            title: "时间规划",
+            description: "设定目标完成时间，帮助您合理安排资金规划",
+            example: "2026年8月完成购房首付，2028年6月完成教育基金"
+          },
+          {
+            icon: "📝",
+            title: "备注记录",
+            description: "为目标添加备注信息，记录重要细节和计划",
+            example: "购买三居室首付、孩子大学教育基金等"
+          },
+          {
+            icon: "🔄",
+            title: "状态管理",
+            description: "支持进行中、已完成等状态管理，清晰了解目标状态",
+            example: "进行中的目标显示绿色，已完成的目标显示灰色"
+          }
+        ],
+        bestPractices: [
+          {
+            icon: "🎯",
+            title: "设定合理目标",
+            description: "根据收入情况设定可实现的目标，避免过高或过低"
+          },
+          {
+            icon: "⏰",
+            title: "定期检查",
+            description: "每月检查一次目标进度，及时调整策略"
+          },
+          {
+            icon: "💪",
+            title: "坚持执行",
+            description: "设定目标后要坚持执行，养成定期储蓄的习惯"
+          },
+          {
+            icon: "📈",
+            title: "动态调整",
+            description: "根据收入变化和市场情况，适时调整目标金额和时间"
+          },
+          {
+            icon: "🎉",
+            title: "庆祝完成",
+            description: "完成目标后给自己一些奖励，保持理财的积极性"
+          }
+        ]
+      };
+    },
+    computed: {
+      completionRate() {
+        if (this.totalGoals === 0)
+          return 0;
+        return Math.round(this.completedGoals / this.totalGoals * 100);
+      }
+    },
+    methods: {
+      goBack() {
+        uni.navigateBack();
+      },
+      getCategoryDescription(categoryName) {
+        const descriptions = {
+          "购房": "买房首付、装修等",
+          "教育": "子女教育、培训等",
+          "退休": "养老规划、退休金",
+          "旅行": "旅游、度假等",
+          "购车": "买车、换车等",
+          "其他": "其他财务目标"
+        };
+        return descriptions[categoryName] || "其他财务目标";
+      },
+      goToGoalManagement() {
+        uni.navigateTo({
+          url: "/pages/wealth/goal-management"
+        });
+      },
+      createNewGoal() {
+        uni.navigateTo({
+          url: "/pages/wealth/goal-management"
+        });
+      },
+      viewProgress() {
+        uni.navigateTo({
+          url: "/pages/wealth/goal-management"
+        });
+      },
+      getAdvice() {
+        uni.navigateTo({
+          url: "/pages/wealth/ai-wealth-manager"
+        });
+      }
+    }
+  };
+  function _sfc_render$3(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("view", { class: "goal-usage-guide-page" }, [
+      vue.createCommentVNode(" 顶部导航 "),
+      vue.createElementVNode("view", { class: "nav-bar" }, [
+        vue.createElementVNode("view", { class: "nav-left" }, [
+          vue.createElementVNode("button", {
+            class: "back-btn",
+            onClick: _cache[0] || (_cache[0] = (...args) => $options.goBack && $options.goBack(...args))
+          }, [
+            vue.createElementVNode("text", { class: "back-icon" }, "←")
+          ]),
+          vue.createElementVNode("text", { class: "nav-title" }, "目标管理使用指南")
+        ])
+      ]),
+      vue.createCommentVNode(" 功能概览 "),
+      vue.createElementVNode("view", { class: "overview-section" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "🎯 目标管理功能概览"),
+        vue.createElementVNode("view", { class: "overview-content" }, [
+          vue.createElementVNode("text", { class: "overview-text" }, "目标管理功能帮助您设定、跟踪和实现财务目标，让理财更有计划性和成就感。")
+        ])
+      ]),
+      vue.createCommentVNode(" 当前目标状态 "),
+      vue.createElementVNode("view", { class: "current-goals-section" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "📊 您当前的目标状态"),
+        vue.createElementVNode("view", { class: "goals-stats" }, [
+          vue.createElementVNode("view", { class: "stat-card" }, [
+            vue.createElementVNode(
+              "text",
+              { class: "stat-number" },
+              vue.toDisplayString($data.totalGoals),
+              1
+              /* TEXT */
+            ),
+            vue.createElementVNode("text", { class: "stat-label" }, "总目标数")
+          ]),
+          vue.createElementVNode("view", { class: "stat-card" }, [
+            vue.createElementVNode(
+              "text",
+              { class: "stat-number" },
+              vue.toDisplayString($data.activeGoals),
+              1
+              /* TEXT */
+            ),
+            vue.createElementVNode("text", { class: "stat-label" }, "进行中")
+          ]),
+          vue.createElementVNode("view", { class: "stat-card" }, [
+            vue.createElementVNode(
+              "text",
+              { class: "stat-number" },
+              vue.toDisplayString($data.completedGoals),
+              1
+              /* TEXT */
+            ),
+            vue.createElementVNode("text", { class: "stat-label" }, "已完成")
+          ]),
+          vue.createElementVNode("view", { class: "stat-card" }, [
+            vue.createElementVNode(
+              "text",
+              { class: "stat-number" },
+              vue.toDisplayString($options.completionRate) + "%",
+              1
+              /* TEXT */
+            ),
+            vue.createElementVNode("text", { class: "stat-label" }, "完成率")
+          ])
+        ])
+      ]),
+      vue.createCommentVNode(" 目标类型说明 "),
+      vue.createElementVNode("view", { class: "goal-types-section" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "🏷️ 支持的目标类型"),
+        vue.createElementVNode("view", { class: "types-grid" }, [
+          (vue.openBlock(true), vue.createElementBlock(
+            vue.Fragment,
+            null,
+            vue.renderList($data.goalCategories, (category) => {
+              return vue.openBlock(), vue.createElementBlock("view", {
+                class: "type-card",
+                key: category.id
+              }, [
+                vue.createElementVNode(
+                  "view",
+                  {
+                    class: "type-icon",
+                    style: vue.normalizeStyle({ backgroundColor: category.color })
+                  },
+                  [
+                    vue.createElementVNode(
+                      "text",
+                      { class: "icon" },
+                      vue.toDisplayString(category.icon),
+                      1
+                      /* TEXT */
+                    )
+                  ],
+                  4
+                  /* STYLE */
+                ),
+                vue.createElementVNode(
+                  "text",
+                  { class: "type-name" },
+                  vue.toDisplayString(category.name),
+                  1
+                  /* TEXT */
+                ),
+                vue.createElementVNode(
+                  "text",
+                  { class: "type-desc" },
+                  vue.toDisplayString($options.getCategoryDescription(category.name)),
+                  1
+                  /* TEXT */
+                )
+              ]);
+            }),
+            128
+            /* KEYED_FRAGMENT */
+          ))
+        ])
+      ]),
+      vue.createCommentVNode(" 使用步骤 "),
+      vue.createElementVNode("view", { class: "usage-steps-section" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "📋 使用步骤"),
+        vue.createElementVNode("view", { class: "steps-list" }, [
+          (vue.openBlock(true), vue.createElementBlock(
+            vue.Fragment,
+            null,
+            vue.renderList($data.usageSteps, (step, index) => {
+              return vue.openBlock(), vue.createElementBlock("view", {
+                class: "step-item",
+                key: index
+              }, [
+                vue.createElementVNode(
+                  "view",
+                  { class: "step-number" },
+                  vue.toDisplayString(index + 1),
+                  1
+                  /* TEXT */
+                ),
+                vue.createElementVNode("view", { class: "step-content" }, [
+                  vue.createElementVNode(
+                    "text",
+                    { class: "step-title" },
+                    vue.toDisplayString(step.title),
+                    1
+                    /* TEXT */
+                  ),
+                  vue.createElementVNode(
+                    "text",
+                    { class: "step-desc" },
+                    vue.toDisplayString(step.description),
+                    1
+                    /* TEXT */
+                  ),
+                  step.tips ? (vue.openBlock(), vue.createElementBlock("view", {
+                    key: 0,
+                    class: "step-tips"
+                  }, [
+                    vue.createElementVNode("text", { class: "tips-label" }, "💡 小贴士："),
+                    vue.createElementVNode(
+                      "text",
+                      { class: "tips-text" },
+                      vue.toDisplayString(step.tips),
+                      1
+                      /* TEXT */
+                    )
+                  ])) : vue.createCommentVNode("v-if", true)
+                ])
+              ]);
+            }),
+            128
+            /* KEYED_FRAGMENT */
+          ))
+        ])
+      ]),
+      vue.createCommentVNode(" 功能详解 "),
+      vue.createElementVNode("view", { class: "features-section" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "⚙️ 功能详解"),
+        vue.createElementVNode("view", { class: "features-list" }, [
+          (vue.openBlock(true), vue.createElementBlock(
+            vue.Fragment,
+            null,
+            vue.renderList($data.features, (feature, index) => {
+              return vue.openBlock(), vue.createElementBlock("view", {
+                class: "feature-item",
+                key: index
+              }, [
+                vue.createElementVNode("view", { class: "feature-header" }, [
+                  vue.createElementVNode(
+                    "view",
+                    { class: "feature-icon" },
+                    vue.toDisplayString(feature.icon),
+                    1
+                    /* TEXT */
+                  ),
+                  vue.createElementVNode(
+                    "text",
+                    { class: "feature-title" },
+                    vue.toDisplayString(feature.title),
+                    1
+                    /* TEXT */
+                  )
+                ]),
+                vue.createElementVNode(
+                  "text",
+                  { class: "feature-desc" },
+                  vue.toDisplayString(feature.description),
+                  1
+                  /* TEXT */
+                ),
+                feature.example ? (vue.openBlock(), vue.createElementBlock("view", {
+                  key: 0,
+                  class: "feature-example"
+                }, [
+                  vue.createElementVNode("text", { class: "example-label" }, "示例："),
+                  vue.createElementVNode(
+                    "text",
+                    { class: "example-text" },
+                    vue.toDisplayString(feature.example),
+                    1
+                    /* TEXT */
+                  )
+                ])) : vue.createCommentVNode("v-if", true)
+              ]);
+            }),
+            128
+            /* KEYED_FRAGMENT */
+          ))
+        ])
+      ]),
+      vue.createCommentVNode(" 最佳实践 "),
+      vue.createElementVNode("view", { class: "best-practices-section" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "🌟 最佳实践建议"),
+        vue.createElementVNode("view", { class: "practices-list" }, [
+          (vue.openBlock(true), vue.createElementBlock(
+            vue.Fragment,
+            null,
+            vue.renderList($data.bestPractices, (practice, index) => {
+              return vue.openBlock(), vue.createElementBlock("view", {
+                class: "practice-item",
+                key: index
+              }, [
+                vue.createElementVNode(
+                  "view",
+                  { class: "practice-icon" },
+                  vue.toDisplayString(practice.icon),
+                  1
+                  /* TEXT */
+                ),
+                vue.createElementVNode("view", { class: "practice-content" }, [
+                  vue.createElementVNode(
+                    "text",
+                    { class: "practice-title" },
+                    vue.toDisplayString(practice.title),
+                    1
+                    /* TEXT */
+                  ),
+                  vue.createElementVNode(
+                    "text",
+                    { class: "practice-desc" },
+                    vue.toDisplayString(practice.description),
+                    1
+                    /* TEXT */
+                  )
+                ])
+              ]);
+            }),
+            128
+            /* KEYED_FRAGMENT */
+          ))
+        ])
+      ]),
+      vue.createCommentVNode(" 快速操作 "),
+      vue.createElementVNode("view", { class: "quick-actions-section" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "🚀 快速操作"),
+        vue.createElementVNode("view", { class: "actions-grid" }, [
+          vue.createElementVNode("button", {
+            class: "action-card",
+            onClick: _cache[1] || (_cache[1] = (...args) => $options.goToGoalManagement && $options.goToGoalManagement(...args))
+          }, [
+            vue.createElementVNode("view", { class: "action-icon" }, "📝"),
+            vue.createElementVNode("text", { class: "action-title" }, "管理目标"),
+            vue.createElementVNode("text", { class: "action-desc" }, "查看和编辑您的目标")
+          ]),
+          vue.createElementVNode("button", {
+            class: "action-card",
+            onClick: _cache[2] || (_cache[2] = (...args) => $options.createNewGoal && $options.createNewGoal(...args))
+          }, [
+            vue.createElementVNode("view", { class: "action-icon" }, "➕"),
+            vue.createElementVNode("text", { class: "action-title" }, "创建目标"),
+            vue.createElementVNode("text", { class: "action-desc" }, "设定新的财务目标")
+          ]),
+          vue.createElementVNode("button", {
+            class: "action-card",
+            onClick: _cache[3] || (_cache[3] = (...args) => $options.viewProgress && $options.viewProgress(...args))
+          }, [
+            vue.createElementVNode("view", { class: "action-icon" }, "📊"),
+            vue.createElementVNode("text", { class: "action-title" }, "查看进度"),
+            vue.createElementVNode("text", { class: "action-desc" }, "跟踪目标完成情况")
+          ]),
+          vue.createElementVNode("button", {
+            class: "action-card",
+            onClick: _cache[4] || (_cache[4] = (...args) => $options.getAdvice && $options.getAdvice(...args))
+          }, [
+            vue.createElementVNode("view", { class: "action-icon" }, "💡"),
+            vue.createElementVNode("text", { class: "action-title" }, "获取建议"),
+            vue.createElementVNode("text", { class: "action-desc" }, "AI智能理财建议")
+          ])
+        ])
+      ])
+    ]);
+  }
+  const PagesWealthGoalUsageGuide = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["render", _sfc_render$3], ["__scopeId", "data-v-4c1222e4"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/goal-usage-guide.vue"]]);
+  const _sfc_main$3 = {
+    data() {
+      return {
+        reportData: {}
+      };
+    },
+    onLoad() {
+      this.loadReportData();
+    },
+    methods: {
+      goBack() {
+        formatAppLog("log", "at pages/wealth/report-preview.vue:154", "返回按钮被点击");
+        const pages = getCurrentPages();
+        formatAppLog("log", "at pages/wealth/report-preview.vue:158", "当前页面栈长度:", pages.length);
+        formatAppLog("log", "at pages/wealth/report-preview.vue:159", "当前页面:", pages[pages.length - 1].route);
+        if (pages.length > 1) {
+          uni.navigateBack({
+            success: () => {
+              formatAppLog("log", "at pages/wealth/report-preview.vue:165", "返回成功");
+            },
+            fail: (err) => {
+              formatAppLog("log", "at pages/wealth/report-preview.vue:168", "返回失败:", err);
+              this.fallbackNavigation();
+            }
+          });
+        } else {
+          formatAppLog("log", "at pages/wealth/report-preview.vue:174", "没有上一页，使用备用导航");
+          this.fallbackNavigation();
+        }
+      },
+      fallbackNavigation() {
+        uni.navigateTo({
+          url: "/pages/wealth/asset-allocation-detail",
+          success: () => {
+            formatAppLog("log", "at pages/wealth/report-preview.vue:184", "跳转到资产配置详情页面成功");
+          },
+          fail: (err) => {
+            formatAppLog("log", "at pages/wealth/report-preview.vue:187", "跳转到资产配置详情页面失败:", err);
+            uni.switchTab({
+              url: "/pages/wealth/wealth",
+              success: () => {
+                formatAppLog("log", "at pages/wealth/report-preview.vue:192", "跳转到财富管理首页成功");
+              },
+              fail: (err2) => {
+                formatAppLog("log", "at pages/wealth/report-preview.vue:195", "跳转到财富管理首页失败:", err2);
+                uni.showToast({
+                  title: "返回失败，请手动操作",
+                  icon: "none"
+                });
+              }
+            });
+          }
+        });
+      },
+      loadReportData() {
+        const storedReport = uni.getStorageSync("currentReport");
+        if (storedReport) {
+          this.reportData = storedReport;
+        } else {
+          this.reportData = {
+            title: "资产配置分析报告",
+            generateTime: (/* @__PURE__ */ new Date()).toLocaleString("zh-CN"),
+            userInfo: {
+              totalAssets: 28e4,
+              changePercent: 3.2,
+              changeType: "positive"
+            },
+            allocationData: [
+              { name: "现金类", percent: 30, amount: 84e3, color: "#4CAF50", description: "货币基金、银行存款等低风险产品" },
+              { name: "债券类", percent: 40, amount: 112e3, color: "#2196F3", description: "国债、企业债、债券基金等" },
+              { name: "股票类", percent: 20, amount: 56e3, color: "#FF9800", description: "股票、股票型基金等" },
+              { name: "另类投资", percent: 10, amount: 28e3, color: "#9C27B0", description: "黄金、REITs、私募等" }
+            ],
+            riskAssessment: {
+              level: "medium",
+              score: 6,
+              factors: [
+                { name: "市场风险", level: 70 },
+                { name: "利率风险", level: 45 },
+                { name: "信用风险", level: 30 },
+                { name: "流动性风险", level: 20 }
+              ]
+            },
+            performanceMetrics: {
+              annualReturn: 8.5,
+              maxDrawdown: -5.2,
+              sharpeRatio: 1.2
+            },
+            aiSuggestions: [
+              {
+                icon: "📈",
+                title: "增加股票配置",
+                priority: "high",
+                priorityText: "高优先级",
+                description: "基于当前市场环境，建议将股票配置从20%提升至25%，以获取更好的长期收益",
+                expectedReturn: "+2.3%",
+                color: "#FF9800"
+              },
+              {
+                icon: "🛡️",
+                title: "优化债券结构",
+                priority: "medium",
+                priorityText: "中优先级",
+                description: "建议增加短期债券配置，降低利率风险，提高流动性",
+                expectedReturn: "+0.8%",
+                color: "#2196F3"
+              }
+            ]
+          };
+        }
+      },
+      formatNumber(num) {
+        return Number(num).toLocaleString("zh-CN", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        });
+      },
+      getRiskLevelText(level) {
+        const levels = {
+          low: "低风险",
+          medium: "中等风险",
+          high: "高风险"
+        };
+        return levels[level] || "中等风险";
+      },
+      shareReport() {
+        uni.showActionSheet({
+          itemList: ["分享给朋友", "保存到相册", "发送邮件"],
+          success: (res) => {
+            if (res.tapIndex === 0) {
+              uni.showToast({
+                title: "分享功能开发中",
+                icon: "none"
+              });
+            } else if (res.tapIndex === 1) {
+              uni.showToast({
+                title: "保存功能开发中",
+                icon: "none"
+              });
+            } else if (res.tapIndex === 2) {
+              uni.showToast({
+                title: "邮件功能开发中",
+                icon: "none"
+              });
+            }
+          }
+        });
+      },
+      copyReport() {
+        const reportContent = this.formatReportContent();
+        uni.setClipboardData({
+          data: reportContent,
+          success: () => {
+            uni.showToast({
+              title: "报告内容已复制到剪贴板",
+              icon: "success"
+            });
+          }
+        });
+      },
+      downloadReport() {
+        uni.showLoading({ title: "正在准备下载..." });
+        const fileName = `资产配置报告_${(/* @__PURE__ */ new Date()).toISOString().slice(0, 10)}.txt`;
+        const reportContent = this.formatReportContent();
+        setTimeout(() => {
+          uni.hideLoading();
+          this.showDownloadLocation(fileName, reportContent);
+        }, 2e3);
+      },
+      showDownloadLocation(fileName, content) {
+        const downloadPath = this.getDownloadPath();
+        uni.showModal({
+          title: "下载完成",
+          content: `报告已保存到：
+
+${downloadPath}
+
+文件名：${fileName}
+
+您可以在以下位置查看：
+• 文件管理器
+• 下载文件夹
+• 文档文件夹`,
+          showCancel: true,
+          cancelText: "知道了",
+          confirmText: "打开文件夹",
+          success: (res) => {
+            if (res.confirm) {
+              this.openFileManager(downloadPath);
+            }
+          }
+        });
+      },
+      getDownloadPath() {
+        return "/storage/emulated/0/Download/";
+      },
+      openFileManager(path) {
+        plus.io.requestFileSystem(plus.io.PUBLIC_DOWNLOADS, (fs) => {
+          plus.io.resolveLocalFileSystemURL(fs.root.fullPath, (entry) => {
+            plus.runtime.openURL(entry.toLocalURL());
+          });
+        });
+      },
+      formatReportContent() {
+        let content = "";
+        content += "=".repeat(50) + "\n";
+        content += `           ${this.reportData.title}
+`;
+        content += "=".repeat(50) + "\n\n";
+        content += `生成时间：${this.reportData.generateTime}
+`;
+        content += `报告类型：资产配置分析报告
+
+`;
+        content += "一、资产概览\n";
+        content += "-".repeat(30) + "\n";
+        content += `总资产：¥${this.formatNumber(this.reportData.userInfo.totalAssets)}
+`;
+        content += `收益率：${this.reportData.userInfo.changePercent}% (${this.reportData.userInfo.changeType === "positive" ? "上涨" : "下跌"})
+
+`;
+        content += "二、资产配置详情\n";
+        content += "-".repeat(30) + "\n";
+        this.reportData.allocationData.forEach((item, index) => {
+          content += `${index + 1}. ${item.name}
+`;
+          content += `   配置比例：${item.percent}%
+`;
+          content += `   配置金额：¥${this.formatNumber(item.amount)}
+`;
+          content += `   产品描述：${item.description}
+
+`;
+        });
+        content += "三、风险评估\n";
+        content += "-".repeat(30) + "\n";
+        content += `风险等级：${this.getRiskLevelText(this.reportData.riskAssessment.level)}
+`;
+        content += `风险评分：${this.reportData.riskAssessment.score}/10
+
+`;
+        content += "风险因素分析：\n";
+        this.reportData.riskAssessment.factors.forEach((factor) => {
+          content += `• ${factor.name}：${factor.level}%
+`;
+        });
+        content += "\n";
+        content += "四、历史表现\n";
+        content += "-".repeat(30) + "\n";
+        content += `年化收益率：${this.reportData.performanceMetrics.annualReturn}%
+`;
+        content += `最大回撤：${this.reportData.performanceMetrics.maxDrawdown}%
+`;
+        content += `夏普比率：${this.reportData.performanceMetrics.sharpeRatio}
+
+`;
+        content += "五、AI智能建议\n";
+        content += "-".repeat(30) + "\n";
+        this.reportData.aiSuggestions.forEach((suggestion, index) => {
+          content += `${index + 1}. ${suggestion.title}
+`;
+          content += `   优先级：${suggestion.priorityText}
+`;
+          content += `   建议内容：${suggestion.description}
+`;
+          content += `   预期收益：${suggestion.expectedReturn}
+
+`;
+        });
+        content += "=".repeat(50) + "\n";
+        content += "报告说明：\n";
+        content += "1. 本报告基于当前市场数据和用户资产配置生成\n";
+        content += "2. 投资有风险，建议仅供参考\n";
+        content += "3. 建议定期更新资产配置，优化投资组合\n";
+        content += "4. 如有疑问，请联系您的理财顾问\n\n";
+        content += `报告生成时间：${this.reportData.generateTime}
+`;
+        content += "=".repeat(50) + "\n";
+        return content;
+      }
+    }
+  };
+  function _sfc_render$2(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("view", { class: "report-preview-page" }, [
+      vue.createCommentVNode(" 顶部导航 "),
+      vue.createElementVNode("view", { class: "nav-bar" }, [
+        vue.createElementVNode("view", { class: "nav-left" }, [
+          vue.createElementVNode("button", {
+            class: "back-btn",
+            onClick: [
+              _cache[0] || (_cache[0] = (...args) => $options.goBack && $options.goBack(...args)),
+              _cache[1] || (_cache[1] = (...args) => $options.goBack && $options.goBack(...args))
+            ]
+          }, [
+            vue.createElementVNode("text", { class: "back-icon" }, "←")
+          ]),
+          vue.createElementVNode("text", { class: "nav-title" }, "报告预览")
+        ]),
+        vue.createElementVNode("view", { class: "nav-right" }, [
+          vue.createElementVNode("button", {
+            class: "share-btn",
+            onClick: _cache[2] || (_cache[2] = (...args) => $options.shareReport && $options.shareReport(...args))
+          }, [
+            vue.createElementVNode("text", { class: "share-icon" }, "📤")
+          ])
+        ])
+      ]),
+      vue.createCommentVNode(" 报告内容 "),
+      vue.createElementVNode("view", { class: "report-content" }, [
+        vue.createCommentVNode(" 报告标题 "),
+        vue.createElementVNode("view", { class: "report-header" }, [
+          vue.createElementVNode(
+            "text",
+            { class: "report-title" },
+            vue.toDisplayString($data.reportData.title),
+            1
+            /* TEXT */
+          ),
+          vue.createElementVNode(
+            "text",
+            { class: "report-time" },
+            "生成时间：" + vue.toDisplayString($data.reportData.generateTime),
+            1
+            /* TEXT */
+          )
+        ]),
+        vue.createCommentVNode(" 资产概览 "),
+        vue.createElementVNode("view", { class: "section" }, [
+          vue.createElementVNode("view", { class: "section-title" }, "一、资产概览"),
+          vue.createElementVNode("view", { class: "overview-card" }, [
+            vue.createElementVNode("view", { class: "overview-item" }, [
+              vue.createElementVNode("text", { class: "overview-label" }, "总资产"),
+              vue.createElementVNode(
+                "text",
+                { class: "overview-value" },
+                "¥" + vue.toDisplayString($options.formatNumber($data.reportData.userInfo.totalAssets)),
+                1
+                /* TEXT */
+              )
+            ]),
+            vue.createElementVNode("view", { class: "overview-item" }, [
+              vue.createElementVNode("text", { class: "overview-label" }, "收益率"),
+              vue.createElementVNode(
+                "text",
+                {
+                  class: vue.normalizeClass(["overview-value", $data.reportData.userInfo.changeType])
+                },
+                vue.toDisplayString($data.reportData.userInfo.changePercent) + "% (" + vue.toDisplayString($data.reportData.userInfo.changeType === "positive" ? "上涨" : "下跌") + ") ",
+                3
+                /* TEXT, CLASS */
+              )
+            ])
+          ])
+        ]),
+        vue.createCommentVNode(" 资产配置 "),
+        vue.createElementVNode("view", { class: "section" }, [
+          vue.createElementVNode("view", { class: "section-title" }, "二、资产配置详情"),
+          vue.createElementVNode("view", { class: "allocation-list" }, [
+            (vue.openBlock(true), vue.createElementBlock(
+              vue.Fragment,
+              null,
+              vue.renderList($data.reportData.allocationData, (item, index) => {
+                return vue.openBlock(), vue.createElementBlock("view", {
+                  class: "allocation-item",
+                  key: index
+                }, [
+                  vue.createElementVNode("view", { class: "allocation-header" }, [
+                    vue.createElementVNode(
+                      "view",
+                      {
+                        class: "allocation-color",
+                        style: vue.normalizeStyle({ backgroundColor: item.color })
+                      },
+                      null,
+                      4
+                      /* STYLE */
+                    ),
+                    vue.createElementVNode(
+                      "text",
+                      { class: "allocation-name" },
+                      vue.toDisplayString(item.name),
+                      1
+                      /* TEXT */
+                    ),
+                    vue.createElementVNode(
+                      "text",
+                      { class: "allocation-percent" },
+                      vue.toDisplayString(item.percent) + "%",
+                      1
+                      /* TEXT */
+                    )
+                  ]),
+                  vue.createElementVNode("view", { class: "allocation-details" }, [
+                    vue.createElementVNode(
+                      "text",
+                      { class: "allocation-amount" },
+                      "配置金额：¥" + vue.toDisplayString($options.formatNumber(item.amount)),
+                      1
+                      /* TEXT */
+                    ),
+                    vue.createElementVNode(
+                      "text",
+                      { class: "allocation-desc" },
+                      vue.toDisplayString(item.description),
+                      1
+                      /* TEXT */
+                    )
+                  ])
+                ]);
+              }),
+              128
+              /* KEYED_FRAGMENT */
+            ))
+          ])
+        ]),
+        vue.createCommentVNode(" 风险评估 "),
+        vue.createElementVNode("view", { class: "section" }, [
+          vue.createElementVNode("view", { class: "section-title" }, "三、风险评估"),
+          vue.createElementVNode("view", { class: "risk-card" }, [
+            vue.createElementVNode("view", { class: "risk-summary" }, [
+              vue.createElementVNode(
+                "text",
+                { class: "risk-level" },
+                "风险等级：" + vue.toDisplayString($options.getRiskLevelText($data.reportData.riskAssessment.level)),
+                1
+                /* TEXT */
+              ),
+              vue.createElementVNode(
+                "text",
+                { class: "risk-score" },
+                "风险评分：" + vue.toDisplayString($data.reportData.riskAssessment.score) + "/10",
+                1
+                /* TEXT */
+              )
+            ]),
+            vue.createElementVNode("view", { class: "risk-factors" }, [
+              vue.createElementVNode("text", { class: "factors-title" }, "风险因素分析："),
+              vue.createElementVNode("view", { class: "factor-list" }, [
+                (vue.openBlock(true), vue.createElementBlock(
+                  vue.Fragment,
+                  null,
+                  vue.renderList($data.reportData.riskAssessment.factors, (factor) => {
+                    return vue.openBlock(), vue.createElementBlock("view", {
+                      class: "factor-item",
+                      key: factor.name
+                    }, [
+                      vue.createElementVNode(
+                        "text",
+                        { class: "factor-name" },
+                        "• " + vue.toDisplayString(factor.name) + "：",
+                        1
+                        /* TEXT */
+                      ),
+                      vue.createElementVNode(
+                        "text",
+                        { class: "factor-level" },
+                        vue.toDisplayString(factor.level) + "%",
+                        1
+                        /* TEXT */
+                      )
+                    ]);
+                  }),
+                  128
+                  /* KEYED_FRAGMENT */
+                ))
+              ])
+            ])
+          ])
+        ]),
+        vue.createCommentVNode(" 历史表现 "),
+        vue.createElementVNode("view", { class: "section" }, [
+          vue.createElementVNode("view", { class: "section-title" }, "四、历史表现"),
+          vue.createElementVNode("view", { class: "performance-grid" }, [
+            vue.createElementVNode("view", { class: "performance-item" }, [
+              vue.createElementVNode("text", { class: "performance-label" }, "年化收益率"),
+              vue.createElementVNode(
+                "text",
+                { class: "performance-value positive" },
+                vue.toDisplayString($data.reportData.performanceMetrics.annualReturn) + "%",
+                1
+                /* TEXT */
+              )
+            ]),
+            vue.createElementVNode("view", { class: "performance-item" }, [
+              vue.createElementVNode("text", { class: "performance-label" }, "最大回撤"),
+              vue.createElementVNode(
+                "text",
+                { class: "performance-value negative" },
+                vue.toDisplayString($data.reportData.performanceMetrics.maxDrawdown) + "%",
+                1
+                /* TEXT */
+              )
+            ]),
+            vue.createElementVNode("view", { class: "performance-item" }, [
+              vue.createElementVNode("text", { class: "performance-label" }, "夏普比率"),
+              vue.createElementVNode(
+                "text",
+                { class: "performance-value" },
+                vue.toDisplayString($data.reportData.performanceMetrics.sharpeRatio),
+                1
+                /* TEXT */
+              )
+            ])
+          ])
+        ]),
+        vue.createCommentVNode(" AI建议 "),
+        vue.createElementVNode("view", { class: "section" }, [
+          vue.createElementVNode("view", { class: "section-title" }, "五、AI智能建议"),
+          vue.createElementVNode("view", { class: "suggestions-list" }, [
+            (vue.openBlock(true), vue.createElementBlock(
+              vue.Fragment,
+              null,
+              vue.renderList($data.reportData.aiSuggestions, (suggestion, index) => {
+                return vue.openBlock(), vue.createElementBlock("view", {
+                  class: "suggestion-item",
+                  key: index
+                }, [
+                  vue.createElementVNode("view", { class: "suggestion-header" }, [
+                    vue.createElementVNode(
+                      "view",
+                      {
+                        class: "suggestion-icon",
+                        style: vue.normalizeStyle({ backgroundColor: suggestion.color })
+                      },
+                      [
+                        vue.createElementVNode(
+                          "text",
+                          { class: "icon" },
+                          vue.toDisplayString(suggestion.icon),
+                          1
+                          /* TEXT */
+                        )
+                      ],
+                      4
+                      /* STYLE */
+                    ),
+                    vue.createElementVNode("view", { class: "suggestion-info" }, [
+                      vue.createElementVNode(
+                        "text",
+                        { class: "suggestion-title" },
+                        vue.toDisplayString(suggestion.title),
+                        1
+                        /* TEXT */
+                      ),
+                      vue.createElementVNode(
+                        "text",
+                        {
+                          class: vue.normalizeClass(["suggestion-priority", suggestion.priority])
+                        },
+                        vue.toDisplayString(suggestion.priorityText),
+                        3
+                        /* TEXT, CLASS */
+                      )
+                    ])
+                  ]),
+                  vue.createElementVNode(
+                    "text",
+                    { class: "suggestion-desc" },
+                    vue.toDisplayString(suggestion.description),
+                    1
+                    /* TEXT */
+                  ),
+                  vue.createElementVNode(
+                    "text",
+                    { class: "suggestion-benefit" },
+                    "预期收益：" + vue.toDisplayString(suggestion.expectedReturn),
+                    1
+                    /* TEXT */
+                  )
+                ]);
+              }),
+              128
+              /* KEYED_FRAGMENT */
+            ))
+          ])
+        ]),
+        vue.createCommentVNode(" 报告说明 "),
+        vue.createElementVNode("view", { class: "section" }, [
+          vue.createElementVNode("view", { class: "section-title" }, "报告说明"),
+          vue.createElementVNode("view", { class: "disclaimer" }, [
+            vue.createElementVNode("text", { class: "disclaimer-text" }, "1. 本报告基于当前市场数据和用户资产配置生成"),
+            vue.createElementVNode("text", { class: "disclaimer-text" }, "2. 投资有风险，建议仅供参考"),
+            vue.createElementVNode("text", { class: "disclaimer-text" }, "3. 建议定期更新资产配置，优化投资组合"),
+            vue.createElementVNode("text", { class: "disclaimer-text" }, "4. 如有疑问，请联系您的理财顾问")
+          ])
+        ])
+      ]),
+      vue.createCommentVNode(" 底部操作 "),
+      vue.createElementVNode("view", { class: "bottom-actions" }, [
+        vue.createElementVNode("button", {
+          class: "action-btn secondary",
+          onClick: _cache[3] || (_cache[3] = (...args) => $options.copyReport && $options.copyReport(...args))
+        }, "复制报告"),
+        vue.createElementVNode("button", {
+          class: "action-btn primary",
+          onClick: _cache[4] || (_cache[4] = (...args) => $options.downloadReport && $options.downloadReport(...args))
+        }, "下载报告")
+      ])
+    ]);
+  }
+  const PagesWealthReportPreview = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["render", _sfc_render$2], ["__scopeId", "data-v-8863309e"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/report-preview.vue"]]);
+  const _sfc_main$2 = {
+    data() {
+      return {
+        searchKeyword: "",
+        currentFilter: "all",
+        showDepositModal: false,
+        currentGoal: {},
+        depositAmount: "",
+        quickAmounts: [1e3, 5e3, 1e4, 2e4, 5e4],
+        goals: [
+          {
+            id: 1,
+            title: "购房首付",
+            category: "住房",
+            icon: "🏠",
+            color: "#4CAF50",
+            targetAmount: 5e5,
+            currentAmount: 325e3,
+            progress: 65,
+            targetDate: "2026年8月",
+            monthlyContribution: 15e3,
+            status: "active",
+            description: "为购买首套房准备首付款",
+            priority: "high"
+          },
+          {
+            id: 2,
+            title: "教育基金",
+            category: "教育",
+            icon: "🎓",
+            color: "#2196F3",
+            targetAmount: 15e4,
+            currentAmount: 6e4,
+            progress: 40,
+            targetDate: "2028年6月",
+            monthlyContribution: 5e3,
+            status: "active",
+            description: "为孩子高等教育准备资金",
+            priority: "medium"
+          },
+          {
+            id: 3,
+            title: "退休规划",
+            category: "养老",
+            icon: "🌴",
+            color: "#FF9800",
+            targetAmount: 1e6,
+            currentAmount: 25e4,
+            progress: 25,
+            targetDate: "2040年12月",
+            monthlyContribution: 8e3,
+            status: "active",
+            description: "为退休生活准备充足资金",
+            priority: "high"
+          },
+          {
+            id: 4,
+            title: "旅行基金",
+            category: "娱乐",
+            icon: "✈️",
+            color: "#9C27B0",
+            targetAmount: 5e4,
+            currentAmount: 5e4,
+            progress: 100,
+            targetDate: "2024年12月",
+            monthlyContribution: 3e3,
+            status: "completed",
+            description: "欧洲旅行资金",
+            priority: "low"
+          },
+          {
+            id: 5,
+            title: "应急基金",
+            category: "应急",
+            icon: "🛡️",
+            color: "#F44336",
+            targetAmount: 1e5,
+            currentAmount: 8e4,
+            progress: 80,
+            targetDate: "2024年6月",
+            monthlyContribution: 5e3,
+            status: "overdue",
+            description: "6个月生活费用应急资金",
+            priority: "high"
+          }
+        ]
+      };
+    },
+    computed: {
+      filteredGoals() {
+        let filtered = this.goals;
+        if (this.currentFilter !== "all") {
+          filtered = filtered.filter((goal) => goal.status === this.currentFilter);
+        }
+        if (this.searchKeyword) {
+          const keyword = this.searchKeyword.toLowerCase();
+          filtered = filtered.filter(
+            (goal) => goal.title.toLowerCase().includes(keyword) || goal.category.toLowerCase().includes(keyword) || goal.description.toLowerCase().includes(keyword)
+          );
+        }
+        return filtered;
+      },
+      totalGoals() {
+        return this.goals.length;
+      },
+      activeGoals() {
+        return this.goals.filter((goal) => goal.status === "active").length;
+      },
+      completedGoals() {
+        return this.goals.filter((goal) => goal.status === "completed").length;
+      },
+      totalTargetAmount() {
+        return this.goals.reduce((sum, goal) => sum + goal.targetAmount, 0);
+      }
+    },
+    onLoad() {
+      this.loadGoals();
+    },
+    methods: {
+      goBack() {
+        uni.navigateTo({
+          url: "/pages/wealth/ai-wealth-manager",
+          success: () => {
+            formatAppLog("log", "at pages/wealth/goal-list.vue:372", "返回AI财富管理页面成功");
+          },
+          fail: (err) => {
+            formatAppLog("log", "at pages/wealth/goal-list.vue:375", "返回AI财富管理页面失败:", err);
+            uni.switchTab({
+              url: "/pages/wealth/wealth"
+            });
+          }
+        });
+      },
+      loadGoals() {
+        const storedGoals = uni.getStorageSync("userGoals");
+        if (storedGoals && storedGoals.length > 0) {
+          this.goals = storedGoals;
+        }
+      },
+      setFilter(filter) {
+        this.currentFilter = filter;
+      },
+      filterGoals() {
+      },
+      getStatusText(status) {
+        const statusMap = {
+          active: "进行中",
+          completed: "已完成",
+          overdue: "已逾期",
+          paused: "已暂停"
+        };
+        return statusMap[status] || "未知";
+      },
+      getRemainingTime(targetDate) {
+        const now = /* @__PURE__ */ new Date();
+        const target = new Date(targetDate);
+        const diffTime = target - now;
+        const diffDays = Math.ceil(diffTime / (1e3 * 60 * 60 * 24));
+        if (diffDays < 0) {
+          return "已逾期";
+        } else if (diffDays < 30) {
+          return `${diffDays}天`;
+        } else if (diffDays < 365) {
+          return `${Math.ceil(diffDays / 30)}个月`;
+        } else {
+          return `${Math.ceil(diffDays / 365)}年`;
+        }
+      },
+      getEmptyMessage() {
+        const messages = {
+          all: "还没有创建任何目标",
+          active: "没有进行中的目标",
+          completed: "没有已完成的目标",
+          overdue: "没有逾期的目标"
+        };
+        return messages[this.currentFilter] || "暂无数据";
+      },
+      formatNumber(num) {
+        return Number(num).toLocaleString("zh-CN", {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0
+        });
+      },
+      viewGoalDetail(goal) {
+        uni.setStorageSync("currentGoal", goal);
+        uni.navigateTo({
+          url: "/pages/wealth/goal-detail"
+        });
+      },
+      editGoal(goal) {
+        uni.setStorageSync("editingGoal", goal);
+        uni.navigateTo({
+          url: "/pages/wealth/goal-edit"
+        });
+      },
+      quickDeposit(goal) {
+        this.currentGoal = goal;
+        this.depositAmount = "";
+        this.showDepositModal = true;
+      },
+      closeDepositModal() {
+        this.showDepositModal = false;
+        this.depositAmount = "";
+        this.currentGoal = {};
+      },
+      onAmountInput(e) {
+        this.depositAmount = e.detail.value;
+      },
+      onInputFocus() {
+      },
+      onInputBlur() {
+      },
+      selectQuickAmount(amount) {
+        this.depositAmount = amount.toString();
+      },
+      confirmDeposit() {
+        if (!this.depositAmount || this.depositAmount <= 0) {
+          uni.showToast({
+            title: "请输入有效金额",
+            icon: "none"
+          });
+          return;
+        }
+        const amount = parseFloat(this.depositAmount);
+        if (isNaN(amount) || amount <= 0) {
+          uni.showToast({
+            title: "请输入有效的数字金额",
+            icon: "none"
+          });
+          return;
+        }
+        this.closeDepositModal();
+        this.depositToGoal(this.currentGoal, amount);
+      },
+      depositToGoal(goal, amount) {
+        uni.showLoading({ title: "正在存入..." });
+        setTimeout(() => {
+          uni.hideLoading();
+          goal.currentAmount += amount;
+          goal.progress = Math.min(100, goal.currentAmount / goal.targetAmount * 100);
+          if (goal.progress >= 100) {
+            goal.status = "completed";
+          }
+          uni.setStorageSync("userGoals", this.goals);
+          uni.showToast({
+            title: "存入成功",
+            icon: "success"
+          });
+        }, 1500);
+      },
+      addNewGoal() {
+        uni.navigateTo({
+          url: "/pages/wealth/goal-create"
+        });
+      },
+      exportGoals() {
+        uni.showLoading({ title: "正在导出..." });
+        setTimeout(() => {
+          uni.hideLoading();
+          const exportData = this.goals.map((goal) => ({
+            目标名称: goal.title,
+            类别: goal.category,
+            目标金额: `¥${this.formatNumber(goal.targetAmount)}`,
+            当前金额: `¥${this.formatNumber(goal.currentAmount)}`,
+            进度: `${goal.progress}%`,
+            目标日期: goal.targetDate,
+            月投入: `¥${this.formatNumber(goal.monthlyContribution)}`,
+            状态: this.getStatusText(goal.status)
+          }));
+          const content = JSON.stringify(exportData, null, 2);
+          uni.setClipboardData({
+            data: content,
+            success: () => {
+              uni.showToast({
+                title: "目标数据已复制到剪贴板",
+                icon: "success"
+              });
+            }
+          });
+        }, 2e3);
+      }
+    }
+  };
+  function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("view", { class: "goal-list-page" }, [
+      vue.createCommentVNode(" 顶部导航 "),
+      vue.createElementVNode("view", { class: "nav-bar" }, [
+        vue.createElementVNode("view", { class: "nav-left" }, [
+          vue.createElementVNode("button", {
+            class: "back-btn",
+            onClick: [
+              _cache[0] || (_cache[0] = (...args) => $options.goBack && $options.goBack(...args)),
+              _cache[1] || (_cache[1] = (...args) => $options.goBack && $options.goBack(...args))
+            ]
+          }, [
+            vue.createElementVNode("text", { class: "back-icon" }, "←")
+          ]),
+          vue.createElementVNode("text", { class: "nav-title" }, "所有目标")
+        ]),
+        vue.createElementVNode("view", { class: "nav-right" }, [
+          vue.createElementVNode("button", {
+            class: "add-btn",
+            onClick: _cache[2] || (_cache[2] = (...args) => $options.addNewGoal && $options.addNewGoal(...args))
+          }, [
+            vue.createElementVNode("text", { class: "add-icon" }, "+")
+          ])
+        ])
+      ]),
+      vue.createCommentVNode(" 筛选和搜索 "),
+      vue.createElementVNode("view", { class: "filter-section" }, [
+        vue.createElementVNode("view", { class: "search-box" }, [
+          vue.withDirectives(vue.createElementVNode(
+            "input",
+            {
+              class: "search-input",
+              placeholder: "搜索目标...",
+              "onUpdate:modelValue": _cache[3] || (_cache[3] = ($event) => $data.searchKeyword = $event),
+              onInput: _cache[4] || (_cache[4] = (...args) => $options.filterGoals && $options.filterGoals(...args))
+            },
+            null,
+            544
+            /* NEED_HYDRATION, NEED_PATCH */
+          ), [
+            [vue.vModelText, $data.searchKeyword]
+          ]),
+          vue.createElementVNode("text", { class: "search-icon" }, "🔍")
+        ]),
+        vue.createElementVNode("view", { class: "filter-tabs" }, [
+          vue.createElementVNode(
+            "button",
+            {
+              class: vue.normalizeClass(["filter-tab", { active: $data.currentFilter === "all" }]),
+              onClick: _cache[5] || (_cache[5] = ($event) => $options.setFilter("all"))
+            },
+            " 全部 ",
+            2
+            /* CLASS */
+          ),
+          vue.createElementVNode(
+            "button",
+            {
+              class: vue.normalizeClass(["filter-tab", { active: $data.currentFilter === "active" }]),
+              onClick: _cache[6] || (_cache[6] = ($event) => $options.setFilter("active"))
+            },
+            " 进行中 ",
+            2
+            /* CLASS */
+          ),
+          vue.createElementVNode(
+            "button",
+            {
+              class: vue.normalizeClass(["filter-tab", { active: $data.currentFilter === "completed" }]),
+              onClick: _cache[7] || (_cache[7] = ($event) => $options.setFilter("completed"))
+            },
+            " 已完成 ",
+            2
+            /* CLASS */
+          ),
+          vue.createElementVNode(
+            "button",
+            {
+              class: vue.normalizeClass(["filter-tab", { active: $data.currentFilter === "overdue" }]),
+              onClick: _cache[8] || (_cache[8] = ($event) => $options.setFilter("overdue"))
+            },
+            " 已逾期 ",
+            2
+            /* CLASS */
+          )
+        ])
+      ]),
+      vue.createCommentVNode(" 目标统计 "),
+      vue.createElementVNode("view", { class: "stats-section" }, [
+        vue.createElementVNode("view", { class: "stat-card" }, [
+          vue.createElementVNode(
+            "text",
+            { class: "stat-number" },
+            vue.toDisplayString($options.totalGoals),
+            1
+            /* TEXT */
+          ),
+          vue.createElementVNode("text", { class: "stat-label" }, "总目标数")
+        ]),
+        vue.createElementVNode("view", { class: "stat-card" }, [
+          vue.createElementVNode(
+            "text",
+            { class: "stat-number" },
+            vue.toDisplayString($options.activeGoals),
+            1
+            /* TEXT */
+          ),
+          vue.createElementVNode("text", { class: "stat-label" }, "进行中")
+        ]),
+        vue.createElementVNode("view", { class: "stat-card" }, [
+          vue.createElementVNode(
+            "text",
+            { class: "stat-number" },
+            vue.toDisplayString($options.completedGoals),
+            1
+            /* TEXT */
+          ),
+          vue.createElementVNode("text", { class: "stat-label" }, "已完成")
+        ]),
+        vue.createElementVNode("view", { class: "stat-card" }, [
+          vue.createElementVNode(
+            "text",
+            { class: "stat-number" },
+            "¥" + vue.toDisplayString($options.formatNumber($options.totalTargetAmount)),
+            1
+            /* TEXT */
+          ),
+          vue.createElementVNode("text", { class: "stat-label" }, "目标总额")
+        ])
+      ]),
+      vue.createCommentVNode(" 目标列表 "),
+      vue.createElementVNode("view", { class: "goals-container" }, [
+        vue.createElementVNode("view", { class: "goals-list" }, [
+          (vue.openBlock(true), vue.createElementBlock(
+            vue.Fragment,
+            null,
+            vue.renderList($options.filteredGoals, (goal) => {
+              return vue.openBlock(), vue.createElementBlock("view", {
+                class: "goal-item",
+                key: goal.id,
+                onClick: ($event) => $options.viewGoalDetail(goal)
+              }, [
+                vue.createElementVNode("view", { class: "goal-header" }, [
+                  vue.createElementVNode(
+                    "view",
+                    {
+                      class: "goal-icon",
+                      style: vue.normalizeStyle({ backgroundColor: goal.color })
+                    },
+                    [
+                      vue.createElementVNode(
+                        "text",
+                        { class: "icon" },
+                        vue.toDisplayString(goal.icon),
+                        1
+                        /* TEXT */
+                      )
+                    ],
+                    4
+                    /* STYLE */
+                  ),
+                  vue.createElementVNode("view", { class: "goal-info" }, [
+                    vue.createElementVNode(
+                      "text",
+                      { class: "goal-title" },
+                      vue.toDisplayString(goal.title),
+                      1
+                      /* TEXT */
+                    ),
+                    vue.createElementVNode(
+                      "text",
+                      { class: "goal-category" },
+                      vue.toDisplayString(goal.category),
+                      1
+                      /* TEXT */
+                    )
+                  ]),
+                  vue.createElementVNode(
+                    "view",
+                    {
+                      class: vue.normalizeClass(["goal-status", goal.status])
+                    },
+                    [
+                      vue.createElementVNode(
+                        "text",
+                        { class: "status-text" },
+                        vue.toDisplayString($options.getStatusText(goal.status)),
+                        1
+                        /* TEXT */
+                      )
+                    ],
+                    2
+                    /* CLASS */
+                  )
+                ]),
+                vue.createElementVNode("view", { class: "goal-progress" }, [
+                  vue.createElementVNode("view", { class: "progress-info" }, [
+                    vue.createElementVNode(
+                      "text",
+                      { class: "progress-text" },
+                      "进度: " + vue.toDisplayString(goal.progress) + "%",
+                      1
+                      /* TEXT */
+                    ),
+                    vue.createElementVNode(
+                      "text",
+                      { class: "amount-text" },
+                      "¥" + vue.toDisplayString($options.formatNumber(goal.currentAmount)) + " / ¥" + vue.toDisplayString($options.formatNumber(goal.targetAmount)),
+                      1
+                      /* TEXT */
+                    )
+                  ]),
+                  vue.createElementVNode("view", { class: "progress-bar" }, [
+                    vue.createElementVNode(
+                      "view",
+                      {
+                        class: "progress-fill",
+                        style: vue.normalizeStyle({
+                          width: goal.progress + "%",
+                          backgroundColor: goal.color
+                        })
+                      },
+                      null,
+                      4
+                      /* STYLE */
+                    )
+                  ])
+                ]),
+                vue.createElementVNode("view", { class: "goal-details" }, [
+                  vue.createElementVNode("view", { class: "detail-item" }, [
+                    vue.createElementVNode("text", { class: "detail-label" }, "目标日期:"),
+                    vue.createElementVNode(
+                      "text",
+                      { class: "detail-value" },
+                      vue.toDisplayString(goal.targetDate),
+                      1
+                      /* TEXT */
+                    )
+                  ]),
+                  vue.createElementVNode("view", { class: "detail-item" }, [
+                    vue.createElementVNode("text", { class: "detail-label" }, "月投入:"),
+                    vue.createElementVNode(
+                      "text",
+                      { class: "detail-value" },
+                      "¥" + vue.toDisplayString($options.formatNumber(goal.monthlyContribution)),
+                      1
+                      /* TEXT */
+                    )
+                  ]),
+                  vue.createElementVNode("view", { class: "detail-item" }, [
+                    vue.createElementVNode("text", { class: "detail-label" }, "剩余时间:"),
+                    vue.createElementVNode(
+                      "text",
+                      { class: "detail-value" },
+                      vue.toDisplayString($options.getRemainingTime(goal.targetDate)),
+                      1
+                      /* TEXT */
+                    )
+                  ])
+                ]),
+                vue.createElementVNode("view", { class: "goal-actions" }, [
+                  vue.createElementVNode("button", {
+                    class: "action-btn secondary",
+                    onClick: vue.withModifiers(($event) => $options.editGoal(goal), ["stop"])
+                  }, [
+                    vue.createElementVNode("text", { class: "btn-text" }, "编辑")
+                  ], 8, ["onClick"]),
+                  vue.createElementVNode("button", {
+                    class: "action-btn primary",
+                    onClick: vue.withModifiers(($event) => $options.quickDeposit(goal), ["stop"])
+                  }, [
+                    vue.createElementVNode("text", { class: "btn-text" }, "快速存入")
+                  ], 8, ["onClick"])
+                ])
+              ], 8, ["onClick"]);
+            }),
+            128
+            /* KEYED_FRAGMENT */
+          ))
+        ]),
+        vue.createCommentVNode(" 空状态 "),
+        $options.filteredGoals.length === 0 ? (vue.openBlock(), vue.createElementBlock("view", {
+          key: 0,
+          class: "empty-state"
+        }, [
+          vue.createElementVNode("text", { class: "empty-icon" }, "🎯"),
+          vue.createElementVNode("text", { class: "empty-title" }, "暂无目标"),
+          vue.createElementVNode(
+            "text",
+            { class: "empty-desc" },
+            vue.toDisplayString($options.getEmptyMessage()),
+            1
+            /* TEXT */
+          ),
+          vue.createElementVNode("button", {
+            class: "empty-btn",
+            onClick: _cache[9] || (_cache[9] = (...args) => $options.addNewGoal && $options.addNewGoal(...args))
+          }, [
+            vue.createElementVNode("text", { class: "btn-text" }, "创建新目标")
+          ])
+        ])) : vue.createCommentVNode("v-if", true)
+      ]),
+      vue.createCommentVNode(" 底部操作栏 "),
+      vue.createElementVNode("view", { class: "bottom-actions" }, [
+        vue.createElementVNode("button", {
+          class: "action-btn secondary",
+          onClick: _cache[10] || (_cache[10] = (...args) => $options.exportGoals && $options.exportGoals(...args))
+        }, [
+          vue.createElementVNode("text", { class: "btn-text" }, "导出目标")
+        ]),
+        vue.createElementVNode("button", {
+          class: "action-btn primary",
+          onClick: _cache[11] || (_cache[11] = (...args) => $options.addNewGoal && $options.addNewGoal(...args))
+        }, [
+          vue.createElementVNode("text", { class: "btn-text" }, "添加新目标")
+        ])
+      ]),
+      vue.createCommentVNode(" 自定义存入弹窗 "),
+      $data.showDepositModal ? (vue.openBlock(), vue.createElementBlock("view", {
+        key: 0,
+        class: "deposit-modal",
+        onClick: _cache[20] || (_cache[20] = (...args) => $options.closeDepositModal && $options.closeDepositModal(...args))
+      }, [
+        vue.createElementVNode("view", {
+          class: "modal-content",
+          onClick: _cache[19] || (_cache[19] = vue.withModifiers(() => {
+          }, ["stop"]))
+        }, [
+          vue.createElementVNode("view", { class: "modal-header" }, [
+            vue.createElementVNode("text", { class: "modal-title" }, "快速存入"),
+            vue.createElementVNode("button", {
+              class: "close-btn",
+              onClick: _cache[12] || (_cache[12] = (...args) => $options.closeDepositModal && $options.closeDepositModal(...args))
+            }, [
+              vue.createElementVNode("text", { class: "close-icon" }, "×")
+            ])
+          ]),
+          vue.createElementVNode("view", { class: "modal-body" }, [
+            vue.createElementVNode("view", { class: "goal-info" }, [
+              vue.createElementVNode(
+                "view",
+                {
+                  class: "goal-icon",
+                  style: vue.normalizeStyle({ backgroundColor: $data.currentGoal.color })
+                },
+                [
+                  vue.createElementVNode(
+                    "text",
+                    { class: "icon" },
+                    vue.toDisplayString($data.currentGoal.icon),
+                    1
+                    /* TEXT */
+                  )
+                ],
+                4
+                /* STYLE */
+              ),
+              vue.createElementVNode("view", { class: "goal-details" }, [
+                vue.createElementVNode(
+                  "text",
+                  { class: "goal-name" },
+                  vue.toDisplayString($data.currentGoal.title),
+                  1
+                  /* TEXT */
+                ),
+                vue.createElementVNode(
+                  "text",
+                  { class: "goal-amount" },
+                  "目标：¥" + vue.toDisplayString($options.formatNumber($data.currentGoal.targetAmount)),
+                  1
+                  /* TEXT */
+                )
+              ])
+            ]),
+            vue.createElementVNode("view", { class: "input-section" }, [
+              vue.createElementVNode("text", { class: "input-label" }, "存入金额"),
+              vue.createElementVNode("view", { class: "amount-input-wrapper" }, [
+                vue.createElementVNode("text", { class: "currency-symbol" }, "¥"),
+                vue.withDirectives(vue.createElementVNode(
+                  "input",
+                  {
+                    class: "amount-input",
+                    type: "number",
+                    "onUpdate:modelValue": _cache[13] || (_cache[13] = ($event) => $data.depositAmount = $event),
+                    placeholder: "请输入金额",
+                    onInput: _cache[14] || (_cache[14] = (...args) => $options.onAmountInput && $options.onAmountInput(...args)),
+                    onFocus: _cache[15] || (_cache[15] = (...args) => $options.onInputFocus && $options.onInputFocus(...args)),
+                    onBlur: _cache[16] || (_cache[16] = (...args) => $options.onInputBlur && $options.onInputBlur(...args))
+                  },
+                  null,
+                  544
+                  /* NEED_HYDRATION, NEED_PATCH */
+                ), [
+                  [vue.vModelText, $data.depositAmount]
+                ])
+              ]),
+              vue.createElementVNode(
+                "text",
+                { class: "input-hint" },
+                "当前进度：" + vue.toDisplayString($data.currentGoal.progress) + "%",
+                1
+                /* TEXT */
+              )
+            ]),
+            vue.createElementVNode("view", { class: "quick-amounts" }, [
+              vue.createElementVNode("text", { class: "quick-label" }, "快速选择："),
+              vue.createElementVNode("view", { class: "amount-buttons" }, [
+                (vue.openBlock(true), vue.createElementBlock(
+                  vue.Fragment,
+                  null,
+                  vue.renderList($data.quickAmounts, (amount) => {
+                    return vue.openBlock(), vue.createElementBlock("button", {
+                      class: "amount-btn",
+                      key: amount,
+                      onClick: ($event) => $options.selectQuickAmount(amount)
+                    }, " ¥" + vue.toDisplayString($options.formatNumber(amount)), 9, ["onClick"]);
+                  }),
+                  128
+                  /* KEYED_FRAGMENT */
+                ))
+              ])
+            ])
+          ]),
+          vue.createElementVNode("view", { class: "modal-footer" }, [
+            vue.createElementVNode("button", {
+              class: "modal-btn cancel",
+              onClick: _cache[17] || (_cache[17] = (...args) => $options.closeDepositModal && $options.closeDepositModal(...args))
+            }, [
+              vue.createElementVNode("text", { class: "btn-text" }, "取消")
+            ]),
+            vue.createElementVNode("button", {
+              class: "modal-btn confirm",
+              onClick: _cache[18] || (_cache[18] = (...args) => $options.confirmDeposit && $options.confirmDeposit(...args)),
+              disabled: !$data.depositAmount || $data.depositAmount <= 0
+            }, [
+              vue.createElementVNode("text", { class: "btn-text" }, "确认存入")
+            ], 8, ["disabled"])
+          ])
+        ])
+      ])) : vue.createCommentVNode("v-if", true)
+    ]);
+  }
+  const PagesWealthGoalList = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["render", _sfc_render$1], ["__scopeId", "data-v-20d595fb"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/goal-list.vue"]]);
+  const _sfc_main$1 = {
+    data() {
+      return {
+        goalData: {
+          id: null,
+          title: "",
+          category: "住房",
+          icon: "🏠",
+          color: "#4CAF50",
+          targetAmount: "",
+          currentAmount: "",
+          monthlyContribution: "",
+          targetDate: "",
+          description: "",
+          priority: "medium"
+        },
+        categories: [
+          { value: "住房", name: "住房", icon: "🏠", color: "#4CAF50" },
+          { value: "教育", name: "教育", icon: "🎓", color: "#2196F3" },
+          { value: "养老", name: "养老", icon: "🌴", color: "#FF9800" },
+          { value: "娱乐", name: "娱乐", icon: "✈️", color: "#9C27B0" },
+          { value: "应急", name: "应急", icon: "🛡️", color: "#F44336" },
+          { value: "投资", name: "投资", icon: "📈", color: "#00BCD4" }
+        ],
+        priorities: [
+          { value: "high", name: "高", icon: "🔴" },
+          { value: "medium", name: "中", icon: "🟡" },
+          { value: "low", name: "低", icon: "🟢" }
+        ],
+        showDatePickerModal: false,
+        pickerValue: [0, 0],
+        years: [],
+        months: [],
+        isFormValid: false
+      };
+    },
+    onLoad() {
+      this.loadGoalData();
+      this.initDatePicker();
+    },
+    methods: {
+      goBack() {
+        uni.navigateTo({
+          url: "/pages/wealth/goal-list",
+          success: () => {
+            formatAppLog("log", "at pages/wealth/goal-edit.vue:247", "返回目标列表页面成功");
+          },
+          fail: (err) => {
+            formatAppLog("log", "at pages/wealth/goal-edit.vue:250", "返回目标列表页面失败:", err);
+            uni.navigateTo({
+              url: "/pages/wealth/ai-wealth-manager",
+              fail: () => {
+                uni.switchTab({
+                  url: "/pages/wealth/wealth"
+                });
+              }
+            });
+          }
+        });
+      },
+      loadGoalData() {
+        const editingGoal = uni.getStorageSync("editingGoal");
+        if (editingGoal) {
+          this.goalData = { ...editingGoal };
+          this.goalData.targetAmount = (this.goalData.targetAmount || 0).toString();
+          this.goalData.currentAmount = (this.goalData.currentAmount || 0).toString();
+          this.goalData.monthlyContribution = (this.goalData.monthlyContribution || 0).toString();
+          this.goalData.title = this.goalData.title || "";
+          this.goalData.category = this.goalData.category || "住房";
+          this.goalData.description = this.goalData.description || "";
+          this.goalData.targetDate = this.goalData.targetDate || "";
+          this.goalData.priority = this.goalData.priority || "medium";
+          this.goalData.icon = this.goalData.icon || "🏠";
+          this.goalData.color = this.goalData.color || "#4CAF50";
+        } else {
+          formatAppLog("log", "at pages/wealth/goal-edit.vue:284", "没有找到编辑数据，使用默认值");
+          this.goalData = {
+            id: null,
+            title: "",
+            category: "住房",
+            icon: "🏠",
+            color: "#4CAF50",
+            targetAmount: "",
+            currentAmount: "",
+            monthlyContribution: "",
+            targetDate: "",
+            description: "",
+            priority: "medium"
+          };
+        }
+        this.validateForm();
+      },
+      initDatePicker() {
+        const currentYear = (/* @__PURE__ */ new Date()).getFullYear();
+        for (let i = 0; i < 10; i++) {
+          this.years.push(currentYear + i);
+        }
+        for (let i = 1; i <= 12; i++) {
+          this.months.push(i);
+        }
+      },
+      selectCategory(category) {
+        const selectedCategory = this.categories.find((cat) => cat.value === category);
+        this.goalData.category = category;
+        this.goalData.icon = selectedCategory.icon;
+        this.goalData.color = selectedCategory.color;
+        this.validateForm();
+      },
+      selectPriority(priority) {
+        this.goalData.priority = priority;
+        this.validateForm();
+      },
+      showDatePicker() {
+        this.showDatePickerModal = true;
+      },
+      closeDatePicker() {
+        this.showDatePickerModal = false;
+      },
+      onDateChange(e) {
+        this.pickerValue = e.detail.value;
+      },
+      confirmDate() {
+        const year = this.years[this.pickerValue[0]];
+        const month = this.months[this.pickerValue[1]];
+        this.goalData.targetDate = `${year}年${month}月`;
+        this.closeDatePicker();
+        this.validateForm();
+      },
+      validateForm() {
+        this.isFormValid = !!(this.goalData.title && this.goalData.targetAmount && this.goalData.currentAmount && this.goalData.monthlyContribution && this.goalData.targetDate);
+      },
+      saveGoal() {
+        if (!this.isFormValid) {
+          uni.showToast({
+            title: "请填写完整信息",
+            icon: "none"
+          });
+          return;
+        }
+        const targetAmount = parseFloat(this.goalData.targetAmount) || 0;
+        const currentAmount = parseFloat(this.goalData.currentAmount) || 0;
+        const monthlyContribution = parseFloat(this.goalData.monthlyContribution) || 0;
+        const updatedGoal = {
+          ...this.goalData,
+          targetAmount,
+          currentAmount,
+          monthlyContribution,
+          progress: targetAmount > 0 ? Math.min(100, currentAmount / targetAmount * 100) : 0
+        };
+        uni.showLoading({ title: "正在保存..." });
+        setTimeout(() => {
+          uni.hideLoading();
+          const goals = uni.getStorageSync("userGoals") || [];
+          const goalIndex = goals.findIndex((goal) => goal.id === updatedGoal.id);
+          if (goalIndex !== -1) {
+            goals[goalIndex] = updatedGoal;
+            uni.setStorageSync("userGoals", goals);
+            uni.showToast({
+              title: "保存成功",
+              icon: "success"
+            });
+            setTimeout(() => {
+              this.goBack();
+            }, 1500);
+          } else {
+            uni.showToast({
+              title: "保存失败",
+              icon: "none"
+            });
+          }
+        }, 1500);
+      },
+      deleteGoal() {
+        uni.showModal({
+          title: "删除目标",
+          content: `确定要删除"${this.goalData.title}"这个目标吗？
+
+删除后无法恢复！`,
+          confirmText: "删除",
+          confirmColor: "#F44336",
+          success: (res) => {
+            if (res.confirm) {
+              this.confirmDelete();
+            }
+          }
+        });
+      },
+      confirmDelete() {
+        uni.showLoading({ title: "正在删除..." });
+        setTimeout(() => {
+          uni.hideLoading();
+          const goals = uni.getStorageSync("userGoals") || [];
+          const filteredGoals = goals.filter((goal) => goal.id !== this.goalData.id);
+          uni.setStorageSync("userGoals", filteredGoals);
+          uni.showToast({
+            title: "删除成功",
+            icon: "success"
+          });
+          setTimeout(() => {
+            this.goBack();
+          }, 1500);
+        }, 1e3);
+      }
+    }
+  };
+  function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("view", { class: "goal-edit-page" }, [
+      vue.createCommentVNode(" 顶部导航 "),
+      vue.createElementVNode("view", { class: "nav-bar" }, [
+        vue.createElementVNode("view", { class: "nav-left" }, [
+          vue.createElementVNode("button", {
+            class: "back-btn",
+            onClick: [
+              _cache[0] || (_cache[0] = (...args) => $options.goBack && $options.goBack(...args)),
+              _cache[1] || (_cache[1] = (...args) => $options.goBack && $options.goBack(...args))
+            ]
+          }, [
+            vue.createElementVNode("text", { class: "back-icon" }, "←")
+          ]),
+          vue.createElementVNode("text", { class: "nav-title" }, "编辑目标")
+        ]),
+        vue.createElementVNode("view", { class: "nav-right" }, [
+          vue.createElementVNode("button", {
+            class: "save-btn",
+            onClick: _cache[2] || (_cache[2] = (...args) => $options.saveGoal && $options.saveGoal(...args)),
+            disabled: !$data.isFormValid
+          }, [
+            vue.createElementVNode("text", { class: "save-text" }, "保存")
+          ], 8, ["disabled"])
+        ])
+      ]),
+      vue.createCommentVNode(" 编辑表单 "),
+      vue.createElementVNode("view", { class: "edit-form" }, [
+        vue.createCommentVNode(" 目标基本信息 "),
+        vue.createElementVNode("view", { class: "form-section" }, [
+          vue.createElementVNode("view", { class: "section-title" }, [
+            vue.createElementVNode("text", { class: "title-text" }, "基本信息")
+          ]),
+          vue.createElementVNode("view", { class: "form-item" }, [
+            vue.createElementVNode("text", { class: "form-label" }, "目标名称"),
+            vue.withDirectives(vue.createElementVNode(
+              "input",
+              {
+                class: "form-input",
+                "onUpdate:modelValue": _cache[3] || (_cache[3] = ($event) => $data.goalData.title = $event),
+                placeholder: "请输入目标名称",
+                onInput: _cache[4] || (_cache[4] = (...args) => $options.validateForm && $options.validateForm(...args))
+              },
+              null,
+              544
+              /* NEED_HYDRATION, NEED_PATCH */
+            ), [
+              [vue.vModelText, $data.goalData.title]
+            ])
+          ]),
+          vue.createElementVNode("view", { class: "form-item" }, [
+            vue.createElementVNode("text", { class: "form-label" }, "目标类别"),
+            vue.createElementVNode("view", { class: "category-selector" }, [
+              (vue.openBlock(true), vue.createElementBlock(
+                vue.Fragment,
+                null,
+                vue.renderList($data.categories, (category) => {
+                  return vue.openBlock(), vue.createElementBlock("button", {
+                    class: vue.normalizeClass(["category-btn", { active: $data.goalData.category === category.value }]),
+                    key: category.value,
+                    onClick: ($event) => $options.selectCategory(category.value)
+                  }, [
+                    vue.createElementVNode(
+                      "text",
+                      { class: "category-icon" },
+                      vue.toDisplayString(category.icon),
+                      1
+                      /* TEXT */
+                    ),
+                    vue.createElementVNode(
+                      "text",
+                      { class: "category-name" },
+                      vue.toDisplayString(category.name),
+                      1
+                      /* TEXT */
+                    )
+                  ], 10, ["onClick"]);
+                }),
+                128
+                /* KEYED_FRAGMENT */
+              ))
+            ])
+          ]),
+          vue.createElementVNode("view", { class: "form-item" }, [
+            vue.createElementVNode("text", { class: "form-label" }, "目标描述"),
+            vue.withDirectives(vue.createElementVNode(
+              "textarea",
+              {
+                class: "form-textarea",
+                "onUpdate:modelValue": _cache[5] || (_cache[5] = ($event) => $data.goalData.description = $event),
+                placeholder: "请输入目标描述（可选）",
+                maxlength: "200"
+              },
+              null,
+              512
+              /* NEED_PATCH */
+            ), [
+              [vue.vModelText, $data.goalData.description]
+            ])
+          ])
+        ]),
+        vue.createCommentVNode(" 目标金额 "),
+        vue.createElementVNode("view", { class: "form-section" }, [
+          vue.createElementVNode("view", { class: "section-title" }, [
+            vue.createElementVNode("text", { class: "title-text" }, "目标金额")
+          ]),
+          vue.createElementVNode("view", { class: "form-item" }, [
+            vue.createElementVNode("text", { class: "form-label" }, "目标总金额"),
+            vue.createElementVNode("view", { class: "amount-input-wrapper" }, [
+              vue.createElementVNode("text", { class: "currency-symbol" }, "¥"),
+              vue.withDirectives(vue.createElementVNode(
+                "input",
+                {
+                  class: "amount-input",
+                  type: "number",
+                  "onUpdate:modelValue": _cache[6] || (_cache[6] = ($event) => $data.goalData.targetAmount = $event),
+                  placeholder: "请输入目标金额",
+                  onInput: _cache[7] || (_cache[7] = (...args) => $options.validateForm && $options.validateForm(...args))
+                },
+                null,
+                544
+                /* NEED_HYDRATION, NEED_PATCH */
+              ), [
+                [vue.vModelText, $data.goalData.targetAmount]
+              ])
+            ])
+          ]),
+          vue.createElementVNode("view", { class: "form-item" }, [
+            vue.createElementVNode("text", { class: "form-label" }, "当前已存金额"),
+            vue.createElementVNode("view", { class: "amount-input-wrapper" }, [
+              vue.createElementVNode("text", { class: "currency-symbol" }, "¥"),
+              vue.withDirectives(vue.createElementVNode(
+                "input",
+                {
+                  class: "amount-input",
+                  type: "number",
+                  "onUpdate:modelValue": _cache[8] || (_cache[8] = ($event) => $data.goalData.currentAmount = $event),
+                  placeholder: "请输入当前金额",
+                  onInput: _cache[9] || (_cache[9] = (...args) => $options.validateForm && $options.validateForm(...args))
+                },
+                null,
+                544
+                /* NEED_HYDRATION, NEED_PATCH */
+              ), [
+                [vue.vModelText, $data.goalData.currentAmount]
+              ])
+            ])
+          ]),
+          vue.createElementVNode("view", { class: "form-item" }, [
+            vue.createElementVNode("text", { class: "form-label" }, "月投入金额"),
+            vue.createElementVNode("view", { class: "amount-input-wrapper" }, [
+              vue.createElementVNode("text", { class: "currency-symbol" }, "¥"),
+              vue.withDirectives(vue.createElementVNode(
+                "input",
+                {
+                  class: "amount-input",
+                  type: "number",
+                  "onUpdate:modelValue": _cache[10] || (_cache[10] = ($event) => $data.goalData.monthlyContribution = $event),
+                  placeholder: "请输入月投入金额",
+                  onInput: _cache[11] || (_cache[11] = (...args) => $options.validateForm && $options.validateForm(...args))
+                },
+                null,
+                544
+                /* NEED_HYDRATION, NEED_PATCH */
+              ), [
+                [vue.vModelText, $data.goalData.monthlyContribution]
+              ])
+            ])
+          ])
+        ]),
+        vue.createCommentVNode(" 时间设置 "),
+        vue.createElementVNode("view", { class: "form-section" }, [
+          vue.createElementVNode("view", { class: "section-title" }, [
+            vue.createElementVNode("text", { class: "title-text" }, "时间设置")
+          ]),
+          vue.createElementVNode("view", { class: "form-item" }, [
+            vue.createElementVNode("text", { class: "form-label" }, "目标完成日期"),
+            vue.createElementVNode("view", {
+              class: "date-picker",
+              onClick: _cache[12] || (_cache[12] = (...args) => $options.showDatePicker && $options.showDatePicker(...args))
+            }, [
+              vue.createElementVNode(
+                "text",
+                { class: "date-text" },
+                vue.toDisplayString($data.goalData.targetDate || "请选择目标日期"),
+                1
+                /* TEXT */
+              ),
+              vue.createElementVNode("text", { class: "date-icon" }, "📅")
+            ])
+          ])
+        ]),
+        vue.createCommentVNode(" 优先级设置 "),
+        vue.createElementVNode("view", { class: "form-section" }, [
+          vue.createElementVNode("view", { class: "section-title" }, [
+            vue.createElementVNode("text", { class: "title-text" }, "优先级")
+          ]),
+          vue.createElementVNode("view", { class: "priority-selector" }, [
+            (vue.openBlock(true), vue.createElementBlock(
+              vue.Fragment,
+              null,
+              vue.renderList($data.priorities, (priority) => {
+                return vue.openBlock(), vue.createElementBlock("button", {
+                  class: vue.normalizeClass(["priority-btn", { active: $data.goalData.priority === priority.value }]),
+                  key: priority.value,
+                  onClick: ($event) => $options.selectPriority(priority.value)
+                }, [
+                  vue.createElementVNode(
+                    "text",
+                    { class: "priority-icon" },
+                    vue.toDisplayString(priority.icon),
+                    1
+                    /* TEXT */
+                  ),
+                  vue.createElementVNode(
+                    "text",
+                    { class: "priority-name" },
+                    vue.toDisplayString(priority.name),
+                    1
+                    /* TEXT */
+                  )
+                ], 10, ["onClick"]);
+              }),
+              128
+              /* KEYED_FRAGMENT */
+            ))
+          ])
+        ]),
+        vue.createCommentVNode(" 删除目标 "),
+        vue.createElementVNode("view", { class: "form-section danger-section" }, [
+          vue.createElementVNode("view", { class: "section-title" }, [
+            vue.createElementVNode("text", { class: "title-text danger" }, "危险操作")
+          ]),
+          vue.createElementVNode("button", {
+            class: "delete-btn",
+            onClick: _cache[13] || (_cache[13] = (...args) => $options.deleteGoal && $options.deleteGoal(...args))
+          }, [
+            vue.createElementVNode("text", { class: "delete-icon" }, "🗑️"),
+            vue.createElementVNode("text", { class: "delete-text" }, "删除此目标")
+          ])
+        ])
+      ]),
+      vue.createCommentVNode(" 日期选择器 "),
+      $data.showDatePickerModal ? (vue.openBlock(), vue.createElementBlock("view", {
+        key: 0,
+        class: "date-picker-modal",
+        onClick: _cache[19] || (_cache[19] = (...args) => $options.closeDatePicker && $options.closeDatePicker(...args))
+      }, [
+        vue.createElementVNode("view", {
+          class: "date-picker-content",
+          onClick: _cache[18] || (_cache[18] = vue.withModifiers(() => {
+          }, ["stop"]))
+        }, [
+          vue.createElementVNode("view", { class: "date-picker-header" }, [
+            vue.createElementVNode("text", { class: "date-picker-title" }, "选择目标日期"),
+            vue.createElementVNode("button", {
+              class: "close-btn",
+              onClick: _cache[14] || (_cache[14] = (...args) => $options.closeDatePicker && $options.closeDatePicker(...args))
+            }, [
+              vue.createElementVNode("text", { class: "close-icon" }, "×")
+            ])
+          ]),
+          vue.createElementVNode("view", { class: "date-picker-body" }, [
+            vue.createElementVNode("picker-view", {
+              class: "date-picker-view",
+              value: $data.pickerValue,
+              onChange: _cache[15] || (_cache[15] = (...args) => $options.onDateChange && $options.onDateChange(...args))
+            }, [
+              vue.createElementVNode("picker-view-column", null, [
+                (vue.openBlock(true), vue.createElementBlock(
+                  vue.Fragment,
+                  null,
+                  vue.renderList($data.years, (year) => {
+                    return vue.openBlock(), vue.createElementBlock("view", {
+                      class: "picker-item",
+                      key: year
+                    }, [
+                      vue.createElementVNode(
+                        "text",
+                        { class: "picker-text" },
+                        vue.toDisplayString(year) + "年",
+                        1
+                        /* TEXT */
+                      )
+                    ]);
+                  }),
+                  128
+                  /* KEYED_FRAGMENT */
+                ))
+              ]),
+              vue.createElementVNode("picker-view-column", null, [
+                (vue.openBlock(true), vue.createElementBlock(
+                  vue.Fragment,
+                  null,
+                  vue.renderList($data.months, (month) => {
+                    return vue.openBlock(), vue.createElementBlock("view", {
+                      class: "picker-item",
+                      key: month
+                    }, [
+                      vue.createElementVNode(
+                        "text",
+                        { class: "picker-text" },
+                        vue.toDisplayString(month) + "月",
+                        1
+                        /* TEXT */
+                      )
+                    ]);
+                  }),
+                  128
+                  /* KEYED_FRAGMENT */
+                ))
+              ])
+            ], 40, ["value"])
+          ]),
+          vue.createElementVNode("view", { class: "date-picker-footer" }, [
+            vue.createElementVNode("button", {
+              class: "date-btn cancel",
+              onClick: _cache[16] || (_cache[16] = (...args) => $options.closeDatePicker && $options.closeDatePicker(...args))
+            }, [
+              vue.createElementVNode("text", { class: "btn-text" }, "取消")
+            ]),
+            vue.createElementVNode("button", {
+              class: "date-btn confirm",
+              onClick: _cache[17] || (_cache[17] = (...args) => $options.confirmDate && $options.confirmDate(...args))
+            }, [
+              vue.createElementVNode("text", { class: "btn-text" }, "确定")
+            ])
+          ])
+        ])
+      ])) : vue.createCommentVNode("v-if", true)
+    ]);
+  }
+  const PagesWealthGoalEdit = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["render", _sfc_render], ["__scopeId", "data-v-d6acd8ab"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/goal-edit.vue"]]);
   __definePage("pages/denglu/login", PagesDengluLogin);
   __definePage("pages/register/register", PagesRegisterRegister);
   __definePage("pages/index/index", PagesIndexIndex);
@@ -27238,14 +44332,6 @@ IP：${event.ip}
   __definePage("pages/payment/payment", PagesPaymentPayment);
   __definePage("pages/water/water", PagesWaterWater);
   __definePage("pages/water-payment/water-payment", PagesWaterPaymentWaterPayment);
-  __definePage("pages/electric/electric", PagesElectricElectric);
-  __definePage("pages/electric-payment/electric-payment", PagesElectricPaymentElectricPayment);
-  __definePage("pages/gas/gas", PagesGasGas);
-  __definePage("pages/gas-payment/gas-payment", PagesGasPaymentGasPayment);
-  __definePage("pages/broadband/broadband", PagesBroadbandBroadband);
-  __definePage("pages/broadband-payment/broadband-payment", PagesBroadbandPaymentBroadbandPayment);
-  __definePage("pages/tv/tv", PagesTvTv);
-  __definePage("pages/tv-payment/tv-payment", PagesTvPaymentTvPayment);
   __definePage("pages/city-select/city-select", PagesCitySelectCitySelect);
   __definePage("pages/payment-management/payment-management", PagesPaymentManagementPaymentManagement);
   __definePage("pages/recharge/recharge", PagesRechargeRecharge);
@@ -27261,13 +44347,21 @@ IP：${event.ip}
   __definePage("pages/user/profile", PagesUserProfile);
   __definePage("pages/user/security", PagesUserSecurity);
   __definePage("pages/user/change-password", PagesUserChangePassword);
-  __definePage("pages/user/screen-protection", PagesUserScreenProtection);
-  __definePage("pages/test/mobile-protection-debug", PagesTestMobileProtectionDebug);
   __definePage("pages/service/branch", PagesServiceBranch);
   __definePage("pages/wealth/deposit", PagesWealthDeposit);
   __definePage("pages/wealth/product", PagesWealthProduct);
   __definePage("pages/wealth/insurance", PagesWealthInsurance);
   __definePage("pages/wealth/forex", PagesWealthForex);
+  __definePage("pages/wealth/insurance-detail", PagesWealthInsuranceDetail);
+  __definePage("pages/wealth/insurance-success", PagesWealthInsuranceSuccess);
+  __definePage("pages/wealth/ai-wealth-manager", PagesWealthAiWealthManager);
+  __definePage("pages/wealth/meeting-schedule", PagesWealthMeetingSchedule);
+  __definePage("pages/wealth/asset-allocation-detail", PagesWealthAssetAllocationDetail);
+  __definePage("pages/wealth/advice-detail", PagesWealthAdviceDetail);
+  __definePage("pages/wealth/goal-usage-guide", PagesWealthGoalUsageGuide);
+  __definePage("pages/wealth/report-preview", PagesWealthReportPreview);
+  __definePage("pages/wealth/goal-list", PagesWealthGoalList);
+  __definePage("pages/wealth/goal-edit", PagesWealthGoalEdit);
   function initPushNotification() {
     if (typeof plus !== "undefined" && plus.push) {
       plus.globalEvent.addEventListener("newPath", ({ path }) => {
@@ -27304,43 +44398,881 @@ IP：${event.ip}
   Promise.resolve().then(() => {
     initPushNotification();
   });
+  class DataStorageManager {
+    constructor() {
+      this.storageKeys = {
+        // 用户相关
+        USER_INFO: "userInfo",
+        CURRENT_USER_ID: "currentUserId",
+        IS_LOGGED_IN: "isLoggedIn",
+        USERS: "users",
+        // 财富相关
+        WEALTH_DATA: "wealthData",
+        DEPOSIT_DATA: "depositData",
+        INVESTMENT_DATA: "investmentData",
+        INSURANCE_DATA: "insuranceData",
+        FOREX_DATA: "forexData",
+        // 账户相关
+        ACCOUNT_DATA: "accountData",
+        BALANCE_DATA: "balanceData",
+        TRANSACTION_DATA: "transactionData",
+        // 信用卡相关
+        CREDIT_CARD_DATA: "creditCardData",
+        CREDIT_CARD_TRANSACTIONS: "creditCardTransactions",
+        // 转账相关
+        TRANSFER_DATA: "transferData",
+        FREQUENT_CONTACTS: "frequentContacts",
+        // 支付相关
+        PAYMENT_DATA: "paymentData",
+        LIFE_SERVICES: "lifeServices",
+        // 安全相关
+        SECURITY_DATA: "securityData",
+        LOGIN_DEVICES: "loginDevices",
+        SECURITY_EVENTS: "securityEvents",
+        // 目标管理相关
+        USER_GOALS: "userGoals",
+        GOAL_PROGRESS: "goalProgress",
+        // 应用设置
+        APP_SETTINGS: "appSettings",
+        THEME_SETTINGS: "themeSettings",
+        LANGUAGE_SETTINGS: "languageSettings",
+        // 缓存数据
+        CACHE_DATA: "cacheData",
+        LAST_SYNC_TIME: "lastSyncTime"
+      };
+    }
+    /**
+     * 初始化所有数据到本地存储
+     */
+    async initAllDataToStorage() {
+      try {
+        formatAppLog("log", "at utils/data-storage-manager.js:67", "开始初始化所有数据到本地存储...");
+        await this.initUserData();
+        await this.initWealthData();
+        await this.initAccountData();
+        await this.initCreditCardData();
+        await this.initTransferData();
+        await this.initPaymentData();
+        await this.initSecurityData();
+        await this.initGoalData();
+        await this.initAppSettings();
+        await this.setLastSyncTime();
+        formatAppLog("log", "at utils/data-storage-manager.js:99", "所有数据初始化到本地存储完成！");
+        return true;
+      } catch (error) {
+        formatAppLog("error", "at utils/data-storage-manager.js:102", "初始化数据到本地存储失败:", error);
+        return false;
+      }
+    }
+    /**
+     * 初始化用户数据
+     */
+    async initUserData() {
+      try {
+        const users2 = userDataJson;
+        await setStorage(this.storageKeys.USERS, users2, true);
+        const currentUser = users2[0];
+        if (currentUser) {
+          await setStorage(this.storageKeys.USER_INFO, currentUser, true);
+          await setStorage(this.storageKeys.CURRENT_USER_ID, currentUser.id, true);
+          await setStorage(this.storageKeys.IS_LOGGED_IN, true, true);
+        }
+        formatAppLog("log", "at utils/data-storage-manager.js:126", "用户数据初始化完成:", users2.length, "个用户");
+      } catch (error) {
+        formatAppLog("error", "at utils/data-storage-manager.js:128", "初始化用户数据失败:", error);
+      }
+    }
+    /**
+     * 初始化财富数据
+     */
+    async initWealthData() {
+      try {
+        const users2 = userDataJson;
+        const wealthData = {};
+        users2.forEach((user) => {
+          var _a, _b;
+          wealthData[user.id] = {
+            deposits: ((_a = user.wealthProducts) == null ? void 0 : _a.deposits) || {
+              current: 0,
+              fixed: 0,
+              smart: 0
+            },
+            investments: ((_b = user.wealthProducts) == null ? void 0 : _b.investments) || [],
+            investmentPortfolio: user.investmentPortfolio || {
+              totalValue: 0,
+              totalReturn: 0,
+              returnRate: 0,
+              holdings: []
+            },
+            depositProducts: user.depositProducts || {
+              current: { rate: 0.35, features: [], riskWarning: "" },
+              fixed: [],
+              smart: { rate: 2.8, features: [], riskWarning: "" }
+            },
+            insuranceProducts: user.insuranceProducts || {
+              categories: []
+            },
+            forexProducts: user.forexProducts || {
+              majorPairs: [],
+              tradingPairs: []
+            }
+          };
+        });
+        await setStorage(this.storageKeys.WEALTH_DATA, wealthData, true);
+        formatAppLog("log", "at utils/data-storage-manager.js:170", "财富数据初始化完成");
+      } catch (error) {
+        formatAppLog("error", "at utils/data-storage-manager.js:172", "初始化财富数据失败:", error);
+      }
+    }
+    /**
+     * 初始化账户数据
+     */
+    async initAccountData() {
+      try {
+        const users2 = userDataJson;
+        const accountData = {};
+        const balanceData = {};
+        const transactionData = {};
+        users2.forEach((user) => {
+          accountData[user.id] = {
+            balance: user.balance || 0,
+            bankAccounts: user.bankAccounts || [],
+            totalBalance: user.balance || 0,
+            accountCount: (user.bankAccounts || []).length
+          };
+          balanceData[user.id] = {
+            currentBalance: user.balance || 0,
+            availableBalance: user.balance || 0,
+            frozenBalance: 0,
+            lastUpdateTime: (/* @__PURE__ */ new Date()).toISOString()
+          };
+          transactionData[user.id] = {
+            records: user.transactionRecords || [],
+            totalTransactions: (user.transactionRecords || []).length,
+            totalAmount: (user.transactionRecords || []).reduce((sum, t) => sum + (t.amount || 0), 0),
+            averageAmount: (user.transactionRecords || []).length > 0 ? (user.transactionRecords || []).reduce((sum, t) => sum + (t.amount || 0), 0) / (user.transactionRecords || []).length : 0
+          };
+        });
+        await setStorage(this.storageKeys.ACCOUNT_DATA, accountData, true);
+        await setStorage(this.storageKeys.BALANCE_DATA, balanceData, true);
+        await setStorage(this.storageKeys.TRANSACTION_DATA, transactionData, true);
+        formatAppLog("log", "at utils/data-storage-manager.js:214", "账户数据初始化完成");
+      } catch (error) {
+        formatAppLog("error", "at utils/data-storage-manager.js:216", "初始化账户数据失败:", error);
+      }
+    }
+    /**
+     * 初始化信用卡数据
+     */
+    async initCreditCardData() {
+      try {
+        const users2 = userDataJson;
+        const creditCardData = {};
+        const creditCardTransactions = {};
+        users2.forEach((user) => {
+          creditCardData[user.id] = {
+            cards: user.creditCards || [],
+            totalCreditLimit: (user.creditCards || []).reduce((sum, card) => sum + (card.creditLimit || 0), 0),
+            usedCreditLimit: (user.creditCards || []).reduce((sum, card) => sum + (card.currentBalance || 0), 0),
+            availableCredit: (user.creditCards || []).reduce((sum, card) => sum + (card.availableCredit || 0), 0),
+            cardCount: (user.creditCards || []).length
+          };
+          creditCardTransactions[user.id] = user.creditCardTransactions || [];
+        });
+        await setStorage(this.storageKeys.CREDIT_CARD_DATA, creditCardData, true);
+        await setStorage(this.storageKeys.CREDIT_CARD_TRANSACTIONS, creditCardTransactions, true);
+        formatAppLog("log", "at utils/data-storage-manager.js:244", "信用卡数据初始化完成");
+      } catch (error) {
+        formatAppLog("error", "at utils/data-storage-manager.js:246", "初始化信用卡数据失败:", error);
+      }
+    }
+    /**
+     * 初始化转账数据
+     */
+    async initTransferData() {
+      try {
+        const users2 = userDataJson;
+        const transferData = {};
+        const frequentContacts = {};
+        users2.forEach((user) => {
+          transferData[user.id] = {
+            records: user.transferRecords || [],
+            totalTransfers: (user.transferRecords || []).length,
+            totalTransferAmount: (user.transferRecords || []).reduce((sum, t) => sum + (t.amount || 0), 0)
+          };
+          frequentContacts[user.id] = user.frequentContacts || [];
+        });
+        await setStorage(this.storageKeys.TRANSFER_DATA, transferData, true);
+        await setStorage(this.storageKeys.FREQUENT_CONTACTS, frequentContacts, true);
+        formatAppLog("log", "at utils/data-storage-manager.js:272", "转账数据初始化完成");
+      } catch (error) {
+        formatAppLog("error", "at utils/data-storage-manager.js:274", "初始化转账数据失败:", error);
+      }
+    }
+    /**
+     * 初始化支付数据
+     */
+    async initPaymentData() {
+      try {
+        const users2 = userDataJson;
+        const paymentData = {};
+        const lifeServices = {};
+        users2.forEach((user) => {
+          paymentData[user.id] = {
+            records: user.paymentRecords || [],
+            totalPayments: (user.paymentRecords || []).length,
+            totalPaymentAmount: (user.paymentRecords || []).reduce((sum, p) => sum + (p.amount || 0), 0)
+          };
+          lifeServices[user.id] = user.lifeServices || {
+            phoneRecharge: {},
+            utilities: [],
+            quickServices: [],
+            allServices: [],
+            bannerData: [],
+            paymentCategories: [],
+            recentPayments: [],
+            favoriteServices: []
+          };
+        });
+        await setStorage(this.storageKeys.PAYMENT_DATA, paymentData, true);
+        await setStorage(this.storageKeys.LIFE_SERVICES, lifeServices, true);
+        formatAppLog("log", "at utils/data-storage-manager.js:309", "支付数据初始化完成");
+      } catch (error) {
+        formatAppLog("error", "at utils/data-storage-manager.js:311", "初始化支付数据失败:", error);
+      }
+    }
+    /**
+     * 初始化安全数据
+     */
+    async initSecurityData() {
+      try {
+        const users2 = userDataJson;
+        const securityData = {};
+        const loginDevices = {};
+        const securityEvents = {};
+        users2.forEach((user) => {
+          var _a, _b, _c, _d, _e;
+          securityData[user.id] = {
+            settings: user.securitySettings || {},
+            biometricEnabled: ((_a = user.securitySettings) == null ? void 0 : _a.biometricEnabled) || false,
+            twoFactorEnabled: ((_b = user.securitySettings) == null ? void 0 : _b.twoFactorEnabled) || false,
+            transactionLimit: ((_c = user.securitySettings) == null ? void 0 : _c.transactionLimit) || 0
+          };
+          loginDevices[user.id] = ((_d = user.securitySettings) == null ? void 0 : _d.loginDevices) || [];
+          securityEvents[user.id] = ((_e = user.securitySettings) == null ? void 0 : _e.securityEvents) || [];
+        });
+        await setStorage(this.storageKeys.SECURITY_DATA, securityData, true);
+        await setStorage(this.storageKeys.LOGIN_DEVICES, loginDevices, true);
+        await setStorage(this.storageKeys.SECURITY_EVENTS, securityEvents, true);
+        formatAppLog("log", "at utils/data-storage-manager.js:341", "安全数据初始化完成");
+      } catch (error) {
+        formatAppLog("error", "at utils/data-storage-manager.js:343", "初始化安全数据失败:", error);
+      }
+    }
+    /**
+     * 初始化目标管理数据
+     */
+    async initGoalData() {
+      try {
+        const users2 = userDataJson;
+        const userGoals = {};
+        const goalProgress = {};
+        users2.forEach((user) => {
+          userGoals[user.id] = [
+            {
+              id: "goal001",
+              name: "购房首付",
+              targetAmount: 5e5,
+              currentAmount: 325e3,
+              monthlyContribution: 5e3,
+              targetDate: "2026-08-01",
+              category: "house",
+              priority: "high",
+              status: "active",
+              progress: 65,
+              createTime: (/* @__PURE__ */ new Date()).toISOString(),
+              updateTime: (/* @__PURE__ */ new Date()).toISOString()
+            },
+            {
+              id: "goal002",
+              name: "教育基金",
+              targetAmount: 15e4,
+              currentAmount: 6e4,
+              monthlyContribution: 3e3,
+              targetDate: "2028-06-01",
+              category: "education",
+              priority: "medium",
+              status: "active",
+              progress: 40,
+              createTime: (/* @__PURE__ */ new Date()).toISOString(),
+              updateTime: (/* @__PURE__ */ new Date()).toISOString()
+            },
+            {
+              id: "goal003",
+              name: "退休规划",
+              targetAmount: 1e6,
+              currentAmount: 25e4,
+              monthlyContribution: 2e3,
+              targetDate: "2040-12-01",
+              category: "retirement",
+              priority: "low",
+              status: "active",
+              progress: 25,
+              createTime: (/* @__PURE__ */ new Date()).toISOString(),
+              updateTime: (/* @__PURE__ */ new Date()).toISOString()
+            }
+          ];
+          goalProgress[user.id] = {
+            totalGoals: 3,
+            completedGoals: 0,
+            activeGoals: 3,
+            totalTargetAmount: 165e4,
+            totalCurrentAmount: 635e3,
+            overallProgress: 38.5
+          };
+        });
+        await setStorage(this.storageKeys.USER_GOALS, userGoals, true);
+        await setStorage(this.storageKeys.GOAL_PROGRESS, goalProgress, true);
+        formatAppLog("log", "at utils/data-storage-manager.js:416", "目标管理数据初始化完成");
+      } catch (error) {
+        formatAppLog("error", "at utils/data-storage-manager.js:418", "初始化目标管理数据失败:", error);
+      }
+    }
+    /**
+     * 初始化应用设置
+     */
+    async initAppSettings() {
+      try {
+        const appSettings = {
+          version: "1.0.0",
+          lastUpdateTime: (/* @__PURE__ */ new Date()).toISOString(),
+          autoSync: true,
+          dataBackup: true,
+          notifications: true,
+          biometricLogin: true
+        };
+        const themeSettings = {
+          currentTheme: "light",
+          primaryColor: "#667eea",
+          secondaryColor: "#764ba2",
+          fontSize: "medium",
+          language: "zh-CN"
+        };
+        const languageSettings = {
+          currentLanguage: "zh-CN",
+          availableLanguages: ["zh-CN", "en-US"],
+          autoDetect: true
+        };
+        await setStorage(this.storageKeys.APP_SETTINGS, appSettings, true);
+        await setStorage(this.storageKeys.THEME_SETTINGS, themeSettings, true);
+        await setStorage(this.storageKeys.LANGUAGE_SETTINGS, languageSettings, true);
+        formatAppLog("log", "at utils/data-storage-manager.js:454", "应用设置初始化完成");
+      } catch (error) {
+        formatAppLog("error", "at utils/data-storage-manager.js:456", "初始化应用设置失败:", error);
+      }
+    }
+    /**
+     * 设置最后同步时间
+     */
+    async setLastSyncTime() {
+      try {
+        const syncTime = (/* @__PURE__ */ new Date()).toISOString();
+        await setStorage(this.storageKeys.LAST_SYNC_TIME, syncTime, true);
+        formatAppLog("log", "at utils/data-storage-manager.js:467", "同步时间设置完成:", syncTime);
+      } catch (error) {
+        formatAppLog("error", "at utils/data-storage-manager.js:469", "设置同步时间失败:", error);
+      }
+    }
+    /**
+     * 获取存储的数据
+     */
+    async getStoredData(key) {
+      try {
+        return await getStorage(key, true);
+      } catch (error) {
+        formatAppLog("error", "at utils/data-storage-manager.js:480", `获取存储数据失败: ${key}`, error);
+        return null;
+      }
+    }
+    /**
+     * 更新存储的数据
+     */
+    async updateStoredData(key, data) {
+      try {
+        await setStorage(key, data, true);
+        formatAppLog("log", "at utils/data-storage-manager.js:491", `存储数据更新成功: ${key}`);
+        return true;
+      } catch (error) {
+        formatAppLog("error", "at utils/data-storage-manager.js:494", `更新存储数据失败: ${key}`, error);
+        return false;
+      }
+    }
+    /**
+     * 获取所有存储信息
+     */
+    async getAllStorageInfo() {
+      try {
+        const storageInfo = {};
+        for (const [key, value] of Object.entries(this.storageKeys)) {
+          const data = await this.getStoredData(value);
+          storageInfo[key] = {
+            key: value,
+            hasData: data !== null,
+            dataSize: data ? JSON.stringify(data).length : 0,
+            lastUpdate: (data == null ? void 0 : data.lastUpdateTime) || null
+          };
+        }
+        return storageInfo;
+      } catch (error) {
+        formatAppLog("error", "at utils/data-storage-manager.js:518", "获取存储信息失败:", error);
+        return {};
+      }
+    }
+    /**
+     * 数据同步检查
+     */
+    async checkDataSync() {
+      try {
+        const lastSyncTime = await this.getStoredData(this.storageKeys.LAST_SYNC_TIME);
+        const now = /* @__PURE__ */ new Date();
+        if (!lastSyncTime) {
+          formatAppLog("log", "at utils/data-storage-manager.js:532", "首次运行，需要初始化数据");
+          return { needsSync: true, reason: "首次运行" };
+        }
+        const lastSync = new Date(lastSyncTime);
+        const timeDiff = now - lastSync;
+        const hoursDiff = timeDiff / (1e3 * 60 * 60);
+        if (hoursDiff > 24) {
+          formatAppLog("log", "at utils/data-storage-manager.js:541", "数据超过24小时未同步，需要更新");
+          return { needsSync: true, reason: "数据过期", hoursDiff };
+        }
+        formatAppLog("log", "at utils/data-storage-manager.js:545", "数据同步正常");
+        return { needsSync: false, hoursDiff };
+      } catch (error) {
+        formatAppLog("error", "at utils/data-storage-manager.js:548", "检查数据同步失败:", error);
+        return { needsSync: true, reason: "检查失败" };
+      }
+    }
+  }
+  const dataStorageManager = new DataStorageManager();
+  class DataSync {
+    constructor() {
+      this.storageKeys = {
+        USERS: "users",
+        USER_INFO: "userInfo",
+        CURRENT_USER_ID: "currentUserId",
+        IS_LOGGED_IN: "isLoggedIn",
+        WEALTH_DATA: "wealthData",
+        ACCOUNT_DATA: "accountData",
+        CREDIT_CARD_DATA: "creditCardData",
+        TRANSFER_DATA: "transferData",
+        PAYMENT_DATA: "paymentData",
+        SECURITY_DATA: "securityData",
+        USER_GOALS: "userGoals"
+      };
+    }
+    /**
+     * 获取用户数据（优先从本地存储）
+     */
+    getUsersData() {
+      try {
+        let users2 = uni.getStorageSync(this.storageKeys.USERS);
+        if (!users2 || users2.length === 0) {
+          users2 = userDataJson;
+          uni.setStorageSync(this.storageKeys.USERS, users2);
+          formatAppLog("log", "at utils/data-sync.js:39", "从JSON文件同步用户数据到本地存储");
+        }
+        return users2;
+      } catch (error) {
+        formatAppLog("error", "at utils/data-sync.js:44", "获取用户数据失败:", error);
+        return userDataJson;
+      }
+    }
+    /**
+     * 获取当前用户信息
+     */
+    getCurrentUserInfo() {
+      try {
+        let userInfo2 = uni.getStorageSync(this.storageKeys.USER_INFO);
+        if (!userInfo2) {
+          const users2 = this.getUsersData();
+          userInfo2 = users2[0];
+          if (userInfo2) {
+            uni.setStorageSync(this.storageKeys.USER_INFO, userInfo2);
+            uni.setStorageSync(this.storageKeys.CURRENT_USER_ID, userInfo2.id);
+            uni.setStorageSync(this.storageKeys.IS_LOGGED_IN, true);
+          }
+        }
+        return userInfo2;
+      } catch (error) {
+        formatAppLog("error", "at utils/data-sync.js:70", "获取当前用户信息失败:", error);
+        return null;
+      }
+    }
+    /**
+     * 获取当前用户ID
+     */
+    getCurrentUserId() {
+      try {
+        let currentUserId = uni.getStorageSync(this.storageKeys.CURRENT_USER_ID);
+        if (!currentUserId) {
+          const userInfo2 = this.getCurrentUserInfo();
+          currentUserId = (userInfo2 == null ? void 0 : userInfo2.id) || "u001";
+          uni.setStorageSync(this.storageKeys.CURRENT_USER_ID, currentUserId);
+        }
+        return currentUserId;
+      } catch (error) {
+        formatAppLog("error", "at utils/data-sync.js:90", "获取当前用户ID失败:", error);
+        return "u001";
+      }
+    }
+    /**
+     * 获取财富数据
+     */
+    getWealthData(userId = null) {
+      var _a, _b;
+      try {
+        const targetUserId = userId || this.getCurrentUserId();
+        let wealthData = uni.getStorageSync(this.storageKeys.WEALTH_DATA);
+        if (!wealthData || !wealthData[targetUserId]) {
+          const users2 = this.getUsersData();
+          const user = users2.find((u) => u.id === targetUserId) || users2[0];
+          if (user) {
+            wealthData = wealthData || {};
+            wealthData[targetUserId] = {
+              deposits: ((_a = user.wealthProducts) == null ? void 0 : _a.deposits) || {
+                current: 0,
+                fixed: 0,
+                smart: 0
+              },
+              investments: ((_b = user.wealthProducts) == null ? void 0 : _b.investments) || [],
+              investmentPortfolio: user.investmentPortfolio || {
+                totalValue: 0,
+                totalReturn: 0,
+                returnRate: 0,
+                holdings: []
+              },
+              depositProducts: user.depositProducts || {
+                current: { rate: 0.35, features: [], riskWarning: "" },
+                fixed: [],
+                smart: { rate: 2.8, features: [], riskWarning: "" }
+              },
+              insuranceProducts: user.insuranceProducts || {
+                categories: []
+              },
+              forexProducts: user.forexProducts || {
+                majorPairs: [],
+                tradingPairs: []
+              }
+            };
+            uni.setStorageSync(this.storageKeys.WEALTH_DATA, wealthData);
+          }
+        }
+        return (wealthData == null ? void 0 : wealthData[targetUserId]) || {};
+      } catch (error) {
+        formatAppLog("error", "at utils/data-sync.js:145", "获取财富数据失败:", error);
+        return {};
+      }
+    }
+    /**
+     * 获取账户数据
+     */
+    getAccountData(userId = null) {
+      try {
+        const targetUserId = userId || this.getCurrentUserId();
+        let accountData = uni.getStorageSync(this.storageKeys.ACCOUNT_DATA);
+        if (!accountData || !accountData[targetUserId]) {
+          const users2 = this.getUsersData();
+          const user = users2.find((u) => u.id === targetUserId) || users2[0];
+          if (user) {
+            accountData = accountData || {};
+            accountData[targetUserId] = {
+              balance: user.balance || 0,
+              bankAccounts: user.bankAccounts || [],
+              totalBalance: user.balance || 0,
+              accountCount: (user.bankAccounts || []).length
+            };
+            uni.setStorageSync(this.storageKeys.ACCOUNT_DATA, accountData);
+          }
+        }
+        return (accountData == null ? void 0 : accountData[targetUserId]) || {};
+      } catch (error) {
+        formatAppLog("error", "at utils/data-sync.js:180", "获取账户数据失败:", error);
+        return {};
+      }
+    }
+    /**
+     * 获取信用卡数据
+     */
+    getCreditCardData(userId = null) {
+      try {
+        const targetUserId = userId || this.getCurrentUserId();
+        let creditCardData = uni.getStorageSync(this.storageKeys.CREDIT_CARD_DATA);
+        if (!creditCardData || !creditCardData[targetUserId]) {
+          const users2 = this.getUsersData();
+          const user = users2.find((u) => u.id === targetUserId) || users2[0];
+          if (user) {
+            creditCardData = creditCardData || {};
+            creditCardData[targetUserId] = {
+              cards: user.creditCards || [],
+              totalCreditLimit: (user.creditCards || []).reduce((sum, card) => sum + (card.creditLimit || 0), 0),
+              usedCreditLimit: (user.creditCards || []).reduce((sum, card) => sum + (card.currentBalance || 0), 0),
+              availableCredit: (user.creditCards || []).reduce((sum, card) => sum + (card.availableCredit || 0), 0),
+              cardCount: (user.creditCards || []).length
+            };
+            uni.setStorageSync(this.storageKeys.CREDIT_CARD_DATA, creditCardData);
+          }
+        }
+        return (creditCardData == null ? void 0 : creditCardData[targetUserId]) || {};
+      } catch (error) {
+        formatAppLog("error", "at utils/data-sync.js:216", "获取信用卡数据失败:", error);
+        return {};
+      }
+    }
+    /**
+     * 获取转账数据
+     */
+    getTransferData(userId = null) {
+      try {
+        const targetUserId = userId || this.getCurrentUserId();
+        let transferData = uni.getStorageSync(this.storageKeys.TRANSFER_DATA);
+        if (!transferData || !transferData[targetUserId]) {
+          const users2 = this.getUsersData();
+          const user = users2.find((u) => u.id === targetUserId) || users2[0];
+          if (user) {
+            transferData = transferData || {};
+            transferData[targetUserId] = {
+              records: user.transferRecords || [],
+              totalTransfers: (user.transferRecords || []).length,
+              totalTransferAmount: (user.transferRecords || []).reduce((sum, t) => sum + (t.amount || 0), 0)
+            };
+            uni.setStorageSync(this.storageKeys.TRANSFER_DATA, transferData);
+          }
+        }
+        return (transferData == null ? void 0 : transferData[targetUserId]) || {};
+      } catch (error) {
+        formatAppLog("error", "at utils/data-sync.js:250", "获取转账数据失败:", error);
+        return {};
+      }
+    }
+    /**
+     * 获取支付数据
+     */
+    getPaymentData(userId = null) {
+      try {
+        const targetUserId = userId || this.getCurrentUserId();
+        let paymentData = uni.getStorageSync(this.storageKeys.PAYMENT_DATA);
+        if (!paymentData || !paymentData[targetUserId]) {
+          const users2 = this.getUsersData();
+          const user = users2.find((u) => u.id === targetUserId) || users2[0];
+          if (user) {
+            paymentData = paymentData || {};
+            paymentData[targetUserId] = {
+              records: user.paymentRecords || [],
+              totalPayments: (user.paymentRecords || []).length,
+              totalPaymentAmount: (user.paymentRecords || []).reduce((sum, p) => sum + (p.amount || 0), 0)
+            };
+            uni.setStorageSync(this.storageKeys.PAYMENT_DATA, paymentData);
+          }
+        }
+        return (paymentData == null ? void 0 : paymentData[targetUserId]) || {};
+      } catch (error) {
+        formatAppLog("error", "at utils/data-sync.js:284", "获取支付数据失败:", error);
+        return {};
+      }
+    }
+    /**
+     * 获取安全数据
+     */
+    getSecurityData(userId = null) {
+      var _a, _b, _c;
+      try {
+        const targetUserId = userId || this.getCurrentUserId();
+        let securityData = uni.getStorageSync(this.storageKeys.SECURITY_DATA);
+        if (!securityData || !securityData[targetUserId]) {
+          const users2 = this.getUsersData();
+          const user = users2.find((u) => u.id === targetUserId) || users2[0];
+          if (user) {
+            securityData = securityData || {};
+            securityData[targetUserId] = {
+              settings: user.securitySettings || {},
+              biometricEnabled: ((_a = user.securitySettings) == null ? void 0 : _a.biometricEnabled) || false,
+              twoFactorEnabled: ((_b = user.securitySettings) == null ? void 0 : _b.twoFactorEnabled) || false,
+              transactionLimit: ((_c = user.securitySettings) == null ? void 0 : _c.transactionLimit) || 0
+            };
+            uni.setStorageSync(this.storageKeys.SECURITY_DATA, securityData);
+          }
+        }
+        return (securityData == null ? void 0 : securityData[targetUserId]) || {};
+      } catch (error) {
+        formatAppLog("error", "at utils/data-sync.js:319", "获取安全数据失败:", error);
+        return {};
+      }
+    }
+    /**
+     * 获取目标数据
+     */
+    getUserGoals(userId = null) {
+      try {
+        const targetUserId = userId || this.getCurrentUserId();
+        let userGoals = uni.getStorageSync(this.storageKeys.USER_GOALS);
+        if (!userGoals || !userGoals[targetUserId]) {
+          userGoals = userGoals || {};
+          userGoals[targetUserId] = [
+            {
+              id: "goal001",
+              name: "购房首付",
+              targetAmount: 5e5,
+              currentAmount: 325e3,
+              monthlyContribution: 5e3,
+              targetDate: "2026-08-01",
+              category: "house",
+              priority: "high",
+              status: "active",
+              progress: 65,
+              createTime: (/* @__PURE__ */ new Date()).toISOString(),
+              updateTime: (/* @__PURE__ */ new Date()).toISOString()
+            },
+            {
+              id: "goal002",
+              name: "教育基金",
+              targetAmount: 15e4,
+              currentAmount: 6e4,
+              monthlyContribution: 3e3,
+              targetDate: "2028-06-01",
+              category: "education",
+              priority: "medium",
+              status: "active",
+              progress: 40,
+              createTime: (/* @__PURE__ */ new Date()).toISOString(),
+              updateTime: (/* @__PURE__ */ new Date()).toISOString()
+            },
+            {
+              id: "goal003",
+              name: "退休规划",
+              targetAmount: 1e6,
+              currentAmount: 25e4,
+              monthlyContribution: 2e3,
+              targetDate: "2040-12-01",
+              category: "retirement",
+              priority: "low",
+              status: "active",
+              progress: 25,
+              createTime: (/* @__PURE__ */ new Date()).toISOString(),
+              updateTime: (/* @__PURE__ */ new Date()).toISOString()
+            }
+          ];
+          uni.setStorageSync(this.storageKeys.USER_GOALS, userGoals);
+        }
+        return (userGoals == null ? void 0 : userGoals[targetUserId]) || [];
+      } catch (error) {
+        formatAppLog("error", "at utils/data-sync.js:387", "获取目标数据失败:", error);
+        return [];
+      }
+    }
+    /**
+     * 更新数据到本地存储
+     */
+    updateDataToStorage(key, data, userId = null) {
+      try {
+        const targetUserId = userId || this.getCurrentUserId();
+        let existingData = uni.getStorageSync(key) || {};
+        existingData[targetUserId] = {
+          ...existingData[targetUserId],
+          ...data,
+          lastUpdateTime: (/* @__PURE__ */ new Date()).toISOString()
+        };
+        uni.setStorageSync(key, existingData);
+        formatAppLog("log", "at utils/data-sync.js:412", `数据已更新到本地存储: ${key}`);
+        return true;
+      } catch (error) {
+        formatAppLog("error", "at utils/data-sync.js:415", `更新数据到本地存储失败: ${key}`, error);
+        return false;
+      }
+    }
+    /**
+     * 同步所有数据到本地存储
+     */
+    syncAllDataToStorage() {
+      try {
+        formatAppLog("log", "at utils/data-sync.js:425", "开始同步所有数据到本地存储...");
+        const users2 = this.getUsersData();
+        users2.forEach((user) => {
+          this.getWealthData(user.id);
+          this.getAccountData(user.id);
+          this.getCreditCardData(user.id);
+          this.getTransferData(user.id);
+          this.getPaymentData(user.id);
+          this.getSecurityData(user.id);
+          this.getUserGoals(user.id);
+        });
+        formatAppLog("log", "at utils/data-sync.js:452", "所有数据已同步到本地存储");
+        return true;
+      } catch (error) {
+        formatAppLog("error", "at utils/data-sync.js:455", "同步数据到本地存储失败:", error);
+        return false;
+      }
+    }
+  }
+  const dataSync = new DataSync();
   const _sfc_main = {
     name: "App",
     onLaunch(options) {
-      formatAppLog("log", "at App.vue:14", "App Launch", options);
+      formatAppLog("log", "at App.vue:16", "App Launch", options);
       this.checkUpdate();
       this.initUserInfo();
       this.setSystemInfo();
       this.initNetworkListener();
       this.initLoginInterceptor();
+      initWealthDataSync();
+      this.initAllDataToStorage();
     },
     onShow(options) {
-      formatAppLog("log", "at App.vue:31", "App Show", options);
+      formatAppLog("log", "at App.vue:41", "App Show", options);
       this.checkLoginStatus();
       this.restoreAppState();
       this.globalLoginCheck();
     },
     onHide() {
-      formatAppLog("log", "at App.vue:44", "App Hide");
+      formatAppLog("log", "at App.vue:54", "App Hide");
       this.saveAppState();
     },
     onError(error) {
-      formatAppLog("error", "at App.vue:51", "App Error:", error);
+      formatAppLog("error", "at App.vue:61", "App Error:", error);
       this.reportError(error);
     },
     onPageNotFound(options) {
-      formatAppLog("log", "at App.vue:58", "Page Not Found:", options);
+      formatAppLog("log", "at App.vue:68", "Page Not Found:", options);
       uni.switchTab({
         url: "/pages/index/index"
       });
     },
     methods: {
       /**
+       * 初始化所有数据到本地存储
+       */
+      async initAllDataToStorage() {
+        try {
+          formatAppLog("log", "at App.vue:82", "开始初始化所有数据到本地存储...");
+          dataSync.syncAllDataToStorage();
+          const syncCheck = await dataStorageManager.checkDataSync();
+          if (syncCheck.needsSync) {
+            formatAppLog("log", "at App.vue:91", "需要同步数据，原因:", syncCheck.reason);
+            await dataStorageManager.initAllDataToStorage();
+            formatAppLog("log", "at App.vue:93", "所有数据已初始化到本地存储");
+          } else {
+            formatAppLog("log", "at App.vue:95", "数据已是最新，无需同步");
+          }
+        } catch (error) {
+          formatAppLog("error", "at App.vue:98", "初始化数据到本地存储失败:", error);
+        }
+      },
+      /**
        * 检查应用更新
        */
       checkUpdate() {
         plus.runtime.getProperty(plus.runtime.appid, (widgetInfo) => {
-          formatAppLog("log", "at App.vue:73", "当前应用版本:", widgetInfo.version);
+          formatAppLog("log", "at App.vue:108", "当前应用版本:", widgetInfo.version);
         });
       },
       /**
@@ -27348,13 +45280,15 @@ IP：${event.ip}
        */
       initUserInfo() {
         try {
-          const userInfo2 = uni.getStorageSync("userInfo");
-          if (userInfo2) {
-            this.globalData.userInfo = userInfo2;
-            formatAppLog("log", "at App.vue:87", "用户信息已恢复:", userInfo2);
+          const consistentUserInfo = checkAndFixUserDataConsistency();
+          if (consistentUserInfo) {
+            this.globalData.userInfo = consistentUserInfo;
+            formatAppLog("log", "at App.vue:124", "用户信息已恢复并验证:", consistentUserInfo.username, "余额:", consistentUserInfo.balance);
+          } else {
+            formatAppLog("warn", "at App.vue:126", "⚠️ 无法恢复用户信息");
           }
         } catch (error) {
-          formatAppLog("error", "at App.vue:90", "恢复用户信息失败:", error);
+          formatAppLog("error", "at App.vue:129", "恢复用户信息失败:", error);
         }
       },
       /**
@@ -27364,9 +45298,9 @@ IP：${event.ip}
         try {
           const systemInfo = uni.getSystemInfoSync();
           this.globalData.systemInfo = systemInfo;
-          formatAppLog("log", "at App.vue:101", "系统信息:", systemInfo);
+          formatAppLog("log", "at App.vue:140", "系统信息:", systemInfo);
         } catch (error) {
-          formatAppLog("error", "at App.vue:103", "获取系统信息失败:", error);
+          formatAppLog("error", "at App.vue:142", "获取系统信息失败:", error);
         }
       },
       /**
@@ -27374,7 +45308,7 @@ IP：${event.ip}
        */
       initNetworkListener() {
         uni.onNetworkStatusChange((res) => {
-          formatAppLog("log", "at App.vue:112", "网络状态变化:", res);
+          formatAppLog("log", "at App.vue:151", "网络状态变化:", res);
           this.globalData.networkType = res.networkType;
           this.globalData.isConnected = res.isConnected;
           if (!res.isConnected) {
@@ -27393,7 +45327,7 @@ IP：${event.ip}
           const pages = getCurrentPages();
           const currentPage = pages[pages.length - 1];
           if (currentPage && !currentPage.route.includes("login")) {
-            formatAppLog("log", "at App.vue:135", "应用启动时检测到未登录，强制跳转到登录页面");
+            formatAppLog("log", "at App.vue:174", "应用启动时检测到未登录，强制跳转到登录页面");
             uni.reLaunch({
               url: "/pages/denglu/login"
             });
@@ -27406,15 +45340,15 @@ IP：${event.ip}
       initLoginInterceptor() {
         uni.addInterceptor("navigateTo", {
           invoke(e) {
-            formatAppLog("log", "at App.vue:150", "拦截 navigateTo:", e.url);
+            formatAppLog("log", "at App.vue:189", "拦截 navigateTo:", e.url);
             if (e.url.includes("/pages/denglu/login") || e.url.includes("/pages/register/register")) {
-              formatAppLog("log", "at App.vue:154", "跳转到登录页面或注册页面，允许");
+              formatAppLog("log", "at App.vue:193", "跳转到登录页面或注册页面，允许");
               return true;
             }
             if (!forceCheckLogin()) {
-              formatAppLog("log", "at App.vue:160", "用户未登录，阻止页面跳转");
+              formatAppLog("log", "at App.vue:199", "用户未登录，阻止页面跳转");
               if (e.url.includes("/pages/wealth/")) {
-                formatAppLog("log", "at App.vue:163", "财富页面，允许跳转但需要登录检查");
+                formatAppLog("log", "at App.vue:202", "财富页面，允许跳转但需要登录检查");
                 return true;
               }
               return false;
@@ -27424,9 +45358,9 @@ IP：${event.ip}
         });
         uni.addInterceptor("switchTab", {
           invoke(e) {
-            formatAppLog("log", "at App.vue:176", "拦截 switchTab:", e.url);
+            formatAppLog("log", "at App.vue:215", "拦截 switchTab:", e.url);
             if (!forceCheckLogin()) {
-              formatAppLog("log", "at App.vue:180", "用户未登录，阻止tabBar跳转");
+              formatAppLog("log", "at App.vue:219", "用户未登录，阻止tabBar跳转");
               return false;
             }
             return true;
@@ -27434,13 +45368,13 @@ IP：${event.ip}
         });
         uni.addInterceptor("reLaunch", {
           invoke(e) {
-            formatAppLog("log", "at App.vue:191", "拦截 reLaunch:", e.url);
+            formatAppLog("log", "at App.vue:230", "拦截 reLaunch:", e.url);
             if (e.url.includes("/pages/denglu/login") || e.url.includes("/pages/register/register")) {
-              formatAppLog("log", "at App.vue:195", "重定向到登录页面或注册页面，允许");
+              formatAppLog("log", "at App.vue:234", "重定向到登录页面或注册页面，允许");
               return true;
             }
             if (!forceCheckLogin()) {
-              formatAppLog("log", "at App.vue:201", "用户未登录，阻止重定向");
+              formatAppLog("log", "at App.vue:240", "用户未登录，阻止重定向");
               return false;
             }
             return true;
@@ -27448,13 +45382,13 @@ IP：${event.ip}
         });
         uni.addInterceptor("redirectTo", {
           invoke(e) {
-            formatAppLog("log", "at App.vue:212", "拦截 redirectTo:", e.url);
+            formatAppLog("log", "at App.vue:251", "拦截 redirectTo:", e.url);
             if (e.url.includes("/pages/denglu/login") || e.url.includes("/pages/register/register")) {
-              formatAppLog("log", "at App.vue:216", "重定向到登录页面或注册页面，允许");
+              formatAppLog("log", "at App.vue:255", "重定向到登录页面或注册页面，允许");
               return true;
             }
             if (!forceCheckLogin()) {
-              formatAppLog("log", "at App.vue:222", "用户未登录，阻止重定向");
+              formatAppLog("log", "at App.vue:261", "用户未登录，阻止重定向");
               return false;
             }
             return true;
@@ -27480,7 +45414,7 @@ IP：${event.ip}
           };
           uni.setStorageSync("appState", appState);
         } catch (error) {
-          formatAppLog("error", "at App.vue:252", "保存应用状态失败:", error);
+          formatAppLog("error", "at App.vue:291", "保存应用状态失败:", error);
         }
       },
       /**
@@ -27496,14 +45430,14 @@ IP：${event.ip}
             }
           }
         } catch (error) {
-          formatAppLog("error", "at App.vue:270", "恢复应用状态失败:", error);
+          formatAppLog("error", "at App.vue:309", "恢复应用状态失败:", error);
         }
       },
       /**
        * 错误上报
        */
       reportError(error) {
-        formatAppLog("error", "at App.vue:279", "错误上报:", error);
+        formatAppLog("error", "at App.vue:318", "错误上报:", error);
       }
     },
     /**
@@ -27516,829 +45450,7 @@ IP：${event.ip}
       isConnected: true
     }
   };
-  const App = /* @__PURE__ */ _export_sfc(_sfc_main, [["__file", "E:/Vue项目/专高六/1/项目/src/App.vue"]]);
-  class ScreenProtector {
-    constructor() {
-      this.isEnabled = false;
-      this.protectionLevel = "high";
-      this.alertEnabled = true;
-      this.watermarkEnabled = true;
-      this.callbacks = {
-        onScreenshotDetected: [],
-        onRecordingDetected: [],
-        onProtectionEnabled: [],
-        onProtectionDisabled: []
-      };
-      this.initDetection();
-    }
-    /**
-     * 启用防录屏保护
-     */
-    enable(options = {}) {
-      try {
-        formatAppLog("log", "at utils/screen-protector.js:30", "🛡️ 启用防录屏保护，选项:", options);
-        const config = {
-          level: options.level || "high",
-          showAlert: options.showAlert !== false,
-          showWatermark: options.showWatermark !== false,
-          watermarkText: options.watermarkText || "隐私保护中",
-          ...options
-        };
-        this.protectionLevel = config.level;
-        this.alertEnabled = config.showAlert;
-        this.watermarkEnabled = config.showWatermark;
-        const env = this.getCurrentEnvironment();
-        formatAppLog("log", "at utils/screen-protector.js:46", "🌍 检测到环境:", env);
-        if (env === "h5") {
-          this.enableWebProtection();
-        } else if (env === "app") {
-          this.enableAppProtection();
-        } else if (env === "mp") {
-          this.enableMiniProgramProtection();
-        }
-        this.isEnabled = true;
-        this.triggerCallback("onProtectionEnabled", { level: this.protectionLevel });
-        formatAppLog("log", "at utils/screen-protector.js:60", `✅ 防录屏保护已启用，环境: ${env}，级别: ${this.protectionLevel}`);
-        if (this.alertEnabled) {
-          uni.showToast({
-            title: "已启用隐私保护",
-            icon: "success",
-            duration: 2e3
-          });
-        }
-        return true;
-      } catch (error) {
-        formatAppLog("error", "at utils/screen-protector.js:72", "❌ 启用防录屏保护失败:", error);
-        return false;
-      }
-    }
-    /**
-     * 禁用防录屏保护
-     */
-    disable() {
-      try {
-        const env = this.getCurrentEnvironment();
-        if (env === "h5") {
-          this.disableWebProtection();
-        } else if (env === "app") {
-          this.disableAppProtection();
-        } else if (env === "mp") {
-          this.disableMiniProgramProtection();
-        }
-        this.isEnabled = false;
-        this.triggerCallback("onProtectionDisabled");
-        formatAppLog("log", "at utils/screen-protector.js:95", "🔓 防录屏保护已禁用");
-        if (this.alertEnabled) {
-          uni.showToast({
-            title: "隐私保护已关闭",
-            icon: "none",
-            duration: 2e3
-          });
-        }
-        return true;
-      } catch (error) {
-        formatAppLog("error", "at utils/screen-protector.js:107", "❌ 禁用防录屏保护失败:", error);
-        return false;
-      }
-    }
-    /**
-     * 获取当前运行环境
-     */
-    getCurrentEnvironment() {
-      if (typeof window !== "undefined" && typeof document !== "undefined") {
-        return "h5";
-      }
-      if (typeof plus !== "undefined") {
-        return "app";
-      }
-      if (typeof wx !== "undefined" && wx.getSystemInfoSync) {
-        return "mp";
-      }
-      try {
-        const systemInfo = uni.getSystemInfoSync();
-        if (systemInfo) {
-          if (systemInfo.platform === "devtools") {
-            return "h5";
-          }
-          if (systemInfo.uniPlatform === "h5" || systemInfo.environment === "h5") {
-            return "h5";
-          }
-          if (systemInfo.uniPlatform === "app") {
-            return "app";
-          }
-          if (systemInfo.uniPlatform && systemInfo.uniPlatform.startsWith("mp-")) {
-            return "mp";
-          }
-        }
-      } catch (error) {
-        formatAppLog("warn", "at utils/screen-protector.js:150", "获取系统信息失败:", error);
-      }
-      return "h5";
-    }
-    /**
-     * H5环境防护措施
-     */
-    enableWebProtection() {
-      formatAppLog("log", "at utils/screen-protector.js:160", "🌐 启用H5防护措施（主动防护+检测）");
-      if (typeof document === "undefined") {
-        formatAppLog("warn", "at utils/screen-protector.js:164", "⚠️ document对象不可用");
-        return;
-      }
-      try {
-        this.addEventListenerSafe(document, "contextmenu", this.preventContextMenu, false);
-        this.addEventListenerSafe(document, "keydown", this.preventDevTools, false);
-        if (this.protectionLevel === "high") {
-          this.addEventListenerSafe(document, "selectstart", this.preventSelect, false);
-        }
-        this.addEventListenerSafe(document, "dragstart", this.preventDrag, false);
-        this.startDevToolsDetection();
-        this.preventScreenshotShortcuts();
-        this.addProtectionStyles();
-        this.addScreenshotDetection();
-        this.addRecordingDetection();
-        this.addVisibilityDetection();
-        formatAppLog("log", "at utils/screen-protector.js:207", "✅ H5防护措施已启用（主动防护+检测）");
-      } catch (error) {
-        formatAppLog("error", "at utils/screen-protector.js:209", "❌ H5防护启用失败:", error);
-      }
-    }
-    /**
-     * 安全地添加事件监听器
-     */
-    addEventListenerSafe(element, event, handler, useCapture = false) {
-      try {
-        if (element && typeof element.addEventListener === "function") {
-          const boundHandler = handler.bind(this);
-          element.addEventListener(event, boundHandler, useCapture);
-          if (!this.eventListeners) {
-            this.eventListeners = [];
-          }
-          this.eventListeners.push({
-            element,
-            event,
-            handler: boundHandler,
-            useCapture
-          });
-          formatAppLog("log", "at utils/screen-protector.js:234", `📎 已添加事件监听器: ${event}`);
-          return true;
-        }
-      } catch (error) {
-        formatAppLog("error", "at utils/screen-protector.js:238", `❌ 添加事件监听器失败 (${event}):`, error);
-      }
-      return false;
-    }
-    /**
-     * 阻止右键菜单
-     */
-    preventContextMenu(e) {
-      e.preventDefault();
-      if (this.alertEnabled) {
-        this.showSecurityAlert("检测到右键操作，已阻止");
-      }
-      formatAppLog("log", "at utils/screen-protector.js:251", "🚫 阻止右键菜单");
-      return false;
-    }
-    /**
-     * 阻止开发者工具快捷键
-     */
-    preventDevTools(e) {
-      const isDevToolsKey = e.keyCode === 123 || e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74) || e.ctrlKey && e.keyCode === 85 || e.ctrlKey && e.keyCode === 83;
-      const isScreenshotKey = this.isScreenshotShortcut(e);
-      if (isDevToolsKey) {
-        e.preventDefault();
-        if (this.alertEnabled) {
-          this.showSecurityAlert("检测到开发者工具快捷键，已阻止");
-        }
-        formatAppLog("log", "at utils/screen-protector.js:272", "🚫 阻止开发者工具快捷键");
-        return false;
-      }
-      if (isScreenshotKey) {
-        e.preventDefault();
-        this.handleScreenshotDetected();
-        formatAppLog("log", "at utils/screen-protector.js:279", "🚫 阻止截屏快捷键");
-        return false;
-      }
-    }
-    /**
-     * 检测截屏快捷键
-     */
-    isScreenshotShortcut(e) {
-      return e.keyCode === 44 || // PrintScreen
-      e.altKey && e.keyCode === 44 || // Alt+PrintScreen
-      e.metaKey && e.shiftKey && (e.keyCode === 51 || e.keyCode === 52 || e.keyCode === 53);
-    }
-    /**
-     * 阻止文本选择
-     */
-    preventSelect(e) {
-      if (this.protectionLevel === "high") {
-        e.preventDefault();
-        return false;
-      }
-    }
-    /**
-     * 阻止拖拽
-     */
-    preventDrag(e) {
-      e.preventDefault();
-      return false;
-    }
-    /**
-     * 开发者工具检测
-     */
-    startDevToolsDetection() {
-      if (typeof window === "undefined")
-        return;
-      this.devToolsDetection = setInterval(() => {
-        const threshold = 160;
-        if (window.outerHeight - window.innerHeight > threshold || window.outerWidth - window.innerWidth > threshold) {
-          this.handleDevToolsDetected();
-        }
-      }, 1e3);
-      formatAppLog("log", "at utils/screen-protector.js:329", "👁️ 开发者工具检测已启动");
-    }
-    /**
-     * 停止开发者工具检测
-     */
-    stopDevToolsDetection() {
-      if (this.devToolsDetection) {
-        clearInterval(this.devToolsDetection);
-        this.devToolsDetection = null;
-        formatAppLog("log", "at utils/screen-protector.js:339", "👁️ 开发者工具检测已停止");
-      }
-    }
-    /**
-     * 添加水印
-     */
-    addWatermark() {
-      formatAppLog("log", "at utils/screen-protector.js:348", "💧 水印功能已禁用，保持页面美观");
-      return;
-    }
-    /**
-     * 移除水印
-     */
-    removeWatermark() {
-      if (typeof document === "undefined")
-        return;
-      const watermark = document.getElementById("screen-protector-watermark");
-      const style = document.getElementById("screen-protector-watermark-style");
-      if (watermark) {
-        watermark.remove();
-      }
-      if (style) {
-        style.remove();
-      }
-      formatAppLog("log", "at utils/screen-protector.js:368", "💧 水印已移除");
-    }
-    /**
-     * 添加保护样式
-     */
-    addProtectionStyles() {
-      if (typeof document === "undefined")
-        return;
-      const style = document.createElement("style");
-      style.id = "screen-protector-styles";
-      style.textContent = `
-      * {
-        -webkit-user-select: none !important;
-        -moz-user-select: none !important;
-        -ms-user-select: none !important;
-        user-select: none !important;
-        -webkit-touch-callout: none !important;
-        -webkit-tap-highlight-color: transparent !important;
-      }
-    `;
-      document.head.appendChild(style);
-      formatAppLog("log", "at utils/screen-protector.js:391", "🎨 保护样式已添加");
-    }
-    /**
-     * 移除保护样式
-     */
-    removeProtectionStyles() {
-      if (typeof document === "undefined")
-        return;
-      const style = document.getElementById("screen-protector-styles");
-      if (style) {
-        style.remove();
-        formatAppLog("log", "at utils/screen-protector.js:403", "🎨 保护样式已移除");
-      }
-    }
-    /**
-     * 移除所有事件监听器
-     */
-    removeAllEventListeners() {
-      if (this.eventListeners) {
-        this.eventListeners.forEach(({ element, event, handler, useCapture }) => {
-          try {
-            element.removeEventListener(event, handler, useCapture);
-          } catch (error) {
-            formatAppLog("error", "at utils/screen-protector.js:416", "移除事件监听器失败:", error);
-          }
-        });
-        this.eventListeners = [];
-        formatAppLog("log", "at utils/screen-protector.js:420", "📎 所有事件监听器已移除");
-      }
-    }
-    /**
-     * 禁用H5防护
-     */
-    disableWebProtection() {
-      formatAppLog("log", "at utils/screen-protector.js:428", "🌐 禁用H5防护措施");
-      this.removeAllEventListeners();
-      this.stopDevToolsDetection();
-      this.removeWatermark();
-      this.removeProtectionStyles();
-      formatAppLog("log", "at utils/screen-protector.js:435", "✅ H5防护措施已禁用");
-    }
-    /**
-     * App环境防护措施
-     */
-    enableAppProtection() {
-      formatAppLog("log", "at utils/screen-protector.js:442", "📱 启用App防护措施");
-      try {
-        if (typeof plus !== "undefined") {
-          if (uni.getSystemInfoSync().platform === "android") {
-            formatAppLog("log", "at utils/screen-protector.js:449", "🤖 Android防护已启用");
-          }
-          if (uni.getSystemInfoSync().platform === "ios") {
-            formatAppLog("log", "at utils/screen-protector.js:455", "🍎 iOS防护已启用");
-          }
-        }
-      } catch (error) {
-        formatAppLog("error", "at utils/screen-protector.js:459", "App防护措施启用失败:", error);
-      }
-    }
-    /**
-     * 禁用App防护
-     */
-    disableAppProtection() {
-      formatAppLog("log", "at utils/screen-protector.js:467", "📱 App防护已禁用");
-    }
-    /**
-     * 小程序环境防护措施
-     */
-    enableMiniProgramProtection() {
-      formatAppLog("log", "at utils/screen-protector.js:474", "🔰 启用小程序防护措施");
-      if (typeof wx !== "undefined" && wx.onUserCaptureScreen) {
-        wx.onUserCaptureScreen(() => {
-          this.handleScreenshotDetected();
-        });
-        formatAppLog("log", "at utils/screen-protector.js:481", "📸 微信小程序截屏监听已启用");
-      }
-    }
-    /**
-     * 禁用小程序防护
-     */
-    disableMiniProgramProtection() {
-      if (typeof wx !== "undefined" && wx.offUserCaptureScreen) {
-        wx.offUserCaptureScreen();
-      }
-      formatAppLog("log", "at utils/screen-protector.js:492", "🔰 小程序防护已禁用");
-    }
-    /**
-     * 阻止截屏快捷键
-     */
-    preventScreenshotShortcuts() {
-      if (typeof window === "undefined")
-        return;
-      this.addEventListenerSafe(window, "keyup", (e) => {
-        if (e.keyCode === 44) {
-          this.handleScreenshotDetected();
-        }
-      });
-    }
-    /**
-     * 处理截屏检测（仅在真正检测到时触发）
-     */
-    handleScreenshotDetected() {
-      formatAppLog("warn", "at utils/screen-protector.js:513", "🚨 检测到截屏行为");
-      const eventData = {
-        timestamp: (/* @__PURE__ */ new Date()).toISOString(),
-        platform: this.getCurrentEnvironment(),
-        detected: true
-      };
-      this.triggerCallback("onScreenshotDetected", eventData);
-      if (this.alertEnabled) {
-        this.showSecurityAlert("检测到截屏行为，已记录此次安全事件");
-      }
-      this.logSecurityEvent("screenshot", {
-        timestamp: Date.now(),
-        userAgent: typeof navigator !== "undefined" ? navigator.userAgent : "unknown",
-        detected: true
-      });
-    }
-    /**
-     * 处理录屏检测（仅在真正检测到时触发）
-     */
-    handleRecordingDetected() {
-      formatAppLog("warn", "at utils/screen-protector.js:541", "🚨 检测到录屏行为");
-      const eventData = {
-        timestamp: (/* @__PURE__ */ new Date()).toISOString(),
-        platform: this.getCurrentEnvironment(),
-        detected: true
-      };
-      this.triggerCallback("onRecordingDetected", eventData);
-      if (this.alertEnabled) {
-        this.showSecurityAlert("检测到录屏行为，已记录此次安全事件");
-      }
-      this.logSecurityEvent("recording", {
-        timestamp: Date.now(),
-        userAgent: typeof navigator !== "undefined" ? navigator.userAgent : "unknown",
-        detected: true
-      });
-    }
-    /**
-     * 处理开发者工具检测
-     */
-    handleDevToolsDetected() {
-      formatAppLog("warn", "at utils/screen-protector.js:569", "🚨 检测到开发者工具");
-      if (this.alertEnabled) {
-        this.showSecurityAlert("检测到开发者工具，已记录");
-      }
-      this.logSecurityEvent("devtools", {
-        timestamp: Date.now(),
-        innerWidth: typeof window !== "undefined" ? window.innerWidth : 0,
-        innerHeight: typeof window !== "undefined" ? window.innerHeight : 0,
-        outerWidth: typeof window !== "undefined" ? window.outerWidth : 0,
-        outerHeight: typeof window !== "undefined" ? window.outerHeight : 0
-      });
-    }
-    /**
-     * 显示安全警告
-     */
-    showSecurityAlert(message) {
-      uni.showModal({
-        title: "安全提示",
-        content: message + "\n\n为保护您的隐私安全，此操作已被阻止。",
-        showCancel: false,
-        confirmText: "知道了",
-        confirmColor: "#ff4444"
-      });
-    }
-    /**
-     * 记录安全事件
-     */
-    logSecurityEvent(type, data) {
-      var _a;
-      const event = {
-        type,
-        timestamp: (/* @__PURE__ */ new Date()).toISOString(),
-        data,
-        userAgent: typeof navigator !== "undefined" ? navigator.userAgent : uni.getSystemInfoSync(),
-        page: ((_a = getCurrentPages().pop()) == null ? void 0 : _a.route) || "unknown"
-      };
-      try {
-        const events = uni.getStorageSync("security_events") || [];
-        events.push(event);
-        if (events.length > 100) {
-          events.splice(0, events.length - 100);
-        }
-        uni.setStorageSync("security_events", events);
-      } catch (error) {
-        formatAppLog("error", "at utils/screen-protector.js:622", "保存安全事件失败:", error);
-      }
-      this.reportSecurityEvent(event);
-    }
-    /**
-     * 上报安全事件
-     */
-    async reportSecurityEvent(event) {
-      try {
-        formatAppLog("log", "at utils/screen-protector.js:634", "📤 安全事件上报:", event);
-      } catch (error) {
-        formatAppLog("error", "at utils/screen-protector.js:643", "安全事件上报失败:", error);
-      }
-    }
-    /**
-     * 初始化检测机制
-     */
-    initDetection() {
-      if (typeof document !== "undefined") {
-        this.addEventListenerSafe(document, "visibilitychange", () => {
-          if (document.visibilityState === "hidden" && this.isEnabled) {
-            formatAppLog("log", "at utils/screen-protector.js:655", "📱 页面隐藏，可能正在截屏或录屏");
-          }
-        });
-      }
-      if (typeof window !== "undefined") {
-        this.addEventListenerSafe(window, "blur", () => {
-          if (this.isEnabled) {
-            formatAppLog("log", "at utils/screen-protector.js:664", "🔍 页面失去焦点");
-          }
-        });
-      }
-      formatAppLog("log", "at utils/screen-protector.js:669", "🔧 检测机制初始化完成");
-    }
-    /**
-     * 添加事件回调
-     */
-    on(event, callback) {
-      if (this.callbacks[event]) {
-        this.callbacks[event].push(callback);
-      }
-    }
-    /**
-     * 移除事件回调
-     */
-    off(event, callback) {
-      if (this.callbacks[event]) {
-        const index = this.callbacks[event].indexOf(callback);
-        if (index > -1) {
-          this.callbacks[event].splice(index, 1);
-        }
-      }
-    }
-    /**
-     * 触发回调
-     */
-    triggerCallback(event, data) {
-      if (this.callbacks[event]) {
-        this.callbacks[event].forEach((callback) => {
-          try {
-            callback(data);
-          } catch (error) {
-            formatAppLog("error", "at utils/screen-protector.js:702", "回调执行失败:", error);
-          }
-        });
-      }
-    }
-    /**
-     * 获取保护状态
-     */
-    getStatus() {
-      return {
-        isEnabled: this.isEnabled,
-        protectionLevel: this.protectionLevel,
-        platform: this.getCurrentEnvironment(),
-        alertEnabled: this.alertEnabled
-      };
-    }
-    /**
-     * 获取安全事件记录
-     */
-    getSecurityEvents() {
-      try {
-        return uni.getStorageSync("security_events") || [];
-      } catch (error) {
-        formatAppLog("error", "at utils/screen-protector.js:727", "获取安全事件失败:", error);
-        return [];
-      }
-    }
-    /**
-     * 清除安全事件记录
-     */
-    clearSecurityEvents() {
-      try {
-        uni.removeStorageSync("security_events");
-        formatAppLog("log", "at utils/screen-protector.js:738", "🗑️ 安全事件记录已清除");
-      } catch (error) {
-        formatAppLog("error", "at utils/screen-protector.js:740", "清除安全事件失败:", error);
-      }
-    }
-    /**
-     * 添加截屏检测（H5环境）
-     */
-    addScreenshotDetection() {
-      try {
-        this.addEventListenerSafe(document, "keyup", (event) => {
-          if (event.keyCode === 44 || event.key === "PrintScreen") {
-            formatAppLog("log", "at utils/screen-protector.js:751", "🔍 检测到 PrintScreen 键");
-            this.handleScreenshotDetected();
-          }
-        });
-        this.addEventListenerSafe(document, "paste", (event) => {
-          var _a;
-          const items = ((_a = event.clipboardData) == null ? void 0 : _a.items) || [];
-          for (let item of items) {
-            if (item.type.indexOf("image") !== -1) {
-              formatAppLog("log", "at utils/screen-protector.js:761", "🔍 检测到剪贴板图片");
-              this.handleScreenshotDetected();
-              break;
-            }
-          }
-        });
-        formatAppLog("log", "at utils/screen-protector.js:768", "📸 截屏检测已启用");
-      } catch (error) {
-        formatAppLog("error", "at utils/screen-protector.js:770", "截屏检测设置失败:", error);
-      }
-    }
-    /**
-     * 添加录屏检测（H5环境）
-     */
-    addRecordingDetection() {
-      try {
-        if (navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia) {
-          const originalGetDisplayMedia = navigator.mediaDevices.getDisplayMedia;
-          navigator.mediaDevices.getDisplayMedia = (...args) => {
-            formatAppLog("log", "at utils/screen-protector.js:783", "🔍 检测到屏幕录制请求");
-            this.handleRecordingDetected();
-            return originalGetDisplayMedia.apply(navigator.mediaDevices, args);
-          };
-        }
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-          const originalGetUserMedia = navigator.mediaDevices.getUserMedia;
-          navigator.mediaDevices.getUserMedia = (constraints) => {
-            var _a, _b;
-            if (((_a = constraints == null ? void 0 : constraints.video) == null ? void 0 : _a.mediaSource) === "screen" || ((_b = constraints == null ? void 0 : constraints.video) == null ? void 0 : _b.chromeMediaSource) === "screen") {
-              formatAppLog("log", "at utils/screen-protector.js:795", "🔍 检测到屏幕录制请求");
-              this.handleRecordingDetected();
-            }
-            return originalGetUserMedia.call(navigator.mediaDevices, constraints);
-          };
-        }
-        formatAppLog("log", "at utils/screen-protector.js:802", "📹 录屏检测已启用");
-      } catch (error) {
-        formatAppLog("error", "at utils/screen-protector.js:804", "录屏检测设置失败:", error);
-      }
-    }
-    /**
-     * 添加页面可见性检测（可能的录屏行为）
-     */
-    addVisibilityDetection() {
-      try {
-        this.addEventListenerSafe(document, "visibilitychange", () => {
-          if (document.hidden) {
-            formatAppLog("log", "at utils/screen-protector.js:816", "🔍 页面进入后台，可能存在录屏行为");
-          } else {
-            formatAppLog("log", "at utils/screen-protector.js:819", "🔍 页面回到前台");
-          }
-        });
-        this.addEventListenerSafe(window, "blur", () => {
-          formatAppLog("log", "at utils/screen-protector.js:825", "🔍 窗口失去焦点，可能存在录屏行为");
-        });
-        formatAppLog("log", "at utils/screen-protector.js:828", "👁️ 页面可见性检测已启用");
-      } catch (error) {
-        formatAppLog("error", "at utils/screen-protector.js:830", "页面可见性检测设置失败:", error);
-      }
-    }
-  }
-  const screenProtector = new ScreenProtector();
-  const ScreenProtectorPlugin = {
-    // 安装插件
-    install(app, options = {}) {
-      formatAppLog("log", "at plugins/screen-protector-plugin.js:14", "🛡️ 安装防录屏插件...");
-      const defaultConfig = {
-        // 是否自动启用
-        autoEnable: true,
-        // 防护级别: low, medium, high
-        protectionLevel: "high",
-        // 是否显示警告
-        showAlert: true,
-        // 是否显示水印
-        showWatermark: true,
-        // 需要保护的页面路径 (为空则全局保护)
-        protectedPaths: [],
-        // 排除的页面路径
-        excludePaths: ["/pages/denglu/login", "/pages/register/register"],
-        // 自定义水印文本
-        watermarkText: "隐私保护中",
-        // 事件回调
-        callbacks: {
-          onScreenshotDetected: null,
-          onRecordingDetected: null,
-          onProtectionEnabled: null,
-          onProtectionDisabled: null
-        }
-      };
-      const config = { ...defaultConfig, ...options };
-      app.config.globalProperties.$screenProtector = screenProtector;
-      app.config.globalProperties.$screenProtectorConfig = config;
-      app.provide("screenProtector", screenProtector);
-      app.provide("screenProtectorConfig", config);
-      if (config.callbacks.onScreenshotDetected) {
-        screenProtector.on("onScreenshotDetected", config.callbacks.onScreenshotDetected);
-      }
-      if (config.callbacks.onRecordingDetected) {
-        screenProtector.on("onRecordingDetected", config.callbacks.onRecordingDetected);
-      }
-      if (config.callbacks.onProtectionEnabled) {
-        screenProtector.on("onProtectionEnabled", config.callbacks.onProtectionEnabled);
-      }
-      if (config.callbacks.onProtectionDisabled) {
-        screenProtector.on("onProtectionDisabled", config.callbacks.onProtectionDisabled);
-      }
-      app.mixin({
-        onLoad() {
-          this.$nextTick(() => {
-            this.handleScreenProtection("onLoad");
-          });
-        },
-        onShow() {
-          this.$nextTick(() => {
-            this.handleScreenProtection("onShow");
-          });
-        },
-        onHide() {
-          this.handleScreenProtection("onHide");
-        },
-        onUnload() {
-          this.handleScreenProtection("onUnload");
-        },
-        mounted() {
-          this.$nextTick(() => {
-            if (config.autoEnable) {
-              this.enableScreenProtection();
-            }
-          });
-        },
-        methods: {
-          /**
-           * 处理页面防录屏逻辑
-           */
-          handleScreenProtection(lifecycle) {
-            const currentRoute = this.getCurrentRoute();
-            if (this.shouldProtectPage(currentRoute)) {
-              if (lifecycle === "onShow" || lifecycle === "onLoad") {
-                this.enableScreenProtection();
-              }
-            } else {
-              if (lifecycle === "onShow" || lifecycle === "onLoad") {
-                this.disableScreenProtection();
-              }
-            }
-          },
-          /**
-           * 获取当前路由
-           */
-          getCurrentRoute() {
-            const pages = getCurrentPages();
-            return pages.length > 0 ? pages[pages.length - 1].route : "";
-          },
-          /**
-           * 判断是否需要保护当前页面
-           */
-          shouldProtectPage(route) {
-            const { protectedPaths, excludePaths } = config;
-            if (excludePaths.some((path) => route.includes(path))) {
-              return false;
-            }
-            if (protectedPaths.length > 0) {
-              return protectedPaths.some((path) => route.includes(path));
-            }
-            return true;
-          },
-          /**
-           * 启用屏幕保护
-           */
-          enableScreenProtection() {
-            if (config.autoEnable) {
-              screenProtector.enable({
-                level: config.protectionLevel,
-                showAlert: config.showAlert,
-                showWatermark: config.showWatermark,
-                watermarkText: config.watermarkText
-              });
-            }
-          },
-          /**
-           * 禁用屏幕保护
-           */
-          disableScreenProtection() {
-            screenProtector.disable();
-          },
-          /**
-           * 手动启用保护
-           */
-          $enableScreenProtection(options2 = {}) {
-            const mergedOptions = {
-              level: config.protectionLevel,
-              showAlert: config.showAlert,
-              showWatermark: config.showWatermark,
-              watermarkText: config.watermarkText,
-              ...options2
-            };
-            return screenProtector.enable(mergedOptions);
-          },
-          /**
-           * 手动禁用保护
-           */
-          $disableScreenProtection() {
-            return screenProtector.disable();
-          },
-          /**
-           * 获取保护状态
-           */
-          $getScreenProtectionStatus() {
-            return screenProtector.getStatus();
-          },
-          /**
-           * 获取安全事件记录
-           */
-          $getSecurityEvents() {
-            return screenProtector.getSecurityEvents();
-          },
-          /**
-           * 清除安全事件记录
-           */
-          $clearSecurityEvents() {
-            return screenProtector.clearSecurityEvents();
-          }
-        }
-      });
-      formatAppLog("log", "at plugins/screen-protector-plugin.js:216", "✅ 防录屏插件安装完成");
-      formatAppLog("log", "at plugins/screen-protector-plugin.js:217", "📋 配置信息:", config);
-    }
-  };
+  const App = /* @__PURE__ */ _export_sfc(_sfc_main, [["__file", "E:/项目/yihangyidon/src/App.vue"]]);
   var define_process_env_default = {};
   function getEnvironment() {
     if (typeof uni !== "undefined" && uni.getSystemInfoSync) {
@@ -28457,17 +45569,17 @@ IP：${event.ip}
         // 基础配置
         baseURL: currentEnv === "development" ? "http://localhost:3000/api" : "https://api.hospital.com",
         // 请求拦截器
-        beforeRequest(config) {
+        beforeRequest(config2) {
           const token = uni.getStorageSync("token");
           if (token) {
-            config.header = {
-              ...config.header,
+            config2.header = {
+              ...config2.header,
               "Authorization": `Bearer ${token}`
             };
           }
-          config.url += (config.url.includes("?") ? "&" : "?") + `_t=${Date.now()}`;
-          formatAppLog("log", "at main.js:177", "Request:", config);
-          return config;
+          config2.url += (config2.url.includes("?") ? "&" : "?") + `_t=${Date.now()}`;
+          formatAppLog("log", "at main.js:177", "Request:", config2);
+          return config2;
         },
         // 响应拦截器
         afterResponse(response) {
@@ -28490,11 +45602,11 @@ IP：${event.ip}
         },
         // 发起请求
         async request(options) {
-          const config = this.beforeRequest(options);
+          const config2 = this.beforeRequest(options);
           try {
             const response = await new Promise((resolve, reject) => {
               uni.request({
-                ...config,
+                ...config2,
                 success: resolve,
                 fail: reject
               });
@@ -28595,72 +45707,28 @@ IP：${event.ip}
         }
       }
     };
-    app.use(ScreenProtectorPlugin, {
-      // 自动启用防录屏
-      autoEnable: true,
-      // 防护级别
-      protectionLevel: "high",
-      // 显示警告
-      showAlert: true,
-      // 显示水印
-      showWatermark: false,
-      // 自定义水印文本
-      watermarkText: "银行APP - 隐私保护中",
-      // 排除登录和注册页面
-      excludePaths: [
-        "/pages/denglu/login",
-        "/pages/register/register"
-      ],
-      // 事件回调
-      callbacks: {
-        onScreenshotDetected: (data) => {
-          formatAppLog("warn", "at main.js:350", "🚨 检测到截屏行为:", data);
-          uni.showToast({
-            title: "检测到截屏，已记录",
-            icon: "none",
-            duration: 3e3
-          });
-        },
-        onRecordingDetected: (data) => {
-          formatAppLog("warn", "at main.js:359", "🚨 检测到录屏行为:", data);
-          uni.showModal({
-            title: "安全警告",
-            content: "检测到录屏行为，为保护您的隐私安全，请停止录屏操作。",
-            showCancel: false,
-            confirmText: "知道了",
-            confirmColor: "#ff4444"
-          });
-        },
-        onProtectionEnabled: (data) => {
-          formatAppLog("log", "at main.js:370", "✅ 防录屏保护已启用:", data);
-        },
-        onProtectionDisabled: () => {
-          formatAppLog("log", "at main.js:373", "🔓 防录屏保护已禁用");
-        }
-      }
-    });
     app.mixin({
       // 页面生命周期
       onLoad(options) {
-        formatAppLog("log", "at main.js:333", "Page Load:", this.$options.name, options);
+        formatAppLog("log", "at main.js:334", "Page Load:", this.$options.name, options);
         this.pageStartTime = Date.now();
       },
       onShow() {
-        formatAppLog("log", "at main.js:340", "Page Show:", this.$options.name);
+        formatAppLog("log", "at main.js:341", "Page Show:", this.$options.name);
       },
       onHide() {
-        formatAppLog("log", "at main.js:344", "Page Hide:", this.$options.name);
+        formatAppLog("log", "at main.js:345", "Page Hide:", this.$options.name);
         if (this.pageStartTime) {
           const duration = Date.now() - this.pageStartTime;
-          formatAppLog("log", "at main.js:349", "Page Duration:", this.$options.name, duration + "ms");
+          formatAppLog("log", "at main.js:350", "Page Duration:", this.$options.name, duration + "ms");
         }
       },
       onUnload() {
-        formatAppLog("log", "at main.js:354", "Page Unload:", this.$options.name);
+        formatAppLog("log", "at main.js:355", "Page Unload:", this.$options.name);
       },
       // 错误处理
       onError(error) {
-        formatAppLog("error", "at main.js:359", "Page Error:", this.$options.name, error);
+        formatAppLog("error", "at main.js:360", "Page Error:", this.$options.name, error);
         reportError(error, `Page: ${this.$options.name}`);
       }
     });
@@ -28678,15 +45746,15 @@ IP：${event.ip}
       userAgent: uni.getSystemInfoSync(),
       url: ((_a = getCurrentPages().pop()) == null ? void 0 : _a.route) || "unknown"
     };
-    formatAppLog("error", "at main.js:385", "Error Report:", errorData);
+    formatAppLog("error", "at main.js:386", "Error Report:", errorData);
   }
   if (typeof window !== "undefined") {
     window.addEventListener("error", (event) => {
-      formatAppLog("error", "at main.js:398", "Global Error:", event.error);
+      formatAppLog("error", "at main.js:399", "Global Error:", event.error);
       reportError(event.error, "Global Error");
     });
     window.addEventListener("unhandledrejection", (event) => {
-      formatAppLog("error", "at main.js:403", "Unhandled Promise Rejection:", event.reason);
+      formatAppLog("error", "at main.js:404", "Unhandled Promise Rejection:", event.reason);
       reportError(event.reason, "Unhandled Promise Rejection");
     });
   }
