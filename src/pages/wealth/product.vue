@@ -1,23 +1,9 @@
 <template>
   <view class="product-page">
-    <!-- 头部导航 -->
-    <view class="header">
-      <view class="nav-bar">
-        <view class="nav-left" @click="goBack">
-          <text class="nav-icon">‹</text>
-        </view>
-        <text class="nav-title">理财产品</text>
-        <view class="nav-right">
-          <text class="nav-icon" @click="onRefresh">⟳</text>
-        </view>
-      </view>
-    </view>
-
     <!-- 市场概览 -->
     <view class="market-overview">
       <view class="overview-header">
         <text class="overview-title">理财市场概览</text>
-        <text class="overview-subtitle">实时数据</text>
       </view>
       <view class="overview-stats">
         <view class="stat-item">
@@ -35,31 +21,15 @@
       </view>
     </view>
 
-    <!-- 收益率趋势图表 -->
+    <!-- 产品类型收益率对比混合图表 -->
     <view class="chart-card">
       <view class="chart-header">
-        <text class="chart-title">理财产品收益率趋势</text>
-        <view class="chart-tabs">
-          <text 
-            class="chart-tab" 
-            :class="{ active: chartPeriod === '7d' }"
-            @click="chartPeriod = '7d'"
-          >7天</text>
-          <text 
-            class="chart-tab" 
-            :class="{ active: chartPeriod === '30d' }"
-            @click="chartPeriod = '30d'"
-          >30天</text>
-          <text 
-            class="chart-tab" 
-            :class="{ active: chartPeriod === '90d' }"
-            @click="chartPeriod = '90d'"
-          >90天</text>
-        </view>
+        <text class="chart-title">产品类型收益率对比</text>
       </view>
       <view class="chart-container">
         <canvas 
-          canvas-id="yieldChart" 
+          :id="'yieldChart'"
+          :canvas-id="'yieldChart'"
           class="chart-canvas"
           @touchstart="onChartTouch"
         ></canvas>
@@ -73,28 +43,28 @@
           <view 
             class="filter-item" 
             :class="{ active: activeFilter === 'all' }"
-            @click="activeFilter = 'all'"
+            @click="setFilter('all')"
           >
             全部
           </view>
           <view 
             class="filter-item" 
             :class="{ active: activeFilter === 'low' }"
-            @click="activeFilter = 'low'"
+            @click="setFilter('low')"
           >
             低风险
           </view>
           <view 
             class="filter-item" 
             :class="{ active: activeFilter === 'medium' }"
-            @click="activeFilter = 'medium'"
+            @click="setFilter('medium')"
           >
             中风险
           </view>
           <view 
             class="filter-item" 
             :class="{ active: activeFilter === 'high' }"
-            @click="activeFilter = 'high'"
+            @click="setFilter('high')"
           >
             高风险
           </view>
@@ -102,31 +72,8 @@
       </scroll-view>
     </view>
 
-    <!-- 快速筛选 -->
+    <!-- 排序选项 -->
     <view class="filter-section">
-      <view class="filter-tabs">
-        <text 
-          class="filter-tab" 
-          :class="{ active: activeFilter === 'all' }"
-          @click="setFilter('all')"
-        >全部</text>
-        <text 
-          class="filter-tab" 
-          :class="{ active: activeFilter === 'low' }"
-          @click="setFilter('low')"
-        >低风险</text>
-        <text 
-          class="filter-tab" 
-          :class="{ active: activeFilter === 'medium' }"
-          @click="setFilter('medium')"
-        >中风险</text>
-        <text 
-          class="filter-tab" 
-          :class="{ active: activeFilter === 'high' }"
-          @click="setFilter('high')"
-        >高风险</text>
-      </view>
-      
       <view class="sort-options">
         <picker 
           :value="sortIndex" 
@@ -324,14 +271,13 @@
 
 <script>
 import { getWealthProductCategories, purchaseWealthProduct, getCurrentUserId, initWealthDataSync } from '@/api/wealth.js'
-import { drawSimpleBarChart } from '@/utils/simple-chart.js'
+import { initUCharts, createWealthProductChart } from '@/utils/ucharts.js'
 
 export default {
   data() {
     return {
       loading: false,
       activeFilter: 'all',
-      chartPeriod: '7d',
       productData: null,
       chartInstance: null,
       
@@ -361,86 +307,7 @@ export default {
         avgYield: 3.45,
         productCount: 156
       },
-      productCategories: [
-        {
-          name: '稳健型',
-          products: [
-            { 
-              id: 'w1', 
-              name: '稳健优选第68期', 
-              risk: '低', 
-              term: '90天', 
-              minAmount: 10000, 
-              yield: 3.20, 
-              type: '净值型' 
-            },
-            { 
-              id: 'w2', 
-              name: '灵活理财T+1', 
-              risk: '低', 
-              term: '开放式', 
-              minAmount: 1000, 
-              yield: 2.65, 
-              type: '货币型' 
-            },
-            { 
-              id: 'w3', 
-              name: '安心宝30天', 
-              risk: '低', 
-              term: '30天', 
-              minAmount: 5000, 
-              yield: 2.85, 
-              type: '固定收益' 
-            }
-          ]
-        },
-        {
-          name: '平衡型',
-          products: [
-            { 
-              id: 'w4', 
-              name: '进取增强半年期', 
-              risk: '中', 
-              term: '180天', 
-              minAmount: 10000, 
-              yield: 4.10, 
-              type: '混合型' 
-            },
-            { 
-              id: 'w5', 
-              name: '成长优选一年期', 
-              risk: '中', 
-              term: '365天', 
-              minAmount: 20000, 
-              yield: 4.50, 
-              type: '权益型' 
-            }
-          ]
-        },
-        {
-          name: '进取型',
-          products: [
-            { 
-              id: 'w6', 
-              name: '价值发现两年期', 
-              risk: '高', 
-              term: '730天', 
-              minAmount: 50000, 
-              yield: 5.80, 
-              type: '权益型' 
-            },
-            { 
-              id: 'w7', 
-              name: '科技成长三年期', 
-              risk: '高', 
-              term: '1095天', 
-              minAmount: 100000, 
-              yield: 6.20, 
-              type: '权益型' 
-            }
-          ]
-        }
-      ]
+      productCategories: []
     }
   },
   
@@ -483,13 +350,6 @@ export default {
   },
   
   methods: {
-    goBack() {
-      uni.navigateBack()
-    },
-    
-    onRefresh() {
-      this.loadProductData()
-    },
     
     async loadProductData() {
       try {
@@ -529,25 +389,28 @@ export default {
       }
     },
     
-    initChart(chartConfig) {
+    async initChart(chartConfig) {
       try {
-        console.log('开始渲染理财产品图表')
+        console.log('🎨 开始渲染理财产品图表')
         
-        // 使用简单图表工具渲染图表
-        const chartData = this.productCategories?.map(category => {
-          const products = category.products || []
-          const totalYield = products.reduce((sum, product) => sum + (product.yield || 0), 0)
-          return products.length > 0 ? (totalYield / products.length) : 0
-        }) || [3.2, 3.8, 4.1]
+        // #ifdef APP-PLUS
+        // App-Plus环境需要延迟初始化
+        await this.$nextTick()
+        await new Promise(resolve => setTimeout(resolve, 200))
+        // #endif
         
-        drawSimpleBarChart('yieldChart', chartData, this)
-        console.log('理财产品图表渲染成功')
+        // 使用uCharts渲染图表
+        const option = createWealthProductChart(this.productCategories)
+        this.chartInstance = await initUCharts('yieldChart', option, this)
+        
+        if (this.chartInstance) {
+          console.log('✅ 理财产品图表渲染成功 (uCharts)')
+        } else {
+          console.warn('❌ uCharts图表渲染失败')
+        }
         
       } catch (error) {
-        console.error('图表渲染失败:', error)
-        // 使用默认数据作为备用
-        const defaultData = [3.2, 3.8, 4.1]
-        drawSimpleBarChart('yieldChart', defaultData, this)
+        console.error('❌ 图表渲染失败:', error)
       }
     },
     
@@ -558,6 +421,7 @@ export default {
     // 筛选和排序方法
     setFilter(filter) {
       this.activeFilter = filter
+      console.log('筛选条件变更:', filter)
     },
     
     onSortChange(e) {
@@ -737,37 +601,6 @@ export default {
 .product-page {
   background: #f5f7fb;
   min-height: 100vh;
-}
-
-/* 头部导航 */
-.header {
-  background: #fff;
-  border-bottom: 1rpx solid #eee;
-}
-
-.nav-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20rpx 30rpx;
-  height: 88rpx;
-}
-
-.nav-left, .nav-right {
-  width: 60rpx;
-  text-align: center;
-}
-
-.nav-icon {
-  font-size: 36rpx;
-  color: #333;
-  font-weight: bold;
-}
-
-.nav-title {
-  font-size: 32rpx;
-  font-weight: 600;
-  color: #333;
 }
 
 /* 市场概览 */
@@ -1419,3 +1252,4 @@ export default {
   line-height: 1.4;
 }
 </style>
+

@@ -1,18 +1,5 @@
 <template>
   <view class="insurance-page">
-    <!-- 头部导航 -->
-    <view class="header">
-      <view class="nav-bar">
-        <view class="nav-left" @click="goBack">
-          <text class="nav-icon">‹</text>
-        </view>
-        <text class="nav-title">保险产品</text>
-        <view class="nav-right">
-          <text class="nav-icon" @click="onRefresh">⟳</text>
-        </view>
-      </view>
-    </view>
-
     <!-- 保险市场概览 -->
     <view class="market-overview">
       <view class="overview-header">
@@ -43,10 +30,22 @@
       </view>
       <view class="chart-container">
         <canvas 
-          canvas-id="insuranceChart" 
+          :id="'insuranceChart'"
+          :canvas-id="'insuranceChart'"
           class="chart-canvas"
           @touchstart="onChartTouch"
         ></canvas>
+      </view>
+      <!-- 一行图例 -->
+      <view class="legend-row" v-if="insuranceCategories && insuranceCategories.length">
+        <scroll-view class="legend-scroll" scroll-x="true">
+          <view class="legend-list">
+            <view class="legend-item" v-for="cat in insuranceCategories" :key="cat.id">
+              <text class="legend-dot" :style="{ background: cat.color }"></text>
+              <text class="legend-name">{{ cat.name }}</text>
+            </view>
+          </view>
+        </scroll-view>
       </view>
     </view>
 
@@ -81,6 +80,13 @@
             @click="activeFilter = 'life'"
           >
             寿险
+          </view>
+          <view 
+            class="filter-item" 
+            :class="{ active: activeFilter === 'property' }"
+            @click="activeFilter = 'property'"
+          >
+            财产险
           </view>
         </view>
       </scroll-view>
@@ -184,7 +190,7 @@
 
 <script>
 import { getInsuranceCategories, purchaseInsuranceProduct, getCurrentUserId, initWealthDataSync } from '@/api/wealth.js'
-import { drawSimpleBarChart } from '@/utils/simple-chart.js'
+import { initUCharts, createInsuranceChart } from '@/utils/ucharts.js'
 
 export default {
   data() {
@@ -360,13 +366,6 @@ export default {
   },
   
   methods: {
-    goBack() {
-      uni.navigateBack()
-    },
-    
-    onRefresh() {
-      this.loadInsuranceData()
-    },
     
     async loadInsuranceData() {
       try {
@@ -416,24 +415,15 @@ export default {
         await new Promise(resolve => setTimeout(resolve, 200))
         // #endif
         
-        // 计算各保险类别的平均保费
-        const chartData = insuranceCategories.map(category => {
-          const avgPremium = category.products.reduce((sum, product) => sum + product.premium, 0) / category.products.length
-          return avgPremium
-        })
+        // 使用uCharts渲染图表
+        const option = createInsuranceChart({ categories: insuranceCategories })
+        this.chartInstance = await initUCharts('insuranceChart', option, this)
         
-        const labels = insuranceCategories.map(category => category.name)
-        
-        // 使用简单图表工具渲染柱状图
-        drawSimpleBarChart('insuranceChart', {
-          data: chartData,
-          labels: labels,
-          title: '保险产品平均保费',
-          yAxisLabel: '保费(元)',
-          colors: ['#FF6B35', '#34C759', '#FF9500']
-        })
-        
-        console.log('✅ 保险图表渲染成功')
+        if (this.chartInstance) {
+          console.log('✅ 保险图表渲染成功 (uCharts)')
+        } else {
+          console.warn('❌ uCharts图表渲染失败')
+        }
       } catch (error) {
         console.error('❌ 保险图表渲染失败:', error)
         // 降级处理：显示文本信息
@@ -546,37 +536,6 @@ export default {
   min-height: 100vh;
 }
 
-/* 头部导航 */
-.header {
-  background: #fff;
-  border-bottom: 1rpx solid #eee;
-}
-
-.nav-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20rpx 30rpx;
-  height: 88rpx;
-}
-
-.nav-left, .nav-right {
-  width: 60rpx;
-  text-align: center;
-}
-
-.nav-icon {
-  font-size: 36rpx;
-  color: #333;
-  font-weight: bold;
-}
-
-.nav-title {
-  font-size: 32rpx;
-  font-weight: 600;
-  color: #333;
-}
-
 /* 市场概览 */
 .market-overview {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -662,6 +621,33 @@ export default {
 .chart-canvas {
   width: 100%;
   height: 100%;
+}
+
+.legend-row {
+  margin: 10rpx 20rpx 0 20rpx;
+}
+.legend-scroll {
+  white-space: nowrap;
+}
+.legend-list {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20rpx;
+}
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+}
+.legend-dot {
+  width: 14rpx;
+  height: 14rpx;
+  border-radius: 50%;
+  margin-right: 8rpx;
+}
+.legend-name {
+  font-size: 22rpx;
+  color: #666;
 }
 
 /* 筛选区域 */

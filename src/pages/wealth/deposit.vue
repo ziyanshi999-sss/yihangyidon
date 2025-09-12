@@ -1,18 +1,5 @@
 <template>
   <view class="deposit-page">
-    <!-- 头部导航 -->
-    <view class="header">
-      <view class="nav-bar">
-        <view class="nav-left" @click="goBack">
-          <text class="nav-icon">‹</text>
-        </view>
-        <text class="nav-title">存款产品</text>
-        <view class="nav-right">
-          <text class="nav-icon" @click="onRefresh">⟳</text>
-        </view>
-      </view>
-    </view>
-
     <!-- 我的存款概览 -->
     <view class="overview-card">
       <view class="overview-header">
@@ -71,21 +58,12 @@
         <text class="chart-subtitle">数据展示</text>
       </view>
       <view class="chart-container">
-        <!-- #ifdef APP-PLUS -->
         <canvas 
-          id="depositRateChart" 
-          type="2d"
+          :id="'depositRateChart'"
+          :canvas-id="'depositRateChart'"
           class="chart-canvas"
           @touchstart="onChartTouch"
         ></canvas>
-        <!-- #endif -->
-        <!-- #ifndef APP-PLUS -->
-        <canvas 
-          canvas-id="depositRateChart" 
-          class="chart-canvas"
-          @touchstart="onChartTouch"
-        ></canvas>
-        <!-- #endif -->
       </view>
     </view>
 
@@ -385,7 +363,7 @@
 
 <script>
 import { getDepositRates, getDepositProducts, addDepositRecord, getCurrentUserId, initWealthDataSync } from '@/api/wealth.js'
-import { drawSimpleLineChart } from '@/utils/simple-chart.js'
+import { initUCharts, createDepositRateChart } from '@/utils/ucharts.js'
 
 export default {
   data() {
@@ -538,13 +516,6 @@ export default {
   },
   
   methods: {
-    goBack() {
-      uni.navigateBack()
-    },
-    
-    onRefresh() {
-      this.loadDepositData()
-    },
     
     toggleAmountVisibility() {
       this.hideAmount = !this.hideAmount
@@ -598,33 +569,18 @@ export default {
         await new Promise(resolve => setTimeout(resolve, 200))
         // #endif
         
-        // 使用简单图表工具渲染图表
-        const chartData = this.depositData?.fixed?.map(item => item.rate) || [1.85, 2.05, 2.10, 2.60, 2.95, 3.20]
-        const labels = this.depositData?.fixed?.map(item => item.term) || ['3个月', '6个月', '1年', '2年', '3年', '5年']
+        // 使用uCharts渲染图表
+        const option = createDepositRateChart(this.depositData)
+        this.chartInstance = await initUCharts('depositRateChart', option, this)
         
-        drawSimpleLineChart('depositRateChart', {
-          data: chartData,
-          labels: labels,
-          title: '存款利率趋势',
-          yAxisLabel: '利率(%)',
-          colors: ['#007AFF']
-        })
-        
-        console.log('✅ 存款利率图表渲染成功')
+        if (this.chartInstance) {
+          console.log('✅ 存款利率图表渲染成功 (uCharts)')
+        } else {
+          console.warn('❌ uCharts图表渲染失败')
+        }
         
       } catch (error) {
         console.error('❌ 图表渲染失败:', error)
-        // 使用默认数据作为备用
-        const defaultData = [1.85, 2.05, 2.10, 2.60, 2.95, 3.20]
-        const defaultLabels = ['3个月', '6个月', '1年', '2年', '3年', '5年']
-        
-        drawSimpleLineChart('depositRateChart', {
-          data: defaultData,
-          labels: defaultLabels,
-          title: '存款利率趋势',
-          yAxisLabel: '利率(%)',
-          colors: ['#007AFF']
-        })
       }
     },
     
@@ -878,37 +834,6 @@ export default {
 .deposit-page {
   background: #f5f7fb;
   min-height: 100vh;
-}
-
-/* 头部导航 */
-.header {
-  background: #fff;
-  border-bottom: 1rpx solid #eee;
-}
-
-.nav-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20rpx 30rpx;
-  height: 88rpx;
-}
-
-.nav-left, .nav-right {
-  width: 60rpx;
-  text-align: center;
-}
-
-.nav-icon {
-  font-size: 36rpx;
-  color: #333;
-  font-weight: bold;
-}
-
-.nav-title {
-  font-size: 32rpx;
-  font-weight: 600;
-  color: #333;
 }
 
 /* 概览卡片 */

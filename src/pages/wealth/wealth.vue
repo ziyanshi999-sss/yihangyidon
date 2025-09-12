@@ -450,13 +450,26 @@ export default {
       
       const url = pageMap[pageType]
       if (url) {
-        uni.navigateTo({
-          url: url,
-          fail: (err) => {
-            console.error('页面跳转失败:', err)
-            uni.showToast({ title: '页面跳转失败', icon: 'none' })
-          }
-        })
+        // 添加延迟确保页面状态正常
+        setTimeout(() => {
+          uni.navigateTo({
+            url: url,
+            success: () => {
+              console.log('页面跳转成功:', url)
+            },
+            fail: (err) => {
+              console.error('页面跳转失败:', err)
+              // 如果navigateTo失败，尝试使用redirectTo
+              uni.redirectTo({
+                url: url,
+                fail: (err2) => {
+                  console.error('重定向也失败:', err2)
+                  uni.showToast({ title: '页面跳转失败', icon: 'none' })
+                }
+              })
+            }
+          })
+        }, 100)
       } else {
         uni.showToast({ title: '页面不存在', icon: 'none' })
       }

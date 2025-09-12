@@ -36,9 +36,24 @@ export function getCurrentUserWealthData() {
       holdings: []
     },
     depositProducts: currentUser.depositProducts || {
-      current: { rate: 0.35, features: [], riskWarning: '' },
-      fixed: [],
-      smart: { rate: 2.8, features: [], riskWarning: '' }
+      current: { 
+        rate: 0.35, 
+        features: ['随时存取', '灵活方便', '安全可靠', '存款保险保障'], 
+        riskWarning: '存款保险保障，风险极低' 
+      },
+      fixed: [
+        { term: '3个月', rate: 1.85, minAmount: 1000, features: ['保本保息', '收益稳定', '期限灵活'], riskWarning: '存款保险保障，风险极低' },
+        { term: '6个月', rate: 2.05, minAmount: 1000, features: ['保本保息', '收益稳定', '期限灵活'], riskWarning: '存款保险保障，风险极低' },
+        { term: '1年', rate: 2.10, minAmount: 1000, features: ['保本保息', '收益稳定', '期限灵活'], riskWarning: '存款保险保障，风险极低' },
+        { term: '2年', rate: 2.60, minAmount: 1000, features: ['保本保息', '收益稳定', '期限灵活'], riskWarning: '存款保险保障，风险极低' },
+        { term: '3年', rate: 2.95, minAmount: 1000, features: ['保本保息', '收益稳定', '期限灵活'], riskWarning: '存款保险保障，风险极低' },
+        { term: '5年', rate: 3.20, minAmount: 1000, features: ['保本保息', '收益稳定', '期限灵活'], riskWarning: '存款保险保障，风险极低' }
+      ],
+      smart: { 
+        rate: 2.8, 
+        features: ['智能计息', '灵活存取', '收益优化', '自动转存'], 
+        riskWarning: '存款保险保障，风险极低' 
+      }
     },
     insuranceProducts: currentUser.insuranceProducts || {
       categories: [
@@ -50,25 +65,39 @@ export function getCurrentUserWealthData() {
           products: [
             {
               id: 'life001',
-              name: '终身寿险',
-              type: '人寿保险',
+              name: '农银终身寿险',
+              type: '终身寿险',
               premium: 5000,
               coverage: 500000,
               term: '终身',
-              features: ['终身保障', '现金价值', '分红收益'],
+              features: ['终身保障', '现金价值', '分红收益', '保单贷款'],
               riskLevel: '低风险',
-              status: '在售'
+              status: '在售',
+              description: '提供终身保障，具有现金价值和分红功能，适合长期规划'
             },
             {
               id: 'life002',
-              name: '定期寿险',
-              type: '人寿保险',
+              name: '农银定期寿险',
+              type: '定期寿险',
               premium: 2000,
               coverage: 300000,
               term: '20年',
-              features: ['高保障', '低保费', '灵活选择'],
+              features: ['高保障', '低保费', '灵活选择', '可续保'],
               riskLevel: '低风险',
-              status: '在售'
+              status: '在售',
+              description: '高保障低保费，适合家庭经济支柱，保障期间灵活'
+            },
+            {
+              id: 'life003',
+              name: '农银两全保险',
+              type: '两全保险',
+              premium: 8000,
+              coverage: 200000,
+              term: '30年',
+              features: ['生死两全', '满期返还', '分红收益', '疾病保障'],
+              riskLevel: '中风险',
+              status: '在售',
+              description: '生死两全保障，满期返还保费，兼具保障和储蓄功能'
             }
           ]
         },
@@ -80,25 +109,39 @@ export function getCurrentUserWealthData() {
           products: [
             {
               id: 'health001',
-              name: '重疾保险',
-              type: '健康保险',
+              name: '农银重疾保险',
+              type: '重疾保险',
               premium: 3000,
               coverage: 200000,
               term: '终身',
-              features: ['重疾保障', '轻症赔付', '豁免保费'],
+              features: ['重疾保障', '轻症赔付', '豁免保费', '多次赔付'],
               riskLevel: '中风险',
-              status: '在售'
+              status: '在售',
+              description: '覆盖100种重疾，轻症豁免保费，提供全面健康保障'
             },
             {
               id: 'health002',
-              name: '医疗保险',
-              type: '健康保险',
+              name: '农银医疗保险',
+              type: '医疗保险',
               premium: 800,
               coverage: 100000,
               term: '1年',
-              features: ['住院保障', '门诊报销', '无免赔额'],
+              features: ['住院保障', '门诊报销', '无免赔额', '续保保证'],
               riskLevel: '低风险',
-              status: '在售'
+              status: '在售',
+              description: '住院医疗费用报销，门诊费用覆盖，无免赔额设计'
+            },
+            {
+              id: 'health003',
+              name: '农银防癌保险',
+              type: '防癌保险',
+              premium: 1500,
+              coverage: 500000,
+              term: '终身',
+              features: ['癌症保障', '原位癌赔付', '康复津贴', '绿色通道'],
+              riskLevel: '中风险',
+              status: '在售',
+              description: '专门针对癌症风险，提供高额保障和就医绿色通道'
             }
           ]
         },
@@ -110,14 +153,95 @@ export function getCurrentUserWealthData() {
           products: [
             {
               id: 'accident001',
-              name: '综合意外险',
+              name: '农银综合意外险',
               type: '意外保险',
               premium: 200,
               coverage: 100000,
               term: '1年',
-              features: ['意外身故', '意外伤残', '意外医疗'],
+              features: ['意外身故', '意外伤残', '意外医疗', '住院津贴'],
               riskLevel: '低风险',
-              status: '在售'
+              status: '在售',
+              description: '全面意外保障，包含身故、伤残、医疗和住院津贴'
+            },
+            {
+              id: 'accident002',
+              name: '农银交通意外险',
+              type: '交通意外险',
+              premium: 100,
+              coverage: 500000,
+              term: '1年',
+              features: ['交通意外', '高额保障', '多种交通工具', '全球保障'],
+              riskLevel: '低风险',
+              status: '在售',
+              description: '专门保障交通意外，覆盖飞机、火车、汽车等多种交通工具'
+            }
+          ]
+        },
+        {
+          id: 'property',
+          name: '财产保险',
+          icon: '🏠',
+          color: '#9C27B0',
+          products: [
+            {
+              id: 'property001',
+              name: '农银家财保险',
+              type: '家财保险',
+              premium: 500,
+              coverage: 500000,
+              term: '1年',
+              features: ['房屋保障', '室内财产', '盗抢保障', '水渍保障'],
+              riskLevel: '低风险',
+              status: '在售',
+              description: '保障家庭财产安全，覆盖房屋及室内财产损失'
+            },
+            {
+              id: 'property002',
+              name: '住宅火灾及自然灾害保险',
+              type: '家财保险',
+              premium: 380,
+              coverage: 300000,
+              term: '1年',
+              features: ['火灾爆炸', '台风暴雨', '冰雹洪水', '附加盗抢'],
+              riskLevel: '低风险',
+              status: '在售',
+              description: '针对住宅火灾与自然灾害造成的房屋及室内财产损失提供保障'
+            },
+            {
+              id: 'property003',
+              name: '企业财产综合保险',
+              type: '企业财产险',
+              premium: 2600,
+              coverage: 5000000,
+              term: '1年',
+              features: ['房屋机器', '存货成品', '盗抢责任', '营业中断可选'],
+              riskLevel: '中风险',
+              status: '在售',
+              description: '适用于中小企业，对房屋、机器设备、存货等提供综合保障，可选营业中断险'
+            },
+            {
+              id: 'property004',
+              name: '设备损坏保险（家商两用）',
+              type: '设备险',
+              premium: 980,
+              coverage: 1000000,
+              term: '1年',
+              features: ['意外损坏', '操作不当', '电涌短路', '零部件更换'],
+              riskLevel: '中风险',
+              status: '在售',
+              description: '对家用或商用设备因意外损坏、操作不当、电气故障造成的损失进行赔偿'
+            },
+            {
+              id: 'property005',
+              name: '租客家财与第三者责任保险',
+              type: '家财责任险',
+              premium: 260,
+              coverage: 200000,
+              term: '1年',
+              features: ['室内财产', '租客责任', '第三者责任', '水渍玻璃破碎'],
+              riskLevel: '低风险',
+              status: '在售',
+              description: '面向租住房人群，覆盖室内财产、租客责任与第三者责任等常见风险'
             }
           ]
         }
@@ -131,7 +255,10 @@ export function getCurrentUserWealthData() {
           price: '7.2345',
           change: '+0.0123',
           changePercent: '+0.17%',
-          trend: 'up'
+          trend: 'up',
+          high: '7.2456',
+          low: '7.2100',
+          volume: '125.6M'
         },
         {
           code: 'EUR/CNY',
@@ -139,7 +266,10 @@ export function getCurrentUserWealthData() {
           price: '7.8901',
           change: '-0.0234',
           changePercent: '-0.30%',
-          trend: 'down'
+          trend: 'down',
+          high: '7.9200',
+          low: '7.8800',
+          volume: '89.3M'
         },
         {
           code: 'GBP/CNY',
@@ -147,7 +277,10 @@ export function getCurrentUserWealthData() {
           price: '9.1234',
           change: '+0.0456',
           changePercent: '+0.50%',
-          trend: 'up'
+          trend: 'up',
+          high: '9.1500',
+          low: '9.0800',
+          volume: '67.8M'
         },
         {
           code: 'JPY/CNY',
@@ -155,7 +288,32 @@ export function getCurrentUserWealthData() {
           price: '0.0489',
           change: '-0.0001',
           changePercent: '-0.20%',
-          trend: 'down'
+          trend: 'down',
+          high: '0.0495',
+          low: '0.0485',
+          volume: '156.2M'
+        },
+        {
+          code: 'AUD/CNY',
+          name: '澳元/人民币',
+          price: '4.7856',
+          change: '+0.0123',
+          changePercent: '+0.26%',
+          trend: 'up',
+          high: '4.7900',
+          low: '4.7700',
+          volume: '45.7M'
+        },
+        {
+          code: 'CAD/CNY',
+          name: '加元/人民币',
+          price: '5.3456',
+          change: '-0.0089',
+          changePercent: '-0.17%',
+          trend: 'down',
+          high: '5.3600',
+          low: '5.3400',
+          volume: '32.1M'
         }
       ],
       tradingPairs: [
@@ -165,7 +323,10 @@ export function getCurrentUserWealthData() {
           buyPrice: '7.2345',
           sellPrice: '7.2340',
           spread: '0.0005',
-          status: '可交易'
+          status: '可交易',
+          minAmount: 100,
+          maxAmount: 50000,
+          commission: 0.0002
         },
         {
           id: 'forex002',
@@ -173,7 +334,10 @@ export function getCurrentUserWealthData() {
           buyPrice: '7.8901',
           sellPrice: '7.8896',
           spread: '0.0005',
-          status: '可交易'
+          status: '可交易',
+          minAmount: 100,
+          maxAmount: 50000,
+          commission: 0.0002
         },
         {
           id: 'forex003',
@@ -181,9 +345,40 @@ export function getCurrentUserWealthData() {
           buyPrice: '9.1234',
           sellPrice: '9.1229',
           spread: '0.0005',
-          status: '可交易'
+          status: '可交易',
+          minAmount: 100,
+          maxAmount: 50000,
+          commission: 0.0002
+        },
+        {
+          id: 'forex004',
+          pair: 'JPY/CNY',
+          buyPrice: '0.0489',
+          sellPrice: '0.0488',
+          spread: '0.0001',
+          status: '可交易',
+          minAmount: 1000,
+          maxAmount: 100000,
+          commission: 0.0001
+        },
+        {
+          id: 'forex005',
+          pair: 'AUD/CNY',
+          buyPrice: '4.7856',
+          sellPrice: '4.7850',
+          spread: '0.0006',
+          status: '可交易',
+          minAmount: 100,
+          maxAmount: 50000,
+          commission: 0.0002
         }
-      ]
+      ],
+      marketInfo: {
+        lastUpdate: '2024-01-15T15:30:00Z',
+        marketStatus: '开放',
+        nextClose: '2024-01-15T23:00:00Z',
+        tradingHours: '周一至周五 09:00-23:00'
+      }
     }
   }
 }
@@ -332,61 +527,133 @@ export function getWealthProductCategories() {
     return [
       {
         id: 'low-risk',
-        name: '低风险理财',
+        name: '稳健型理财',
         icon: '🛡️',
         color: '#34C759',
         products: [
           {
-            id: 'default001',
-            name: '稳健理财A',
-            type: '理财产品',
-            yield: 3.8,
-            minAmount: 1000,
+            id: 'w001',
+            name: '农银稳健优选第68期',
+            type: '净值型',
+            yield: 3.20,
+            minAmount: 10000,
             term: '90天',
             riskLevel: '低风险',
-            features: ['保本保息', '收益稳定', '风险极低'],
+            features: ['保本保息', '收益稳定', '风险极低', '银行担保'],
             status: '在售',
-            description: '适合稳健型投资者，风险极低，收益稳定'
+            description: '适合稳健型投资者，风险极低，收益稳定，银行提供本金保障'
+          },
+          {
+            id: 'w002',
+            name: '农银灵活理财T+1',
+            type: '货币型',
+            yield: 2.65,
+            minAmount: 1000,
+            term: '开放式',
+            riskLevel: '低风险',
+            features: ['随时存取', '灵活方便', '安全可靠', 'T+1到账'],
+            status: '在售',
+            description: '开放式理财产品，随时申购赎回，T+1到账，适合短期资金管理'
+          },
+          {
+            id: 'w003',
+            name: '农银安心宝30天',
+            type: '固定收益',
+            yield: 2.85,
+            minAmount: 5000,
+            term: '30天',
+            riskLevel: '低风险',
+            features: ['保本保息', '收益稳定', '期限灵活', '自动续存'],
+            status: '在售',
+            description: '30天短期理财产品，保本保息，适合短期闲置资金'
           }
         ]
       },
       {
         id: 'medium-risk',
-        name: '中风险理财',
+        name: '平衡型理财',
         icon: '⚖️',
         color: '#FF9500',
         products: [
           {
-            id: 'default002',
-            name: '平衡理财B',
-            type: '理财产品',
-            yield: 4.5,
-            minAmount: 5000,
+            id: 'w004',
+            name: '农银进取增强半年期',
+            type: '混合型',
+            yield: 4.10,
+            minAmount: 10000,
             term: '180天',
             riskLevel: '中风险',
-            features: ['收益较高', '风险适中', '期限灵活'],
+            features: ['收益较高', '风险适中', '期限灵活', '专业管理'],
             status: '在售',
-            description: '适合平衡型投资者，风险适中，收益较高'
+            description: '混合型理财产品，投资于债券和货币市场工具，风险适中收益较高'
+          },
+          {
+            id: 'w005',
+            name: '农银成长优选一年期',
+            type: '权益型',
+            yield: 4.50,
+            minAmount: 20000,
+            term: '365天',
+            riskLevel: '中风险',
+            features: ['收益较高', '风险适中', '期限灵活', '成长潜力'],
+            status: '在售',
+            description: '权益类理财产品，投资于优质企业债券和股票，具有成长潜力'
+          },
+          {
+            id: 'w006',
+            name: '农银价值发现180天',
+            type: '混合型',
+            yield: 3.95,
+            minAmount: 15000,
+            term: '180天',
+            riskLevel: '中风险',
+            features: ['价值投资', '风险适中', '期限适中', '专业选股'],
+            status: '在售',
+            description: '价值投资理念，精选优质标的，风险适中收益稳定'
           }
         ]
       },
       {
         id: 'high-risk',
-        name: '高风险理财',
+        name: '进取型理财',
         icon: '🚀',
         color: '#FF3B30',
         products: [
           {
-            id: 'default003',
-            name: '成长理财C',
-            type: '理财产品',
-            yield: 6.5,
-            minAmount: 10000,
+            id: 'w007',
+            name: '农银价值发现两年期',
+            type: '权益型',
+            yield: 5.80,
+            minAmount: 50000,
+            term: '730天',
+            riskLevel: '高风险',
+            features: ['高收益', '高风险', '专业投资', '长期持有'],
+            status: '在售',
+            description: '长期价值投资产品，投资于优质成长企业，适合风险承受能力强的投资者'
+          },
+          {
+            id: 'w008',
+            name: '农银科技成长三年期',
+            type: '权益型',
+            yield: 6.20,
+            minAmount: 100000,
+            term: '1095天',
+            riskLevel: '高风险',
+            features: ['高收益', '高风险', '科技主题', '成长潜力'],
+            status: '在售',
+            description: '科技主题投资产品，专注于科技创新企业，具有较高成长潜力'
+          },
+          {
+            id: 'w009',
+            name: '农银新兴产业一年期',
+            type: '权益型',
+            yield: 5.50,
+            minAmount: 80000,
             term: '365天',
             riskLevel: '高风险',
-            features: ['高收益', '高风险', '专业投资'],
+            features: ['新兴产业', '高收益', '高风险', '主题投资'],
             status: '在售',
-            description: '适合激进型投资者，高风险高收益'
+            description: '新兴产业主题投资，涵盖新能源、生物医药等新兴领域'
           }
         ]
       }

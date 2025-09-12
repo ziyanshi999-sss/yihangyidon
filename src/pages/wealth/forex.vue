@@ -1,19 +1,5 @@
 <template>
   <view class="forex-page">
-    <!-- 头部导航 -->
-    <view class="header">
-      <view class="nav-bar">
-        <view class="nav-left" @click="goBack">
-          <text class="nav-icon">‹</text>
-        </view>
-        <text class="nav-title">外汇交易</text>
-        <view class="nav-right">
-          <text class="nav-icon" @click="toggleAutoUpdate" :class="{ active: autoUpdate }">⏰</text>
-          <text class="nav-icon" @click="onRefresh">⟳</text>
-        </view>
-      </view>
-    </view>
-
     <!-- 市场状态 -->
     <view class="market-status">
       <view class="status-header">
@@ -24,7 +10,7 @@
             <text class="status-text">{{ marketStatus.isOpen ? '开市' : '休市' }}</text>
           </view>
         </view>
-        <text class="last-update">最后更新: {{ formatTime(marketStatus.lastUpdate) }}</text>
+        <text class="last-update" v-if="marketStatus.lastUpdate && formatTime(marketStatus.lastUpdate) !== 'Invalid Date'">最后更新: {{ formatTime(marketStatus.lastUpdate) }}</text>
       </view>
     </view>
 
@@ -32,7 +18,6 @@
     <view class="major-pairs">
       <view class="pairs-header">
         <text class="pairs-title">主要货币对</text>
-        <text class="pairs-subtitle">实时汇率</text>
       </view>
       
       <view class="pairs-list">
@@ -63,27 +48,33 @@
     <view class="chart-card">
       <view class="chart-header">
         <text class="chart-title">汇率走势图</text>
-        <view class="chart-tabs">
-          <text 
-            class="chart-tab" 
-            :class="{ active: selectedPair === 'USD/CNY' }"
-            @click="selectedPair = 'USD/CNY'"
-          >美元/人民币</text>
-          <text 
-            class="chart-tab" 
-            :class="{ active: selectedPair === 'EUR/CNY' }"
-            @click="selectedPair = 'EUR/CNY'"
-          >欧元/人民币</text>
-          <text 
-            class="chart-tab" 
-            :class="{ active: selectedPair === 'JPY/CNY' }"
-            @click="selectedPair = 'JPY/CNY'"
-          >日元/人民币</text>
+      </view>
+      <view class="chart-toolbar">
+        <view class="toolbar-buttons">
+          <button size="mini" :class="{ active: selectedPair==='USD/CNY' }" @click="switchCurrency('USD')">美元/人民币</button>
+          <button size="mini" :class="{ active: selectedPair==='EUR/CNY' }" @click="switchCurrency('EUR')">欧元/人民币</button>
+          <button size="mini" :class="{ active: selectedPair==='JPY/CNY' }" @click="switchCurrency('JPY')">日元/人民币</button>
         </view>
       </view>
       <view class="chart-container">
         <canvas 
-          canvas-id="forexChart" 
+          v-if="selectedPair==='USD/CNY'"
+          :id="'forexChartUSD'"
+          :canvas-id="'forexChartUSD'"
+          class="chart-canvas"
+          @touchstart="onChartTouch"
+        ></canvas>
+        <canvas 
+          v-if="selectedPair==='EUR/CNY'"
+          :id="'forexChartEUR'"
+          :canvas-id="'forexChartEUR'"
+          class="chart-canvas"
+          @touchstart="onChartTouch"
+        ></canvas>
+        <canvas 
+          v-if="selectedPair==='JPY/CNY'"
+          :id="'forexChartJPY'"
+          :canvas-id="'forexChartJPY'"
           class="chart-canvas"
           @touchstart="onChartTouch"
         ></canvas>
@@ -208,7 +199,7 @@
 
 <script>
 import { getForexMajorPairs, getForexTradingPairs } from '@/api/wealth.js'
-import { drawSimpleLineChart } from '@/utils/simple-chart.js'
+import { initUCharts, createForexChart } from '@/utils/ucharts.js'
 
 export default {
   data() {
@@ -293,13 +284,6 @@ export default {
   },
   
   methods: {
-    goBack() {
-      uni.navigateBack()
-    },
-    
-    onRefresh() {
-      this.loadForexData()
-    },
     
     async loadForexData() {
       try {
@@ -322,8 +306,8 @@ export default {
         // 更新数据
         this.forexData = forexData
         
-        // 初始化图表
-        await this.initChart(forexData)
+        // 默认加载美元历史
+        await this.switchCurrency('USD')
         
         // 启动自动更新（简化版）
         this.startSimpleAutoUpdate()
@@ -336,6 +320,167 @@ export default {
         uni.showToast({ title: '加载失败', icon: 'none' })
         this.loading = false
       }
+    },
+    // 切换币种并拉取近30天历史（在线优先，离线回退）
+    async switchCurrency(code) {
+      try {
+        this.selectedPair = `${code}/CNY`
+        const end = new Date()
+        const start = new Date()
+        start.setDate(end.getDate() - 29)
+        const fmt = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`
+        const startStr = fmt(start)
+        const endStr = fmt(end)
+
+        // 生成完整日期序列（30天）
+        const fullDates = []
+        for (let i = 29; i >= 0; i--) {
+          const d = new Date()
+          d.setDate(d.getDate() - i)
+          fullDates.push(fmt(d))
+        }
+
+        const base = code
+        const symbol = 'CNY'
+
+        const loadFromCache = () => {
+          try {
+            const cacheKey = `forex_history_${code}`
+            const cached = uni.getStorageSync(cacheKey)
+            if (cached && cached.dates && cached.values && cached.dates.length === cached.values.length) {
+              return cached
+            }
+          } catch (e) {}
+          return null
+        }
+
+        const saveToCache = (payload) => {
+          try {
+            const cacheKey = `forex_history_${code}`
+            uni.setStorageSync(cacheKey, payload)
+          } catch (e) {}
+        }
+
+        const fillMissing = (datesArr, valuesMap) => {
+          const filledValues = new Array(datesArr.length)
+          // 先写入已知值
+          for (let i = 0; i < datesArr.length; i++) {
+            const d = datesArr[i]
+            const v = valuesMap[d]
+            filledValues[i] = (typeof v === 'number' && !Number.isNaN(v)) ? v : null
+          }
+          // 找到第一个有效值
+          let firstIdx = filledValues.findIndex(v => v !== null)
+          if (firstIdx === -1) {
+            return filledValues.map(() => 0)
+          }
+          // 将第一个值向前填充
+          for (let i = 0; i < firstIdx; i++) {
+            filledValues[i] = filledValues[firstIdx]
+          }
+          // 向后延续
+          for (let i = firstIdx + 1; i < filledValues.length; i++) {
+            if (filledValues[i] === null) filledValues[i] = filledValues[i - 1]
+          }
+          return filledValues
+        }
+
+        // 多数据源尝试
+        const networkData = await this.fetchHistoryFromProviders({ base, symbol, startStr, endStr })
+
+        let dates = fullDates.slice()
+        let values = []
+
+        if (networkData && networkData.rates) {
+          const map = {}
+          const keys = Object.keys(networkData.rates)
+          const respBase = networkData.base || base
+          for (const k of keys) {
+            const rec = networkData.rates[k]
+            let val = null
+            if (respBase === base) {
+              val = Number(rec && rec[symbol])
+            } else {
+              // 交叉汇率：base->CNY = (respBase->CNY) / (respBase->base)
+              const toCny = Number(rec && rec[symbol])
+              const toBase = Number(rec && rec[base])
+              if (!Number.isNaN(toCny) && !Number.isNaN(toBase) && toBase !== 0) {
+                val = toCny / toBase
+              }
+            }
+            if (typeof val === 'number' && !Number.isNaN(val)) map[k] = val
+          }
+          values = fillMissing(dates, map)
+          const payload = { history: { name: `${code}/CNY`, dates, values } }
+          saveToCache(payload.history)
+          console.log('📈 加载到历史数据:', code, '首末值:', values[0], values[values.length-1])
+          await this.initChart(payload)
+          return
+        }
+
+        // 无网络或失败：尝试缓存
+        const cached = loadFromCache()
+        if (cached) {
+          // 以当前 fullDates 为准，用缓存映射补齐
+          const valuesMap = {}
+          for (let i = 0; i < cached.dates.length; i++) {
+            valuesMap[cached.dates[i]] = cached.values[i]
+          }
+          values = fillMissing(dates, valuesMap)
+          console.log('📦 使用缓存数据:', code, '首末值:', values[0], values[values.length-1])
+          await this.initChart({ history: { name: `${code}/CNY`, dates, values } })
+          return
+        }
+
+        // 既无网络也无缓存：提示并不使用随机数据
+        uni.showToast({ title: '无法获取汇率数据', icon: 'none' })
+      } catch (err) {
+        console.error('切换币种失败:', err)
+        uni.showToast({ title: '切换失败', icon: 'none' })
+      }
+    },
+
+    // 依次尝试多个公共汇率数据源，返回 { rates: { 'YYYY-MM-DD': { [symbol]: number } } }
+    fetchHistoryFromProviders({ base, symbol, startStr, endStr }) {
+      const tryHost = (urlBuilder, mapper) => new Promise(resolve => {
+        const url = urlBuilder()
+        uni.request({
+          url,
+          method: 'GET',
+          timeout: 8000,
+          success: (res) => {
+            try {
+              if (res && res.statusCode === 200 && res.data) {
+                const mapped = mapper(res.data)
+                if (mapped && mapped.rates && Object.keys(mapped.rates).length) {
+                  resolve(mapped)
+                  return
+                }
+              }
+            } catch (e) {}
+            resolve(null)
+          },
+          fail: () => resolve(null)
+        })
+      })
+
+      // provider 1: exchangerate.host
+      const p1 = () => tryHost(
+        () => `https://api.exchangerate.host/timeseries?base=${base}&symbols=${symbol}&start_date=${startStr}&end_date=${endStr}`,
+        (data) => ({ rates: data && data.rates ? data.rates : null })
+      )
+
+      // provider 2: frankfurter.app（支持CORS，日期区间用 A..B 格式）
+      const p2 = () => tryHost(
+        () => `https://api.frankfurter.app/${startStr}..${endStr}?from=${base}&to=${symbol}`,
+        (data) => {
+          if (!data || !data.rates) return null
+          // frankfurter 返回 rates: { 'YYYY-MM-DD': { CNY: number } }
+          return { rates: data.rates }
+        }
+      )
+
+      return p1().then(r => r || p2())
     },
     
     // 启动简单自动更新
@@ -361,17 +506,6 @@ export default {
       }
     },
     
-    // 切换自动更新
-    toggleAutoUpdate() {
-      this.autoUpdate = !this.autoUpdate
-      if (this.autoUpdate) {
-        this.startSimpleAutoUpdate()
-        uni.showToast({ title: '自动更新已开启', icon: 'success' })
-      } else {
-        this.stopAutoUpdate()
-        uni.showToast({ title: '自动更新已关闭', icon: 'none' })
-      }
-    },
     
     async initChart(forexData) {
       try {
@@ -383,20 +517,36 @@ export default {
         await new Promise(resolve => setTimeout(resolve, 200))
         // #endif
         
-        // 提取汇率数据用于图表
-        const chartData = forexData.majorPairs.map(pair => parseFloat(pair.price))
-        const labels = forexData.majorPairs.map(pair => pair.code)
+        // 使用uCharts渲染或更新图表（每个币种独立实例与容器）
+        const option = createForexChart(forexData)
+        const isHistory = !!(forexData && forexData.history)
+        const pairName = isHistory ? (forexData.history.name || this.selectedPair) : this.selectedPair
+        const code = (pairName || 'USD/CNY').split('/')[0]
+        const idMap = { USD: 'forexChartUSD', EUR: 'forexChartEUR', JPY: 'forexChartJPY' }
+        const instMapKey = { USD: 'chartInstanceUSD', EUR: 'chartInstanceEUR', JPY: 'chartInstanceJPY' }
+        const canvasId = idMap[code] || 'forexChartUSD'
+        const instKey = instMapKey[code] || 'chartInstanceUSD'
+
+        if (this[instKey] && typeof this[instKey].updateData === 'function' && isHistory) {
+          console.log('🔄 更新图表数据:', pairName, '范围:', forexData.history?.dates?.[0], '→', forexData.history?.dates?.[forexData.history?.dates?.length - 1])
+          try {
+            this[instKey].updateData({
+              categories: option.categories,
+              series: option.series
+            })
+          } catch (e) {
+            console.warn('updateData失败，重新初始化图表', e)
+            this[instKey] = await initUCharts(canvasId, option, this)
+          }
+        } else {
+          this[instKey] = await initUCharts(canvasId, option, this)
+        }
         
-        // 使用简单图表工具渲染折线图
-        drawSimpleLineChart('forexChart', {
-          data: chartData,
-          labels: labels,
-          title: '主要货币对汇率',
-          yAxisLabel: '汇率',
-          colors: ['#FF6B35', '#34C759', '#FF9500', '#007AFF', '#AF52DE', '#FF2D92']
-        })
-        
-        console.log('✅ 外汇图表渲染成功')
+        if (this[instKey]) {
+          console.log('✅ 外汇图表渲染成功 (uCharts)')
+        } else {
+          console.warn('❌ uCharts图表渲染失败')
+        }
       } catch (error) {
         console.error('❌ 外汇图表渲染失败:', error)
         // 降级处理：显示文本信息
@@ -465,7 +615,7 @@ export default {
         return
       }
       
-      // 模拟汇率计算（实际应该调用实时汇率API）
+      // 模拟汇率计算
       const exchangeRates = {
         'CNY': { 'USD': 0.138, 'EUR': 0.127, 'JPY': 21.37, 'GBP': 0.110, 'AUD': 0.209, 'CAD': 0.188 },
         'USD': { 'CNY': 7.238, 'EUR': 0.920, 'JPY': 154.8, 'GBP': 0.794, 'AUD': 1.515, 'CAD': 1.365 },
@@ -500,49 +650,33 @@ export default {
 </script>
 
 <style scoped>
+.chart-toolbar {
+  padding: 8rpx 20rpx 0 20rpx;
+}
+
+.toolbar-buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12rpx;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+
+.toolbar-buttons button {
+  font-size: 22rpx;
+  padding: 8rpx 16rpx;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.toolbar-buttons button.active {
+  background: #2e7d32;
+  color: #fff;
+}
 .forex-page {
   background: #f5f7fb;
   min-height: 100vh;
-}
-
-/* 头部导航 */
-.header {
-  background: #fff;
-  border-bottom: 1rpx solid #eee;
-}
-
-.nav-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20rpx 30rpx;
-  height: 88rpx;
-}
-
-.nav-left, .nav-right {
-  width: 60rpx;
-  text-align: center;
-}
-
-.nav-icon {
-  font-size: 36rpx;
-  color: #333;
-  font-weight: bold;
-  transition: color 0.3s ease;
-}
-
-.nav-icon.active {
-  color: #007aff;
-}
-
-.nav-icon:hover {
-  color: #007aff;
-}
-
-.nav-title {
-  font-size: 32rpx;
-  font-weight: 600;
-  color: #333;
 }
 
 /* 市场状态 */

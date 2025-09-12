@@ -65,6 +65,7 @@
     "@dcloudio/uni-mp-weixin": "3.0.0-4070620250821001",
     "@dcloudio/uni-mp-xhs": "3.0.0-4070620250821001",
     "@dcloudio/uni-quickapp-webview": "3.0.0-4070620250821001",
+    "@qiun/ucharts": "^2.5.0-20230101",
     "antd-mobile": "^5.41.0-alpha.3",
     "axios": "^1.11.0",
     "echarts": "^5.4.3",
