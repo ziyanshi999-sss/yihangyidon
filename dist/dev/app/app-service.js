@@ -41,22 +41,22 @@ if (uni.restoreGlobal) {
   const userDataJson = [
     {
       id: "u001",
-      username: "张小明",
-      phone: "13999999999",
-      password: "abc123",
-      transactionPassword: "654321",
-      balance: 15e4,
-      nickname: "小明",
-      email: "zhangxiaoming@example.com",
-      idCard: "110101199202021456",
+      username: "李华",
+      phone: "13888888888",
+      password: "123456",
+      transactionPassword: "888888",
+      balance: 28e4,
+      nickname: "华华",
+      email: "lihua@example.com",
+      idCard: "110101199503151234",
       avatar: "/static/wealth/useravatar.jpg",
       status: "active",
-      createTime: "2024-01-02T09:15:00.000Z",
-      lastLoginTime: "2024-01-15T14:20:00.000Z",
-      realName: "张小明",
-      gender: "男",
-      birthDate: "1992-02-02",
-      address: "上海市浦东新区陆家嘴环路1000号",
+      createTime: "2024-01-10T08:30:00.000Z",
+      lastLoginTime: "2024-01-20T16:45:00.000Z",
+      realName: "李华",
+      gender: "女",
+      birthDate: "1995-03-15",
+      address: "北京市朝阳区建国门外大街1号",
       avatarUpdateTime: "2024-01-15T14:20:00.000Z",
       lastUpdateTime: "2024-01-15T14:20:00.000Z",
       securitySettings: {
@@ -119,7 +119,7 @@ if (uni.restoreGlobal) {
           dueDate: "2024-02-10",
           lastStatementDate: "2024-01-20",
           cardStatus: "active",
-          cardHolder: "张小明",
+          cardHolder: "李华",
           expiryDate: "2029-09-30",
           cvv: "456",
           annualFee: 500,
@@ -152,7 +152,7 @@ if (uni.restoreGlobal) {
           dueDate: "2024-02-15",
           lastStatementDate: "2024-01-15",
           cardStatus: "active",
-          cardHolder: "张小明",
+          cardHolder: "李华",
           expiryDate: "2030-12-31",
           cvv: "789",
           annualFee: 1e3,
@@ -179,7 +179,7 @@ if (uni.restoreGlobal) {
           type: "income",
           amount: 15e3,
           description: "工资收入",
-          balance: 15e4,
+          balance: 28e4,
           timestamp: "2024-01-15T09:00:00.000Z",
           icon: "💰",
           title: "工资收入",
@@ -822,10 +822,10 @@ if (uni.restoreGlobal) {
       bankAccounts: [
         {
           accountNumber: "6228480012345678901",
-          accountName: "张小明",
+          accountName: "李华",
           bankName: "中国农业银行",
           accountType: "储蓄卡",
-          balance: 15e4,
+          balance: 28e4,
           currency: "CNY",
           status: "active",
           openDate: "2020-03-15T00:00:00.000Z",
@@ -833,7 +833,7 @@ if (uni.restoreGlobal) {
         },
         {
           accountNumber: "6228480012345678902",
-          accountName: "张小明",
+          accountName: "李华",
           bankName: "中国农业银行",
           accountType: "定期存款",
           balance: 1e5,
@@ -1751,7 +1751,7 @@ if (uni.restoreGlobal) {
           id: "t003",
           type: "incoming",
           amount: 5e3,
-          sender: "张小明",
+          sender: "李华",
           senderAccount: "6228480012345678901",
           description: "生活费转账",
           status: "completed",
@@ -3064,7 +3064,7 @@ if (uni.restoreGlobal) {
           accountName: "刘强",
           bankName: "中国农业银行",
           accountType: "定期存款",
-          balance: 15e4,
+          balance: 28e4,
           currency: "CNY",
           status: "active",
           openDate: "2023-05-01T00:00:00.000Z",
@@ -3258,26 +3258,21 @@ if (uni.restoreGlobal) {
   let users = [];
   function initUsers() {
     try {
-      const storedUsers = getStorage("users", true);
-      if (storedUsers && storedUsers.length > 0) {
-        users = storedUsers;
-        formatAppLog("log", "at data/users.js:15", "从本地存储加载用户数据:", users.length, "个用户");
-      } else {
-        users = userDataJson || [];
-        saveUsersToStorage();
-        formatAppLog("log", "at data/users.js:21", "从JSON文件加载用户数据:", users.length, "个用户");
-      }
+      users = userDataJson || [];
+      saveUsersToStorage();
+      formatAppLog("log", "at data/users.js:15", "从JSON文件加载用户数据:", users.length, "个用户");
+      formatAppLog("log", "at data/users.js:16", "用户数据详情:", users.map((u) => ({ id: u.id, username: u.username, phone: u.phone, balance: u.balance })));
     } catch (error) {
-      formatAppLog("error", "at data/users.js:24", "初始化用户数据失败:", error);
+      formatAppLog("error", "at data/users.js:18", "初始化用户数据失败:", error);
       users = userDataJson || [];
     }
   }
   function saveUsersToStorage() {
     try {
       setStorage("users", users, true);
-      formatAppLog("log", "at data/users.js:33", "用户数据已保存到本地存储");
+      formatAppLog("log", "at data/users.js:27", "用户数据已保存到本地存储");
     } catch (error) {
-      formatAppLog("error", "at data/users.js:35", "保存用户数据失败:", error);
+      formatAppLog("error", "at data/users.js:29", "保存用户数据失败:", error);
     }
   }
   initUsers();
@@ -3306,12 +3301,12 @@ if (uni.restoreGlobal) {
     return false;
   }
   function validateUser(usernameOrPhone, password) {
-    formatAppLog("log", "at data/users.js:75", "登录验证:", { usernameOrPhone, password, totalUsers: users.length });
+    formatAppLog("log", "at data/users.js:69", "登录验证:", { usernameOrPhone, password, totalUsers: users.length });
     const user = users.find((user2) => {
       const matchUsername = user2.username && user2.username === usernameOrPhone;
       const matchPhone = user2.phone && user2.phone === usernameOrPhone;
       const matchPassword = user2.password === password;
-      formatAppLog("log", "at data/users.js:83", "检查用户:", {
+      formatAppLog("log", "at data/users.js:77", "检查用户:", {
         userId: user2.id,
         username: user2.username,
         phone: user2.phone,
@@ -3322,10 +3317,10 @@ if (uni.restoreGlobal) {
       return (matchUsername || matchPhone) && matchPassword;
     });
     if (user) {
-      formatAppLog("log", "at data/users.js:96", "登录成功:", user.id);
+      formatAppLog("log", "at data/users.js:90", "登录成功:", user.id);
       user.lastLoginTime = (/* @__PURE__ */ new Date()).toISOString();
     } else {
-      formatAppLog("log", "at data/users.js:100", "登录失败: 用户名/手机号或密码错误");
+      formatAppLog("log", "at data/users.js:94", "登录失败: 用户名/手机号或密码错误");
     }
     return user;
   }
@@ -3386,8 +3381,8 @@ if (uni.restoreGlobal) {
     };
     users.push(newUser);
     saveUsersToStorage();
-    formatAppLog("log", "at data/users.js:172", "新用户注册成功:", newUser);
-    formatAppLog("log", "at data/users.js:173", "当前用户总数:", users.length);
+    formatAppLog("log", "at data/users.js:166", "新用户注册成功:", newUser);
+    formatAppLog("log", "at data/users.js:167", "当前用户总数:", users.length);
     return newUser;
   }
   function getAllUsers() {
@@ -3411,11 +3406,22 @@ if (uni.restoreGlobal) {
   function resetUsersData() {
     users = userDataJson || [];
     saveUsersToStorage();
-    formatAppLog("log", "at data/users.js:211", "用户数据已重置");
+    formatAppLog("log", "at data/users.js:205", "用户数据已重置");
+  }
+  function clearStorageAndReload() {
+    try {
+      uni.removeStorageSync("users");
+      formatAppLog("log", "at data/users.js:213", "已清除本地存储");
+      initUsers();
+      formatAppLog("log", "at data/users.js:217", "用户数据已重新加载");
+    } catch (error) {
+      formatAppLog("error", "at data/users.js:219", "清除存储并重新加载失败:", error);
+    }
   }
   const users$1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
     __proto__: null,
     checkUserExists,
+    clearStorageAndReload,
     findUserById,
     findUserByUsername,
     generateVerificationCode,
@@ -3534,8 +3540,9 @@ if (uni.restoreGlobal) {
         uni.setStorageSync("users", users2);
         uni.setStorageSync("userInfo", completeUserInfo);
         uni.setStorageSync("currentUser", completeUserInfo);
+        uni.setStorageSync("currentUserId", completeUserInfo.id);
         uni.setStorageSync("isLoggedIn", true);
-        formatAppLog("log", "at utils/auth.js:173", "用户登录成功，完整数据已同步:", {
+        formatAppLog("log", "at utils/auth.js:174", "用户登录成功，完整数据已同步:", {
           id: completeUserInfo.id,
           username: completeUserInfo.username,
           phone: completeUserInfo.phone,
@@ -3545,8 +3552,9 @@ if (uni.restoreGlobal) {
       } else {
         uni.setStorageSync("userInfo", userInfo2);
         uni.setStorageSync("currentUser", userInfo2);
+        uni.setStorageSync("currentUserId", userInfo2.id);
         uni.setStorageSync("isLoggedIn", true);
-        formatAppLog("log", "at utils/auth.js:186", "用户登录成功，使用传入数据:", {
+        formatAppLog("log", "at utils/auth.js:188", "用户登录成功，使用传入数据:", {
           id: userInfo2.id,
           username: userInfo2.username,
           phone: userInfo2.phone,
@@ -3555,9 +3563,10 @@ if (uni.restoreGlobal) {
         });
       }
     } catch (error) {
-      formatAppLog("error", "at utils/auth.js:195", "更新用户登录状态失败:", error);
+      formatAppLog("error", "at utils/auth.js:197", "更新用户登录状态失败:", error);
       uni.setStorageSync("userInfo", userInfo2);
       uni.setStorageSync("currentUser", userInfo2);
+      uni.setStorageSync("currentUserId", userInfo2.id);
       uni.setStorageSync("isLoggedIn", true);
     }
     const redirectUrl = uni.getStorageSync("redirectUrl");
@@ -3588,16 +3597,16 @@ if (uni.restoreGlobal) {
     } = options;
     const performLogout = async () => {
       try {
-        formatAppLog("log", "at utils/auth.js:246", "开始退出登录流程");
+        formatAppLog("log", "at utils/auth.js:249", "开始退出登录流程");
         logLogoutEvent(reason);
         clearAllUserData();
-        formatAppLog("log", "at utils/auth.js:253", "用户数据已清除");
+        formatAppLog("log", "at utils/auth.js:256", "用户数据已清除");
         if (syncToServer) {
           try {
             await syncLogoutToServer(reason);
-            formatAppLog("log", "at utils/auth.js:259", "服务器同步完成");
+            formatAppLog("log", "at utils/auth.js:262", "服务器同步完成");
           } catch (syncError) {
-            formatAppLog("warn", "at utils/auth.js:261", "服务器同步失败，但继续退出流程:", syncError);
+            formatAppLog("warn", "at utils/auth.js:264", "服务器同步失败，但继续退出流程:", syncError);
           }
         }
         uni.showToast({
@@ -3605,18 +3614,18 @@ if (uni.restoreGlobal) {
           icon: "success",
           duration: 1500
         });
-        formatAppLog("log", "at utils/auth.js:273", "跳转到登录页面");
+        formatAppLog("log", "at utils/auth.js:276", "跳转到登录页面");
         uni.reLaunch({
           url: "/pages/denglu/login",
           success: () => {
-            formatAppLog("log", "at utils/auth.js:277", "已成功跳转到登录页面");
+            formatAppLog("log", "at utils/auth.js:280", "已成功跳转到登录页面");
           },
           fail: (error) => {
-            formatAppLog("error", "at utils/auth.js:280", "跳转失败:", error);
+            formatAppLog("error", "at utils/auth.js:283", "跳转失败:", error);
             uni.navigateTo({
               url: "/pages/denglu/login",
               fail: () => {
-                formatAppLog("error", "at utils/auth.js:285", "所有跳转方式都失败");
+                formatAppLog("error", "at utils/auth.js:288", "所有跳转方式都失败");
                 uni.showToast({
                   title: "跳转失败，请手动返回登录页面",
                   icon: "none"
@@ -3626,11 +3635,11 @@ if (uni.restoreGlobal) {
           }
         });
       } catch (error) {
-        formatAppLog("error", "at utils/auth.js:296", "退出登录过程中发生错误:", error);
+        formatAppLog("error", "at utils/auth.js:299", "退出登录过程中发生错误:", error);
         try {
           clearAllUserData();
         } catch (clearError) {
-          formatAppLog("error", "at utils/auth.js:302", "清除数据失败:", clearError);
+          formatAppLog("error", "at utils/auth.js:305", "清除数据失败:", clearError);
         }
         uni.showToast({
           title: "退出登录失败，请重试",
@@ -3681,7 +3690,7 @@ if (uni.restoreGlobal) {
       try {
         uni.removeStorageSync(key);
       } catch (error) {
-        formatAppLog("warn", "at utils/auth.js:365", `清除存储键 ${key} 失败:`, error);
+        formatAppLog("warn", "at utils/auth.js:368", `清除存储键 ${key} 失败:`, error);
       }
     });
     try {
@@ -3692,7 +3701,7 @@ if (uni.restoreGlobal) {
         }
       });
     } catch (error) {
-      formatAppLog("warn", "at utils/auth.js:378", "清除用户相关数据失败:", error);
+      formatAppLog("warn", "at utils/auth.js:381", "清除用户相关数据失败:", error);
     }
   }
   function logLogoutEvent(reason) {
@@ -3709,16 +3718,16 @@ if (uni.restoreGlobal) {
         logoutLogs.splice(0, logoutLogs.length - 10);
       }
       uni.setStorageSync("logoutLogs", logoutLogs);
-      formatAppLog("log", "at utils/auth.js:407", "用户退出登录:", logoutData);
+      formatAppLog("log", "at utils/auth.js:410", "用户退出登录:", logoutData);
     } catch (error) {
-      formatAppLog("error", "at utils/auth.js:409", "记录退出日志失败:", error);
+      formatAppLog("error", "at utils/auth.js:412", "记录退出日志失败:", error);
     }
   }
   async function syncLogoutToServer(reason) {
     try {
       const userInfo2 = getUserInfo();
       if (!userInfo2) {
-        formatAppLog("log", "at utils/auth.js:422", "用户信息不存在，跳过服务器同步");
+        formatAppLog("log", "at utils/auth.js:425", "用户信息不存在，跳过服务器同步");
         return;
       }
       const logoutData = {
@@ -3740,10 +3749,10 @@ if (uni.restoreGlobal) {
           }
         }, 500);
       });
-      formatAppLog("log", "at utils/auth.js:453", "退出登录已同步到服务器:", logoutData);
+      formatAppLog("log", "at utils/auth.js:456", "退出登录已同步到服务器:", logoutData);
       saveLogoutRecord(logoutData);
     } catch (error) {
-      formatAppLog("warn", "at utils/auth.js:459", "同步退出到服务器失败:", error);
+      formatAppLog("warn", "at utils/auth.js:462", "同步退出到服务器失败:", error);
     }
   }
   function getDeviceId() {
@@ -3763,7 +3772,7 @@ if (uni.restoreGlobal) {
       }
       uni.setStorageSync("logoutRecords", logoutRecords);
     } catch (error) {
-      formatAppLog("error", "at utils/auth.js:493", "保存退出记录失败:", error);
+      formatAppLog("error", "at utils/auth.js:496", "保存退出记录失败:", error);
     }
   }
   function isTabBarPage(pagePath) {
@@ -3779,7 +3788,7 @@ if (uni.restoreGlobal) {
     try {
       return uni.getStorageSync("userInfo");
     } catch (error) {
-      formatAppLog("error", "at utils/auth.js:534", "获取用户信息失败:", error);
+      formatAppLog("error", "at utils/auth.js:537", "获取用户信息失败:", error);
       return null;
     }
   }
@@ -3790,7 +3799,7 @@ if (uni.restoreGlobal) {
     }
     return target;
   };
-  const _sfc_main$I = {
+  const _sfc_main$L = {
     data() {
       return {
         loginType: "password",
@@ -3811,8 +3820,9 @@ if (uni.restoreGlobal) {
     },
     onLoad() {
       formatAppLog("log", "at pages/denglu/login.vue:205", "页面加载完成");
-      formatAppLog("log", "at pages/denglu/login.vue:207", "加载的用户数据:", users);
-      formatAppLog("log", "at pages/denglu/login.vue:208", "用户数量:", users.length);
+      clearStorageAndReload();
+      formatAppLog("log", "at pages/denglu/login.vue:209", "加载的用户数据:", users);
+      formatAppLog("log", "at pages/denglu/login.vue:210", "用户数量:", users.length);
       this.checkFingerprintSupport();
       this.getLastFingerprintUser();
     },
@@ -3832,30 +3842,30 @@ if (uni.restoreGlobal) {
         if (fingerprintEnabled === false) {
           this.fingerprintSupport = false;
           this.fingerprintStatus = "notSupport";
-          formatAppLog("log", "at pages/denglu/login.vue:235", "用户已禁用指纹登录");
+          formatAppLog("log", "at pages/denglu/login.vue:237", "用户已禁用指纹登录");
           return;
         }
         if (typeof uni.checkIsSupportSoterAuthentication !== "function") {
-          formatAppLog("log", "at pages/denglu/login.vue:251", "当前环境不支持指纹识别API");
+          formatAppLog("log", "at pages/denglu/login.vue:253", "当前环境不支持指纹识别API");
           this.fingerprintSupport = false;
           this.fingerprintStatus = "notSupport";
           return;
         }
         uni.checkIsSupportSoterAuthentication({
           success: (res) => {
-            formatAppLog("log", "at pages/denglu/login.vue:259", "指纹支持检查结果:", res);
+            formatAppLog("log", "at pages/denglu/login.vue:261", "指纹支持检查结果:", res);
             if (res.supportMode && res.supportMode.includes("fingerPrint")) {
               this.fingerprintSupport = true;
               this.fingerprintStatus = "ready";
-              formatAppLog("log", "at pages/denglu/login.vue:263", "设备支持指纹识别");
+              formatAppLog("log", "at pages/denglu/login.vue:265", "设备支持指纹识别");
             } else {
               this.fingerprintSupport = false;
               this.fingerprintStatus = "notSupport";
-              formatAppLog("log", "at pages/denglu/login.vue:267", "设备不支持指纹识别");
+              formatAppLog("log", "at pages/denglu/login.vue:269", "设备不支持指纹识别");
             }
           },
           fail: (err) => {
-            formatAppLog("error", "at pages/denglu/login.vue:271", "检查指纹支持失败:", err);
+            formatAppLog("error", "at pages/denglu/login.vue:273", "检查指纹支持失败:", err);
             this.fingerprintSupport = false;
             this.fingerprintStatus = "notSupport";
           }
@@ -3867,10 +3877,10 @@ if (uni.restoreGlobal) {
           const lastUser = uni.getStorageSync("lastFingerprintUser");
           if (lastUser) {
             this.lastFingerprintUser = lastUser;
-            formatAppLog("log", "at pages/denglu/login.vue:285", "上次指纹登录用户:", lastUser);
+            formatAppLog("log", "at pages/denglu/login.vue:287", "上次指纹登录用户:", lastUser);
           }
         } catch (error) {
-          formatAppLog("error", "at pages/denglu/login.vue:288", "获取上次指纹登录用户失败:", error);
+          formatAppLog("error", "at pages/denglu/login.vue:290", "获取上次指纹登录用户失败:", error);
         }
       },
       // 开始指纹登录
@@ -3913,13 +3923,13 @@ if (uni.restoreGlobal) {
           challenge,
           authContent: "请用指纹解锁",
           success: (res) => {
-            formatAppLog("log", "at pages/denglu/login.vue:353", "指纹认证成功:", res);
+            formatAppLog("log", "at pages/denglu/login.vue:355", "指纹认证成功:", res);
             this.fingerprintStatus = "success";
             this.isFingerprintScanning = false;
             this.handleFingerprintLoginSuccess();
           },
           fail: (err) => {
-            formatAppLog("error", "at pages/denglu/login.vue:361", "指纹认证失败:", err);
+            formatAppLog("error", "at pages/denglu/login.vue:363", "指纹认证失败:", err);
             this.fingerprintStatus = "failed";
             this.isFingerprintScanning = false;
             if (err.errCode === 1) {
@@ -3967,9 +3977,9 @@ if (uni.restoreGlobal) {
       saveUserForFingerprint(user) {
         try {
           uni.setStorageSync("lastFingerprintUser", user);
-          formatAppLog("log", "at pages/denglu/login.vue:422", "用户信息已保存用于指纹登录:", user.username);
+          formatAppLog("log", "at pages/denglu/login.vue:424", "用户信息已保存用于指纹登录:", user.username);
         } catch (error) {
-          formatAppLog("error", "at pages/denglu/login.vue:424", "保存用户信息失败:", error);
+          formatAppLog("error", "at pages/denglu/login.vue:426", "保存用户信息失败:", error);
         }
       },
       // 获取指纹按钮文本
@@ -4086,7 +4096,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$H(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$K(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "login-container" }, [
       vue.createCommentVNode(" 背景装饰 "),
       vue.createElementVNode("view", { class: "bg-decoration" }, [
@@ -4355,8 +4365,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesDengluLogin = /* @__PURE__ */ _export_sfc(_sfc_main$I, [["render", _sfc_render$H], ["__scopeId", "data-v-6f56e16f"], ["__file", "E:/项目/yihangyidon/src/pages/denglu/login.vue"]]);
-  const _sfc_main$H = {
+  const PagesDengluLogin = /* @__PURE__ */ _export_sfc(_sfc_main$L, [["render", _sfc_render$K], ["__scopeId", "data-v-6f56e16f"], ["__file", "E:/项目/yihangyidon/src/pages/denglu/login.vue"]]);
+  const _sfc_main$K = {
     data() {
       return {
         form: {
@@ -4369,20 +4379,30 @@ if (uni.restoreGlobal) {
           nickname: "",
           idCard: ""
         },
+        errors: {},
         countdown: 0,
         loading: false,
         showPassword: false,
         showConfirmPassword: false,
+        focusedField: "",
+        agreeTerms: false,
         showDebug: true,
         // 开发环境显示调试信息
+        debugExpanded: false,
         userCount: 0
       };
     },
     onLoad() {
-      formatAppLog("log", "at pages/register/register.vue:176", "注册页面加载完成");
+      formatAppLog("log", "at pages/register/register.vue:308", "注册页面加载完成");
       this.refreshUserCount();
     },
     methods: {
+      // 返回上一页
+      goBack() {
+        uni.navigateBack({
+          delta: 1
+        });
+      },
       // 切换密码显示
       togglePassword() {
         this.showPassword = !this.showPassword;
@@ -4390,6 +4410,14 @@ if (uni.restoreGlobal) {
       // 切换确认密码显示
       toggleConfirmPassword() {
         this.showConfirmPassword = !this.showConfirmPassword;
+      },
+      // 切换服务条款同意状态
+      toggleTerms() {
+        this.agreeTerms = !this.agreeTerms;
+      },
+      // 切换调试面板
+      toggleDebugPanel() {
+        this.debugExpanded = !this.debugExpanded;
       },
       // 获取验证码
       getCode() {
@@ -4416,6 +4444,7 @@ if (uni.restoreGlobal) {
       // 注册处理
       handleRegister() {
         this.loading = true;
+        this.clearErrors();
         if (!this.validateForm()) {
           this.loading = false;
           return;
@@ -4423,12 +4452,12 @@ if (uni.restoreGlobal) {
         setTimeout(() => {
           try {
             if (!verifyCode(this.form.phone, this.form.code)) {
-              uni.showToast({ title: "验证码错误或已过期", icon: "none" });
+              this.setError("code", "验证码错误或已过期");
               this.loading = false;
               return;
             }
             if (checkUserExists(this.form.username, this.form.phone)) {
-              uni.showToast({ title: "用户名或手机号已存在", icon: "none" });
+              this.setError("username", "用户名或手机号已存在");
               this.loading = false;
               return;
             }
@@ -4445,28 +4474,36 @@ if (uni.restoreGlobal) {
               icon: "success",
               duration: 2e3
             });
-            formatAppLog("log", "at pages/register/register.vue:264", "注册成功，用户信息:", user);
-            formatAppLog("log", "at pages/register/register.vue:265", "当前系统用户总数:", getUsersData().length);
+            formatAppLog("log", "at pages/register/register.vue:414", "注册成功，用户信息:", user);
+            formatAppLog("log", "at pages/register/register.vue:415", "当前系统用户总数:", getUsersData().length);
             this.refreshUserCount();
             setTimeout(() => {
               handleLoginSuccess(user);
             }, 2e3);
           } catch (error) {
             uni.showToast({ title: "注册失败，请重试", icon: "none" });
-            formatAppLog("error", "at pages/register/register.vue:277", "注册错误:", error);
+            formatAppLog("error", "at pages/register/register.vue:427", "注册错误:", error);
           } finally {
             this.loading = false;
           }
         }, 1e3);
       },
+      // 设置错误信息
+      setError(field, message) {
+        this.errors[field] = message;
+      },
+      // 清除错误信息
+      clearErrors() {
+        this.errors = {};
+      },
       // 验证手机号
       validatePhone() {
         if (!this.form.phone.trim()) {
-          uni.showToast({ title: "请输入手机号", icon: "none" });
+          this.setError("phone", "请输入手机号");
           return false;
         }
         if (!/^1[3-9]\d{9}$/.test(this.form.phone)) {
-          uni.showToast({ title: "请输入正确的手机号", icon: "none" });
+          this.setError("phone", "请输入正确的手机号");
           return false;
         }
         return true;
@@ -4484,7 +4521,7 @@ if (uni.restoreGlobal) {
           "123456789012345678"
         ];
         if (testIdCards.includes(idCard)) {
-          formatAppLog("log", "at pages/register/register.vue:314", "使用测试身份证号:", idCard);
+          formatAppLog("log", "at pages/register/register.vue:474", "使用测试身份证号:", idCard);
           return true;
         }
         const weights = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2];
@@ -4496,7 +4533,7 @@ if (uni.restoreGlobal) {
         const checkCode = checkCodes[sum % 11];
         const isValid = checkCode === idCard[17].toUpperCase();
         if (!isValid) {
-          formatAppLog("log", "at pages/register/register.vue:331", "身份证校验失败:", {
+          formatAppLog("log", "at pages/register/register.vue:491", "身份证校验失败:", {
             输入: idCard,
             计算校验位: checkCode,
             实际最后一位: idCard[17]
@@ -4506,54 +4543,55 @@ if (uni.restoreGlobal) {
       },
       // 表单验证
       validateForm() {
+        this.clearErrors();
+        let isValid = true;
         if (!this.form.username.trim()) {
-          uni.showToast({ title: "请输入用户名", icon: "none" });
-          return false;
-        }
-        if (this.form.username.length < 3 || this.form.username.length > 20) {
-          uni.showToast({ title: "用户名长度应为3-20个字符", icon: "none" });
-          return false;
+          this.setError("username", "请输入用户名");
+          isValid = false;
+        } else if (this.form.username.length < 3 || this.form.username.length > 20) {
+          this.setError("username", "用户名长度应为3-20个字符");
+          isValid = false;
         }
         if (!this.validatePhone()) {
-          return false;
+          isValid = false;
         }
         if (!this.form.code.trim()) {
-          uni.showToast({ title: "请输入验证码", icon: "none" });
-          return false;
-        }
-        if (!/^\d{6}$/.test(this.form.code)) {
-          uni.showToast({ title: "请输入6位验证码", icon: "none" });
-          return false;
+          this.setError("code", "请输入验证码");
+          isValid = false;
+        } else if (!/^\d{6}$/.test(this.form.code)) {
+          this.setError("code", "请输入6位验证码");
+          isValid = false;
         }
         if (!this.form.password.trim()) {
-          uni.showToast({ title: "请输入密码", icon: "none" });
-          return false;
-        }
-        if (this.form.password.length < 6) {
-          uni.showToast({ title: "密码长度至少6位", icon: "none" });
-          return false;
+          this.setError("password", "请输入密码");
+          isValid = false;
+        } else if (this.form.password.length < 6) {
+          this.setError("password", "密码长度至少6位");
+          isValid = false;
         }
         if (!this.form.confirmPassword.trim()) {
-          uni.showToast({ title: "请再次输入密码", icon: "none" });
-          return false;
-        }
-        if (this.form.password !== this.form.confirmPassword) {
-          uni.showToast({ title: "两次输入的密码不一致", icon: "none" });
-          return false;
+          this.setError("confirmPassword", "请再次输入密码");
+          isValid = false;
+        } else if (this.form.password !== this.form.confirmPassword) {
+          this.setError("confirmPassword", "两次输入的密码不一致");
+          isValid = false;
         }
         if (this.form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email)) {
-          uni.showToast({ title: "请输入正确的邮箱地址", icon: "none" });
-          return false;
+          this.setError("email", "请输入正确的邮箱地址");
+          isValid = false;
         }
         if (!this.form.idCard.trim()) {
-          uni.showToast({ title: "请输入身份证号", icon: "none" });
-          return false;
+          this.setError("idCard", "请输入身份证号");
+          isValid = false;
+        } else if (!this.validateIdCard(this.form.idCard)) {
+          this.setError("idCard", "请输入正确的身份证号");
+          isValid = false;
         }
-        if (!this.validateIdCard(this.form.idCard)) {
-          uni.showToast({ title: "请输入正确的身份证号", icon: "none" });
-          return false;
+        if (!this.agreeTerms) {
+          uni.showToast({ title: "请先同意服务条款", icon: "none" });
+          isValid = false;
         }
-        return true;
+        return isValid;
       },
       // 刷新用户数量
       refreshUserCount() {
@@ -4563,7 +4601,7 @@ if (uni.restoreGlobal) {
       showAllUsers() {
         var _a;
         const users2 = getUsersData();
-        formatAppLog("log", "at pages/register/register.vue:415", "所有用户数据:", users2);
+        formatAppLog("log", "at pages/register/register.vue:579", "所有用户数据:", users2);
         uni.showModal({
           title: "用户数据",
           content: `当前共有 ${users2.length} 个用户
@@ -4573,223 +4611,533 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$G(_ctx, _cache, $props, $setup, $data, $options) {
-    return vue.openBlock(), vue.createElementBlock("view", { class: "register-container" }, [
-      vue.createCommentVNode(" 标题 "),
-      vue.createElementVNode("view", { class: "title" }, "注册账户"),
-      vue.createElementVNode("view", { class: "subtitle" }, "创建您的账户"),
-      vue.createCommentVNode(" 注册表单 "),
-      vue.createElementVNode(
-        "form",
-        {
-          onSubmit: _cache[11] || (_cache[11] = (...args) => $options.handleRegister && $options.handleRegister(...args))
-        },
-        [
-          vue.createCommentVNode(" 用户名输入 "),
-          vue.createElementVNode("view", { class: "input-item" }, [
-            vue.withDirectives(vue.createElementVNode(
-              "input",
-              {
-                type: "text",
-                "onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => $data.form.username = $event),
-                placeholder: "请输入用户名",
-                maxlength: "20",
-                required: ""
-              },
-              null,
-              512
-              /* NEED_PATCH */
-            ), [
-              [vue.vModelText, $data.form.username]
-            ])
-          ]),
-          vue.createCommentVNode(" 手机号输入 "),
-          vue.createElementVNode("view", { class: "input-item" }, [
-            vue.withDirectives(vue.createElementVNode(
-              "input",
-              {
-                type: "number",
-                "onUpdate:modelValue": _cache[1] || (_cache[1] = ($event) => $data.form.phone = $event),
-                placeholder: "请输入手机号",
-                maxlength: "11",
-                required: ""
-              },
-              null,
-              512
-              /* NEED_PATCH */
-            ), [
-              [vue.vModelText, $data.form.phone]
-            ])
-          ]),
-          vue.createCommentVNode(" 验证码输入 "),
-          vue.createElementVNode("view", { class: "input-item" }, [
-            vue.withDirectives(vue.createElementVNode(
-              "input",
-              {
-                type: "number",
-                "onUpdate:modelValue": _cache[2] || (_cache[2] = ($event) => $data.form.code = $event),
-                placeholder: "请输入验证码",
-                maxlength: "6",
-                required: ""
-              },
-              null,
-              512
-              /* NEED_PATCH */
-            ), [
-              [vue.vModelText, $data.form.code]
-            ]),
-            vue.createElementVNode("button", {
-              class: "get-code-btn",
-              onClick: _cache[3] || (_cache[3] = vue.withModifiers((...args) => $options.getCode && $options.getCode(...args), ["stop"])),
-              disabled: $data.countdown > 0
-            }, vue.toDisplayString($data.countdown > 0 ? `${$data.countdown}s后重发` : "获取验证码"), 9, ["disabled"])
-          ]),
-          vue.createCommentVNode(" 密码输入 "),
-          vue.createElementVNode("view", { class: "input-item" }, [
-            vue.withDirectives(vue.createElementVNode("input", {
-              type: $data.showPassword ? "text" : "password",
-              "onUpdate:modelValue": _cache[4] || (_cache[4] = ($event) => $data.form.password = $event),
-              placeholder: "请输入登录密码",
-              required: ""
-            }, null, 8, ["type"]), [
-              [vue.vModelDynamic, $data.form.password]
-            ]),
-            vue.createElementVNode(
-              "button",
-              {
-                class: "password-toggle",
-                onClick: _cache[5] || (_cache[5] = vue.withModifiers((...args) => $options.togglePassword && $options.togglePassword(...args), ["stop"]))
-              },
-              vue.toDisplayString($data.showPassword ? "🙈" : "👁️"),
-              1
-              /* TEXT */
-            )
-          ]),
-          vue.createCommentVNode(" 确认密码输入 "),
-          vue.createElementVNode("view", { class: "input-item" }, [
-            vue.withDirectives(vue.createElementVNode("input", {
-              type: $data.showConfirmPassword ? "text" : "password",
-              "onUpdate:modelValue": _cache[6] || (_cache[6] = ($event) => $data.form.confirmPassword = $event),
-              placeholder: "请再次输入密码",
-              required: ""
-            }, null, 8, ["type"]), [
-              [vue.vModelDynamic, $data.form.confirmPassword]
-            ]),
-            vue.createElementVNode(
-              "button",
-              {
-                class: "password-toggle",
-                onClick: _cache[7] || (_cache[7] = vue.withModifiers((...args) => $options.toggleConfirmPassword && $options.toggleConfirmPassword(...args), ["stop"]))
-              },
-              vue.toDisplayString($data.showConfirmPassword ? "🙈" : "👁️"),
-              1
-              /* TEXT */
-            )
-          ]),
-          vue.createCommentVNode(" 邮箱输入 "),
-          vue.createElementVNode("view", { class: "input-item" }, [
-            vue.withDirectives(vue.createElementVNode(
-              "input",
-              {
-                type: "email",
-                "onUpdate:modelValue": _cache[8] || (_cache[8] = ($event) => $data.form.email = $event),
-                placeholder: "请输入邮箱地址（选填）"
-              },
-              null,
-              512
-              /* NEED_PATCH */
-            ), [
-              [vue.vModelText, $data.form.email]
-            ])
-          ]),
-          vue.createCommentVNode(" 昵称输入 "),
-          vue.createElementVNode("view", { class: "input-item" }, [
-            vue.withDirectives(vue.createElementVNode(
-              "input",
-              {
-                type: "text",
-                "onUpdate:modelValue": _cache[9] || (_cache[9] = ($event) => $data.form.nickname = $event),
-                placeholder: "请输入昵称（选填）",
-                maxlength: "20"
-              },
-              null,
-              512
-              /* NEED_PATCH */
-            ), [
-              [vue.vModelText, $data.form.nickname]
-            ])
-          ]),
-          vue.createCommentVNode(" 身份证号输入 "),
-          vue.createElementVNode("view", { class: "input-item" }, [
-            vue.withDirectives(vue.createElementVNode(
-              "input",
-              {
-                type: "text",
-                "onUpdate:modelValue": _cache[10] || (_cache[10] = ($event) => $data.form.idCard = $event),
-                placeholder: "请输入身份证号",
-                maxlength: "18",
-                required: ""
-              },
-              null,
-              512
-              /* NEED_PATCH */
-            ), [
-              [vue.vModelText, $data.form.idCard]
-            ])
-          ]),
-          vue.createCommentVNode(" 注册按钮 "),
-          vue.createElementVNode("button", {
-            class: "register-btn",
-            "form-type": "submit",
-            loading: $data.loading
-          }, " 立即注册 ", 8, ["loading"])
-        ],
-        32
-        /* NEED_HYDRATION */
-      ),
-      vue.createCommentVNode(" 快速登录按钮 "),
-      vue.createElementVNode("view", { class: "quick-login" }, [
-        vue.createElementVNode("navigator", {
-          url: "/pages/denglu/login",
-          "open-type": "navigate"
-        }, [
-          vue.createElementVNode("button", { class: "quick-login-btn" }, " 已有账户？立即登录 ")
-        ])
+  function _sfc_render$J(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("view", { class: "register-page" }, [
+      vue.createCommentVNode(" 背景装饰 "),
+      vue.createElementVNode("view", { class: "background-decoration" }, [
+        vue.createElementVNode("view", { class: "decoration-circle circle-1" }),
+        vue.createElementVNode("view", { class: "decoration-circle circle-2" }),
+        vue.createElementVNode("view", { class: "decoration-circle circle-3" }),
+        vue.createElementVNode("view", { class: "decoration-wave" })
       ]),
-      vue.createCommentVNode(" 注册须知 "),
-      vue.createElementVNode("view", { class: "register-notice" }, [
-        vue.createElementVNode("text", { class: "notice-title" }, "注册须知："),
-        vue.createElementVNode("text", { class: "notice-item" }, "• 用户名支持中文、英文、数字，长度3-20个字符"),
-        vue.createElementVNode("text", { class: "notice-item" }, "• 密码长度至少6位，建议包含字母和数字"),
-        vue.createElementVNode("text", { class: "notice-item" }, "• 手机号用于接收验证码和安全提醒"),
-        vue.createElementVNode("text", { class: "notice-item" }, "• 注册即表示同意相关服务条款和隐私政策")
+      vue.createCommentVNode(" 顶部导航 "),
+      vue.createElementVNode("view", { class: "top-nav" }, [
+        vue.createElementVNode("view", {
+          class: "nav-back",
+          onClick: _cache[0] || (_cache[0] = (...args) => $options.goBack && $options.goBack(...args))
+        }, [
+          vue.createElementVNode("text", { class: "back-icon" }, "←")
+        ]),
+        vue.createElementVNode("view", { class: "nav-title" }, "创建账户"),
+        vue.createElementVNode("view", { class: "nav-placeholder" })
+      ]),
+      vue.createCommentVNode(" 主要内容区域 "),
+      vue.createElementVNode("view", { class: "main-content" }, [
+        vue.createCommentVNode(" 欢迎区域 "),
+        vue.createElementVNode("view", { class: "welcome-section" }, [
+          vue.createElementVNode("view", { class: "welcome-icon" }, "🚀"),
+          vue.createElementVNode("view", { class: "welcome-title" }, "欢迎加入我们"),
+          vue.createElementVNode("view", { class: "welcome-subtitle" }, "开启您的财富管理之旅")
+        ]),
+        vue.createCommentVNode(" 注册表单 "),
+        vue.createElementVNode("view", { class: "form-container" }, [
+          vue.createElementVNode(
+            "form",
+            {
+              onSubmit: _cache[28] || (_cache[28] = (...args) => $options.handleRegister && $options.handleRegister(...args))
+            },
+            [
+              vue.createCommentVNode(" 用户名输入 "),
+              vue.createElementVNode("view", { class: "form-group" }, [
+                vue.createElementVNode("view", { class: "input-label" }, [
+                  vue.createElementVNode("text", { class: "label-icon" }, "👤"),
+                  vue.createElementVNode("text", { class: "label-text" }, "用户名")
+                ]),
+                vue.createElementVNode(
+                  "view",
+                  {
+                    class: vue.normalizeClass(["input-wrapper", { "focused": $data.focusedField === "username", "error": $data.errors.username }])
+                  },
+                  [
+                    vue.withDirectives(vue.createElementVNode(
+                      "input",
+                      {
+                        type: "text",
+                        "onUpdate:modelValue": _cache[1] || (_cache[1] = ($event) => $data.form.username = $event),
+                        placeholder: "请输入用户名",
+                        maxlength: "20",
+                        onFocus: _cache[2] || (_cache[2] = ($event) => $data.focusedField = "username"),
+                        onBlur: _cache[3] || (_cache[3] = ($event) => $data.focusedField = ""),
+                        required: ""
+                      },
+                      null,
+                      544
+                      /* NEED_HYDRATION, NEED_PATCH */
+                    ), [
+                      [vue.vModelText, $data.form.username]
+                    ]),
+                    vue.createElementVNode("view", { class: "input-border" })
+                  ],
+                  2
+                  /* CLASS */
+                ),
+                $data.errors.username ? (vue.openBlock(), vue.createElementBlock(
+                  "view",
+                  {
+                    key: 0,
+                    class: "error-message"
+                  },
+                  vue.toDisplayString($data.errors.username),
+                  1
+                  /* TEXT */
+                )) : vue.createCommentVNode("v-if", true)
+              ]),
+              vue.createCommentVNode(" 手机号输入 "),
+              vue.createElementVNode("view", { class: "form-group" }, [
+                vue.createElementVNode("view", { class: "input-label" }, [
+                  vue.createElementVNode("text", { class: "label-icon" }, "📱"),
+                  vue.createElementVNode("text", { class: "label-text" }, "手机号")
+                ]),
+                vue.createElementVNode(
+                  "view",
+                  {
+                    class: vue.normalizeClass(["input-wrapper", { "focused": $data.focusedField === "phone", "error": $data.errors.phone }])
+                  },
+                  [
+                    vue.withDirectives(vue.createElementVNode(
+                      "input",
+                      {
+                        type: "number",
+                        "onUpdate:modelValue": _cache[4] || (_cache[4] = ($event) => $data.form.phone = $event),
+                        placeholder: "请输入手机号",
+                        maxlength: "11",
+                        onFocus: _cache[5] || (_cache[5] = ($event) => $data.focusedField = "phone"),
+                        onBlur: _cache[6] || (_cache[6] = ($event) => $data.focusedField = ""),
+                        required: ""
+                      },
+                      null,
+                      544
+                      /* NEED_HYDRATION, NEED_PATCH */
+                    ), [
+                      [vue.vModelText, $data.form.phone]
+                    ]),
+                    vue.createElementVNode("view", { class: "input-border" })
+                  ],
+                  2
+                  /* CLASS */
+                ),
+                $data.errors.phone ? (vue.openBlock(), vue.createElementBlock(
+                  "view",
+                  {
+                    key: 0,
+                    class: "error-message"
+                  },
+                  vue.toDisplayString($data.errors.phone),
+                  1
+                  /* TEXT */
+                )) : vue.createCommentVNode("v-if", true)
+              ]),
+              vue.createCommentVNode(" 验证码输入 "),
+              vue.createElementVNode("view", { class: "form-group" }, [
+                vue.createElementVNode("view", { class: "input-label" }, [
+                  vue.createElementVNode("text", { class: "label-icon" }, "🔐"),
+                  vue.createElementVNode("text", { class: "label-text" }, "验证码")
+                ]),
+                vue.createElementVNode(
+                  "view",
+                  {
+                    class: vue.normalizeClass(["input-wrapper verification-wrapper", { "focused": $data.focusedField === "code", "error": $data.errors.code }])
+                  },
+                  [
+                    vue.withDirectives(vue.createElementVNode(
+                      "input",
+                      {
+                        type: "number",
+                        "onUpdate:modelValue": _cache[7] || (_cache[7] = ($event) => $data.form.code = $event),
+                        placeholder: "请输入验证码",
+                        maxlength: "6",
+                        onFocus: _cache[8] || (_cache[8] = ($event) => $data.focusedField = "code"),
+                        onBlur: _cache[9] || (_cache[9] = ($event) => $data.focusedField = ""),
+                        required: ""
+                      },
+                      null,
+                      544
+                      /* NEED_HYDRATION, NEED_PATCH */
+                    ), [
+                      [vue.vModelText, $data.form.code]
+                    ]),
+                    vue.createElementVNode("button", {
+                      class: vue.normalizeClass(["verification-btn", { "disabled": $data.countdown > 0 }]),
+                      onClick: _cache[10] || (_cache[10] = vue.withModifiers((...args) => $options.getCode && $options.getCode(...args), ["stop"])),
+                      disabled: $data.countdown > 0
+                    }, vue.toDisplayString($data.countdown > 0 ? `${$data.countdown}s` : "获取验证码"), 11, ["disabled"]),
+                    vue.createElementVNode("view", { class: "input-border" })
+                  ],
+                  2
+                  /* CLASS */
+                ),
+                $data.errors.code ? (vue.openBlock(), vue.createElementBlock(
+                  "view",
+                  {
+                    key: 0,
+                    class: "error-message"
+                  },
+                  vue.toDisplayString($data.errors.code),
+                  1
+                  /* TEXT */
+                )) : vue.createCommentVNode("v-if", true)
+              ]),
+              vue.createCommentVNode(" 密码输入 "),
+              vue.createElementVNode("view", { class: "form-group" }, [
+                vue.createElementVNode("view", { class: "input-label" }, [
+                  vue.createElementVNode("text", { class: "label-icon" }, "🔒"),
+                  vue.createElementVNode("text", { class: "label-text" }, "登录密码")
+                ]),
+                vue.createElementVNode(
+                  "view",
+                  {
+                    class: vue.normalizeClass(["input-wrapper", { "focused": $data.focusedField === "password", "error": $data.errors.password }])
+                  },
+                  [
+                    vue.withDirectives(vue.createElementVNode("input", {
+                      type: $data.showPassword ? "text" : "password",
+                      "onUpdate:modelValue": _cache[11] || (_cache[11] = ($event) => $data.form.password = $event),
+                      placeholder: "请输入登录密码",
+                      onFocus: _cache[12] || (_cache[12] = ($event) => $data.focusedField = "password"),
+                      onBlur: _cache[13] || (_cache[13] = ($event) => $data.focusedField = ""),
+                      required: ""
+                    }, null, 40, ["type"]), [
+                      [vue.vModelDynamic, $data.form.password]
+                    ]),
+                    vue.createElementVNode("button", {
+                      class: "password-toggle",
+                      onClick: _cache[14] || (_cache[14] = vue.withModifiers((...args) => $options.togglePassword && $options.togglePassword(...args), ["stop"]))
+                    }, [
+                      vue.createElementVNode(
+                        "text",
+                        { class: "toggle-icon" },
+                        vue.toDisplayString($data.showPassword ? "🙈" : "👁️"),
+                        1
+                        /* TEXT */
+                      )
+                    ]),
+                    vue.createElementVNode("view", { class: "input-border" })
+                  ],
+                  2
+                  /* CLASS */
+                ),
+                $data.errors.password ? (vue.openBlock(), vue.createElementBlock(
+                  "view",
+                  {
+                    key: 0,
+                    class: "error-message"
+                  },
+                  vue.toDisplayString($data.errors.password),
+                  1
+                  /* TEXT */
+                )) : vue.createCommentVNode("v-if", true)
+              ]),
+              vue.createCommentVNode(" 确认密码输入 "),
+              vue.createElementVNode("view", { class: "form-group" }, [
+                vue.createElementVNode("view", { class: "input-label" }, [
+                  vue.createElementVNode("text", { class: "label-icon" }, "🔒"),
+                  vue.createElementVNode("text", { class: "label-text" }, "确认密码")
+                ]),
+                vue.createElementVNode(
+                  "view",
+                  {
+                    class: vue.normalizeClass(["input-wrapper", { "focused": $data.focusedField === "confirmPassword", "error": $data.errors.confirmPassword }])
+                  },
+                  [
+                    vue.withDirectives(vue.createElementVNode("input", {
+                      type: $data.showConfirmPassword ? "text" : "password",
+                      "onUpdate:modelValue": _cache[15] || (_cache[15] = ($event) => $data.form.confirmPassword = $event),
+                      placeholder: "请再次输入密码",
+                      onFocus: _cache[16] || (_cache[16] = ($event) => $data.focusedField = "confirmPassword"),
+                      onBlur: _cache[17] || (_cache[17] = ($event) => $data.focusedField = ""),
+                      required: ""
+                    }, null, 40, ["type"]), [
+                      [vue.vModelDynamic, $data.form.confirmPassword]
+                    ]),
+                    vue.createElementVNode("button", {
+                      class: "password-toggle",
+                      onClick: _cache[18] || (_cache[18] = vue.withModifiers((...args) => $options.toggleConfirmPassword && $options.toggleConfirmPassword(...args), ["stop"]))
+                    }, [
+                      vue.createElementVNode(
+                        "text",
+                        { class: "toggle-icon" },
+                        vue.toDisplayString($data.showConfirmPassword ? "🙈" : "👁️"),
+                        1
+                        /* TEXT */
+                      )
+                    ]),
+                    vue.createElementVNode("view", { class: "input-border" })
+                  ],
+                  2
+                  /* CLASS */
+                ),
+                $data.errors.confirmPassword ? (vue.openBlock(), vue.createElementBlock(
+                  "view",
+                  {
+                    key: 0,
+                    class: "error-message"
+                  },
+                  vue.toDisplayString($data.errors.confirmPassword),
+                  1
+                  /* TEXT */
+                )) : vue.createCommentVNode("v-if", true)
+              ]),
+              vue.createCommentVNode(" 邮箱输入 "),
+              vue.createElementVNode("view", { class: "form-group" }, [
+                vue.createElementVNode("view", { class: "input-label" }, [
+                  vue.createElementVNode("text", { class: "label-icon" }, "📧"),
+                  vue.createElementVNode("text", { class: "label-text" }, "邮箱地址"),
+                  vue.createElementVNode("text", { class: "optional-tag" }, "选填")
+                ]),
+                vue.createElementVNode(
+                  "view",
+                  {
+                    class: vue.normalizeClass(["input-wrapper", { "focused": $data.focusedField === "email", "error": $data.errors.email }])
+                  },
+                  [
+                    vue.withDirectives(vue.createElementVNode(
+                      "input",
+                      {
+                        type: "email",
+                        "onUpdate:modelValue": _cache[19] || (_cache[19] = ($event) => $data.form.email = $event),
+                        placeholder: "请输入邮箱地址",
+                        onFocus: _cache[20] || (_cache[20] = ($event) => $data.focusedField = "email"),
+                        onBlur: _cache[21] || (_cache[21] = ($event) => $data.focusedField = "")
+                      },
+                      null,
+                      544
+                      /* NEED_HYDRATION, NEED_PATCH */
+                    ), [
+                      [vue.vModelText, $data.form.email]
+                    ]),
+                    vue.createElementVNode("view", { class: "input-border" })
+                  ],
+                  2
+                  /* CLASS */
+                ),
+                $data.errors.email ? (vue.openBlock(), vue.createElementBlock(
+                  "view",
+                  {
+                    key: 0,
+                    class: "error-message"
+                  },
+                  vue.toDisplayString($data.errors.email),
+                  1
+                  /* TEXT */
+                )) : vue.createCommentVNode("v-if", true)
+              ]),
+              vue.createCommentVNode(" 昵称输入 "),
+              vue.createElementVNode("view", { class: "form-group" }, [
+                vue.createElementVNode("view", { class: "input-label" }, [
+                  vue.createElementVNode("text", { class: "label-icon" }, "🎭"),
+                  vue.createElementVNode("text", { class: "label-text" }, "昵称"),
+                  vue.createElementVNode("text", { class: "optional-tag" }, "选填")
+                ]),
+                vue.createElementVNode(
+                  "view",
+                  {
+                    class: vue.normalizeClass(["input-wrapper", { "focused": $data.focusedField === "nickname", "error": $data.errors.nickname }])
+                  },
+                  [
+                    vue.withDirectives(vue.createElementVNode(
+                      "input",
+                      {
+                        type: "text",
+                        "onUpdate:modelValue": _cache[22] || (_cache[22] = ($event) => $data.form.nickname = $event),
+                        placeholder: "请输入昵称",
+                        maxlength: "20",
+                        onFocus: _cache[23] || (_cache[23] = ($event) => $data.focusedField = "nickname"),
+                        onBlur: _cache[24] || (_cache[24] = ($event) => $data.focusedField = "")
+                      },
+                      null,
+                      544
+                      /* NEED_HYDRATION, NEED_PATCH */
+                    ), [
+                      [vue.vModelText, $data.form.nickname]
+                    ]),
+                    vue.createElementVNode("view", { class: "input-border" })
+                  ],
+                  2
+                  /* CLASS */
+                ),
+                $data.errors.nickname ? (vue.openBlock(), vue.createElementBlock(
+                  "view",
+                  {
+                    key: 0,
+                    class: "error-message"
+                  },
+                  vue.toDisplayString($data.errors.nickname),
+                  1
+                  /* TEXT */
+                )) : vue.createCommentVNode("v-if", true)
+              ]),
+              vue.createCommentVNode(" 身份证号输入 "),
+              vue.createElementVNode("view", { class: "form-group" }, [
+                vue.createElementVNode("view", { class: "input-label" }, [
+                  vue.createElementVNode("text", { class: "label-icon" }, "🆔"),
+                  vue.createElementVNode("text", { class: "label-text" }, "身份证号")
+                ]),
+                vue.createElementVNode(
+                  "view",
+                  {
+                    class: vue.normalizeClass(["input-wrapper", { "focused": $data.focusedField === "idCard", "error": $data.errors.idCard }])
+                  },
+                  [
+                    vue.withDirectives(vue.createElementVNode(
+                      "input",
+                      {
+                        type: "text",
+                        "onUpdate:modelValue": _cache[25] || (_cache[25] = ($event) => $data.form.idCard = $event),
+                        placeholder: "请输入身份证号",
+                        maxlength: "18",
+                        onFocus: _cache[26] || (_cache[26] = ($event) => $data.focusedField = "idCard"),
+                        onBlur: _cache[27] || (_cache[27] = ($event) => $data.focusedField = ""),
+                        required: ""
+                      },
+                      null,
+                      544
+                      /* NEED_HYDRATION, NEED_PATCH */
+                    ), [
+                      [vue.vModelText, $data.form.idCard]
+                    ]),
+                    vue.createElementVNode("view", { class: "input-border" })
+                  ],
+                  2
+                  /* CLASS */
+                ),
+                $data.errors.idCard ? (vue.openBlock(), vue.createElementBlock(
+                  "view",
+                  {
+                    key: 0,
+                    class: "error-message"
+                  },
+                  vue.toDisplayString($data.errors.idCard),
+                  1
+                  /* TEXT */
+                )) : vue.createCommentVNode("v-if", true)
+              ]),
+              vue.createCommentVNode(" 注册按钮 "),
+              vue.createElementVNode("button", {
+                class: vue.normalizeClass(["register-btn", { "loading": $data.loading, "disabled": $data.loading }]),
+                "form-type": "submit",
+                disabled: $data.loading
+              }, [
+                vue.createElementVNode("view", { class: "btn-content" }, [
+                  !$data.loading ? (vue.openBlock(), vue.createElementBlock("view", {
+                    key: 0,
+                    class: "btn-icon"
+                  }, "✨")) : vue.createCommentVNode("v-if", true),
+                  $data.loading ? (vue.openBlock(), vue.createElementBlock("view", {
+                    key: 1,
+                    class: "btn-loading"
+                  }, [
+                    vue.createElementVNode("view", { class: "loading-spinner" })
+                  ])) : vue.createCommentVNode("v-if", true),
+                  vue.createElementVNode(
+                    "text",
+                    { class: "btn-text" },
+                    vue.toDisplayString($data.loading ? "注册中..." : "立即注册"),
+                    1
+                    /* TEXT */
+                  )
+                ])
+              ], 10, ["disabled"])
+            ],
+            32
+            /* NEED_HYDRATION */
+          )
+        ]),
+        vue.createCommentVNode(" 快速登录 "),
+        vue.createElementVNode("view", { class: "quick-login" }, [
+          vue.createElementVNode("text", { class: "quick-login-text" }, "已有账户？"),
+          vue.createElementVNode("navigator", {
+            url: "/pages/denglu/login",
+            "open-type": "navigate",
+            class: "quick-login-link"
+          }, [
+            vue.createElementVNode("text", { class: "link-text" }, "立即登录")
+          ])
+        ]),
+        vue.createCommentVNode(" 服务条款 "),
+        vue.createElementVNode("view", { class: "terms-section" }, [
+          vue.createElementVNode("view", {
+            class: "terms-checkbox",
+            onClick: _cache[29] || (_cache[29] = (...args) => $options.toggleTerms && $options.toggleTerms(...args))
+          }, [
+            vue.createElementVNode(
+              "view",
+              {
+                class: vue.normalizeClass(["checkbox", { "checked": $data.agreeTerms }])
+              },
+              [
+                $data.agreeTerms ? (vue.openBlock(), vue.createElementBlock("text", {
+                  key: 0,
+                  class: "checkbox-icon"
+                }, "✓")) : vue.createCommentVNode("v-if", true)
+              ],
+              2
+              /* CLASS */
+            ),
+            vue.createElementVNode("text", { class: "terms-text" }, "我已阅读并同意"),
+            vue.createElementVNode("text", { class: "terms-link" }, "《服务条款》"),
+            vue.createElementVNode("text", { class: "terms-text" }, "和"),
+            vue.createElementVNode("text", { class: "terms-link" }, "《隐私政策》")
+          ])
+        ])
       ]),
       vue.createCommentVNode(" 调试信息（开发环境） "),
       $data.showDebug ? (vue.openBlock(), vue.createElementBlock("view", {
         key: 0,
-        class: "debug-info"
+        class: "debug-panel"
       }, [
-        vue.createElementVNode("text", { class: "debug-title" }, "调试信息："),
-        vue.createElementVNode(
-          "text",
-          { class: "debug-item" },
-          "当前用户总数：" + vue.toDisplayString($data.userCount),
-          1
-          /* TEXT */
-        ),
-        vue.createElementVNode("button", {
-          class: "debug-btn",
-          onClick: _cache[12] || (_cache[12] = (...args) => $options.refreshUserCount && $options.refreshUserCount(...args))
-        }, "刷新用户数"),
-        vue.createElementVNode("button", {
-          class: "debug-btn",
-          onClick: _cache[13] || (_cache[13] = (...args) => $options.showAllUsers && $options.showAllUsers(...args))
-        }, "查看所有用户")
+        vue.createElementVNode("view", {
+          class: "debug-header",
+          onClick: _cache[30] || (_cache[30] = (...args) => $options.toggleDebugPanel && $options.toggleDebugPanel(...args))
+        }, [
+          vue.createElementVNode("text", { class: "debug-title" }, "调试信息"),
+          vue.createElementVNode(
+            "text",
+            { class: "debug-toggle" },
+            vue.toDisplayString($data.debugExpanded ? "−" : "+"),
+            1
+            /* TEXT */
+          )
+        ]),
+        $data.debugExpanded ? (vue.openBlock(), vue.createElementBlock("view", {
+          key: 0,
+          class: "debug-content"
+        }, [
+          vue.createElementVNode("view", { class: "debug-item" }, [
+            vue.createElementVNode("text", { class: "debug-label" }, "当前用户总数："),
+            vue.createElementVNode(
+              "text",
+              { class: "debug-value" },
+              vue.toDisplayString($data.userCount),
+              1
+              /* TEXT */
+            )
+          ]),
+          vue.createElementVNode("view", { class: "debug-actions" }, [
+            vue.createElementVNode("button", {
+              class: "debug-btn",
+              onClick: _cache[31] || (_cache[31] = (...args) => $options.refreshUserCount && $options.refreshUserCount(...args))
+            }, "刷新用户数"),
+            vue.createElementVNode("button", {
+              class: "debug-btn",
+              onClick: _cache[32] || (_cache[32] = (...args) => $options.showAllUsers && $options.showAllUsers(...args))
+            }, "查看所有用户")
+          ])
+        ])) : vue.createCommentVNode("v-if", true)
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesRegisterRegister = /* @__PURE__ */ _export_sfc(_sfc_main$H, [["render", _sfc_render$G], ["__scopeId", "data-v-97bb96ad"], ["__file", "E:/项目/yihangyidon/src/pages/register/register.vue"]]);
-  const _sfc_main$G = {
+  const PagesRegisterRegister = /* @__PURE__ */ _export_sfc(_sfc_main$K, [["render", _sfc_render$J], ["__scopeId", "data-v-97bb96ad"], ["__file", "E:/项目/yihangyidon/src/pages/register/register.vue"]]);
+  const _sfc_main$J = {
     data() {
       return {
         isLoggedIn: false,
@@ -4998,7 +5346,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$F(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$I(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", {
       class: "home-container",
       onClick: _cache[29] || (_cache[29] = (...args) => $options.closeSearchSuggestions && $options.closeSearchSuggestions(...args))
@@ -5290,7 +5638,7 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesIndexIndex = /* @__PURE__ */ _export_sfc(_sfc_main$G, [["render", _sfc_render$F], ["__scopeId", "data-v-83a5a03c"], ["__file", "E:/项目/yihangyidon/src/pages/index/index.vue"]]);
+  const PagesIndexIndex = /* @__PURE__ */ _export_sfc(_sfc_main$J, [["render", _sfc_render$I], ["__scopeId", "data-v-83a5a03c"], ["__file", "E:/项目/yihangyidon/src/pages/index/index.vue"]]);
   const scriptRel = "modulepreload";
   const assetsURL = function(dep) {
     return "/" + dep;
@@ -5356,7 +5704,7 @@ if (uni.restoreGlobal) {
   function canAccessPlatinumHotline(userInfo2) {
     return isPlatinumVip(userInfo2);
   }
-  const _sfc_main$F = {
+  const _sfc_main$I = {
     name: "ServiceModal",
     props: {
       visible: {
@@ -5461,7 +5809,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$E(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$H(_ctx, _cache, $props, $setup, $data, $options) {
     return $props.visible ? (vue.openBlock(), vue.createElementBlock("view", {
       key: 0,
       class: "service-modal",
@@ -5586,8 +5934,8 @@ if (uni.restoreGlobal) {
       )
     ])) : vue.createCommentVNode("v-if", true);
   }
-  const ServiceModal = /* @__PURE__ */ _export_sfc(_sfc_main$F, [["render", _sfc_render$E], ["__scopeId", "data-v-1f8e1b4e"], ["__file", "E:/项目/yihangyidon/src/components/common/ServiceModal.vue"]]);
-  const _sfc_main$E = {
+  const ServiceModal = /* @__PURE__ */ _export_sfc(_sfc_main$I, [["render", _sfc_render$H], ["__scopeId", "data-v-1f8e1b4e"], ["__file", "E:/项目/yihangyidon/src/components/common/ServiceModal.vue"]]);
+  const _sfc_main$H = {
     components: {
       ServiceModal
     },
@@ -5847,7 +6195,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$D(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$G(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_ServiceModal = vue.resolveComponent("ServiceModal");
     return vue.openBlock(), vue.createElementBlock("view", { class: "user-page" }, [
       vue.createCommentVNode(" 顶部背景 "),
@@ -6076,7 +6424,7 @@ if (uni.restoreGlobal) {
       }, null, 8, ["visible", "onClose"])
     ]);
   }
-  const PagesUserUser = /* @__PURE__ */ _export_sfc(_sfc_main$E, [["render", _sfc_render$D], ["__scopeId", "data-v-99b0ba47"], ["__file", "E:/项目/yihangyidon/src/pages/user/user.vue"]]);
+  const PagesUserUser = /* @__PURE__ */ _export_sfc(_sfc_main$H, [["render", _sfc_render$G], ["__scopeId", "data-v-99b0ba47"], ["__file", "E:/项目/yihangyidon/src/pages/user/user.vue"]]);
   function getCurrentUserWealthData() {
     var _a, _b;
     const users2 = getUsersData();
@@ -6651,45 +6999,60 @@ if (uni.restoreGlobal) {
   function checkAndFixUserDataConsistency() {
     try {
       formatAppLog("log", "at utils/data-consistency.js:12", "🔍 开始检查用户数据一致性...");
-      const currentUserId = uni.getStorageSync("currentUserId") || "u001";
+      const currentUserId = uni.getStorageSync("currentUserId");
       const users2 = uni.getStorageSync("users") || [];
       const userInfo2 = uni.getStorageSync("userInfo");
       formatAppLog("log", "at utils/data-consistency.js:19", "当前用户ID:", currentUserId);
       formatAppLog("log", "at utils/data-consistency.js:20", "存储的用户信息:", userInfo2);
-      const dbUser = users2.find((user) => user.id === currentUserId);
-      if (!dbUser) {
-        formatAppLog("warn", "at utils/data-consistency.js:26", "⚠️ 数据库中未找到用户:", currentUserId);
+      if (!currentUserId) {
+        formatAppLog("log", "at utils/data-consistency.js:24", "⚠️ 用户未登录，跳过数据一致性检查");
         return null;
       }
-      const isConsistent = userInfo2 && userInfo2.id === dbUser.id && userInfo2.username === dbUser.username && userInfo2.balance === dbUser.balance && userInfo2.phone === dbUser.phone;
+      const dbUser = users2.find((user) => user.id === currentUserId);
+      if (!dbUser) {
+        formatAppLog("warn", "at utils/data-consistency.js:32", "⚠️ 数据库中未找到用户:", currentUserId);
+        return null;
+      }
+      const isConsistent = userInfo2 && userInfo2.id === dbUser.id && userInfo2.username === dbUser.username && userInfo2.phone === dbUser.phone;
       if (isConsistent) {
-        formatAppLog("log", "at utils/data-consistency.js:38", "✅ 用户数据一致，无需修复");
+        formatAppLog("log", "at utils/data-consistency.js:43", "✅ 用户数据一致，无需修复");
         return userInfo2;
       }
-      formatAppLog("log", "at utils/data-consistency.js:43", "🔧 发现数据不一致，开始修复...");
-      formatAppLog("log", "at utils/data-consistency.js:44", "数据库用户:", dbUser.username, "余额:", dbUser.balance);
-      formatAppLog("log", "at utils/data-consistency.js:45", "存储用户:", userInfo2 == null ? void 0 : userInfo2.username, "余额:", userInfo2 == null ? void 0 : userInfo2.balance);
+      formatAppLog("log", "at utils/data-consistency.js:48", "🔧 发现数据不一致，开始修复...");
+      formatAppLog("log", "at utils/data-consistency.js:49", "数据库用户:", dbUser.username, "余额:", dbUser.balance);
+      formatAppLog("log", "at utils/data-consistency.js:50", "存储用户:", userInfo2 == null ? void 0 : userInfo2.username, "余额:", userInfo2 == null ? void 0 : userInfo2.balance);
       const fixedUserInfo = {
+        ...userInfo2,
+        // 保持当前用户信息
         ...dbUser,
-        // 确保必要字段存在
-        balance: dbUser.balance || 0,
-        nickname: dbUser.nickname || dbUser.username
+        // 用数据库数据覆盖
+        // 确保关键字段不变
+        id: userInfo2.id,
+        username: userInfo2.username,
+        phone: userInfo2.phone,
+        // 确保登录状态正确
+        isLoggedIn: true
       };
       uni.setStorageSync("userInfo", fixedUserInfo);
       uni.setStorageSync("currentUser", fixedUserInfo);
-      formatAppLog("log", "at utils/data-consistency.js:59", "✅ 用户数据修复完成:", {
+      const userIndex = users2.findIndex((user) => user.id === currentUserId);
+      if (userIndex !== -1) {
+        users2[userIndex] = { ...users2[userIndex], ...fixedUserInfo };
+        uni.setStorageSync("users", users2);
+      }
+      formatAppLog("log", "at utils/data-consistency.js:75", "✅ 用户数据修复完成:", {
         username: fixedUserInfo.username,
         balance: fixedUserInfo.balance,
         phone: fixedUserInfo.phone
       });
       return fixedUserInfo;
     } catch (error) {
-      formatAppLog("error", "at utils/data-consistency.js:68", "❌ 数据一致性检查失败:", error);
+      formatAppLog("error", "at utils/data-consistency.js:84", "❌ 数据一致性检查失败:", error);
       return null;
     }
   }
   const _imports_0$1 = "/static/tabbar/service.png";
-  const _sfc_main$D = {
+  const _sfc_main$G = {
     components: {
       ServiceModal
     },
@@ -6799,20 +7162,25 @@ if (uni.restoreGlobal) {
           } else {
             const defaultUser = {
               id: "u001",
-              username: "张小明",
-              phone: "13999999999",
-              balance: 15e4,
-              nickname: "小明"
+              username: "李华",
+              phone: "13888888888",
+              balance: 28e4,
+              nickname: "华华",
+              realName: "李华",
+              email: "lihua@example.com",
+              gender: "女",
+              birthDate: "1995-03-15",
+              address: "北京市朝阳区建国门外大街1号"
             };
             uni.setStorageSync("userInfo", defaultUser);
             uni.setStorageSync("isLoggedIn", true);
             uni.setStorageSync("currentUser", defaultUser);
-            formatAppLog("log", "at pages/wealth/wealth.vue:366", "已设置默认用户登录状态用于测试");
+            formatAppLog("log", "at pages/wealth/wealth.vue:371", "已设置默认用户登录状态用于测试");
           }
         } else {
           const consistentUserInfo = checkAndFixUserDataConsistency();
           if (consistentUserInfo) {
-            formatAppLog("log", "at pages/wealth/wealth.vue:372", "用户数据一致性检查完成:", consistentUserInfo.username, "余额:", consistentUserInfo.balance);
+            formatAppLog("log", "at pages/wealth/wealth.vue:377", "用户数据一致性检查完成:", consistentUserInfo.username, "余额:", consistentUserInfo.balance);
           }
         }
       },
@@ -6897,7 +7265,7 @@ if (uni.restoreGlobal) {
           uni.navigateTo({
             url,
             fail: (err) => {
-              formatAppLog("error", "at pages/wealth/wealth.vue:466", "页面跳转失败:", err);
+              formatAppLog("error", "at pages/wealth/wealth.vue:471", "页面跳转失败:", err);
               uni.showToast({ title: "页面跳转失败", icon: "none" });
             }
           });
@@ -6909,21 +7277,21 @@ if (uni.restoreGlobal) {
       initDataSync() {
         initWealthDataSync();
         uni.$on("depositSuccess", (data) => {
-          formatAppLog("log", "at pages/wealth/wealth.vue:482", "财富页面收到存款成功事件:", data);
+          formatAppLog("log", "at pages/wealth/wealth.vue:487", "财富页面收到存款成功事件:", data);
         });
         uni.$on("purchaseSuccess", (data) => {
-          formatAppLog("log", "at pages/wealth/wealth.vue:487", "财富页面收到购买成功事件:", data);
+          formatAppLog("log", "at pages/wealth/wealth.vue:492", "财富页面收到购买成功事件:", data);
         });
         uni.$on("insurancePurchaseSuccess", (data) => {
-          formatAppLog("log", "at pages/wealth/wealth.vue:492", "财富页面收到保险购买成功事件:", data);
+          formatAppLog("log", "at pages/wealth/wealth.vue:497", "财富页面收到保险购买成功事件:", data);
         });
         uni.$on("balanceUpdated", (data) => {
-          formatAppLog("log", "at pages/wealth/wealth.vue:497", "财富页面收到余额更新事件:", data);
+          formatAppLog("log", "at pages/wealth/wealth.vue:502", "财富页面收到余额更新事件:", data);
         });
       }
     }
   };
-  function _sfc_render$C(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$F(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_ServiceModal = vue.resolveComponent("ServiceModal");
     return vue.openBlock(), vue.createElementBlock("view", { class: "wealth-container" }, [
       vue.createCommentVNode(" 资产概览轮播（图片版） "),
@@ -7434,8 +7802,8 @@ if (uni.restoreGlobal) {
       }, null, 8, ["visible", "onClose"])
     ]);
   }
-  const PagesWealthWealth = /* @__PURE__ */ _export_sfc(_sfc_main$D, [["render", _sfc_render$C], ["__scopeId", "data-v-a00d3a3e"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/wealth.vue"]]);
-  const _sfc_main$C = {
+  const PagesWealthWealth = /* @__PURE__ */ _export_sfc(_sfc_main$G, [["render", _sfc_render$F], ["__scopeId", "data-v-a00d3a3e"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/wealth.vue"]]);
+  const _sfc_main$F = {
     name: "LifePage",
     data() {
       return {
@@ -8145,7 +8513,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$B(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$E(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "life-page" }, [
       vue.createCommentVNode(" 头部标题区域 "),
       vue.createElementVNode("view", { class: "header-section" }, [
@@ -8534,7 +8902,7 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesLifeLife = /* @__PURE__ */ _export_sfc(_sfc_main$C, [["render", _sfc_render$B], ["__scopeId", "data-v-980f0516"], ["__file", "E:/项目/yihangyidon/src/pages/life/life.vue"]]);
+  const PagesLifeLife = /* @__PURE__ */ _export_sfc(_sfc_main$F, [["render", _sfc_render$E], ["__scopeId", "data-v-980f0516"], ["__file", "E:/项目/yihangyidon/src/pages/life/life.vue"]]);
   const SILICONFLOW_API_KEY = "sk-fkzxlpblcjigbzitanooofmnfmvvedobfdvvxqdbbdodntdt";
   const API_BASE_URL = "https://api.siliconflow.cn/v1";
   const sessionHistory = {};
@@ -8716,7 +9084,7 @@ if (uni.restoreGlobal) {
   };
   const _imports_0 = "/static/wealth/aiavatar.png";
   const _imports_1 = "/static/wealth/useravatar.jpg";
-  const _sfc_main$B = {
+  const _sfc_main$E = {
     data() {
       return {
         draft: "",
@@ -9128,7 +9496,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$A(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$D(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "chat-page" }, [
       vue.createElementVNode("view", { class: "chat-header" }, [
         vue.createElementVNode("text", { class: "title" }, "AI 智能客服"),
@@ -9333,8 +9701,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesServiceChat = /* @__PURE__ */ _export_sfc(_sfc_main$B, [["render", _sfc_render$A], ["__scopeId", "data-v-e19cce9b"], ["__file", "E:/项目/yihangyidon/src/pages/service/chat.vue"]]);
-  const _sfc_main$A = {
+  const PagesServiceChat = /* @__PURE__ */ _export_sfc(_sfc_main$E, [["render", _sfc_render$D], ["__scopeId", "data-v-e19cce9b"], ["__file", "E:/项目/yihangyidon/src/pages/service/chat.vue"]]);
+  const _sfc_main$D = {
     data() {
       return {
         searchKeyword: "",
@@ -9372,7 +9740,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$z(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$C(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "help-center" }, [
       vue.createCommentVNode(" 顶部搜索栏 "),
       vue.createElementVNode("view", { class: "search-header" }, [
@@ -9649,8 +10017,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesHelpHelpCenter = /* @__PURE__ */ _export_sfc(_sfc_main$A, [["render", _sfc_render$z], ["__scopeId", "data-v-292cc293"], ["__file", "E:/项目/yihangyidon/src/pages/help/help-center.vue"]]);
-  const _sfc_main$z = {
+  const PagesHelpHelpCenter = /* @__PURE__ */ _export_sfc(_sfc_main$D, [["render", _sfc_render$C], ["__scopeId", "data-v-292cc293"], ["__file", "E:/项目/yihangyidon/src/pages/help/help-center.vue"]]);
+  const _sfc_main$C = {
     data() {
       return {
         helpId: "",
@@ -9812,7 +10180,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$y(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$B(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "help-detail" }, [
       vue.createCommentVNode(" 顶部导航 "),
       vue.createElementVNode("view", { class: "detail-header" }, [
@@ -9986,7 +10354,7 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesHelpHelpDetail = /* @__PURE__ */ _export_sfc(_sfc_main$z, [["render", _sfc_render$y], ["__scopeId", "data-v-ba096d18"], ["__file", "E:/项目/yihangyidon/src/pages/help/help-detail.vue"]]);
+  const PagesHelpHelpDetail = /* @__PURE__ */ _export_sfc(_sfc_main$C, [["render", _sfc_render$B], ["__scopeId", "data-v-ba096d18"], ["__file", "E:/项目/yihangyidon/src/pages/help/help-detail.vue"]]);
   function getUserBalance() {
     return new Promise((resolve, reject) => {
       try {
@@ -10148,7 +10516,7 @@ if (uni.restoreGlobal) {
       }
     });
   }
-  const _sfc_main$y = {
+  const _sfc_main$B = {
     name: "PaymentPasswordModal",
     props: {
       visible: {
@@ -10283,7 +10651,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$x(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$A(_ctx, _cache, $props, $setup, $data, $options) {
     return $props.visible ? (vue.openBlock(), vue.createElementBlock("view", {
       key: 0,
       class: "payment-password-modal",
@@ -10416,8 +10784,8 @@ if (uni.restoreGlobal) {
       ])
     ])) : vue.createCommentVNode("v-if", true);
   }
-  const PaymentPasswordModal = /* @__PURE__ */ _export_sfc(_sfc_main$y, [["render", _sfc_render$x], ["__scopeId", "data-v-c92603ac"], ["__file", "E:/项目/yihangyidon/src/components/common/PaymentPasswordModal.vue"]]);
-  const _sfc_main$x = {
+  const PaymentPasswordModal = /* @__PURE__ */ _export_sfc(_sfc_main$B, [["render", _sfc_render$A], ["__scopeId", "data-v-c92603ac"], ["__file", "E:/项目/yihangyidon/src/components/common/PaymentPasswordModal.vue"]]);
+  const _sfc_main$A = {
     components: {
       PaymentPasswordModal
     },
@@ -10857,7 +11225,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$w(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$z(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_PaymentPasswordModal = vue.resolveComponent("PaymentPasswordModal");
     return vue.openBlock(), vue.createElementBlock("view", { class: "transfer-page" }, [
       vue.createCommentVNode(" 顶部导航 "),
@@ -11213,8 +11581,8 @@ if (uni.restoreGlobal) {
       }, null, 8, ["visible", "amount", "payee", "description", "onPaymentConfirmed", "onClose"])
     ]);
   }
-  const PagesTransferTransfer = /* @__PURE__ */ _export_sfc(_sfc_main$x, [["render", _sfc_render$w], ["__scopeId", "data-v-d303ad3d"], ["__file", "E:/项目/yihangyidon/src/pages/transfer/transfer.vue"]]);
-  const _sfc_main$w = {
+  const PagesTransferTransfer = /* @__PURE__ */ _export_sfc(_sfc_main$A, [["render", _sfc_render$z], ["__scopeId", "data-v-d303ad3d"], ["__file", "E:/项目/yihangyidon/src/pages/transfer/transfer.vue"]]);
+  const _sfc_main$z = {
     data() {
       return {
         isLoginNeeded: false,
@@ -11276,21 +11644,40 @@ if (uni.restoreGlobal) {
       // 新增：获取用户余额的方法
       getUserBalance() {
         try {
+          const userInfo2 = uni.getStorageSync("userInfo");
+          const currentUserId = uni.getStorageSync("currentUserId");
+          if (userInfo2 && userInfo2.balance) {
+            this.accountInfo.balance = Number(userInfo2.balance).toLocaleString("zh-CN", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2
+            });
+            this.bankAccounts = userInfo2.bankAccounts || [];
+            formatAppLog("log", "at pages/account/account.vue:203", "从userInfo获取用户余额:", this.accountInfo.balance);
+            return;
+          }
           const users2 = uni.getStorageSync("users") || [];
-          const currentUser = users2.find((user) => user.isLoggedIn);
+          let currentUser = null;
+          if (currentUserId) {
+            currentUser = users2.find((user) => user.id === currentUserId);
+          } else {
+            currentUser = users2.find((user) => user.isLoggedIn);
+          }
           if (currentUser && currentUser.balance) {
             this.accountInfo.balance = Number(currentUser.balance).toLocaleString("zh-CN", {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2
             });
             this.bankAccounts = currentUser.bankAccounts || [];
-            formatAppLog("log", "at pages/account/account.vue:203", "获取用户余额:", this.accountInfo.balance);
+            formatAppLog("log", "at pages/account/account.vue:223", "从users数组获取用户余额:", this.accountInfo.balance);
           } else {
             this.accountInfo.balance = "0.00";
-            formatAppLog("log", "at pages/account/account.vue:206", "未找到用户余额，使用默认值");
+            formatAppLog("log", "at pages/account/account.vue:226", "未找到用户余额，使用默认值");
+            formatAppLog("log", "at pages/account/account.vue:227", "当前用户ID:", currentUserId);
+            formatAppLog("log", "at pages/account/account.vue:228", "用户信息:", userInfo2);
+            formatAppLog("log", "at pages/account/account.vue:229", "用户数组:", users2.map((u) => ({ id: u.id, username: u.username, balance: u.balance, isLoggedIn: u.isLoggedIn })));
           }
         } catch (error) {
-          formatAppLog("error", "at pages/account/account.vue:209", "获取用户余额失败:", error);
+          formatAppLog("error", "at pages/account/account.vue:232", "获取用户余额失败:", error);
           this.accountInfo.balance = "0.00";
         }
       },
@@ -11441,7 +11828,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$v(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$y(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "account-page" }, [
       vue.createCommentVNode(" 顶部导航 "),
       vue.createElementVNode("view", { class: "nav-bar" }, [
@@ -11668,8 +12055,8 @@ if (uni.restoreGlobal) {
       ))
     ]);
   }
-  const PagesAccountAccount = /* @__PURE__ */ _export_sfc(_sfc_main$w, [["render", _sfc_render$v], ["__scopeId", "data-v-f7e9057f"], ["__file", "E:/项目/yihangyidon/src/pages/account/account.vue"]]);
-  const _sfc_main$v = {
+  const PagesAccountAccount = /* @__PURE__ */ _export_sfc(_sfc_main$z, [["render", _sfc_render$y], ["__scopeId", "data-v-f7e9057f"], ["__file", "E:/项目/yihangyidon/src/pages/account/account.vue"]]);
+  const _sfc_main$y = {
     name: "PaymentPage",
     data() {
       return {
@@ -11803,7 +12190,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$u(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$x(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "payment-page" }, [
       vue.createCommentVNode(" 头部区域 "),
       vue.createElementVNode("view", { class: "header" }, [
@@ -11949,8 +12336,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesPaymentPayment = /* @__PURE__ */ _export_sfc(_sfc_main$v, [["render", _sfc_render$u], ["__scopeId", "data-v-6e0fac4f"], ["__file", "E:/项目/yihangyidon/src/pages/payment/payment.vue"]]);
-  const _sfc_main$u = {
+  const PagesPaymentPayment = /* @__PURE__ */ _export_sfc(_sfc_main$y, [["render", _sfc_render$x], ["__scopeId", "data-v-6e0fac4f"], ["__file", "E:/项目/yihangyidon/src/pages/payment/payment.vue"]]);
+  const _sfc_main$x = {
     name: "WaterPage",
     data() {
       return {
@@ -12296,7 +12683,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$t(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$w(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "water-page" }, [
       vue.createCommentVNode(" 地区选择 "),
       vue.createElementVNode("view", { class: "location-section" }, [
@@ -12399,8 +12786,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesWaterWater = /* @__PURE__ */ _export_sfc(_sfc_main$u, [["render", _sfc_render$t], ["__scopeId", "data-v-ebd6dd79"], ["__file", "E:/项目/yihangyidon/src/pages/water/water.vue"]]);
-  const _sfc_main$t = {
+  const PagesWaterWater = /* @__PURE__ */ _export_sfc(_sfc_main$x, [["render", _sfc_render$w], ["__scopeId", "data-v-ebd6dd79"], ["__file", "E:/项目/yihangyidon/src/pages/water/water.vue"]]);
+  const _sfc_main$w = {
     name: "WaterPaymentPage",
     data() {
       return {
@@ -12623,7 +13010,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$s(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$v(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "water-payment-page" }, [
       vue.createCommentVNode(" 顶部厨房插画背景 "),
       vue.createElementVNode("view", { class: "header-section" }, [
@@ -12861,8 +13248,8 @@ if (uni.restoreGlobal) {
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesWaterPaymentWaterPayment = /* @__PURE__ */ _export_sfc(_sfc_main$t, [["render", _sfc_render$s], ["__scopeId", "data-v-16fc2ef4"], ["__file", "E:/项目/yihangyidon/src/pages/water-payment/water-payment.vue"]]);
-  const _sfc_main$s = {
+  const PagesWaterPaymentWaterPayment = /* @__PURE__ */ _export_sfc(_sfc_main$w, [["render", _sfc_render$v], ["__scopeId", "data-v-16fc2ef4"], ["__file", "E:/项目/yihangyidon/src/pages/water-payment/water-payment.vue"]]);
+  const _sfc_main$v = {
     name: "CitySelectPage",
     data() {
       return {
@@ -13754,7 +14141,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$r(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$u(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "city-select-page" }, [
       vue.createCommentVNode(" 搜索栏 "),
       vue.createElementVNode("view", { class: "search-section" }, [
@@ -14049,8 +14436,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesCitySelectCitySelect = /* @__PURE__ */ _export_sfc(_sfc_main$s, [["render", _sfc_render$r], ["__scopeId", "data-v-66878741"], ["__file", "E:/项目/yihangyidon/src/pages/city-select/city-select.vue"]]);
-  const _sfc_main$r = {
+  const PagesCitySelectCitySelect = /* @__PURE__ */ _export_sfc(_sfc_main$v, [["render", _sfc_render$u], ["__scopeId", "data-v-66878741"], ["__file", "E:/项目/yihangyidon/src/pages/city-select/city-select.vue"]]);
+  const _sfc_main$u = {
     name: "PaymentManagementPage",
     data() {
       return {
@@ -14456,7 +14843,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$q(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$t(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "payment-management-page" }, [
       vue.createCommentVNode(" 新增分组 "),
       vue.createElementVNode("view", { class: "add-group-section" }, [
@@ -14645,8 +15032,8 @@ if (uni.restoreGlobal) {
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesPaymentManagementPaymentManagement = /* @__PURE__ */ _export_sfc(_sfc_main$r, [["render", _sfc_render$q], ["__scopeId", "data-v-aea28279"], ["__file", "E:/项目/yihangyidon/src/pages/payment-management/payment-management.vue"]]);
-  const _sfc_main$q = {
+  const PagesPaymentManagementPaymentManagement = /* @__PURE__ */ _export_sfc(_sfc_main$u, [["render", _sfc_render$t], ["__scopeId", "data-v-aea28279"], ["__file", "E:/项目/yihangyidon/src/pages/payment-management/payment-management.vue"]]);
+  const _sfc_main$t = {
     name: "RechargePage",
     data() {
       return {
@@ -14859,7 +15246,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$p(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$s(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "recharge-page" }, [
       vue.createCommentVNode(" 手机号码区域 "),
       vue.createElementVNode("view", { class: "phone-section" }, [
@@ -15053,8 +15440,8 @@ if (uni.restoreGlobal) {
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesRechargeRecharge = /* @__PURE__ */ _export_sfc(_sfc_main$q, [["render", _sfc_render$p], ["__scopeId", "data-v-d370def1"], ["__file", "E:/项目/yihangyidon/src/pages/recharge/recharge.vue"]]);
-  const _sfc_main$p = {
+  const PagesRechargeRecharge = /* @__PURE__ */ _export_sfc(_sfc_main$t, [["render", _sfc_render$s], ["__scopeId", "data-v-d370def1"], ["__file", "E:/项目/yihangyidon/src/pages/recharge/recharge.vue"]]);
+  const _sfc_main$s = {
     name: "RechargePaymentPage",
     data() {
       return {
@@ -15399,7 +15786,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$o(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$r(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "payment-page" }, [
       vue.createCommentVNode(" 导航栏 "),
       vue.createElementVNode("view", { class: "nav-bar" }, [
@@ -15697,8 +16084,8 @@ if (uni.restoreGlobal) {
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesRechargePaymentRechargePayment = /* @__PURE__ */ _export_sfc(_sfc_main$p, [["render", _sfc_render$o], ["__scopeId", "data-v-e95b868e"], ["__file", "E:/项目/yihangyidon/src/pages/recharge-payment/recharge-payment.vue"]]);
-  const _sfc_main$o = {
+  const PagesRechargePaymentRechargePayment = /* @__PURE__ */ _export_sfc(_sfc_main$s, [["render", _sfc_render$r], ["__scopeId", "data-v-e95b868e"], ["__file", "E:/项目/yihangyidon/src/pages/recharge-payment/recharge-payment.vue"]]);
+  const _sfc_main$r = {
     name: "GovernmentPage",
     data() {
       return {
@@ -15916,7 +16303,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$n(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$q(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "government-page" }, [
       vue.createElementVNode("view", { class: "page-header" }, [
         vue.createElementVNode("text", { class: "header-title" }, "政务民生"),
@@ -16103,8 +16490,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesGovernmentGovernment = /* @__PURE__ */ _export_sfc(_sfc_main$o, [["render", _sfc_render$n], ["__scopeId", "data-v-55002ac7"], ["__file", "E:/项目/yihangyidon/src/pages/government/government.vue"]]);
-  const _sfc_main$n = {
+  const PagesGovernmentGovernment = /* @__PURE__ */ _export_sfc(_sfc_main$r, [["render", _sfc_render$q], ["__scopeId", "data-v-55002ac7"], ["__file", "E:/项目/yihangyidon/src/pages/government/government.vue"]]);
+  const _sfc_main$q = {
     name: "GamesPage",
     data() {
       return {
@@ -16334,7 +16721,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$m(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$p(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "games-page" }, [
       vue.createElementVNode("view", { class: "page-header" }, [
         vue.createElementVNode("text", { class: "header-title" }, "小豆乐园"),
@@ -16581,8 +16968,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesGamesGames = /* @__PURE__ */ _export_sfc(_sfc_main$n, [["render", _sfc_render$m], ["__scopeId", "data-v-5e0e9dd0"], ["__file", "E:/项目/yihangyidon/src/pages/games/games.vue"]]);
-  const _sfc_main$m = {
+  const PagesGamesGames = /* @__PURE__ */ _export_sfc(_sfc_main$q, [["render", _sfc_render$p], ["__scopeId", "data-v-5e0e9dd0"], ["__file", "E:/项目/yihangyidon/src/pages/games/games.vue"]]);
+  const _sfc_main$p = {
     data() {
       return {
         transferRecords: []
@@ -16675,7 +17062,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$l(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$o(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "history-page" }, [
       vue.createCommentVNode(" 顶部导航 "),
       vue.createElementVNode("view", { class: "nav-bar" }, [
@@ -16759,7 +17146,7 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesTransferHistory = /* @__PURE__ */ _export_sfc(_sfc_main$m, [["render", _sfc_render$l], ["__scopeId", "data-v-c9706b1b"], ["__file", "E:/项目/yihangyidon/src/pages/transfer/history.vue"]]);
+  const PagesTransferHistory = /* @__PURE__ */ _export_sfc(_sfc_main$p, [["render", _sfc_render$o], ["__scopeId", "data-v-c9706b1b"], ["__file", "E:/项目/yihangyidon/src/pages/transfer/history.vue"]]);
   const formatBankCard = (cardNumber, separator = " ") => {
     if (!cardNumber)
       return "";
@@ -16776,7 +17163,7 @@ if (uni.restoreGlobal) {
     const middle = "*".repeat(card.length - showStart - showEnd);
     return formatBankCard(start + middle + end);
   };
-  const _sfc_main$l = {
+  const _sfc_main$o = {
     name: "BankCard",
     props: {
       cardInfo: {
@@ -16851,7 +17238,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$k(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$n(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock(
       "view",
       {
@@ -16939,8 +17326,8 @@ if (uni.restoreGlobal) {
       /* CLASS */
     );
   }
-  const BankCard = /* @__PURE__ */ _export_sfc(_sfc_main$l, [["render", _sfc_render$k], ["__scopeId", "data-v-2f14f5e9"], ["__file", "E:/项目/yihangyidon/src/components/common/BankCard.vue"]]);
-  const _sfc_main$k = {
+  const BankCard = /* @__PURE__ */ _export_sfc(_sfc_main$o, [["render", _sfc_render$n], ["__scopeId", "data-v-2f14f5e9"], ["__file", "E:/项目/yihangyidon/src/components/common/BankCard.vue"]]);
+  const _sfc_main$n = {
     components: {
       BankCard
     },
@@ -17119,7 +17506,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$j(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$m(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_BankCard = vue.resolveComponent("BankCard");
     return vue.openBlock(), vue.createElementBlock("view", { class: "credit-card-container" }, [
       vue.createCommentVNode(" 页面头部 "),
@@ -17316,7 +17703,7 @@ if (uni.restoreGlobal) {
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesCreditCardCreditCard = /* @__PURE__ */ _export_sfc(_sfc_main$k, [["render", _sfc_render$j], ["__scopeId", "data-v-03264d9b"], ["__file", "E:/项目/yihangyidon/src/pages/credit-card/credit-card.vue"]]);
+  const PagesCreditCardCreditCard = /* @__PURE__ */ _export_sfc(_sfc_main$n, [["render", _sfc_render$m], ["__scopeId", "data-v-03264d9b"], ["__file", "E:/项目/yihangyidon/src/pages/credit-card/credit-card.vue"]]);
   function verifyPaymentPassword(password) {
     return new Promise((resolve, reject) => {
       var _a, _b;
@@ -17498,7 +17885,7 @@ if (uni.restoreGlobal) {
       formatAppLog("error", "at api/payment.js:258", "❌ 添加交易记录失败:", error);
     }
   }
-  const _sfc_main$j = {
+  const _sfc_main$m = {
     name: "RepaymentPasswordModal",
     props: {
       visible: {
@@ -17728,7 +18115,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$i(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$l(_ctx, _cache, $props, $setup, $data, $options) {
     return $props.visible ? (vue.openBlock(), vue.createElementBlock("view", {
       key: 0,
       class: "modal-overlay",
@@ -17888,8 +18275,8 @@ if (uni.restoreGlobal) {
       ])
     ])) : vue.createCommentVNode("v-if", true);
   }
-  const RepaymentPasswordModal = /* @__PURE__ */ _export_sfc(_sfc_main$j, [["render", _sfc_render$i], ["__scopeId", "data-v-d5beb455"], ["__file", "E:/项目/yihangyidon/src/components/common/RepaymentPasswordModal.vue"]]);
-  const _sfc_main$i = {
+  const RepaymentPasswordModal = /* @__PURE__ */ _export_sfc(_sfc_main$m, [["render", _sfc_render$l], ["__scopeId", "data-v-d5beb455"], ["__file", "E:/项目/yihangyidon/src/components/common/RepaymentPasswordModal.vue"]]);
+  const _sfc_main$l = {
     name: "CreditCardRepayment",
     components: {
       RepaymentPasswordModal
@@ -18022,7 +18409,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$h(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$k(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_RepaymentPasswordModal = vue.resolveComponent("RepaymentPasswordModal");
     return vue.openBlock(), vue.createElementBlock("view", { class: "repayment-container" }, [
       vue.createCommentVNode(" 页面头部 "),
@@ -18405,8 +18792,8 @@ if (uni.restoreGlobal) {
       }, null, 8, ["visible", "card-number", "repayment-amount", "onClose", "onRepaymentSuccess"])
     ]);
   }
-  const PagesCreditCardRepayment = /* @__PURE__ */ _export_sfc(_sfc_main$i, [["render", _sfc_render$h], ["__scopeId", "data-v-08d86d8e"], ["__file", "E:/项目/yihangyidon/src/pages/credit-card/repayment.vue"]]);
-  const _sfc_main$h = {
+  const PagesCreditCardRepayment = /* @__PURE__ */ _export_sfc(_sfc_main$l, [["render", _sfc_render$k], ["__scopeId", "data-v-08d86d8e"], ["__file", "E:/项目/yihangyidon/src/pages/credit-card/repayment.vue"]]);
+  const _sfc_main$k = {
     data() {
       return {
         type: "normal",
@@ -18704,7 +19091,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$g(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$j(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "balance-container" }, [
       vue.createCommentVNode(" 页面头部 "),
       vue.createElementVNode("view", { class: "page-header" }, [
@@ -18888,8 +19275,8 @@ if (uni.restoreGlobal) {
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesBalanceBalance = /* @__PURE__ */ _export_sfc(_sfc_main$h, [["render", _sfc_render$g], ["__scopeId", "data-v-a05d65b8"], ["__file", "E:/项目/yihangyidon/src/pages/balance/balance.vue"]]);
-  const _sfc_main$g = {
+  const PagesBalanceBalance = /* @__PURE__ */ _export_sfc(_sfc_main$k, [["render", _sfc_render$j], ["__scopeId", "data-v-a05d65b8"], ["__file", "E:/项目/yihangyidon/src/pages/balance/balance.vue"]]);
+  const _sfc_main$j = {
     data() {
       return {
         hasLoan: true,
@@ -19113,7 +19500,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$f(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$i(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "loan-container" }, [
       vue.createCommentVNode(" 页面头部 "),
       vue.createElementVNode("view", { class: "page-header" }, [
@@ -19360,8 +19747,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesLoanLoan = /* @__PURE__ */ _export_sfc(_sfc_main$g, [["render", _sfc_render$f], ["__scopeId", "data-v-2fe4ed24"], ["__file", "E:/项目/yihangyidon/src/pages/loan/loan.vue"]]);
-  const _sfc_main$f = {
+  const PagesLoanLoan = /* @__PURE__ */ _export_sfc(_sfc_main$j, [["render", _sfc_render$i], ["__scopeId", "data-v-2fe4ed24"], ["__file", "E:/项目/yihangyidon/src/pages/loan/loan.vue"]]);
+  const _sfc_main$i = {
     name: "CardDetailModal",
     props: {
       visible: {
@@ -19429,7 +19816,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$e(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$h(_ctx, _cache, $props, $setup, $data, $options) {
     var _a, _b, _c, _d, _e, _f, _g;
     return $props.visible ? (vue.openBlock(), vue.createElementBlock("view", {
       key: 0,
@@ -19489,7 +19876,7 @@ if (uni.restoreGlobal) {
               vue.createElementVNode("view", { class: "card-footer" }, [
                 vue.createElementVNode("view", { class: "card-holder" }, [
                   vue.createElementVNode("text", { class: "holder-label" }, "持卡人"),
-                  vue.createElementVNode("text", { class: "holder-name" }, "张小明")
+                  vue.createElementVNode("text", { class: "holder-name" }, "李华")
                 ]),
                 vue.createElementVNode("view", { class: "card-status" }, [
                   vue.createElementVNode(
@@ -19695,8 +20082,8 @@ if (uni.restoreGlobal) {
       ])
     ])) : vue.createCommentVNode("v-if", true);
   }
-  const CardDetailModal = /* @__PURE__ */ _export_sfc(_sfc_main$f, [["render", _sfc_render$e], ["__scopeId", "data-v-fcf447e6"], ["__file", "E:/项目/yihangyidon/src/components/common/CardDetailModal.vue"]]);
-  const _sfc_main$e = {
+  const CardDetailModal = /* @__PURE__ */ _export_sfc(_sfc_main$i, [["render", _sfc_render$h], ["__scopeId", "data-v-fcf447e6"], ["__file", "E:/项目/yihangyidon/src/components/common/CardDetailModal.vue"]]);
+  const _sfc_main$h = {
     name: "CreditCards",
     components: {
       CardDetailModal,
@@ -19711,6 +20098,8 @@ if (uni.restoreGlobal) {
         selectedCard: null,
         repaymentAmountForModal: 0,
         balanceVisible: true,
+        showCards: false,
+        // 控制卡片列表的显示/隐藏
         totalCreditLimit: 0,
         totalAvailableCredit: 0,
         totalCurrentBalance: 0,
@@ -19732,6 +20121,10 @@ if (uni.restoreGlobal) {
       goBack() {
         uni.switchTab({ url: "/pages/user/user" });
       },
+      // 切换卡片列表的显示/隐藏
+      toggleCardsVisibility() {
+        this.showCards = !this.showCards;
+      },
       async loadCreditCards() {
         try {
           const users2 = uni.getStorageSync("users") || [];
@@ -19744,7 +20137,7 @@ if (uni.restoreGlobal) {
             this.resetSummary();
           }
         } catch (error) {
-          formatAppLog("error", "at pages/credit-cards/credit-cards.vue:262", "加载信用卡信息失败:", error);
+          formatAppLog("error", "at pages/credit-cards/credit-cards.vue:269", "加载信用卡信息失败:", error);
           uni.showToast({ title: "加载失败", icon: "none" });
         }
       },
@@ -19801,7 +20194,7 @@ if (uni.restoreGlobal) {
         }
       },
       async onRepaymentSuccess(result) {
-        formatAppLog("log", "at pages/credit-cards/credit-cards.vue:321", "还款成功，更新数据:", result);
+        formatAppLog("log", "at pages/credit-cards/credit-cards.vue:328", "还款成功，更新数据:", result);
         await this.loadCreditCards();
         this.closeRepaymentPasswordModal();
         uni.showToast({ title: "还款成功", icon: "success" });
@@ -19859,7 +20252,7 @@ if (uni.restoreGlobal) {
             uni.showToast({ title: "添加成功", icon: "success" });
           }
         } catch (error) {
-          formatAppLog("error", "at pages/credit-cards/credit-cards.vue:383", "添加卡片失败:", error);
+          formatAppLog("error", "at pages/credit-cards/credit-cards.vue:390", "添加卡片失败:", error);
           uni.showToast({ title: "添加失败", icon: "none" });
         }
       },
@@ -19883,7 +20276,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$d(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$g(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_CardDetailModal = vue.resolveComponent("CardDetailModal");
     const _component_RepaymentPasswordModal = vue.resolveComponent("RepaymentPasswordModal");
     return vue.openBlock(), vue.createElementBlock("view", { class: "credit-cards-page" }, [
@@ -19956,119 +20349,147 @@ if (uni.restoreGlobal) {
       ]),
       vue.createCommentVNode(" 信用卡列表 "),
       vue.createElementVNode("view", { class: "credit-cards-list-section" }, [
-        vue.createElementVNode("view", { class: "section-header" }, [
+        vue.createElementVNode("view", {
+          class: "section-header",
+          onClick: _cache[3] || (_cache[3] = (...args) => $options.toggleCardsVisibility && $options.toggleCardsVisibility(...args))
+        }, [
           vue.createElementVNode("text", { class: "section-title" }, "我的信用卡"),
-          vue.createElementVNode("text", { class: "section-subtitle" }, "点击查看详情")
+          vue.createElementVNode(
+            "text",
+            { class: "section-subtitle" },
+            vue.toDisplayString($data.showCards ? "点击隐藏详情" : "点击查看详情"),
+            1
+            /* TEXT */
+          ),
+          vue.createElementVNode(
+            "text",
+            {
+              class: vue.normalizeClass(["expand-icon", { "expanded": $data.showCards }])
+            },
+            "▼",
+            2
+            /* CLASS */
+          )
         ]),
-        vue.createElementVNode("view", { class: "cards-list" }, [
-          (vue.openBlock(true), vue.createElementBlock(
-            vue.Fragment,
-            null,
-            vue.renderList($data.creditCards, (card) => {
-              return vue.openBlock(), vue.createElementBlock("view", {
-                key: card.id,
-                class: "card-item",
-                style: vue.normalizeStyle({ background: card.cardColor }),
-                onClick: ($event) => $options.viewCardDetail(card)
-              }, [
-                vue.createElementVNode("view", { class: "card-header" }, [
-                  vue.createElementVNode("view", { class: "card-brand" }, [
+        vue.withDirectives(vue.createElementVNode(
+          "view",
+          {
+            class: vue.normalizeClass(["cards-list", { "show": $data.showCards }])
+          },
+          [
+            (vue.openBlock(true), vue.createElementBlock(
+              vue.Fragment,
+              null,
+              vue.renderList($data.creditCards, (card) => {
+                return vue.openBlock(), vue.createElementBlock("view", {
+                  key: card.id,
+                  class: "card-item",
+                  style: vue.normalizeStyle({ background: card.cardColor }),
+                  onClick: ($event) => $options.viewCardDetail(card)
+                }, [
+                  vue.createElementVNode("view", { class: "card-header" }, [
+                    vue.createElementVNode("view", { class: "card-brand" }, [
+                      vue.createElementVNode(
+                        "text",
+                        { class: "brand-text" },
+                        vue.toDisplayString(card.bankName),
+                        1
+                        /* TEXT */
+                      )
+                    ]),
+                    vue.createElementVNode("view", { class: "card-type" }, [
+                      vue.createElementVNode(
+                        "text",
+                        { class: "type-text" },
+                        vue.toDisplayString(card.cardType),
+                        1
+                        /* TEXT */
+                      )
+                    ]),
+                    vue.createElementVNode("view", { class: "card-status" }, [
+                      vue.createElementVNode(
+                        "text",
+                        { class: "status-text" },
+                        vue.toDisplayString($options.getStatusText(card.status)),
+                        1
+                        /* TEXT */
+                      )
+                    ])
+                  ]),
+                  vue.createElementVNode("view", { class: "card-number" }, [
                     vue.createElementVNode(
                       "text",
-                      { class: "brand-text" },
-                      vue.toDisplayString(card.bankName),
+                      { class: "number-text" },
+                      vue.toDisplayString($options.formatCardNumber(card.cardNumber)),
                       1
                       /* TEXT */
                     )
                   ]),
-                  vue.createElementVNode("view", { class: "card-type" }, [
-                    vue.createElementVNode(
-                      "text",
-                      { class: "type-text" },
-                      vue.toDisplayString(card.cardType),
-                      1
-                      /* TEXT */
-                    )
+                  vue.createElementVNode("view", { class: "card-info" }, [
+                    vue.createElementVNode("view", { class: "info-row" }, [
+                      vue.createElementVNode("text", { class: "info-label" }, "授信额度"),
+                      vue.createElementVNode(
+                        "text",
+                        { class: "info-value" },
+                        vue.toDisplayString($options.formatCurrency(card.creditLimit)),
+                        1
+                        /* TEXT */
+                      )
+                    ]),
+                    vue.createElementVNode("view", { class: "info-row" }, [
+                      vue.createElementVNode("text", { class: "info-label" }, "可用额度"),
+                      vue.createElementVNode(
+                        "text",
+                        { class: "info-value available" },
+                        vue.toDisplayString($options.formatCurrency(card.availableCredit)),
+                        1
+                        /* TEXT */
+                      )
+                    ]),
+                    vue.createElementVNode("view", { class: "info-row" }, [
+                      vue.createElementVNode("text", { class: "info-label" }, "当前欠款"),
+                      vue.createElementVNode(
+                        "text",
+                        { class: "info-value debt" },
+                        vue.toDisplayString($options.formatCurrency(card.currentBalance)),
+                        1
+                        /* TEXT */
+                      )
+                    ])
                   ]),
-                  vue.createElementVNode("view", { class: "card-status" }, [
-                    vue.createElementVNode(
-                      "text",
-                      { class: "status-text" },
-                      vue.toDisplayString($options.getStatusText(card.status)),
-                      1
-                      /* TEXT */
-                    )
+                  vue.createElementVNode("view", { class: "card-actions" }, [
+                    vue.createElementVNode("button", {
+                      class: "action-btn",
+                      onClick: vue.withModifiers(($event) => $options.handleRepay(card), ["stop"])
+                    }, [
+                      vue.createElementVNode("text", { class: "btn-icon" }, "💳"),
+                      vue.createElementVNode("text", { class: "btn-text" }, "还款")
+                    ], 8, ["onClick"]),
+                    vue.createElementVNode("button", {
+                      class: "action-btn",
+                      onClick: vue.withModifiers(($event) => $options.viewCardDetail(card), ["stop"])
+                    }, [
+                      vue.createElementVNode("text", { class: "btn-icon" }, "📊"),
+                      vue.createElementVNode("text", { class: "btn-text" }, "详情")
+                    ], 8, ["onClick"]),
+                    vue.createElementVNode("button", {
+                      class: "action-btn",
+                      onClick: vue.withModifiers(($event) => $options.handleManageCard(card), ["stop"])
+                    }, [
+                      vue.createElementVNode("text", { class: "btn-icon" }, "⚙️"),
+                      vue.createElementVNode("text", { class: "btn-text" }, "管理")
+                    ], 8, ["onClick"])
                   ])
-                ]),
-                vue.createElementVNode("view", { class: "card-number" }, [
-                  vue.createElementVNode(
-                    "text",
-                    { class: "number-text" },
-                    vue.toDisplayString($options.formatCardNumber(card.cardNumber)),
-                    1
-                    /* TEXT */
-                  )
-                ]),
-                vue.createElementVNode("view", { class: "card-info" }, [
-                  vue.createElementVNode("view", { class: "info-row" }, [
-                    vue.createElementVNode("text", { class: "info-label" }, "授信额度"),
-                    vue.createElementVNode(
-                      "text",
-                      { class: "info-value" },
-                      vue.toDisplayString($options.formatCurrency(card.creditLimit)),
-                      1
-                      /* TEXT */
-                    )
-                  ]),
-                  vue.createElementVNode("view", { class: "info-row" }, [
-                    vue.createElementVNode("text", { class: "info-label" }, "可用额度"),
-                    vue.createElementVNode(
-                      "text",
-                      { class: "info-value available" },
-                      vue.toDisplayString($options.formatCurrency(card.availableCredit)),
-                      1
-                      /* TEXT */
-                    )
-                  ]),
-                  vue.createElementVNode("view", { class: "info-row" }, [
-                    vue.createElementVNode("text", { class: "info-label" }, "当前欠款"),
-                    vue.createElementVNode(
-                      "text",
-                      { class: "info-value debt" },
-                      vue.toDisplayString($options.formatCurrency(card.currentBalance)),
-                      1
-                      /* TEXT */
-                    )
-                  ])
-                ]),
-                vue.createElementVNode("view", { class: "card-actions" }, [
-                  vue.createElementVNode("button", {
-                    class: "action-btn",
-                    onClick: vue.withModifiers(($event) => $options.handleRepay(card), ["stop"])
-                  }, [
-                    vue.createElementVNode("text", { class: "btn-icon" }, "💳"),
-                    vue.createElementVNode("text", { class: "btn-text" }, "还款")
-                  ], 8, ["onClick"]),
-                  vue.createElementVNode("button", {
-                    class: "action-btn",
-                    onClick: vue.withModifiers(($event) => $options.viewCardDetail(card), ["stop"])
-                  }, [
-                    vue.createElementVNode("text", { class: "btn-icon" }, "📊"),
-                    vue.createElementVNode("text", { class: "btn-text" }, "详情")
-                  ], 8, ["onClick"]),
-                  vue.createElementVNode("button", {
-                    class: "action-btn",
-                    onClick: vue.withModifiers(($event) => $options.handleManageCard(card), ["stop"])
-                  }, [
-                    vue.createElementVNode("text", { class: "btn-icon" }, "⚙️"),
-                    vue.createElementVNode("text", { class: "btn-text" }, "管理")
-                  ], 8, ["onClick"])
-                ])
-              ], 12, ["onClick"]);
-            }),
-            128
-            /* KEYED_FRAGMENT */
-          ))
+                ], 12, ["onClick"]);
+              }),
+              128
+              /* KEYED_FRAGMENT */
+            ))
+          ],
+          2
+          /* CLASS */
+        ), [
+          [vue.vShow, $data.showCards]
         ])
       ]),
       vue.createCommentVNode(" 快捷功能区 "),
@@ -20079,28 +20500,28 @@ if (uni.restoreGlobal) {
         vue.createElementVNode("view", { class: "actions-grid" }, [
           vue.createElementVNode("view", {
             class: "action-item",
-            onClick: _cache[3] || (_cache[3] = (...args) => $options.showAddCardModal && $options.showAddCardModal(...args))
+            onClick: _cache[4] || (_cache[4] = (...args) => $options.showAddCardModal && $options.showAddCardModal(...args))
           }, [
             vue.createElementVNode("text", { class: "action-icon" }, "➕"),
             vue.createElementVNode("text", { class: "action-text" }, "添加卡片")
           ]),
           vue.createElementVNode("view", {
             class: "action-item",
-            onClick: _cache[4] || (_cache[4] = (...args) => $options.goToRepayment && $options.goToRepayment(...args))
+            onClick: _cache[5] || (_cache[5] = (...args) => $options.goToRepayment && $options.goToRepayment(...args))
           }, [
             vue.createElementVNode("text", { class: "action-icon" }, "💳"),
             vue.createElementVNode("text", { class: "action-text" }, "快速还款")
           ]),
           vue.createElementVNode("view", {
             class: "action-item",
-            onClick: _cache[5] || (_cache[5] = (...args) => $options.showBillReminder && $options.showBillReminder(...args))
+            onClick: _cache[6] || (_cache[6] = (...args) => $options.showBillReminder && $options.showBillReminder(...args))
           }, [
             vue.createElementVNode("text", { class: "action-icon" }, "📅"),
             vue.createElementVNode("text", { class: "action-text" }, "账单提醒")
           ]),
           vue.createElementVNode("view", {
             class: "action-item",
-            onClick: _cache[6] || (_cache[6] = (...args) => $options.showCreditReport && $options.showCreditReport(...args))
+            onClick: _cache[7] || (_cache[7] = (...args) => $options.showCreditReport && $options.showCreditReport(...args))
           }, [
             vue.createElementVNode("text", { class: "action-icon" }, "📈"),
             vue.createElementVNode("text", { class: "action-text" }, "信用报告")
@@ -20157,18 +20578,18 @@ if (uni.restoreGlobal) {
       $data.showAddCardModalFlag ? (vue.openBlock(), vue.createElementBlock("view", {
         key: 0,
         class: "modal-overlay",
-        onClick: _cache[15] || (_cache[15] = (...args) => $options.closeAddCardModal && $options.closeAddCardModal(...args))
+        onClick: _cache[16] || (_cache[16] = (...args) => $options.closeAddCardModal && $options.closeAddCardModal(...args))
       }, [
         vue.createElementVNode("view", {
           class: "modal-content",
-          onClick: _cache[14] || (_cache[14] = vue.withModifiers(() => {
+          onClick: _cache[15] || (_cache[15] = vue.withModifiers(() => {
           }, ["stop"]))
         }, [
           vue.createElementVNode("view", { class: "modal-header" }, [
             vue.createElementVNode("text", { class: "modal-title" }, "添加信用卡"),
             vue.createElementVNode("text", {
               class: "close-btn",
-              onClick: _cache[7] || (_cache[7] = (...args) => $options.closeAddCardModal && $options.closeAddCardModal(...args))
+              onClick: _cache[8] || (_cache[8] = (...args) => $options.closeAddCardModal && $options.closeAddCardModal(...args))
             }, "×")
           ]),
           vue.createElementVNode("view", { class: "modal-body" }, [
@@ -20178,7 +20599,7 @@ if (uni.restoreGlobal) {
                 "input",
                 {
                   class: "form-input",
-                  "onUpdate:modelValue": _cache[8] || (_cache[8] = ($event) => $data.newCard.bankName = $event),
+                  "onUpdate:modelValue": _cache[9] || (_cache[9] = ($event) => $data.newCard.bankName = $event),
                   placeholder: "请输入银行名称"
                 },
                 null,
@@ -20194,7 +20615,7 @@ if (uni.restoreGlobal) {
                 "input",
                 {
                   class: "form-input",
-                  "onUpdate:modelValue": _cache[9] || (_cache[9] = ($event) => $data.newCard.cardType = $event),
+                  "onUpdate:modelValue": _cache[10] || (_cache[10] = ($event) => $data.newCard.cardType = $event),
                   placeholder: "请输入卡片类型"
                 },
                 null,
@@ -20210,7 +20631,7 @@ if (uni.restoreGlobal) {
                 "input",
                 {
                   class: "form-input",
-                  "onUpdate:modelValue": _cache[10] || (_cache[10] = ($event) => $data.newCard.cardNumber = $event),
+                  "onUpdate:modelValue": _cache[11] || (_cache[11] = ($event) => $data.newCard.cardNumber = $event),
                   placeholder: "请输入卡号"
                 },
                 null,
@@ -20226,7 +20647,7 @@ if (uni.restoreGlobal) {
                 "input",
                 {
                   class: "form-input",
-                  "onUpdate:modelValue": _cache[11] || (_cache[11] = ($event) => $data.newCard.creditLimit = $event),
+                  "onUpdate:modelValue": _cache[12] || (_cache[12] = ($event) => $data.newCard.creditLimit = $event),
                   placeholder: "请输入授信额度"
                 },
                 null,
@@ -20240,18 +20661,18 @@ if (uni.restoreGlobal) {
           vue.createElementVNode("view", { class: "modal-footer" }, [
             vue.createElementVNode("button", {
               class: "btn-cancel",
-              onClick: _cache[12] || (_cache[12] = (...args) => $options.closeAddCardModal && $options.closeAddCardModal(...args))
+              onClick: _cache[13] || (_cache[13] = (...args) => $options.closeAddCardModal && $options.closeAddCardModal(...args))
             }, "取消"),
             vue.createElementVNode("button", {
               class: "btn-confirm",
-              onClick: _cache[13] || (_cache[13] = (...args) => $options.confirmAddCard && $options.confirmAddCard(...args))
+              onClick: _cache[14] || (_cache[14] = (...args) => $options.confirmAddCard && $options.confirmAddCard(...args))
             }, "确认添加")
           ])
         ])
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesCreditCardsCreditCards = /* @__PURE__ */ _export_sfc(_sfc_main$e, [["render", _sfc_render$d], ["__scopeId", "data-v-a750c574"], ["__file", "E:/项目/yihangyidon/src/pages/credit-cards/credit-cards.vue"]]);
+  const PagesCreditCardsCreditCards = /* @__PURE__ */ _export_sfc(_sfc_main$h, [["render", _sfc_render$g], ["__scopeId", "data-v-a750c574"], ["__file", "E:/项目/yihangyidon/src/pages/credit-cards/credit-cards.vue"]]);
   class SyncManager {
     constructor() {
       this.maxRetryCount = 3;
@@ -20544,7 +20965,7 @@ if (uni.restoreGlobal) {
     }
   }
   const syncManager = new SyncManager();
-  const _sfc_main$d = {
+  const _sfc_main$g = {
     data() {
       return {
         profileData: {
@@ -20854,7 +21275,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$c(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$f(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "profile-page" }, [
       vue.createElementVNode("view", { class: "nav-bar" }, [
         vue.createElementVNode("view", {
@@ -21049,8 +21470,8 @@ if (uni.restoreGlobal) {
       ])
     ]);
   }
-  const PagesUserProfile = /* @__PURE__ */ _export_sfc(_sfc_main$d, [["render", _sfc_render$c], ["__scopeId", "data-v-f6b4f04d"], ["__file", "E:/项目/yihangyidon/src/pages/user/profile.vue"]]);
-  const _sfc_main$c = {
+  const PagesUserProfile = /* @__PURE__ */ _export_sfc(_sfc_main$g, [["render", _sfc_render$f], ["__scopeId", "data-v-f6b4f04d"], ["__file", "E:/项目/yihangyidon/src/pages/user/profile.vue"]]);
+  const _sfc_main$f = {
     data() {
       return {
         securityScore: 85,
@@ -21933,7 +22354,7 @@ IP：${event.ip}
       }
     }
   };
-  function _sfc_render$b(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$e(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "security-page" }, [
       vue.createCommentVNode(" 顶部导航栏 "),
       vue.createElementVNode("view", { class: "nav-bar" }, [
@@ -22499,8 +22920,8 @@ IP：${event.ip}
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesUserSecurity = /* @__PURE__ */ _export_sfc(_sfc_main$c, [["render", _sfc_render$b], ["__scopeId", "data-v-b74f3c40"], ["__file", "E:/项目/yihangyidon/src/pages/user/security.vue"]]);
-  const _sfc_main$b = {
+  const PagesUserSecurity = /* @__PURE__ */ _export_sfc(_sfc_main$f, [["render", _sfc_render$e], ["__scopeId", "data-v-b74f3c40"], ["__file", "E:/项目/yihangyidon/src/pages/user/security.vue"]]);
+  const _sfc_main$e = {
     data() {
       return {
         type: "login",
@@ -22711,7 +23132,7 @@ IP：${event.ip}
       }
     }
   };
-  function _sfc_render$a(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$d(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "change-password-page" }, [
       vue.createCommentVNode(" 顶部导航栏 "),
       vue.createElementVNode("view", { class: "nav-bar" }, [
@@ -22825,8 +23246,8 @@ IP：${event.ip}
       ])
     ]);
   }
-  const PagesUserChangePassword = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["render", _sfc_render$a], ["__scopeId", "data-v-df75db25"], ["__file", "E:/项目/yihangyidon/src/pages/user/change-password.vue"]]);
-  const _sfc_main$a = {
+  const PagesUserChangePassword = /* @__PURE__ */ _export_sfc(_sfc_main$e, [["render", _sfc_render$d], ["__scopeId", "data-v-df75db25"], ["__file", "E:/项目/yihangyidon/src/pages/user/change-password.vue"]]);
+  const _sfc_main$d = {
     data() {
       return {
         latitude: 0,
@@ -23305,7 +23726,7 @@ IP：${event.ip}
       }
     }
   };
-  function _sfc_render$9(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$c(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "branch-page" }, [
       vue.createCommentVNode(" 搜索栏 "),
       vue.createElementVNode("view", { class: "search-section" }, [
@@ -23749,7 +24170,7 @@ IP：${event.ip}
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesServiceBranch = /* @__PURE__ */ _export_sfc(_sfc_main$a, [["render", _sfc_render$9], ["__scopeId", "data-v-51383fbf"], ["__file", "E:/项目/yihangyidon/src/pages/service/branch.vue"]]);
+  const PagesServiceBranch = /* @__PURE__ */ _export_sfc(_sfc_main$d, [["render", _sfc_render$c], ["__scopeId", "data-v-51383fbf"], ["__file", "E:/项目/yihangyidon/src/pages/service/branch.vue"]]);
   function drawSimpleLineChart(canvasId, data, context) {
     try {
       formatAppLog("log", "at utils/simple-chart.js:14", "🎨 绘制简单折线图:", canvasId);
@@ -23868,7 +24289,7 @@ IP：${event.ip}
     ctx.textAlign = "center";
     ctx.fillText("数据对比图", width / 2, 20);
   }
-  const _sfc_main$9 = {
+  const _sfc_main$c = {
     data() {
       return {
         hideAmount: false,
@@ -24283,7 +24704,7 @@ IP：${event.ip}
       }
     }
   };
-  function _sfc_render$8(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$b(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "deposit-page" }, [
       vue.createCommentVNode(" 头部导航 "),
       vue.createElementVNode("view", { class: "header" }, [
@@ -25007,8 +25428,8 @@ IP：${event.ip}
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesWealthDeposit = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["render", _sfc_render$8], ["__scopeId", "data-v-76c36c1f"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/deposit.vue"]]);
-  const _sfc_main$8 = {
+  const PagesWealthDeposit = /* @__PURE__ */ _export_sfc(_sfc_main$c, [["render", _sfc_render$b], ["__scopeId", "data-v-76c36c1f"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/deposit.vue"]]);
+  const _sfc_main$b = {
     data() {
       return {
         loading: false,
@@ -25346,7 +25767,7 @@ IP：${event.ip}
       }
     }
   };
-  function _sfc_render$7(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$a(_ctx, _cache, $props, $setup, $data, $options) {
     var _a;
     return vue.openBlock(), vue.createElementBlock("view", { class: "product-page" }, [
       vue.createCommentVNode(" 头部导航 "),
@@ -25951,8 +26372,8 @@ IP：${event.ip}
       ])) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const PagesWealthProduct = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["render", _sfc_render$7], ["__scopeId", "data-v-080bb83e"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/product.vue"]]);
-  const _sfc_main$7 = {
+  const PagesWealthProduct = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["render", _sfc_render$a], ["__scopeId", "data-v-080bb83e"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/product.vue"]]);
+  const _sfc_main$a = {
     data() {
       return {
         loading: false,
@@ -26256,7 +26677,7 @@ IP：${event.ip}
       }
     }
   };
-  function _sfc_render$6(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$9(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "insurance-page" }, [
       vue.createCommentVNode(" 头部导航 "),
       vue.createElementVNode("view", { class: "header" }, [
@@ -26606,8 +27027,8 @@ IP：${event.ip}
       ])
     ]);
   }
-  const PagesWealthInsurance = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["render", _sfc_render$6], ["__scopeId", "data-v-64b05542"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/insurance.vue"]]);
-  const _sfc_main$6 = {
+  const PagesWealthInsurance = /* @__PURE__ */ _export_sfc(_sfc_main$a, [["render", _sfc_render$9], ["__scopeId", "data-v-64b05542"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/insurance.vue"]]);
+  const _sfc_main$9 = {
     data() {
       return {
         loading: false,
@@ -26844,7 +27265,7 @@ IP：${event.ip}
       }
     }
   };
-  function _sfc_render$5(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$8(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "forex-page" }, [
       vue.createCommentVNode(" 头部导航 "),
       vue.createElementVNode("view", { class: "header" }, [
@@ -27209,8 +27630,8 @@ IP：${event.ip}
       ])
     ]);
   }
-  const PagesWealthForex = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["render", _sfc_render$5], ["__scopeId", "data-v-3af541aa"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/forex.vue"]]);
-  const _sfc_main$5 = {
+  const PagesWealthForex = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["render", _sfc_render$8], ["__scopeId", "data-v-3af541aa"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/forex.vue"]]);
+  const _sfc_main$8 = {
     data() {
       return {
         product: {},
@@ -27379,7 +27800,7 @@ IP：${event.ip}
       }
     }
   };
-  function _sfc_render$4(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$7(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "insurance-detail-page" }, [
       vue.createCommentVNode(" 头部导航 "),
       vue.createElementVNode("view", { class: "header" }, [
@@ -27606,8 +28027,8 @@ IP：${event.ip}
       ])
     ]);
   }
-  const PagesWealthInsuranceDetail = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["render", _sfc_render$4], ["__scopeId", "data-v-cbee9a92"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/insurance-detail.vue"]]);
-  const _sfc_main$4 = {
+  const PagesWealthInsuranceDetail = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["render", _sfc_render$7], ["__scopeId", "data-v-cbee9a92"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/insurance-detail.vue"]]);
+  const _sfc_main$7 = {
     data() {
       return {
         productName: "",
@@ -27654,7 +28075,7 @@ IP：${event.ip}
       }
     }
   };
-  function _sfc_render$3(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$6(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "insurance-success-page" }, [
       vue.createCommentVNode(" 成功状态 "),
       vue.createElementVNode("view", { class: "success-status" }, [
@@ -27770,7 +28191,7 @@ IP：${event.ip}
       ])
     ]);
   }
-  const PagesWealthInsuranceSuccess = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["render", _sfc_render$3], ["__scopeId", "data-v-6999dc6e"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/insurance-success.vue"]]);
+  const PagesWealthInsuranceSuccess = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["render", _sfc_render$6], ["__scopeId", "data-v-6999dc6e"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/insurance-success.vue"]]);
   class ThemeManager {
     constructor() {
       this.currentTheme = this.getStoredTheme() || "system";
@@ -28963,8 +29384,8 @@ ${JSON.stringify(marketConditions, null, 2)}
      */
     async loadAllUsers() {
       try {
-        formatAppLog("log", "at utils/user-data-loader.js:18", "使用模拟用户数据");
-        this.userData = this.getMockUserData();
+        formatAppLog("log", "at utils/user-data-loader.js:18", "尝试从user.json加载用户数据");
+        this.userData = await this.getMockUserData();
         return this.userData;
       } catch (error) {
         formatAppLog("error", "at utils/user-data-loader.js:22", "加载用户数据失败:", error);
@@ -29229,26 +29650,35 @@ ${JSON.stringify(marketConditions, null, 2)}
     /**
      * 获取模拟用户数据（备用）
      */
-    getMockUserData() {
+    async getMockUserData() {
+      try {
+        const response = await fetch("/db/user.json");
+        if (response.ok) {
+          const userData = await response.json();
+          return userData;
+        }
+      } catch (error) {
+        formatAppLog("error", "at utils/user-data-loader.js:341", "加载user.json失败，使用默认数据:", error);
+      }
       return [
         {
           id: "u001",
-          username: "张小明",
-          phone: "13999999999",
-          password: "abc123",
-          transactionPassword: "654321",
-          balance: 15e4,
-          nickname: "小明",
-          email: "zhangxiaoming@example.com",
-          idCard: "110101199202021456",
+          username: "李华",
+          phone: "13888888888",
+          password: "123456",
+          transactionPassword: "888888",
+          balance: 28e4,
+          nickname: "华华",
+          email: "lihua@example.com",
+          idCard: "110101199503151234",
           avatar: "/static/wealth/useravatar.jpg",
           status: "active",
-          createTime: "2024-01-02T09:15:00.000Z",
-          lastLoginTime: "2024-01-15T14:20:00.000Z",
-          realName: "张小明",
-          gender: "男",
-          birthDate: "1992-02-02",
-          address: "上海市浦东新区陆家嘴环路1000号",
+          createTime: "2024-01-10T08:30:00.000Z",
+          lastLoginTime: "2024-01-20T16:45:00.000Z",
+          realName: "李华",
+          gender: "女",
+          birthDate: "1995-03-15",
+          address: "北京市朝阳区建国门外大街1号",
           avatarUpdateTime: "2024-01-15T14:20:00.000Z",
           lastUpdateTime: "2024-01-15T14:20:00.000Z",
           securitySettings: {
@@ -29311,7 +29741,7 @@ ${JSON.stringify(marketConditions, null, 2)}
               dueDate: "2024-02-10",
               lastStatementDate: "2024-01-20",
               cardStatus: "active",
-              cardHolder: "张小明",
+              cardHolder: "李华",
               expiryDate: "2029-09-30",
               cvv: "456",
               annualFee: 500,
@@ -29338,7 +29768,7 @@ ${JSON.stringify(marketConditions, null, 2)}
               type: "income",
               amount: 15e3,
               description: "工资收入",
-              balance: 15e4,
+              balance: 28e4,
               timestamp: "2024-01-15T09:00:00.000Z",
               icon: "💰",
               title: "工资收入",
@@ -29422,10 +29852,10 @@ ${JSON.stringify(marketConditions, null, 2)}
           bankAccounts: [
             {
               accountNumber: "6228480012345678901",
-              accountName: "张小明",
+              accountName: "李华",
               bankName: "中国农业银行",
               accountType: "储蓄卡",
-              balance: 15e4,
+              balance: 28e4,
               currency: "CNY",
               status: "active",
               openDate: "2020-03-15T00:00:00.000Z",
@@ -29618,7 +30048,7 @@ ${JSON.stringify(marketConditions, null, 2)}
               id: "t003",
               type: "incoming",
               amount: 5e3,
-              sender: "张小明",
+              sender: "李华",
               senderAccount: "6228480012345678901",
               description: "生活费转账",
               status: "completed",
@@ -29653,7 +30083,7 @@ ${JSON.stringify(marketConditions, null, 2)}
         );
         return results;
       } catch (error) {
-        formatAppLog("error", "at utils/user-data-loader.js:762", "搜索用户失败:", error);
+        formatAppLog("error", "at utils/user-data-loader.js:774", "搜索用户失败:", error);
         return [];
       }
     }
@@ -29678,7 +30108,7 @@ ${JSON.stringify(marketConditions, null, 2)}
         };
         return stats;
       } catch (error) {
-        formatAppLog("error", "at utils/user-data-loader.js:787", "获取用户统计失败:", error);
+        formatAppLog("error", "at utils/user-data-loader.js:799", "获取用户统计失败:", error);
         return null;
       }
     }
@@ -30173,167 +30603,151 @@ ${JSON.stringify(marketConditions, null, 2)}
       this.originalOverflow = "";
       this.originalPosition = "";
       this.originalTop = "";
+      this.scrollTop = 0;
+      this.lockCount = 0;
     }
     /**
      * 锁定页面滚动
+     * @param {Object} options 配置选项
      */
-    lockScroll() {
-      if (this.isLocked)
+    lockScroll(options = {}) {
+      if (this.isLocked) {
+        this.lockCount++;
         return;
+      }
       try {
-        this.originalTop = window.pageYOffset || document.documentElement.scrollTop;
+        this.scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
         const body = document.body;
         const html = document.documentElement;
         this.originalOverflow = body.style.overflow;
         this.originalPosition = body.style.position;
+        this.originalTop = body.style.top;
         body.style.overflow = "hidden";
         body.style.position = "fixed";
-        body.style.top = `-${this.originalTop}px`;
+        body.style.top = `-${this.scrollTop}px`;
         body.style.width = "100%";
-        if (typeof uni !== "undefined") {
-          uni.pageScrollTo({
-            scrollTop: 0,
-            duration: 0
-          });
+        if (options.preventIOSBounce !== false) {
+          body.style.webkitOverflowScrolling = "auto";
+          html.style.overflow = "hidden";
+          html.style.position = "fixed";
+          html.style.top = `-${this.scrollTop}px`;
+          html.style.width = "100%";
         }
         this.isLocked = true;
-        formatAppLog("log", "at utils/scroll-control.js:47", "页面滚动已锁定");
+        this.lockCount = 1;
+        formatAppLog("log", "at utils/scroll-control.js:56", "页面滚动已锁定");
       } catch (error) {
-        formatAppLog("error", "at utils/scroll-control.js:49", "锁定滚动失败:", error);
+        formatAppLog("error", "at utils/scroll-control.js:58", "锁定滚动失败:", error);
       }
     }
     /**
      * 解锁页面滚动
      */
     unlockScroll() {
-      if (!this.isLocked)
+      if (!this.isLocked) {
         return;
+      }
+      this.lockCount--;
+      if (this.lockCount > 0) {
+        return;
+      }
       try {
         const body = document.body;
+        const html = document.documentElement;
         body.style.overflow = this.originalOverflow;
         body.style.position = this.originalPosition;
+        body.style.top = this.originalTop;
+        body.style.width = "";
+        body.style.webkitOverflowScrolling = "";
+        html.style.overflow = "";
+        html.style.position = "";
+        html.style.top = "";
+        html.style.width = "";
+        window.scrollTo(0, this.scrollTop);
+        this.isLocked = false;
+        this.lockCount = 0;
+        formatAppLog("log", "at utils/scroll-control.js:98", "页面滚动已解锁");
+      } catch (error) {
+        formatAppLog("error", "at utils/scroll-control.js:100", "解锁滚动失败:", error);
+      }
+    }
+    /**
+     * 处理聊天界面的滚动控制
+     * @param {boolean} isOpen 是否打开聊天界面
+     * @param {HTMLElement} chatContainer 聊天容器元素
+     */
+    handleChatScroll(isOpen, chatContainer) {
+      if (isOpen) {
+        this.lockScroll();
+        if (chatContainer) {
+          chatContainer.style.overflowY = "auto";
+          chatContainer.style.webkitOverflowScrolling = "touch";
+        }
+      } else {
+        this.unlockScroll();
+      }
+    }
+    /**
+     * 强制解锁所有滚动锁定
+     */
+    forceUnlock() {
+      try {
+        const body = document.body;
+        const html = document.documentElement;
+        body.style.overflow = "";
+        body.style.position = "";
         body.style.top = "";
         body.style.width = "";
-        if (this.originalTop !== "") {
-          window.scrollTo(0, this.originalTop);
-        }
+        body.style.webkitOverflowScrolling = "";
+        html.style.overflow = "";
+        html.style.position = "";
+        html.style.top = "";
+        html.style.width = "";
         this.isLocked = false;
-        formatAppLog("log", "at utils/scroll-control.js:74", "页面滚动已解锁");
+        this.lockCount = 0;
+        formatAppLog("log", "at utils/scroll-control.js:146", "强制解锁页面滚动");
       } catch (error) {
-        formatAppLog("error", "at utils/scroll-control.js:76", "解锁滚动失败:", error);
+        formatAppLog("error", "at utils/scroll-control.js:148", "强制解锁滚动失败:", error);
       }
     }
     /**
-     * 切换滚动锁定状态
+     * 获取当前锁定状态
      */
-    toggleScroll() {
-      if (this.isLocked) {
-        this.unlockScroll();
-      } else {
-        this.lockScroll();
+    getLockStatus() {
+      return {
+        isLocked: this.isLocked,
+        lockCount: this.lockCount,
+        scrollTop: this.scrollTop
+      };
+    }
+    /**
+     * 处理页面可见性变化
+     */
+    handleVisibilityChange() {
+      if (document.hidden && this.isLocked) {
+        this.forceUnlock();
       }
     }
     /**
-     * 检查滚动锁定状态
+     * 处理页面卸载
      */
-    isScrollLocked() {
-      return this.isLocked;
-    }
-    /**
-     * 强制锁定滚动（用于弹窗等场景）
-     */
-    forceLockScroll() {
-      this.lockScroll();
-      try {
-        const body = document.body;
-        body.style.touchAction = "none";
-        body.style.userSelect = "none";
-        body.addEventListener("touchmove", this.preventDefault, { passive: false });
-        body.addEventListener("wheel", this.preventDefault, { passive: false });
-      } catch (error) {
-        formatAppLog("error", "at utils/scroll-control.js:114", "强制锁定滚动失败:", error);
-      }
-    }
-    /**
-     * 强制解锁滚动
-     */
-    forceUnlockScroll() {
-      this.unlockScroll();
-      try {
-        const body = document.body;
-        body.style.touchAction = "";
-        body.style.userSelect = "";
-        body.removeEventListener("touchmove", this.preventDefault);
-        body.removeEventListener("wheel", this.preventDefault);
-      } catch (error) {
-        formatAppLog("error", "at utils/scroll-control.js:133", "强制解锁滚动失败:", error);
-      }
-    }
-    /**
-     * 阻止默认事件
-     */
-    preventDefault(e) {
-      e.preventDefault();
-    }
-    /**
-     * 处理弹窗滚动穿透
-     */
-    handleModalScroll(show, modalElement) {
-      if (show) {
-        this.lockScroll();
-        if (modalElement) {
-          modalElement.style.overflow = "auto";
-          modalElement.style.maxHeight = "100vh";
-        }
-      } else {
-        this.unlockScroll();
-      }
-    }
-    /**
-     * 处理聊天窗口滚动穿透
-     */
-    handleChatScroll(show, chatElement) {
-      if (show) {
-        this.forceLockScroll();
-        if (chatElement) {
-          chatElement.style.overflow = "auto";
-          chatElement.style.maxHeight = "100vh";
-          chatElement.style.position = "fixed";
-          chatElement.style.top = "0";
-          chatElement.style.left = "0";
-          chatElement.style.width = "100%";
-          chatElement.style.height = "100%";
-          chatElement.style.zIndex = "9999";
-        }
-      } else {
-        this.forceUnlockScroll();
-      }
-    }
-    /**
-     * 处理页面切换时的滚动
-     */
-    handlePageScroll(pageName, show) {
-      if (show) {
-        this.lockScroll();
-        formatAppLog("log", "at utils/scroll-control.js:188", `页面 ${pageName} 滚动已锁定`);
-      } else {
-        this.unlockScroll();
-        formatAppLog("log", "at utils/scroll-control.js:191", `页面 ${pageName} 滚动已解锁`);
-      }
-    }
-    /**
-     * 重置滚动控制
-     */
-    reset() {
-      this.forceUnlockScroll();
-      this.isLocked = false;
-      this.originalOverflow = "";
-      this.originalPosition = "";
-      this.originalTop = "";
+    handlePageUnload() {
+      this.forceUnlock();
     }
   }
   const scrollControl = new ScrollControl();
-  const _sfc_main$3 = {
+  if (typeof document !== "undefined") {
+    document.addEventListener("visibilitychange", () => {
+      scrollControl.handleVisibilityChange();
+    });
+    window.addEventListener("beforeunload", () => {
+      scrollControl.handlePageUnload();
+    });
+    window.addEventListener("pagehide", () => {
+      scrollControl.handlePageUnload();
+    });
+  }
+  const _sfc_main$6 = {
     name: "AIWealthManager",
     mixins: [themeMixin],
     data() {
@@ -30506,10 +30920,10 @@ ${JSON.stringify(marketConditions, null, 2)}
           this.availableUsers = [
             {
               id: "u001",
-              username: "张小明",
-              realName: "张小明",
-              phone: "13999999999",
-              balance: 15e4,
+              username: "李华",
+              realName: "李华",
+              phone: "13888888888",
+              balance: 28e4,
               avatar: "/static/wealth/useravatar.jpg"
             }
           ];
@@ -30703,29 +31117,119 @@ ${this.hasFullAccess ? "✅ 已授予完整访问权限" : "❌ 未授予完整�
       async getSmartAdvice() {
         try {
           this.isLoading = true;
-          const advice = await projectDataAnalyzer.generateSmartAdvice();
-          if (advice.success) {
-            this.smartAdvice = advice.advice;
-            uni.showModal({
-              title: "智能投资建议",
-              content: advice.advice,
-              showCancel: false
-            });
-          } else {
-            uni.showToast({
-              title: "获取建议失败",
-              icon: "error"
-            });
-          }
+          const userAnalysis = this.analyzeUserFinancialStatus();
+          const marketAnalysis = await this.getMarketTrendAnalysis();
+          const personalizedAdvice = this.generatePersonalizedAdvice(userAnalysis, marketAnalysis);
+          this.showAdviceModal(personalizedAdvice);
         } catch (error) {
-          formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:759", "获取智能建议失败:", error);
+          formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:757", "获取智能建议失败:", error);
           uni.showToast({
-            title: "网络错误",
-            icon: "error"
+            title: "网络错误，请重试",
+            icon: "none"
           });
         } finally {
           this.isLoading = false;
         }
+      },
+      analyzeUserFinancialStatus() {
+        const totalAssets = this.userWealth.totalAssets || 28e4;
+        const monthlyIncome = 15e3;
+        const monthlyExpenses = 8e3;
+        const emergencyFund = 5e4;
+        return {
+          totalAssets,
+          monthlyIncome,
+          monthlyExpenses,
+          emergencyFund,
+          savingsRate: ((monthlyIncome - monthlyExpenses) / monthlyIncome * 100).toFixed(1),
+          debtToIncomeRatio: 0.3,
+          // 模拟负债收入比
+          riskCapacity: this.calculateRiskCapacity(totalAssets, monthlyIncome),
+          liquidityRatio: (emergencyFund / monthlyExpenses).toFixed(1)
+        };
+      },
+      calculateRiskCapacity(assets, income) {
+        if (assets > 5e5 && income > 2e4)
+          return "high";
+        if (assets > 2e5 && income > 1e4)
+          return "medium";
+        return "low";
+      },
+      async getMarketTrendAnalysis() {
+        return {
+          marketTrend: "bullish",
+          volatility: "medium",
+          interestRate: 3.5,
+          inflationRate: 2.1,
+          recommendedAllocation: {
+            stocks: 25,
+            bonds: 35,
+            cash: 25,
+            alternatives: 15
+          }
+        };
+      },
+      generatePersonalizedAdvice(userAnalysis, marketAnalysis) {
+        const advice = {
+          title: "个性化财富建议",
+          summary: "",
+          recommendations: [],
+          riskAssessment: "",
+          nextSteps: []
+        };
+        if (userAnalysis.savingsRate < 20) {
+          advice.recommendations.push({
+            type: "savings",
+            title: "提高储蓄率",
+            description: `当前储蓄率${userAnalysis.savingsRate}%，建议提升至20%以上`,
+            priority: "high",
+            action: "制定预算计划，减少非必要支出"
+          });
+        }
+        if (userAnalysis.liquidityRatio < 6) {
+          advice.recommendations.push({
+            type: "emergency",
+            title: "建立应急基金",
+            description: `建议储备6个月的生活费用作为应急基金`,
+            priority: "high",
+            action: "将部分资金转入货币基金"
+          });
+        }
+        if (userAnalysis.riskCapacity === "high") {
+          advice.recommendations.push({
+            type: "investment",
+            title: "优化投资组合",
+            description: "基于您的风险承受能力，建议增加股票类资产配置",
+            priority: "medium",
+            action: "考虑定投指数基金"
+          });
+        }
+        if (marketAnalysis.marketTrend === "bullish") {
+          advice.recommendations.push({
+            type: "market",
+            title: "把握市场机会",
+            description: "当前市场趋势向好，适合适度增加权益类投资",
+            priority: "medium",
+            action: "关注优质成长股和指数基金"
+          });
+        }
+        advice.summary = `基于您的财务状况分析，我们为您提供了${advice.recommendations.length}项个性化建议`;
+        advice.riskAssessment = `您的风险承受能力为${userAnalysis.riskCapacity}，建议采用稳健型投资策略`;
+        advice.nextSteps = ["制定详细投资计划", "设置自动定投", "定期评估投资表现"];
+        return advice;
+      },
+      showAdviceModal(advice) {
+        const adviceData = {
+          title: advice.title,
+          summary: advice.summary,
+          recommendations: advice.recommendations,
+          riskAssessment: advice.riskAssessment,
+          nextSteps: advice.nextSteps
+        };
+        uni.setStorageSync("currentAdvice", adviceData);
+        uni.navigateTo({
+          url: "/pages/wealth/advice-detail"
+        });
       },
       /**
        * 生成财务报告
@@ -30747,7 +31251,7 @@ ${this.hasFullAccess ? "✅ 已授予完整访问权限" : "❌ 未授予完整�
             });
           }
         } catch (error) {
-          formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:790", "生成财务报告失败:", error);
+          formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:906", "生成财务报告失败:", error);
           uni.showToast({
             title: "网络错误",
             icon: "error"
@@ -30784,7 +31288,7 @@ ${this.hasFullAccess ? "✅ 已授予完整访问权限" : "❌ 未授予完整�
             });
           }
         } catch (error) {
-          formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:829", "风险评估失败:", error);
+          formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:945", "风险评估失败:", error);
           uni.showToast({
             title: "网络错误",
             icon: "error"
@@ -30814,7 +31318,7 @@ ${this.hasFullAccess ? "✅ 已授予完整访问权限" : "❌ 未授予完整�
             });
           }
         } catch (error) {
-          formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:865", "执行AI建议失败:", error);
+          formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:981", "执行AI建议失败:", error);
           uni.showToast({
             title: "执行失败",
             icon: "error"
@@ -30843,7 +31347,7 @@ ${this.hasFullAccess ? "✅ 已授予完整访问权限" : "❌ 未授予完整�
             });
           }
         } catch (error) {
-          formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:899", "数据操作失败:", error);
+          formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:1015", "数据操作失败:", error);
           uni.showToast({
             title: "操作失败",
             icon: "error"
@@ -30905,7 +31409,7 @@ ${this.hasFullAccess ? "✅ 已授予完整访问权限" : "❌ 未授予完整�
             });
           }
         } catch (error) {
-          formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:970", "AI对话失败:", error);
+          formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:1086", "AI对话失败:", error);
           const fallbackResponse = this.generateAIResponse(userMessage);
           this.chatMessages.push({
             type: "ai",
@@ -31001,16 +31505,39 @@ ${this.hasFullAccess ? "✅ 已授予完整访问权限" : "❌ 未授予完整�
       autoRebalance() {
         uni.showModal({
           title: "一键调仓",
-          content: "系统将根据您的风险偏好自动调整资产配置，是否继续？",
+          content: "系统将根据您的风险偏好和市场情况自动调整资产配置，确定继续吗？",
           success: (res) => {
             if (res.confirm) {
-              uni.showToast({
-                title: "调仓指令已发送",
-                icon: "success"
-              });
+              this.executeAutoRebalance();
             }
           }
         });
+      },
+      executeAutoRebalance() {
+        uni.showLoading({ title: "正在分析市场..." });
+        setTimeout(() => {
+          uni.hideLoading();
+          uni.showLoading({ title: "正在调仓..." });
+          setTimeout(() => {
+            uni.hideLoading();
+            this.allocationData = [
+              { name: "现金类", percent: 25, color: "#4CAF50" },
+              { name: "债券类", percent: 35, color: "#2196F3" },
+              { name: "股票类", percent: 25, color: "#FF9800" },
+              { name: "另类投资", percent: 15, color: "#9C27B0" }
+            ];
+            uni.showModal({
+              title: "调仓完成",
+              content: "资产配置已根据市场情况优化调整，预期年化收益率提升至8.5%",
+              showCancel: false,
+              success: () => {
+                uni.navigateTo({
+                  url: "/pages/wealth/asset-allocation-detail"
+                });
+              }
+            });
+          }, 2e3);
+        }, 1500);
       },
       addNewGoal() {
         uni.navigateTo({
@@ -31037,8 +31564,35 @@ ${this.hasFullAccess ? "✅ 已授予完整访问权限" : "❌ 未授予完整�
         });
       },
       contactAdvisor() {
-        uni.navigateTo({
-          url: "/pages/wealth/advisor-chat"
+        uni.showModal({
+          title: "联系客户经理",
+          content: "是否拨打客户经理电话：15903724152？",
+          confirmText: "拨打",
+          cancelText: "取消",
+          success: (res) => {
+            if (res.confirm) {
+              uni.makePhoneCall({
+                phoneNumber: "15903724152",
+                success: () => {
+                  formatAppLog("log", "at pages/wealth/ai-wealth-manager.vue:1266", "拨打电话成功");
+                  uni.showToast({
+                    title: "正在拨打电话...",
+                    icon: "success"
+                  });
+                },
+                fail: (err) => {
+                  formatAppLog("error", "at pages/wealth/ai-wealth-manager.vue:1273", "拨打电话失败:", err);
+                  uni.showToast({
+                    title: "拨打电话失败",
+                    icon: "none"
+                  });
+                  uni.navigateTo({
+                    url: "/pages/wealth/advisor-chat"
+                  });
+                }
+              });
+            }
+          }
         });
       },
       scheduleMeeting() {
@@ -31048,7 +31602,7 @@ ${this.hasFullAccess ? "✅ 已授予完整访问权限" : "❌ 未授予完整�
       }
     }
   };
-  function _sfc_render$2(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$5(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock(
       "view",
       {
@@ -31834,216 +32388,815 @@ ${this.hasFullAccess ? "✅ 已授予完整访问权限" : "❌ 未授予完整�
       /* CLASS, STYLE */
     );
   }
-  const PagesWealthAiWealthManager = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["render", _sfc_render$2], ["__scopeId", "data-v-762ab66e"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/ai-wealth-manager.vue"]]);
-  const _sfc_main$2 = {
-    name: "AssetAllocationDetail",
-    mixins: [themeMixin],
+  const PagesWealthAiWealthManager = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["render", _sfc_render$5], ["__scopeId", "data-v-762ab66e"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/ai-wealth-manager.vue"]]);
+  const _sfc_main$5 = {
+    name: "MeetingSchedule",
     data() {
       return {
-        riskProfile: "平衡型",
-        riskLevel: "中等",
-        riskLevelClass: "medium",
-        totalAssets: 125689.23,
-        expectedReturn: 6.8,
-        maxDrawdown: 8.5,
-        sharpeRatio: 1.2,
-        annualReturn: 7.2,
-        volatility: 12.5,
-        historicalReturn: 8.6,
-        allocationDetails: [
+        advisorInfo: {
+          name: "张经理",
+          title: "高级理财顾问",
+          avatar: "/static/wealth/advisor-avatar.jpg",
+          rating: 4.8,
+          experience: "8年",
+          clients: "500+",
+          successRate: 95
+        },
+        selectedDate: "",
+        selectedTime: "",
+        selectedLocation: "",
+        selectedTopics: [],
+        remark: "",
+        showDateModal: false,
+        showTimeModal: false,
+        locationOptions: [
           {
-            name: "现金及货币基金",
-            category: "现金类",
-            icon: "💰",
-            color: "#4CAF50",
-            currentPercent: 30,
-            targetPercent: 25,
-            currentAmount: 37706.77,
-            deviation: 5,
-            expectedReturn: 2.5,
-            recommendation: "建议减少5%现金配置，转入债券类产品"
+            id: "office",
+            name: "银行营业厅",
+            address: "北京市朝阳区建国门外大街1号",
+            icon: "🏦"
           },
           {
-            name: "债券基金",
-            category: "债券类",
-            icon: "🏦",
-            color: "#2196F3",
-            currentPercent: 35,
-            targetPercent: 40,
-            currentAmount: 43991.23,
-            deviation: -5,
-            expectedReturn: 4.2,
-            recommendation: "建议增加5%债券配置，提高收益稳定性"
+            id: "online",
+            name: "在线视频",
+            address: "腾讯会议/钉钉视频",
+            icon: "💻"
           },
           {
-            name: "股票基金",
-            category: "股票类",
-            icon: "📈",
-            color: "#FF9800",
-            currentPercent: 25,
-            targetPercent: 25,
-            currentAmount: 31422.31,
-            deviation: 0,
-            expectedReturn: 8.5,
-            recommendation: "当前配置合理，建议保持"
-          },
-          {
-            name: "另类投资",
-            category: "另类投资",
-            icon: "💎",
-            color: "#9C27B0",
-            currentPercent: 10,
-            targetPercent: 10,
-            currentAmount: 12568.92,
-            deviation: 0,
-            expectedReturn: 6.8,
-            recommendation: "当前配置合理，建议保持"
+            id: "client",
+            name: "客户指定地点",
+            address: "您方便的地点",
+            icon: "📍"
           }
         ],
-        rebalanceSuggestions: [
-          {
-            priority: "high",
-            priorityText: "高优先级",
-            title: "优化现金配置",
-            description: "当前现金配置过高，建议将部分资金转入债券基金，提高整体收益",
-            operation: "减仓现金，增仓债券",
-            amount: 6284.46,
-            expectedReturn: 1.7
-          },
-          {
-            priority: "medium",
-            priorityText: "中优先级",
-            title: "平衡风险收益",
-            description: "建议微调股票和债券比例，在控制风险的同时提升收益潜力",
-            operation: "微调股债比例",
-            amount: 2513.78,
-            expectedReturn: 0.8
-          }
+        topicOptions: [
+          { id: "investment", name: "投资理财规划" },
+          { id: "insurance", name: "保险配置建议" },
+          { id: "retirement", name: "退休养老规划" },
+          { id: "education", name: "子女教育基金" },
+          { id: "tax", name: "税务优化策略" },
+          { id: "estate", name: "财富传承规划" },
+          { id: "other", name: "其他咨询" }
+        ],
+        availableDates: [],
+        availableTimes: [
+          { value: "09:00", label: "09:00-10:00" },
+          { value: "10:00", label: "10:00-11:00" },
+          { value: "11:00", label: "11:00-12:00" },
+          { value: "14:00", label: "14:00-15:00" },
+          { value: "15:00", label: "15:00-16:00" },
+          { value: "16:00", label: "16:00-17:00" }
         ]
       };
     },
+    computed: {
+      canSubmit() {
+        return this.selectedDate && this.selectedTime && this.selectedLocation && this.selectedTopics.length > 0;
+      }
+    },
+    onLoad() {
+      this.generateAvailableDates();
+    },
     methods: {
       goBack() {
-        uni.navigateBack({
-          delta: 1
-        });
+        uni.navigateBack();
       },
-      formatNumber(num) {
-        return num.toLocaleString("zh-CN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      generateAvailableDates() {
+        const dates = [];
+        const today = /* @__PURE__ */ new Date();
+        const weekDays = ["日", "一", "二", "三", "四", "五", "六"];
+        for (let i = 1; i <= 14; i++) {
+          const date = new Date(today);
+          date.setDate(today.getDate() + i);
+          if (date.getDay() !== 0 && date.getDay() !== 6) {
+            dates.push({
+              value: this.formatDate(date),
+              day: date.getDate(),
+              week: weekDays[date.getDay()]
+            });
+          }
+        }
+        this.availableDates = dates;
       },
-      viewDetails(item) {
+      formatDate(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
+      },
+      showDatePicker() {
+        formatAppLog("log", "at pages/wealth/meeting-schedule.vue:263", "showDatePicker 被调用");
+        this.showDateModal = true;
+      },
+      closeDatePicker() {
+        this.showDateModal = false;
+      },
+      selectDate(date) {
+        this.selectedDate = date;
+        this.closeDatePicker();
+      },
+      showTimePicker() {
+        formatAppLog("log", "at pages/wealth/meeting-schedule.vue:277", "showTimePicker 被调用");
+        this.showTimeModal = true;
+      },
+      closeTimePicker() {
+        this.showTimeModal = false;
+      },
+      selectTime(time) {
+        this.selectedTime = time;
+        this.closeTimePicker();
+      },
+      selectLocation(locationId) {
+        formatAppLog("log", "at pages/wealth/meeting-schedule.vue:291", "selectLocation 被调用:", locationId);
+        this.selectedLocation = locationId;
+      },
+      toggleTopic(topicId) {
+        const index = this.selectedTopics.indexOf(topicId);
+        if (index > -1) {
+          this.selectedTopics.splice(index, 1);
+        } else {
+          this.selectedTopics.push(topicId);
+        }
+      },
+      submitSchedule() {
+        if (!this.canSubmit) {
+          uni.showToast({
+            title: "请完善预约信息",
+            icon: "none"
+          });
+          return;
+        }
+        const scheduleData = {
+          advisor: this.advisorInfo.name,
+          date: this.selectedDate,
+          time: this.selectedTime,
+          location: this.locationOptions.find((l) => l.id === this.selectedLocation),
+          topics: this.selectedTopics.map(
+            (id) => this.topicOptions.find((t) => t.id === id).name
+          ),
+          remark: this.remark
+        };
+        const locationName = scheduleData.location.name;
+        const topicsText = scheduleData.topics.join("、");
         uni.showModal({
-          title: item.name,
-          content: `类别：${item.category}
-当前配置：${item.currentPercent}%
-目标配置：${item.targetPercent}%
-预期收益：${item.expectedReturn}%`,
-          showCancel: false
-        });
-      },
-      executeSuggestion(suggestion) {
-        uni.showModal({
-          title: "执行调仓建议",
-          content: suggestion.description,
+          title: "确认预约信息",
+          content: `客户经理：${scheduleData.advisor}
+面谈时间：${scheduleData.date} ${scheduleData.time}
+面谈地点：${locationName}
+面谈主题：${topicsText}`,
+          confirmText: "确认预约",
+          cancelText: "修改",
           success: (res) => {
             if (res.confirm) {
-              uni.showToast({
-                title: "调仓指令已发送",
-                icon: "success"
-              });
+              this.submitToServer(scheduleData);
             }
           }
         });
       },
-      viewAnalysis(suggestion) {
-        uni.navigateTo({
-          url: "/pages/wealth/allocation-analysis"
+      async submitToServer(scheduleData) {
+        try {
+          uni.showLoading({
+            title: "提交中..."
+          });
+          await new Promise((resolve) => setTimeout(resolve, 2e3));
+          const schedules = uni.getStorageSync("meetingSchedules") || [];
+          schedules.push({
+            id: Date.now(),
+            ...scheduleData,
+            status: "pending",
+            createTime: (/* @__PURE__ */ new Date()).toISOString()
+          });
+          uni.setStorageSync("meetingSchedules", schedules);
+          uni.hideLoading();
+          uni.showModal({
+            title: "预约成功",
+            content: "您的面谈预约已提交，客户经理将在24小时内与您确认具体安排。",
+            showCancel: false,
+            confirmText: "确定",
+            success: () => {
+              uni.navigateBack();
+            }
+          });
+        } catch (error) {
+          uni.hideLoading();
+          formatAppLog("error", "at pages/wealth/meeting-schedule.vue:374", "提交预约失败:", error);
+          uni.showToast({
+            title: "提交失败，请重试",
+            icon: "none"
+          });
+        }
+      }
+    }
+  };
+  function _sfc_render$4(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("view", { class: "meeting-schedule-page" }, [
+      vue.createCommentVNode(" 顶部导航 "),
+      vue.createElementVNode("view", { class: "nav-bar" }, [
+        vue.createElementVNode("view", { class: "nav-left" }, [
+          vue.createElementVNode("button", {
+            class: "back-btn",
+            onClick: _cache[0] || (_cache[0] = (...args) => $options.goBack && $options.goBack(...args))
+          }, [
+            vue.createElementVNode("text", { class: "back-icon" }, "←")
+          ]),
+          vue.createElementVNode("text", { class: "nav-title" }, "预约面谈")
+        ])
+      ]),
+      vue.createCommentVNode(" 客户经理信息 "),
+      vue.createElementVNode("view", { class: "advisor-info-card" }, [
+        vue.createElementVNode("view", { class: "advisor-header" }, [
+          vue.createElementVNode("image", {
+            class: "advisor-avatar",
+            src: $data.advisorInfo.avatar,
+            mode: "aspectFill"
+          }, null, 8, ["src"]),
+          vue.createElementVNode("view", { class: "advisor-details" }, [
+            vue.createElementVNode(
+              "text",
+              { class: "advisor-name" },
+              vue.toDisplayString($data.advisorInfo.name),
+              1
+              /* TEXT */
+            ),
+            vue.createElementVNode(
+              "text",
+              { class: "advisor-title" },
+              vue.toDisplayString($data.advisorInfo.title),
+              1
+              /* TEXT */
+            ),
+            vue.createElementVNode("view", { class: "advisor-rating" }, [
+              vue.createElementVNode("text", { class: "rating-stars" }, "★★★★★"),
+              vue.createElementVNode(
+                "text",
+                { class: "rating-text" },
+                vue.toDisplayString($data.advisorInfo.rating) + "/5.0",
+                1
+                /* TEXT */
+              )
+            ])
+          ])
+        ]),
+        vue.createElementVNode("view", { class: "advisor-stats" }, [
+          vue.createElementVNode("view", { class: "stat-item" }, [
+            vue.createElementVNode(
+              "text",
+              { class: "stat-value" },
+              vue.toDisplayString($data.advisorInfo.experience),
+              1
+              /* TEXT */
+            ),
+            vue.createElementVNode("text", { class: "stat-label" }, "从业经验")
+          ]),
+          vue.createElementVNode("view", { class: "stat-item" }, [
+            vue.createElementVNode(
+              "text",
+              { class: "stat-value" },
+              vue.toDisplayString($data.advisorInfo.clients),
+              1
+              /* TEXT */
+            ),
+            vue.createElementVNode("text", { class: "stat-label" }, "服务客户")
+          ]),
+          vue.createElementVNode("view", { class: "stat-item" }, [
+            vue.createElementVNode(
+              "text",
+              { class: "stat-value" },
+              vue.toDisplayString($data.advisorInfo.successRate) + "%",
+              1
+              /* TEXT */
+            ),
+            vue.createElementVNode("text", { class: "stat-label" }, "成功率")
+          ])
+        ])
+      ]),
+      vue.createCommentVNode(" 预约表单 "),
+      vue.createElementVNode("view", { class: "schedule-form" }, [
+        vue.createElementVNode("view", { class: "form-section" }, [
+          vue.createElementVNode("text", { class: "section-title" }, "选择面谈时间"),
+          vue.createElementVNode("view", { class: "time-selector" }, [
+            vue.createElementVNode("view", {
+              class: "date-picker",
+              onClick: _cache[1] || (_cache[1] = (...args) => $options.showDatePicker && $options.showDatePicker(...args))
+            }, [
+              vue.createElementVNode("text", { class: "picker-label" }, "日期"),
+              vue.createElementVNode(
+                "text",
+                { class: "picker-value" },
+                vue.toDisplayString($data.selectedDate || "请选择日期"),
+                1
+                /* TEXT */
+              ),
+              vue.createElementVNode("text", { class: "picker-arrow" }, "▼")
+            ]),
+            vue.createElementVNode("view", {
+              class: "time-picker",
+              onClick: _cache[2] || (_cache[2] = (...args) => $options.showTimePicker && $options.showTimePicker(...args))
+            }, [
+              vue.createElementVNode("text", { class: "picker-label" }, "时间"),
+              vue.createElementVNode(
+                "text",
+                { class: "picker-value" },
+                vue.toDisplayString($data.selectedTime || "请选择时间"),
+                1
+                /* TEXT */
+              ),
+              vue.createElementVNode("text", { class: "picker-arrow" }, "▼")
+            ])
+          ])
+        ]),
+        vue.createElementVNode("view", { class: "form-section" }, [
+          vue.createElementVNode("text", { class: "section-title" }, "选择面谈地点"),
+          vue.createElementVNode("view", { class: "location-options" }, [
+            (vue.openBlock(true), vue.createElementBlock(
+              vue.Fragment,
+              null,
+              vue.renderList($data.locationOptions, (location) => {
+                return vue.openBlock(), vue.createElementBlock("view", {
+                  key: location.id,
+                  class: vue.normalizeClass(["location-option", { active: $data.selectedLocation === location.id }]),
+                  onClick: ($event) => $options.selectLocation(location.id)
+                }, [
+                  vue.createElementVNode(
+                    "view",
+                    { class: "location-icon" },
+                    vue.toDisplayString(location.icon),
+                    1
+                    /* TEXT */
+                  ),
+                  vue.createElementVNode("view", { class: "location-info" }, [
+                    vue.createElementVNode(
+                      "text",
+                      { class: "location-name" },
+                      vue.toDisplayString(location.name),
+                      1
+                      /* TEXT */
+                    ),
+                    vue.createElementVNode(
+                      "text",
+                      { class: "location-address" },
+                      vue.toDisplayString(location.address),
+                      1
+                      /* TEXT */
+                    )
+                  ]),
+                  $data.selectedLocation === location.id ? (vue.openBlock(), vue.createElementBlock("view", {
+                    key: 0,
+                    class: "location-status"
+                  }, "✓")) : vue.createCommentVNode("v-if", true)
+                ], 10, ["onClick"]);
+              }),
+              128
+              /* KEYED_FRAGMENT */
+            ))
+          ])
+        ]),
+        vue.createElementVNode("view", { class: "form-section" }, [
+          vue.createElementVNode("text", { class: "section-title" }, "面谈主题"),
+          vue.createElementVNode("view", { class: "topic-options" }, [
+            (vue.openBlock(true), vue.createElementBlock(
+              vue.Fragment,
+              null,
+              vue.renderList($data.topicOptions, (topic) => {
+                return vue.openBlock(), vue.createElementBlock("view", {
+                  key: topic.id,
+                  class: vue.normalizeClass(["topic-option", { active: $data.selectedTopics.includes(topic.id) }]),
+                  onClick: ($event) => $options.toggleTopic(topic.id)
+                }, [
+                  vue.createElementVNode(
+                    "text",
+                    { class: "topic-text" },
+                    vue.toDisplayString(topic.name),
+                    1
+                    /* TEXT */
+                  )
+                ], 10, ["onClick"]);
+              }),
+              128
+              /* KEYED_FRAGMENT */
+            ))
+          ])
+        ]),
+        vue.createElementVNode("view", { class: "form-section" }, [
+          vue.createElementVNode("text", { class: "section-title" }, "备注信息"),
+          vue.withDirectives(vue.createElementVNode(
+            "textarea",
+            {
+              class: "remark-input",
+              "onUpdate:modelValue": _cache[3] || (_cache[3] = ($event) => $data.remark = $event),
+              placeholder: "请简要描述您的需求或问题...",
+              maxlength: "200"
+            },
+            null,
+            512
+            /* NEED_PATCH */
+          ), [
+            [vue.vModelText, $data.remark]
+          ]),
+          vue.createElementVNode(
+            "text",
+            { class: "char-count" },
+            vue.toDisplayString($data.remark.length) + "/200",
+            1
+            /* TEXT */
+          )
+        ])
+      ]),
+      vue.createCommentVNode(" 底部操作 "),
+      vue.createElementVNode("view", { class: "bottom-actions" }, [
+        vue.createElementVNode("button", {
+          class: "submit-btn",
+          onClick: _cache[4] || (_cache[4] = (...args) => $options.submitSchedule && $options.submitSchedule(...args)),
+          disabled: !$options.canSubmit
+        }, " 确认预约 ", 8, ["disabled"])
+      ]),
+      vue.createCommentVNode(" 日期选择器 "),
+      $data.showDateModal ? (vue.openBlock(), vue.createElementBlock("view", {
+        key: 0,
+        class: "date-picker-modal",
+        onClick: _cache[7] || (_cache[7] = (...args) => $options.closeDatePicker && $options.closeDatePicker(...args))
+      }, [
+        vue.createElementVNode("view", {
+          class: "modal-content",
+          onClick: _cache[6] || (_cache[6] = vue.withModifiers(() => {
+          }, ["stop"]))
+        }, [
+          vue.createElementVNode("view", { class: "modal-header" }, [
+            vue.createElementVNode("text", { class: "modal-title" }, "选择日期"),
+            vue.createElementVNode("button", {
+              class: "close-btn",
+              onClick: _cache[5] || (_cache[5] = (...args) => $options.closeDatePicker && $options.closeDatePicker(...args))
+            }, "×")
+          ]),
+          vue.createElementVNode("view", { class: "date-grid" }, [
+            (vue.openBlock(true), vue.createElementBlock(
+              vue.Fragment,
+              null,
+              vue.renderList($data.availableDates, (date) => {
+                return vue.openBlock(), vue.createElementBlock("view", {
+                  key: date.value,
+                  class: vue.normalizeClass(["date-item", { active: $data.selectedDate === date.value }]),
+                  onClick: ($event) => $options.selectDate(date.value)
+                }, [
+                  vue.createElementVNode(
+                    "text",
+                    { class: "date-day" },
+                    vue.toDisplayString(date.day),
+                    1
+                    /* TEXT */
+                  ),
+                  vue.createElementVNode(
+                    "text",
+                    { class: "date-week" },
+                    vue.toDisplayString(date.week),
+                    1
+                    /* TEXT */
+                  )
+                ], 10, ["onClick"]);
+              }),
+              128
+              /* KEYED_FRAGMENT */
+            ))
+          ])
+        ])
+      ])) : vue.createCommentVNode("v-if", true),
+      vue.createCommentVNode(" 时间选择器 "),
+      $data.showTimeModal ? (vue.openBlock(), vue.createElementBlock("view", {
+        key: 1,
+        class: "time-picker-modal",
+        onClick: _cache[10] || (_cache[10] = (...args) => $options.closeTimePicker && $options.closeTimePicker(...args))
+      }, [
+        vue.createElementVNode("view", {
+          class: "modal-content",
+          onClick: _cache[9] || (_cache[9] = vue.withModifiers(() => {
+          }, ["stop"]))
+        }, [
+          vue.createElementVNode("view", { class: "modal-header" }, [
+            vue.createElementVNode("text", { class: "modal-title" }, "选择时间"),
+            vue.createElementVNode("button", {
+              class: "close-btn",
+              onClick: _cache[8] || (_cache[8] = (...args) => $options.closeTimePicker && $options.closeTimePicker(...args))
+            }, "×")
+          ]),
+          vue.createElementVNode("view", { class: "time-grid" }, [
+            (vue.openBlock(true), vue.createElementBlock(
+              vue.Fragment,
+              null,
+              vue.renderList($data.availableTimes, (time) => {
+                return vue.openBlock(), vue.createElementBlock("view", {
+                  key: time.value,
+                  class: vue.normalizeClass(["time-item", { active: $data.selectedTime === time.value }]),
+                  onClick: ($event) => $options.selectTime(time.value)
+                }, [
+                  vue.createElementVNode(
+                    "text",
+                    { class: "time-text" },
+                    vue.toDisplayString(time.label),
+                    1
+                    /* TEXT */
+                  )
+                ], 10, ["onClick"]);
+              }),
+              128
+              /* KEYED_FRAGMENT */
+            ))
+          ])
+        ])
+      ])) : vue.createCommentVNode("v-if", true)
+    ]);
+  }
+  const PagesWealthMeetingSchedule = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["render", _sfc_render$4], ["__scopeId", "data-v-7355c991"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/meeting-schedule.vue"]]);
+  const _sfc_main$4 = {
+    data() {
+      return {
+        totalAssets: 28e4,
+        changePercent: 3.2,
+        changeType: "positive",
+        selectedPeriod: "1M",
+        riskLevel: "medium",
+        riskScore: 6,
+        allocationData: [
+          {
+            name: "现金类",
+            percent: 30,
+            amount: 84e3,
+            color: "#4CAF50",
+            description: "货币基金、银行存款等低风险产品"
+          },
+          {
+            name: "债券类",
+            percent: 40,
+            amount: 112e3,
+            color: "#2196F3",
+            description: "国债、企业债、债券基金等"
+          },
+          {
+            name: "股票类",
+            percent: 20,
+            amount: 56e3,
+            color: "#FF9800",
+            description: "股票、股票型基金等"
+          },
+          {
+            name: "另类投资",
+            percent: 10,
+            amount: 28e3,
+            color: "#9C27B0",
+            description: "黄金、REITs、私募等"
+          }
+        ],
+        aiSuggestions: [
+          {
+            icon: "📈",
+            title: "增加股票配置",
+            priority: "high",
+            priorityText: "高优先级",
+            description: "基于当前市场环境，建议将股票配置从20%提升至25%，以获取更好的长期收益",
+            expectedReturn: "+2.3%",
+            color: "#FF9800"
+          },
+          {
+            icon: "🛡️",
+            title: "优化债券结构",
+            priority: "medium",
+            priorityText: "中优先级",
+            description: "建议增加短期债券配置，降低利率风险，提高流动性",
+            expectedReturn: "+0.8%",
+            color: "#2196F3"
+          },
+          {
+            icon: "💰",
+            title: "现金管理优化",
+            priority: "low",
+            priorityText: "低优先级",
+            description: "将部分现金转入货币基金，提高资金使用效率",
+            expectedReturn: "+0.5%",
+            color: "#4CAF50"
+          }
+        ],
+        riskFactors: [
+          { name: "市场风险", level: 70, color: "#FF5722" },
+          { name: "利率风险", level: 45, color: "#FF9800" },
+          { name: "信用风险", level: 30, color: "#4CAF50" },
+          { name: "流动性风险", level: 20, color: "#2196F3" }
+        ],
+        annualReturn: 8.5,
+        maxDrawdown: -5.2,
+        sharpeRatio: 1.2
+      };
+    },
+    computed: {
+      riskLevelText() {
+        const levels = {
+          low: "低风险",
+          medium: "中等风险",
+          high: "高风险"
+        };
+        return levels[this.riskLevel] || "中等风险";
+      }
+    },
+    onLoad() {
+      this.loadAllocationData();
+    },
+    methods: {
+      goBack() {
+        uni.navigateBack();
+      },
+      formatNumber(num) {
+        return Number(num).toLocaleString("zh-CN", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
         });
+      },
+      loadAllocationData() {
+        formatAppLog("log", "at pages/wealth/asset-allocation-detail.vue:246", "加载资产配置数据");
+      },
+      adjustAllocation(item) {
+        uni.showModal({
+          title: `调整${item.name}配置`,
+          content: `当前配置：${item.percent}%
+建议范围：${this.getAllocationRange(item.name)}`,
+          editable: true,
+          placeholderText: "请输入新的配置比例",
+          success: (res) => {
+            if (res.confirm && res.content) {
+              const newPercent = parseFloat(res.content);
+              if (newPercent >= 0 && newPercent <= 100) {
+                this.updateAllocation(item.name, newPercent);
+              } else {
+                uni.showToast({
+                  title: "请输入0-100之间的数值",
+                  icon: "none"
+                });
+              }
+            }
+          }
+        });
+      },
+      getAllocationRange(assetType) {
+        const ranges = {
+          "现金类": "10-30%",
+          "债券类": "30-50%",
+          "股票类": "15-35%",
+          "另类投资": "5-15%"
+        };
+        return ranges[assetType] || "5-20%";
+      },
+      updateAllocation(assetType, newPercent) {
+        const item = this.allocationData.find((item2) => item2.name === assetType);
+        if (item) {
+          item.percent = newPercent;
+          item.amount = this.totalAssets * newPercent / 100;
+          uni.showToast({
+            title: "配置已更新",
+            icon: "success"
+          });
+        }
+      },
+      applySuggestion(suggestion) {
+        uni.showModal({
+          title: "应用建议",
+          content: `确定要应用"${suggestion.title}"建议吗？
+预期收益：${suggestion.expectedReturn}`,
+          success: (res) => {
+            if (res.confirm) {
+              this.executeSuggestion(suggestion);
+            }
+          }
+        });
+      },
+      executeSuggestion(suggestion) {
+        uni.showLoading({ title: "正在应用建议..." });
+        setTimeout(() => {
+          uni.hideLoading();
+          uni.showToast({
+            title: "建议已应用",
+            icon: "success"
+          });
+          if (suggestion.title.includes("股票")) {
+            const stockItem = this.allocationData.find((item) => item.name === "股票类");
+            if (stockItem) {
+              stockItem.percent = 25;
+              stockItem.amount = this.totalAssets * 0.25;
+            }
+          }
+        }, 2e3);
+      },
+      selectPeriod(period) {
+        this.selectedPeriod = period;
+        this.loadPerformanceData(period);
+      },
+      loadPerformanceData(period) {
+        formatAppLog("log", "at pages/wealth/asset-allocation-detail.vue:334", `加载${period}表现数据`);
       },
       autoRebalance() {
         uni.showModal({
           title: "一键调仓",
-          content: "系统将根据您的风险偏好自动调整资产配置，是否继续？",
+          content: "系统将根据您的风险偏好和市场情况自动调整资产配置，确定继续吗？",
           success: (res) => {
             if (res.confirm) {
-              uni.showToast({
-                title: "调仓指令已发送",
-                icon: "success"
-              });
+              this.executeAutoRebalance();
             }
           }
         });
       },
-      manualAdjust() {
+      executeAutoRebalance() {
+        uni.showLoading({ title: "正在调仓..." });
+        setTimeout(() => {
+          uni.hideLoading();
+          uni.showToast({
+            title: "调仓完成",
+            icon: "success"
+          });
+          this.allocationData = [
+            { name: "现金类", percent: 25, amount: 7e4, color: "#4CAF50" },
+            { name: "债券类", percent: 35, amount: 98e3, color: "#2196F3" },
+            { name: "股票类", percent: 25, amount: 7e4, color: "#FF9800" },
+            { name: "另类投资", percent: 15, amount: 42e3, color: "#9C27B0" }
+          ];
+        }, 3e3);
+      },
+      customRebalance() {
         uni.navigateTo({
-          url: "/pages/wealth/manual-allocation"
+          url: "/pages/wealth/custom-rebalance"
         });
       },
       exportReport() {
-        uni.showToast({
-          title: "报告导出中...",
-          icon: "loading"
-        });
+        uni.showLoading({ title: "正在生成报告..." });
         setTimeout(() => {
+          uni.hideLoading();
           uni.showToast({
-            title: "报告已导出",
+            title: "报告已生成",
             icon: "success"
           });
         }, 2e3);
       }
     }
   };
-  function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
-    return vue.openBlock(), vue.createElementBlock(
-      "view",
-      {
-        class: vue.normalizeClass(["allocation-detail", _ctx.getThemeClass()]),
-        style: vue.normalizeStyle(_ctx.getThemeStyle())
-      },
-      [
-        vue.createCommentVNode(" 顶部背景 "),
-        vue.createElementVNode("view", { class: "header-bg" }),
-        vue.createCommentVNode(" 顶部导航 "),
-        vue.createElementVNode("view", { class: "top-nav" }, [
-          vue.createElementVNode("view", { class: "nav-content" }, [
-            vue.createElementVNode("button", {
-              class: "back-btn",
-              onClick: _cache[0] || (_cache[0] = (...args) => $options.goBack && $options.goBack(...args))
-            }, [
-              vue.createElementVNode("text", { class: "back-icon" }, "←")
-            ]),
-            vue.createElementVNode("view", { class: "nav-info" }, [
-              vue.createElementVNode("text", { class: "nav-title" }, "资产配置详情"),
-              vue.createElementVNode("text", { class: "nav-subtitle" }, "Asset Allocation Details")
-            ])
-          ])
-        ]),
-        vue.createCommentVNode(" 当前配置概览 "),
-        vue.createElementVNode("view", { class: "current-allocation theme-card" }, [
-          vue.createElementVNode("view", { class: "section-header" }, [
-            vue.createElementVNode("text", { class: "section-title" }, "当前资产配置"),
-            vue.createElementVNode(
-              "text",
-              { class: "section-subtitle" },
-              "基于您的风险偏好：" + vue.toDisplayString($data.riskProfile),
-              1
-              /* TEXT */
-            )
+  function _sfc_render$3(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("view", { class: "allocation-detail-page" }, [
+      vue.createCommentVNode(" 顶部导航 "),
+      vue.createElementVNode("view", { class: "nav-bar" }, [
+        vue.createElementVNode("view", { class: "nav-left" }, [
+          vue.createElementVNode("button", {
+            class: "back-btn",
+            onClick: _cache[0] || (_cache[0] = (...args) => $options.goBack && $options.goBack(...args))
+          }, [
+            vue.createElementVNode("text", { class: "back-icon" }, "←")
           ]),
-          vue.createElementVNode("view", { class: "allocation-overview" }, [
-            vue.createElementVNode("view", { class: "pie-chart-container" }, [
+          vue.createElementVNode("text", { class: "nav-title" }, "资产配置详情")
+        ])
+      ]),
+      vue.createCommentVNode(" 资产概览 "),
+      vue.createElementVNode("view", { class: "overview-section" }, [
+        vue.createElementVNode("view", { class: "total-assets" }, [
+          vue.createElementVNode("text", { class: "total-label" }, "总资产"),
+          vue.createElementVNode(
+            "text",
+            { class: "total-amount" },
+            "¥" + vue.toDisplayString($options.formatNumber($data.totalAssets)),
+            1
+            /* TEXT */
+          ),
+          vue.createElementVNode(
+            "view",
+            {
+              class: vue.normalizeClass(["change-info", $data.changeType])
+            },
+            [
               vue.createElementVNode(
-                "view",
-                {
-                  class: "pie-chart",
-                  ref: "pieChart"
-                },
-                null,
-                512
-                /* NEED_PATCH */
+                "text",
+                { class: "change-arrow" },
+                vue.toDisplayString($data.changeType === "positive" ? "↗" : "↘"),
+                1
+                /* TEXT */
               ),
+              vue.createElementVNode(
+                "text",
+                { class: "change-amount" },
+                vue.toDisplayString($data.changePercent) + "%",
+                1
+                /* TEXT */
+              )
+            ],
+            2
+            /* CLASS */
+          )
+        ])
+      ]),
+      vue.createCommentVNode(" 资产配置图表 "),
+      vue.createElementVNode("view", { class: "chart-section" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "资产配置分布"),
+        vue.createElementVNode("view", { class: "chart-container" }, [
+          vue.createElementVNode(
+            "view",
+            {
+              class: "pie-chart",
+              ref: "pieChart"
+            },
+            [
               vue.createElementVNode("view", { class: "chart-center" }, [
-                vue.createElementVNode("text", { class: "center-text" }, "总资产"),
+                vue.createElementVNode("text", { class: "center-label" }, "总资产"),
                 vue.createElementVNode(
                   "text",
                   { class: "center-amount" },
@@ -32052,188 +33205,50 @@ ${this.hasFullAccess ? "✅ 已授予完整访问权限" : "❌ 未授予完整�
                   /* TEXT */
                 )
               ])
-            ]),
-            vue.createElementVNode("view", { class: "allocation-stats" }, [
-              vue.createElementVNode("view", { class: "stat-item" }, [
-                vue.createElementVNode("text", { class: "stat-label" }, "风险等级"),
-                vue.createElementVNode(
-                  "text",
-                  {
-                    class: vue.normalizeClass(["stat-value", $data.riskLevelClass])
-                  },
-                  vue.toDisplayString($data.riskLevel),
-                  3
-                  /* TEXT, CLASS */
-                )
-              ]),
-              vue.createElementVNode("view", { class: "stat-item" }, [
-                vue.createElementVNode("text", { class: "stat-label" }, "预期年化收益"),
-                vue.createElementVNode(
-                  "text",
-                  { class: "stat-value" },
-                  vue.toDisplayString($data.expectedReturn) + "%",
-                  1
-                  /* TEXT */
-                )
-              ]),
-              vue.createElementVNode("view", { class: "stat-item" }, [
-                vue.createElementVNode("text", { class: "stat-label" }, "最大回撤"),
-                vue.createElementVNode(
-                  "text",
-                  { class: "stat-value" },
-                  vue.toDisplayString($data.maxDrawdown) + "%",
-                  1
-                  /* TEXT */
-                )
-              ]),
-              vue.createElementVNode("view", { class: "stat-item" }, [
-                vue.createElementVNode("text", { class: "stat-label" }, "夏普比率"),
-                vue.createElementVNode(
-                  "text",
-                  { class: "stat-value" },
-                  vue.toDisplayString($data.sharpeRatio),
-                  1
-                  /* TEXT */
-                )
-              ])
-            ])
-          ])
-        ]),
-        vue.createCommentVNode(" 详细配置列表 "),
-        vue.createElementVNode("view", { class: "allocation-breakdown theme-card" }, [
-          vue.createElementVNode("view", { class: "section-header" }, [
-            vue.createElementVNode("text", { class: "section-title" }, "详细配置"),
-            vue.createElementVNode("text", { class: "section-subtitle" }, "各类资产的具体配置情况")
-          ]),
-          vue.createElementVNode("view", { class: "breakdown-list" }, [
+            ],
+            512
+            /* NEED_PATCH */
+          ),
+          vue.createElementVNode("view", { class: "chart-legend" }, [
             (vue.openBlock(true), vue.createElementBlock(
               vue.Fragment,
               null,
-              vue.renderList($data.allocationDetails, (item, index) => {
+              vue.renderList($data.allocationData, (item, index) => {
                 return vue.openBlock(), vue.createElementBlock("view", {
-                  class: "breakdown-item",
+                  class: "legend-item",
                   key: index
                 }, [
-                  vue.createElementVNode("view", { class: "item-header" }, [
+                  vue.createElementVNode(
+                    "view",
+                    {
+                      class: "legend-color",
+                      style: vue.normalizeStyle({ backgroundColor: item.color })
+                    },
+                    null,
+                    4
+                    /* STYLE */
+                  ),
+                  vue.createElementVNode("view", { class: "legend-info" }, [
                     vue.createElementVNode(
-                      "view",
-                      {
-                        class: "item-icon",
-                        style: vue.normalizeStyle({ backgroundColor: item.color })
-                      },
-                      [
-                        vue.createElementVNode(
-                          "text",
-                          { class: "icon" },
-                          vue.toDisplayString(item.icon),
-                          1
-                          /* TEXT */
-                        )
-                      ],
-                      4
-                      /* STYLE */
+                      "text",
+                      { class: "legend-name" },
+                      vue.toDisplayString(item.name),
+                      1
+                      /* TEXT */
                     ),
-                    vue.createElementVNode("view", { class: "item-info" }, [
-                      vue.createElementVNode(
-                        "text",
-                        { class: "item-name" },
-                        vue.toDisplayString(item.name),
-                        1
-                        /* TEXT */
-                      ),
-                      vue.createElementVNode(
-                        "text",
-                        { class: "item-category" },
-                        vue.toDisplayString(item.category),
-                        1
-                        /* TEXT */
-                      )
-                    ]),
-                    vue.createElementVNode("view", { class: "item-actions" }, [
-                      vue.createElementVNode("button", {
-                        class: "action-btn",
-                        onClick: ($event) => $options.viewDetails(item)
-                      }, "详情", 8, ["onClick"])
-                    ])
+                    vue.createElementVNode(
+                      "text",
+                      { class: "legend-details" },
+                      vue.toDisplayString(item.percent) + "% · ¥" + vue.toDisplayString($options.formatNumber(item.amount)),
+                      1
+                      /* TEXT */
+                    )
                   ]),
-                  vue.createElementVNode("view", { class: "item-content" }, [
-                    vue.createElementVNode("view", { class: "allocation-bar" }, [
-                      vue.createElementVNode("view", { class: "bar-bg" }, [
-                        vue.createElementVNode(
-                          "view",
-                          {
-                            class: "bar-fill",
-                            style: vue.normalizeStyle({ width: item.currentPercent + "%", backgroundColor: item.color })
-                          },
-                          null,
-                          4
-                          /* STYLE */
-                        )
-                      ]),
-                      vue.createElementVNode(
-                        "text",
-                        { class: "bar-text" },
-                        vue.toDisplayString(item.currentPercent) + "%",
-                        1
-                        /* TEXT */
-                      )
-                    ]),
-                    vue.createElementVNode("view", { class: "allocation-details" }, [
-                      vue.createElementVNode("view", { class: "detail-row" }, [
-                        vue.createElementVNode("text", { class: "detail-label" }, "当前金额"),
-                        vue.createElementVNode(
-                          "text",
-                          { class: "detail-value" },
-                          "¥" + vue.toDisplayString($options.formatNumber(item.currentAmount)),
-                          1
-                          /* TEXT */
-                        )
-                      ]),
-                      vue.createElementVNode("view", { class: "detail-row" }, [
-                        vue.createElementVNode("text", { class: "detail-label" }, "目标配置"),
-                        vue.createElementVNode(
-                          "text",
-                          { class: "detail-value" },
-                          vue.toDisplayString(item.targetPercent) + "%",
-                          1
-                          /* TEXT */
-                        )
-                      ]),
-                      vue.createElementVNode("view", { class: "detail-row" }, [
-                        vue.createElementVNode("text", { class: "detail-label" }, "偏离度"),
-                        vue.createElementVNode(
-                          "text",
-                          {
-                            class: vue.normalizeClass(["detail-value", item.deviation > 0 ? "positive" : "negative"])
-                          },
-                          vue.toDisplayString(item.deviation > 0 ? "+" : "") + vue.toDisplayString(item.deviation) + "% ",
-                          3
-                          /* TEXT, CLASS */
-                        )
-                      ]),
-                      vue.createElementVNode("view", { class: "detail-row" }, [
-                        vue.createElementVNode("text", { class: "detail-label" }, "预期收益"),
-                        vue.createElementVNode(
-                          "text",
-                          { class: "detail-value" },
-                          vue.toDisplayString(item.expectedReturn) + "%",
-                          1
-                          /* TEXT */
-                        )
-                      ])
-                    ]),
-                    item.recommendation ? (vue.openBlock(), vue.createElementBlock("view", {
-                      key: 0,
-                      class: "item-recommendation"
-                    }, [
-                      vue.createElementVNode(
-                        "text",
-                        { class: "recommendation-text" },
-                        vue.toDisplayString(item.recommendation),
-                        1
-                        /* TEXT */
-                      )
-                    ])) : vue.createCommentVNode("v-if", true)
+                  vue.createElementVNode("view", { class: "legend-actions" }, [
+                    vue.createElementVNode("button", {
+                      class: "action-btn-small",
+                      onClick: ($event) => $options.adjustAllocation(item)
+                    }, "调整", 8, ["onClick"])
                   ])
                 ]);
               }),
@@ -32241,124 +33256,198 @@ ${this.hasFullAccess ? "✅ 已授予完整访问权限" : "❌ 未授予完整�
               /* KEYED_FRAGMENT */
             ))
           ])
-        ]),
-        vue.createCommentVNode(" 调仓建议 "),
-        vue.createElementVNode("view", { class: "rebalance-suggestions theme-card" }, [
-          vue.createElementVNode("view", { class: "section-header" }, [
-            vue.createElementVNode("text", { class: "section-title" }, "调仓建议"),
-            vue.createElementVNode("text", { class: "section-subtitle" }, "基于市场分析和风险模型")
-          ]),
-          vue.createElementVNode("view", { class: "suggestions-list" }, [
-            (vue.openBlock(true), vue.createElementBlock(
-              vue.Fragment,
-              null,
-              vue.renderList($data.rebalanceSuggestions, (suggestion, index) => {
-                return vue.openBlock(), vue.createElementBlock("view", {
-                  class: "suggestion-item",
-                  key: index
-                }, [
-                  vue.createElementVNode("view", { class: "suggestion-header" }, [
-                    vue.createElementVNode(
-                      "view",
-                      {
-                        class: vue.normalizeClass(["suggestion-priority", suggestion.priority])
-                      },
-                      [
-                        vue.createElementVNode(
-                          "text",
-                          { class: "priority-text" },
-                          vue.toDisplayString(suggestion.priorityText),
-                          1
-                          /* TEXT */
-                        )
-                      ],
-                      2
-                      /* CLASS */
-                    ),
+        ])
+      ]),
+      vue.createCommentVNode(" 智能建议 "),
+      vue.createElementVNode("view", { class: "suggestions-section" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "AI优化建议"),
+        vue.createElementVNode("view", { class: "suggestions-list" }, [
+          (vue.openBlock(true), vue.createElementBlock(
+            vue.Fragment,
+            null,
+            vue.renderList($data.aiSuggestions, (suggestion, index) => {
+              return vue.openBlock(), vue.createElementBlock("view", {
+                class: "suggestion-item",
+                key: index
+              }, [
+                vue.createElementVNode("view", { class: "suggestion-header" }, [
+                  vue.createElementVNode(
+                    "view",
+                    {
+                      class: "suggestion-icon",
+                      style: vue.normalizeStyle({ backgroundColor: suggestion.color })
+                    },
+                    [
+                      vue.createElementVNode(
+                        "text",
+                        { class: "icon" },
+                        vue.toDisplayString(suggestion.icon),
+                        1
+                        /* TEXT */
+                      )
+                    ],
+                    4
+                    /* STYLE */
+                  ),
+                  vue.createElementVNode("view", { class: "suggestion-info" }, [
                     vue.createElementVNode(
                       "text",
                       { class: "suggestion-title" },
                       vue.toDisplayString(suggestion.title),
                       1
                       /* TEXT */
-                    )
-                  ]),
-                  vue.createElementVNode("view", { class: "suggestion-content" }, [
+                    ),
                     vue.createElementVNode(
                       "text",
-                      { class: "suggestion-desc" },
-                      vue.toDisplayString(suggestion.description),
-                      1
-                      /* TEXT */
-                    ),
-                    vue.createElementVNode("view", { class: "suggestion-details" }, [
-                      vue.createElementVNode("view", { class: "detail-item" }, [
-                        vue.createElementVNode("text", { class: "detail-label" }, "操作类型"),
-                        vue.createElementVNode(
-                          "text",
-                          { class: "detail-value" },
-                          vue.toDisplayString(suggestion.operation),
-                          1
-                          /* TEXT */
-                        )
-                      ]),
-                      vue.createElementVNode("view", { class: "detail-item" }, [
-                        vue.createElementVNode("text", { class: "detail-label" }, "调整金额"),
-                        vue.createElementVNode(
-                          "text",
-                          { class: "detail-value" },
-                          "¥" + vue.toDisplayString($options.formatNumber(suggestion.amount)),
-                          1
-                          /* TEXT */
-                        )
-                      ]),
-                      vue.createElementVNode("view", { class: "detail-item" }, [
-                        vue.createElementVNode("text", { class: "detail-label" }, "预期收益"),
-                        vue.createElementVNode(
-                          "text",
-                          { class: "detail-value" },
-                          vue.toDisplayString(suggestion.expectedReturn) + "%",
-                          1
-                          /* TEXT */
-                        )
-                      ])
-                    ]),
-                    vue.createElementVNode("view", { class: "suggestion-actions" }, [
-                      vue.createElementVNode("button", {
-                        class: "suggestion-btn primary",
-                        onClick: ($event) => $options.executeSuggestion(suggestion)
-                      }, "执行建议", 8, ["onClick"]),
-                      vue.createElementVNode("button", {
-                        class: "suggestion-btn secondary",
-                        onClick: ($event) => $options.viewAnalysis(suggestion)
-                      }, "查看分析", 8, ["onClick"])
-                    ])
-                  ])
+                      {
+                        class: vue.normalizeClass(["suggestion-priority", suggestion.priority])
+                      },
+                      vue.toDisplayString(suggestion.priorityText),
+                      3
+                      /* TEXT, CLASS */
+                    )
+                  ]),
+                  vue.createElementVNode("button", {
+                    class: "apply-btn",
+                    onClick: ($event) => $options.applySuggestion(suggestion)
+                  }, "应用", 8, ["onClick"])
+                ]),
+                vue.createElementVNode(
+                  "text",
+                  { class: "suggestion-desc" },
+                  vue.toDisplayString(suggestion.description),
+                  1
+                  /* TEXT */
+                ),
+                vue.createElementVNode("view", { class: "suggestion-benefits" }, [
+                  vue.createElementVNode("text", { class: "benefit-label" }, "预期收益："),
+                  vue.createElementVNode(
+                    "text",
+                    { class: "benefit-value" },
+                    vue.toDisplayString(suggestion.expectedReturn),
+                    1
+                    /* TEXT */
+                  )
+                ])
+              ]);
+            }),
+            128
+            /* KEYED_FRAGMENT */
+          ))
+        ])
+      ]),
+      vue.createCommentVNode(" 风险评估 "),
+      vue.createElementVNode("view", { class: "risk-section" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "风险评估"),
+        vue.createElementVNode("view", { class: "risk-content" }, [
+          vue.createElementVNode("view", { class: "risk-level" }, [
+            vue.createElementVNode("text", { class: "risk-label" }, "当前风险等级"),
+            vue.createElementVNode(
+              "view",
+              {
+                class: vue.normalizeClass(["risk-indicator", $data.riskLevel])
+              },
+              [
+                vue.createElementVNode(
+                  "text",
+                  { class: "risk-text" },
+                  vue.toDisplayString($options.riskLevelText),
+                  1
+                  /* TEXT */
+                ),
+                vue.createElementVNode(
+                  "text",
+                  { class: "risk-score" },
+                  vue.toDisplayString($data.riskScore) + "/10",
+                  1
+                  /* TEXT */
+                )
+              ],
+              2
+              /* CLASS */
+            )
+          ]),
+          vue.createElementVNode("view", { class: "risk-factors" }, [
+            vue.createElementVNode("text", { class: "factors-title" }, "风险因素分析"),
+            (vue.openBlock(true), vue.createElementBlock(
+              vue.Fragment,
+              null,
+              vue.renderList($data.riskFactors, (factor, index) => {
+                return vue.openBlock(), vue.createElementBlock("view", {
+                  class: "factor-item",
+                  key: index
+                }, [
+                  vue.createElementVNode(
+                    "text",
+                    { class: "factor-name" },
+                    vue.toDisplayString(factor.name),
+                    1
+                    /* TEXT */
+                  ),
+                  vue.createElementVNode("view", { class: "factor-bar" }, [
+                    vue.createElementVNode(
+                      "view",
+                      {
+                        class: "factor-fill",
+                        style: vue.normalizeStyle({ width: factor.level + "%", backgroundColor: factor.color })
+                      },
+                      null,
+                      4
+                      /* STYLE */
+                    )
+                  ]),
+                  vue.createElementVNode(
+                    "text",
+                    { class: "factor-level" },
+                    vue.toDisplayString(factor.level) + "%",
+                    1
+                    /* TEXT */
+                  )
                 ]);
               }),
               128
               /* KEYED_FRAGMENT */
             ))
           ])
-        ]),
-        vue.createCommentVNode(" 历史表现 "),
-        vue.createElementVNode("view", { class: "historical-performance theme-card" }, [
-          vue.createElementVNode("view", { class: "section-header" }, [
-            vue.createElementVNode("text", { class: "section-title" }, "历史表现"),
-            vue.createElementVNode("text", { class: "section-subtitle" }, "过去12个月的配置表现")
-          ]),
-          vue.createElementVNode("view", { class: "performance-chart" }, [
-            vue.createElementVNode("view", { class: "chart-container" }, [
-              vue.createElementVNode("view", { class: "chart-placeholder" }, [
-                vue.createElementVNode("text", { class: "chart-text" }, "收益率曲线图"),
-                vue.createElementVNode(
-                  "text",
-                  { class: "chart-desc" },
-                  "过去12个月累计收益率：" + vue.toDisplayString($data.historicalReturn) + "%",
-                  1
-                  /* TEXT */
-                )
-              ])
+        ])
+      ]),
+      vue.createCommentVNode(" 历史表现 "),
+      vue.createElementVNode("view", { class: "performance-section" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "历史表现"),
+        vue.createElementVNode("view", { class: "performance-chart" }, [
+          vue.createElementVNode("view", { class: "chart-header" }, [
+            vue.createElementVNode("text", { class: "chart-title" }, "收益率走势"),
+            vue.createElementVNode("view", { class: "time-selector" }, [
+              vue.createElementVNode(
+                "button",
+                {
+                  class: vue.normalizeClass(["time-btn", { active: $data.selectedPeriod === "1M" }]),
+                  onClick: _cache[1] || (_cache[1] = ($event) => $options.selectPeriod("1M"))
+                },
+                "1月",
+                2
+                /* CLASS */
+              ),
+              vue.createElementVNode(
+                "button",
+                {
+                  class: vue.normalizeClass(["time-btn", { active: $data.selectedPeriod === "3M" }]),
+                  onClick: _cache[2] || (_cache[2] = ($event) => $options.selectPeriod("3M"))
+                },
+                "3月",
+                2
+                /* CLASS */
+              ),
+              vue.createElementVNode(
+                "button",
+                {
+                  class: vue.normalizeClass(["time-btn", { active: $data.selectedPeriod === "1Y" }]),
+                  onClick: _cache[3] || (_cache[3] = ($event) => $options.selectPeriod("1Y"))
+                },
+                "1年",
+                2
+                /* CLASS */
+              )
             ])
           ]),
           vue.createElementVNode("view", { class: "performance-metrics" }, [
@@ -32368,16 +33457,6 @@ ${this.hasFullAccess ? "✅ 已授予完整访问权限" : "❌ 未授予完整�
                 "text",
                 { class: "metric-value positive" },
                 vue.toDisplayString($data.annualReturn) + "%",
-                1
-                /* TEXT */
-              )
-            ]),
-            vue.createElementVNode("view", { class: "metric-item" }, [
-              vue.createElementVNode("text", { class: "metric-label" }, "波动率"),
-              vue.createElementVNode(
-                "text",
-                { class: "metric-value" },
-                vue.toDisplayString($data.volatility) + "%",
                 1
                 /* TEXT */
               )
@@ -32403,217 +33482,420 @@ ${this.hasFullAccess ? "✅ 已授予完整访问权限" : "❌ 未授予完整�
               )
             ])
           ])
-        ]),
-        vue.createCommentVNode(" 操作按钮 "),
-        vue.createElementVNode("view", { class: "action-buttons" }, [
-          vue.createElementVNode("button", {
-            class: "theme-btn-primary",
-            onClick: _cache[1] || (_cache[1] = (...args) => $options.autoRebalance && $options.autoRebalance(...args))
-          }, "一键调仓"),
-          vue.createElementVNode("button", {
-            class: "theme-btn-secondary",
-            onClick: _cache[2] || (_cache[2] = (...args) => $options.manualAdjust && $options.manualAdjust(...args))
-          }, "手动调整"),
-          vue.createElementVNode("button", {
-            class: "theme-btn-secondary",
-            onClick: _cache[3] || (_cache[3] = (...args) => $options.exportReport && $options.exportReport(...args))
-          }, "导出报告")
         ])
-      ],
-      6
-      /* CLASS, STYLE */
-    );
+      ]),
+      vue.createCommentVNode(" 操作按钮 "),
+      vue.createElementVNode("view", { class: "action-section" }, [
+        vue.createElementVNode("button", {
+          class: "action-btn primary",
+          onClick: _cache[4] || (_cache[4] = (...args) => $options.autoRebalance && $options.autoRebalance(...args))
+        }, "一键调仓"),
+        vue.createElementVNode("button", {
+          class: "action-btn secondary",
+          onClick: _cache[5] || (_cache[5] = (...args) => $options.customRebalance && $options.customRebalance(...args))
+        }, "自定义调仓"),
+        vue.createElementVNode("button", {
+          class: "action-btn tertiary",
+          onClick: _cache[6] || (_cache[6] = (...args) => $options.exportReport && $options.exportReport(...args))
+        }, "导出报告")
+      ])
+    ]);
   }
-  const PagesWealthAssetAllocationDetail = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["render", _sfc_render$1], ["__scopeId", "data-v-a3a51207"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/asset-allocation-detail.vue"]]);
-  const _sfc_main$1 = {
-    name: "GoalManagement",
-    mixins: [themeMixin],
+  const PagesWealthAssetAllocationDetail = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["render", _sfc_render$3], ["__scopeId", "data-v-a3a51207"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/asset-allocation-detail.vue"]]);
+  const _sfc_main$3 = {
     data() {
       return {
-        activeGoals: [
+        currentFilter: "all",
+        showAddModal: false,
+        showDateModal: false,
+        showContributionModal: false,
+        selectedGoal: null,
+        contributionAmount: "",
+        newGoal: {
+          title: "",
+          category: "",
+          target: "",
+          deadline: "",
+          current: "",
+          notes: "",
+          color: "#2196F3"
+        },
+        goalCategories: [
+          { id: 1, name: "购房", icon: "🏠", color: "#4CAF50" },
+          { id: 2, name: "教育", icon: "🎓", color: "#2196F3" },
+          { id: 3, name: "退休", icon: "🌴", color: "#FF9800" },
+          { id: 4, name: "旅行", icon: "✈️", color: "#9C27B0" },
+          { id: 5, name: "购车", icon: "🚗", color: "#F44336" },
+          { id: 6, name: "其他", icon: "💰", color: "#607D8B" }
+        ],
+        quickAmounts: [1e3, 5e3, 1e4, 2e4, 5e4],
+        availableDates: [],
+        userGoals: [
           {
             id: 1,
-            name: "购房首付",
+            title: "购房首付",
+            category: "购房",
+            icon: "🏠",
+            color: "#4CAF50",
             target: 5e5,
             current: 325e3,
             progress: 65,
             deadline: "2026年8月",
-            icon: "🏠",
-            color: "#4caf50"
+            status: "active",
+            notes: "购买三居室首付"
           },
           {
             id: 2,
-            name: "教育基金",
+            title: "教育基金",
+            category: "教育",
+            icon: "🎓",
+            color: "#2196F3",
             target: 15e4,
             current: 6e4,
             progress: 40,
             deadline: "2028年6月",
-            icon: "🎓",
-            color: "#2196f3"
+            status: "active",
+            notes: "孩子大学教育基金"
           },
           {
             id: 3,
-            name: "退休规划",
+            title: "退休规划",
+            category: "退休",
+            icon: "🌴",
+            color: "#FF9800",
             target: 1e6,
             current: 25e4,
             progress: 25,
             deadline: "2040年12月",
-            icon: "🌴",
-            color: "#ff9800"
-          }
-        ],
-        completedGoals: [
+            status: "active",
+            notes: "退休生活保障"
+          },
           {
             id: 4,
-            name: "应急基金",
+            title: "欧洲旅行",
+            category: "旅行",
+            icon: "✈️",
+            color: "#9C27B0",
             target: 5e4,
             current: 5e4,
             progress: 100,
             deadline: "2024年12月",
-            icon: "🛡️",
-            color: "#9c27b0"
+            status: "completed",
+            notes: "已完成欧洲旅行"
           }
-        ],
-        quickGoals: [
-          { id: 1, name: "购房首付", icon: "🏠", color: "#4caf50", target: 5e5 },
-          { id: 2, name: "教育基金", icon: "🎓", color: "#2196f3", target: 15e4 },
-          { id: 3, name: "退休规划", icon: "🌴", color: "#ff9800", target: 1e6 },
-          { id: 4, name: "旅行基金", icon: "✈️", color: "#e91e63", target: 3e4 },
-          { id: 5, name: "购车基金", icon: "🚗", color: "#f44336", target: 2e5 },
-          { id: 6, name: "应急基金", icon: "🛡️", color: "#9c27b0", target: 5e4 }
         ]
       };
     },
     computed: {
-      totalTargetAmount() {
-        return this.activeGoals.reduce((total, goal) => total + goal.target, 0);
+      totalGoals() {
+        return this.userGoals.length;
+      },
+      completedGoals() {
+        return this.userGoals.filter((goal) => goal.status === "completed").length;
+      },
+      activeGoals() {
+        return this.userGoals.filter((goal) => goal.status === "active").length;
+      },
+      filteredGoals() {
+        if (this.currentFilter === "all") {
+          return this.userGoals;
+        } else if (this.currentFilter === "active") {
+          return this.userGoals.filter((goal) => goal.status === "active");
+        } else if (this.currentFilter === "completed") {
+          return this.userGoals.filter((goal) => goal.status === "completed");
+        }
+        return this.userGoals;
       }
+    },
+    onLoad() {
+      this.generateAvailableDates();
     },
     methods: {
       goBack() {
-        uni.navigateBack({
-          delta: 1
-        });
+        uni.navigateBack();
       },
       formatNumber(num) {
-        return num.toLocaleString("zh-CN", { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+        return Number(num).toLocaleString("zh-CN", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        });
       },
-      addQuickGoal(goal) {
-        uni.showModal({
-          title: "添加目标",
-          content: `确定要添加"${goal.name}"目标吗？
-目标金额：¥${this.formatNumber(goal.target)}`,
-          success: (res) => {
-            if (res.confirm) {
-              uni.showToast({
-                title: "目标添加成功",
-                icon: "success"
-              });
-            }
-          }
+      getStatusText(status) {
+        const statusMap = {
+          active: "进行中",
+          completed: "已完成",
+          paused: "已暂停"
+        };
+        return statusMap[status] || "未知";
+      },
+      setFilter(filter) {
+        this.currentFilter = filter;
+      },
+      showAddGoalModal() {
+        this.showAddModal = true;
+        this.resetNewGoal();
+      },
+      closeAddModal() {
+        this.showAddModal = false;
+        this.resetNewGoal();
+      },
+      resetNewGoal() {
+        this.newGoal = {
+          title: "",
+          category: "",
+          target: "",
+          deadline: "",
+          current: "",
+          notes: "",
+          color: "#2196F3"
+        };
+      },
+      selectCategory(category) {
+        this.newGoal.category = category.name;
+        this.newGoal.color = category.color;
+        this.newGoal.icon = category.icon;
+      },
+      showDatePicker() {
+        this.showDateModal = true;
+      },
+      closeDatePicker() {
+        this.showDateModal = false;
+      },
+      generateAvailableDates() {
+        const dates = [];
+        const today = /* @__PURE__ */ new Date();
+        for (let i = 1; i <= 24; i++) {
+          const date = new Date(today.getFullYear(), today.getMonth() + i, 1);
+          dates.push({
+            value: `${date.getFullYear()}年${date.getMonth() + 1}月`,
+            day: "1",
+            month: `${date.getMonth() + 1}月`,
+            year: `${date.getFullYear()}年`
+          });
+        }
+        this.availableDates = dates;
+      },
+      selectDate(date) {
+        this.newGoal.deadline = date;
+        this.closeDatePicker();
+      },
+      saveGoal() {
+        if (!this.newGoal.title || !this.newGoal.category || !this.newGoal.target) {
+          uni.showToast({
+            title: "请填写完整信息",
+            icon: "none"
+          });
+          return;
+        }
+        const newGoal = {
+          id: Date.now(),
+          title: this.newGoal.title,
+          category: this.newGoal.category,
+          icon: this.newGoal.icon,
+          color: this.newGoal.color,
+          target: parseFloat(this.newGoal.target),
+          current: parseFloat(this.newGoal.current) || 0,
+          progress: Math.round((parseFloat(this.newGoal.current) || 0) / parseFloat(this.newGoal.target) * 100),
+          deadline: this.newGoal.deadline,
+          status: "active",
+          notes: this.newGoal.notes
+        };
+        this.userGoals.unshift(newGoal);
+        this.closeAddModal();
+        uni.showToast({
+          title: "目标创建成功",
+          icon: "success"
         });
       },
       viewGoalDetail(goal) {
         uni.showModal({
-          title: goal.name,
+          title: goal.title,
           content: `目标金额：¥${this.formatNumber(goal.target)}
-当前进度：${goal.progress}%
-完成时间：${goal.deadline}`,
+已存金额：¥${this.formatNumber(goal.current)}
+完成进度：${goal.progress}%
+目标日期：${goal.deadline}
+备注：${goal.notes || "无"}`,
           showCancel: false
         });
       },
-      addNewGoal() {
+      addContribution(goal) {
+        this.selectedGoal = goal;
+        this.contributionAmount = "";
+        this.showContributionModal = true;
+      },
+      closeContributionModal() {
+        this.showContributionModal = false;
+        this.selectedGoal = null;
+        this.contributionAmount = "";
+      },
+      setQuickAmount(amount) {
+        this.contributionAmount = amount.toString();
+      },
+      confirmContribution() {
+        if (!this.contributionAmount || parseFloat(this.contributionAmount) <= 0) {
+          uni.showToast({
+            title: "请输入有效金额",
+            icon: "none"
+          });
+          return;
+        }
+        const amount = parseFloat(this.contributionAmount);
+        this.selectedGoal.current += amount;
+        this.selectedGoal.progress = Math.round(this.selectedGoal.current / this.selectedGoal.target * 100);
+        if (this.selectedGoal.progress >= 100) {
+          this.selectedGoal.status = "completed";
+          this.selectedGoal.progress = 100;
+        }
+        this.closeContributionModal();
         uni.showToast({
-          title: "跳转到添加目标页面",
-          icon: "none"
+          title: "存入成功",
+          icon: "success"
         });
       },
-      viewAllGoals() {
-        uni.showToast({
-          title: "查看所有目标",
-          icon: "none"
+      editGoal(goal) {
+        uni.showModal({
+          title: "编辑目标",
+          content: "编辑功能开发中，敬请期待",
+          showCancel: false
+        });
+      },
+      deleteGoal(goal) {
+        uni.showModal({
+          title: "删除目标",
+          content: `确定要删除目标"${goal.title}"吗？此操作不可恢复。`,
+          success: (res) => {
+            if (res.confirm) {
+              const index = this.userGoals.findIndex((g) => g.id === goal.id);
+              if (index > -1) {
+                this.userGoals.splice(index, 1);
+                uni.showToast({
+                  title: "目标已删除",
+                  icon: "success"
+                });
+              }
+            }
+          }
+        });
+      },
+      showUsageGuide() {
+        uni.navigateTo({
+          url: "/pages/wealth/goal-usage-guide"
         });
       }
     }
   };
-  function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
-    return vue.openBlock(), vue.createElementBlock(
-      "view",
-      {
-        class: vue.normalizeClass(["goal-management", _ctx.getThemeClass()]),
-        style: vue.normalizeStyle(_ctx.getThemeStyle())
-      },
-      [
-        vue.createCommentVNode(" 顶部背景 "),
-        vue.createElementVNode("view", { class: "header-bg" }),
-        vue.createCommentVNode(" 顶部导航 "),
-        vue.createElementVNode("view", { class: "top-nav" }, [
-          vue.createElementVNode("view", { class: "nav-content" }, [
-            vue.createElementVNode("button", {
-              class: "back-btn",
-              onClick: _cache[0] || (_cache[0] = (...args) => $options.goBack && $options.goBack(...args))
-            }, [
-              vue.createElementVNode("text", { class: "back-icon" }, "←")
-            ]),
-            vue.createElementVNode("view", { class: "nav-info" }, [
-              vue.createElementVNode("text", { class: "nav-title" }, "目标管理"),
-              vue.createElementVNode("text", { class: "nav-subtitle" }, "Goal Management")
-            ])
-          ])
-        ]),
-        vue.createCommentVNode(" 目标概览 "),
-        vue.createElementVNode("view", { class: "goals-overview" }, [
-          vue.createElementVNode("view", { class: "overview-header" }, [
-            vue.createElementVNode("view", { class: "overview-stats" }, [
-              vue.createElementVNode("view", { class: "stat-item" }, [
-                vue.createElementVNode(
-                  "text",
-                  { class: "stat-number" },
-                  vue.toDisplayString($data.activeGoals.length),
-                  1
-                  /* TEXT */
-                ),
-                vue.createElementVNode("text", { class: "stat-label" }, "进行中")
-              ]),
-              vue.createElementVNode("view", { class: "stat-item" }, [
-                vue.createElementVNode(
-                  "text",
-                  { class: "stat-number" },
-                  vue.toDisplayString($data.completedGoals.length),
-                  1
-                  /* TEXT */
-                ),
-                vue.createElementVNode("text", { class: "stat-label" }, "已完成")
-              ]),
-              vue.createElementVNode("view", { class: "stat-item" }, [
-                vue.createElementVNode(
-                  "text",
-                  { class: "stat-number" },
-                  "¥" + vue.toDisplayString($options.formatNumber($options.totalTargetAmount)),
-                  1
-                  /* TEXT */
-                ),
-                vue.createElementVNode("text", { class: "stat-label" }, "总目标金额")
-              ])
-            ])
-          ])
-        ]),
-        vue.createCommentVNode(" 快速添加目标 "),
-        vue.createElementVNode("view", { class: "quick-add" }, [
-          vue.createElementVNode("view", { class: "section-header" }, [
-            vue.createElementVNode("text", { class: "section-title" }, "快速添加目标"),
-            vue.createElementVNode("text", { class: "section-subtitle" }, "选择常见目标类型快速创建")
+  function _sfc_render$2(_ctx, _cache, $props, $setup, $data, $options) {
+    var _a, _b;
+    return vue.openBlock(), vue.createElementBlock("view", { class: "goal-management-page" }, [
+      vue.createCommentVNode(" 顶部导航 "),
+      vue.createElementVNode("view", { class: "nav-bar" }, [
+        vue.createElementVNode("view", { class: "nav-left" }, [
+          vue.createElementVNode("button", {
+            class: "back-btn",
+            onClick: _cache[0] || (_cache[0] = (...args) => $options.goBack && $options.goBack(...args))
+          }, [
+            vue.createElementVNode("text", { class: "back-icon" }, "←")
           ]),
-          vue.createElementVNode("view", { class: "quick-goals-grid" }, [
-            (vue.openBlock(true), vue.createElementBlock(
-              vue.Fragment,
-              null,
-              vue.renderList($data.quickGoals, (goal) => {
-                return vue.openBlock(), vue.createElementBlock("view", {
-                  key: goal.id,
-                  class: "quick-goal-item",
-                  onClick: ($event) => $options.addQuickGoal(goal)
-                }, [
+          vue.createElementVNode("text", { class: "nav-title" }, "目标管理")
+        ]),
+        vue.createElementVNode("view", { class: "nav-right" }, [
+          vue.createElementVNode("button", {
+            class: "help-btn",
+            onClick: _cache[1] || (_cache[1] = (...args) => $options.showUsageGuide && $options.showUsageGuide(...args))
+          }, [
+            vue.createElementVNode("text", { class: "help-icon" }, "?")
+          ]),
+          vue.createElementVNode("button", {
+            class: "add-btn",
+            onClick: _cache[2] || (_cache[2] = (...args) => $options.showAddGoalModal && $options.showAddGoalModal(...args))
+          }, [
+            vue.createElementVNode("text", { class: "add-icon" }, "+")
+          ])
+        ])
+      ]),
+      vue.createCommentVNode(" 目标概览 "),
+      vue.createElementVNode("view", { class: "overview-section" }, [
+        vue.createElementVNode("view", { class: "overview-stats" }, [
+          vue.createElementVNode("view", { class: "stat-item" }, [
+            vue.createElementVNode(
+              "text",
+              { class: "stat-number" },
+              vue.toDisplayString($options.totalGoals),
+              1
+              /* TEXT */
+            ),
+            vue.createElementVNode("text", { class: "stat-label" }, "总目标数")
+          ]),
+          vue.createElementVNode("view", { class: "stat-item" }, [
+            vue.createElementVNode(
+              "text",
+              { class: "stat-number" },
+              vue.toDisplayString($options.completedGoals),
+              1
+              /* TEXT */
+            ),
+            vue.createElementVNode("text", { class: "stat-label" }, "已完成")
+          ]),
+          vue.createElementVNode("view", { class: "stat-item" }, [
+            vue.createElementVNode(
+              "text",
+              { class: "stat-number" },
+              vue.toDisplayString($options.activeGoals),
+              1
+              /* TEXT */
+            ),
+            vue.createElementVNode("text", { class: "stat-label" }, "进行中")
+          ])
+        ])
+      ]),
+      vue.createCommentVNode(" 目标列表 "),
+      vue.createElementVNode("view", { class: "goals-section" }, [
+        vue.createElementVNode("view", { class: "section-header" }, [
+          vue.createElementVNode("text", { class: "section-title" }, "我的目标"),
+          vue.createElementVNode("view", { class: "filter-tabs" }, [
+            vue.createElementVNode(
+              "button",
+              {
+                class: vue.normalizeClass(["filter-tab", { active: $data.currentFilter === "all" }]),
+                onClick: _cache[3] || (_cache[3] = ($event) => $options.setFilter("all"))
+              },
+              "全部",
+              2
+              /* CLASS */
+            ),
+            vue.createElementVNode(
+              "button",
+              {
+                class: vue.normalizeClass(["filter-tab", { active: $data.currentFilter === "active" }]),
+                onClick: _cache[4] || (_cache[4] = ($event) => $options.setFilter("active"))
+              },
+              "进行中",
+              2
+              /* CLASS */
+            ),
+            vue.createElementVNode(
+              "button",
+              {
+                class: vue.normalizeClass(["filter-tab", { active: $data.currentFilter === "completed" }]),
+                onClick: _cache[5] || (_cache[5] = ($event) => $options.setFilter("completed"))
+              },
+              "已完成",
+              2
+              /* CLASS */
+            )
+          ])
+        ]),
+        vue.createElementVNode("view", { class: "goals-list" }, [
+          (vue.openBlock(true), vue.createElementBlock(
+            vue.Fragment,
+            null,
+            vue.renderList($options.filteredGoals, (goal, index) => {
+              return vue.openBlock(), vue.createElementBlock("view", {
+                class: "goal-card",
+                key: index,
+                onClick: ($event) => $options.viewGoalDetail(goal)
+              }, [
+                vue.createElementVNode("view", { class: "goal-header" }, [
                   vue.createElementVNode(
                     "view",
                     {
@@ -32623,7 +33905,7 @@ ${this.hasFullAccess ? "✅ 已授予完整访问权限" : "❌ 未授予完整�
                     [
                       vue.createElementVNode(
                         "text",
-                        { class: "icon-text" },
+                        { class: "icon" },
                         vue.toDisplayString(goal.icon),
                         1
                         /* TEXT */
@@ -32632,132 +33914,1264 @@ ${this.hasFullAccess ? "✅ 已授予完整访问权限" : "❌ 未授予完整�
                     4
                     /* STYLE */
                   ),
-                  vue.createElementVNode(
-                    "text",
-                    { class: "goal-name" },
-                    vue.toDisplayString(goal.name),
-                    1
-                    /* TEXT */
-                  )
-                ], 8, ["onClick"]);
-              }),
-              128
-              /* KEYED_FRAGMENT */
-            ))
-          ])
-        ]),
-        vue.createCommentVNode(" 进行中的目标 "),
-        vue.createElementVNode("view", { class: "active-goals" }, [
-          vue.createElementVNode("view", { class: "section-header" }, [
-            vue.createElementVNode("text", { class: "section-title" }, "进行中的目标"),
-            vue.createElementVNode("text", { class: "section-subtitle" }, "查看和管理您的理财目标")
-          ]),
-          vue.createElementVNode("view", { class: "goals-list" }, [
-            (vue.openBlock(true), vue.createElementBlock(
-              vue.Fragment,
-              null,
-              vue.renderList($data.activeGoals, (goal) => {
-                return vue.openBlock(), vue.createElementBlock("view", {
-                  key: goal.id,
-                  class: "goal-item",
-                  onClick: ($event) => $options.viewGoalDetail(goal)
-                }, [
-                  vue.createElementVNode("view", { class: "goal-header" }, [
-                    vue.createElementVNode("view", { class: "goal-info" }, [
-                      vue.createElementVNode(
-                        "view",
-                        {
-                          class: "goal-icon",
-                          style: vue.normalizeStyle({ backgroundColor: goal.color })
-                        },
-                        [
-                          vue.createElementVNode(
-                            "text",
-                            { class: "icon-text" },
-                            vue.toDisplayString(goal.icon),
-                            1
-                            /* TEXT */
-                          )
-                        ],
-                        4
-                        /* STYLE */
-                      ),
-                      vue.createElementVNode("view", { class: "goal-details" }, [
-                        vue.createElementVNode(
-                          "text",
-                          { class: "goal-name" },
-                          vue.toDisplayString(goal.name),
-                          1
-                          /* TEXT */
-                        ),
-                        vue.createElementVNode(
-                          "text",
-                          { class: "goal-amount" },
-                          "目标: ¥" + vue.toDisplayString($options.formatNumber(goal.target)),
-                          1
-                          /* TEXT */
-                        )
-                      ])
-                    ]),
-                    vue.createElementVNode("view", { class: "goal-actions" }, [
-                      vue.createElementVNode(
-                        "text",
-                        { class: "goal-deadline" },
-                        vue.toDisplayString(goal.deadline),
-                        1
-                        /* TEXT */
-                      ),
-                      vue.createElementVNode("text", { class: "arrow" }, ">")
-                    ])
-                  ]),
-                  vue.createElementVNode("view", { class: "goal-progress" }, [
-                    vue.createElementVNode("view", { class: "progress-bar" }, [
-                      vue.createElementVNode(
-                        "view",
-                        {
-                          class: "progress-fill",
-                          style: vue.normalizeStyle({
-                            width: goal.progress + "%",
-                            backgroundColor: goal.color
-                          })
-                        },
-                        null,
-                        4
-                        /* STYLE */
-                      )
-                    ]),
+                  vue.createElementVNode("view", { class: "goal-info" }, [
                     vue.createElementVNode(
                       "text",
-                      { class: "progress-text" },
+                      { class: "goal-title" },
+                      vue.toDisplayString(goal.title),
+                      1
+                      /* TEXT */
+                    ),
+                    vue.createElementVNode(
+                      "text",
+                      { class: "goal-category" },
+                      vue.toDisplayString(goal.category),
+                      1
+                      /* TEXT */
+                    )
+                  ]),
+                  vue.createElementVNode(
+                    "view",
+                    {
+                      class: vue.normalizeClass(["goal-status", goal.status])
+                    },
+                    [
+                      vue.createElementVNode(
+                        "text",
+                        { class: "status-text" },
+                        vue.toDisplayString($options.getStatusText(goal.status)),
+                        1
+                        /* TEXT */
+                      )
+                    ],
+                    2
+                    /* CLASS */
+                  )
+                ]),
+                vue.createElementVNode("view", { class: "goal-progress" }, [
+                  vue.createElementVNode("view", { class: "progress-header" }, [
+                    vue.createElementVNode("text", { class: "progress-label" }, "完成进度"),
+                    vue.createElementVNode(
+                      "text",
+                      { class: "progress-percent" },
                       vue.toDisplayString(goal.progress) + "%",
                       1
                       /* TEXT */
                     )
+                  ]),
+                  vue.createElementVNode("view", { class: "progress-bar" }, [
+                    vue.createElementVNode(
+                      "view",
+                      {
+                        class: "progress-fill",
+                        style: vue.normalizeStyle({ width: goal.progress + "%", backgroundColor: goal.color })
+                      },
+                      null,
+                      4
+                      /* STYLE */
+                    )
                   ])
-                ], 8, ["onClick"]);
+                ]),
+                vue.createElementVNode("view", { class: "goal-details" }, [
+                  vue.createElementVNode("view", { class: "detail-item" }, [
+                    vue.createElementVNode("text", { class: "detail-label" }, "目标金额"),
+                    vue.createElementVNode(
+                      "text",
+                      { class: "detail-value" },
+                      "¥" + vue.toDisplayString($options.formatNumber(goal.target)),
+                      1
+                      /* TEXT */
+                    )
+                  ]),
+                  vue.createElementVNode("view", { class: "detail-item" }, [
+                    vue.createElementVNode("text", { class: "detail-label" }, "已存金额"),
+                    vue.createElementVNode(
+                      "text",
+                      { class: "detail-value" },
+                      "¥" + vue.toDisplayString($options.formatNumber(goal.current)),
+                      1
+                      /* TEXT */
+                    )
+                  ]),
+                  vue.createElementVNode("view", { class: "detail-item" }, [
+                    vue.createElementVNode("text", { class: "detail-label" }, "目标日期"),
+                    vue.createElementVNode(
+                      "text",
+                      { class: "detail-value" },
+                      vue.toDisplayString(goal.deadline),
+                      1
+                      /* TEXT */
+                    )
+                  ])
+                ]),
+                vue.createElementVNode("view", { class: "goal-actions" }, [
+                  vue.createElementVNode("button", {
+                    class: "action-btn small",
+                    onClick: vue.withModifiers(($event) => $options.addContribution(goal), ["stop"])
+                  }, "存入", 8, ["onClick"]),
+                  vue.createElementVNode("button", {
+                    class: "action-btn small",
+                    onClick: vue.withModifiers(($event) => $options.editGoal(goal), ["stop"])
+                  }, "编辑", 8, ["onClick"]),
+                  vue.createElementVNode("button", {
+                    class: "action-btn small danger",
+                    onClick: vue.withModifiers(($event) => $options.deleteGoal(goal), ["stop"])
+                  }, "删除", 8, ["onClick"])
+                ])
+              ], 8, ["onClick"]);
+            }),
+            128
+            /* KEYED_FRAGMENT */
+          ))
+        ])
+      ]),
+      vue.createCommentVNode(" 添加目标模态框 "),
+      $data.showAddModal ? (vue.openBlock(), vue.createElementBlock("view", {
+        key: 0,
+        class: "modal-overlay",
+        onClick: _cache[15] || (_cache[15] = (...args) => $options.closeAddModal && $options.closeAddModal(...args))
+      }, [
+        vue.createElementVNode("view", {
+          class: "modal-content",
+          onClick: _cache[14] || (_cache[14] = vue.withModifiers(() => {
+          }, ["stop"]))
+        }, [
+          vue.createElementVNode("view", { class: "modal-header" }, [
+            vue.createElementVNode("text", { class: "modal-title" }, "添加新目标"),
+            vue.createElementVNode("button", {
+              class: "close-btn",
+              onClick: _cache[6] || (_cache[6] = (...args) => $options.closeAddModal && $options.closeAddModal(...args))
+            }, "×")
+          ]),
+          vue.createElementVNode("view", { class: "modal-body" }, [
+            vue.createElementVNode("view", { class: "form-group" }, [
+              vue.createElementVNode("text", { class: "form-label" }, "目标名称"),
+              vue.withDirectives(vue.createElementVNode(
+                "input",
+                {
+                  class: "form-input",
+                  "onUpdate:modelValue": _cache[7] || (_cache[7] = ($event) => $data.newGoal.title = $event),
+                  placeholder: "请输入目标名称"
+                },
+                null,
+                512
+                /* NEED_PATCH */
+              ), [
+                [vue.vModelText, $data.newGoal.title]
+              ])
+            ]),
+            vue.createElementVNode("view", { class: "form-group" }, [
+              vue.createElementVNode("text", { class: "form-label" }, "目标类型"),
+              vue.createElementVNode("view", { class: "category-selector" }, [
+                (vue.openBlock(true), vue.createElementBlock(
+                  vue.Fragment,
+                  null,
+                  vue.renderList($data.goalCategories, (category) => {
+                    return vue.openBlock(), vue.createElementBlock("button", {
+                      class: vue.normalizeClass(["category-btn", { active: $data.newGoal.category === category.name }]),
+                      key: category.id,
+                      onClick: ($event) => $options.selectCategory(category)
+                    }, [
+                      vue.createElementVNode(
+                        "text",
+                        { class: "category-icon" },
+                        vue.toDisplayString(category.icon),
+                        1
+                        /* TEXT */
+                      ),
+                      vue.createElementVNode(
+                        "text",
+                        { class: "category-name" },
+                        vue.toDisplayString(category.name),
+                        1
+                        /* TEXT */
+                      )
+                    ], 10, ["onClick"]);
+                  }),
+                  128
+                  /* KEYED_FRAGMENT */
+                ))
+              ])
+            ]),
+            vue.createElementVNode("view", { class: "form-group" }, [
+              vue.createElementVNode("text", { class: "form-label" }, "目标金额"),
+              vue.withDirectives(vue.createElementVNode(
+                "input",
+                {
+                  class: "form-input",
+                  "onUpdate:modelValue": _cache[8] || (_cache[8] = ($event) => $data.newGoal.target = $event),
+                  placeholder: "请输入目标金额",
+                  type: "number"
+                },
+                null,
+                512
+                /* NEED_PATCH */
+              ), [
+                [vue.vModelText, $data.newGoal.target]
+              ])
+            ]),
+            vue.createElementVNode("view", { class: "form-group" }, [
+              vue.createElementVNode("text", { class: "form-label" }, "目标日期"),
+              vue.createElementVNode("view", {
+                class: "date-picker",
+                onClick: _cache[9] || (_cache[9] = (...args) => $options.showDatePicker && $options.showDatePicker(...args))
+              }, [
+                vue.createElementVNode(
+                  "text",
+                  { class: "picker-value" },
+                  vue.toDisplayString($data.newGoal.deadline || "请选择目标日期"),
+                  1
+                  /* TEXT */
+                ),
+                vue.createElementVNode("text", { class: "picker-arrow" }, "▼")
+              ])
+            ]),
+            vue.createElementVNode("view", { class: "form-group" }, [
+              vue.createElementVNode("text", { class: "form-label" }, "初始金额"),
+              vue.withDirectives(vue.createElementVNode(
+                "input",
+                {
+                  class: "form-input",
+                  "onUpdate:modelValue": _cache[10] || (_cache[10] = ($event) => $data.newGoal.current = $event),
+                  placeholder: "请输入初始金额",
+                  type: "number"
+                },
+                null,
+                512
+                /* NEED_PATCH */
+              ), [
+                [vue.vModelText, $data.newGoal.current]
+              ])
+            ]),
+            vue.createElementVNode("view", { class: "form-group" }, [
+              vue.createElementVNode("text", { class: "form-label" }, "备注"),
+              vue.withDirectives(vue.createElementVNode(
+                "textarea",
+                {
+                  class: "form-textarea",
+                  "onUpdate:modelValue": _cache[11] || (_cache[11] = ($event) => $data.newGoal.notes = $event),
+                  placeholder: "请输入备注信息"
+                },
+                null,
+                512
+                /* NEED_PATCH */
+              ), [
+                [vue.vModelText, $data.newGoal.notes]
+              ])
+            ])
+          ]),
+          vue.createElementVNode("view", { class: "modal-footer" }, [
+            vue.createElementVNode("button", {
+              class: "modal-btn secondary",
+              onClick: _cache[12] || (_cache[12] = (...args) => $options.closeAddModal && $options.closeAddModal(...args))
+            }, "取消"),
+            vue.createElementVNode("button", {
+              class: "modal-btn primary",
+              onClick: _cache[13] || (_cache[13] = (...args) => $options.saveGoal && $options.saveGoal(...args))
+            }, "保存")
+          ])
+        ])
+      ])) : vue.createCommentVNode("v-if", true),
+      vue.createCommentVNode(" 日期选择器 "),
+      $data.showDateModal ? (vue.openBlock(), vue.createElementBlock("view", {
+        key: 1,
+        class: "date-picker-modal",
+        onClick: _cache[18] || (_cache[18] = (...args) => $options.closeDatePicker && $options.closeDatePicker(...args))
+      }, [
+        vue.createElementVNode("view", {
+          class: "date-picker-content",
+          onClick: _cache[17] || (_cache[17] = vue.withModifiers(() => {
+          }, ["stop"]))
+        }, [
+          vue.createElementVNode("view", { class: "date-picker-header" }, [
+            vue.createElementVNode("text", { class: "date-picker-title" }, "选择目标日期"),
+            vue.createElementVNode("button", {
+              class: "close-btn",
+              onClick: _cache[16] || (_cache[16] = (...args) => $options.closeDatePicker && $options.closeDatePicker(...args))
+            }, "×")
+          ]),
+          vue.createElementVNode("view", { class: "date-grid" }, [
+            (vue.openBlock(true), vue.createElementBlock(
+              vue.Fragment,
+              null,
+              vue.renderList($data.availableDates, (date) => {
+                return vue.openBlock(), vue.createElementBlock("view", {
+                  class: vue.normalizeClass(["date-item", { active: $data.newGoal.deadline === date.value }]),
+                  key: date.value,
+                  onClick: ($event) => $options.selectDate(date.value)
+                }, [
+                  vue.createElementVNode(
+                    "text",
+                    { class: "date-day" },
+                    vue.toDisplayString(date.day),
+                    1
+                    /* TEXT */
+                  ),
+                  vue.createElementVNode(
+                    "text",
+                    { class: "date-month" },
+                    vue.toDisplayString(date.month),
+                    1
+                    /* TEXT */
+                  ),
+                  vue.createElementVNode(
+                    "text",
+                    { class: "date-year" },
+                    vue.toDisplayString(date.year),
+                    1
+                    /* TEXT */
+                  )
+                ], 10, ["onClick"]);
               }),
               128
               /* KEYED_FRAGMENT */
             ))
           ])
-        ]),
-        vue.createCommentVNode(" 底部操作按钮 "),
-        vue.createElementVNode("view", { class: "bottom-actions" }, [
-          vue.createElementVNode("button", {
-            class: "action-btn primary",
-            onClick: _cache[1] || (_cache[1] = (...args) => $options.addNewGoal && $options.addNewGoal(...args))
-          }, "添加新目标"),
-          vue.createElementVNode("button", {
-            class: "action-btn secondary",
-            onClick: _cache[2] || (_cache[2] = (...args) => $options.viewAllGoals && $options.viewAllGoals(...args))
-          }, "查看所有目标")
         ])
-      ],
-      6
-      /* CLASS, STYLE */
-    );
+      ])) : vue.createCommentVNode("v-if", true),
+      vue.createCommentVNode(" 存入金额模态框 "),
+      $data.showContributionModal ? (vue.openBlock(), vue.createElementBlock("view", {
+        key: 2,
+        class: "modal-overlay",
+        onClick: _cache[24] || (_cache[24] = (...args) => $options.closeContributionModal && $options.closeContributionModal(...args))
+      }, [
+        vue.createElementVNode("view", {
+          class: "modal-content",
+          onClick: _cache[23] || (_cache[23] = vue.withModifiers(() => {
+          }, ["stop"]))
+        }, [
+          vue.createElementVNode("view", { class: "modal-header" }, [
+            vue.createElementVNode("text", { class: "modal-title" }, "存入金额"),
+            vue.createElementVNode("button", {
+              class: "close-btn",
+              onClick: _cache[19] || (_cache[19] = (...args) => $options.closeContributionModal && $options.closeContributionModal(...args))
+            }, "×")
+          ]),
+          vue.createElementVNode("view", { class: "modal-body" }, [
+            vue.createElementVNode("view", { class: "contribution-goal" }, [
+              vue.createElementVNode(
+                "text",
+                { class: "goal-name" },
+                vue.toDisplayString((_a = $data.selectedGoal) == null ? void 0 : _a.title),
+                1
+                /* TEXT */
+              ),
+              vue.createElementVNode(
+                "text",
+                { class: "goal-progress" },
+                "当前进度：" + vue.toDisplayString((_b = $data.selectedGoal) == null ? void 0 : _b.progress) + "%",
+                1
+                /* TEXT */
+              )
+            ]),
+            vue.createElementVNode("view", { class: "form-group" }, [
+              vue.createElementVNode("text", { class: "form-label" }, "存入金额"),
+              vue.withDirectives(vue.createElementVNode(
+                "input",
+                {
+                  class: "form-input",
+                  "onUpdate:modelValue": _cache[20] || (_cache[20] = ($event) => $data.contributionAmount = $event),
+                  placeholder: "请输入存入金额",
+                  type: "number"
+                },
+                null,
+                512
+                /* NEED_PATCH */
+              ), [
+                [vue.vModelText, $data.contributionAmount]
+              ])
+            ]),
+            vue.createElementVNode("view", { class: "quick-amounts" }, [
+              (vue.openBlock(true), vue.createElementBlock(
+                vue.Fragment,
+                null,
+                vue.renderList($data.quickAmounts, (amount) => {
+                  return vue.openBlock(), vue.createElementBlock("button", {
+                    class: "quick-amount-btn",
+                    key: amount,
+                    onClick: ($event) => $options.setQuickAmount(amount)
+                  }, " ¥" + vue.toDisplayString(amount), 9, ["onClick"]);
+                }),
+                128
+                /* KEYED_FRAGMENT */
+              ))
+            ])
+          ]),
+          vue.createElementVNode("view", { class: "modal-footer" }, [
+            vue.createElementVNode("button", {
+              class: "modal-btn secondary",
+              onClick: _cache[21] || (_cache[21] = (...args) => $options.closeContributionModal && $options.closeContributionModal(...args))
+            }, "取消"),
+            vue.createElementVNode("button", {
+              class: "modal-btn primary",
+              onClick: _cache[22] || (_cache[22] = (...args) => $options.confirmContribution && $options.confirmContribution(...args))
+            }, "确认存入")
+          ])
+        ])
+      ])) : vue.createCommentVNode("v-if", true)
+    ]);
   }
-  const PagesWealthGoalManagement = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["render", _sfc_render], ["__scopeId", "data-v-6c5242bf"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/goal-management.vue"]]);
+  const PagesWealthGoalManagement = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["render", _sfc_render$2], ["__scopeId", "data-v-6c5242bf"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/goal-management.vue"]]);
+  const _sfc_main$2 = {
+    data() {
+      return {
+        adviceData: {
+          title: "个性化财富建议",
+          summary: "基于您的财务状况分析，我们为您提供了个性化建议",
+          recommendations: [],
+          riskAssessment: "",
+          nextSteps: []
+        }
+      };
+    },
+    onLoad() {
+      this.loadAdviceData();
+    },
+    methods: {
+      goBack() {
+        uni.navigateBack();
+      },
+      loadAdviceData() {
+        const storedAdvice = uni.getStorageSync("currentAdvice");
+        if (storedAdvice) {
+          this.adviceData = storedAdvice;
+        } else {
+          this.adviceData = {
+            title: "个性化财富建议",
+            summary: "基于您的财务状况分析，我们为您提供了4项个性化建议",
+            recommendations: [
+              {
+                type: "savings",
+                title: "提高储蓄率",
+                description: "当前储蓄率46.7%，建议提升至20%以上",
+                priority: "high",
+                action: "制定预算计划，减少非必要支出"
+              },
+              {
+                type: "emergency",
+                title: "建立应急基金",
+                description: "建议储备6个月的生活费用作为应急基金",
+                priority: "high",
+                action: "将部分资金转入货币基金"
+              },
+              {
+                type: "investment",
+                title: "优化投资组合",
+                description: "基于您的风险承受能力，建议增加股票类资产配置",
+                priority: "medium",
+                action: "考虑定投指数基金"
+              },
+              {
+                type: "market",
+                title: "把握市场机会",
+                description: "当前市场趋势向好，适合适度增加权益类投资",
+                priority: "medium",
+                action: "关注优质成长股和指数基金"
+              }
+            ],
+            riskAssessment: "您的风险承受能力为medium，建议采用稳健型投资策略",
+            nextSteps: ["制定详细投资计划", "设置自动定投", "定期评估投资表现"]
+          };
+        }
+      },
+      getPriorityColor(priority) {
+        const colors = {
+          high: "#F44336",
+          medium: "#FF9800",
+          low: "#4CAF50"
+        };
+        return colors[priority] || "#2196F3";
+      },
+      getPriorityText(priority) {
+        const texts = {
+          high: "高优先级",
+          medium: "中优先级",
+          low: "低优先级"
+        };
+        return texts[priority] || "中优先级";
+      },
+      getTypeIcon(type) {
+        const icons = {
+          savings: "💰",
+          emergency: "🛡️",
+          investment: "📈",
+          market: "📊",
+          debt: "💳",
+          insurance: "🏥"
+        };
+        return icons[type] || "💡";
+      },
+      applyRecommendations() {
+        uni.showModal({
+          title: "应用建议",
+          content: "确定要应用这些建议吗？系统将为您自动调整投资配置。",
+          success: (res) => {
+            if (res.confirm) {
+              uni.showLoading({ title: "正在应用建议..." });
+              setTimeout(() => {
+                uni.hideLoading();
+                uni.showToast({
+                  title: "建议已应用",
+                  icon: "success"
+                });
+                setTimeout(() => {
+                  uni.navigateTo({
+                    url: "/pages/wealth/asset-allocation-detail"
+                  });
+                }, 1500);
+              }, 2e3);
+            }
+          }
+        });
+      },
+      saveAdvice() {
+        const savedAdvice = uni.getStorageSync("savedAdvice") || [];
+        savedAdvice.unshift({
+          ...this.adviceData,
+          saveTime: (/* @__PURE__ */ new Date()).toISOString(),
+          id: Date.now()
+        });
+        if (savedAdvice.length > 10) {
+          savedAdvice.splice(10);
+        }
+        uni.setStorageSync("savedAdvice", savedAdvice);
+        uni.showToast({
+          title: "建议已保存",
+          icon: "success"
+        });
+      },
+      shareAdvice() {
+        uni.showActionSheet({
+          itemList: ["分享给朋友", "生成报告", "导出PDF"],
+          success: (res) => {
+            if (res.tapIndex === 0) {
+              uni.showToast({
+                title: "分享功能开发中",
+                icon: "none"
+              });
+            } else if (res.tapIndex === 1) {
+              uni.showToast({
+                title: "报告生成中...",
+                icon: "loading"
+              });
+            } else if (res.tapIndex === 2) {
+              uni.showToast({
+                title: "PDF导出功能开发中",
+                icon: "none"
+              });
+            }
+          }
+        });
+      }
+    }
+  };
+  function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("view", { class: "advice-detail-page" }, [
+      vue.createCommentVNode(" 顶部导航 "),
+      vue.createElementVNode("view", { class: "nav-bar" }, [
+        vue.createElementVNode("view", { class: "nav-left" }, [
+          vue.createElementVNode("button", {
+            class: "back-btn",
+            onClick: _cache[0] || (_cache[0] = (...args) => $options.goBack && $options.goBack(...args))
+          }, [
+            vue.createElementVNode("text", { class: "back-icon" }, "←")
+          ]),
+          vue.createElementVNode("text", { class: "nav-title" }, "智能建议详情")
+        ])
+      ]),
+      vue.createCommentVNode(" 建议概览 "),
+      vue.createElementVNode("view", { class: "overview-section" }, [
+        vue.createElementVNode("view", { class: "advice-header" }, [
+          vue.createElementVNode(
+            "text",
+            { class: "advice-title" },
+            vue.toDisplayString($data.adviceData.title),
+            1
+            /* TEXT */
+          ),
+          vue.createElementVNode(
+            "text",
+            { class: "advice-summary" },
+            vue.toDisplayString($data.adviceData.summary),
+            1
+            /* TEXT */
+          )
+        ])
+      ]),
+      vue.createCommentVNode(" 风险评估 "),
+      $data.adviceData.riskAssessment ? (vue.openBlock(), vue.createElementBlock("view", {
+        key: 0,
+        class: "risk-section"
+      }, [
+        vue.createElementVNode("view", { class: "section-title" }, "风险评估"),
+        vue.createElementVNode("view", { class: "risk-content" }, [
+          vue.createElementVNode("view", { class: "risk-card" }, [
+            vue.createElementVNode("view", { class: "risk-icon" }, "🛡️"),
+            vue.createElementVNode(
+              "text",
+              { class: "risk-text" },
+              vue.toDisplayString($data.adviceData.riskAssessment),
+              1
+              /* TEXT */
+            )
+          ])
+        ])
+      ])) : vue.createCommentVNode("v-if", true),
+      vue.createCommentVNode(" 具体建议 "),
+      vue.createElementVNode("view", { class: "recommendations-section" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "具体建议"),
+        vue.createElementVNode("view", { class: "recommendations-list" }, [
+          (vue.openBlock(true), vue.createElementBlock(
+            vue.Fragment,
+            null,
+            vue.renderList($data.adviceData.recommendations, (rec, index) => {
+              return vue.openBlock(), vue.createElementBlock("view", {
+                class: "recommendation-item",
+                key: index
+              }, [
+                vue.createElementVNode("view", { class: "rec-header" }, [
+                  vue.createElementVNode(
+                    "view",
+                    {
+                      class: "rec-icon",
+                      style: vue.normalizeStyle({ backgroundColor: $options.getPriorityColor(rec.priority) })
+                    },
+                    [
+                      vue.createElementVNode(
+                        "text",
+                        { class: "icon" },
+                        vue.toDisplayString($options.getTypeIcon(rec.type)),
+                        1
+                        /* TEXT */
+                      )
+                    ],
+                    4
+                    /* STYLE */
+                  ),
+                  vue.createElementVNode("view", { class: "rec-info" }, [
+                    vue.createElementVNode(
+                      "text",
+                      { class: "rec-title" },
+                      vue.toDisplayString(rec.title),
+                      1
+                      /* TEXT */
+                    ),
+                    vue.createElementVNode(
+                      "text",
+                      {
+                        class: vue.normalizeClass(["rec-priority", rec.priority])
+                      },
+                      vue.toDisplayString($options.getPriorityText(rec.priority)),
+                      3
+                      /* TEXT, CLASS */
+                    )
+                  ])
+                ]),
+                vue.createElementVNode(
+                  "text",
+                  { class: "rec-description" },
+                  vue.toDisplayString(rec.description),
+                  1
+                  /* TEXT */
+                ),
+                vue.createElementVNode("view", { class: "rec-action" }, [
+                  vue.createElementVNode("text", { class: "action-label" }, "建议行动："),
+                  vue.createElementVNode(
+                    "text",
+                    { class: "action-text" },
+                    vue.toDisplayString(rec.action),
+                    1
+                    /* TEXT */
+                  )
+                ])
+              ]);
+            }),
+            128
+            /* KEYED_FRAGMENT */
+          ))
+        ])
+      ]),
+      vue.createCommentVNode(" 下一步计划 "),
+      $data.adviceData.nextSteps && $data.adviceData.nextSteps.length > 0 ? (vue.openBlock(), vue.createElementBlock("view", {
+        key: 1,
+        class: "next-steps-section"
+      }, [
+        vue.createElementVNode("view", { class: "section-title" }, "下一步计划"),
+        vue.createElementVNode("view", { class: "steps-list" }, [
+          (vue.openBlock(true), vue.createElementBlock(
+            vue.Fragment,
+            null,
+            vue.renderList($data.adviceData.nextSteps, (step, index) => {
+              return vue.openBlock(), vue.createElementBlock("view", {
+                class: "step-item",
+                key: index
+              }, [
+                vue.createElementVNode(
+                  "view",
+                  { class: "step-number" },
+                  vue.toDisplayString(index + 1),
+                  1
+                  /* TEXT */
+                ),
+                vue.createElementVNode(
+                  "text",
+                  { class: "step-text" },
+                  vue.toDisplayString(step),
+                  1
+                  /* TEXT */
+                )
+              ]);
+            }),
+            128
+            /* KEYED_FRAGMENT */
+          ))
+        ])
+      ])) : vue.createCommentVNode("v-if", true),
+      vue.createCommentVNode(" 市场洞察 "),
+      vue.createElementVNode("view", { class: "market-insights-section" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "市场洞察"),
+        vue.createElementVNode("view", { class: "insights-grid" }, [
+          vue.createElementVNode("view", { class: "insight-card" }, [
+            vue.createElementVNode("text", { class: "insight-label" }, "市场趋势"),
+            vue.createElementVNode("text", { class: "insight-value bullish" }, "看涨")
+          ]),
+          vue.createElementVNode("view", { class: "insight-card" }, [
+            vue.createElementVNode("text", { class: "insight-label" }, "波动率"),
+            vue.createElementVNode("text", { class: "insight-value" }, "中等")
+          ]),
+          vue.createElementVNode("view", { class: "insight-card" }, [
+            vue.createElementVNode("text", { class: "insight-label" }, "利率水平"),
+            vue.createElementVNode("text", { class: "insight-value" }, "3.5%")
+          ]),
+          vue.createElementVNode("view", { class: "insight-card" }, [
+            vue.createElementVNode("text", { class: "insight-label" }, "通胀率"),
+            vue.createElementVNode("text", { class: "insight-value" }, "2.1%")
+          ])
+        ])
+      ]),
+      vue.createCommentVNode(" 推荐配置 "),
+      vue.createElementVNode("view", { class: "allocation-section" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "推荐资产配置"),
+        vue.createElementVNode("view", { class: "allocation-chart" }, [
+          vue.createElementVNode("view", { class: "chart-container" }, [
+            vue.createElementVNode("view", { class: "pie-chart" }, [
+              vue.createElementVNode("view", { class: "chart-center" }, [
+                vue.createElementVNode("text", { class: "center-label" }, "推荐配置")
+              ])
+            ]),
+            vue.createElementVNode("view", { class: "allocation-legend" }, [
+              vue.createElementVNode("view", { class: "legend-item" }, [
+                vue.createElementVNode("view", {
+                  class: "legend-color",
+                  style: { "background-color": "#FF9800" }
+                }),
+                vue.createElementVNode("text", { class: "legend-name" }, "股票类"),
+                vue.createElementVNode("text", { class: "legend-percent" }, "25%")
+              ]),
+              vue.createElementVNode("view", { class: "legend-item" }, [
+                vue.createElementVNode("view", {
+                  class: "legend-color",
+                  style: { "background-color": "#2196F3" }
+                }),
+                vue.createElementVNode("text", { class: "legend-name" }, "债券类"),
+                vue.createElementVNode("text", { class: "legend-percent" }, "35%")
+              ]),
+              vue.createElementVNode("view", { class: "legend-item" }, [
+                vue.createElementVNode("view", {
+                  class: "legend-color",
+                  style: { "background-color": "#4CAF50" }
+                }),
+                vue.createElementVNode("text", { class: "legend-name" }, "现金类"),
+                vue.createElementVNode("text", { class: "legend-percent" }, "25%")
+              ]),
+              vue.createElementVNode("view", { class: "legend-item" }, [
+                vue.createElementVNode("view", {
+                  class: "legend-color",
+                  style: { "background-color": "#9C27B0" }
+                }),
+                vue.createElementVNode("text", { class: "legend-name" }, "另类投资"),
+                vue.createElementVNode("text", { class: "legend-percent" }, "15%")
+              ])
+            ])
+          ])
+        ])
+      ]),
+      vue.createCommentVNode(" 操作按钮 "),
+      vue.createElementVNode("view", { class: "action-section" }, [
+        vue.createElementVNode("button", {
+          class: "action-btn primary",
+          onClick: _cache[1] || (_cache[1] = (...args) => $options.applyRecommendations && $options.applyRecommendations(...args))
+        }, "应用建议"),
+        vue.createElementVNode("button", {
+          class: "action-btn secondary",
+          onClick: _cache[2] || (_cache[2] = (...args) => $options.saveAdvice && $options.saveAdvice(...args))
+        }, "保存建议"),
+        vue.createElementVNode("button", {
+          class: "action-btn tertiary",
+          onClick: _cache[3] || (_cache[3] = (...args) => $options.shareAdvice && $options.shareAdvice(...args))
+        }, "分享建议")
+      ])
+    ]);
+  }
+  const PagesWealthAdviceDetail = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["render", _sfc_render$1], ["__scopeId", "data-v-c28b21b5"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/advice-detail.vue"]]);
+  const _sfc_main$1 = {
+    data() {
+      return {
+        totalGoals: 4,
+        activeGoals: 3,
+        completedGoals: 1,
+        goalCategories: [
+          { id: 1, name: "购房", icon: "🏠", color: "#4CAF50" },
+          { id: 2, name: "教育", icon: "🎓", color: "#2196F3" },
+          { id: 3, name: "退休", icon: "🌴", color: "#FF9800" },
+          { id: 4, name: "旅行", icon: "✈️", color: "#9C27B0" },
+          { id: 5, name: "购车", icon: "🚗", color: "#F44336" },
+          { id: 6, name: "其他", icon: "💰", color: "#607D8B" }
+        ],
+        usageSteps: [
+          {
+            title: "设定目标",
+            description: '点击右上角"+"按钮，选择目标类型，输入目标金额和完成时间',
+            tips: "建议设定SMART目标：具体、可衡量、可实现、相关、有时限"
+          },
+          {
+            title: "定期存入",
+            description: '点击目标卡片上的"存入"按钮，定期向目标账户存入资金',
+            tips: "建议设置自动定投，让储蓄成为习惯"
+          },
+          {
+            title: "跟踪进度",
+            description: "在目标列表中查看进度条，了解完成情况",
+            tips: "定期检查进度，必要时调整目标或策略"
+          },
+          {
+            title: "完成目标",
+            description: "当存入金额达到目标时，系统会自动标记为已完成",
+            tips: "完成目标后，可以设定新的目标继续理财规划"
+          }
+        ],
+        features: [
+          {
+            icon: "📊",
+            title: "进度跟踪",
+            description: "实时显示目标完成进度，让您清楚了解距离目标还有多远",
+            example: "购房首付目标50万，已存32.5万，完成进度65%"
+          },
+          {
+            icon: "💰",
+            title: "快速存入",
+            description: "支持快速金额选择和自定义金额存入，操作简单便捷",
+            example: "点击1000、5000、10000等快速金额，或输入自定义金额"
+          },
+          {
+            icon: "🏷️",
+            title: "分类管理",
+            description: "按购房、教育、退休等类型分类管理，让目标更有条理",
+            example: "购房目标、教育基金、退休规划分别管理"
+          },
+          {
+            icon: "📅",
+            title: "时间规划",
+            description: "设定目标完成时间，帮助您合理安排资金规划",
+            example: "2026年8月完成购房首付，2028年6月完成教育基金"
+          },
+          {
+            icon: "📝",
+            title: "备注记录",
+            description: "为目标添加备注信息，记录重要细节和计划",
+            example: "购买三居室首付、孩子大学教育基金等"
+          },
+          {
+            icon: "🔄",
+            title: "状态管理",
+            description: "支持进行中、已完成等状态管理，清晰了解目标状态",
+            example: "进行中的目标显示绿色，已完成的目标显示灰色"
+          }
+        ],
+        bestPractices: [
+          {
+            icon: "🎯",
+            title: "设定合理目标",
+            description: "根据收入情况设定可实现的目标，避免过高或过低"
+          },
+          {
+            icon: "⏰",
+            title: "定期检查",
+            description: "每月检查一次目标进度，及时调整策略"
+          },
+          {
+            icon: "💪",
+            title: "坚持执行",
+            description: "设定目标后要坚持执行，养成定期储蓄的习惯"
+          },
+          {
+            icon: "📈",
+            title: "动态调整",
+            description: "根据收入变化和市场情况，适时调整目标金额和时间"
+          },
+          {
+            icon: "🎉",
+            title: "庆祝完成",
+            description: "完成目标后给自己一些奖励，保持理财的积极性"
+          }
+        ]
+      };
+    },
+    computed: {
+      completionRate() {
+        if (this.totalGoals === 0)
+          return 0;
+        return Math.round(this.completedGoals / this.totalGoals * 100);
+      }
+    },
+    methods: {
+      goBack() {
+        uni.navigateBack();
+      },
+      getCategoryDescription(categoryName) {
+        const descriptions = {
+          "购房": "买房首付、装修等",
+          "教育": "子女教育、培训等",
+          "退休": "养老规划、退休金",
+          "旅行": "旅游、度假等",
+          "购车": "买车、换车等",
+          "其他": "其他财务目标"
+        };
+        return descriptions[categoryName] || "其他财务目标";
+      },
+      goToGoalManagement() {
+        uni.navigateTo({
+          url: "/pages/wealth/goal-management"
+        });
+      },
+      createNewGoal() {
+        uni.navigateTo({
+          url: "/pages/wealth/goal-management"
+        });
+      },
+      viewProgress() {
+        uni.navigateTo({
+          url: "/pages/wealth/goal-management"
+        });
+      },
+      getAdvice() {
+        uni.navigateTo({
+          url: "/pages/wealth/ai-wealth-manager"
+        });
+      }
+    }
+  };
+  function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("view", { class: "goal-usage-guide-page" }, [
+      vue.createCommentVNode(" 顶部导航 "),
+      vue.createElementVNode("view", { class: "nav-bar" }, [
+        vue.createElementVNode("view", { class: "nav-left" }, [
+          vue.createElementVNode("button", {
+            class: "back-btn",
+            onClick: _cache[0] || (_cache[0] = (...args) => $options.goBack && $options.goBack(...args))
+          }, [
+            vue.createElementVNode("text", { class: "back-icon" }, "←")
+          ]),
+          vue.createElementVNode("text", { class: "nav-title" }, "目标管理使用指南")
+        ])
+      ]),
+      vue.createCommentVNode(" 功能概览 "),
+      vue.createElementVNode("view", { class: "overview-section" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "🎯 目标管理功能概览"),
+        vue.createElementVNode("view", { class: "overview-content" }, [
+          vue.createElementVNode("text", { class: "overview-text" }, "目标管理功能帮助您设定、跟踪和实现财务目标，让理财更有计划性和成就感。")
+        ])
+      ]),
+      vue.createCommentVNode(" 当前目标状态 "),
+      vue.createElementVNode("view", { class: "current-goals-section" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "📊 您当前的目标状态"),
+        vue.createElementVNode("view", { class: "goals-stats" }, [
+          vue.createElementVNode("view", { class: "stat-card" }, [
+            vue.createElementVNode(
+              "text",
+              { class: "stat-number" },
+              vue.toDisplayString($data.totalGoals),
+              1
+              /* TEXT */
+            ),
+            vue.createElementVNode("text", { class: "stat-label" }, "总目标数")
+          ]),
+          vue.createElementVNode("view", { class: "stat-card" }, [
+            vue.createElementVNode(
+              "text",
+              { class: "stat-number" },
+              vue.toDisplayString($data.activeGoals),
+              1
+              /* TEXT */
+            ),
+            vue.createElementVNode("text", { class: "stat-label" }, "进行中")
+          ]),
+          vue.createElementVNode("view", { class: "stat-card" }, [
+            vue.createElementVNode(
+              "text",
+              { class: "stat-number" },
+              vue.toDisplayString($data.completedGoals),
+              1
+              /* TEXT */
+            ),
+            vue.createElementVNode("text", { class: "stat-label" }, "已完成")
+          ]),
+          vue.createElementVNode("view", { class: "stat-card" }, [
+            vue.createElementVNode(
+              "text",
+              { class: "stat-number" },
+              vue.toDisplayString($options.completionRate) + "%",
+              1
+              /* TEXT */
+            ),
+            vue.createElementVNode("text", { class: "stat-label" }, "完成率")
+          ])
+        ])
+      ]),
+      vue.createCommentVNode(" 目标类型说明 "),
+      vue.createElementVNode("view", { class: "goal-types-section" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "🏷️ 支持的目标类型"),
+        vue.createElementVNode("view", { class: "types-grid" }, [
+          (vue.openBlock(true), vue.createElementBlock(
+            vue.Fragment,
+            null,
+            vue.renderList($data.goalCategories, (category) => {
+              return vue.openBlock(), vue.createElementBlock("view", {
+                class: "type-card",
+                key: category.id
+              }, [
+                vue.createElementVNode(
+                  "view",
+                  {
+                    class: "type-icon",
+                    style: vue.normalizeStyle({ backgroundColor: category.color })
+                  },
+                  [
+                    vue.createElementVNode(
+                      "text",
+                      { class: "icon" },
+                      vue.toDisplayString(category.icon),
+                      1
+                      /* TEXT */
+                    )
+                  ],
+                  4
+                  /* STYLE */
+                ),
+                vue.createElementVNode(
+                  "text",
+                  { class: "type-name" },
+                  vue.toDisplayString(category.name),
+                  1
+                  /* TEXT */
+                ),
+                vue.createElementVNode(
+                  "text",
+                  { class: "type-desc" },
+                  vue.toDisplayString($options.getCategoryDescription(category.name)),
+                  1
+                  /* TEXT */
+                )
+              ]);
+            }),
+            128
+            /* KEYED_FRAGMENT */
+          ))
+        ])
+      ]),
+      vue.createCommentVNode(" 使用步骤 "),
+      vue.createElementVNode("view", { class: "usage-steps-section" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "📋 使用步骤"),
+        vue.createElementVNode("view", { class: "steps-list" }, [
+          (vue.openBlock(true), vue.createElementBlock(
+            vue.Fragment,
+            null,
+            vue.renderList($data.usageSteps, (step, index) => {
+              return vue.openBlock(), vue.createElementBlock("view", {
+                class: "step-item",
+                key: index
+              }, [
+                vue.createElementVNode(
+                  "view",
+                  { class: "step-number" },
+                  vue.toDisplayString(index + 1),
+                  1
+                  /* TEXT */
+                ),
+                vue.createElementVNode("view", { class: "step-content" }, [
+                  vue.createElementVNode(
+                    "text",
+                    { class: "step-title" },
+                    vue.toDisplayString(step.title),
+                    1
+                    /* TEXT */
+                  ),
+                  vue.createElementVNode(
+                    "text",
+                    { class: "step-desc" },
+                    vue.toDisplayString(step.description),
+                    1
+                    /* TEXT */
+                  ),
+                  step.tips ? (vue.openBlock(), vue.createElementBlock("view", {
+                    key: 0,
+                    class: "step-tips"
+                  }, [
+                    vue.createElementVNode("text", { class: "tips-label" }, "💡 小贴士："),
+                    vue.createElementVNode(
+                      "text",
+                      { class: "tips-text" },
+                      vue.toDisplayString(step.tips),
+                      1
+                      /* TEXT */
+                    )
+                  ])) : vue.createCommentVNode("v-if", true)
+                ])
+              ]);
+            }),
+            128
+            /* KEYED_FRAGMENT */
+          ))
+        ])
+      ]),
+      vue.createCommentVNode(" 功能详解 "),
+      vue.createElementVNode("view", { class: "features-section" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "⚙️ 功能详解"),
+        vue.createElementVNode("view", { class: "features-list" }, [
+          (vue.openBlock(true), vue.createElementBlock(
+            vue.Fragment,
+            null,
+            vue.renderList($data.features, (feature, index) => {
+              return vue.openBlock(), vue.createElementBlock("view", {
+                class: "feature-item",
+                key: index
+              }, [
+                vue.createElementVNode("view", { class: "feature-header" }, [
+                  vue.createElementVNode(
+                    "view",
+                    { class: "feature-icon" },
+                    vue.toDisplayString(feature.icon),
+                    1
+                    /* TEXT */
+                  ),
+                  vue.createElementVNode(
+                    "text",
+                    { class: "feature-title" },
+                    vue.toDisplayString(feature.title),
+                    1
+                    /* TEXT */
+                  )
+                ]),
+                vue.createElementVNode(
+                  "text",
+                  { class: "feature-desc" },
+                  vue.toDisplayString(feature.description),
+                  1
+                  /* TEXT */
+                ),
+                feature.example ? (vue.openBlock(), vue.createElementBlock("view", {
+                  key: 0,
+                  class: "feature-example"
+                }, [
+                  vue.createElementVNode("text", { class: "example-label" }, "示例："),
+                  vue.createElementVNode(
+                    "text",
+                    { class: "example-text" },
+                    vue.toDisplayString(feature.example),
+                    1
+                    /* TEXT */
+                  )
+                ])) : vue.createCommentVNode("v-if", true)
+              ]);
+            }),
+            128
+            /* KEYED_FRAGMENT */
+          ))
+        ])
+      ]),
+      vue.createCommentVNode(" 最佳实践 "),
+      vue.createElementVNode("view", { class: "best-practices-section" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "🌟 最佳实践建议"),
+        vue.createElementVNode("view", { class: "practices-list" }, [
+          (vue.openBlock(true), vue.createElementBlock(
+            vue.Fragment,
+            null,
+            vue.renderList($data.bestPractices, (practice, index) => {
+              return vue.openBlock(), vue.createElementBlock("view", {
+                class: "practice-item",
+                key: index
+              }, [
+                vue.createElementVNode(
+                  "view",
+                  { class: "practice-icon" },
+                  vue.toDisplayString(practice.icon),
+                  1
+                  /* TEXT */
+                ),
+                vue.createElementVNode("view", { class: "practice-content" }, [
+                  vue.createElementVNode(
+                    "text",
+                    { class: "practice-title" },
+                    vue.toDisplayString(practice.title),
+                    1
+                    /* TEXT */
+                  ),
+                  vue.createElementVNode(
+                    "text",
+                    { class: "practice-desc" },
+                    vue.toDisplayString(practice.description),
+                    1
+                    /* TEXT */
+                  )
+                ])
+              ]);
+            }),
+            128
+            /* KEYED_FRAGMENT */
+          ))
+        ])
+      ]),
+      vue.createCommentVNode(" 快速操作 "),
+      vue.createElementVNode("view", { class: "quick-actions-section" }, [
+        vue.createElementVNode("view", { class: "section-title" }, "🚀 快速操作"),
+        vue.createElementVNode("view", { class: "actions-grid" }, [
+          vue.createElementVNode("button", {
+            class: "action-card",
+            onClick: _cache[1] || (_cache[1] = (...args) => $options.goToGoalManagement && $options.goToGoalManagement(...args))
+          }, [
+            vue.createElementVNode("view", { class: "action-icon" }, "📝"),
+            vue.createElementVNode("text", { class: "action-title" }, "管理目标"),
+            vue.createElementVNode("text", { class: "action-desc" }, "查看和编辑您的目标")
+          ]),
+          vue.createElementVNode("button", {
+            class: "action-card",
+            onClick: _cache[2] || (_cache[2] = (...args) => $options.createNewGoal && $options.createNewGoal(...args))
+          }, [
+            vue.createElementVNode("view", { class: "action-icon" }, "➕"),
+            vue.createElementVNode("text", { class: "action-title" }, "创建目标"),
+            vue.createElementVNode("text", { class: "action-desc" }, "设定新的财务目标")
+          ]),
+          vue.createElementVNode("button", {
+            class: "action-card",
+            onClick: _cache[3] || (_cache[3] = (...args) => $options.viewProgress && $options.viewProgress(...args))
+          }, [
+            vue.createElementVNode("view", { class: "action-icon" }, "📊"),
+            vue.createElementVNode("text", { class: "action-title" }, "查看进度"),
+            vue.createElementVNode("text", { class: "action-desc" }, "跟踪目标完成情况")
+          ]),
+          vue.createElementVNode("button", {
+            class: "action-card",
+            onClick: _cache[4] || (_cache[4] = (...args) => $options.getAdvice && $options.getAdvice(...args))
+          }, [
+            vue.createElementVNode("view", { class: "action-icon" }, "💡"),
+            vue.createElementVNode("text", { class: "action-title" }, "获取建议"),
+            vue.createElementVNode("text", { class: "action-desc" }, "AI智能理财建议")
+          ])
+        ])
+      ])
+    ]);
+  }
+  const PagesWealthGoalUsageGuide = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["render", _sfc_render], ["__scopeId", "data-v-4c1222e4"], ["__file", "E:/项目/yihangyidon/src/pages/wealth/goal-usage-guide.vue"]]);
   __definePage("pages/denglu/login", PagesDengluLogin);
   __definePage("pages/register/register", PagesRegisterRegister);
   __definePage("pages/index/index", PagesIndexIndex);
@@ -32795,8 +35209,11 @@ ${this.hasFullAccess ? "✅ 已授予完整访问权限" : "❌ 未授予完整�
   __definePage("pages/wealth/insurance-detail", PagesWealthInsuranceDetail);
   __definePage("pages/wealth/insurance-success", PagesWealthInsuranceSuccess);
   __definePage("pages/wealth/ai-wealth-manager", PagesWealthAiWealthManager);
+  __definePage("pages/wealth/meeting-schedule", PagesWealthMeetingSchedule);
   __definePage("pages/wealth/asset-allocation-detail", PagesWealthAssetAllocationDetail);
   __definePage("pages/wealth/goal-management", PagesWealthGoalManagement);
+  __definePage("pages/wealth/advice-detail", PagesWealthAdviceDetail);
+  __definePage("pages/wealth/goal-usage-guide", PagesWealthGoalUsageGuide);
   function initPushNotification() {
     if (typeof plus !== "undefined" && plus.push) {
       plus.globalEvent.addEventListener("newPath", ({ path }) => {

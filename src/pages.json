@@ -256,6 +256,14 @@
 			}
 		},
 		{
+			"path": "pages/wealth/meeting-schedule",
+			"style": {
+				"navigationBarTitleText": "预约面谈",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+			}
+		},
+		{
 			"path": "pages/wealth/asset-allocation-detail",
 			"style": {
 				"navigationBarTitleText": "资产配置详情",
@@ -264,9 +272,41 @@
 			}
 		},
 		{
-			"path": "pages/wealth/goal-management",
+			"path": "pages/wealth/advice-detail",
 			"style": {
-				"navigationBarTitleText": "目标管理",
+				"navigationBarTitleText": "智能建议详情",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/wealth/goal-usage-guide",
+			"style": {
+				"navigationBarTitleText": "目标管理使用指南",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/wealth/report-preview",
+			"style": {
+				"navigationBarTitleText": "报告预览",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/wealth/goal-list",
+			"style": {
+				"navigationBarTitleText": "所有目标",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/wealth/goal-edit",
+			"style": {
+				"navigationBarTitleText": "编辑目标",
 				"enablePullDownRefresh": false,
 				"navigationStyle": "custom"
 			}

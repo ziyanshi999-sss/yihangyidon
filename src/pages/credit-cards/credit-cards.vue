@@ -38,11 +38,12 @@
 
     <!-- 信用卡列表 -->
     <view class="credit-cards-list-section">
-      <view class="section-header">
+      <view class="section-header" @click="toggleCardsVisibility">
         <text class="section-title">我的信用卡</text>
-        <text class="section-subtitle">点击查看详情</text>
+        <text class="section-subtitle">{{ showCards ? '点击隐藏详情' : '点击查看详情' }}</text>
+        <text class="expand-icon" :class="{ 'expanded': showCards }">▼</text>
       </view>
-      <view class="cards-list">
+      <view class="cards-list" :class="{ 'show': showCards }" v-show="showCards">
         <view 
           v-for="card in creditCards" 
           :key="card.id"
@@ -226,6 +227,7 @@ export default {
       selectedCard: null,
       repaymentAmountForModal: 0,
       balanceVisible: true,
+      showCards: false, // 控制卡片列表的显示/隐藏
       totalCreditLimit: 0,
       totalAvailableCredit: 0,
       totalCurrentBalance: 0,
@@ -246,6 +248,11 @@ export default {
   methods: {
     goBack() {
       uni.switchTab({ url: '/pages/user/user' })
+    },
+    
+    // 切换卡片列表的显示/隐藏
+    toggleCardsVisibility() {
+      this.showCards = !this.showCards
     },
     async loadCreditCards() {
       try {
@@ -524,25 +531,62 @@ export default {
 
 .section-header {
   margin-bottom: 30rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx;
+  background: #f8fafc;
+  border-radius: 16rpx;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2rpx solid transparent;
 }
 
-.section-title {
+.section-header:hover {
+  background: #e2e8f0;
+  border-color: #3b82f6;
+}
+
+.section-header .section-title {
   font-size: 32rpx;
   font-weight: 600;
   color: #1e40af;
-  display: block;
-  margin-bottom: 8rpx;
+  margin-bottom: 0;
 }
 
-.section-subtitle {
+.section-header .section-subtitle {
   font-size: 24rpx;
   color: #3b82f6;
+  margin-left: 20rpx;
+  flex: 1;
+}
+
+.expand-icon {
+  font-size: 24rpx;
+  color: #3b82f6;
+  transition: transform 0.3s ease;
+  margin-left: 20rpx;
+}
+
+.expand-icon.expanded {
+  transform: rotate(180deg);
 }
 
 .cards-list {
   display: flex;
   flex-direction: column;
   gap: 20rpx;
+  opacity: 0;
+  transform: translateY(-20rpx);
+  transition: all 0.3s ease;
+  max-height: 0;
+  overflow: hidden;
+}
+
+.cards-list.show {
+  opacity: 1;
+  transform: translateY(0);
+  max-height: 2000rpx;
 }
 
 .card-item {

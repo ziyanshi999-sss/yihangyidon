@@ -11,7 +11,14 @@ import { getStorage, setStorage } from '@/utils/storage'
  * @returns {Object} 财富数据
  */
 export function getCurrentUserWealthData() {
-  const users = getUsersData()
+  // 首先尝试从本地存储获取数据
+  let users = uni.getStorageSync('users')
+  
+  if (!users || users.length === 0) {
+    // 如果本地存储没有数据，从getUsersData获取
+    users = getUsersData()
+  }
+  
   const currentUserId = getCurrentUserId()
   const currentUser = users.find(user => user.id === currentUserId) || users[0]
   

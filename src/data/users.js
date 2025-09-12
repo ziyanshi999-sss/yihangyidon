@@ -8,9 +8,11 @@ let users = []
 // 初始化用户数据
 function initUsers() {
   try {
-    // 首先尝试从本地存储获取用户数据
-    const storedUsers = getStorage('users', true)
+    // 首先尝试从本地存储获取数据
+    const storedUsers = uni.getStorageSync('users')
+    
     if (storedUsers && storedUsers.length > 0) {
+      // 如果本地存储有数据，使用本地存储的数据
       users = storedUsers
       console.log('从本地存储加载用户数据:', users.length, '个用户')
     } else {
@@ -20,6 +22,8 @@ function initUsers() {
       saveUsersToStorage()
       console.log('从JSON文件加载用户数据:', users.length, '个用户')
     }
+    
+    console.log('用户数据详情:', users.map(u => ({ id: u.id, username: u.username, phone: u.phone, balance: u.balance })))
   } catch (error) {
     console.error('初始化用户数据失败:', error)
     users = userDataJson || []
@@ -209,4 +213,19 @@ export function resetUsersData() {
   users = userDataJson || []
   saveUsersToStorage()
   console.log('用户数据已重置')
+}
+
+// 清除本地存储并重新加载数据
+export function clearStorageAndReload() {
+  try {
+    // 清除本地存储
+    uni.removeStorageSync('users')
+    console.log('已清除本地存储')
+    
+    // 重新初始化用户数据
+    initUsers()
+    console.log('用户数据已重新加载')
+  } catch (error) {
+    console.error('清除存储并重新加载失败:', error)
+  }
 }

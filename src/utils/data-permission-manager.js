@@ -294,3 +294,5 @@ class DataPermissionManager {
 const dataPermissionManager = new DataPermissionManager()
 
 export default dataPermissionManager
+
+

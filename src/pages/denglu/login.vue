@@ -181,7 +181,7 @@
 </template>
 
 <script>
-import { validateUser, generateVerificationCode, verifyCode, users } from '@/data/users.js'
+import { validateUser, generateVerificationCode, verifyCode, users, clearStorageAndReload } from '@/data/users.js'
 import { handleLoginSuccess } from '@/utils/auth.js'
 
 export default {
@@ -203,6 +203,8 @@ export default {
   
   onLoad() {
     console.log('页面加载完成');
+    // 清除旧数据并重新加载
+    clearStorageAndReload();
     // 测试用户数据加载
     console.log('加载的用户数据:', users);
     console.log('用户数量:', users.length);

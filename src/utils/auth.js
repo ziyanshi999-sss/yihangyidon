@@ -168,6 +168,7 @@ export function handleLoginSuccess(userInfo) {
       // 保存完整的用户信息到本地存储
       uni.setStorageSync('userInfo', completeUserInfo)
       uni.setStorageSync('currentUser', completeUserInfo)
+      uni.setStorageSync('currentUserId', completeUserInfo.id)
       uni.setStorageSync('isLoggedIn', true)
       
       console.log('用户登录成功，完整数据已同步:', {
@@ -181,6 +182,7 @@ export function handleLoginSuccess(userInfo) {
       // 如果数据库中没有找到用户，直接保存传入的用户信息
       uni.setStorageSync('userInfo', userInfo)
       uni.setStorageSync('currentUser', userInfo)
+      uni.setStorageSync('currentUserId', userInfo.id)
       uni.setStorageSync('isLoggedIn', true)
       
       console.log('用户登录成功，使用传入数据:', {
@@ -196,6 +198,7 @@ export function handleLoginSuccess(userInfo) {
     // 出错时仍然保存基本用户信息
     uni.setStorageSync('userInfo', userInfo)
     uni.setStorageSync('currentUser', userInfo)
+    uni.setStorageSync('currentUserId', userInfo.id)
     uni.setStorageSync('isLoggedIn', true)
   }
   

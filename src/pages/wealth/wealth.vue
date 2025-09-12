@@ -261,33 +261,17 @@ export default {
       // 客服
       serviceHotline: '95599',
       serviceHours: '7×24小时在线',
-      totalAssets: '125,438.52',
-      yesterdayProfit: '+35.78',
+      totalAssets: '0.00',
+      yesterdayProfit: '+0.00',
       depositSummary: {
-        current: '23,560.20',
-        fixed: '80,000.00',
-        smart: '8,520.32'
+        current: '0.00',
+        fixed: '0.00',
+        smart: '0.00'
       },
-      depositProducts: [
-        { id: 'd1', name: '整存整取', term: '3个月', minAmount: 1000, rate: 1.85 },
-        { id: 'd2', name: '整存整取', term: '1年', minAmount: 1000, rate: 2.10 },
-        { id: 'd3', name: '大额存单', term: '3年', minAmount: 200000, rate: 2.95 }
-      ],
-      wealthProducts: [
-        { id: 'w1', name: '稳健优选第68期', risk: '低', term: '90天', minAmount: 10000, yield: 3.20 },
-        { id: 'w2', name: '灵活理财T+1', risk: '低', term: '开放式', minAmount: 1000, yield: 2.65 },
-        { id: 'w3', name: '进取增强半年期', risk: '中', term: '180天', minAmount: 10000, yield: 4.10 }
-      ],
-      insuranceList: [
-        { id: 'i1', name: '安心医疗险', type: 'health', typeText: '医疗险', desc: '百万保额·报销广', premium: 268 },
-        { id: 'i2', name: '家庭意外险', type: 'accident', typeText: '意外险', desc: '全家保障·一年期', premium: 199 },
-        { id: 'i3', name: '重疾守护', type: 'critical', typeText: '重疾险', desc: '重大疾病全面保障', premium: 860 }
-      ],
-      forexList: [
-        { code: 'USD/CNY', price: '7.2375', change: 0.12 },
-        { code: 'EUR/CNY', price: '7.8801', change: -0.08 },
-        { code: 'JPY/CNY', price: '0.0468', change: 0.02 }
-      ],
+      depositProducts: [],
+      wealthProducts: [],
+      insuranceList: [],
+      forexList: [],
       // 热点资讯（示例静态数据，可后续接入后端/抓取）
       newsList: [
         {
@@ -334,6 +318,7 @@ export default {
     console.log('财富页面加载')
     this.ensureLoginStatus()
     this.initDataSync()
+    this.loadWealthData()
   },
   
   methods: {
@@ -353,10 +338,15 @@ export default {
           // 如果数据库中没有用户，使用默认数据
           const defaultUser = {
             id: 'u001',
-            username: '张小明',
-            phone: '13999999999',
-            balance: 150000.00,
-            nickname: '小明'
+            username: '李华',
+            phone: '13888888888',
+            balance: 280000.00,
+            nickname: '华华',
+            realName: '李华',
+            email: 'lihua@example.com',
+            gender: '女',
+            birthDate: '1995-03-15',
+            address: '北京市朝阳区建国门外大街1号'
           }
           
           uni.setStorageSync('userInfo', defaultUser)
@@ -496,7 +486,114 @@ export default {
       uni.$on('balanceUpdated', (data) => {
         console.log('财富页面收到余额更新事件:', data)
         // 可以在这里更新页面显示
+        this.loadWealthData() // 重新加载数据
       })
+    },
+    
+    // 从user.json加载财富数据
+    loadWealthData() {
+      try {
+        const wealthData = getCurrentUserWealthData()
+        console.log('加载财富数据:', wealthData)
+        
+        // 更新存款数据
+        if (wealthData.deposits) {
+          this.depositSummary = {
+            current: wealthData.deposits.current ? wealthData.deposits.current.toLocaleString() : '0.00',
+            fixed: wealthData.deposits.fixed ? wealthData.deposits.fixed.toLocaleString() : '0.00',
+            smart: wealthData.deposits.smart ? wealthData.deposits.smart.toLocaleString() : '0.00'
+          }
+        }
+        
+        // 更新存款产品数据
+        if (wealthData.depositProducts && wealthData.depositProducts.fixed) {
+          this.depositProducts = wealthData.depositProducts.fixed.map((product, index) => ({
+            id: `d${index + 1}`,
+            name: '整存整取',
+            term: product.term,
+            minAmount: product.minAmount,
+            rate: product.rate
+          }))
+        }
+        
+        // 更新理财产品数据
+        if (wealthData.investments) {
+          this.wealthProducts = wealthData.investments.map((investment, index) => ({
+            id: `w${index + 1}`,
+            name: investment.name,
+            risk: investment.rate <= 4.0 ? '低' : investment.rate <= 6.0 ? '中' : '高',
+            term: investment.term,
+            minAmount: 1000,
+            yield: investment.rate
+          }))
+        }
+        
+        // 更新保险产品数据
+        if (wealthData.insuranceProducts && wealthData.insuranceProducts.categories) {
+          this.insuranceList = []
+          wealthData.insuranceProducts.categories.forEach(category => {
+            category.products.forEach(product => {
+              this.insuranceList.push({
+                id: product.id,
+                name: product.name,
+                type: category.id,
+                typeText: category.name,
+                desc: product.features ? product.features.join('·') : '',
+                premium: product.premium
+              })
+            })
+          })
+        }
+        
+        // 更新外汇数据
+        if (wealthData.forexProducts && wealthData.forexProducts.majorPairs) {
+          this.forexList = wealthData.forexProducts.majorPairs.map(pair => ({
+            code: pair.code,
+            price: pair.price,
+            change: parseFloat(pair.change)
+          }))
+        }
+        
+        // 计算总资产
+        this.calculateTotalAssets(wealthData)
+        
+        console.log('财富数据加载完成')
+      } catch (error) {
+        console.error('加载财富数据失败:', error)
+      }
+    },
+    
+    // 计算总资产
+    calculateTotalAssets(wealthData) {
+      try {
+        let totalAssets = 0
+        
+        // 存款总额
+        if (wealthData.deposits) {
+          totalAssets += (wealthData.deposits.current || 0)
+          totalAssets += (wealthData.deposits.fixed || 0)
+          totalAssets += (wealthData.deposits.smart || 0)
+        }
+        
+        // 投资总额
+        if (wealthData.investmentPortfolio && wealthData.investmentPortfolio.totalValue) {
+          totalAssets += wealthData.investmentPortfolio.totalValue
+        }
+        
+        // 格式化显示
+        this.totalAssets = totalAssets.toLocaleString('zh-CN', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        })
+        
+        // 计算昨日收益（模拟）
+        const yesterdayReturn = wealthData.investmentPortfolio?.totalReturn || 0
+        this.yesterdayProfit = yesterdayReturn >= 0 ? `+${yesterdayReturn.toFixed(2)}` : `${yesterdayReturn.toFixed(2)}`
+        
+        console.log('总资产计算完成:', this.totalAssets)
+      } catch (error) {
+        console.error('计算总资产失败:', error)
+      }
     }
   }
 }

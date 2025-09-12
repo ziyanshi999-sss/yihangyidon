@@ -2,6 +2,8 @@
 import { checkLoginAndRedirect, forceCheckLogin } from '@/utils/auth.js'
 import { initWealthDataSync } from '@/api/wealth.js'
 import { checkAndFixUserDataConsistency } from '@/utils/data-consistency.js'
+import dataStorageManager from '@/utils/data-storage-manager.js'
+import dataSync from '@/utils/data-sync.js'
 
 /**
  * 中国农业银行应用主入口
@@ -30,6 +32,9 @@ export default {
     
     // 初始化财富数据同步
     initWealthDataSync()
+    
+    // 初始化所有数据到本地存储
+    this.initAllDataToStorage()
   },
 
   onShow(options) {
@@ -69,6 +74,31 @@ export default {
   },
 
   methods: {
+    /**
+     * 初始化所有数据到本地存储
+     */
+    async initAllDataToStorage() {
+      try {
+        console.log('开始初始化所有数据到本地存储...')
+        
+        // 使用数据同步工具同步所有数据
+        dataSync.syncAllDataToStorage()
+        
+        // 检查是否需要同步数据
+        const syncCheck = await dataStorageManager.checkDataSync()
+        
+        if (syncCheck.needsSync) {
+          console.log('需要同步数据，原因:', syncCheck.reason)
+          await dataStorageManager.initAllDataToStorage()
+          console.log('所有数据已初始化到本地存储')
+        } else {
+          console.log('数据已是最新，无需同步')
+        }
+      } catch (error) {
+        console.error('初始化数据到本地存储失败:', error)
+      }
+    },
+
     /**
      * 检查应用更新
      */

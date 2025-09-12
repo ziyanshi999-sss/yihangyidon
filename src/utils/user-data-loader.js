@@ -14,9 +14,9 @@ class UserDataLoader {
    */
   async loadAllUsers() {
     try {
-      // 在uni-app中，直接使用模拟数据，避免网络请求问题
-      console.log('使用模拟用户数据')
-      this.userData = this.getMockUserData()
+      // 尝试从user.json文件加载真实数据
+      console.log('尝试从user.json加载用户数据')
+      this.userData = await this.getMockUserData()
       return this.userData
     } catch (error) {
       console.error('加载用户数据失败:', error)
@@ -329,26 +329,38 @@ class UserDataLoader {
   /**
    * 获取模拟用户数据（备用）
    */
-  getMockUserData() {
+  async getMockUserData() {
+    try {
+      // 尝试从user.json文件加载真实数据
+      const response = await fetch('/db/user.json')
+      if (response.ok) {
+        const userData = await response.json()
+        return userData
+      }
+    } catch (error) {
+      console.error('加载user.json失败，使用默认数据:', error)
+    }
+    
+    // 如果加载失败，返回默认数据
     return [
       {
         id: "u001",
-        username: "张小明",
-        phone: "13999999999",
-        password: "abc123",
-        transactionPassword: "654321",
-        balance: 150000.00,
-        nickname: "小明",
-        email: "zhangxiaoming@example.com",
-        idCard: "110101199202021456",
+        username: "李华",
+        phone: "13888888888",
+        password: "123456",
+        transactionPassword: "888888",
+        balance: 280000.00,
+        nickname: "华华",
+        email: "lihua@example.com",
+        idCard: "110101199503151234",
         avatar: "/static/wealth/useravatar.jpg",
         status: "active",
-        createTime: "2024-01-02T09:15:00.000Z",
-        lastLoginTime: "2024-01-15T14:20:00.000Z",
-        realName: "张小明",
-        gender: "男",
-        birthDate: "1992-02-02",
-        address: "上海市浦东新区陆家嘴环路1000号",
+        createTime: "2024-01-10T08:30:00.000Z",
+        lastLoginTime: "2024-01-20T16:45:00.000Z",
+        realName: "李华",
+        gender: "女",
+        birthDate: "1995-03-15",
+        address: "北京市朝阳区建国门外大街1号",
         avatarUpdateTime: "2024-01-15T14:20:00.000Z",
         lastUpdateTime: "2024-01-15T14:20:00.000Z",
         securitySettings: {
@@ -411,7 +423,7 @@ class UserDataLoader {
             dueDate: "2024-02-10",
             lastStatementDate: "2024-01-20",
             cardStatus: "active",
-            cardHolder: "张小明",
+            cardHolder: "李华",
             expiryDate: "2029-09-30",
             cvv: "456",
             annualFee: 500,
@@ -438,7 +450,7 @@ class UserDataLoader {
             type: "income",
             amount: 15000,
             description: "工资收入",
-            balance: 150000,
+            balance: 280000,
             timestamp: "2024-01-15T09:00:00.000Z",
             icon: "💰",
             title: "工资收入",
@@ -522,10 +534,10 @@ class UserDataLoader {
         bankAccounts: [
           {
             accountNumber: "6228480012345678901",
-            accountName: "张小明",
+            accountName: "李华",
             bankName: "中国农业银行",
             accountType: "储蓄卡",
-            balance: 150000.00,
+            balance: 280000.00,
             currency: "CNY",
             status: "active",
             openDate: "2020-03-15T00:00:00.000Z",
@@ -718,7 +730,7 @@ class UserDataLoader {
             id: "t003",
             type: "incoming",
             amount: 5000,
-            sender: "张小明",
+            sender: "李华",
             senderAccount: "6228480012345678901",
             description: "生活费转账",
             status: "completed",

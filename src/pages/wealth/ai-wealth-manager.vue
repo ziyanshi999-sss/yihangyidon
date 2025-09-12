@@ -7,7 +7,7 @@
     <view class="header-section">
       <view class="header-content">
         <view class="header-left">
-          <button class="back-btn" @click="goBack">
+          <button class="back-btn" @tap="goBack">
             <text class="back-icon">←</text>
           </button>
           <view class="ai-avatar-container">
@@ -20,7 +20,7 @@
           </view>
         </view>
         <view class="header-right">
-          <button class="chat-btn" @click="toggleChat">
+          <button class="chat-btn" @tap="toggleChat">
             <text class="chat-icon">💬</text>
           </button>
         </view>
@@ -85,7 +85,7 @@
         </view>
         
         <!-- 用户选择器 -->
-        <view class="user-selector" @click="showUserSelector" v-if="currentUserInfo">
+        <view class="user-selector" @tap="showUserSelector" v-if="currentUserInfo">
           <view class="user-avatar">
             <image :src="currentUserInfo.avatar" mode="aspectFill"></image>
           </view>
@@ -100,7 +100,7 @@
       </view>
       
       <view class="ai-features">
-        <view class="feature-card primary" @click="getSmartAdvice" :class="{ disabled: isLoading }">
+        <view class="feature-card primary" @tap="getSmartAdvice" :class="{ disabled: isLoading }">
           <view class="feature-icon">
             <text class="icon">💡</text>
           </view>
@@ -113,7 +113,7 @@
           </view>
         </view>
         
-        <view class="feature-card" @click="generateFinancialReport" :class="{ disabled: isLoading }">
+        <view class="feature-card" @tap="generateFinancialReport" :class="{ disabled: isLoading }">
           <view class="feature-icon">
             <text class="icon">📊</text>
           </view>
@@ -126,7 +126,7 @@
           </view>
         </view>
         
-        <view class="feature-card" @click="assessRisk" :class="{ disabled: isLoading }">
+        <view class="feature-card" @tap="assessRisk" :class="{ disabled: isLoading }">
           <view class="feature-icon">
             <text class="icon">🛡️</text>
           </view>
@@ -148,7 +148,7 @@
             <text class="permission-title">数据访问权限</text>
             <text class="permission-desc">授予AI完整的数据访问权限以获得更好的服务体验</text>
           </view>
-          <button class="permission-btn" @click="requestFullAccess" :disabled="isLoading">
+          <button class="permission-btn" @tap="requestFullAccess" :disabled="isLoading">
             <text class="btn-text">授予权限</text>
           </button>
         </view>
@@ -156,7 +156,7 @@
       
       <!-- 权限管理按钮 -->
       <view class="permission-actions" v-if="hasFullAccess">
-        <button class="permission-action-btn" @click="managePermissions">
+        <button class="permission-action-btn" @tap="managePermissions">
           <text class="btn-icon">⚙️</text>
           <text class="btn-text">权限管理</text>
         </button>
@@ -180,8 +180,8 @@
           </view>
         </view>
         <view class="allocation-actions">
-          <button class="action-btn primary" @click="showAllocationDetail">查看详细配置</button>
-          <button class="action-btn secondary" @click="autoRebalance">一键调仓</button>
+          <button class="action-btn primary" @tap="showAllocationDetail">查看详细配置</button>
+          <button class="action-btn secondary" @tap="autoRebalance">一键调仓</button>
         </view>
       </view>
     </view>
@@ -190,7 +190,7 @@
     <view class="goals-section">
       <view class="section-title">目标管理</view>
       <view class="goals-list">
-        <view class="goal-item" v-for="(goal, index) in userGoals" :key="index" @click="viewGoalDetail(goal)">
+        <view class="goal-item" v-for="(goal, index) in userGoals" :key="index" @tap="viewGoalDetail(goal)">
           <view class="goal-left">
             <view class="goal-icon" :style="{ backgroundColor: goal.color }">
               <text class="icon">{{ goal.icon }}</text>
@@ -213,8 +213,8 @@
         </view>
       </view>
       <view class="goal-actions">
-        <button class="action-btn primary" @click="addNewGoal">添加新目标</button>
-        <button class="action-btn secondary" @click="viewAllGoals">查看所有目标</button>
+        <button class="action-btn primary" @tap="addNewGoal">添加新目标</button>
+        <button class="action-btn secondary" @tap="viewAllGoals">查看所有目标</button>
       </view>
     </view>
     
@@ -222,7 +222,7 @@
     <view class="suggestions-section">
       <view class="section-title">智能建议</view>
       <view class="suggestions-list">
-        <view class="suggestion-item" v-for="(suggestion, index) in smartSuggestions" :key="index" @click="applySuggestion(suggestion)">
+        <view class="suggestion-item" v-for="(suggestion, index) in smartSuggestions" :key="index" @tap="applySuggestion(suggestion)">
           <view class="suggestion-left">
             <view class="suggestion-priority" :class="suggestion.priority">
               <text class="priority-text">{{ suggestion.priorityText }}</text>
@@ -260,15 +260,15 @@
           </view>
         </view>
         <view class="advisor-actions">
-          <button class="action-btn primary" @click="contactAdvisor">联系客户经理</button>
-          <button class="action-btn secondary" @click="scheduleMeeting">预约面谈</button>
+          <button class="action-btn primary" @tap="contactAdvisor">联系客户经理</button>
+          <button class="action-btn secondary" @tap="scheduleMeeting">预约面谈</button>
         </view>
       </view>
     </view>
     
     <!-- AI对话界面 -->
-    <view class="ai-chat-overlay" v-if="showChat" @click="closeChat">
-      <view class="chat-container" ref="chatContainer" @click.stop>
+    <view class="ai-chat-overlay" v-if="showChat" @tap="closeChat">
+      <view class="chat-container" ref="chatContainer" @tap.stop>
         <view class="chat-header">
           <view class="chat-avatar">
             <image class="ai-avatar-small" src="/static/wealth/aiavatar.png" mode="aspectFill"></image>
@@ -278,7 +278,7 @@
             <text class="chat-name">AI财富管家</text>
             <text class="chat-status">在线</text>
           </view>
-          <button class="close-btn" @click="closeChat">×</button>
+          <button class="close-btn" @tap="closeChat">×</button>
         </view>
         
         <view class="chat-messages" ref="chatMessages">
@@ -287,10 +287,10 @@
               <image class="avatar-img" src="/static/wealth/aiavatar.png" mode="aspectFill"></image>
             </view>
             <view class="message-content">
-              <view class="message-bubble">
-                <text class="message-text">{{ message.content }}</text>
-                <text class="message-time">{{ message.time }}</text>
-              </view>
+            <view class="message-bubble">
+              <text class="message-text">{{ message.content }}</text>
+              <text class="message-time">{{ message.time }}</text>
+            </view>
             </view>
           </view>
         </view>
@@ -298,12 +298,12 @@
         <view class="chat-input">
           <view class="input-container">
             <input class="message-input" v-model="inputMessage" placeholder="输入您的问题..." @confirm="sendMessage" />
-            <button class="send-btn" @click="sendMessage" :disabled="!inputMessage.trim()">
+            <button class="send-btn" @tap="sendMessage" :disabled="!inputMessage.trim()">
               <text class="send-icon">📤</text>
             </button>
           </view>
           <view class="quick-questions">
-            <button class="quick-btn" v-for="(question, index) in quickQuestions" :key="index" @click="sendQuickQuestion(question)">
+            <button class="quick-btn" v-for="(question, index) in quickQuestions" :key="index" @tap="sendQuickQuestion(question)">
               {{ question }}
             </button>
           </view>
@@ -449,9 +449,6 @@ export default {
     }
   },
   async onLoad() {
-    // 锁定页面滚动，防止滚动穿透
-    scrollControl.lockScroll()
-    
     await this.loadAvailableUsers()
     await this.checkPermissions()
     await this.loadProjectData()
@@ -469,13 +466,10 @@ export default {
   },
   
   onShow() {
-    // 页面显示时锁定滚动
-    scrollControl.lockScroll()
+    // 页面显示时不锁定滚动，允许正常滑动
   },
   methods: {
     goBack() {
-      // 返回前解锁滚动
-      scrollControl.unlockScroll()
       uni.navigateBack({
         delta: 1
       })
@@ -509,10 +503,10 @@ export default {
         this.availableUsers = [
           {
             id: 'u001',
-            username: '张小明',
-            realName: '张小明',
-            phone: '13999999999',
-            balance: 150000,
+            username: '李华',
+            realName: '李华',
+            phone: '13888888888',
+            balance: 280000.00,
             avatar: '/static/wealth/useravatar.jpg'
           }
         ]
@@ -740,30 +734,146 @@ ${this.hasFullAccess ? '✅ 已授予完整访问权限' : '❌ 未授予完整�
     async getSmartAdvice() {
       try {
         this.isLoading = true
-        const advice = await projectDataAnalyzer.generateSmartAdvice()
         
-        if (advice.success) {
-          this.smartAdvice = advice.advice
-          uni.showModal({
-            title: '智能投资建议',
-            content: advice.advice,
-            showCancel: false
-          })
-        } else {
-          uni.showToast({
-            title: '获取建议失败',
-            icon: 'error'
-          })
-        }
+        // 分析用户当前财务状况
+        const userAnalysis = this.analyzeUserFinancialStatus()
+        
+        // 获取市场趋势分析
+        const marketAnalysis = await this.getMarketTrendAnalysis()
+        
+        // 生成个性化建议
+        const personalizedAdvice = this.generatePersonalizedAdvice(userAnalysis, marketAnalysis)
+        
+        // 显示智能建议模态框
+        this.showAdviceModal(personalizedAdvice)
+        
       } catch (error) {
         console.error('获取智能建议失败:', error)
         uni.showToast({
-          title: '网络错误',
-          icon: 'error'
+          title: '网络错误，请重试',
+          icon: 'none'
         })
       } finally {
         this.isLoading = false
       }
+    },
+    
+    analyzeUserFinancialStatus() {
+      const totalAssets = this.userWealth.totalAssets || 280000
+      const monthlyIncome = 15000 // 模拟月收入
+      const monthlyExpenses = 8000 // 模拟月支出
+      const emergencyFund = 50000 // 应急资金
+      
+      return {
+        totalAssets,
+        monthlyIncome,
+        monthlyExpenses,
+        emergencyFund,
+        savingsRate: ((monthlyIncome - monthlyExpenses) / monthlyIncome * 100).toFixed(1),
+        debtToIncomeRatio: 0.3, // 模拟负债收入比
+        riskCapacity: this.calculateRiskCapacity(totalAssets, monthlyIncome),
+        liquidityRatio: (emergencyFund / monthlyExpenses).toFixed(1)
+      }
+    },
+    
+    calculateRiskCapacity(assets, income) {
+      if (assets > 500000 && income > 20000) return 'high'
+      if (assets > 200000 && income > 10000) return 'medium'
+      return 'low'
+    },
+    
+    async getMarketTrendAnalysis() {
+      // 模拟市场分析数据
+      return {
+        marketTrend: 'bullish',
+        volatility: 'medium',
+        interestRate: 3.5,
+        inflationRate: 2.1,
+        recommendedAllocation: {
+          stocks: 25,
+          bonds: 35,
+          cash: 25,
+          alternatives: 15
+        }
+      }
+    },
+    
+    generatePersonalizedAdvice(userAnalysis, marketAnalysis) {
+      const advice = {
+        title: '个性化财富建议',
+        summary: '',
+        recommendations: [],
+        riskAssessment: '',
+        nextSteps: []
+      }
+      
+      // 根据用户财务状况生成建议
+      if (userAnalysis.savingsRate < 20) {
+        advice.recommendations.push({
+          type: 'savings',
+          title: '提高储蓄率',
+          description: `当前储蓄率${userAnalysis.savingsRate}%，建议提升至20%以上`,
+          priority: 'high',
+          action: '制定预算计划，减少非必要支出'
+        })
+      }
+      
+      if (userAnalysis.liquidityRatio < 6) {
+        advice.recommendations.push({
+          type: 'emergency',
+          title: '建立应急基金',
+          description: `建议储备6个月的生活费用作为应急基金`,
+          priority: 'high',
+          action: '将部分资金转入货币基金'
+        })
+      }
+      
+      // 投资建议
+      if (userAnalysis.riskCapacity === 'high') {
+        advice.recommendations.push({
+          type: 'investment',
+          title: '优化投资组合',
+          description: '基于您的风险承受能力，建议增加股票类资产配置',
+          priority: 'medium',
+          action: '考虑定投指数基金'
+        })
+      }
+      
+      // 市场趋势建议
+      if (marketAnalysis.marketTrend === 'bullish') {
+        advice.recommendations.push({
+          type: 'market',
+          title: '把握市场机会',
+          description: '当前市场趋势向好，适合适度增加权益类投资',
+          priority: 'medium',
+          action: '关注优质成长股和指数基金'
+        })
+      }
+      
+      advice.summary = `基于您的财务状况分析，我们为您提供了${advice.recommendations.length}项个性化建议`
+      advice.riskAssessment = `您的风险承受能力为${userAnalysis.riskCapacity}，建议采用稳健型投资策略`
+      advice.nextSteps = ['制定详细投资计划', '设置自动定投', '定期评估投资表现']
+      
+      return advice
+    },
+    
+    showAdviceModal(advice) {
+      // 创建建议详情页面数据
+      const adviceData = {
+        title: advice.title,
+        summary: advice.summary,
+        recommendations: advice.recommendations,
+        riskAssessment: advice.riskAssessment,
+        nextSteps: advice.nextSteps
+      }
+      
+      // 存储到本地，供详情页面使用
+      uni.setStorageSync('currentAdvice', adviceData)
+      
+      // 跳转到建议详情页面
+      uni.navigateTo({
+        url: '/pages/wealth/advice-detail'
+      })
     },
     
     /**
@@ -1042,8 +1152,10 @@ ${this.hasFullAccess ? '✅ 已授予完整访问权限' : '❌ 未授予完整�
       })
     },
     viewAllGoals() {
-      uni.navigateTo({
-        url: '/pages/wealth/goal-management'
+      uni.showToast({
+        title: '目标管理功能暂不可用',
+        icon: 'none',
+        duration: 2000
       })
     },
     applySuggestion(suggestion) {
@@ -1068,20 +1180,53 @@ ${this.hasFullAccess ? '✅ 已授予完整访问权限' : '❌ 未授予完整�
     autoRebalance() {
       uni.showModal({
         title: '一键调仓',
-        content: '系统将根据您的风险偏好自动调整资产配置，是否继续？',
+        content: '系统将根据您的风险偏好和市场情况自动调整资产配置，确定继续吗？',
         success: (res) => {
           if (res.confirm) {
-            uni.showToast({
-              title: '调仓指令已发送',
-              icon: 'success'
-            })
+            this.executeAutoRebalance()
           }
         }
       })
     },
+    
+    executeAutoRebalance() {
+      uni.showLoading({ title: '正在分析市场...' })
+      
+      setTimeout(() => {
+        uni.hideLoading()
+        uni.showLoading({ title: '正在调仓...' })
+        
+        // 模拟调仓过程
+        setTimeout(() => {
+          uni.hideLoading()
+          
+          // 更新资产配置数据
+          this.allocationData = [
+            { name: '现金类', percent: 25, color: '#4CAF50' },
+            { name: '债券类', percent: 35, color: '#2196F3' },
+            { name: '股票类', percent: 25, color: '#FF9800' },
+            { name: '另类投资', percent: 15, color: '#9C27B0' }
+          ]
+          
+          uni.showModal({
+            title: '调仓完成',
+            content: '资产配置已根据市场情况优化调整，预期年化收益率提升至8.5%',
+            showCancel: false,
+            success: () => {
+              // 跳转到资产配置详情页面
+              uni.navigateTo({
+                url: '/pages/wealth/asset-allocation-detail'
+              })
+            }
+          })
+        }, 2000)
+      }, 1500)
+    },
     addNewGoal() {
-      uni.navigateTo({
-        url: '/pages/wealth/goal-management'
+      uni.showToast({
+        title: '目标管理功能暂不可用',
+        icon: 'none',
+        duration: 2000
       })
     },
     viewAllGoals() {
@@ -1104,8 +1249,38 @@ ${this.hasFullAccess ? '✅ 已授予完整访问权限' : '❌ 未授予完整�
       })
     },
     contactAdvisor() {
-      uni.navigateTo({
-        url: '/pages/wealth/advisor-chat'
+      // 显示确认对话框
+      uni.showModal({
+        title: '联系客户经理',
+        content: '是否拨打客户经理电话：15903724152？',
+        confirmText: '拨打',
+        cancelText: '取消',
+        success: (res) => {
+          if (res.confirm) {
+            // 用户确认后自动拨打电话
+            uni.makePhoneCall({
+              phoneNumber: '15903724152',
+              success: () => {
+                console.log('拨打电话成功')
+                uni.showToast({
+                  title: '正在拨打电话...',
+                  icon: 'success'
+                })
+              },
+              fail: (err) => {
+                console.error('拨打电话失败:', err)
+                uni.showToast({
+                  title: '拨打电话失败',
+                  icon: 'none'
+                })
+                // 如果拨打电话失败，跳转到聊天页面作为备选
+                uni.navigateTo({
+                  url: '/pages/wealth/advisor-chat'
+                })
+              }
+            })
+          }
+        }
       })
     },
     scheduleMeeting() {
@@ -1124,6 +1299,8 @@ ${this.hasFullAccess ? '✅ 已授予完整访问权限' : '❌ 未授予完整�
   padding: 0;
   transition: background-color 0.3s ease;
   position: relative;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* 顶部背景 */
@@ -1181,6 +1358,7 @@ ${this.hasFullAccess ? '✅ 已授予完整访问权限' : '❌ 未授予完整�
   color: white;
   font-weight: bold;
 }
+
 
 .ai-avatar-container {
   position: relative;
@@ -2528,6 +2706,7 @@ ${this.hasFullAccess ? '✅ 已授予完整访问权限' : '❌ 未授予完整�
   background: var(--theme-primary, #6366F1);
   border-color: var(--theme-primary, #6366F1);
 }
+
 
 .message-text {
   font-size: 26rpx;

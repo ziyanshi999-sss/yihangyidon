@@ -12,12 +12,18 @@ export function checkAndFixUserDataConsistency() {
     console.log('🔍 开始检查用户数据一致性...')
     
     // 获取当前存储的数据
-    const currentUserId = uni.getStorageSync('currentUserId') || 'u001'
+    const currentUserId = uni.getStorageSync('currentUserId')
     const users = uni.getStorageSync('users') || []
     const userInfo = uni.getStorageSync('userInfo')
     
     console.log('当前用户ID:', currentUserId)
     console.log('存储的用户信息:', userInfo)
+    
+    // 如果没有currentUserId，说明用户未登录，不进行修复
+    if (!currentUserId) {
+      console.log('⚠️ 用户未登录，跳过数据一致性检查')
+      return null
+    }
     
     // 从数据库中找到对应的用户
     const dbUser = users.find(user => user.id === currentUserId)
@@ -27,11 +33,10 @@ export function checkAndFixUserDataConsistency() {
       return null
     }
     
-    // 检查数据一致性
+    // 检查数据一致性 - 只检查关键字段，允许一些差异
     const isConsistent = userInfo && 
       userInfo.id === dbUser.id &&
       userInfo.username === dbUser.username &&
-      userInfo.balance === dbUser.balance &&
       userInfo.phone === dbUser.phone
     
     if (isConsistent) {
@@ -39,22 +44,33 @@ export function checkAndFixUserDataConsistency() {
       return userInfo
     }
     
-    // 数据不一致，需要修复
+    // 数据不一致，需要修复 - 但只更新非关键字段
     console.log('🔧 发现数据不一致，开始修复...')
     console.log('数据库用户:', dbUser.username, '余额:', dbUser.balance)
     console.log('存储用户:', userInfo?.username, '余额:', userInfo?.balance)
     
-    // 使用数据库中的最新数据
+    // 保持当前用户信息，只更新数据库中的最新字段
     const fixedUserInfo = {
-      ...dbUser,
-      // 确保必要字段存在
-      balance: dbUser.balance || 0,
-      nickname: dbUser.nickname || dbUser.username
+      ...userInfo, // 保持当前用户信息
+      ...dbUser,   // 用数据库数据覆盖
+      // 确保关键字段不变
+      id: userInfo.id,
+      username: userInfo.username,
+      phone: userInfo.phone,
+      // 确保登录状态正确
+      isLoggedIn: true
     }
     
     // 更新本地存储
     uni.setStorageSync('userInfo', fixedUserInfo)
     uni.setStorageSync('currentUser', fixedUserInfo)
+    
+    // 同时更新users数组中的用户数据
+    const userIndex = users.findIndex(user => user.id === currentUserId)
+    if (userIndex !== -1) {
+      users[userIndex] = { ...users[userIndex], ...fixedUserInfo }
+      uni.setStorageSync('users', users)
+    }
     
     console.log('✅ 用户数据修复完成:', {
       username: fixedUserInfo.username,

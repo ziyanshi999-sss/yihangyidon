@@ -25,7 +25,7 @@
           <view class="card-footer">
             <view class="card-holder">
               <text class="holder-label">持卡人</text>
-              <text class="holder-name">张小明</text>
+              <text class="holder-name">李华</text>
             </view>
             <view class="card-status">
               <text class="status-text">{{ getStatusText(cardInfo && cardInfo.status) }}</text>
