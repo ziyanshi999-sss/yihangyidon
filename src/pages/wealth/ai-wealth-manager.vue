@@ -450,6 +450,7 @@ export default {
   },
   async onLoad() {
     await this.loadAvailableUsers()
+    await this.loadUserWealthData()
     await this.checkPermissions()
     await this.loadProjectData()
     await this.generateAIAnalysis()
@@ -530,6 +531,7 @@ export default {
         })
         
         // 重新加载数据
+        await this.loadUserWealthData()
         await this.loadProjectData()
         await this.generateAIAnalysis()
         
@@ -707,6 +709,61 @@ ${this.hasFullAccess ? '✅ 已授予完整访问权限' : '❌ 未授予完整�
       }
     },
     
+    /**
+     * 加载用户财富数据
+     */
+    async loadUserWealthData() {
+      try {
+        const users = uni.getStorageSync('users') || []
+        const currentUser = users.find(user => user.isLoggedIn) || users[0]
+        
+        if (currentUser && currentUser.wealthProducts) {
+          // 更新财富分解数据
+          const deposits = currentUser.wealthProducts.deposits || {}
+          const investments = currentUser.wealthProducts.investments || []
+          
+          // 计算总资产
+          const totalAssets = (deposits.current || 0) + (deposits.fixed || 0) + (deposits.smart || 0) + 
+                             investments.reduce((sum, inv) => sum + (inv.amount || 0), 0)
+          
+          // 更新财富分解
+          this.wealthBreakdown = [
+            { 
+              icon: '💰', 
+              label: '活期存款', 
+              amount: deposits.current || 0, 
+              percent: totalAssets > 0 ? Math.round((deposits.current || 0) / totalAssets * 100) : 0, 
+              color: '#4CAF50' 
+            },
+            { 
+              icon: '🏦', 
+              label: '定期存款', 
+              amount: deposits.fixed || 0, 
+              percent: totalAssets > 0 ? Math.round((deposits.fixed || 0) / totalAssets * 100) : 0, 
+              color: '#2196F3' 
+            },
+            { 
+              icon: '📈', 
+              label: '投资理财', 
+              amount: investments.reduce((sum, inv) => sum + (inv.amount || 0), 0), 
+              percent: totalAssets > 0 ? Math.round(investments.reduce((sum, inv) => sum + (inv.amount || 0), 0) / totalAssets * 100) : 0, 
+              color: '#FF9800' 
+            }
+          ]
+          
+          // 更新用户财富数据
+          this.userWealth.totalAssets = totalAssets
+          
+          console.log('✅ 用户财富数据加载成功:', {
+            totalAssets,
+            wealthBreakdown: this.wealthBreakdown
+          })
+        }
+      } catch (error) {
+        console.error('❌ 加载用户财富数据失败:', error)
+      }
+    },
+
     /**
      * 生成AI分析
      */

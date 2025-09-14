@@ -1,0 +1,1 @@
+"use strict";const e=(e,r=" ")=>e?e.replace(/\s/g,"").replace(/(.{4})/g,`$1${r}`).trim():"";exports.formatBankCard=e,exports.hideBankCard=(r,t=4,s=4)=>{if(!r)return"";const n=r.replace(/\s/g,"");if(n.length<=t+s)return n;const a=n.slice(0,t),c=n.slice(-s),i="*".repeat(n.length-t-s);return e(a+i+c)};

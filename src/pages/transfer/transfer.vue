@@ -24,7 +24,7 @@
       <view class="balance-footer">
         <view class="limit-info">
           <text class="limit-label">单笔限额</text>
-          <text class="limit-amount">¥{{ currentUser.securitySettings?.transactionLimit?.toLocaleString() || '50,000' }}</text>
+          <text class="limit-amount">¥{{ currentUser.securitySettings?.transactionLimit?.toLocaleString() || '100,000' }}</text>
         </view>
         <view class="refresh-btn" @click="refreshBalance">
           <text class="refresh-icon">🔄</text>
@@ -177,6 +177,8 @@ import { forceCheckLogin } from '@/utils/auth.js'
 import dataSync from '@/utils/data-sync.js'
 import PaymentPasswordModal from '@/components/common/PaymentPasswordModal.vue'
 
+import unifiedDataManager from '@/utils/unified-data-manager.js'
+
 export default {
   components: {
     PaymentPasswordModal
@@ -207,6 +209,7 @@ export default {
   mounted() {
     // 页面加载完成
     this.loadUserData()
+    this.initDataSync()
   },
   
   onShow() {
@@ -232,19 +235,13 @@ export default {
   
   methods: {
     // 加载用户数据
-    loadUserData() {
+    async loadUserData() {
       try {
-        // 从本地存储获取当前用户信息
-        const currentUserId = uni.getStorageSync('currentUserId')
-        const users = uni.getStorageSync('users') || []
+        // 初始化统一数据管理器
+        await unifiedDataManager.init()
         
-        if (currentUserId && users.length > 0) {
-          this.currentUser = users.find(user => user.id === currentUserId) || {}
-        } else {
-          // 如果本地存储没有数据，从user.json获取
-          const userData = dataSync.getCurrentUserInfo()
-          this.currentUser = userData || {}
-        }
+        // 从统一数据管理器获取当前用户信息
+        this.currentUser = unifiedDataManager.getCurrentUser() || {}
         
         console.log('转账页面加载用户数据:', this.currentUser.username)
       } catch (error) {
@@ -324,7 +321,7 @@ export default {
       }
       
       // 检查是否超过限额
-      const transferLimit = this.currentUser.securitySettings?.transactionLimit || 50000
+      const transferLimit = this.currentUser.securitySettings?.transactionLimit || 100000
       if (numAmount > transferLimit) {
         uni.showToast({
           title: `转账金额不能超过${transferLimit.toLocaleString()}元`,
@@ -367,11 +364,13 @@ export default {
             return
           }
           
-          // 显示交易密码验证弹窗
+          // 直接处理转账，不需要密码验证
           this.transferAmount = parseFloat(this.accountForm.amount)
           this.transferPayee = this.accountForm.name
           this.transferDescription = `向账号${this.accountForm.account}转账`
-          this.showPasswordModal = true
+          
+          // 直接执行转账
+          await this.processTransferSuccess()
         } else {
           if (!this.phoneForm.phone || !this.phoneForm.amount) {
             uni.showToast({
@@ -388,11 +387,13 @@ export default {
             return
           }
           
-          // 显示交易密码验证弹窗
+          // 直接处理转账，不需要密码验证
           this.transferAmount = parseFloat(this.phoneForm.amount)
           this.transferPayee = this.phoneForm.phone
           this.transferDescription = `向手机号${this.phoneForm.phone}转账`
-          this.showPasswordModal = true
+          
+          // 直接执行转账
+          await this.processTransferSuccess()
         }
       } catch (error) {
         console.error('转账过程中出错:', error)
@@ -409,7 +410,7 @@ export default {
       try {
         // 更新用户余额
         const newBalance = this.currentUser.balance - this.transferAmount
-        this.currentUser.balance = newBalance
+        unifiedDataManager.updateBalance(this.currentUser.id, newBalance)
         
         // 创建转账记录
         const transferRecord = {
@@ -424,17 +425,20 @@ export default {
           fee: this.transferAmount > 1000 ? 2.5 : 0
         }
         
-        // 添加到转账记录
-        if (!this.currentUser.transferRecords) {
-          this.currentUser.transferRecords = []
-        }
-        this.currentUser.transferRecords.unshift(transferRecord)
+        // 使用统一数据管理器添加转账记录
+        unifiedDataManager.addTransferRecord(this.currentUser.id, transferRecord)
         
         // 更新常用联系人
         this.updateFrequentContacts(transferRecord)
         
-        // 保存到本地存储
-        this.saveUserData()
+        // 触发数据同步
+        unifiedDataManager.syncData()
+        
+        // 触发转账成功事件
+        uni.$emit('balanceUpdated', {
+          userId: this.currentUser.id,
+          balance: newBalance
+        })
         
         // 显示转账成功提示
         uni.showToast({
@@ -445,6 +449,15 @@ export default {
         
         // 清空表单
         this.clearForms()
+        
+        // 重新加载用户数据
+        await this.loadUserData()
+        
+        console.log('✅ 转账操作完成:', {
+          amount: this.transferAmount,
+          newBalance,
+          transferRecord
+        })
         
       } catch (error) {
         console.error('处理转账成功失败:', error)
@@ -459,11 +472,14 @@ export default {
     
     // 更新常用联系人
     updateFrequentContacts(transferRecord) {
-      if (!this.currentUser.frequentContacts) {
-        this.currentUser.frequentContacts = []
+      const user = unifiedDataManager.getAllUsers().find(u => u.id === this.currentUser.id)
+      if (!user) return
+      
+      if (!user.frequentContacts) {
+        user.frequentContacts = []
       }
       
-      const existingContact = this.currentUser.frequentContacts.find(
+      const existingContact = user.frequentContacts.find(
         contact => contact.account === transferRecord.recipientAccount
       )
       
@@ -482,13 +498,16 @@ export default {
           lastTransfer: transferRecord.timestamp,
           transferCount: 1
         }
-        this.currentUser.frequentContacts.unshift(newContact)
+        user.frequentContacts.unshift(newContact)
         
         // 只保留最近20个联系人
-        if (this.currentUser.frequentContacts.length > 20) {
-          this.currentUser.frequentContacts = this.currentUser.frequentContacts.slice(0, 20)
+        if (user.frequentContacts.length > 20) {
+          user.frequentContacts = user.frequentContacts.slice(0, 20)
         }
       }
+      
+      // 使用统一数据管理器更新联系人数据
+      unifiedDataManager.updateUserData(this.currentUser.id, { frequentContacts: user.frequentContacts })
     },
     
     // 保存用户数据到本地存储
@@ -563,6 +582,44 @@ export default {
         phone: '',
         amount: '',
         remark: ''
+      }
+    },
+
+    // 加载用户数据
+    async loadUserData() {
+      try {
+        await unifiedDataManager.init()
+        this.currentUser = unifiedDataManager.getCurrentUser() || {}
+        console.log('转账页面加载用户数据:', this.currentUser.username)
+      } catch (error) {
+        console.error('加载用户数据失败:', error)
+        this.currentUser = {}
+      }
+    },
+
+    // 初始化数据同步
+    initDataSync() {
+      try {
+        // 监听统一数据管理器变化
+        unifiedDataManager.onDataChange((data) => {
+          console.log('转账页面收到数据更新事件:', data)
+          this.loadUserData() // 重新加载用户数据
+        })
+
+        // 监听余额更新事件
+        uni.$on('balanceUpdated', (data) => {
+          console.log('转账页面收到余额更新事件:', data)
+          if (data.userId && data.balance) {
+            const currentUser = unifiedDataManager.getCurrentUser()
+            if (currentUser && currentUser.id === data.userId) {
+              this.loadUserData() // 重新加载用户数据
+            }
+          }
+        })
+
+        console.log('✅ 转账页面数据同步已初始化')
+      } catch (error) {
+        console.error('❌ 转账页面数据同步初始化失败:', error)
       }
     }
   }

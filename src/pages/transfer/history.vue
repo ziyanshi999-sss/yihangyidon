@@ -139,7 +139,7 @@
 </template>
 
 <script>
-import dataSync from '@/utils/data-sync.js'
+import unifiedDataManager from '@/utils/unified-data-manager.js'
 
 export default {
   data() {
@@ -186,6 +186,7 @@ export default {
   
   onLoad() {
     this.loadTransferRecords()
+    this.initDataSync()
   },
   
   onShow() {
@@ -194,18 +195,61 @@ export default {
   
   methods: {
     // 加载转账记录
-    loadTransferRecords() {
+    async loadTransferRecords() {
       try {
-        const currentUser = dataSync.getCurrentUserInfo()
+        // 初始化统一数据管理器
+        await unifiedDataManager.init()
+        
+        // 从统一数据管理器获取当前用户数据
+        const currentUser = unifiedDataManager.getCurrentUser()
+        
         if (currentUser && currentUser.transferRecords) {
           this.transferRecords = currentUser.transferRecords
+          console.log('从统一数据管理器加载转账记录:', this.transferRecords.length)
         } else {
-          this.transferRecords = []
+          // 如果统一数据管理器没有数据，尝试从本地存储获取
+          const users = uni.getStorageSync('users') || []
+          const currentUserId = uni.getStorageSync('currentUserId')
+          let fallbackUser = null
+          
+          if (currentUserId) {
+            fallbackUser = users.find(user => user.id === currentUserId)
+          } else {
+            fallbackUser = users.find(user => user.isLoggedIn)
+          }
+          
+          if (fallbackUser && fallbackUser.transferRecords) {
+            this.transferRecords = fallbackUser.transferRecords
+            console.log('从本地存储加载转账记录:', this.transferRecords.length)
+          } else {
+            this.transferRecords = []
+            console.log('没有找到转账记录')
+          }
         }
-        console.log('加载转账记录:', this.transferRecords.length)
       } catch (error) {
         console.error('加载转账记录失败:', error)
         this.transferRecords = []
+      }
+    },
+
+    // 初始化数据同步
+    initDataSync() {
+      try {
+        // 监听统一数据管理器变化
+        unifiedDataManager.onDataChange((data) => {
+          console.log('转账记录页面收到数据更新事件:', data)
+          this.loadTransferRecords() // 重新加载转账记录
+        })
+
+        // 监听转账记录更新事件
+        uni.$on('transferRecordUpdated', (data) => {
+          console.log('转账记录页面收到转账记录更新事件:', data)
+          this.loadTransferRecords() // 重新加载转账记录
+        })
+
+        console.log('✅ 转账记录页面数据同步已初始化')
+      } catch (error) {
+        console.error('❌ 转账记录页面数据同步初始化失败:', error)
       }
     },
     

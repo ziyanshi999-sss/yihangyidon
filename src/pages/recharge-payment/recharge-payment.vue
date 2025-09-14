@@ -213,7 +213,7 @@ export default {
       selectedPaymentMethod: "account",
       showOrderDetail: false,
       showTransferModalFlag: false,
-      accountBalance: "3707",
+      accountBalance: "0",
       actualBalance: 0, // 实际余额，将从用户数据中加载
       bankAccount: null, // 银行卡信息
       paymentType: "recharge", // 支付类型：recharge（充值）、water（水费）
@@ -351,7 +351,7 @@ export default {
               console.log('❌ 没有找到任何银行账户');
               // 使用默认值
               this.actualBalance = 0.20;
-              this.accountBalance = "3707";
+              this.accountBalance = this.actualBalance.toString();
             }
           }
         } else {
@@ -366,7 +366,7 @@ export default {
         console.error('❌ 加载银行卡数据失败:', error);
         // 使用默认值
         this.actualBalance = 0.20;
-        this.accountBalance = "3707";
+        this.accountBalance = this.actualBalance.toString();
       }
     },
 
@@ -408,7 +408,7 @@ export default {
             console.log('❌ 第一个用户也没有银行账户');
             // 使用用户的总余额作为电子账户余额
             this.actualBalance = firstUser.balance || 0.20;
-            this.accountBalance = "3707";
+            this.accountBalance = this.actualBalance.toString();
             
             // 设置当前用户
             firstUser.isLoggedIn = true;
@@ -417,12 +417,12 @@ export default {
         } else {
           console.log('❌ 没有找到任何用户数据');
           this.actualBalance = 0.20;
-          this.accountBalance = "3707";
+          this.accountBalance = this.actualBalance.toString();
         }
       } catch (error) {
         console.error('❌ 从原始数据加载失败:', error);
         this.actualBalance = 0.20;
-        this.accountBalance = "3707";
+        this.accountBalance = this.actualBalance.toString();
       }
     },
 

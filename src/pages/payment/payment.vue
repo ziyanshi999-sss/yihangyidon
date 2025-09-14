@@ -131,64 +131,70 @@ export default {
     // 加载缴费数据
     loadPaymentData() {
       try {
-        const users = uni.getStorageSync('users') || []
-        const currentUser = users.find(user => user.isLoggedIn)
-        
+        const users = uni.getStorageSync("users") || [];
+        const currentUser = users.find((user) => user.isLoggedIn);
+
         if (currentUser) {
           // 加载缴费记录
-          this.paymentRecords = currentUser.paymentRecords || []
-          
+          this.paymentRecords = currentUser.paymentRecords || [];
+
           // 处理最近缴费数据
-          this.recentPayments = this.paymentRecords.slice(0, 5).map(record => ({
-            id: record.id,
-            type: this.getPaymentType(record.type),
-            icon: this.getPaymentIcon(record.type),
-            title: record.type,
-            desc: record.phoneNumber || record.account || record.description,
-            amount: record.amount.toFixed(2),
-            status: record.status === 'completed' ? 'success' : 'pending',
-            statusText: record.status === 'completed' ? '缴费成功' : '处理中'
-          }))
-          
-          console.log('✅ 生活缴费数据加载成功:', {
+          this.recentPayments = this.paymentRecords
+            .slice(0, 5)
+            .map((record) => ({
+              id: record.id,
+              type: this.getPaymentType(record.type),
+              icon: this.getPaymentIcon(record.type),
+              title: record.type,
+              desc: record.phoneNumber || record.account || record.description,
+              amount: record.amount.toFixed(2),
+              status: record.status === "completed" ? "success" : "pending",
+              statusText: record.status === "completed" ? "缴费成功" : "处理中",
+            }));
+
+          console.log("✅ 生活缴费数据加载成功:", {
             paymentRecords: this.paymentRecords.length,
             recentPayments: this.recentPayments.length,
-            userBalance: currentUser.balance
-          })
+            userBalance: currentUser.balance,
+          });
         } else {
-          console.log('❌ 未找到当前用户数据')
-          this.recentPayments = []
-          this.paymentRecords = []
+          console.log("❌ 未找到当前用户数据");
+          this.recentPayments = [];
+          this.paymentRecords = [];
         }
       } catch (error) {
-        console.error('❌ 加载生活缴费数据失败:', error)
-        this.recentPayments = []
-        this.paymentRecords = []
+        console.error("❌ 加载生活缴费数据失败:", error);
+        this.recentPayments = [];
+        this.paymentRecords = [];
       }
     },
 
     // 获取缴费类型
     getPaymentType(type) {
       const typeMap = {
-        '手机充值': 'phone',
-        '电费': 'electric',
-        '水费': 'water',
-        '燃气费': 'gas',
-        '党费': 'party'
-      }
-      return typeMap[type] || 'other'
+        手机充值: "phone",
+        电费: "electric",
+        水费: "water",
+        燃气费: "gas",
+        宽带费: "broadband",
+        有线电视费: "tv",
+        党费: "party",
+      };
+      return typeMap[type] || "other";
     },
 
     // 获取缴费图标
     getPaymentIcon(type) {
       const iconMap = {
-        '手机充值': '📱',
-        '电费': '⚡',
-        '水费': '💧',
-        '燃气费': '🔥',
-        '党费': '☭'
-      }
-      return iconMap[type] || '💰'
+        手机充值: "📱",
+        电费: "⚡",
+        水费: "💧",
+        燃气费: "🔥",
+        宽带费: "🌐",
+        有线电视费: "📺",
+        党费: "☭",
+      };
+      return iconMap[type] || "💰";
     },
 
     goToWater() {
@@ -198,16 +204,14 @@ export default {
     },
 
     goToElectric() {
-      uni.showToast({
-        title: "电费缴费功能开发中",
-        icon: "none",
+      uni.navigateTo({
+        url: "/pages/electric/electric",
       });
     },
 
     goToGas() {
-      uni.showToast({
-        title: "燃气费缴费功能开发中",
-        icon: "none",
+      uni.navigateTo({
+        url: "/pages/gas/gas",
       });
     },
 
@@ -218,16 +222,14 @@ export default {
     },
 
     goToBroadband() {
-      uni.showToast({
-        title: "宽带费缴费功能开发中",
-        icon: "none",
+      uni.navigateTo({
+        url: "/pages/broadband/broadband",
       });
     },
 
     goToTV() {
-      uni.showToast({
-        title: "有线电视缴费功能开发中",
-        icon: "none",
+      uni.navigateTo({
+        url: "/pages/tv/tv",
       });
     },
 

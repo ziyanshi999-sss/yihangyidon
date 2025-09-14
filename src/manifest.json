@@ -18,7 +18,9 @@
         },
         /* 模块配置 */
         "modules": {
-        
+            "ScreenProtector": {
+                "description": "防录屏截屏功能模块"
+            },
             "FaceID": {},
             "Payment": {},
             "Push": {},
@@ -31,6 +33,12 @@
             "Maps": {},
             "Messaging": {},
             "Speech": {}
+        },
+        /* 原生插件配置 */
+        "nativePlugins": {
+            "ScreenProtector": {
+                "path": "nativeplugins/ScreenProtector"
+            }
         },
         /* 应用发布信息 */
         "distribute": {

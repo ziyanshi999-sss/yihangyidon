@@ -1,0 +1,14 @@
+name: screen_protector
+description: A Flutter plugin to prevent screen recording and screenshots.
+version: 1.0.0
+environment:
+  sdk: ">=2.17.0 <3.0.0"
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: com.example.screenprotector
+        pluginClass: ScreenProtectorPlugin
+      ios:
+        pluginClass: ScreenProtectorPlugin

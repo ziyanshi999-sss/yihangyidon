@@ -76,6 +76,7 @@
 <script>
 import { forceCheckLogin } from '@/utils/auth.js'
 import { getTransactionHistory } from '@/api/user.js'
+import unifiedDataManager from '@/utils/unified-data-manager.js'
 
 export default {
   data() {
@@ -99,6 +100,7 @@ export default {
       this.type = 'credit'
     }
     this.loadTransactions()
+    this.initDataSync()
   },
   computed: {
     
@@ -118,9 +120,11 @@ export default {
       try {
         uni.showLoading({ title: '加载中...' })
         
-        // 从user.json获取交易记录
-        const users = uni.getStorageSync('users') || []
-        const currentUser = users.find(user => user.isLoggedIn)
+        // 初始化统一数据管理器
+        await unifiedDataManager.init()
+        
+        // 从统一数据管理器获取当前用户数据
+        const currentUser = unifiedDataManager.getCurrentUser()
         
         if (currentUser && currentUser.transactionRecords) {
           // 验证并过滤有效的交易记录
@@ -136,18 +140,48 @@ export default {
           if (this.transactions.length === 0) {
             console.log('没有有效的交易记录，生成模拟数据')
             this.transactions = this.generateMockTransactions()
-            currentUser.transactionRecords = this.transactions
-            uni.setStorageSync('users', users)
+            // 使用统一数据管理器更新数据
+            unifiedDataManager.updateUserData(currentUser.id, { transactionRecords: this.transactions })
           }
         } else {
-          // 如果没有交易记录，使用模拟数据
-          const mockTransactions = this.generateMockTransactions()
-          this.transactions = mockTransactions
+          // 如果统一数据管理器没有数据，尝试从本地存储获取
+          const users = uni.getStorageSync('users') || []
+          const currentUserId = uni.getStorageSync('currentUserId')
+          let fallbackUser = null
           
-          // 保存到用户数据中
-          if (currentUser) {
-            currentUser.transactionRecords = mockTransactions
-            uni.setStorageSync('users', users)
+          if (currentUserId) {
+            fallbackUser = users.find(user => user.id === currentUserId)
+          } else {
+            fallbackUser = users.find(user => user.isLoggedIn)
+          }
+          
+          if (fallbackUser && fallbackUser.transactionRecords) {
+            // 验证并过滤有效的交易记录
+            this.transactions = fallbackUser.transactionRecords.filter(transaction => {
+              const isValid = this.validateTransaction(transaction)
+              if (!isValid) {
+                console.warn('发现无效交易记录，已过滤:', transaction)
+              }
+              return isValid
+            })
+            
+            // 如果没有有效记录，生成模拟数据
+            if (this.transactions.length === 0) {
+              console.log('没有有效的交易记录，生成模拟数据')
+              this.transactions = this.generateMockTransactions()
+              fallbackUser.transactionRecords = this.transactions
+              uni.setStorageSync('users', users)
+            }
+          } else {
+            // 如果没有交易记录，使用模拟数据
+            const mockTransactions = this.generateMockTransactions()
+            this.transactions = mockTransactions
+            
+            // 保存到用户数据中
+            if (fallbackUser) {
+              fallbackUser.transactionRecords = mockTransactions
+              uni.setStorageSync('users', users)
+            }
           }
         }
         
@@ -155,12 +189,34 @@ export default {
         this.calculateSummary()
         
       } catch (error) {
+        console.error('加载交易记录失败:', error)
         uni.showToast({
           title: '加载失败，请稍后重试',
           icon: 'none'
         })
       } finally {
         uni.hideLoading()
+      }
+    },
+
+    // 初始化数据同步
+    initDataSync() {
+      try {
+        // 监听统一数据管理器变化
+        unifiedDataManager.onDataChange((data) => {
+          console.log('收支明细页面收到数据更新事件:', data)
+          this.loadTransactions() // 重新加载交易记录
+        })
+
+        // 监听交易记录更新事件
+        uni.$on('transactionRecordUpdated', (data) => {
+          console.log('收支明细页面收到交易记录更新事件:', data)
+          this.loadTransactions() // 重新加载交易记录
+        })
+
+        console.log('✅ 收支明细页面数据同步已初始化')
+      } catch (error) {
+        console.error('❌ 收支明细页面数据同步初始化失败:', error)
       }
     },
     

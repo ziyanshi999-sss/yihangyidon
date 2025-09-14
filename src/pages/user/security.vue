@@ -343,7 +343,7 @@ export default {
 			securityNotificationsEnabled: true,
 			securityQuestionsSet: false,
 			emergencyContactSet: false,
-			transactionLimit: 50000,
+			transactionLimit: 100000,
 			passwordUpdateTime: '2024-01-01',
 			transactionPasswordUpdateTime: '2024-01-01',
 			lastUpdateTime: '2024-01-15',
@@ -443,7 +443,7 @@ export default {
 					this.accountLockEnabled = Boolean(securitySettings.accountLockEnabled)
 					this.twoFactorEnabled = Boolean(securitySettings.twoFactorEnabled)
 					this.securityNotificationsEnabled = Boolean(securitySettings.securityNotificationsEnabled)
-					this.transactionLimit = Number(securitySettings.transactionLimit) || 50000
+					this.transactionLimit = Number(securitySettings.transactionLimit) || 100000
 					this.passwordUpdateTime = securitySettings.passwordUpdateTime || '2024-01-01'
 					this.transactionPasswordUpdateTime = securitySettings.transactionPasswordUpdateTime || '2024-01-01'
 					this.securityQuestionsSet = Boolean(securitySettings.securityQuestionsSet)
@@ -472,7 +472,7 @@ export default {
 				this.accountLockEnabled = false
 				this.twoFactorEnabled = false
 				this.securityNotificationsEnabled = false
-				this.transactionLimit = 50000
+				this.transactionLimit = 100000
 				this.passwordUpdateTime = '2024-01-01'
 				this.transactionPasswordUpdateTime = '2024-01-01'
 				this.securityQuestionsSet = false

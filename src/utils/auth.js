@@ -532,10 +532,26 @@ export function requireLogin(pageMethod) {
  */
 export function getUserInfo() {
   try {
+    // 首先尝试从统一数据管理器获取
+    const unifiedDataManager = require('./unified-data-manager.js').default
+    if (unifiedDataManager && unifiedDataManager.getCurrentUser) {
+      const currentUser = unifiedDataManager.getCurrentUser()
+      if (currentUser) {
+        return currentUser
+      }
+    }
+    
+    // 如果统一数据管理器没有数据，从本地存储获取
     return uni.getStorageSync('userInfo')
   } catch (error) {
     console.error('获取用户信息失败:', error)
-    return null
+    // 出错时从本地存储获取
+    try {
+      return uni.getStorageSync('userInfo')
+    } catch (storageError) {
+      console.error('从本地存储获取用户信息失败:', storageError)
+      return null
+    }
   }
 }
 

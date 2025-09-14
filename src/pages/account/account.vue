@@ -115,6 +115,7 @@
 
 <script>
 import { forceCheckLogin } from '@/utils/auth.js'
+import unifiedDataManager from '@/utils/unified-data-manager.js'
 
 export default {
   data() {
@@ -153,6 +154,9 @@ export default {
   console.log('账户页面初始化 - 认证状态:', this.isVerified)
   console.log('账户页面初始化 - 银行卡状态:', this.hasBankCard)
   }
+  
+  // 初始化数据同步
+  this.initDataSync()
   },
   
   onShow() {
@@ -188,31 +192,13 @@ export default {
       },
       
       // 新增：获取用户余额的方法
-      getUserBalance() {
+      async getUserBalance() {
         try {
-          // 优先从userInfo获取当前用户数据
-          const userInfo = uni.getStorageSync('userInfo')
-          const currentUserId = uni.getStorageSync('currentUserId')
+          // 初始化统一数据管理器
+          await unifiedDataManager.init()
           
-          if (userInfo && userInfo.balance) {
-            this.accountInfo.balance = Number(userInfo.balance).toLocaleString('zh-CN', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2
-            })
-            this.bankAccounts = userInfo.bankAccounts || []
-            console.log('从userInfo获取用户余额:', this.accountInfo.balance)
-            return
-          }
-          
-          // 如果userInfo没有数据，从users数组中查找
-          const users = uni.getStorageSync('users') || []
-          let currentUser = null
-          
-          if (currentUserId) {
-            currentUser = users.find(user => user.id === currentUserId)
-          } else {
-            currentUser = users.find(user => user.isLoggedIn)
-          }
+          // 从统一数据管理器获取当前用户数据
+          const currentUser = unifiedDataManager.getCurrentUser()
           
           if (currentUser && currentUser.balance) {
             this.accountInfo.balance = Number(currentUser.balance).toLocaleString('zh-CN', {
@@ -220,17 +206,64 @@ export default {
               maximumFractionDigits: 2
             })
             this.bankAccounts = currentUser.bankAccounts || []
+            console.log('从统一数据管理器获取用户余额:', this.accountInfo.balance)
+            return
+          }
+          
+          // 如果统一数据管理器没有数据，从users数组中查找
+          const users = uni.getStorageSync('users') || []
+          const currentUserId = uni.getStorageSync('currentUserId')
+          let fallbackUser = null
+          
+          if (currentUserId) {
+            fallbackUser = users.find(user => user.id === currentUserId)
+          } else {
+            fallbackUser = users.find(user => user.isLoggedIn)
+          }
+          
+          if (fallbackUser && fallbackUser.balance) {
+            this.accountInfo.balance = Number(fallbackUser.balance).toLocaleString('zh-CN', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2
+            })
+            this.bankAccounts = fallbackUser.bankAccounts || []
             console.log('从users数组获取用户余额:', this.accountInfo.balance)
           } else {
             this.accountInfo.balance = '0.00'
             console.log('未找到用户余额，使用默认值')
             console.log('当前用户ID:', currentUserId)
-            console.log('用户信息:', userInfo)
+            console.log('用户信息:', fallbackUser)
             console.log('用户数组:', users.map(u => ({ id: u.id, username: u.username, balance: u.balance, isLoggedIn: u.isLoggedIn })))
           }
         } catch (error) {
           console.error('获取用户余额失败:', error)
           this.accountInfo.balance = '0.00'
+        }
+      },
+
+      // 初始化数据同步
+      initDataSync() {
+        try {
+          // 监听统一数据管理器变化
+          unifiedDataManager.onDataChange((data) => {
+            console.log('账户页面收到数据更新事件:', data)
+            this.getUserBalance() // 重新加载用户余额
+          })
+
+          // 监听余额更新事件
+          uni.$on('balanceUpdated', (data) => {
+            console.log('账户页面收到余额更新事件:', data)
+            if (data.userId && data.balance) {
+              const currentUser = unifiedDataManager.getCurrentUser()
+              if (currentUser && currentUser.id === data.userId) {
+                this.getUserBalance() // 重新加载用户余额
+              }
+            }
+          })
+
+          console.log('✅ 账户页面数据同步已初始化')
+        } catch (error) {
+          console.error('❌ 账户页面数据同步初始化失败:', error)
         }
       },
       

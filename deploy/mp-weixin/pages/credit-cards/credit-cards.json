@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "我的信用卡",
+  "enablePullDownRefresh": false,
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "card-detail-modal": "../../components/common/CardDetailModal",
+    "repayment-password-modal": "../../components/common/RepaymentPasswordModal"
+  }
+}

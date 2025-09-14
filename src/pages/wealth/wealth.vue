@@ -22,6 +22,7 @@
       </view>
     </view>
 
+
     <!-- 四宫格入口 -->
     <view class="entry-grid">
       <view class="entry-item" @click="navigateToPage('deposit')">
@@ -632,6 +633,7 @@ export default {
 .service-actions { display: flex; gap: 12rpx; }
 .mini-btn.ghost { background: #fff; color: #2e7d32; border: 2rpx solid #2e7d32; }
 .mini-btn.call { background: #1e88e5; }
+
 
 .entry-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20rpx; padding: 0 20rpx 20rpx; }
 .entry-item { background: #fff; border-radius: 16rpx; padding: 20rpx 10rpx; text-align: center; box-shadow: 0 6rpx 20rpx rgba(0,0,0,0.04); }

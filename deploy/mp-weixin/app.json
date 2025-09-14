@@ -1,0 +1,98 @@
+{
+  "pages": [
+    "pages/denglu/login",
+    "pages/register/register",
+    "pages/index/index",
+    "pages/user/user",
+    "pages/wealth/wealth",
+    "pages/life/life",
+    "pages/service/chat",
+    "pages/help/help-center",
+    "pages/help/help-detail",
+    "pages/transfer/transfer",
+    "pages/account/account",
+    "pages/payment/payment",
+    "pages/water/water",
+    "pages/water-payment/water-payment",
+    "pages/electric/electric",
+    "pages/electric-payment/electric-payment",
+    "pages/gas/gas",
+    "pages/gas-payment/gas-payment",
+    "pages/broadband/broadband",
+    "pages/broadband-payment/broadband-payment",
+    "pages/tv/tv",
+    "pages/tv-payment/tv-payment",
+    "pages/city-select/city-select",
+    "pages/payment-management/payment-management",
+    "pages/recharge/recharge",
+    "pages/recharge-payment/recharge-payment",
+    "pages/government/government",
+    "pages/games/games",
+    "pages/transfer/history",
+    "pages/credit-card/credit-card",
+    "pages/credit-card/repayment",
+    "pages/balance/balance",
+    "pages/loan/loan",
+    "pages/credit-cards/credit-cards",
+    "pages/user/profile",
+    "pages/user/security",
+    "pages/user/change-password",
+    "pages/user/screen-protection",
+    "pages/test/mobile-protection-debug",
+    "pages/service/branch",
+    "pages/wealth/deposit",
+    "pages/wealth/product",
+    "pages/wealth/insurance",
+    "pages/wealth/forex",
+    "pages/wealth/insurance-detail",
+    "pages/wealth/insurance-success"
+  ],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarBackgroundColor": "#fff",
+    "backgroundColor": "#F8F8F8"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#f9a825",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "iconPath": "static/tabbar/home.jpg",
+        "selectedIconPath": "static/tabbar/home-active.jpg",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/wealth/wealth",
+        "iconPath": "static/tabbar/service.jpg",
+        "selectedIconPath": "static/tabbar/service-active.jpg",
+        "text": "财富"
+      },
+      {
+        "pagePath": "pages/life/life",
+        "iconPath": "static/tabbar/order.jpg",
+        "selectedIconPath": "static/tabbar/order-active.jpg",
+        "text": "生活"
+      },
+      {
+        "pagePath": "pages/user/user",
+        "iconPath": "static/tabbar/user.jpg",
+        "selectedIconPath": "static/tabbar/user-active.jpg",
+        "text": "我的"
+      }
+    ]
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "您的位置信息将用于小程序定位及网点查询功能"
+    }
+  },
+  "plugins": {
+    "myPlugin": {
+      "version": "1.0.0",
+      "provider": "wx76a9a06e5b4e693e"
+    }
+  },
+  "usingComponents": {}
+}

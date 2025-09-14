@@ -11,18 +11,18 @@
       <view class="amount-grid">
         <view class="amount-item">
           <text class="amount-label">活期存款</text>
-          <text class="amount-value">{{ hideAmount ? '****' : '¥23,560.20' }}</text>
-          <text class="amount-rate">年利率 0.35%</text>
+          <text class="amount-value">{{ hideAmount ? '****' : '¥' + (depositData.current || 0).toLocaleString() }}</text>
+          <text class="amount-rate">年利率 {{ depositRates.current }}%</text>
         </view>
         <view class="amount-item">
           <text class="amount-label">定期存款</text>
-          <text class="amount-value">{{ hideAmount ? '****' : '¥80,000.00' }}</text>
-          <text class="amount-rate">平均利率 2.45%</text>
+          <text class="amount-value">{{ hideAmount ? '****' : '¥' + (depositData.fixed || 0).toLocaleString() }}</text>
+          <text class="amount-rate">平均利率 {{ depositRates.fixed }}%</text>
         </view>
         <view class="amount-item">
           <text class="amount-label">智能存款</text>
-          <text class="amount-value">{{ hideAmount ? '****' : '¥8,520.32' }}</text>
-          <text class="amount-rate">平均利率 3.50%</text>
+          <text class="amount-value">{{ hideAmount ? '****' : '¥' + (depositData.smart || 0).toLocaleString() }}</text>
+          <text class="amount-rate">平均利率 {{ depositRates.smart }}%</text>
         </view>
       </view>
     </view>
@@ -32,17 +32,17 @@
       <view class="action-item" @click="onQuickDeposit('current')">
         <view class="action-icon current">💰</view>
         <text class="action-text">活期存款</text>
-        <text class="action-rate">0.35%</text>
+        <text class="action-rate">{{ depositRates.current }}%</text>
       </view>
       <view class="action-item" @click="onQuickDeposit('fixed')">
         <view class="action-icon fixed">🏦</view>
         <text class="action-text">定期存款</text>
-        <text class="action-rate">2.45%</text>
+        <text class="action-rate">{{ depositRates.fixed }}%</text>
       </view>
       <view class="action-item" @click="onQuickDeposit('smart')">
         <view class="action-icon smart">🧠</view>
         <text class="action-text">智能存款</text>
-        <text class="action-rate">3.50%</text>
+        <text class="action-rate">{{ depositRates.smart }}%</text>
       </view>
       <view class="action-item" @click="onDepositCalculator">
         <view class="action-icon calc">🧮</view>
@@ -364,6 +364,7 @@
 <script>
 import { getDepositRates, getDepositProducts, addDepositRecord, getCurrentUserId, initWealthDataSync } from '@/api/wealth.js'
 import { initUCharts, createDepositRateChart } from '@/utils/ucharts.js'
+import unifiedDataManager from '@/utils/unified-data-manager.js'
 
 export default {
   data() {
@@ -371,6 +372,11 @@ export default {
       hideAmount: false,
       loading: false,
       depositData: null,
+      depositRates: {
+        current: 0.35,
+        fixed: 2.45,
+        smart: 3.50
+      },
       chartInstance: null,
       showDataTable: false,
       
@@ -510,12 +516,23 @@ export default {
     }
   },
   
-  onLoad() {
+  async onLoad() {
+    await this.initDataManager()
     this.loadDepositData()
     this.initDataSync()
   },
   
   methods: {
+    
+    // 初始化数据管理器
+    async initDataManager() {
+      try {
+        await unifiedDataManager.init()
+        console.log('✅ 存款页面数据管理器初始化成功')
+      } catch (error) {
+        console.error('❌ 存款页面数据管理器初始化失败:', error)
+      }
+    },
     
     toggleAmountVisibility() {
       this.hideAmount = !this.hideAmount
@@ -526,14 +543,44 @@ export default {
         this.loading = true
         uni.showLoading({ title: '加载中...' })
         
-        // 从财富API获取存款数据
-        const depositData = getDepositRates()
-        console.log('存款数据:', depositData)
+        // 从统一数据管理器获取当前用户数据
+        const currentUser = unifiedDataManager.getCurrentUser()
+        
+        if (currentUser && currentUser.wealthProducts) {
+          // 更新存款数据
+          this.depositData = {
+            current: currentUser.wealthProducts.deposits?.current || 0,
+            fixed: currentUser.wealthProducts.deposits?.fixed || 0,
+            smart: currentUser.wealthProducts.deposits?.smart || 0
+          }
+          
+          // 更新存款利率
+          if (currentUser.depositProducts) {
+            this.depositRates = {
+              current: currentUser.depositProducts.current?.rate || 0.35,
+              fixed: currentUser.depositProducts.fixed?.[0]?.rate || 2.45,
+              smart: currentUser.depositProducts.smart?.rate || 3.50
+            }
+          }
+          
+          console.log('✅ 存款数据加载成功:', this.depositData)
+        } else {
+          // 使用默认数据
+          this.depositData = {
+            current: 0,
+            fixed: 0,
+            smart: 0
+          }
+        }
+        
+        // 从财富API获取存款产品数据
+        const depositProducts = getDepositRates()
+        console.log('存款产品数据:', depositProducts)
         
         // 确保数据结构完整
-        if (!depositData.fixed || depositData.fixed.length === 0) {
+        if (!depositProducts.fixed || depositProducts.fixed.length === 0) {
           console.log('定期存款数据为空，使用默认数据')
-          depositData.fixed = [
+          depositProducts.fixed = [
             { term: '3个月', rate: 1.85 },
             { term: '6个月', rate: 2.05 },
             { term: '1年', rate: 2.10 },
@@ -542,9 +589,6 @@ export default {
             { term: '5年', rate: 3.20 }
           ]
         }
-        
-        // 保存数据用于图表渲染
-        this.depositData = depositData
         
         // 初始化图表
         await this.initChart(depositData)
@@ -797,10 +841,29 @@ export default {
       // 初始化财富数据同步
       initWealthDataSync()
       
+      // 监听统一数据管理器的数据更新事件
+      unifiedDataManager.onDataChange((data) => {
+        console.log('存款页面收到数据更新事件:', data)
+        // 重新加载存款数据
+        this.loadDepositData()
+      })
+      
+      // 监听各种数据更新事件
+      uni.$on('depositSuccess', (data) => {
+        console.log('存款页面收到存款成功事件:', data)
+        // 更新统一数据管理器中的数据
+        if (data.userId && data.depositType && data.amount) {
+          unifiedDataManager.updateDepositData(data.userId, data.depositType, data.amount)
+        }
+      })
+      
       // 监听余额更新事件
       uni.$on('balanceUpdated', (data) => {
         console.log('存款页面收到余额更新事件:', data)
-        // 可以在这里更新页面显示
+        // 更新统一数据管理器中的余额
+        if (data.userId && data.balance) {
+          unifiedDataManager.updateBalance(data.userId, data.balance)
+        }
       })
     },
     
@@ -824,6 +887,187 @@ export default {
         total: total.toFixed(2),
         interest: interest.toFixed(2),
         annualRate: annualRate.toFixed(2)
+      }
+    },
+
+    // 确认存款
+    async onConfirmDeposit() {
+      try {
+        if (!this.confirmAmount || parseFloat(this.confirmAmount) <= 0) {
+          uni.showToast({
+            title: '请输入有效的存款金额',
+            icon: 'none'
+          })
+          return
+        }
+
+        const amount = parseFloat(this.confirmAmount)
+        const currentUser = unifiedDataManager.getCurrentUser()
+        
+        if (!currentUser) {
+          uni.showToast({
+            title: '用户信息获取失败',
+            icon: 'none'
+          })
+          return
+        }
+
+        // 检查余额是否足够
+        if (currentUser.balance < amount) {
+          uni.showToast({
+            title: '账户余额不足',
+            icon: 'none'
+          })
+          return
+        }
+
+        uni.showLoading({ title: '处理中...' })
+
+        // 更新用户余额
+        const newBalance = currentUser.balance - amount
+        unifiedDataManager.updateBalance(currentUser.id, newBalance)
+
+        // 更新存款数据
+        const depositType = this.getDepositTypeFromProduct(this.confirmProduct.name)
+        const currentDepositAmount = currentUser.wealthProducts?.deposits?.[depositType] || 0
+        const newDepositAmount = currentDepositAmount + amount
+        
+        unifiedDataManager.updateDepositData(currentUser.id, depositType, newDepositAmount)
+
+        // 添加交易记录
+        const transactionRecord = {
+          id: 't' + Date.now(),
+          type: 'expense',
+          amount: amount,
+          description: `${this.confirmProduct.name}存款`,
+          balance: newBalance,
+          timestamp: new Date().toISOString(),
+          icon: '💰',
+          title: '存款',
+          time: new Date().toLocaleTimeString()
+        }
+
+        // 更新交易记录
+        const user = unifiedDataManager.getAllUsers().find(u => u.id === currentUser.id)
+        if (user) {
+          if (!user.transactionRecords) {
+            user.transactionRecords = []
+          }
+          user.transactionRecords.unshift(transactionRecord)
+          unifiedDataManager.updateUserData(currentUser.id, { transactionRecords: user.transactionRecords })
+        }
+
+        // 添加存款记录
+        const depositRecord = {
+          id: 'd' + Date.now(),
+          type: 'deposit',
+          productName: this.confirmProduct.name,
+          productType: depositType,
+          amount: amount,
+          rate: this.confirmProduct.rate,
+          term: this.confirmProduct.term,
+          status: 'completed',
+          timestamp: new Date().toISOString()
+        }
+
+        // 更新存款记录
+        if (!user.depositRecords) {
+          user.depositRecords = []
+        }
+        user.depositRecords.unshift(depositRecord)
+        unifiedDataManager.updateUserData(currentUser.id, { depositRecords: user.depositRecords })
+
+        // 触发数据同步
+        unifiedDataManager.syncData()
+
+        // 触发存款成功事件
+        uni.$emit('depositSuccess', {
+          userId: currentUser.id,
+          depositType: depositType,
+          amount: amount,
+          productName: this.confirmProduct.name
+        })
+
+        uni.hideLoading()
+        
+        uni.showToast({
+          title: '存款成功',
+          icon: 'success'
+        })
+
+        // 关闭弹窗
+        this.closeConfirmModal()
+
+        // 重新加载数据
+        await this.loadDepositData()
+
+        console.log('✅ 存款操作完成:', {
+          amount,
+          depositType,
+          newBalance,
+          newDepositAmount
+        })
+
+      } catch (error) {
+        uni.hideLoading()
+        console.error('❌ 存款操作失败:', error)
+        uni.showToast({
+          title: '存款失败，请重试',
+          icon: 'none'
+        })
+      }
+    },
+
+    // 关闭确认弹窗
+    closeConfirmModal() {
+      this.showConfirmModal = false
+      this.confirmProduct = {}
+      this.confirmAmount = ''
+    },
+
+    // 根据产品名称获取存款类型
+    getDepositTypeFromProduct(productName) {
+      if (productName.includes('活期')) return 'current'
+      if (productName.includes('定期')) return 'fixed'
+      if (productName.includes('智能')) return 'smart'
+      return 'current' // 默认活期
+    },
+
+    // 初始化数据同步
+    initDataSync() {
+      try {
+        // 监听统一数据管理器变化
+        unifiedDataManager.onDataChange((data) => {
+          console.log('存款页面收到数据更新事件:', data)
+          this.loadDepositData() // 重新加载数据
+        })
+
+        // 监听存款成功事件
+        uni.$on('depositSuccess', (data) => {
+          console.log('存款页面收到存款成功事件:', data)
+          if (data.userId && data.depositType && data.amount) {
+            // 通过统一数据管理器更新数据
+            const currentUser = unifiedDataManager.getCurrentUser()
+            if (currentUser && currentUser.id === data.userId) {
+              this.loadDepositData() // 重新加载数据
+            }
+          }
+        })
+
+        // 监听余额更新事件
+        uni.$on('balanceUpdated', (data) => {
+          console.log('存款页面收到余额更新事件:', data)
+          if (data.userId && data.balance) {
+            const currentUser = unifiedDataManager.getCurrentUser()
+            if (currentUser && currentUser.id === data.userId) {
+              this.loadDepositData() // 重新加载数据
+            }
+          }
+        })
+
+        console.log('✅ 存款页面数据同步已初始化')
+      } catch (error) {
+        console.error('❌ 存款页面数据同步初始化失败:', error)
       }
     }
   }
