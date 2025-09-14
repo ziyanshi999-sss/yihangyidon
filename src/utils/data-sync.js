@@ -418,6 +418,35 @@ class DataSync {
   }
 
   /**
+   * 更新用户数据
+   */
+  updateUserData(userData) {
+    try {
+      const users = this.getUsersData()
+      const userIndex = users.findIndex(user => user.id === userData.id)
+      
+      if (userIndex !== -1) {
+        users[userIndex] = userData
+        uni.setStorageSync(this.storageKeys.USERS, users)
+        
+        // 更新当前用户信息
+        const currentUserId = uni.getStorageSync(this.storageKeys.CURRENT_USER_ID)
+        if (currentUserId === userData.id) {
+          uni.setStorageSync(this.storageKeys.USER_INFO, userData)
+        }
+        
+        console.log('用户数据已更新')
+        return true
+      }
+      
+      return false
+    } catch (error) {
+      console.error('更新用户数据失败:', error)
+      return false
+    }
+  }
+
+  /**
    * 同步所有数据到本地存储
    */
   syncAllDataToStorage() {

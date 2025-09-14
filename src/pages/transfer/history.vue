@@ -1,28 +1,136 @@
 <template>
-  <view class="history-page">
+  <view class="transfer-history-page">
     <!-- 顶部导航 -->
     <view class="nav-bar">
+      <view class="nav-left" @click="goBack">
+        <text class="back-icon">←</text>
+      </view>
       <text class="nav-title">转账记录</text>
+      <view class="nav-right" @click="refreshData">
+        <text class="refresh-icon">🔄</text>
+      </view>
     </view>
 
-    <!-- 记录列表 -->
-    <view class="history-list">
-      <view v-if="transferRecords.length === 0" class="empty-state">
-        <text class="empty-text">暂无转账记录</text>
+    <!-- 统计卡片 -->
+    <view class="stats-card">
+      <view class="stats-item">
+        <text class="stats-value">{{ totalTransfers }}</text>
+        <text class="stats-label">总笔数</text>
       </view>
-      <view v-else>
-        <view class="record-item" v-for="record in transferRecords" :key="record.transactionId">
-          <view class="record-header">
-            <text class="record-title">{{ getRecordTitle(record) }}</text>
-            <text class="record-status" :class="record.status">{{ record.status === 'success' ? '成功' : '失败' }}</text>
+      <view class="stats-item">
+        <text class="stats-value">¥{{ totalAmount.toFixed(2) }}</text>
+        <text class="stats-label">总金额</text>
+      </view>
+      <view class="stats-item">
+        <text class="stats-value">{{ thisMonthTransfers }}</text>
+        <text class="stats-label">本月</text>
+      </view>
+    </view>
+
+    <!-- 筛选器 -->
+    <view class="filter-section">
+      <view class="filter-tabs">
+        <view 
+          class="filter-tab" 
+          :class="{ active: currentFilter === 'all' }" 
+          @click="setFilter('all')"
+        >
+          全部
+        </view>
+        <view 
+          class="filter-tab" 
+          :class="{ active: currentFilter === 'outgoing' }" 
+          @click="setFilter('outgoing')"
+        >
+          转出
+        </view>
+        <view 
+          class="filter-tab" 
+          :class="{ active: currentFilter === 'incoming' }" 
+          @click="setFilter('incoming')"
+        >
+          转入
+        </view>
+      </view>
+    </view>
+
+    <!-- 转账记录列表 -->
+    <view class="transfer-list">
+      <view 
+        class="transfer-item" 
+        v-for="record in filteredRecords" 
+        :key="record.id"
+        @click="showTransferDetail(record)"
+      >
+        <view class="transfer-left">
+          <view class="transfer-icon" :class="record.type">
+            <text class="icon-text">{{ record.type === 'outgoing' ? '↗️' : '↙️' }}</text>
           </view>
-          <view class="record-info">
-            <text class="record-detail">{{ getRecordDetail(record) }}</text>
-            <text class="record-amount">{{ record.status === 'success' ? '-' : '' }}{{ record.amount }}元</text>
+          <view class="transfer-info">
+            <text class="transfer-name">{{ record.recipient || record.sender }}</text>
+            <text class="transfer-desc">{{ record.description }}</text>
+            <text class="transfer-time">{{ formatTime(record.timestamp) }}</text>
           </view>
-          <view class="record-footer">
-            <text class="record-time">{{ formatTime(record.timestamp) }}</text>
-            <text class="record-remark" v-if="record.remark">{{ record.remark }}</text>
+        </view>
+        <view class="transfer-right">
+          <text class="transfer-amount" :class="record.type">
+            {{ record.type === 'outgoing' ? '-' : '+' }}¥{{ record.amount.toFixed(2) }}
+          </text>
+          <text class="transfer-status" :class="record.status">{{ getStatusText(record.status) }}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" v-if="filteredRecords.length === 0">
+      <text class="empty-icon">📋</text>
+      <text class="empty-text">暂无转账记录</text>
+      <text class="empty-desc">开始您的第一笔转账吧</text>
+    </view>
+
+    <!-- 转账详情弹窗 -->
+    <view class="detail-modal" v-if="showDetailModal" @click="closeDetailModal">
+      <view class="modal-content" @click.stop>
+        <view class="modal-header">
+          <text class="modal-title">转账详情</text>
+          <text class="close-btn" @click="closeDetailModal">×</text>
+        </view>
+        <view class="modal-body" v-if="selectedRecord">
+          <view class="detail-item">
+            <text class="detail-label">交易类型</text>
+            <text class="detail-value">{{ selectedRecord.type === 'outgoing' ? '转出' : '转入' }}</text>
+          </view>
+          <view class="detail-item">
+            <text class="detail-label">交易金额</text>
+            <text class="detail-value amount">¥{{ selectedRecord.amount.toFixed(2) }}</text>
+          </view>
+          <view class="detail-item">
+            <text class="detail-label">{{ selectedRecord.type === 'outgoing' ? '收款方' : '付款方' }}</text>
+            <text class="detail-value">{{ selectedRecord.recipient || selectedRecord.sender }}</text>
+          </view>
+          <view class="detail-item">
+            <text class="detail-label">账户信息</text>
+            <text class="detail-value">{{ selectedRecord.recipientAccount || selectedRecord.senderAccount }}</text>
+          </view>
+          <view class="detail-item">
+            <text class="detail-label">交易说明</text>
+            <text class="detail-value">{{ selectedRecord.description }}</text>
+          </view>
+          <view class="detail-item">
+            <text class="detail-label">交易时间</text>
+            <text class="detail-value">{{ formatFullTime(selectedRecord.timestamp) }}</text>
+          </view>
+          <view class="detail-item">
+            <text class="detail-label">交易状态</text>
+            <text class="detail-value status" :class="selectedRecord.status">{{ getStatusText(selectedRecord.status) }}</text>
+          </view>
+          <view class="detail-item" v-if="selectedRecord.fee > 0">
+            <text class="detail-label">手续费</text>
+            <text class="detail-value">¥{{ selectedRecord.fee.toFixed(2) }}</text>
+          </view>
+          <view class="detail-item">
+            <text class="detail-label">交易流水号</text>
+            <text class="detail-value">{{ selectedRecord.id }}</text>
           </view>
         </view>
       </view>
@@ -31,211 +139,526 @@
 </template>
 
 <script>
-import { forceCheckLogin } from '@/utils/auth.js'
+import dataSync from '@/utils/data-sync.js'
 
 export default {
   data() {
     return {
-      transferRecords: []
+      transferRecords: [],
+      currentFilter: 'all',
+      showDetailModal: false,
+      selectedRecord: null
     }
   },
   
-  onShow() {
-    // 检查登录状态
-    if (!forceCheckLogin()) {
-      console.log('转账记录页面：用户未登录，跳转到登录页面')
-      uni.reLaunch({
-        url: '/pages/denglu/login'
-      })
-      return
-    }
+  computed: {
+    // 过滤后的记录
+    filteredRecords() {
+      if (this.currentFilter === 'all') {
+        return this.transferRecords
+      }
+      return this.transferRecords.filter(record => record.type === this.currentFilter)
+    },
     
-    // 加载转账记录
+    // 总笔数
+    totalTransfers() {
+      return this.transferRecords.length
+    },
+    
+    // 总金额
+    totalAmount() {
+      return this.transferRecords.reduce((sum, record) => {
+        return sum + (record.type === 'outgoing' ? record.amount : 0)
+      }, 0)
+    },
+    
+    // 本月笔数
+    thisMonthTransfers() {
+      const currentMonth = new Date().getMonth()
+      const currentYear = new Date().getFullYear()
+      
+      return this.transferRecords.filter(record => {
+        const recordDate = new Date(record.timestamp)
+        return recordDate.getMonth() === currentMonth && recordDate.getFullYear() === currentYear
+      }).length
+    }
+  },
+  
+  onLoad() {
+    this.loadTransferRecords()
+  },
+  
+  onShow() {
     this.loadTransferRecords()
   },
   
   methods: {
     // 加载转账记录
     loadTransferRecords() {
-      // 从本地存储获取转账记录
-      const records = uni.getStorageSync('transferRecords') || []
-      this.transferRecords = records
-      
-      // 如果没有记录，创建一些模拟数据
-      if (this.transferRecords.length === 0) {
-        this.createMockRecords()
-      }
-    },
-    
-    // 创建模拟记录（如果没有真实记录）
-    createMockRecords() {
-      const mockRecords = [
-        {
-          type: 'account',
-          account: '6228 **** **** 1234',
-          name: '张三',
-          amount: 500.00,
-          remark: '饭钱',
-          timestamp: Date.now() - 86400000, // 昨天
-          status: 'success',
-          transactionId: 'TX' + Date.now() + '001'
-        },
-        {
-          type: 'phone',
-          phone: '138 **** 5678',
-          amount: 1000.00,
-          remark: '房租',
-          timestamp: Date.now() - 172800000, // 前天
-          status: 'success',
-          transactionId: 'TX' + Date.now() + '002'
-        },
-        {
-          type: 'account',
-          account: '6228 **** **** 5678',
-          name: '李四',
-          amount: 200.00,
-          remark: '',
-          timestamp: Date.now() - 259200000, // 三天前
-          status: 'failed',
-          errorMsg: '余额不足',
-          transactionId: 'TX' + Date.now() + '003'
+      try {
+        const currentUser = dataSync.getCurrentUserInfo()
+        if (currentUser && currentUser.transferRecords) {
+          this.transferRecords = currentUser.transferRecords
+        } else {
+          this.transferRecords = []
         }
-      ]
-      
-      this.transferRecords = mockRecords
-      // 保存模拟记录到本地存储
-      uni.setStorageSync('transferRecords', mockRecords)
-    },
-    
-    // 获取记录标题
-    getRecordTitle(record) {
-      if (record.type === 'account') {
-        return `转账给 ${record.name}`
-      } else {
-        return `手机号转账`
+        console.log('加载转账记录:', this.transferRecords.length)
+      } catch (error) {
+        console.error('加载转账记录失败:', error)
+        this.transferRecords = []
       }
     },
     
-    // 获取记录详情
-    getRecordDetail(record) {
-      if (record.type === 'account') {
-        return `账号：${record.account}`
-      } else {
-        return `手机号：${record.phone}`
-      }
+    // 返回上一页
+    goBack() {
+      uni.navigateBack()
+    },
+    
+    // 刷新数据
+    refreshData() {
+      uni.showLoading({ title: '刷新中...' })
+      setTimeout(() => {
+        this.loadTransferRecords()
+        uni.hideLoading()
+        uni.showToast({
+          title: '刷新成功',
+          icon: 'success'
+        })
+      }, 1000)
+    },
+    
+    // 设置筛选器
+    setFilter(filter) {
+      this.currentFilter = filter
+    },
+    
+    // 显示转账详情
+    showTransferDetail(record) {
+      this.selectedRecord = record
+      this.showDetailModal = true
+    },
+    
+    // 关闭详情弹窗
+    closeDetailModal() {
+      this.showDetailModal = false
+      this.selectedRecord = null
     },
     
     // 格式化时间
     formatTime(timestamp) {
       const date = new Date(timestamp)
-      const year = date.getFullYear()
-      const month = (date.getMonth() + 1).toString().padStart(2, '0')
-      const day = date.getDate().toString().padStart(2, '0')
-      const hour = date.getHours().toString().padStart(2, '0')
-      const minute = date.getMinutes().toString().padStart(2, '0')
+      const now = new Date()
+      const diff = now - date
       
-      return `${year}-${month}-${day} ${hour}:${minute}`
+      // 小于1分钟
+      if (diff < 60000) {
+        return '刚刚'
+      }
+      
+      // 小于1小时
+      if (diff < 3600000) {
+        return Math.floor(diff / 60000) + '分钟前'
+      }
+      
+      // 小于1天
+      if (diff < 86400000) {
+        return Math.floor(diff / 3600000) + '小时前'
+      }
+      
+      // 小于7天
+      if (diff < 604800000) {
+        return Math.floor(diff / 86400000) + '天前'
+      }
+      
+      // 超过7天显示具体日期
+      return date.toLocaleDateString()
+    },
+    
+    // 格式化完整时间
+    formatFullTime(timestamp) {
+      const date = new Date(timestamp)
+      return date.toLocaleString('zh-CN', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      })
+    },
+    
+    // 获取状态文本
+    getStatusText(status) {
+      const statusMap = {
+        'completed': '已完成',
+        'processing': '处理中',
+        'failed': '失败',
+        'pending': '待处理',
+        'cancelled': '已取消'
+      }
+      return statusMap[status] || '未知'
     }
   }
 }
 </script>
 
 <style scoped>
-.history-page {
-  background-color: #f8f8f8;
+.transfer-history-page {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   min-height: 100vh;
+  padding-bottom: 20rpx;
 }
 
+/* 顶部导航 */
 .nav-bar {
-  background-color: #fff;
-  padding: 15px;
-  text-align: center;
-  border-bottom: 1px solid #e0e0e0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 20rpx 30rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #333;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2rpx 20rpx rgba(0, 0, 0, 0.1);
+}
+
+.nav-left, .nav-right {
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(102, 126, 234, 0.1);
+  transition: all 0.3s ease;
+}
+
+.nav-left:active, .nav-right:active {
+  background: rgba(102, 126, 234, 0.2);
+  transform: scale(0.95);
+}
+
+.back-icon, .refresh-icon {
+  font-size: 32rpx;
+  color: #667eea;
+  font-weight: bold;
 }
 
 .nav-title {
-  font-size: 18px;
+  font-size: 36rpx;
   font-weight: bold;
-  color: #333;
-}
-
-.history-list {
-  padding: 10px;
-}
-
-.empty-state {
-  padding: 60px 20px;
+  flex: 1;
   text-align: center;
-  color: #999;
+  color: #333;
 }
 
-.record-item {
-  background-color: #fff;
-  padding: 15px;
-  margin-bottom: 10px;
-  border-radius: 8px;
+/* 统计卡片 */
+.stats-card {
+  background: rgba(255, 255, 255, 0.95);
+  margin: 20rpx;
+  border-radius: 24rpx;
+  padding: 40rpx;
+  display: flex;
+  justify-content: space-around;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.1);
 }
 
-.record-header {
+.stats-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stats-value {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #667eea;
+  margin-bottom: 8rpx;
+}
+
+.stats-label {
+  font-size: 24rpx;
+  color: #666;
+}
+
+/* 筛选器 */
+.filter-section {
+  background: rgba(255, 255, 255, 0.95);
+  margin: 0 20rpx 20rpx 20rpx;
+  border-radius: 20rpx;
+  padding: 20rpx;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.1);
+}
+
+.filter-tabs {
+  display: flex;
+  background: #f5f5f5;
+  border-radius: 16rpx;
+  padding: 8rpx;
+}
+
+.filter-tab {
+  flex: 1;
+  text-align: center;
+  padding: 20rpx;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  color: #666;
+  transition: all 0.3s ease;
+}
+
+.filter-tab.active {
+  background: #667eea;
+  color: white;
+  font-weight: 600;
+}
+
+/* 转账记录列表 */
+.transfer-list {
+  background: rgba(255, 255, 255, 0.95);
+  margin: 0 20rpx;
+  border-radius: 24rpx;
+  overflow: hidden;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.1);
+}
+
+.transfer-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+  padding: 32rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+  transition: all 0.3s ease;
 }
 
-.record-title {
-  font-size: 16px;
+.transfer-item:last-child {
+  border-bottom: none;
+}
+
+.transfer-item:active {
+  background: #f8f9ff;
+}
+
+.transfer-left {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.transfer-icon {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 24rpx;
+}
+
+.transfer-icon.outgoing {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+}
+
+.transfer-icon.incoming {
+  background: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
+}
+
+.icon-text {
+  font-size: 32rpx;
+}
+
+.transfer-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.transfer-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.transfer-desc {
+  font-size: 24rpx;
+  color: #666;
+  margin-bottom: 6rpx;
+}
+
+.transfer-time {
+  font-size: 22rpx;
+  color: #999;
+}
+
+.transfer-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.transfer-amount {
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 8rpx;
+}
+
+.transfer-amount.outgoing {
+  color: #ff6b6b;
+}
+
+.transfer-amount.incoming {
+  color: #51cf66;
+}
+
+.transfer-status {
+  font-size: 22rpx;
+  padding: 6rpx 12rpx;
+  border-radius: 12rpx;
+  background: #f0f0f0;
+  color: #666;
+}
+
+.transfer-status.completed {
+  background: #e8f5e8;
+  color: #51cf66;
+}
+
+.transfer-status.processing {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.transfer-status.failed {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120rpx 40rpx;
+  background: rgba(255, 255, 255, 0.95);
+  margin: 20rpx;
+  border-radius: 24rpx;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.1);
+}
+
+.empty-icon {
+  font-size: 120rpx;
+  margin-bottom: 32rpx;
+  opacity: 0.5;
+}
+
+.empty-text {
+  font-size: 32rpx;
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 16rpx;
+}
+
+.empty-desc {
+  font-size: 26rpx;
+  color: #666;
+}
+
+/* 详情弹窗 */
+.detail-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 40rpx;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 24rpx;
+  width: 100%;
+  max-height: 80vh;
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 32rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.modal-title {
+  font-size: 32rpx;
   font-weight: bold;
   color: #333;
 }
 
-.record-status {
-  font-size: 14px;
-  padding: 2px 8px;
-  border-radius: 4px;
-}
-
-.record-status.success {
-  background-color: #e8f5e8;
-  color: #4caf50;
-}
-
-.record-status.failed {
-  background-color: #ffebee;
-  color: #f44336;
-}
-
-.record-info {
+.close-btn {
+  width: 60rpx;
+  height: 60rpx;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
-}
-
-.record-detail {
-  font-size: 14px;
+  justify-content: center;
+  border-radius: 50%;
+  background: #f5f5f5;
   color: #666;
-}
-
-.record-amount {
-  font-size: 16px;
+  font-size: 32rpx;
   font-weight: bold;
-  color: #f44336;
 }
 
-.record-footer {
+.modal-body {
+  padding: 32rpx;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.detail-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #f8f9fa;
 }
 
-.record-time {
-  font-size: 12px;
-  color: #999;
+.detail-item:last-child {
+  border-bottom: none;
 }
 
-.record-remark {
-  font-size: 12px;
+.detail-label {
+  font-size: 28rpx;
   color: #666;
+  font-weight: 500;
+}
+
+.detail-value {
+  font-size: 28rpx;
+  color: #333;
+  text-align: right;
+  flex: 1;
+  margin-left: 20rpx;
+}
+
+.detail-value.amount {
+  font-weight: bold;
+  color: #667eea;
+}
+
+.detail-value.status {
+  padding: 6rpx 12rpx;
+  border-radius: 12rpx;
+  background: #e8f5e8;
+  color: #51cf66;
+  display: inline-block;
 }
 </style>

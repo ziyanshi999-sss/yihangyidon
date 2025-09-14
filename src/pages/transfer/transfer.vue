@@ -18,13 +18,13 @@
         <text class="balance-label">我的账户</text>
       </view>
       <view class="balance-info">
-        <text class="balance-amount">¥{{ userBalance.toFixed(2) }}</text>
+        <text class="balance-amount">¥{{ currentUser.balance.toFixed(2) }}</text>
         <text class="balance-subtitle">可用余额</text>
       </view>
       <view class="balance-footer">
         <view class="limit-info">
           <text class="limit-label">单笔限额</text>
-          <text class="limit-amount">¥{{ transferLimit.toLocaleString() }}</text>
+          <text class="limit-amount">¥{{ currentUser.securitySettings?.transactionLimit?.toLocaleString() || '50,000' }}</text>
         </view>
         <view class="refresh-btn" @click="refreshBalance">
           <text class="refresh-icon">🔄</text>
@@ -47,7 +47,7 @@
     </view>
 
     <!-- 常用联系人 -->
-    <view class="frequent-contacts" v-if="frequentContacts.length > 0">
+    <view class="frequent-contacts" v-if="currentUser.frequentContacts && currentUser.frequentContacts.length > 0">
       <view class="section-header">
         <text class="section-title">常用联系人</text>
         <text class="section-more" @click="showAllContacts">查看全部</text>
@@ -56,7 +56,7 @@
         <view class="contacts-list">
           <view 
             class="contact-item" 
-            v-for="contact in frequentContacts.slice(0, 5)" 
+            v-for="contact in currentUser.frequentContacts.slice(0, 5)" 
             :key="contact.id"
             @click="selectContact(contact)"
           >
@@ -174,8 +174,7 @@
 
 <script>
 import { forceCheckLogin } from '@/utils/auth.js'
-import { transfer, phoneTransfer, validatePayee, getTransferLimit } from '@/api/transfer.js'
-import { deductBalance, checkBalanceSufficient, getUserBalance } from '@/api/balance.js'
+import dataSync from '@/utils/data-sync.js'
 import PaymentPasswordModal from '@/components/common/PaymentPasswordModal.vue'
 
 export default {
@@ -197,21 +196,17 @@ export default {
         remark: ''
       },
       isProcessing: false, // 转账处理状态
-      transferLimit: 50000, // 默认转账限额
-      userBalance: 0, // 用户余额
+      currentUser: {}, // 当前用户信息
       showPasswordModal: false, // 显示交易密码弹窗
       transferAmount: 0, // 转账金额
       transferPayee: '', // 收款方
-      transferDescription: '', // 转账说明
-      transferRecords: [], // 转账记录
-      frequentContacts: [], // 常用联系人
-      showHistory: false // 显示历史记录
+      transferDescription: '' // 转账说明
     }
   },
   
   mounted() {
     // 页面加载完成
-    this.loadTransferData()
+    this.loadUserData()
   },
   
   onShow() {
@@ -225,11 +220,8 @@ export default {
         return
       }
       
-      // 加载转账数据
-      this.loadTransferData()
-      
-      // 获取转账限额
-      this.getTransferLimit()
+      // 加载用户数据
+      this.loadUserData()
     } catch (error) {
       console.error('转账页面onShow检查失败:', error)
       uni.reLaunch({
@@ -239,20 +231,25 @@ export default {
   },
   
   methods: {
-    // 加载转账数据
-    loadTransferData() {
+    // 加载用户数据
+    loadUserData() {
       try {
+        // 从本地存储获取当前用户信息
+        const currentUserId = uni.getStorageSync('currentUserId')
         const users = uni.getStorageSync('users') || []
-        const currentUser = users.find(user => user.isLoggedIn)
         
-        if (currentUser) {
-          this.userBalance = currentUser.balance || 0
-          this.transferRecords = currentUser.transferRecords || []
-          this.frequentContacts = currentUser.frequentContacts || []
-          this.transferLimit = currentUser.securitySettings?.transactionLimit || 50000
+        if (currentUserId && users.length > 0) {
+          this.currentUser = users.find(user => user.id === currentUserId) || {}
+        } else {
+          // 如果本地存储没有数据，从user.json获取
+          const userData = dataSync.getCurrentUserInfo()
+          this.currentUser = userData || {}
         }
+        
+        console.log('转账页面加载用户数据:', this.currentUser.username)
       } catch (error) {
-        console.error('加载转账数据失败:', error)
+        console.error('加载用户数据失败:', error)
+        this.currentUser = {}
       }
     },
 
@@ -293,7 +290,7 @@ export default {
     async refreshBalance() {
       uni.showLoading({ title: '刷新中...' })
       try {
-        await this.getUserBalance()
+        this.loadUserData()
         uni.showToast({
           title: '刷新成功',
           icon: 'success'
@@ -313,34 +310,8 @@ export default {
       this.currentTab = tab
     },
     
-    // 获取转账限额
-    getTransferLimit() {
-      // 在实际环境中调用API，这里使用模拟数据
-      // 模拟API调用延迟
-      setTimeout(() => {
-        // 可以从本地存储获取模拟的限额
-        const savedLimit = uni.getStorageSync('transferLimit')
-        if (savedLimit) {
-          this.transferLimit = savedLimit
-        }
-        console.log('转账限额:', this.transferLimit)
-      }, 300)
-    },
-    
-    // 获取用户余额
-    async getUserBalance() {
-      try {
-        const balance = await getUserBalance()
-        this.userBalance = balance
-        console.log('获取用户余额成功:', balance)
-      } catch (error) {
-        console.error('获取用户余额失败:', error)
-        this.userBalance = 0
-      }
-    },
-    
     // 验证转账金额
-    async validateAmount(amount) {
+    validateAmount(amount) {
       const numAmount = parseFloat(amount)
       
       // 检查是否为有效数字
@@ -353,28 +324,19 @@ export default {
       }
       
       // 检查是否超过限额
-      if (numAmount > this.transferLimit) {
+      const transferLimit = this.currentUser.securitySettings?.transactionLimit || 50000
+      if (numAmount > transferLimit) {
         uni.showToast({
-          title: `转账金额不能超过${this.transferLimit}元`,
+          title: `转账金额不能超过${transferLimit.toLocaleString()}元`,
           icon: 'none'
         })
         return false
       }
       
       // 检查余额是否足够
-      try {
-        const isSufficient = await checkBalanceSufficient(numAmount)
-        if (!isSufficient) {
-          uni.showToast({
-            title: '余额不足，请检查账户余额',
-            icon: 'none'
-          })
-          return false
-        }
-      } catch (error) {
-        console.error('检查余额失败:', error)
+      if (numAmount > this.currentUser.balance) {
         uni.showToast({
-          title: '检查余额失败，请重试',
+          title: '余额不足，请检查账户余额',
           icon: 'none'
         })
         return false
@@ -400,8 +362,7 @@ export default {
           }
           
           // 验证转账金额
-          const isValidAmount = await this.validateAmount(this.accountForm.amount)
-          if (!isValidAmount) {
+          if (!this.validateAmount(this.accountForm.amount)) {
             this.isProcessing = false
             return
           }
@@ -422,8 +383,7 @@ export default {
           }
           
           // 验证转账金额
-          const isValidAmount = await this.validateAmount(this.phoneForm.amount)
-          if (!isValidAmount) {
+          if (!this.validateAmount(this.phoneForm.amount)) {
             this.isProcessing = false
             return
           }
@@ -444,89 +404,52 @@ export default {
       }
     },
     
-    // 验证收款人信息
-    async verifyPayeeInfo(account, name) {
+    // 处理转账成功
+    async processTransferSuccess() {
       try {
-        // 模拟API调用延迟
-        await new Promise(resolve => setTimeout(resolve, 1000))
+        // 更新用户余额
+        const newBalance = this.currentUser.balance - this.transferAmount
+        this.currentUser.balance = newBalance
         
-        // 在实际环境中调用API验证收款人
-        // const result = await validatePayee(account, name)
-        
-        // 模拟验证成功
-        console.log('收款人信息验证成功')
-        
-        // 执行账号转账
-        await this.processAccountTransfer()
-      } catch (error) {
-        console.error('验证收款人信息失败:', error)
-        uni.showToast({
-          title: '收款人信息验证失败',
-          icon: 'none'
-        })
-        this.isProcessing = false
-      }
-    },
-    
-    // 处理账号转账
-    async processAccountTransfer() {
-      try {
-        // 模拟API调用延迟
-        await new Promise(resolve => setTimeout(resolve, 1500))
-        
-        // 构造转账信息
-        const transferInfo = {
-          account: this.accountForm.account,
-          name: this.accountForm.name,
-          amount: parseFloat(this.accountForm.amount),
-          remark: this.accountForm.remark,
-          timestamp: new Date().getTime()
+        // 创建转账记录
+        const transferRecord = {
+          id: 't' + Date.now() + Math.random().toString(36).substr(2, 9),
+          type: this.currentTab === 'account' ? 'outgoing' : 'outgoing',
+          amount: this.transferAmount,
+          recipient: this.currentTab === 'account' ? this.accountForm.name : this.phoneForm.phone,
+          recipientAccount: this.currentTab === 'account' ? this.accountForm.account : this.phoneForm.phone,
+          description: this.currentTab === 'account' ? this.accountForm.remark || '转账' : this.phoneForm.remark || '转账',
+          status: 'completed',
+          timestamp: new Date().toISOString(),
+          fee: this.transferAmount > 1000 ? 2.5 : 0
         }
         
-        // 在实际环境中调用API
-        // const result = await transfer(transferInfo)
+        // 添加到转账记录
+        if (!this.currentUser.transferRecords) {
+          this.currentUser.transferRecords = []
+        }
+        this.currentUser.transferRecords.unshift(transferRecord)
         
-        // 模拟转账成功，更新余额
-        this.updateUserBalance(parseFloat(this.accountForm.amount))
+        // 更新常用联系人
+        this.updateFrequentContacts(transferRecord)
         
-        // 保存转账记录
-        this.saveTransferRecord({
-          type: 'account',
-          ...transferInfo,
-          status: 'success',
-          transactionId: 'TX' + Date.now() + Math.random().toString(36).substr(2, 9)
-        })
+        // 保存到本地存储
+        this.saveUserData()
         
         // 显示转账成功提示
         uni.showToast({
-          title: '转账成功',
-          icon: 'success'
+          title: `转账成功，余额：¥${newBalance.toFixed(2)}`,
+          icon: 'success',
+          duration: 3000
         })
         
         // 清空表单
-        this.accountForm = {
-          account: '',
-          name: '',
-          amount: '',
-          remark: ''
-        }
-      } catch (error) {
-        console.error('账号转账失败:', error)
-        // 保存转账失败记录
-        this.saveTransferRecord({
-          type: 'account',
-          account: this.accountForm.account,
-          name: this.accountForm.name,
-          amount: parseFloat(this.accountForm.amount),
-          remark: this.accountForm.remark,
-          timestamp: new Date().getTime(),
-          status: 'failed',
-          errorMsg: '转账失败，请重试',
-          transactionId: 'TX' + Date.now() + Math.random().toString(36).substr(2, 9)
-        })
+        this.clearForms()
         
+      } catch (error) {
+        console.error('处理转账成功失败:', error)
         uni.showToast({
-          title: '转账失败，请重试',
+          title: '转账处理失败',
           icon: 'none'
         })
       } finally {
@@ -534,109 +457,70 @@ export default {
       }
     },
     
-    // 处理手机号转账
-    async processPhoneTransfer() {
-      try {
-        // 模拟API调用延迟
-        await new Promise(resolve => setTimeout(resolve, 1500))
-        
-        // 构造转账信息
-        const transferInfo = {
-          phone: this.phoneForm.phone,
-          amount: parseFloat(this.phoneForm.amount),
-          remark: this.phoneForm.remark,
-          timestamp: new Date().getTime()
+    // 更新常用联系人
+    updateFrequentContacts(transferRecord) {
+      if (!this.currentUser.frequentContacts) {
+        this.currentUser.frequentContacts = []
+      }
+      
+      const existingContact = this.currentUser.frequentContacts.find(
+        contact => contact.account === transferRecord.recipientAccount
+      )
+      
+      if (existingContact) {
+        // 更新现有联系人
+        existingContact.lastTransfer = transferRecord.timestamp
+        existingContact.transferCount = (existingContact.transferCount || 0) + 1
+      } else {
+        // 添加新联系人
+        const newContact = {
+          id: 'fc' + Date.now() + Math.random().toString(36).substr(2, 9),
+          name: transferRecord.recipient,
+          account: transferRecord.recipientAccount,
+          bank: '中国农业银行', // 默认银行
+          phone: transferRecord.recipientAccount.length === 11 ? transferRecord.recipientAccount : '',
+          lastTransfer: transferRecord.timestamp,
+          transferCount: 1
         }
+        this.currentUser.frequentContacts.unshift(newContact)
         
-        // 在实际环境中调用API
-        // const result = await phoneTransfer(transferInfo)
-        
-        // 模拟转账成功，更新余额
-        this.updateUserBalance(parseFloat(this.phoneForm.amount))
-        
-        // 保存转账记录
-        this.saveTransferRecord({
-          type: 'phone',
-          ...transferInfo,
-          status: 'success',
-          transactionId: 'TX' + Date.now() + Math.random().toString(36).substr(2, 9)
-        })
-        
-        // 显示转账成功提示
-        uni.showToast({
-          title: '转账成功',
-          icon: 'success'
-        })
-        
-        // 清空表单
-        this.phoneForm = {
-          phone: '',
-          amount: '',
-          remark: ''
+        // 只保留最近20个联系人
+        if (this.currentUser.frequentContacts.length > 20) {
+          this.currentUser.frequentContacts = this.currentUser.frequentContacts.slice(0, 20)
         }
-      } catch (error) {
-        console.error('手机号转账失败:', error)
-        // 保存转账失败记录
-        this.saveTransferRecord({
-          type: 'phone',
-          phone: this.phoneForm.phone,
-          amount: parseFloat(this.phoneForm.amount),
-          remark: this.phoneForm.remark,
-          timestamp: new Date().getTime(),
-          status: 'failed',
-          errorMsg: '转账失败，请重试',
-          transactionId: 'TX' + Date.now() + Math.random().toString(36).substr(2, 9)
-        })
-        
-        uni.showToast({
-          title: '转账失败，请重试',
-          icon: 'none'
-        })
-      } finally {
-        this.isProcessing = false
       }
     },
     
-    // 更新用户余额
-    updateUserBalance(amount) {
-      this.userBalance -= amount
-      // 保存余额到本地存储
-      uni.setStorageSync('userBalance', this.userBalance)
-    },
-    
-    // 保存转账记录
-    saveTransferRecord(record) {
+    // 保存用户数据到本地存储
+    saveUserData() {
       try {
-        // 获取现有记录
-        const records = uni.getStorageSync('transferRecords') || []
-        // 添加新记录到开头
-        records.unshift(record)
-        // 只保留最近100条记录
-        if (records.length > 100) {
-          records.splice(100)
+        const users = uni.getStorageSync('users') || []
+        const currentUserId = uni.getStorageSync('currentUserId')
+        
+        if (currentUserId && users.length > 0) {
+          const userIndex = users.findIndex(user => user.id === currentUserId)
+          if (userIndex !== -1) {
+            users[userIndex] = this.currentUser
+            uni.setStorageSync('users', users)
+            console.log('用户数据已保存到本地存储')
+          }
         }
-        // 保存回本地存储
-        uni.setStorageSync('transferRecords', records)
-        console.log('转账记录已保存')
       } catch (error) {
-        console.error('保存转账记录失败:', error)
+        console.error('保存用户数据失败:', error)
       }
     },
     
     // 跳转到转账记录
     goToTransferHistory() {
-      // 在实际项目中应该跳转到转账记录页面
-      // 这里我们可以创建一个临时的转账记录页面
       uni.navigateTo({
-        url: '/pages/transfer/history' // 假设我们创建了这个页面
+        url: '/pages/transfer/history'
       })
     },
     
     // 跳转到转账设置
     goToTransferSettings() {
-      // 在实际项目中应该跳转到转账设置页面
       uni.showToast({
-        title: '跳转到转账设置页面',
+        title: '转账设置功能开发中',
         icon: 'none'
       })
     },
@@ -646,43 +530,10 @@ export default {
       try {
         this.isProcessing = true
         
-        // 扣除余额
-        const deductResult = await deductBalance(
-          this.transferAmount, 
-          this.transferDescription
-        )
+        // 处理转账成功
+        await this.processTransferSuccess()
         
-        if (!deductResult.success) {
-          uni.showToast({
-            title: deductResult.message,
-            icon: 'none'
-          })
-          this.isProcessing = false
-          return
-        }
-        
-        // 更新本地余额显示
-        this.userBalance = deductResult.newBalance
-        
-        // 执行转账记录保存
-        if (this.currentTab === 'account') {
-          await this.processAccountTransfer()
-        } else {
-          await this.processPhoneTransfer()
-        }
-        
-        this.isProcessing = false
         this.closePasswordModal()
-        
-        // 显示转账成功提示
-        uni.showToast({
-          title: `转账成功，余额：¥${deductResult.newBalance.toFixed(2)}`,
-          icon: 'success',
-          duration: 3000
-        })
-        
-        // 清空表单
-        this.clearForms()
         
       } catch (error) {
         console.error('转账处理失败:', error)
