@@ -43,6 +43,10 @@
         <text>手机充值</text>
         <text class="arrow-right">→</text>
       </view>
+      <view class="suggestion-item" @click="handleTransactionClick">
+        <text>交易记录</text>
+        <text class="arrow-right">→</text>
+      </view>
     </view>
 
 
@@ -87,13 +91,13 @@
             <view class="function-icon icon-scan">🔍</view>
             <text class="function-text">扫一扫</text>
           </view>
-          <view class="function-item" @click="showFeatureTip('存款')">
-            <view class="function-icon icon-deposit">💰</view>
-            <text class="function-text">存款</text>
+          <view class="function-item" @click="goToBranch">
+            <view class="function-icon icon-branch">🏢</view>
+            <text class="function-text">我的网点</text>
           </view>
-          <view class="function-item" @click="handleBranchClick">
-            <view class="function-icon icon-branch">🏦</view>
-            <text class="function-text">网点查询</text>
+          <view class="function-item" @click="handleTransactionClick">
+            <view class="function-icon icon-transaction">📊</view>
+            <text class="function-text">交易记录</text>
           </view>
         </view>
         
@@ -106,9 +110,9 @@
             <view class="function-icon icon-topup">📱</view>
             <text class="function-text">手机充值</text>
           </view>
-          <view class="function-item" @click="showFeatureTip('纪念币预约')">
-            <view class="function-icon icon-coin">🪙</view>
-            <text class="function-text">纪念币预约</text>
+          <view class="function-item" @click="goToMap">
+            <view class="function-icon icon-map">🗺️</view>
+            <text class="function-text">我的地图</text>
           </view>
         </view>
       </view>
@@ -183,38 +187,71 @@
 
 <script>
 import { forceCheckLogin } from '@/utils/auth.js'
+import themeManager from '@/utils/theme.js'
+import { useAppStore } from '@/stores/app.js'
 
 export default {
   data() {
     return {
       isLoggedIn: false,
       showMoreFunctions: false,
-      showSearchSuggestions: false // 控制搜索建议的显示/隐藏
+      showSearchSuggestions: false, // 控制搜索建议的显示/隐藏
+      currentTheme: 'light'
     }
   },
   
   // 页面加载时检查登录状态
   onLoad() {
     this.checkLoginStatus()
+    this.initTheme()
   },
   
   // 页面显示时检查登录状态
   onShow() {
     this.checkLoginStatus()
+    this.checkThemeChange()
   },
   
   // 在methods对象中添加缺失的scrollToHotActivities方法
   methods: {
     // 检查登录状态
     checkLoginStatus() {
-      if (!forceCheckLogin()) {
-        console.log('首页：用户未登录，跳转到登录页面')
-        uni.reLaunch({
-          url: '/pages/denglu/login'
-        })
-        return
+      const isLoggedIn = uni.getStorageSync('isLoggedIn')
+      const userInfo = uni.getStorageSync('userInfo')
+      
+      if (!isLoggedIn || !userInfo) {
+        console.log('首页：用户未登录，尝试从数据库恢复登录状态')
+        
+        // 尝试从数据库恢复登录状态
+        try {
+          const users = uni.getStorageSync('users') || []
+          const loggedInUser = users.find(user => user.isLoggedIn === true)
+          
+          if (loggedInUser) {
+            console.log('从数据库恢复登录状态:', loggedInUser.username)
+            // 恢复登录状态
+            uni.setStorageSync('userInfo', loggedInUser)
+            uni.setStorageSync('isLoggedIn', true)
+            uni.setStorageSync('currentUser', loggedInUser)
+            uni.setStorageSync('currentUserId', loggedInUser.id)
+            this.isLoggedIn = true
+          } else {
+            console.log('首页：数据库中也未找到登录用户，跳转到登录页面')
+            uni.reLaunch({
+              url: '/pages/denglu/login'
+            })
+            return
+          }
+        } catch (recoveryError) {
+          console.error('恢复登录状态失败:', recoveryError)
+          uni.reLaunch({
+            url: '/pages/denglu/login'
+          })
+          return
+        }
+      } else {
+        this.isLoggedIn = true
       }
-      this.isLoggedIn = true
     },
     
     // 新增：处理搜索框点击事件
@@ -233,6 +270,117 @@ export default {
         title: `${featureName}功能开发中`,
         icon: 'none',
         duration: 2000
+      })
+    },
+
+    // 跳转到网点页面
+    goToBranch() {
+      uni.navigateTo({
+        url: '/pages/wealth/branch'
+      })
+    },
+
+    // 跳转到地图页面
+    goToMap() {
+      uni.navigateTo({
+        url: '/pages/map/map'
+      })
+    },
+
+    // 打开地图
+    openMap() {
+      // 使用uni-app的地图API
+      uni.chooseLocation({
+        success: (res) => {
+          console.log('选择位置成功:', res)
+          uni.showModal({
+            title: '位置信息',
+            content: `您选择的位置：${res.name}\n地址：${res.address}`,
+            showCancel: false
+          })
+        },
+        fail: (error) => {
+          console.log('选择位置失败:', error)
+          // 如果选择位置失败，尝试打开系统地图
+          this.openSystemMap()
+        }
+      })
+    },
+
+    // 打开系统地图
+    openSystemMap() {
+      // 获取当前位置
+      uni.getLocation({
+        type: 'gcj02',
+        success: (res) => {
+          console.log('获取位置成功:', res)
+          const { latitude, longitude } = res
+          
+          // 尝试打开系统地图应用
+          uni.openLocation({
+            latitude: latitude,
+            longitude: longitude,
+            name: '当前位置',
+            address: '您当前所在位置',
+            success: () => {
+              console.log('打开地图成功')
+            },
+            fail: (error) => {
+              console.error('打开地图失败:', error)
+              // 如果打开地图失败，显示提示
+              uni.showModal({
+                title: '地图功能',
+                content: '正在为您打开地图功能，请稍候...',
+                showCancel: false,
+                success: () => {
+                  // 可以在这里添加其他地图相关的功能
+                  this.showMapFeatures()
+                }
+              })
+            }
+          })
+        },
+        fail: (error) => {
+          console.error('获取位置失败:', error)
+          // 如果获取位置失败，显示地图功能说明
+          this.showMapFeatures()
+        }
+      })
+    },
+
+    // 显示地图功能说明
+    showMapFeatures() {
+      uni.showActionSheet({
+        itemList: ['查看附近网点', '导航到银行', '查看交通路线', '地图功能说明'],
+        success: (res) => {
+          switch (res.tapIndex) {
+            case 0:
+              // 跳转到网点页面
+              this.goToBranch()
+              break
+            case 1:
+              uni.showToast({
+                title: '正在为您规划路线...',
+                icon: 'loading',
+                duration: 2000
+              })
+              break
+            case 2:
+              uni.showToast({
+                title: '正在查询交通路线...',
+                icon: 'loading',
+                duration: 2000
+              })
+              break
+            case 3:
+              uni.showModal({
+                title: '地图功能说明',
+                content: '地图功能可以帮助您：\n• 查找附近的银行网点\n• 导航到指定位置\n• 查看交通路线\n• 获取实时位置信息',
+                showCancel: false
+              })
+              break
+          }
+        }
       })
     },
 
@@ -331,6 +479,7 @@ export default {
       if (this.isLoggedIn) {
         // 已登录，跳转到手机充值页面
         uni.navigateTo({
+          
           url: '/pages/recharge/recharge'
         })
       } else {
@@ -339,6 +488,23 @@ export default {
           url: '/pages/denglu/login'
         })
       }
+    },
+
+
+    // 处理交易记录点击
+    handleTransactionClick() {
+      if (this.isLoggedIn) {
+        // 已登录，跳转到交易记录页面
+        uni.navigateTo({
+          url: '/pages/transaction/transaction'
+        })
+      } else {
+        // 未登录，跳转到登录页面
+        uni.navigateTo({
+          url: '/pages/denglu/login'
+        })
+      }
+      this.closeSearchSuggestions()
     },
     
     
@@ -437,6 +603,29 @@ export default {
           duration: 300 // 滚动动画持续时间（毫秒）
         })
       }).exec()
+    },
+
+    // 初始化主题
+    initTheme() {
+      try {
+        this.currentTheme = themeManager.getCurrentTheme()
+        console.log('首页初始化主题:', this.currentTheme)
+      } catch (error) {
+        console.error('首页初始化主题失败:', error)
+      }
+    },
+
+    // 检查主题变化
+    checkThemeChange() {
+      try {
+        const currentTheme = themeManager.getCurrentTheme()
+        if (this.currentTheme !== currentTheme) {
+          this.currentTheme = currentTheme
+          console.log('首页主题已更新:', currentTheme)
+        }
+      } catch (error) {
+        console.error('首页检查主题变化失败:', error)
+      }
     }
   }
 }
@@ -445,8 +634,9 @@ export default {
 <style scoped>
 .home-container {
   padding-bottom: 60px; /* 为底部导航栏留出空间 */
-  background-color: #f8f8f8;
+  background-color: var(--theme-background, #f8f8f8);
   min-height: 100vh;
+  transition: background-color 0.3s ease;
 }
 
 /* 顶部搜索栏 */
@@ -502,10 +692,11 @@ export default {
 
 /* 功能区域 */
 .function-area {
-  background-color: #fff;
+  background-color: var(--theme-card-background, #fff);
   padding: 20px 15px;
   margin-bottom: 10px;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid var(--theme-border, #e0e0e0);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .function-grid {
@@ -552,20 +743,20 @@ export default {
 .icon-balance { background-color: #ff9800; }
 .icon-scan { background-color: #9c27b0; }
 .icon-card { background-color: #f44336; }
-.icon-deposit { background-color: #00bcd4; }
+.icon-branch { background-color: #00bcd4; }
 .icon-activity { background-color: #ffeb3b; color: #333; }
-.icon-branch { background-color: #795548; }
 .icon-electronic { background-color: #673ab7; }
 .icon-loan { background-color: #e91e63; }
 .icon-topup { background-color: #009688; }
 .icon-more { background-color: #607d8b; }
-.icon-coin { background-color: #ff9800; }
+.icon-map { background-color: #ff9800; }
 
 .function-text {
   font-size: 14px;
-  color: #333;
+  color: var(--theme-text-primary, #333);
   margin-top: 8px;
   font-weight: 500;
+  transition: color 0.3s ease;
 }
 
 /* 优化广告横幅样式 */
@@ -633,31 +824,35 @@ export default {
 /* 其他样式保持不变 */
 .todo-section,
 .news-section {
-  background-color: #fff;
+  background-color: var(--theme-card-background, #fff);
   padding: 15px;
   margin-bottom: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  transition: background-color 0.3s ease;
 }
 
 .section-title {
   font-size: 16px;
   font-weight: bold;
-  color: #333;
+  color: var(--theme-text-primary, #333);
+  transition: color 0.3s ease;
 }
 
 .todo-content,
 .news-content {
   flex: 1;
   margin: 0 10px;
-  color: #666;
+  color: var(--theme-text-secondary, #666);
+  transition: color 0.3s ease;
 }
 
 .swiper-container {
-  background-color: #fff;
+  background-color: var(--theme-card-background, #fff);
   margin-bottom: 10px;
   padding: 10px;
+  transition: background-color 0.3s ease;
 }
 
 .swiper {
@@ -688,9 +883,10 @@ export default {
 }
 
 .ad-section {
-  background-color: #fff;
+  background-color: var(--theme-card-background, #fff);
   margin-bottom: 10px;
   padding: 15px;
+  transition: background-color 0.3s ease;
 }
 
 .ad-content {
@@ -725,18 +921,20 @@ export default {
 }
 
 .hot-activities {
-  background-color: #fff;
+  background-color: var(--theme-card-background, #fff);
   padding: 15px;
   margin-bottom: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  transition: background-color 0.3s ease;
 }
 
 .activities-title {
   font-size: 16px;
   font-weight: bold;
-  color: #333;
+  color: var(--theme-text-primary, #333);
+  transition: color 0.3s ease;
 }
 
 .activity-cards {
@@ -747,29 +945,33 @@ export default {
 
 .activity-card {
   width: 48%;
-  background-color: #fff;
+  background-color: var(--theme-card-background, #fff);
   padding: 15px;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px var(--theme-shadow-light, rgba(0, 0, 0, 0.1));
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card-title {
   font-size: 16px;
   font-weight: bold;
-  color: #333;
+  color: var(--theme-text-primary, #333);
   margin-bottom: 5px;
   display: block;
+  transition: color 0.3s ease;
 }
 
 .card-desc {
   font-size: 14px;
-  color: #666;
+  color: var(--theme-text-secondary, #666);
+  transition: color 0.3s ease;
 }
 
 /* 更多功能区域 */
 .more-functions {
   margin-top: 15px;
   padding-top: 15px;
-  border-top: 1px solid #f0f0f0;
+  border-top: 1px solid var(--theme-border, #f0f0f0);
+  transition: border-color 0.3s ease;
 }
 </style>

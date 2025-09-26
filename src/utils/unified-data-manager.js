@@ -18,9 +18,9 @@ class UnifiedDataManager {
       // 从本地存储加载用户数据
       this.users = uni.getStorageSync('users') || []
       
-      // 如果没有数据，从user.json加载
+      // 如果没有数据，从数据连接器加载
       if (this.users.length === 0) {
-        await this.loadFromUserJson()
+        await this.loadFromDataConnector()
       }
       
       // 设置当前用户
@@ -37,27 +37,27 @@ class UnifiedDataManager {
   }
 
   /**
-   * 从user.json文件加载数据
+   * 从数据连接器加载数据
    */
-  async loadFromUserJson() {
+  async loadFromDataConnector() {
     try {
-      // 这里应该从实际的user.json文件加载数据
-      // 由于uni-app的限制，我们使用模拟数据
-      const userJsonData = await this.getUserJsonData()
-      this.users = userJsonData
+      // 从数据连接器加载数据
+      const dataConnector = await import('../../db/data-connector.js')
+      await dataConnector.default.init()
+      const userData = await dataConnector.default.getUsers()
+      this.users = userData
       this.saveToLocalStorage()
-      console.log('✅ 从user.json加载数据成功')
+      console.log('✅ 从数据连接器加载数据成功')
     } catch (error) {
-      console.error('❌ 从user.json加载数据失败:', error)
+      console.error('❌ 从数据连接器加载数据失败:', error)
     }
   }
 
   /**
-   * 获取user.json数据（模拟）
+   * 获取模拟数据（备用）
    */
   async getUserJsonData() {
-    // 这里应该从实际的user.json文件读取
-    // 由于uni-app的限制，我们返回模拟数据
+    // 备用模拟数据
     return [
       {
         "id": "u001",

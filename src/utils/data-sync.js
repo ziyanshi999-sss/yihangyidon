@@ -1,10 +1,10 @@
 /**
  * 数据同步工具
- * 确保所有数据都从本地存储获取，基于 user.json 文件
+ * 确保所有数据都从本地存储获取，基于数据连接器
  */
 
 import { getStorage, setStorage } from './storage.js'
-import userDataJson from '../../db/user.json'
+import dataConnector from '../../db/data-connector.js'
 
 class DataSync {
   constructor() {
@@ -26,23 +26,24 @@ class DataSync {
   /**
    * 获取用户数据（优先从本地存储）
    */
-  getUsersData() {
+  async getUsersData() {
     try {
       // 首先尝试从本地存储获取
       let users = uni.getStorageSync(this.storageKeys.USERS)
       
       if (!users || users.length === 0) {
-        // 如果本地存储没有数据，使用JSON文件数据
-        users = userDataJson
+        // 如果本地存储没有数据，从数据连接器获取
+        await dataConnector.init()
+        users = await dataConnector.getUsers()
         // 保存到本地存储
         uni.setStorageSync(this.storageKeys.USERS, users)
-        console.log('从JSON文件同步用户数据到本地存储')
+        console.log('从数据连接器同步用户数据到本地存储')
       }
       
       return users
     } catch (error) {
       console.error('获取用户数据失败:', error)
-      return userDataJson
+      return []
     }
   }
 

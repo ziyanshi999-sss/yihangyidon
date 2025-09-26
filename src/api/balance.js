@@ -5,23 +5,20 @@ import { getUserInfo } from '@/utils/auth.js'
  * 获取用户余额
  * @returns {Promise<number>} 用户余额
  */
-export function getUserBalance() {
-  return new Promise((resolve, reject) => {
-    try {
-      const userInfo = getUserInfo()
-      if (!userInfo) {
-        reject(new Error('用户未登录'))
-        return
-      }
-      
-      const balance = userInfo.balance || 0
-      console.log('获取用户余额:', balance)
-      resolve(balance)
-    } catch (error) {
-      console.error('获取用户余额失败:', error)
-      reject(error)
+export async function getUserBalance() {
+  try {
+    const userInfo = await getUserInfo()
+    if (!userInfo) {
+      throw new Error('用户未登录')
     }
-  })
+    
+    const balance = userInfo.balance || 0
+    console.log('获取用户余额:', balance)
+    return balance
+  } catch (error) {
+    console.error('获取用户余额失败:', error)
+    throw error
+  }
 }
 
 /**
@@ -30,61 +27,57 @@ export function getUserBalance() {
  * @param {string} description 交易描述
  * @returns {Promise<{success: boolean, newBalance: number, message: string}>}
  */
-export function deductBalance(amount, description = '转账支出') {
-  return new Promise((resolve, reject) => {
-    try {
-      const userInfo = getUserInfo()
-      if (!userInfo) {
-        reject(new Error('用户未登录'))
-        return
-      }
-      
-      const currentBalance = userInfo.balance || 0
-      
-      // 检查余额是否足够
-      if (currentBalance < amount) {
-        resolve({
-          success: false,
-          newBalance: currentBalance,
-          message: '余额不足，无法完成转账'
-        })
-        return
-      }
-      
-      // 扣除余额
-      const newBalance = currentBalance - amount
-      userInfo.balance = newBalance
-      userInfo.lastUpdateTime = new Date().toISOString()
-      
-      // 更新本地存储
-      uni.setStorageSync('userInfo', userInfo)
-      uni.setStorageSync('currentUser', userInfo)
-      
-      // 更新本地数据库
-      updateUserBalanceInDatabase(userInfo)
-      
-      // 记录交易记录
-      addTransactionRecord({
-        type: 'expense',
-        amount: amount,
-        description: description,
-        balance: newBalance,
-        timestamp: new Date().toISOString()
-      })
-      
-      console.log(`余额扣除成功: ${amount}元，剩余余额: ${newBalance}元`)
-      
-      resolve({
-        success: true,
-        newBalance: newBalance,
-        message: '转账成功'
-      })
-      
-    } catch (error) {
-      console.error('扣除余额失败:', error)
-      reject(error)
+export async function deductBalance(amount, description = '转账支出') {
+  try {
+    const userInfo = await getUserInfo()
+    if (!userInfo) {
+      throw new Error('用户未登录')
     }
-  })
+    
+    const currentBalance = userInfo.balance || 0
+    
+    // 检查余额是否足够
+    if (currentBalance < amount) {
+      return {
+        success: false,
+        newBalance: currentBalance,
+        message: '余额不足，无法完成转账'
+      }
+    }
+    
+    // 扣除余额
+    const newBalance = currentBalance - amount
+    userInfo.balance = newBalance
+    userInfo.lastUpdateTime = new Date().toISOString()
+    
+    // 更新本地存储
+    uni.setStorageSync('userInfo', userInfo)
+    uni.setStorageSync('currentUser', userInfo)
+    
+    // 更新本地数据库
+    updateUserBalanceInDatabase(userInfo)
+    
+    // 记录交易记录
+    await addTransactionRecord({
+      type: 'expense',
+      amount: amount,
+      description: description,
+      balance: newBalance,
+      timestamp: new Date().toISOString()
+    })
+    
+    console.log(`余额扣除成功: ${amount}元，剩余余额: ${newBalance}元`)
+    
+    return {
+      success: true,
+      newBalance: newBalance,
+      message: '转账成功'
+    }
+    
+  } catch (error) {
+    console.error('扣除余额失败:', error)
+    throw error
+  }
 }
 
 /**
@@ -93,14 +86,12 @@ export function deductBalance(amount, description = '转账支出') {
  * @param {string} description 交易描述
  * @returns {Promise<{success: boolean, newBalance: number, message: string}>}
  */
-export function addBalance(amount, description = '转账收入') {
-  return new Promise((resolve, reject) => {
-    try {
-      const userInfo = getUserInfo()
-      if (!userInfo) {
-        reject(new Error('用户未登录'))
-        return
-      }
+export async function addBalance(amount, description = '转账收入') {
+  try {
+    const userInfo = await getUserInfo()
+    if (!userInfo) {
+      throw new Error('用户未登录')
+    }
       
       const currentBalance = userInfo.balance || 0
       const newBalance = currentBalance + amount
@@ -132,11 +123,10 @@ export function addBalance(amount, description = '转账收入') {
         message: '收款成功'
       })
       
-    } catch (error) {
-      console.error('增加余额失败:', error)
-      reject(error)
-    }
-  })
+  } catch (error) {
+    console.error('增加余额失败:', error)
+    throw error
+  }
 }
 
 /**
@@ -144,26 +134,23 @@ export function addBalance(amount, description = '转账收入') {
  * @param {number} amount 需要检查的金额
  * @returns {Promise<boolean>} 余额是否足够
  */
-export function checkBalanceSufficient(amount) {
-  return new Promise((resolve, reject) => {
-    try {
-      const userInfo = getUserInfo()
-      if (!userInfo) {
-        reject(new Error('用户未登录'))
-        return
-      }
+export async function checkBalanceSufficient(amount) {
+  try {
+    const userInfo = await getUserInfo()
+    if (!userInfo) {
+      throw new Error('用户未登录')
+    }
       
       const currentBalance = userInfo.balance || 0
       const isSufficient = currentBalance >= amount
       
-      console.log(`余额检查: 当前余额${currentBalance}元，需要${amount}元，是否足够: ${isSufficient}`)
-      resolve(isSufficient)
-      
-    } catch (error) {
-      console.error('检查余额失败:', error)
-      reject(error)
-    }
-  })
+    console.log(`余额检查: 当前余额${currentBalance}元，需要${amount}元，是否足够: ${isSufficient}`)
+    return isSufficient
+    
+  } catch (error) {
+    console.error('检查余额失败:', error)
+    throw error
+  }
 }
 
 /**
@@ -189,9 +176,9 @@ function updateUserBalanceInDatabase(userInfo) {
  * 添加交易记录
  * @param {Object} transaction 交易信息
  */
-function addTransactionRecord(transaction) {
+export async function addTransactionRecord(transaction) {
   try {
-    const userInfo = getUserInfo()
+    const userInfo = await getUserInfo()
     if (!userInfo) {
       return
     }
@@ -212,8 +199,19 @@ function addTransactionRecord(transaction) {
       userInfo.transactionRecords = userInfo.transactionRecords.slice(0, 100)
     }
     
+    // 更新本地存储
     uni.setStorageSync('userInfo', userInfo)
     uni.setStorageSync('currentUser', userInfo)
+    
+    // 同步更新到userData
+    const userData = uni.getStorageSync('userData') || []
+    const userIndex = userData.findIndex(u => u.id === userInfo.id)
+    if (userIndex !== -1) {
+      userData[userIndex].transactionRecords = userInfo.transactionRecords
+      userData[userIndex].lastUpdateTime = new Date().toISOString()
+      uni.setStorageSync('userData', userData)
+      console.log('✅ 交易记录已同步到userData')
+    }
     
     console.log('交易记录添加成功:', newRecord)
     
@@ -227,26 +225,23 @@ function addTransactionRecord(transaction) {
  * @param {number} limit 限制条数，默认20条
  * @returns {Promise<Array>} 交易记录列表
  */
-export function getTransactionRecords(limit = 20) {
-  return new Promise((resolve, reject) => {
-    try {
-      const userInfo = getUserInfo()
-      if (!userInfo) {
-        reject(new Error('用户未登录'))
-        return
-      }
+export async function getTransactionRecords(limit = 20) {
+  try {
+    const userInfo = await getUserInfo()
+    if (!userInfo) {
+      throw new Error('用户未登录')
+    }
       
       const records = userInfo.transactionRecords || []
       const limitedRecords = records.slice(0, limit)
       
-      console.log(`获取交易记录: ${limitedRecords.length}条`)
-      resolve(limitedRecords)
-      
-    } catch (error) {
-      console.error('获取交易记录失败:', error)
-      reject(error)
-    }
-  })
+    console.log(`获取交易记录: ${limitedRecords.length}条`)
+    return limitedRecords
+    
+  } catch (error) {
+    console.error('获取交易记录失败:', error)
+    throw error
+  }
 }
 
 /**
@@ -254,14 +249,12 @@ export function getTransactionRecords(limit = 20) {
  * @param {string} password 支付密码
  * @returns {Promise<boolean>} 密码是否正确
  */
-export function verifyPaymentPassword(password) {
-  return new Promise((resolve, reject) => {
-    try {
-      const userInfo = getUserInfo()
-      if (!userInfo) {
-        reject(new Error('用户未登录'))
-        return
-      }
+export async function verifyPaymentPassword(password) {
+  try {
+    const userInfo = await getUserInfo()
+    if (!userInfo) {
+      throw new Error('用户未登录')
+    }
       
       console.log('支付密码验证调试信息:', {
         userId: userInfo.id,
@@ -286,13 +279,12 @@ export function verifyPaymentPassword(password) {
         })
       }
       
-      resolve(isCorrect)
-      
-    } catch (error) {
-      console.error('验证支付密码失败:', error)
-      reject(error)
-    }
-  })
+    return isCorrect
+    
+  } catch (error) {
+    console.error('验证支付密码失败:', error)
+    throw error
+  }
 }
 
 /**
@@ -302,12 +294,12 @@ export function verifyPaymentPassword(password) {
  * @param {string} paymentPassword 支付密码
  * @returns {Promise<{success: boolean, message: string, newBalance: number, newCardBalance: number}>}
  */
-export function repayCreditCard(cardNumber, amount, paymentPassword) {
+export async function repayCreditCard(cardNumber, amount, paymentPassword) {
   return new Promise(async (resolve, reject) => {
     try {
-      const userInfo = getUserInfo()
+      const userInfo = await getUserInfo()
       if (!userInfo) {
-        reject(new Error('用户未登录'))
+        throw new Error('用户未登录')
         return
       }
       
@@ -413,7 +405,7 @@ export function repayCreditCard(cardNumber, amount, paymentPassword) {
       
     } catch (error) {
       console.error('信用卡还款失败:', error)
-      reject(error)
+      throw error
     }
   })
 }
@@ -423,29 +415,25 @@ export function repayCreditCard(cardNumber, amount, paymentPassword) {
  * @param {string} cardNumber 信用卡号（可选）
  * @returns {Promise<Array|Object>} 信用卡信息
  */
-export function getCreditCards(cardNumber = null) {
-  return new Promise((resolve, reject) => {
-    try {
-      const userInfo = getUserInfo()
-      if (!userInfo) {
-        reject(new Error('用户未登录'))
-        return
-      }
-      
-      const creditCards = userInfo.creditCards || []
-      
-      if (cardNumber) {
-        const card = creditCards.find(card => card.cardNumber === cardNumber)
-        resolve(card || null)
-      } else {
-        resolve(creditCards)
-      }
-      
-    } catch (error) {
-      console.error('获取信用卡信息失败:', error)
-      reject(error)
+export async function getCreditCards(cardNumber = null) {
+  try {
+    const userInfo = await getUserInfo()
+    if (!userInfo) {
+      throw new Error('用户未登录')
     }
-  })
+    
+    const creditCards = userInfo.creditCards || []
+    
+    if (cardNumber) {
+      const card = creditCards.find(card => card.cardNumber === cardNumber)
+      return card || null
+    } else {
+      return creditCards
+    }
+  } catch (error) {
+    console.error('获取信用卡信息失败:', error)
+    throw error
+  }
 }
 
 /**
@@ -454,14 +442,12 @@ export function getCreditCards(cardNumber = null) {
  * @param {number} limit 限制条数，默认10条
  * @returns {Promise<Array>} 还款记录列表
  */
-export function getRepaymentRecords(cardNumber = null, limit = 10) {
-  return new Promise((resolve, reject) => {
-    try {
-      const userInfo = getUserInfo()
-      if (!userInfo) {
-        reject(new Error('用户未登录'))
-        return
-      }
+export async function getRepaymentRecords(cardNumber = null, limit = 10) {
+  try {
+    const userInfo = await getUserInfo()
+    if (!userInfo) {
+      throw new Error('用户未登录')
+    }
       
       const records = userInfo.transactionRecords || []
       let repaymentRecords = records.filter(record => 
@@ -476,12 +462,11 @@ export function getRepaymentRecords(cardNumber = null, limit = 10) {
       
       const limitedRecords = repaymentRecords.slice(0, limit)
       
-      console.log(`获取还款记录: ${limitedRecords.length}条`)
-      resolve(limitedRecords)
-      
-    } catch (error) {
-      console.error('获取还款记录失败:', error)
-      reject(error)
-    }
-  })
+    console.log(`获取还款记录: ${limitedRecords.length}条`)
+    return limitedRecords
+    
+  } catch (error) {
+    console.error('获取还款记录失败:', error)
+    throw error
+  }
 }

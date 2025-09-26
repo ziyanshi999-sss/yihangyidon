@@ -209,60 +209,144 @@
       </view>
     </view>
 
-    <!-- 申购确认弹窗 -->
-    <view class="purchase-modal" v-if="showPurchaseModal" @tap="closePurchaseModal">
-      <view class="modal-content" @tap.stop>
-        <view class="modal-header">
-          <text class="modal-title">确认申购</text>
-          <text class="modal-close" @tap="closePurchaseModal">×</text>
+    <!-- 申购确认弹窗 - 全新设计 -->
+    <view class="purchase-modal-new" v-if="showPurchaseModal" @tap="closePurchaseModal">
+      <view class="modal-backdrop"></view>
+      <view class="modal-container" @tap.stop>
+        <!-- 弹窗头部 -->
+        <view class="modal-header-new">
+          <view class="header-icon">
+            <text class="icon-text">💰</text>
+          </view>
+          <view class="header-content">
+            <text class="modal-title-new">确认申购</text>
+            <text class="modal-subtitle">请确认您的投资信息</text>
+          </view>
+          <view class="close-btn" @tap="closePurchaseModal">
+            <text class="close-icon">×</text>
+          </view>
         </view>
-        <view class="modal-body">
-          <view class="purchase-info">
-            <view class="info-item">
-              <text class="info-label">产品名称</text>
-              <text class="info-value">{{ purchaseProduct.name }}</text>
+
+        <!-- 产品信息卡片 -->
+        <view class="product-card">
+          <view class="product-header">
+            <view class="product-icon">
+              <text class="product-icon-text">{{ getProductIcon(purchaseProduct.type) }}</text>
             </view>
-            <view class="info-item">
-              <text class="info-label">预期收益率</text>
-              <text class="info-value yield">{{ purchaseProduct.yield }}%</text>
+            <view class="product-info">
+              <text class="product-name">{{ purchaseProduct.name }}</text>
+              <text class="product-type">{{ purchaseProduct.type }}</text>
             </view>
-            <view class="info-item">
-              <text class="info-label">投资期限</text>
-              <text class="info-value">{{ purchaseProduct.term }}</text>
-            </view>
-            <view class="info-item">
-              <text class="info-label">申购金额</text>
-              <input 
-                class="amount-input" 
-                v-model="purchaseAmount" 
-                type="number" 
-                placeholder="请输入申购金额"
-              />
-            </view>
-            <view class="info-item">
-              <text class="info-label">预计收益</text>
-              <text class="info-value expected">¥{{ calculateExpectedReturn() }}</text>
+            <view class="product-yield">
+              <text class="yield-value">{{ purchaseProduct.yield }}%</text>
+              <text class="yield-label">预期年化</text>
             </view>
           </view>
           
-          <view class="agreement-section">
-            <view class="agreement-item" @tap="toggleAgreement('risk')">
-              <text class="agreement-check" :class="{ checked: agreements.risk }">✓</text>
-              <text class="agreement-text">我已阅读并同意《理财产品风险揭示书》</text>
+          <view class="product-details">
+            <view class="detail-row">
+              <text class="detail-label">投资期限</text>
+              <text class="detail-value">{{ purchaseProduct.term }}</text>
             </view>
-            <view class="agreement-item" @tap="toggleAgreement('terms')">
-              <text class="agreement-check" :class="{ checked: agreements.terms }">✓</text>
-              <text class="agreement-text">我已阅读并同意《理财产品说明书》</text>
+            <view class="detail-row">
+              <text class="detail-label">起投金额</text>
+              <text class="detail-value">¥{{ purchaseProduct.minAmount || 1000 }}</text>
+            </view>
+            <view class="detail-row">
+              <text class="detail-label">风险等级</text>
+              <view class="risk-level" :class="'risk-' + (purchaseProduct.risk || 'low')">
+                <text class="risk-text">{{ getRiskText(purchaseProduct.risk) }}</text>
+              </view>
             </view>
           </view>
         </view>
-        <view class="modal-footer">
-          <button class="modal-btn secondary" @tap="closePurchaseModal">取消</button>
+
+        <!-- 申购金额输入 -->
+        <view class="amount-section">
+          <view class="section-title">
+            <text class="title-text">申购金额</text>
+            <text class="title-desc">请输入您要投资的金额</text>
+          </view>
+          <view class="amount-input-container">
+            <text class="currency-symbol">¥</text>
+            <input 
+              class="amount-input-new" 
+              v-model="purchaseAmount" 
+              type="number" 
+              placeholder="请输入申购金额"
+              @input="onAmountInput"
+            />
+            <view class="amount-suggestions">
+              <view 
+                class="suggestion-item" 
+                v-for="suggestion in amountSuggestions" 
+                :key="suggestion"
+                @tap="setAmount(suggestion)"
+              >
+                <text class="suggestion-text">{{ suggestion }}万</text>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <!-- 收益预览 -->
+        <view class="return-preview" v-if="purchaseAmount">
+          <view class="preview-header">
+            <text class="preview-title">收益预览</text>
+          </view>
+          <view class="preview-content">
+            <view class="return-item">
+              <text class="return-label">预计收益</text>
+              <text class="return-value">¥{{ calculateExpectedReturn() }}</text>
+            </view>
+            <view class="return-item">
+              <text class="return-label">到期本息</text>
+              <text class="return-value total">¥{{ calculateTotalReturn() }}</text>
+            </view>
+          </view>
+        </view>
+
+        <!-- 协议确认 -->
+        <view class="agreement-section-new">
+          <view class="agreement-header">
+            <text class="agreement-title">风险提示与协议</text>
+          </view>
+          <view class="agreement-list">
+            <view class="agreement-item-new" @tap="toggleAgreement('risk')">
+              <view class="agreement-check-new" :class="{ checked: agreements.risk }">
+                <text class="check-icon-new" v-if="agreements.risk">✓</text>
+              </view>
+              <view class="agreement-content">
+                <text class="agreement-text-new">我已阅读并同意</text>
+                <text class="agreement-link">《理财产品风险揭示书》</text>
+              </view>
+            </view>
+            <view class="agreement-item-new" @tap="toggleAgreement('terms')">
+              <view class="agreement-check-new" :class="{ checked: agreements.terms }">
+                <text class="check-icon-new" v-if="agreements.terms">✓</text>
+              </view>
+              <view class="agreement-content">
+                <text class="agreement-text-new">我已阅读并同意</text>
+                <text class="agreement-link">《理财产品说明书》</text>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <!-- 弹窗底部按钮 -->
+        <view class="modal-footer-new">
+          <button class="btn-cancel" @tap="closePurchaseModal">
+            <text class="btn-text">取消</text>
+          </button>
           <button 
-            class="modal-btn primary" 
-            :class="{ disabled: !canPurchase }"
+            class="btn-confirm" 
+            :class="{ disabled: !canPurchase, loading: isProcessing }"
             @tap="onConfirmPurchase"
-          >确认申购</button>
+            :disabled="!canPurchase || isProcessing"
+          >
+            <text class="btn-text" v-if="!isProcessing">确认申购</text>
+            <text class="btn-text" v-else>处理中...</text>
+          </button>
         </view>
       </view>
     </view>
@@ -302,6 +386,10 @@ export default {
         risk: false,
         terms: false
       },
+      
+      // 新弹窗相关
+      isProcessing: false,
+      amountSuggestions: [1, 5, 10, 20, 50],
       marketData: {
         totalAUM: '125,000',
         avgYield: 3.45,
@@ -337,10 +425,21 @@ export default {
     },
     
     canPurchase() {
-      return this.purchaseAmount && 
-             parseFloat(this.purchaseAmount) >= (this.purchaseProduct.minAmount || 0) &&
-             this.agreements.risk && 
-             this.agreements.terms
+      const hasAmount = this.purchaseAmount && parseFloat(this.purchaseAmount) > 0
+      const meetsMinAmount = parseFloat(this.purchaseAmount) >= (this.purchaseProduct.minAmount || 0)
+      const riskAgreed = this.agreements.risk
+      const termsAgreed = this.agreements.terms
+      
+      console.log('申购条件检查:', {
+        hasAmount,
+        meetsMinAmount,
+        riskAgreed,
+        termsAgreed,
+        purchaseAmount: this.purchaseAmount,
+        minAmount: this.purchaseProduct.minAmount
+      })
+      
+      return hasAmount && meetsMinAmount && riskAgreed && termsAgreed
     }
   },
   
@@ -492,6 +591,45 @@ export default {
       this.agreements[type] = !this.agreements[type]
     },
     
+    // 新弹窗相关方法
+    getProductIcon(type) {
+      const iconMap = {
+        '稳健型': '🛡️',
+        '平衡型': '⚖️',
+        '成长型': '📈',
+        '进取型': '🚀',
+        '保本型': '🔒'
+      }
+      return iconMap[type] || '💰'
+    },
+    
+    getRiskText(risk) {
+      const riskMap = {
+        'low': '低风险',
+        'medium': '中风险',
+        'high': '高风险'
+      }
+      return riskMap[risk] || '低风险'
+    },
+    
+    onAmountInput() {
+      // 输入金额时的处理
+      console.log('申购金额输入:', this.purchaseAmount)
+    },
+    
+    setAmount(amount) {
+      this.purchaseAmount = (amount * 10000).toString()
+    },
+    
+    calculateTotalReturn() {
+      if (!this.purchaseAmount || !this.purchaseProduct.yield) {
+        return '0.00'
+      }
+      const amount = parseFloat(this.purchaseAmount)
+      const expectedReturn = this.calculateExpectedReturn()
+      return (amount + parseFloat(expectedReturn)).toFixed(2)
+    },
+    
     // 计算预期收益
     calculateExpectedReturn() {
       if (!this.purchaseAmount || !this.purchaseProduct.yield) {
@@ -520,9 +658,30 @@ export default {
     // 确认申购
     onConfirmPurchase() {
       if (!this.canPurchase) {
+        // 提供更详细的错误提示
+        let errorMessage = '请完善以下信息：'
+        const errors = []
+        
+        if (!this.purchaseAmount || parseFloat(this.purchaseAmount) <= 0) {
+          errors.push('请输入申购金额')
+        } else if (parseFloat(this.purchaseAmount) < (this.purchaseProduct.minAmount || 0)) {
+          errors.push(`申购金额不能少于${this.purchaseProduct.minAmount || 0}元`)
+        }
+        
+        if (!this.agreements.risk) {
+          errors.push('请同意风险揭示书')
+        }
+        
+        if (!this.agreements.terms) {
+          errors.push('请同意产品说明书')
+        }
+        
+        errorMessage += errors.join('、')
+        
         uni.showToast({
-          title: '请完善申购信息并同意相关协议',
-          icon: 'none'
+          title: errorMessage,
+          icon: 'none',
+          duration: 3000
         })
         return
       }
@@ -540,6 +699,7 @@ export default {
     
     // 处理申购业务
     async processPurchase() {
+      this.isProcessing = true
       uni.showLoading({ title: '申购处理中...' })
       
       try {
@@ -551,6 +711,7 @@ export default {
         
         setTimeout(async () => {
           uni.hideLoading()
+          this.isProcessing = false
           
           if (success) {
             uni.showToast({
@@ -574,6 +735,7 @@ export default {
         }, 1500)
       } catch (error) {
         uni.hideLoading()
+        this.isProcessing = false
         uni.showToast({
           title: '申购失败，请重试',
           icon: 'none'
@@ -1222,23 +1384,30 @@ export default {
   align-items: center;
   gap: 12rpx;
   margin-bottom: 12rpx;
+  padding: 8rpx;
+  border-radius: 8rpx;
+  transition: background-color 0.2s ease;
 }
 
 .agreement-item:last-child {
   margin-bottom: 0;
 }
 
+.agreement-item:active {
+  background-color: #f0f0f0;
+}
+
 .agreement-check {
-  width: 32rpx;
-  height: 32rpx;
+  width: 36rpx;
+  height: 36rpx;
   border: 2rpx solid #ddd;
-  border-radius: 6rpx;
+  border-radius: 8rpx;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20rpx;
-  color: #fff;
   background: #fff;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
 }
 
 .agreement-check.checked {
@@ -1246,10 +1415,506 @@ export default {
   border-color: #2e7d32;
 }
 
+.check-icon {
+  font-size: 20rpx;
+  color: #fff;
+  font-weight: bold;
+}
+
 .agreement-text {
   font-size: 22rpx;
   color: #666;
   line-height: 1.4;
+}
+
+/* 全新申购弹窗样式 */
+.purchase-modal-new {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.modal-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4rpx);
+}
+
+.modal-container {
+  position: relative;
+  background: #fff;
+  border-radius: 24rpx 24rpx 0 0;
+  width: 100%;
+  max-height: 85vh;
+  overflow: hidden;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* 弹窗头部 */
+.modal-header-new {
+  display: flex;
+  align-items: center;
+  padding: 32rpx 32rpx 24rpx;
+  background: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%);
+  color: white;
+  position: relative;
+}
+
+.header-icon {
+  width: 60rpx;
+  height: 60rpx;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20rpx;
+}
+
+.icon-text {
+  font-size: 32rpx;
+}
+
+.header-content {
+  flex: 1;
+}
+
+.modal-title-new {
+  font-size: 36rpx;
+  font-weight: 700;
+  display: block;
+  margin-bottom: 4rpx;
+}
+
+.modal-subtitle {
+  font-size: 24rpx;
+  opacity: 0.9;
+  display: block;
+}
+
+.close-btn {
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+}
+
+.close-icon {
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+/* 产品信息卡片 */
+.product-card {
+  margin: 24rpx 32rpx;
+  background: #f8f9fa;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  border: 2rpx solid #e9ecef;
+}
+
+.product-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.product-icon {
+  width: 60rpx;
+  height: 60rpx;
+  background: linear-gradient(135deg, #1976d2 0%, #42a5f5 100%);
+  border-radius: 12rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 16rpx;
+}
+
+.product-icon-text {
+  font-size: 28rpx;
+}
+
+.product-info {
+  flex: 1;
+}
+
+.product-name {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #333;
+  display: block;
+  margin-bottom: 4rpx;
+}
+
+.product-type {
+  font-size: 24rpx;
+  color: #666;
+  display: block;
+}
+
+.product-yield {
+  text-align: right;
+}
+
+.yield-value {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #e74c3c;
+  display: block;
+  margin-bottom: 4rpx;
+}
+
+.yield-label {
+  font-size: 20rpx;
+  color: #666;
+  display: block;
+}
+
+.product-details {
+  border-top: 1rpx solid #e9ecef;
+  padding-top: 20rpx;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.detail-row:last-child {
+  margin-bottom: 0;
+}
+
+.detail-label {
+  font-size: 26rpx;
+  color: #666;
+}
+
+.detail-value {
+  font-size: 26rpx;
+  color: #333;
+  font-weight: 600;
+}
+
+.risk-level {
+  padding: 4rpx 12rpx;
+  border-radius: 12rpx;
+  font-size: 20rpx;
+}
+
+.risk-level.risk-low {
+  background: #d4edda;
+  color: #155724;
+}
+
+.risk-level.risk-medium {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.risk-level.risk-high {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+/* 申购金额输入 */
+.amount-section {
+  margin: 0 32rpx 24rpx;
+}
+
+.section-title {
+  margin-bottom: 16rpx;
+}
+
+.title-text {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #333;
+  display: block;
+  margin-bottom: 4rpx;
+}
+
+.title-desc {
+  font-size: 24rpx;
+  color: #666;
+  display: block;
+}
+
+.amount-input-container {
+  position: relative;
+}
+
+.currency-symbol {
+  position: absolute;
+  left: 20rpx;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 32rpx;
+  color: #666;
+  font-weight: 600;
+  z-index: 1;
+}
+
+.amount-input-new {
+  width: 100%;
+  height: 80rpx;
+  border: 2rpx solid #e9ecef;
+  border-radius: 12rpx;
+  padding: 0 20rpx 0 60rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+  background: #fff;
+  transition: all 0.2s ease;
+}
+
+.amount-input-new:focus {
+  border-color: #2e7d32;
+  box-shadow: 0 0 0 4rpx rgba(46, 125, 50, 0.1);
+}
+
+.amount-suggestions {
+  display: flex;
+  gap: 12rpx;
+  margin-top: 16rpx;
+}
+
+.suggestion-item {
+  flex: 1;
+  height: 60rpx;
+  background: #f8f9fa;
+  border: 2rpx solid #e9ecef;
+  border-radius: 8rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.suggestion-item:active {
+  background: #2e7d32;
+  border-color: #2e7d32;
+}
+
+.suggestion-item:active .suggestion-text {
+  color: white;
+}
+
+.suggestion-text {
+  font-size: 24rpx;
+  color: #666;
+  font-weight: 600;
+}
+
+/* 收益预览 */
+.return-preview {
+  margin: 0 32rpx 24rpx;
+  background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
+  border-radius: 16rpx;
+  padding: 24rpx;
+  border: 2rpx solid #c8e6c9;
+}
+
+.preview-header {
+  margin-bottom: 16rpx;
+}
+
+.preview-title {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #2e7d32;
+}
+
+.preview-content {
+  display: flex;
+  gap: 24rpx;
+}
+
+.return-item {
+  flex: 1;
+  text-align: center;
+}
+
+.return-label {
+  font-size: 24rpx;
+  color: #666;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.return-value {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #2e7d32;
+  display: block;
+}
+
+.return-value.total {
+  color: #1976d2;
+  font-size: 36rpx;
+}
+
+/* 协议确认 */
+.agreement-section-new {
+  margin: 0 32rpx 24rpx;
+}
+
+.agreement-header {
+  margin-bottom: 16rpx;
+}
+
+.agreement-title {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #333;
+}
+
+.agreement-list {
+  background: #f8f9fa;
+  border-radius: 12rpx;
+  padding: 20rpx;
+}
+
+.agreement-item-new {
+  display: flex;
+  align-items: flex-start;
+  gap: 16rpx;
+  margin-bottom: 16rpx;
+  padding: 12rpx;
+  border-radius: 8rpx;
+  transition: background-color 0.2s ease;
+}
+
+.agreement-item-new:last-child {
+  margin-bottom: 0;
+}
+
+.agreement-item-new:active {
+  background-color: #e9ecef;
+}
+
+.agreement-check-new {
+  width: 40rpx;
+  height: 40rpx;
+  border: 2rpx solid #ddd;
+  border-radius: 8rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  margin-top: 2rpx;
+}
+
+.agreement-check-new.checked {
+  background: #2e7d32;
+  border-color: #2e7d32;
+}
+
+.check-icon-new {
+  font-size: 22rpx;
+  color: #fff;
+  font-weight: bold;
+}
+
+.agreement-content {
+  flex: 1;
+}
+
+.agreement-text-new {
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.4;
+}
+
+.agreement-link {
+  font-size: 26rpx;
+  color: #2e7d32;
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+/* 弹窗底部按钮 */
+.modal-footer-new {
+  display: flex;
+  gap: 16rpx;
+  padding: 24rpx 32rpx 40rpx;
+  background: #fff;
+}
+
+.btn-cancel,
+.btn-confirm {
+  flex: 1;
+  height: 88rpx;
+  border-radius: 44rpx;
+  font-size: 32rpx;
+  font-weight: 700;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.btn-cancel {
+  background: #f8f9fa;
+  color: #666;
+  border: 2rpx solid #e9ecef;
+}
+
+.btn-cancel:active {
+  background: #e9ecef;
+}
+
+.btn-confirm {
+  background: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%);
+  color: #fff;
+  box-shadow: 0 8rpx 24rpx rgba(46, 125, 50, 0.3);
+}
+
+.btn-confirm:active:not(.disabled) {
+  transform: scale(0.98);
+  box-shadow: 0 4rpx 12rpx rgba(46, 125, 50, 0.3);
+}
+
+.btn-confirm.disabled {
+  background: #ccc;
+  color: #999;
+  box-shadow: none;
+}
+
+.btn-confirm.loading {
+  background: #999;
+  color: #fff;
+}
+
+.btn-text {
+  font-size: 32rpx;
+  font-weight: 700;
 }
 </style>
 

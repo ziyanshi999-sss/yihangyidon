@@ -1,1 +1,240 @@
- 
+/**
+ * 主题样式文件
+ * 定义白天和黑夜主题的CSS变量和样式
+ */
+
+/* 白天主题 (默认) */
+:root {
+  /* 主色调 */
+  --theme-primary: #4caf50;
+  --theme-primary-light: #81c784;
+  --theme-primary-dark: #388e3c;
+  
+  /* 辅助色 */
+  --theme-secondary: #2196f3;
+  --theme-secondary-light: #64b5f6;
+  --theme-secondary-dark: #1976d2;
+  
+  /* 背景色 */
+  --theme-background: #f5f5f5;
+  --theme-surface: #ffffff;
+  --theme-card-background: #ffffff;
+  
+  /* 文本色 */
+  --theme-text-primary: #333333;
+  --theme-text-secondary: #666666;
+  --theme-text-disabled: #999999;
+  --theme-text-hint: #cccccc;
+  
+  /* 边框和分割线 */
+  --theme-border: #e0e0e0;
+  --theme-divider: #f0f0f0;
+  
+  /* 阴影 */
+  --theme-shadow-light: rgba(0, 0, 0, 0.1);
+  --theme-shadow-medium: rgba(0, 0, 0, 0.15);
+  --theme-shadow-heavy: rgba(0, 0, 0, 0.2);
+  
+  /* 状态色 */
+  --theme-success: #4caf50;
+  --theme-warning: #ff9800;
+  --theme-error: #f44336;
+  --theme-info: #2196f3;
+  
+  /* 透明度变体 */
+  --theme-primary-alpha-10: rgba(76, 175, 80, 0.1);
+  --theme-primary-alpha-20: rgba(76, 175, 80, 0.2);
+  --theme-primary-alpha-50: rgba(76, 175, 80, 0.5);
+  
+  /* 渐变 */
+  --theme-gradient-primary: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+  --theme-gradient-secondary: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+  --theme-gradient-surface: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+}
+
+/* 黑夜主题 */
+.theme-dark,
+.dark {
+  /* 主色调 */
+  --theme-primary: #4caf50;
+  --theme-primary-light: #81c784;
+  --theme-primary-dark: #388e3c;
+  
+  /* 辅助色 */
+  --theme-secondary: #2196f3;
+  --theme-secondary-light: #64b5f6;
+  --theme-secondary-dark: #1976d2;
+  
+  /* 背景色 */
+  --theme-background: #121212;
+  --theme-surface: #1e1e1e;
+  --theme-card-background: #1e1e1e;
+  
+  /* 文本色 */
+  --theme-text-primary: #ffffff;
+  --theme-text-secondary: #b0b0b0;
+  --theme-text-disabled: #666666;
+  --theme-text-hint: #444444;
+  
+  /* 边框和分割线 */
+  --theme-border: #333333;
+  --theme-divider: #2a2a2a;
+  
+  /* 阴影 */
+  --theme-shadow-light: rgba(0, 0, 0, 0.3);
+  --theme-shadow-medium: rgba(0, 0, 0, 0.4);
+  --theme-shadow-heavy: rgba(0, 0, 0, 0.5);
+  
+  /* 状态色 */
+  --theme-success: #4caf50;
+  --theme-warning: #ff9800;
+  --theme-error: #f44336;
+  --theme-info: #2196f3;
+  
+  /* 透明度变体 */
+  --theme-primary-alpha-10: rgba(76, 175, 80, 0.1);
+  --theme-primary-alpha-20: rgba(76, 175, 80, 0.2);
+  --theme-primary-alpha-50: rgba(76, 175, 80, 0.5);
+  
+  /* 渐变 */
+  --theme-gradient-primary: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+  --theme-gradient-secondary: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+  --theme-gradient-surface: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%);
+}
+
+/* 通用主题样式类 */
+.theme-light {
+  background-color: var(--theme-background);
+  color: var(--theme-text-primary);
+}
+
+.theme-dark {
+  background-color: var(--theme-background);
+  color: var(--theme-text-primary);
+}
+
+/* 卡片样式 */
+.theme-card {
+  background-color: var(--theme-card-background);
+  border: 1px solid var(--theme-border);
+  box-shadow: 0 2px 8px var(--theme-shadow-light);
+}
+
+.theme-card-dark {
+  background-color: var(--theme-card-background);
+  border: 1px solid var(--theme-border);
+  box-shadow: 0 2px 8px var(--theme-shadow-light);
+}
+
+/* 按钮样式 */
+.theme-btn-primary {
+  background: var(--theme-gradient-primary);
+  color: white;
+  border: none;
+}
+
+.theme-btn-secondary {
+  background-color: var(--theme-surface);
+  color: var(--theme-text-primary);
+  border: 1px solid var(--theme-border);
+}
+
+.theme-btn-outline {
+  background-color: transparent;
+  color: var(--theme-primary);
+  border: 1px solid var(--theme-primary);
+}
+
+/* 输入框样式 */
+.theme-input {
+  background-color: var(--theme-surface);
+  color: var(--theme-text-primary);
+  border: 1px solid var(--theme-border);
+}
+
+.theme-input:focus {
+  border-color: var(--theme-primary);
+  box-shadow: 0 0 0 2px var(--theme-primary-alpha-20);
+}
+
+/* 文本样式 */
+.theme-text-primary {
+  color: var(--theme-text-primary);
+}
+
+.theme-text-secondary {
+  color: var(--theme-text-secondary);
+}
+
+.theme-text-disabled {
+  color: var(--theme-text-disabled);
+}
+
+.theme-text-success {
+  color: var(--theme-success);
+}
+
+.theme-text-warning {
+  color: var(--theme-warning);
+}
+
+.theme-text-error {
+  color: var(--theme-error);
+}
+
+.theme-text-info {
+  color: var(--theme-info);
+}
+
+/* 背景样式 */
+.theme-bg-primary {
+  background-color: var(--theme-primary);
+}
+
+.theme-bg-surface {
+  background-color: var(--theme-surface);
+}
+
+.theme-bg-card {
+  background-color: var(--theme-card-background);
+}
+
+/* 边框样式 */
+.theme-border {
+  border-color: var(--theme-border);
+}
+
+.theme-divider {
+  border-color: var(--theme-divider);
+}
+
+/* 阴影样式 */
+.theme-shadow-light {
+  box-shadow: 0 2px 4px var(--theme-shadow-light);
+}
+
+.theme-shadow-medium {
+  box-shadow: 0 4px 8px var(--theme-shadow-medium);
+}
+
+.theme-shadow-heavy {
+  box-shadow: 0 8px 16px var(--theme-shadow-heavy);
+}
+
+/* 主题切换动画 */
+.theme-transition {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* 响应式主题调整 */
+@media (prefers-color-scheme: dark) {
+  :root:not(.theme-light) {
+    /* 自动应用暗色主题 */
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not(.theme-dark) {
+    /* 自动应用亮色主题 */
+  }
+}

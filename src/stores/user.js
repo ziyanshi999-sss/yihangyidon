@@ -63,6 +63,7 @@ const actions = {
                 const userInfo = getStorage('userInfo', true)
                 if (userInfo) {
                     state.userInfo = userInfo
+                    console.log('✅ 从本地存储恢复用户信息:', userInfo.username)
                 } else {
                     await this.fetchUserInfo()
                 }
@@ -152,6 +153,15 @@ const actions = {
     updateUserInfo(userInfo) {
         state.userInfo = { ...state.userInfo, ...userInfo }
         setStorage('userInfo', state.userInfo, true)
+        
+        // 同时更新userData中的用户信息
+        const userData = getStorage('userData', true) || []
+        const userIndex = userData.findIndex(u => u.id === state.userInfo.id)
+        if (userIndex !== -1) {
+            userData[userIndex] = { ...userData[userIndex], ...userInfo }
+            setStorage('userData', userData, true)
+            console.log('✅ 用户信息已同步更新到userData')
+        }
     },
 
     // 设置银行卡列表

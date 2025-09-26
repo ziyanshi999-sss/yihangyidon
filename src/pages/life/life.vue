@@ -203,6 +203,8 @@
 
 <script>
 import { checkLoginAndRedirect, forceCheckLogin } from "@/utils/auth.js";
+import themeManager from '@/utils/theme.js'
+import { useAppStore } from '@/stores/app.js'
 
 export default {
   name: "LifePage",
@@ -213,6 +215,7 @@ export default {
       currentTimeGreeting: "",
       greetingEmoji: "",
       weatherInfo: "22°C 晴",
+      currentTheme: 'light',
       // 轮播图数据
       bannerData: [
         {
@@ -585,21 +588,49 @@ export default {
   onLoad() {
     this.initPage();
     this.loadLifeServicesData();
+    this.initTheme();
   },
 
   onShow() {
     try {
-      // 检查登录状态
-      if (!forceCheckLogin()) {
-        console.log("生活页面：用户未登录，跳转到登录页面");
-        uni.reLaunch({
-          url: "/pages/denglu/login",
-        });
-        return;
+      // 检查登录状态 - 使用更宽松的检查方式
+      const isLoggedIn = uni.getStorageSync('isLoggedIn')
+      const userInfo = uni.getStorageSync('userInfo')
+      
+      if (!isLoggedIn || !userInfo) {
+        console.log("生活页面：用户未登录，尝试从数据库恢复登录状态");
+        
+        // 尝试从数据库恢复登录状态
+        try {
+          const users = uni.getStorageSync('users') || []
+          const loggedInUser = users.find(user => user.isLoggedIn === true)
+          
+          if (loggedInUser) {
+            console.log("从数据库恢复登录状态:", loggedInUser.username)
+            // 恢复登录状态
+            uni.setStorageSync('userInfo', loggedInUser)
+            uni.setStorageSync('isLoggedIn', true)
+            uni.setStorageSync('currentUser', loggedInUser)
+            uni.setStorageSync('currentUserId', loggedInUser.id)
+          } else {
+            console.log("生活页面：数据库中也未找到登录用户，跳转到登录页面");
+            uni.reLaunch({
+              url: "/pages/denglu/login",
+            });
+            return;
+          }
+        } catch (recoveryError) {
+          console.error("恢复登录状态失败:", recoveryError);
+          uni.reLaunch({
+            url: "/pages/denglu/login",
+          });
+          return;
+        }
       }
 
       // 页面显示逻辑
       console.log("生活页面显示");
+      this.checkThemeChange();
     } catch (error) {
       console.error("生活页面onShow检查失败:", error);
       uni.reLaunch({
@@ -941,6 +972,29 @@ export default {
         url: "/pages/games/games",
       });
     },
+
+    // 初始化主题
+    initTheme() {
+      try {
+        this.currentTheme = themeManager.getCurrentTheme()
+        console.log('生活页面初始化主题:', this.currentTheme)
+      } catch (error) {
+        console.error('生活页面初始化主题失败:', error)
+      }
+    },
+
+    // 检查主题变化
+    checkThemeChange() {
+      try {
+        const currentTheme = themeManager.getCurrentTheme()
+        if (this.currentTheme !== currentTheme) {
+          this.currentTheme = currentTheme
+          console.log('生活页面主题已更新:', currentTheme)
+        }
+      } catch (error) {
+        console.error('生活页面检查主题变化失败:', error)
+      }
+    }
   },
 };
 </script>
@@ -948,7 +1002,8 @@ export default {
 <style scoped>
 .life-page {
   min-height: 100vh;
-  background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
+  background: var(--theme-background, linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%));
+  transition: background-color 0.3s ease;
 }
 
 /* 头部区域 */
@@ -1308,25 +1363,28 @@ export default {
 }
 
 .section-title {
-  color: #333;
+  color: var(--theme-text-primary, #333);
   font-size: 36rpx;
   font-weight: bold;
   display: block;
+  transition: color 0.3s ease;
 }
 
 .section-subtitle {
-  color: #666;
+  color: var(--theme-text-secondary, #666);
   font-size: 26rpx;
   display: block;
+  transition: color 0.3s ease;
 }
 
 /* 快捷服务 */
 .quick-services {
-  background: #fff;
+  background: var(--theme-card-background, #fff);
   margin: 0 30rpx 30rpx;
   padding: 40rpx 30rpx;
   border-radius: 16rpx;
-  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2rpx 12rpx var(--theme-shadow-light, rgba(0, 0, 0, 0.06));
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .services-grid {
@@ -1409,9 +1467,10 @@ export default {
 
 .service-label {
   font-size: 26rpx;
-  color: #333;
+  color: var(--theme-text-primary, #333);
   line-height: 1.2;
   font-weight: 500;
+  transition: color 0.3s ease;
 }
 
 .service-badge {
@@ -1435,11 +1494,12 @@ export default {
 
 /* 全部服务 */
 .all-services {
-  background: #fff;
+  background: var(--theme-card-background, #fff);
   margin: 0 30rpx 30rpx;
   padding: 40rpx 30rpx;
   border-radius: 16rpx;
-  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2rpx 12rpx var(--theme-shadow-light, rgba(0, 0, 0, 0.06));
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .services-grid-large {
@@ -1522,9 +1582,10 @@ export default {
 
 .service-label-large {
   font-size: 24rpx;
-  color: #333;
+  color: var(--theme-text-primary, #333);
   line-height: 1.2;
   font-weight: 500;
+  transition: color 0.3s ease;
 }
 
 .service-status {
@@ -1552,12 +1613,13 @@ export default {
 /* 分类导航 */
 .category-nav {
   position: relative;
-  background: #fff;
+  background: var(--theme-card-background, #fff);
   margin: 0 30rpx 30rpx;
   border-radius: 20rpx;
   padding: 8rpx;
-  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4rpx 20rpx var(--theme-shadow-light, rgba(0, 0, 0, 0.08));
   overflow: hidden;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .nav-container {
@@ -1601,7 +1663,7 @@ export default {
 
 .nav-text {
   font-size: 28rpx;
-  color: #666;
+  color: var(--theme-text-secondary, #666);
   font-weight: 600;
   transition: all 0.3s ease;
 }

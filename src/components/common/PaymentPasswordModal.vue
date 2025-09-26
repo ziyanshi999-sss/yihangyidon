@@ -99,7 +99,7 @@
 <script>
 import { getUserInfo } from '@/utils/auth.js'
 import dataSync from '@/utils/data-sync.js'
-// import userDataJson from '../../../db/user.json'
+// import dataConnector from '../../../db/data-connector.js'
 
 export default {
   name: 'PaymentPasswordModal',

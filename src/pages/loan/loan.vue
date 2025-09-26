@@ -9,7 +9,7 @@
     <view class="loan-overview" v-if="hasLoan">
       <view class="overview-content">
         <text class="overview-label">您有一笔贷款</text>
-        <text class="overview-amount">¥{{ loanInfo.amount.toFixed(2) }}</text>
+        <text class="overview-amount">¥{{ safeToFixed(loanInfo.amount, 2) }}</text>
         <text class="overview-status">{{ loanInfo.status }}</text>
         <view class="loan-details">
           <text class="detail-item">贷款类型: {{ loanInfo.type }}</text>
@@ -17,7 +17,7 @@
           <text class="detail-item">贷款利率: {{ loanInfo.rate }}%</text>
           <text class="detail-item">已还期数: {{ loanInfo.paidInstallments }}/{{ loanInfo.totalInstallments }}</text>
           <text class="detail-item">下次还款日: {{ loanInfo.nextPaymentDate }}</text>
-          <text class="detail-item">下次还款金额: ¥{{ loanInfo.nextPaymentAmount.toFixed(2) }}</text>
+          <text class="detail-item">下次还款金额: ¥{{ safeToFixed(loanInfo.nextPaymentAmount, 2) }}</text>
         </view>
         <view class="overview-actions">
           <button class="action-btn primary" @tap="makePayment">立即还款</button>
@@ -127,6 +127,14 @@ export default {
     this.loadLoanData()
   },
   methods: {
+    // 安全的数值格式化方法
+    safeToFixed(value, digits = 2) {
+      if (value === null || value === undefined || isNaN(value)) {
+        return '0.00'
+      }
+      return Number(value).toFixed(digits)
+    },
+
     // 加载贷款数据
     loadLoanData() {
       try {
@@ -229,7 +237,7 @@ export default {
     makePayment() {
       uni.showModal({
         title: '确认还款',
-        content: `确定要偿还本期贷款 ¥${this.loanInfo.nextPaymentAmount.toFixed(2)} 吗？`,
+        content: `确定要偿还本期贷款 ¥${this.safeToFixed(this.loanInfo.nextPaymentAmount, 2)} 吗？`,
         success: (res) => {
           if (res.confirm) {
             // 模拟还款成功
@@ -261,12 +269,10 @@ export default {
       })
     },
     
-    // 申请新贷款 - 修改为提示功能
+    // 申请新贷款
     applyForLoan() {
-      uni.showModal({
-        title: '提示',
-        content: '贷款申请功能正在开发中',
-        showCancel: false
+      uni.navigateTo({
+        url: '/pages/loan/loan-application'
       })
     },
     
@@ -288,12 +294,10 @@ export default {
       })
     },
     
-    // 申请特定产品 - 修改为提示功能
+    // 申请特定产品
     applyForProduct(product) {
-      uni.showModal({
-        title: '提示',
-        content: '产品申请功能正在开发中',
-        showCancel: false
+      uni.navigateTo({
+        url: `/pages/loan/loan-application?productId=${product.id}`
       })
     },
     

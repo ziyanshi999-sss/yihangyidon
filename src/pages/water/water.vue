@@ -54,6 +54,20 @@
       <text class="no-service-tip">请联系当地供水公司或稍后再试</text>
     </view>
 
+    <!-- 历史记录入口 -->
+    <view class="history-section" v-if="waterCompanies.length > 0">
+      <view class="history-card" @tap="goToHistory">
+        <view class="history-icon">📋</view>
+        <view class="history-content">
+          <text class="history-title">缴费记录</text>
+          <text class="history-desc">查看历史缴费记录</text>
+        </view>
+        <view class="history-arrow">
+          <text class="arrow-icon">→</text>
+        </view>
+      </view>
+    </view>
+
     <!-- 底部说明 -->
     <view class="footer-info">
       <text class="info-text">• 缴费成功后，请保留缴费凭证</text>
@@ -182,28 +196,50 @@ export default {
 
   methods: {
     // 加载用户数据
-    loadUserData() {
+    async loadUserData() {
       try {
-        const users = uni.getStorageSync('users') || []
+        // 使用数据连接器获取用户数据
+        const dataConnector = await import('../../../db/data-connector.js')
+        const connector = dataConnector.default
+        
+        if (!connector.isInitialized) {
+          await connector.init()
+        }
+        
+        const users = await connector.getUsers()
         const currentUser = users.find(user => user.isLoggedIn)
         
         if (currentUser) {
-          console.log('✅ 用户数据加载成功:', {
+          console.log('✅ 水费页面用户数据加载成功:', {
             username: currentUser.username,
             phone: currentUser.phone,
             balance: currentUser.balance,
             hasLifeServices: !!currentUser.lifeServices
           })
           
-          // 如果有生活服务数据，可以在这里处理
-          if (currentUser.lifeServices) {
-            console.log('用户生活服务数据:', currentUser.lifeServices)
-          }
+          // 加载水费支付历史
+          await this.loadWaterPaymentHistory(connector)
         } else {
           console.log('❌ 未找到当前用户数据')
         }
       } catch (error) {
         console.error('❌ 加载用户数据失败:', error)
+      }
+    },
+
+    // 加载水费缴费历史
+    async loadWaterPaymentHistory(connector) {
+      try {
+        const paymentHistory = await connector.getWaterPaymentHistory()
+        console.log('💧 水费缴费历史:', paymentHistory.length, '条记录')
+        
+        // 可以在这里处理历史记录，比如显示最近缴费记录
+        if (paymentHistory.length > 0) {
+          const latestPayment = paymentHistory[0]
+          console.log('最新缴费记录:', latestPayment)
+        }
+      } catch (error) {
+        console.error('❌ 加载水费缴费历史失败:', error)
       }
     },
 
@@ -276,6 +312,23 @@ export default {
         )}&company=${encodeURIComponent(JSON.stringify(company))}`,
         success: () => {
           console.log("成功跳转到水费缴费页面");
+        },
+        fail: (err) => {
+          console.error("跳转失败:", err);
+          uni.showToast({
+            title: "页面跳转失败",
+            icon: "none",
+          });
+        },
+      });
+    },
+
+    // 跳转到历史记录
+    goToHistory() {
+      uni.navigateTo({
+        url: '/pages/water-history/water-history',
+        success: () => {
+          console.log("成功跳转到水费历史记录页面");
         },
         fail: (err) => {
           console.error("跳转失败:", err);
@@ -657,6 +710,68 @@ export default {
 
 .no-service-tip {
   font-size: 24rpx;
+  color: #999;
+}
+
+/* 历史记录入口 */
+.history-section {
+  margin: 24rpx;
+}
+
+.history-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20rpx;
+  padding: 24rpx;
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  transition: all 0.3s ease;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
+}
+
+.history-card:active {
+  transform: scale(0.98);
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.15);
+}
+
+.history-icon {
+  font-size: 32rpx;
+  width: 48rpx;
+  height: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 12rpx;
+}
+
+.history-content {
+  flex: 1;
+}
+
+.history-title {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #333;
+  display: block;
+  margin-bottom: 4rpx;
+}
+
+.history-desc {
+  font-size: 20rpx;
+  color: #666;
+}
+
+.history-arrow {
+  width: 24rpx;
+  height: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.arrow-icon {
+  font-size: 20rpx;
   color: #999;
 }
 

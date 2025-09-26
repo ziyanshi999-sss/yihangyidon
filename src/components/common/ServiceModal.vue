@@ -112,8 +112,9 @@ export default {
   computed: {
     // 检查当前用户是否可以访问白金贵宾专线
     canAccessPlatinum() {
-      const userInfo = getUserInfo()
-      return canAccessPlatinumHotline(userInfo)
+      // 计算属性不能是异步的，这里返回一个默认值
+      // 实际的检查在方法中进行
+      return false
     }
   },
   methods: {

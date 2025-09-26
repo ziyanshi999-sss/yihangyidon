@@ -198,15 +198,36 @@ export default {
      */
     loadProtectionStatus() {
       try {
-        if (this.$screenProtector) {
+        // 首先尝试从增强版防录屏保护器获取状态
+        if (this.$screenProtector && typeof this.$screenProtector.getStatus === 'function') {
           this.protectionStatus = this.$screenProtector.getStatus();
           this.currentLevel = this.protectionStatus.protectionLevel;
           this.alertEnabled = this.protectionStatus.alertEnabled;
+          this.watermarkEnabled = this.protectionStatus.watermarkEnabled;
 
           // 设置级别选择器的索引
           this.levelIndex = this.levelOptions.findIndex(
             (item) => item.value === this.currentLevel
           );
+        } else {
+          // 备用方案：从本地存储加载状态
+          const savedSettings = uni.getStorageSync('screenProtectionSettings');
+          if (savedSettings) {
+            this.currentLevel = savedSettings.level || 'medium';
+            this.alertEnabled = savedSettings.showAlert !== false;
+            this.watermarkEnabled = savedSettings.showWatermark || false;
+            
+            this.protectionStatus = {
+              isEnabled: uni.getStorageSync('screenProtectionEnabled') || false,
+              protectionLevel: this.currentLevel,
+              alertEnabled: this.alertEnabled,
+              watermarkEnabled: this.watermarkEnabled
+            };
+            
+            this.levelIndex = this.levelOptions.findIndex(
+              (item) => item.value === this.currentLevel
+            );
+          }
         }
       } catch (error) {
         console.error("加载保护状态失败:", error);
@@ -218,11 +239,17 @@ export default {
      */
     loadSecurityEvents() {
       try {
-        if (this.$screenProtector) {
+        // 首先尝试从增强版防录屏保护器获取事件
+        if (this.$screenProtector && typeof this.$screenProtector.getSecurityEvents === 'function') {
           this.securityEvents = this.$screenProtector.getSecurityEvents();
+        } else {
+          // 备用方案：从本地存储加载安全日志
+          const logs = uni.getStorageSync('securityLogs') || [];
+          this.securityEvents = logs.slice(0, 50); // 只显示最近50条
         }
       } catch (error) {
         console.error("加载安全事件失败:", error);
+        this.securityEvents = [];
       }
     },
 
@@ -241,14 +268,23 @@ export default {
       const enabled = e.detail.value;
 
       try {
+        // 检查防录屏方法是否存在
         if (enabled) {
-          this.$enableScreenProtection({
-            level: this.currentLevel,
-            showAlert: this.alertEnabled,
-            showWatermark: this.watermarkEnabled,
-          });
+          if (typeof this.$enableScreenProtection === 'function') {
+            this.$enableScreenProtection({
+              level: this.currentLevel,
+              showAlert: this.alertEnabled,
+              showWatermark: this.watermarkEnabled,
+            });
+          } else {
+            console.log('防录屏功能暂不可用');
+          }
         } else {
-          this.$disableScreenProtection();
+          if (typeof this.$disableScreenProtection === 'function') {
+            this.$disableScreenProtection();
+          } else {
+            console.log('防录屏功能暂不可用');
+          }
         }
 
         // 保存用户设置
@@ -292,12 +328,7 @@ export default {
      * 切换水印显示
      */
     toggleWatermark(e) {
-      // 水印功能已禁用，保持页面美观
-      uni.showToast({
-        title: "水印功能已禁用，保持页面美观",
-        icon: "none",
-        duration: 2000,
-      });
+      this.watermarkEnabled = e.detail.value;
 
       // 如果当前已启用保护，重新启用以应用新设置
       if (this.protectionStatus.isEnabled) {
@@ -310,6 +341,13 @@ export default {
 
       // 保存设置
       this.saveSettings();
+      
+      // 显示状态提示
+      uni.showToast({
+        title: this.watermarkEnabled ? "水印已启用" : "水印已禁用",
+        icon: "success",
+        duration: 1500,
+      });
     },
 
     /**
@@ -454,7 +492,19 @@ export default {
           lastModified: new Date().toISOString(),
         };
 
+        // 保存到本地存储
         uni.setStorageSync("screenProtectionSettings", settings);
+        uni.setStorageSync("screenProtectionEnabled", settings.enabled);
+        
+        // 同时更新增强版防录屏保护器的设置
+        if (this.$screenProtector && typeof this.$screenProtector.updateSettings === 'function') {
+          this.$screenProtector.updateSettings({
+            level: this.currentLevel,
+            showAlert: this.alertEnabled,
+            showWatermark: this.watermarkEnabled
+          });
+        }
+        
         console.log("💾 防录屏设置已保存:", settings);
       } catch (error) {
         console.error("保存设置失败:", error);

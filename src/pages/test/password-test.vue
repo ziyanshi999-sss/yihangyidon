@@ -63,18 +63,18 @@ export default {
     this.loadUserInfo()
   },
   methods: {
-    loadUserInfo() {
+    async loadUserInfo() {
       console.log('开始加载用户信息...')
       
       // 尝试多种方式获取用户信息
       this.userInfo = dataSync.getCurrentUserInfo() || getUserInfo()
       
       if (!this.userInfo) {
-        console.log('从本地存储获取用户信息失败，尝试从user.json加载...')
-        const users = dataSync.getUsersData()
+        console.log('从本地存储获取用户信息失败，尝试从数据连接器加载...')
+        const users = await dataSync.getUsersData()
         if (users && users.length > 0) {
           this.userInfo = users[0]
-          console.log('从user.json加载用户信息成功:', this.userInfo)
+          console.log('从数据连接器加载用户信息成功:', this.userInfo)
         }
       }
       

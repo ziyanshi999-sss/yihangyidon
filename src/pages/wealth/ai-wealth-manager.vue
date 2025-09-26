@@ -91,7 +91,7 @@
           </view>
           <view class="user-info">
             <text class="user-name">{{ currentUserInfo.realName }}</text>
-            <text class="user-balance">余额: ¥{{ currentUserInfo.balance.toLocaleString() }}</text>
+            <text class="user-balance">余额: ¥{{ formatNumber(currentUserInfo.balance) }}</text>
           </view>
           <view class="user-arrow">
             <text class="arrow">▼</text>
@@ -481,26 +481,38 @@ export default {
      */
     async loadAvailableUsers() {
       try {
-        const users = await userDataLoader.loadAllUsers()
+        // 从数据连接器获取用户数据
+        const dataConnector = await import('../../../db/data-connector.js')
+        const connector = dataConnector.default
+        
+        // 确保数据连接器已初始化
+        if (!connector.isInitialized) {
+          await connector.init()
+        }
+        
+        // 获取所有用户数据
+        const users = connector.getUsers() || []
+        
         this.availableUsers = users.map(user => ({
           id: user.id,
           username: user.username,
-          realName: user.realName,
+          realName: user.realName || user.username,
           phone: user.phone,
-          balance: user.balance,
-          avatar: user.avatar
+          balance: user.balance || 0,
+          avatar: user.avatar || '/static/wealth/useravatar.jpg'
         }))
         
-        // 设置默认用户
+        // 设置默认用户（优先选择已登录用户）
         if (this.availableUsers.length > 0) {
-          this.selectedUserId = this.availableUsers[0].id
-          this.currentUserInfo = this.availableUsers[0]
+          const loggedInUser = this.availableUsers.find(user => user.id === 'u001') // 假设u001是当前登录用户
+          this.selectedUserId = loggedInUser ? loggedInUser.id : this.availableUsers[0].id
+          this.currentUserInfo = loggedInUser || this.availableUsers[0]
         }
         
-        console.log('可用用户列表:', this.availableUsers)
+        console.log('✅ 可用用户列表加载成功:', this.availableUsers)
       } catch (error) {
-        console.error('加载用户列表失败:', error)
-        // 静默处理错误，使用默认用户数据
+        console.error('❌ 加载用户列表失败:', error)
+        // 使用默认用户数据
         this.availableUsers = [
           {
             id: 'u001',
@@ -550,7 +562,7 @@ export default {
      */
     showUserSelector() {
       const userList = this.availableUsers.map(user => 
-        `${user.realName} (${user.username}) - 余额: ¥${user.balance.toLocaleString()}`
+        `${user.realName} (${user.username}) - 余额: ¥${this.formatNumber(user.balance)}`
       )
       
       uni.showActionSheet({
@@ -677,36 +689,105 @@ ${this.hasFullAccess ? '✅ 已授予完整访问权限' : '❌ 未授予完整�
       try {
         this.isLoading = true
         
-        // 使用增强的数据操作器获取完整数据
-        const data = await enhancedDataOperator.collectAllUserData()
-        this.projectData = data
+        // 从数据连接器获取完整数据
+        const dataConnector = await import('../../../db/data-connector.js')
+        const connector = dataConnector.default
         
-        // 更新用户财富数据
-        this.userWealth.totalAssets = data.accountData.totalBalance
-        this.userWealth.changePercent = data.investmentData.returnRate || 3.2
-        this.userWealth.changeType = this.userWealth.changePercent >= 0 ? 'positive' : 'negative'
-        
-        console.log('项目数据加载完成:', data)
-      } catch (error) {
-        console.error('加载项目数据失败:', error)
-        
-        // 静默处理错误，不显示弹窗
-        // 使用默认数据确保页面正常显示
-        this.userWealth.totalAssets = 150000
-        this.userWealth.changePercent = 3.2
-        this.userWealth.changeType = 'positive'
-        
-        // 如果权限被拒绝，静默请求权限
-        if (error.message.includes('权限')) {
-          try {
-            await this.requestFullAccess()
-          } catch (permissionError) {
-            console.log('权限请求被拒绝，使用默认数据')
-          }
+        // 确保数据连接器已初始化
+        if (!connector.isInitialized) {
+          await connector.init()
         }
+        
+        // 获取用户数据
+        const users = await connector.getUsers()
+        const currentUser = users.find(user => user.isLoggedIn) || users[0]
+        
+        // 获取AI建议和目标数据
+        const aiSuggestions = await connector.getAISuggestions()
+        const userGoals = await connector.getUserGoals()
+        
+        if (currentUser) {
+          // 构建项目数据结构
+          this.projectData = {
+            userInfo: {
+              id: currentUser.id,
+              username: currentUser.username,
+              realName: currentUser.realName,
+              balance: currentUser.balance || 0
+            },
+            wealthData: {
+              deposits: currentUser.wealthProducts?.deposits || {},
+              investments: currentUser.wealthProducts?.investments || [],
+              portfolio: currentUser.investmentPortfolio || {}
+            },
+            transactionData: currentUser.transactionRecords || [],
+            creditCardData: currentUser.creditCards || [],
+            aiSuggestions: aiSuggestions,
+            userGoals: userGoals
+          }
+          
+          // 更新智能建议数据
+          this.updateSmartSuggestions(aiSuggestions)
+          
+          // 更新目标数据
+          this.updateUserGoals(userGoals)
+          
+          // 更新用户财富数据 - 使用用户余额确保数据一致性
+          const deposits = currentUser.wealthProducts?.deposits || {}
+          const investments = currentUser.wealthProducts?.investments || []
+          const portfolio = currentUser.investmentPortfolio || {}
+          
+          // 使用用户余额作为总资产，确保与余额显示一致
+          const totalAssets = currentUser.balance || ((deposits.current || 0) + (deposits.fixed || 0) + (deposits.smart || 0) + 
+                             investments.reduce((sum, inv) => sum + (inv.amount || 0), 0) + 
+                             (portfolio.totalValue || 0))
+          
+          this.userWealth.totalAssets = totalAssets
+          this.userWealth.changePercent = portfolio.returnRate || 3.2
+          this.userWealth.changeType = this.userWealth.changePercent >= 0 ? 'positive' : 'negative'
+          
+          console.log('💰 项目数据财富计算:', {
+            userBalance: currentUser.balance,
+            calculatedTotal: totalAssets,
+            finalTotal: this.userWealth.totalAssets
+          })
+          
+          console.log('✅ 项目数据加载完成:', this.projectData)
+        } else {
+          console.warn('⚠️ 未找到用户数据，使用默认数据')
+          this.setDefaultProjectData()
+        }
+      } catch (error) {
+        console.error('❌ 加载项目数据失败:', error)
+        this.setDefaultProjectData()
       } finally {
         this.isLoading = false
       }
+    },
+    
+    /**
+     * 设置默认项目数据
+     */
+    setDefaultProjectData() {
+      this.projectData = {
+        userInfo: {
+          id: 'u001',
+          username: '李华',
+          realName: '李华',
+          balance: 280000
+        },
+        wealthData: {
+          deposits: { current: 30000, fixed: 50000, smart: 20000 },
+          investments: [],
+          portfolio: { totalValue: 100000, returnRate: 3.2 }
+        },
+        transactionData: [],
+        creditCardData: []
+      }
+      
+      this.userWealth.totalAssets = 200000
+      this.userWealth.changePercent = 3.2
+      this.userWealth.changeType = 'positive'
     },
     
     /**
@@ -714,53 +795,200 @@ ${this.hasFullAccess ? '✅ 已授予完整访问权限' : '❌ 未授予完整�
      */
     async loadUserWealthData() {
       try {
-        const users = uni.getStorageSync('users') || []
+        // 从数据连接器获取用户数据
+        const dataConnector = await import('../../../db/data-connector.js')
+        const connector = dataConnector.default
+        
+        // 确保数据连接器已初始化
+        if (!connector.isInitialized) {
+          await connector.init()
+        }
+        
+        // 获取所有用户数据
+        const users = connector.getUsers() || []
         const currentUser = users.find(user => user.isLoggedIn) || users[0]
         
-        if (currentUser && currentUser.wealthProducts) {
-          // 更新财富分解数据
-          const deposits = currentUser.wealthProducts.deposits || {}
-          const investments = currentUser.wealthProducts.investments || []
+        if (currentUser) {
+          // 从后端数据格式中提取财富信息
+          const deposits = currentUser.wealthProducts?.deposits || {}
+          const investments = currentUser.wealthProducts?.investments || []
+          const investmentPortfolio = currentUser.investmentPortfolio || {}
           
-          // 计算总资产
-          const totalAssets = (deposits.current || 0) + (deposits.fixed || 0) + (deposits.smart || 0) + 
-                             investments.reduce((sum, inv) => sum + (inv.amount || 0), 0)
+          // 计算各项资产
+          const currentDeposit = deposits.current || 0
+          const fixedDeposit = deposits.fixed || 0
+          const smartDeposit = deposits.smart || 0
+          const investmentAmount = investments.reduce((sum, inv) => sum + (inv.amount || 0), 0)
+          const portfolioValue = investmentPortfolio.totalValue || 0
           
-          // 更新财富分解
+          // 计算总资产 - 使用用户余额作为总资产，确保数据一致性
+          const totalAssets = currentUser.balance || (currentDeposit + fixedDeposit + smartDeposit + investmentAmount + portfolioValue)
+          
+          console.log('💰 资产计算详情:', {
+            userBalance: currentUser.balance,
+            currentDeposit,
+            fixedDeposit,
+            smartDeposit,
+            investmentAmount,
+            portfolioValue,
+            calculatedTotal: currentDeposit + fixedDeposit + smartDeposit + investmentAmount + portfolioValue,
+            finalTotal: totalAssets
+          })
+          
+          // 更新财富分解数据 - 基于用户余额重新计算百分比
           this.wealthBreakdown = [
             { 
               icon: '💰', 
               label: '活期存款', 
-              amount: deposits.current || 0, 
-              percent: totalAssets > 0 ? Math.round((deposits.current || 0) / totalAssets * 100) : 0, 
+              amount: currentDeposit, 
+              percent: totalAssets > 0 ? Math.round(currentDeposit / totalAssets * 100) : 0, 
               color: '#4CAF50' 
             },
             { 
               icon: '🏦', 
               label: '定期存款', 
-              amount: deposits.fixed || 0, 
-              percent: totalAssets > 0 ? Math.round((deposits.fixed || 0) / totalAssets * 100) : 0, 
+              amount: fixedDeposit, 
+              percent: totalAssets > 0 ? Math.round(fixedDeposit / totalAssets * 100) : 0, 
               color: '#2196F3' 
             },
             { 
               icon: '📈', 
               label: '投资理财', 
-              amount: investments.reduce((sum, inv) => sum + (inv.amount || 0), 0), 
-              percent: totalAssets > 0 ? Math.round(investments.reduce((sum, inv) => sum + (inv.amount || 0), 0) / totalAssets * 100) : 0, 
+              amount: investmentAmount + portfolioValue, 
+              percent: totalAssets > 0 ? Math.round((investmentAmount + portfolioValue) / totalAssets * 100) : 0, 
               color: '#FF9800' 
+            },
+            { 
+              icon: '💳', 
+              label: '其他资产', 
+              amount: totalAssets - (currentDeposit + fixedDeposit + investmentAmount + portfolioValue), 
+              percent: totalAssets > 0 ? Math.round((totalAssets - (currentDeposit + fixedDeposit + investmentAmount + portfolioValue)) / totalAssets * 100) : 0, 
+              color: '#9C27B0' 
             }
           ]
           
           // 更新用户财富数据
           this.userWealth.totalAssets = totalAssets
+          this.userWealth.changePercent = investmentPortfolio.returnRate || 3.2
+          this.userWealth.changeType = this.userWealth.changePercent >= 0 ? 'positive' : 'negative'
+          
+          // 更新当前用户信息
+          if (this.currentUserInfo) {
+            this.currentUserInfo.balance = currentUser.balance || 0
+          }
           
           console.log('✅ 用户财富数据加载成功:', {
             totalAssets,
-            wealthBreakdown: this.wealthBreakdown
+            wealthBreakdown: this.wealthBreakdown,
+            userWealth: this.userWealth
           })
+        } else {
+          console.warn('⚠️ 未找到当前用户数据，使用默认数据')
+          this.setDefaultWealthData()
         }
       } catch (error) {
         console.error('❌ 加载用户财富数据失败:', error)
+        this.setDefaultWealthData()
+      }
+    },
+    
+    /**
+     * 设置默认财富数据
+     */
+    setDefaultWealthData() {
+      this.userWealth = {
+        totalAssets: 125689.23,
+        changeType: 'positive',
+        changePercent: 3.2
+      }
+      this.wealthBreakdown = [
+        { icon: '💰', label: '活期存款', amount: 32541.78, percent: 26, color: '#4CAF50' },
+        { icon: '🏦', label: '定期存款', amount: 80000.00, percent: 64, color: '#2196F3' },
+        { icon: '📈', label: '投资理财', amount: 13147.45, percent: 10, color: '#FF9800' }
+      ]
+    },
+
+    /**
+     * 更新智能建议数据
+     */
+    updateSmartSuggestions(aiSuggestions) {
+      try {
+        const suggestions = []
+        
+        // 处理高优先级建议
+        if (aiSuggestions.highPriority) {
+          aiSuggestions.highPriority.forEach(suggestion => {
+            suggestions.push({
+              priority: 'high',
+              priorityText: '高优先级',
+              title: suggestion.title,
+              description: suggestion.description,
+              benefit: suggestion.benefit,
+              action: suggestion.action,
+              category: suggestion.category
+            })
+          })
+        }
+        
+        // 处理中优先级建议
+        if (aiSuggestions.mediumPriority) {
+          aiSuggestions.mediumPriority.forEach(suggestion => {
+            suggestions.push({
+              priority: 'medium',
+              priorityText: '中优先级',
+              title: suggestion.title,
+              description: suggestion.description,
+              benefit: suggestion.benefit,
+              action: suggestion.action,
+              category: suggestion.category
+            })
+          })
+        }
+        
+        // 处理低优先级建议
+        if (aiSuggestions.lowPriority) {
+          aiSuggestions.lowPriority.forEach(suggestion => {
+            suggestions.push({
+              priority: 'low',
+              priorityText: '低优先级',
+              title: suggestion.title,
+              description: suggestion.description,
+              benefit: suggestion.benefit,
+              action: suggestion.action,
+              category: suggestion.category
+            })
+          })
+        }
+        
+        this.smartSuggestions = suggestions
+        console.log('✅ 智能建议数据更新完成:', suggestions.length, '条建议')
+        
+      } catch (error) {
+        console.error('❌ 更新智能建议失败:', error)
+      }
+    },
+    
+    /**
+     * 更新用户目标数据
+     */
+    updateUserGoals(userGoals) {
+      try {
+        this.userGoals = userGoals.map(goal => ({
+          id: goal.id,
+          title: goal.title,
+          target: goal.target,
+          current: goal.current,
+          progress: goal.progress,
+          timeline: goal.timeline,
+          icon: goal.icon,
+          color: goal.color,
+          status: goal.status
+        }))
+        
+        console.log('✅ 用户目标数据更新完成:', this.userGoals.length, '个目标')
+        
+      } catch (error) {
+        console.error('❌ 更新用户目标失败:', error)
       }
     },
 
@@ -1073,7 +1301,10 @@ ${this.hasFullAccess ? '✅ 已授予完整访问权限' : '❌ 未授予完整�
       }
     },
     formatNumber(num) {
-      return num.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+      if (num === null || num === undefined || isNaN(num)) {
+        return '0.00'
+      }
+      return parseFloat(num).toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     },
     getSegmentStart(index) {
       let start = 0
@@ -1350,159 +1581,229 @@ ${this.hasFullAccess ? '✅ 已授予完整访问权限' : '❌ 未授予完整�
 </script>
 
 <style scoped>
+
+/* 全新AI财富管理样式 - 现代化设计 */
 .ai-wealth-manager {
   min-height: 100vh;
-  background: var(--theme-background, #f5f5f5);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 0;
-  transition: background-color 0.3s ease;
   position: relative;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
 }
 
-/* 顶部背景 */
+/* 顶部背景增强 */
 .header-bg {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   height: 400rpx;
-  background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  opacity: 0.9;
   z-index: 1;
 }
 
-/* 顶部导航栏 */
+.header-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.05)"/><circle cx="10" cy="60" r="0.5" fill="rgba(255,255,255,0.05)"/><circle cx="90" cy="40" r="0.5" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+  opacity: 0.3;
+}
+
+/* 顶部导航栏优化 */
 .header-section {
   position: relative;
-  z-index: 2;
-  padding: 40rpx 30rpx;
+  z-index: 10;
+  padding: 60rpx 40rpx 40rpx;
   background: transparent;
+  backdrop-filter: blur(20rpx);
 }
 
 .header-content {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 24rpx;
+  padding: 24rpx;
+  backdrop-filter: blur(20rpx);
+  border: 1rpx solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.header-content:active {
+  transform: scale(0.98);
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .header-left {
   display: flex;
   align-items: center;
-  gap: 24rpx;
+  gap: 20rpx;
+  flex: 1;
 }
 
 .back-btn {
-  width: 60rpx;
-  height: 60rpx;
+  width: 56rpx;
+  height: 56rpx;
   background: rgba(255, 255, 255, 0.2);
-  border: 1rpx solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
+  border: none;
+  border-radius: 16rpx;
   display: flex;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(10rpx);
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   flex-shrink: 0;
+  backdrop-filter: blur(10rpx);
 }
 
 .back-btn:active {
   transform: scale(0.95);
   background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.2);
 }
 
 .back-icon {
-  font-size: 28rpx;
+  font-size: 24rpx;
   color: white;
   font-weight: bold;
+  text-shadow: 0 1rpx 2rpx rgba(0, 0, 0, 0.2);
 }
-
 
 .ai-avatar-container {
   position: relative;
+  flex-shrink: 0;
 }
 
 .ai-avatar {
-  width: 80rpx;
-  height: 80rpx;
-  border-radius: 50%;
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 20rpx;
   border: 3rpx solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.ai-avatar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6rpx 20rpx rgba(0, 0, 0, 0.3);
 }
 
 .ai-status-dot {
   position: absolute;
-  bottom: 4rpx;
-  right: 4rpx;
-  width: 20rpx;
-  height: 20rpx;
-  background: #4caf50;
+  bottom: 2rpx;
+  right: 2rpx;
+  width: 16rpx;
+  height: 16rpx;
+  background: #00ff88;
   border-radius: 50%;
-  border: 3rpx solid white;
+  border: 2rpx solid white;
   animation: pulse 2s infinite;
+  box-shadow: 0 0 8rpx rgba(0, 255, 136, 0.5);
 }
 
 @keyframes pulse {
   0% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.7; transform: scale(1.1); }
+  50% { opacity: 0.7; transform: scale(1.2); }
   100% { opacity: 1; transform: scale(1); }
 }
 
 .header-info {
   display: flex;
   flex-direction: column;
+  gap: 4rpx;
+  flex: 1;
 }
 
 .header-title {
-  font-size: 36rpx;
-  font-weight: bold;
+  font-size: 32rpx;
+  font-weight: 700;
   color: white;
-  margin-bottom: 8rpx;
-  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.3);
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.3);
+  letter-spacing: 0.5rpx;
+  line-height: 1.2;
 }
 
 .header-subtitle {
-  font-size: 24rpx;
+  font-size: 22rpx;
   color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+  letter-spacing: 0.3rpx;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
 }
 
 .chat-btn {
-  width: 60rpx;
-  height: 60rpx;
-  background: rgba(255, 255, 255, 0.2);
-  border: 1rpx solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
+  width: 56rpx;
+  height: 56rpx;
+  background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+  border: none;
+  border-radius: 16rpx;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4rpx 16rpx rgba(255, 107, 107, 0.3);
   backdrop-filter: blur(10rpx);
-  transition: all 0.3s ease;
 }
 
 .chat-btn:active {
   transform: scale(0.95);
-  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 2rpx 8rpx rgba(255, 107, 107, 0.4);
 }
 
 .chat-icon {
-  font-size: 24rpx;
+  font-size: 22rpx;
   color: white;
+  filter: drop-shadow(0 1rpx 2rpx rgba(0, 0, 0, 0.2));
 }
 
-/* 财富概览卡片 */
+/* 财富概览卡片优化 */
 .wealth-overview-card {
   position: relative;
-  z-index: 2;
-  margin: 40rpx 30rpx 0;
-  background: var(--card-bg, #ffffff);
-  border-radius: 20rpx;
+  z-index: 5;
+  margin: 32rpx 24rpx 0;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 32rpx;
   padding: 40rpx;
-  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(20rpx);
+  border: 1rpx solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 16rpx 48rpx rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.wealth-overview-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4rpx;
+  background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+}
+
+.wealth-overview-card:active {
+  transform: translateY(-2rpx);
+  box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, 0.2);
 }
 
 .wealth-header {
   display: flex;
   align-items: center;
-  gap: 40rpx;
-  margin-bottom: 40rpx;
+  gap: 32rpx;
+  margin-bottom: 32rpx;
 }
 
 .wealth-info {
@@ -1511,49 +1812,60 @@ ${this.hasFullAccess ? '✅ 已授予完整访问权限' : '❌ 未授予完整�
 }
 
 .wealth-label {
-  font-size: 24rpx;
-  color: var(--text-color, #666);
+  font-size: 26rpx;
+  color: #666;
   display: block;
-  margin-bottom: 12rpx;
+  margin-bottom: 8rpx;
+  font-weight: 500;
+  letter-spacing: 0.5rpx;
 }
 
 .wealth-amount {
-  font-size: 48rpx;
-  font-weight: bold;
-  color: #4caf50;
+  font-size: 52rpx;
+  font-weight: 800;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   display: block;
-  margin-bottom: 16rpx;
+  margin-bottom: 12rpx;
+  letter-spacing: -1rpx;
+  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.1);
 }
 
 .wealth-change {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 8rpx;
+  gap: 6rpx;
   padding: 8rpx 16rpx;
   border-radius: 20rpx;
-  font-size: 20rpx;
+  font-size: 22rpx;
   font-weight: 600;
+  backdrop-filter: blur(10rpx);
+  transition: all 0.3s ease;
 }
 
 .wealth-change.positive {
-  background: rgba(76, 175, 80, 0.1);
-  color: #4caf50;
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+  border: 1rpx solid rgba(34, 197, 94, 0.2);
 }
 
 .wealth-change.negative {
-  background: rgba(244, 67, 54, 0.1);
-  color: #f44336;
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border: 1rpx solid rgba(239, 68, 68, 0.2);
 }
 
 .change-icon {
-  font-size: 16rpx;
+  font-size: 18rpx;
+  font-weight: bold;
 }
 
 .wealth-chart {
   position: relative;
-  width: 200rpx;
-  height: 200rpx;
+  width: 180rpx;
+  height: 180rpx;
   flex-shrink: 0;
 }
 
@@ -1562,11 +1874,18 @@ ${this.hasFullAccess ? '✅ 已授予完整访问权限' : '❌ 未授予完整�
   height: 100%;
   border-radius: 50%;
   background: conic-gradient(
-    #4CAF50 0deg 93.6deg,
-    #2196F3 93.6deg 230.4deg,
-    #FF9800 230.4deg 360deg
+    #667eea 0deg 93.6deg,
+    #764ba2 93.6deg 230.4deg,
+    #f093fb 230.4deg 360deg
   );
   position: relative;
+  box-shadow: 0 8rpx 24rpx rgba(102, 126, 234, 0.3);
+  transition: all 0.3s ease;
+}
+
+.chart-circle:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12rpx 32rpx rgba(102, 126, 234, 0.4);
 }
 
 .chart-center {
@@ -1575,32 +1894,37 @@ ${this.hasFullAccess ? '✅ 已授予完整访问权限' : '❌ 未授予完整�
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
-  background: white;
-  width: 120rpx;
-  height: 120rpx;
+  background: rgba(255, 255, 255, 0.95);
+  width: 100rpx;
+  height: 100rpx;
   border-radius: 50%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  backdrop-filter: blur(10rpx);
+  border: 2rpx solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
 }
 
 .chart-total {
-  font-size: 18rpx;
+  font-size: 16rpx;
   color: #666;
-  margin-bottom: 4rpx;
+  margin-bottom: 2rpx;
+  font-weight: 500;
 }
 
 .chart-amount {
-  font-size: 20rpx;
-  font-weight: bold;
+  font-size: 18rpx;
+  font-weight: 700;
   color: #333;
+  letter-spacing: -0.5rpx;
 }
 
 .wealth-breakdown {
   display: flex;
   flex-direction: column;
-  gap: 16rpx;
+  gap: 12rpx;
 }
 
 .breakdown-item {
@@ -1608,24 +1932,40 @@ ${this.hasFullAccess ? '✅ 已授予完整访问权限' : '❌ 未授予完整�
   align-items: center;
   gap: 16rpx;
   padding: 20rpx;
-  background: #f8f9fa;
-  border-radius: 16rpx;
-  border: 1rpx solid #e9ecef;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 20rpx;
+  border: 1rpx solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10rpx);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.breakdown-item:active {
+  background: rgba(255, 255, 255, 0.8);
+  transform: translateY(-2rpx);
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.1);
 }
 
 .item-icon {
-  width: 60rpx;
-  height: 60rpx;
-  border-radius: 50%;
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 16rpx;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.item-icon:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6rpx 16rpx rgba(0, 0, 0, 0.2);
 }
 
 .item-icon .icon {
-  font-size: 24rpx;
+  font-size: 22rpx;
   color: white;
+  filter: drop-shadow(0 1rpx 2rpx rgba(0, 0, 0, 0.2));
 }
 
 .item-content {
@@ -1633,62 +1973,313 @@ ${this.hasFullAccess ? '✅ 已授予完整访问权限' : '❌ 未授予完整�
 }
 
 .item-label {
-  font-size: 24rpx;
-  color: var(--text-color, #333);
+  font-size: 26rpx;
+  color: #333;
   display: block;
   margin-bottom: 4rpx;
-  font-weight: 500;
+  font-weight: 600;
+  letter-spacing: 0.3rpx;
 }
 
 .item-amount {
-  font-size: 20rpx;
+  font-size: 22rpx;
   color: #666;
+  font-weight: 500;
 }
 
 .item-percent {
-  font-size: 24rpx;
-  font-weight: bold;
-  color: #4caf50;
+  font-size: 26rpx;
+  font-weight: 700;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-/* 分析部分 */
-.analysis-section {
+/* AI分析部分优化 */
+.ai-analysis-section {
   position: relative;
-  z-index: 2;
-  margin: 30rpx;
-  background: var(--card-bg, #ffffff);
-  border-radius: 20rpx;
+  z-index: 5;
+  margin: 24rpx;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 32rpx;
+  padding: 32rpx;
+  backdrop-filter: blur(20rpx);
+  border: 1rpx solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 16rpx 48rpx rgba(0, 0, 0, 0.15);
   overflow: hidden;
-  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.section-title {
-  font-size: 32rpx;
-  font-weight: bold;
-  color: var(--text-color, #333);
-  padding: 30rpx 40rpx 20rpx;
-  border-bottom: 1rpx solid var(--border-color, #f0f0f0);
+.ai-analysis-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4rpx;
+  background: linear-gradient(90deg, #f093fb, #f5576c, #4facfe);
 }
 
-.analysis-list {
-  padding: 0 40rpx;
+.ai-analysis-section:active {
+  transform: translateY(-2rpx);
+  box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, 0.2);
 }
 
-.analysis-item {
+.ai-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 30rpx 0;
-  border-bottom: 1rpx solid var(--border-color, #f0f0f0);
+  margin-bottom: 32rpx;
+}
+
+.ai-title-container {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  flex: 1;
+}
+
+.ai-icon {
+  width: 56rpx;
+  height: 56rpx;
+  background: linear-gradient(135deg, #f093fb, #f5576c);
+  border-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  box-shadow: 0 4rpx 16rpx rgba(240, 147, 251, 0.3);
   transition: all 0.3s ease;
 }
 
-.analysis-item:last-child {
-  border-bottom: none;
+.ai-icon:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6rpx 20rpx rgba(240, 147, 251, 0.4);
 }
 
-.analysis-item:active {
-  background: rgba(76, 175, 80, 0.05);
+.ai-title-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2rpx;
+}
+
+.ai-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #333;
+  letter-spacing: 0.5rpx;
+  line-height: 1.2;
+}
+
+.ai-subtitle {
+  font-size: 22rpx;
+  color: #666;
+  font-weight: 500;
+  letter-spacing: 0.3rpx;
+}
+
+.ai-status {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 8rpx 16rpx;
+  background: rgba(34, 197, 94, 0.1);
+  border-radius: 20rpx;
+  border: 1rpx solid rgba(34, 197, 94, 0.2);
+  transition: all 0.3s ease;
+}
+
+.ai-status.active {
+  background: rgba(34, 197, 94, 0.15);
+  box-shadow: 0 2rpx 8rpx rgba(34, 197, 94, 0.2);
+}
+
+.status-dot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 8rpx rgba(34, 197, 94, 0.5);
+  animation: pulse 2s infinite;
+}
+
+.status-text {
+  font-size: 20rpx;
+  color: #22c55e;
+  font-weight: 600;
+}
+
+/* 用户选择器优化 */
+.user-selector {
+  background: rgba(102, 126, 234, 0.1);
+  border-radius: 20rpx;
+  padding: 16rpx;
+  margin-top: 16rpx;
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  border: 1rpx solid rgba(102, 126, 234, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10rpx);
+}
+
+.user-selector:active {
+  background: rgba(102, 126, 234, 0.15);
+  transform: scale(0.98);
+  box-shadow: 0 4rpx 16rpx rgba(102, 126, 234, 0.2);
+}
+
+.user-avatar {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 12rpx;
+  overflow: hidden;
+  border: 2rpx solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+}
+
+.user-avatar image {
+  width: 100%;
+  height: 100%;
+}
+
+.user-info {
+  flex: 1;
+}
+
+.user-name {
+  color: #333;
+  font-size: 24rpx;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 2rpx;
+  letter-spacing: 0.3rpx;
+}
+
+.user-balance {
+  color: #666;
+  font-size: 20rpx;
+  display: block;
+  font-weight: 500;
+}
+
+.user-arrow {
+  color: #999;
+  font-size: 20rpx;
+  transition: all 0.3s ease;
+}
+
+.user-selector:active .user-arrow {
+  transform: rotate(180deg);
+}
+
+/* AI功能卡片优化 */
+.ai-features {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.feature-card {
+  display: flex;
+  align-items: center;
+  padding: 20rpx;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 20rpx;
+  border: 1rpx solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10rpx);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.feature-card:active {
+  transform: scale(0.98);
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.1);
+}
+
+.feature-card.primary {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+  border: 1rpx solid rgba(102, 126, 234, 0.2);
+}
+
+.feature-card.disabled {
+  opacity: 0.6;
+  transform: none !important;
+}
+
+.feature-icon {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 12rpx;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 16rpx;
+  flex-shrink: 0;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.feature-card.primary .feature-icon {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+.feature-icon .icon {
+  font-size: 22rpx;
+  color: #666;
+}
+
+.feature-card.primary .feature-icon .icon {
+  color: white;
+  filter: drop-shadow(0 1rpx 2rpx rgba(0, 0, 0, 0.2));
+}
+
+.feature-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2rpx;
+}
+
+.feature-title {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #333;
+  letter-spacing: 0.3rpx;
+}
+
+.feature-desc {
+  font-size: 20rpx;
+  color: #666;
+  font-weight: 500;
+}
+
+.feature-arrow {
+  width: 32rpx;
+  height: 32rpx;
+  border-radius: 8rpx;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.feature-card.primary .feature-arrow {
+  background: rgba(102, 126, 234, 0.1);
+}
+
+.arrow {
+  font-size: 18rpx;
+  color: #999;
+  font-weight: bold;
+}
+
+.feature-card.primary .arrow {
+  color: #667eea;
 }
 
 .analysis-left {
@@ -1980,119 +2571,293 @@ ${this.hasFullAccess ? '✅ 已授予完整访问权限' : '❌ 未授予完整�
   gap: 20rpx;
 }
 
-/* 智能建议部分 */
+/* 智能建议部分优化 */
 .suggestions-section {
   position: relative;
-  z-index: 2;
-  margin: 30rpx;
-  background: var(--card-bg, #ffffff);
-  border-radius: 20rpx;
+  z-index: 5;
+  margin: 24rpx;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 32rpx;
+  padding: 32rpx;
+  backdrop-filter: blur(20rpx);
+  border: 1rpx solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 16rpx 48rpx rgba(0, 0, 0, 0.15);
   overflow: hidden;
-  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.suggestions-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4rpx;
+  background: linear-gradient(90deg, #a8edea, #fed6e3, #d299c2);
 }
 
 .suggestions-list {
-  padding: 0 40rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
 }
 
 .suggestion-item {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 30rpx 0;
-  border-bottom: 1rpx solid var(--border-color, #f0f0f0);
-  transition: all 0.3s ease;
+  align-items: flex-start;
+  padding: 24rpx;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 20rpx;
+  border: 1rpx solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10rpx);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
 }
 
-.suggestion-item:last-child {
-  border-bottom: none;
+.suggestion-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4rpx;
+  height: 100%;
+  background: linear-gradient(180deg, #667eea, #764ba2);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .suggestion-item:active {
-  background: rgba(76, 175, 80, 0.05);
+  background: rgba(255, 255, 255, 0.8);
+  transform: translateY(-2rpx);
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.1);
+}
+
+.suggestion-item:active::before {
+  opacity: 1;
 }
 
 .suggestion-left {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   flex: 1;
+  gap: 16rpx;
 }
 
 .suggestion-priority {
-  padding: 8rpx 16rpx;
-  border-radius: 20rpx;
-  font-size: 20rpx;
-  font-weight: bold;
-  margin-right: 25rpx;
+  padding: 6rpx 12rpx;
+  border-radius: 12rpx;
+  font-size: 18rpx;
+  font-weight: 600;
   flex-shrink: 0;
+  backdrop-filter: blur(10rpx);
+  border: 1rpx solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
 }
 
 .suggestion-priority.high {
-  background: rgba(244, 67, 54, 0.1);
-  color: #f44336;
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.2);
+  box-shadow: 0 2rpx 8rpx rgba(239, 68, 68, 0.2);
 }
 
 .suggestion-priority.medium {
-  background: rgba(255, 152, 0, 0.1);
-  color: #ff9800;
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+  border-color: rgba(245, 158, 11, 0.2);
+  box-shadow: 0 2rpx 8rpx rgba(245, 158, 11, 0.2);
 }
 
 .suggestion-priority.low {
-  background: rgba(76, 175, 80, 0.1);
-  color: #4caf50;
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+  border-color: rgba(34, 197, 94, 0.2);
+  box-shadow: 0 2rpx 8rpx rgba(34, 197, 94, 0.2);
+}
+
+.priority-text {
+  font-size: 18rpx;
+  font-weight: 600;
+  letter-spacing: 0.3rpx;
 }
 
 .suggestion-content {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
 }
 
 .suggestion-title {
-  font-size: 30rpx;
-  color: var(--text-color, #333);
-  font-weight: 500;
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 600;
   display: block;
-  margin-bottom: 8rpx;
+  letter-spacing: 0.3rpx;
+  line-height: 1.3;
 }
 
 .suggestion-desc {
-  font-size: 24rpx;
+  font-size: 22rpx;
   color: #666;
+  line-height: 1.5;
   display: block;
-  margin-bottom: 8rpx;
-  line-height: 1.4;
+  font-weight: 500;
 }
 
 .suggestion-benefit {
   font-size: 20rpx;
-  color: #4caf50;
-  font-weight: 500;
+  color: #22c55e;
+  font-weight: 600;
+  background: rgba(34, 197, 94, 0.1);
+  padding: 6rpx 12rpx;
+  border-radius: 12rpx;
+  border: 1rpx solid rgba(34, 197, 94, 0.2);
+  display: inline-block;
+  backdrop-filter: blur(10rpx);
+  box-shadow: 0 2rpx 8rpx rgba(34, 197, 94, 0.1);
 }
 
 .suggestion-right {
   display: flex;
   align-items: center;
-  gap: 16rpx;
+  gap: 8rpx;
+  flex-shrink: 0;
 }
 
 .suggestion-action {
-  font-size: 24rpx;
-  color: #4caf50;
-  font-weight: 500;
+  font-size: 22rpx;
+  color: #667eea;
+  font-weight: 600;
+  padding: 8rpx 16rpx;
+  background: rgba(102, 126, 234, 0.1);
+  border-radius: 12rpx;
+  border: 1rpx solid rgba(102, 126, 234, 0.2);
+  backdrop-filter: blur(10rpx);
+  transition: all 0.3s ease;
+  box-shadow: 0 2rpx 8rpx rgba(102, 126, 234, 0.1);
 }
 
-/* 客户经理部分 */
+.suggestion-item:active .suggestion-action {
+  background: rgba(102, 126, 234, 0.15);
+  transform: scale(0.95);
+  box-shadow: 0 4rpx 12rpx rgba(102, 126, 234, 0.2);
+}
+
+/* 客户经理部分优化 */
 .advisor-section {
   position: relative;
-  z-index: 2;
-  margin: 30rpx;
-  background: var(--card-bg, #ffffff);
-  border-radius: 20rpx;
+  z-index: 5;
+  margin: 24rpx;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 32rpx;
+  padding: 32rpx;
+  backdrop-filter: blur(20rpx);
+  border: 1rpx solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 16rpx 48rpx rgba(0, 0, 0, 0.15);
   overflow: hidden;
-  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.advisor-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4rpx;
+  background: linear-gradient(90deg, #ffecd2, #fcb69f, #ff8a80);
 }
 
 .advisor-card {
-  padding: 0 40rpx 40rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.advisor-info {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.advisor-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 20rpx;
+  border: 3rpx solid #667eea;
+  flex-shrink: 0;
+  box-shadow: 0 4rpx 16rpx rgba(102, 126, 234, 0.3);
+  transition: all 0.3s ease;
+}
+
+.advisor-avatar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6rpx 20rpx rgba(102, 126, 234, 0.4);
+}
+
+.advisor-details {
+  flex: 1;
+}
+
+.advisor-name {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #333;
+  display: block;
+  margin-bottom: 4rpx;
+  letter-spacing: 0.3rpx;
+}
+
+.advisor-title {
+  font-size: 22rpx;
+  color: #667eea;
+  display: block;
+  margin-bottom: 4rpx;
+  font-weight: 600;
+}
+
+.advisor-experience {
+  font-size: 20rpx;
+  color: #666;
+  display: block;
+  margin-bottom: 8rpx;
+  font-weight: 500;
+}
+
+.advisor-rating {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.rating-stars {
+  display: flex;
+  gap: 2rpx;
+}
+
+.star {
+  font-size: 18rpx;
+  color: #ddd;
+  transition: all 0.3s ease;
+}
+
+.star.active {
+  color: #fbbf24;
+  text-shadow: 0 1rpx 2rpx rgba(251, 191, 36, 0.3);
+}
+
+.rating-text {
+  font-size: 18rpx;
+  color: #666;
+  font-weight: 500;
+}
+
+.advisor-actions {
+  display: flex;
+  gap: 16rpx;
 }
 
 .advisor-info {

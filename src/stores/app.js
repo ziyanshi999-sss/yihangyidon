@@ -15,6 +15,8 @@ const state = reactive({
     language: 'zh-CN',
     // 字体大小
     fontSize: 'normal',
+    // 主题设置
+    theme: 'light',
     // 加载状态
     loading: false,
     // 错误信息
@@ -103,9 +105,11 @@ const actions = {
         try {
             const language = uni.getStorageSync('app_language') || 'zh-CN'
             const fontSize = uni.getStorageSync('app_fontSize') || 'normal'
+            const theme = uni.getStorageSync('app_theme') || 'light'
 
             state.language = language
             state.fontSize = fontSize
+            state.theme = theme
 
         } catch (error) {
             console.error('加载用户设置失败:', error)
@@ -122,6 +126,15 @@ const actions = {
     setFontSize(fontSize) {
         state.fontSize = fontSize
         uni.setStorageSync('app_fontSize', fontSize)
+    },
+
+    // 设置主题
+    setTheme(theme) {
+        state.theme = theme
+        uni.setStorageSync('app_theme', theme)
+        
+        // 触发主题变化事件
+        uni.$emit('themeChanged', theme)
     },
 
     // 显示加载

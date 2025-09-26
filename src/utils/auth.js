@@ -420,7 +420,7 @@ function logLogoutEvent(reason) {
 async function syncLogoutToServer(reason) {
   try {
     // 获取当前用户信息
-    const userInfo = getUserInfo()
+    const userInfo = await getUserInfo()
     if (!userInfo) {
       console.log('用户信息不存在，跳过服务器同步')
       return
@@ -530,10 +530,10 @@ export function requireLogin(pageMethod) {
  * 获取用户信息
  * @returns {Object|null} 用户信息
  */
-export function getUserInfo() {
+export async function getUserInfo() {
   try {
     // 首先尝试从统一数据管理器获取
-    const unifiedDataManager = require('./unified-data-manager.js').default
+    const unifiedDataManager = (await import('./unified-data-manager.js')).default
     if (unifiedDataManager && unifiedDataManager.getCurrentUser) {
       const currentUser = unifiedDataManager.getCurrentUser()
       if (currentUser) {

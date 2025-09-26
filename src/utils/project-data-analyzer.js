@@ -4,6 +4,7 @@
  */
 
 import zhipuAI from '@/api/zhipu-ai.js'
+import { getSafeArray, getSafeObject, getSafeNumber } from './safe-storage.js'
 
 class ProjectDataAnalyzer {
   constructor() {
@@ -148,9 +149,11 @@ class ProjectDataAnalyzer {
    */
   getGoalData() {
     try {
-      const goals = uni.getStorageSync('userGoals') || []
-      const activeGoals = goals.filter(goal => goal.status === 'active')
-      const completedGoals = goals.filter(goal => goal.status === 'completed')
+      // 使用安全的数组获取方法
+      const goals = getSafeArray('userGoals', [])
+      
+      const activeGoals = goals.filter(goal => goal && goal.status === 'active')
+      const completedGoals = goals.filter(goal => goal && goal.status === 'completed')
       
       return {
         totalGoals: goals.length,
@@ -169,8 +172,9 @@ class ProjectDataAnalyzer {
    */
   getSpendingData() {
     try {
-      const spending = uni.getStorageSync('userSpending') || []
-      const categories = uni.getStorageSync('spendingCategories') || []
+      // 使用安全的数组获取方法
+      const spending = getSafeArray('userSpending', [])
+      const categories = getSafeArray('spendingCategories', [])
       
       // 分析消费模式
       const spendingAnalysis = this.analyzeSpending(spending, categories)

@@ -6,6 +6,7 @@
 import dataPermissionManager from './data-permission-manager.js'
 import zhipuAI from '@/api/zhipu-ai.js'
 import userDataLoader from './user-data-loader.js'
+import { getSafeArray, getSafeObject, getSafeNumber } from './safe-storage.js'
 
 class EnhancedDataOperator {
   constructor() {
@@ -29,7 +30,7 @@ class EnhancedDataOperator {
       const loginInfo = uni.getStorageSync('loginInfo') || {}
       const currentUserId = loginInfo.userId || 'u001' // 默认使用第一个用户
       
-      // 从 user.json 加载真实用户数据
+      // 从数据连接器加载真实用户数据
       const userFinancialData = await userDataLoader.getUserFinancialData(currentUserId)
       
       if (!userFinancialData) {
@@ -37,7 +38,7 @@ class EnhancedDataOperator {
       }
 
       const allData = {
-        // 从 user.json 获取的真实数据
+        // 从数据连接器获取的真实数据
         userInfo: userFinancialData.userInfo,
         accountData: userFinancialData.accountData,
         creditCardData: userFinancialData.creditCardData,
@@ -53,7 +54,7 @@ class EnhancedDataOperator {
         systemData: this.getSystemData(),
         
         // 数据来源标识
-        dataSource: 'user.json',
+        dataSource: 'data-connector',
         userId: currentUserId,
         
         // 时间戳
@@ -65,10 +66,10 @@ class EnhancedDataOperator {
         dataTypes: Object.keys(allData),
         timestamp: allData.collectedAt,
         userId: currentUserId,
-        dataSource: 'user.json'
+        dataSource: 'data-connector'
       })
 
-      console.log('从 user.json 收集用户数据成功:', allData)
+      console.log('从数据连接器收集用户数据成功:', allData)
       return allData
     } catch (error) {
       console.error('收集用户数据失败:', error)
@@ -159,18 +160,33 @@ class EnhancedDataOperator {
    * 获取目标数据
    */
   getGoalData() {
-    const goals = uni.getStorageSync('userGoals') || []
-    const activeGoals = goals.filter(goal => goal.status === 'active')
-    const completedGoals = goals.filter(goal => goal.status === 'completed')
-    
-    return {
-      totalGoals: goals.length,
-      activeGoals: activeGoals,
-      completedGoals: completedGoals,
-      totalTargetAmount: activeGoals.reduce((sum, goal) => sum + (goal.target || 0), 0),
-      totalSavedAmount: activeGoals.reduce((sum, goal) => sum + (goal.current || 0), 0),
-      averageProgress: this.calculateAverageProgress(activeGoals),
-      goalCategories: this.analyzeGoalCategories(goals)
+    try {
+      // 使用安全的数组获取方法
+      const goals = getSafeArray('userGoals', [])
+      
+      const activeGoals = goals.filter(goal => goal && goal.status === 'active')
+      const completedGoals = goals.filter(goal => goal && goal.status === 'completed')
+      
+      return {
+        totalGoals: goals.length,
+        activeGoals: activeGoals,
+        completedGoals: completedGoals,
+        totalTargetAmount: activeGoals.reduce((sum, goal) => sum + (goal.target || 0), 0),
+        totalSavedAmount: activeGoals.reduce((sum, goal) => sum + (goal.current || 0), 0),
+        averageProgress: this.calculateAverageProgress(activeGoals),
+        goalCategories: this.analyzeGoalCategories(goals)
+      }
+    } catch (error) {
+      console.error('获取目标数据失败:', error)
+      return {
+        totalGoals: 0,
+        activeGoals: [],
+        completedGoals: [],
+        totalTargetAmount: 0,
+        totalSavedAmount: 0,
+        averageProgress: 0,
+        goalCategories: []
+      }
     }
   }
 
@@ -178,16 +194,29 @@ class EnhancedDataOperator {
    * 获取消费数据
    */
   getSpendingData() {
-    const spending = uni.getStorageSync('userSpending') || []
-    const categories = uni.getStorageSync('spendingCategories') || []
-    
-    return {
-      spending: spending,
-      categories: categories,
-      totalSpent: spending.reduce((sum, s) => sum + (s.amount || 0), 0),
-      monthlySpending: this.calculateMonthlySpending(spending),
-      categoryAnalysis: this.analyzeSpendingCategories(spending),
-      trends: this.analyzeSpendingTrends(spending)
+    try {
+      // 使用安全的数组获取方法
+      const spending = getSafeArray('userSpending', [])
+      const categories = getSafeArray('spendingCategories', [])
+      
+      return {
+        spending: spending,
+        categories: categories,
+        totalSpent: spending.reduce((sum, s) => sum + (s.amount || 0), 0),
+        monthlySpending: this.calculateMonthlySpending(spending),
+        categoryAnalysis: this.analyzeSpendingCategories(spending),
+        trends: this.analyzeSpendingTrends(spending)
+      }
+    } catch (error) {
+      console.error('获取消费数据失败:', error)
+      return {
+        spending: [],
+        categories: [],
+        totalSpent: 0,
+        monthlySpending: 0,
+        categoryAnalysis: {},
+        trends: {}
+      }
     }
   }
 

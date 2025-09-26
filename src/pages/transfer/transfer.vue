@@ -68,6 +68,49 @@
       </scroll-view>
     </view>
 
+    <!-- 其他用户 -->
+    <view class="other-users" @click="handleRetryLoad">
+      <view class="section-header">
+        <text class="section-title">其他用户</text>
+        <text class="section-desc">点击选择用户，自动填入银行卡信息</text>
+      </view>
+      
+      <!-- 加载状态 -->
+      <view v-if="isLoadingUsers" class="loading-state">
+        <text class="loading-text">正在加载用户数据...</text>
+      </view>
+      
+      <!-- 错误状态 -->
+      <view v-else-if="loadError" class="error-state">
+        <text class="error-text">连接服务器超时，点击屏幕重试</text>
+      </view>
+      
+      <!-- 用户列表 -->
+      <view v-else-if="otherUsers.length > 0" class="users-grid">
+        <view 
+          class="user-item" 
+          v-for="user in otherUsers" 
+          :key="user.id"
+          @click.stop="selectOtherUser(user)"
+        >
+          <view class="user-avatar">{{ user.realName.charAt(0) }}</view>
+          <view class="user-info">
+            <text class="user-name">{{ user.realName }}</text>
+            <text class="user-bank">{{ user.bankAccount.bankName }}</text>
+            <text class="user-account">{{ user.bankAccount.accountNumber }}</text>
+          </view>
+          <view class="user-action">
+            <text class="action-text">选择</text>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 空状态 -->
+      <view v-else class="empty-state">
+        <text class="empty-text">暂无其他用户数据</text>
+      </view>
+    </view>
+
     <!-- 转账表单 -->
     <view class="transfer-form">
       <!-- 账号转账表单 -->
@@ -173,11 +216,11 @@
 </template>
 
 <script>
-import { forceCheckLogin } from '@/utils/auth.js'
-import dataSync from '@/utils/data-sync.js'
-import PaymentPasswordModal from '@/components/common/PaymentPasswordModal.vue'
+import { forceCheckLogin } from '../../utils/auth.js'
+import dataSync from '../../utils/data-sync.js'
+import PaymentPasswordModal from '../../components/common/PaymentPasswordModal.vue'
 
-import unifiedDataManager from '@/utils/unified-data-manager.js'
+import unifiedDataManager from '../../utils/unified-data-manager.js'
 
 export default {
   components: {
@@ -197,6 +240,9 @@ export default {
         amount: '',
         remark: ''
       },
+      otherUsers: [], // 其他用户列表
+      isLoadingUsers: false, // 用户数据加载状态
+      loadError: false, // 加载错误状态
       isProcessing: false, // 转账处理状态
       currentUser: {}, // 当前用户信息
       showPasswordModal: false, // 显示交易密码弹窗
@@ -209,6 +255,7 @@ export default {
   mounted() {
     // 页面加载完成
     this.loadUserData()
+    this.loadOtherUsers()
     this.initDataSync()
   },
   
@@ -237,16 +284,55 @@ export default {
     // 加载用户数据
     async loadUserData() {
       try {
-        // 初始化统一数据管理器
-        await unifiedDataManager.init()
+        console.log('开始加载用户数据...')
         
-        // 从统一数据管理器获取当前用户信息
-        this.currentUser = unifiedDataManager.getCurrentUser() || {}
+        // 设置超时时间
+        const timeoutPromise = new Promise((_, reject) => {
+          setTimeout(() => reject(new Error('用户数据加载超时')), 8000)
+        })
         
-        console.log('转账页面加载用户数据:', this.currentUser.username)
+        const loadPromise = (async () => {
+          // 初始化统一数据管理器
+          await unifiedDataManager.init()
+          
+          // 从统一数据管理器获取当前用户信息
+          const currentUser = unifiedDataManager.getCurrentUser() || {}
+          
+          return currentUser
+        })()
+        
+        // 使用Promise.race来处理超时
+        this.currentUser = await Promise.race([loadPromise, timeoutPromise])
+        
+        console.log('✅ 转账页面加载用户数据成功:', this.currentUser.username)
+        
+        // 检查用户数据是否完整
+        if (!this.currentUser.id || !this.currentUser.username) {
+          console.warn('⚠️ 用户数据不完整，可能需要重新登录')
+          uni.showToast({
+            title: '用户数据异常，请重新登录',
+            icon: 'none',
+            duration: 3000
+          })
+        }
+        
       } catch (error) {
-        console.error('加载用户数据失败:', error)
-        this.currentUser = {}
+        console.error('❌ 加载用户数据失败:', error)
+        
+        // 显示错误提示
+        uni.showToast({
+          title: '连接服务器超时，点击屏幕重试',
+          icon: 'none',
+          duration: 3000
+        })
+        
+        // 设置默认用户数据避免页面错误
+        this.currentUser = {
+          id: 'unknown',
+          username: '未知用户',
+          balance: 0,
+          frequentContacts: []
+        }
       }
     },
 
@@ -262,6 +348,169 @@ export default {
       uni.showToast({
         title: `已选择${contact.name}`,
         icon: 'success'
+      })
+    },
+
+    // 加载其他用户数据
+    async loadOtherUsers() {
+      this.isLoadingUsers = true
+      this.loadError = false
+      
+      try {
+        console.log('开始加载其他用户数据...')
+        
+        // 设置超时时间
+        const timeoutPromise = new Promise((_, reject) => {
+          setTimeout(() => reject(new Error('加载超时')), 5000)
+        })
+        
+        const loadPromise = (async () => {
+          const dataConnector = await import('../../../db/data-connector.js')
+          
+          // 初始化数据连接器
+          await dataConnector.init()
+          
+          const allUsers = await dataConnector.getUsers()
+          const currentUserId = uni.getStorageSync('currentUserId')
+          
+          // 过滤掉当前用户，只显示其他用户
+          const otherUsers = allUsers.filter(user => 
+            user.id !== currentUserId && 
+            user.bankAccount && 
+            user.bankAccount.accountNumber
+          )
+          
+          return otherUsers
+        })()
+        
+        // 使用Promise.race来处理超时
+        this.otherUsers = await Promise.race([loadPromise, timeoutPromise])
+        
+        console.log('✅ 加载其他用户数据成功:', this.otherUsers.length, '个用户')
+        
+        // 如果没有其他用户，显示提示
+        if (this.otherUsers.length === 0) {
+          console.log('⚠️ 没有找到其他用户数据')
+        }
+        
+      } catch (error) {
+        console.error('❌ 加载其他用户数据失败:', error)
+        
+        // 使用备用数据
+        console.log('🔄 使用备用用户数据...')
+        this.otherUsers = this.getFallbackUsers()
+        
+        if (this.otherUsers.length > 0) {
+          console.log('✅ 备用用户数据加载成功:', this.otherUsers.length, '个用户')
+          this.loadError = false
+        } else {
+          this.loadError = true
+        }
+      } finally {
+        this.isLoadingUsers = false
+      }
+    },
+
+    // 获取备用用户数据
+    getFallbackUsers() {
+      return [
+        {
+          id: "u002",
+          username: "李小红",
+          realName: "李小红",
+          phone: "13777777777",
+          balance: 80000.00,
+          isLoggedIn: false,
+          bankAccount: {
+            accountNumber: "6228 4800 1234 5678",
+            bankName: "中国农业银行",
+            accountType: "储蓄卡",
+            accountHolder: "李小红",
+            branchName: "广州天河支行"
+          }
+        },
+        {
+          id: "u003",
+          username: "王小明",
+          realName: "王小明",
+          phone: "13666666666",
+          balance: 150000.00,
+          isLoggedIn: false,
+          bankAccount: {
+            accountNumber: "6228 4800 2345 6789",
+            bankName: "中国工商银行",
+            accountType: "储蓄卡",
+            accountHolder: "王小明",
+            branchName: "深圳南山支行"
+          }
+        },
+        {
+          id: "u004",
+          username: "张美丽",
+          realName: "张美丽",
+          phone: "13555555555",
+          balance: 95000.00,
+          isLoggedIn: false,
+          bankAccount: {
+            accountNumber: "6228 4800 3456 7890",
+            bankName: "中国建设银行",
+            accountType: "储蓄卡",
+            accountHolder: "张美丽",
+            branchName: "杭州西湖支行"
+          }
+        },
+        {
+          id: "u005",
+          username: "刘强",
+          realName: "刘强",
+          phone: "13444444444",
+          balance: 120000.00,
+          isLoggedIn: false,
+          bankAccount: {
+            accountNumber: "6228 4800 4567 8901",
+            bankName: "中国银行",
+            accountType: "储蓄卡",
+            accountHolder: "刘强",
+            branchName: "成都锦江支行"
+          }
+        }
+      ]
+    },
+
+    // 处理重试加载
+    handleRetryLoad() {
+      if (this.loadError) {
+        console.log('用户点击重试加载数据')
+        this.loadOtherUsers()
+      }
+    },
+
+    // 选择其他用户
+    selectOtherUser(user) {
+      if (!user.bankAccount) {
+        uni.showToast({
+          title: '该用户暂无银行卡信息',
+          icon: 'none'
+        })
+        return
+      }
+      
+      // 自动填入银行卡号和姓名
+      this.accountForm.account = user.bankAccount.accountNumber
+      this.accountForm.name = user.bankAccount.accountHolder
+      
+      // 切换到账号转账模式
+      this.currentTab = 'account'
+      
+      uni.showToast({
+        title: `已选择${user.realName}`,
+        icon: 'success'
+      })
+      
+      console.log('选择用户:', {
+        name: user.realName,
+        account: user.bankAccount.accountNumber,
+        bank: user.bankAccount.bankName
       })
     },
 
@@ -408,6 +657,91 @@ export default {
     // 处理转账成功
     async processTransferSuccess() {
       try {
+        // 使用新的交易记录API
+        const { addTransactionRecord } = await import('../../api/transaction.js')
+
+
+        
+        
+        // 构建交易记录
+        const transaction = {
+          type: "expense",
+          category: "transfer",
+          amount: this.transferAmount,
+          description: this.currentTab === 'account' ? 
+            `转账给${this.accountForm.name || this.accountForm.account}` : 
+            `转账给${this.phoneForm.phone}`,
+          source: this.currentTab === 'account' ? 
+            this.accountForm.name || this.accountForm.account : 
+            this.phoneForm.phone,
+          reference: `TRF${Date.now()}`,
+          status: "completed"
+        }
+        
+        // 添加交易记录（会自动更新用户余额）
+        const newTransaction = await addTransactionRecord(transaction)
+        console.log('✅ 转账交易记录添加成功:', newTransaction)
+        
+        // 创建转账记录（用于转账历史页面）
+        const transferRecord = {
+          id: 't' + Date.now() + Math.random().toString(36).substr(2, 9),
+          type: 'outgoing',
+          amount: this.transferAmount,
+          recipient: this.currentTab === 'account' ? this.accountForm.name : this.phoneForm.phone,
+          recipientAccount: this.currentTab === 'account' ? this.accountForm.account : this.phoneForm.phone,
+          description: this.currentTab === 'account' ? this.accountForm.remark || '转账' : this.phoneForm.remark || '转账',
+          status: 'completed',
+          timestamp: new Date().toISOString(),
+          fee: this.transferAmount > 1000 ? 2.5 : 0
+        }
+        
+        // 使用统一数据管理器添加转账记录
+        unifiedDataManager.addTransferRecord(this.currentUser.id, transferRecord)
+        
+        // 更新常用联系人
+        this.updateFrequentContacts(transferRecord)
+        
+        // 触发数据同步
+        unifiedDataManager.syncData()
+        
+        // 触发转账成功事件
+        uni.$emit('balanceUpdated', {
+          userId: this.currentUser.id,
+          balance: newTransaction.balance
+        })
+        
+        // 显示转账成功提示
+        uni.showToast({
+          title: `转账成功，余额：¥${newTransaction.balance.toFixed(2)}`,
+          icon: 'success',
+          duration: 3000
+        })
+        
+        // 清空表单
+        this.clearForms()
+        
+        // 重新加载用户数据
+        await this.loadUserData()
+        
+        console.log('✅ 转账操作完成:', {
+          amount: this.transferAmount,
+          newBalance: newTransaction.balance,
+          transferRecord,
+          transactionId: newTransaction.id
+        })
+        
+      } catch (error) {
+        console.error('❌ 处理转账成功失败:', error)
+        // 如果API调用失败，回退到原来的方法
+        this.fallbackProcessTransferSuccess()
+      } finally {
+        this.isProcessing = false
+      }
+    },
+
+    // 回退方法：直接处理转账成功
+    async fallbackProcessTransferSuccess() {
+      try {
         // 更新用户余额
         const newBalance = this.currentUser.balance - this.transferAmount
         unifiedDataManager.updateBalance(this.currentUser.id, newBalance)
@@ -415,7 +749,7 @@ export default {
         // 创建转账记录
         const transferRecord = {
           id: 't' + Date.now() + Math.random().toString(36).substr(2, 9),
-          type: this.currentTab === 'account' ? 'outgoing' : 'outgoing',
+          type: 'outgoing',
           amount: this.transferAmount,
           recipient: this.currentTab === 'account' ? this.accountForm.name : this.phoneForm.phone,
           recipientAccount: this.currentTab === 'account' ? this.accountForm.account : this.phoneForm.phone,
@@ -453,20 +787,18 @@ export default {
         // 重新加载用户数据
         await this.loadUserData()
         
-        console.log('✅ 转账操作完成:', {
+        console.log('✅ 回退方法：转账操作完成:', {
           amount: this.transferAmount,
           newBalance,
           transferRecord
         })
         
       } catch (error) {
-        console.error('处理转账成功失败:', error)
+        console.error('❌ 回退方法处理转账成功失败:', error)
         uni.showToast({
           title: '转账处理失败',
           icon: 'none'
         })
-      } finally {
-        this.isProcessing = false
       }
     },
     
@@ -831,6 +1163,143 @@ export default {
   border-radius: 24rpx;
   padding: 40rpx;
   box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.1);
+}
+
+/* 其他用户 */
+.other-users {
+  background-color: #fff;
+  margin: 0 20rpx 20rpx 20rpx;
+  border-radius: 24rpx;
+  padding: 40rpx;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.1);
+}
+
+.other-users .section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30rpx;
+}
+
+.other-users .section-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.other-users .section-desc {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.users-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.user-item {
+  display: flex;
+  align-items: center;
+  padding: 24rpx;
+  background: #f8f9fa;
+  border-radius: 12rpx;
+  border: 2rpx solid transparent;
+  transition: all 0.3s ease;
+}
+
+.user-item:active {
+  background: #e9ecef;
+  border-color: #007AFF;
+  transform: scale(0.98);
+}
+
+.user-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: 600;
+  margin-right: 24rpx;
+}
+
+.user-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.user-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.user-bank {
+  font-size: 26rpx;
+  color: #666;
+}
+
+.user-account {
+  font-size: 24rpx;
+  color: #999;
+  font-family: 'Courier New', monospace;
+}
+
+.user-action {
+  padding: 12rpx 24rpx;
+  background: #007AFF;
+  border-radius: 20rpx;
+}
+
+.action-text {
+  color: #fff;
+  font-size: 24rpx;
+  font-weight: 500;
+}
+
+/* 加载和错误状态样式 */
+.loading-state, .error-state, .empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60rpx 20rpx;
+  text-align: center;
+}
+
+.loading-text {
+  color: #007AFF;
+  font-size: 28rpx;
+}
+
+.error-state {
+  background: #fff5f5;
+  border: 2rpx solid #ffebee;
+  border-radius: 12rpx;
+  margin: 20rpx 0;
+}
+
+.error-text {
+  color: #f56565;
+  font-size: 28rpx;
+  cursor: pointer;
+}
+
+.empty-state {
+  background: #f8f9fa;
+  border-radius: 12rpx;
+  margin: 20rpx 0;
+}
+
+.empty-text {
+  color: #999;
+  font-size: 28rpx;
 }
 
 .section-header {

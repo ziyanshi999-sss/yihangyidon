@@ -1,6 +1,6 @@
 /**
  * 财富管理API服务
- * 从user.json中读取财富相关数据
+ * 从数据连接器中读取财富相关数据
  */
 
 import { getUsersData, updateUser } from '@/data/users.js'

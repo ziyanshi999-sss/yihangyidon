@@ -120,6 +120,17 @@
             </view>
             <text class="arrow">></text>
           </view>
+          <view class="menu-item theme-switch-item" @click="toggleTheme">
+            <view class="menu-left">
+              <text class="menu-icon">{{ currentTheme === 'dark' ? '🌙' : '☀️' }}</text>
+              <text class="menu-text">主题切换</text>
+            </view>
+            <view class="theme-switch">
+              <view class="theme-switch-track" :class="{ 'active': currentTheme === 'dark' }">
+                <view class="theme-switch-thumb"></view>
+              </view>
+            </view>
+          </view>
           <view class="menu-item ai-wealth-item" @click="goToAIWealthManager">
             <view class="menu-left">
               <text class="menu-icon ai-icon">🤖</text>
@@ -180,6 +191,8 @@ import {
 } from "@/utils/auth.js";
 import ServiceModal from "@/components/common/ServiceModal.vue";
 import unifiedDataManager from "@/utils/unified-data-manager.js";
+import themeManager from "@/utils/theme.js";
+import { useAppStore } from "@/stores/app.js";
 
 export default {
   components: {
@@ -189,6 +202,7 @@ export default {
     return {
       userInfo: null,
       showServiceModal: false,
+      currentTheme: 'light',
     };
   },
   onShow() {
@@ -223,6 +237,7 @@ export default {
     // 组件挂载完成
     this.checkLoginStatus();
     this.initDataSync();
+    this.initTheme();
   },
 
   onShow() {
@@ -252,7 +267,7 @@ export default {
           console.log('用户页面加载用户数据:', currentUser.username)
         } else {
           // 如果统一数据管理器没有数据，尝试从auth.js获取
-          const userInfo = getUserInfo()
+          const userInfo = await getUserInfo()
           if (userInfo) {
             this.userInfo = userInfo
             console.log('用户页面从auth.js加载用户数据:', userInfo.username)
@@ -263,7 +278,7 @@ export default {
       } catch (error) {
         console.error('用户页面检查登录状态失败:', error)
         // 出错时尝试从auth.js获取
-        const userInfo = getUserInfo()
+        const userInfo = await getUserInfo()
         if (userInfo) {
           this.userInfo = userInfo
         } else {
@@ -318,7 +333,7 @@ export default {
     },
     goToTransactions() {
       uni.navigateTo({
-        url: '/pages/balance/balance'
+        url: '/pages/transaction/transaction'
       })
     },
     goToSecurity() {
@@ -376,7 +391,7 @@ export default {
     },
     goToTransactions() {
       uni.navigateTo({
-        url: "/pages/balance/balance",
+        url: "/pages/transaction/transaction",
       });
     },
     goToSecurity() {
@@ -438,7 +453,7 @@ export default {
     },
 
     // 显示信用卡信息
-    showCreditCards() {
+    async showCreditCards() {
       if (!this.userInfo) {
         uni.showToast({
           title: "请先登录",
@@ -455,7 +470,7 @@ export default {
         // 如果本地没有数据，尝试从导入的数据获取
         if (users.length === 0) {
           // 动态导入用户数据
-          import("@/data/users.js")
+          await import("@/data/users.js")
             .then((module) => {
               const importedUsers = module.users || module.getAllUsers();
               this.displayCreditCards(importedUsers);
@@ -578,6 +593,48 @@ export default {
           });
         },
       });
+    },
+
+    // 初始化主题
+    initTheme() {
+      try {
+        this.currentTheme = themeManager.getCurrentTheme();
+        console.log('个人中心初始化主题:', this.currentTheme);
+      } catch (error) {
+        console.error('初始化主题失败:', error);
+      }
+    },
+
+    // 切换主题
+    toggleTheme() {
+      try {
+        const newTheme = this.currentTheme === 'light' ? 'dark' : 'light';
+        
+        // 使用主题管理器切换主题
+        themeManager.switchTheme(newTheme);
+        
+        // 更新当前主题状态
+        this.currentTheme = newTheme;
+        
+        // 使用应用状态管理更新主题
+        const appStore = useAppStore();
+        appStore.actions.setTheme(newTheme);
+        
+        // 显示切换成功提示
+        uni.showToast({
+          title: `已切换到${newTheme === 'dark' ? '黑夜' : '白天'}主题`,
+          icon: 'success',
+          duration: 1500
+        });
+        
+        console.log('主题已切换:', newTheme);
+      } catch (error) {
+        console.error('切换主题失败:', error);
+        uni.showToast({
+          title: '切换主题失败',
+          icon: 'none'
+        });
+      }
     }
   },
 };
@@ -586,8 +643,9 @@ export default {
 <style scoped>
 .user-page {
   min-height: 100vh;
-  background: var(--bg-color, #f5f5f5);
+  background: var(--theme-background, #f5f5f5);
   position: relative;
+  transition: background-color 0.3s ease;
 }
 
 /* 顶部背景 */
@@ -607,10 +665,11 @@ export default {
   position: relative;
   z-index: 2;
   margin: 40rpx 30rpx 0;
-  background: var(--card-bg, #ffffff);
+  background: var(--theme-card-background, #ffffff);
   border-radius: 20rpx;
   padding: 40rpx;
-  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8rpx 32rpx var(--theme-shadow-light, rgba(0, 0, 0, 0.1));
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .user-info {
@@ -678,8 +737,9 @@ export default {
 .username {
   font-size: 36rpx;
   font-weight: bold;
-  color: var(--text-color, #333);
+  color: var(--theme-text-primary, #333);
   margin-bottom: 10rpx;
+  transition: color 0.3s ease;
 }
 
 .user-level {
@@ -697,9 +757,10 @@ export default {
 
 .account-label {
   font-size: 24rpx;
-  color: var(--text-color, #666);
+  color: var(--theme-text-secondary, #666);
   display: block;
   margin-bottom: 10rpx;
+  transition: color 0.3s ease;
 }
 
 .account-balance {
@@ -713,26 +774,29 @@ export default {
   position: relative;
   z-index: 2;
   margin: 40rpx 30rpx 0;
-  background: var(--card-bg, #ffffff);
+  background: var(--theme-card-background, #ffffff);
   border-radius: 20rpx;
   padding: 60rpx 40rpx;
-  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8rpx 32rpx var(--theme-shadow-light, rgba(0, 0, 0, 0.1));
   text-align: center;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .login-title {
   font-size: 36rpx;
   font-weight: bold;
-  color: var(--text-color, #333);
+  color: var(--theme-text-primary, #333);
   display: block;
   margin-bottom: 20rpx;
+  transition: color 0.3s ease;
 }
 
 .login-subtitle {
   font-size: 28rpx;
-  color: var(--text-color, #666);
+  color: var(--theme-text-secondary, #666);
   display: block;
   margin-bottom: 40rpx;
+  transition: color 0.3s ease;
 }
 
 .login-btn {
@@ -750,10 +814,11 @@ export default {
   position: relative;
   z-index: 2;
   margin: 30rpx;
-  background: var(--card-bg, #ffffff);
+  background: var(--theme-card-background, #ffffff);
   border-radius: 20rpx;
   padding: 40rpx;
-  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4rpx 16rpx var(--theme-shadow-light, rgba(0, 0, 0, 0.08));
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .function-grid {
@@ -791,8 +856,9 @@ export default {
 
 .function-text {
   font-size: 24rpx;
-  color: var(--text-color, #333);
+  color: var(--theme-text-primary, #333);
   font-weight: 500;
+  transition: color 0.3s ease;
 }
 
 /* 功能菜单 */
@@ -803,19 +869,21 @@ export default {
 }
 
 .menu-section {
-  background: var(--card-bg, #ffffff);
+  background: var(--theme-card-background, #ffffff);
   border-radius: 20rpx;
   margin-bottom: 30rpx;
   overflow: hidden;
-  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4rpx 16rpx var(--theme-shadow-light, rgba(0, 0, 0, 0.08));
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .section-title {
   font-size: 32rpx;
   font-weight: bold;
-  color: var(--text-color, #333);
+  color: var(--theme-text-primary, #333);
   padding: 30rpx 40rpx 20rpx;
-  border-bottom: 1rpx solid var(--border-color, #f0f0f0);
+  border-bottom: 1rpx solid var(--theme-border, #f0f0f0);
+  transition: color 0.3s ease, border-color 0.3s ease;
 }
 
 .menu-list {
@@ -827,7 +895,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 30rpx 0;
-  border-bottom: 1rpx solid var(--border-color, #f0f0f0);
+  border-bottom: 1rpx solid var(--theme-border, #f0f0f0);
   transition: all 0.3s ease;
 }
 
@@ -853,8 +921,9 @@ export default {
 
 .menu-text {
   font-size: 30rpx;
-  color: var(--text-color, #333);
+  color: var(--theme-text-primary, #333);
   font-weight: 500;
+  transition: color 0.3s ease;
 }
 
 /* AI财富管家特殊样式 */
@@ -950,7 +1019,8 @@ export default {
 
 .arrow {
   font-size: 28rpx;
-  color: var(--text-color, #999);
+  color: var(--theme-text-secondary, #999);
+  transition: color 0.3s ease;
 }
 
 /* 退出登录 */
@@ -973,5 +1043,64 @@ export default {
 .logout-btn:active {
   transform: scale(0.98);
   box-shadow: 0 2rpx 8rpx rgba(244, 67, 54, 0.3);
+}
+
+/* 主题切换样式 */
+.theme-switch-item {
+  position: relative;
+}
+
+.theme-switch {
+  display: flex;
+  align-items: center;
+  margin-right: 20rpx;
+}
+
+.theme-switch-track {
+  width: 100rpx;
+  height: 50rpx;
+  background: #e0e0e0;
+  border-radius: 25rpx;
+  position: relative;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.theme-switch-track.active {
+  background: #4caf50;
+}
+
+.theme-switch-thumb {
+  width: 44rpx;
+  height: 44rpx;
+  background: #ffffff;
+  border-radius: 50%;
+  position: absolute;
+  top: 3rpx;
+  left: 3rpx;
+  transition: all 0.3s ease;
+  box-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.2);
+}
+
+.theme-switch-track.active .theme-switch-thumb {
+  transform: translateX(50rpx);
+}
+
+/* 主题切换动画效果 */
+.theme-switch-item:active .theme-switch-track {
+  transform: scale(0.95);
+}
+
+/* 暗色主题下的主题切换样式 */
+.dark .theme-switch-track {
+  background: #333333;
+}
+
+.dark .theme-switch-track.active {
+  background: #4caf50;
+}
+
+.dark .theme-switch-thumb {
+  background: #ffffff;
 }
 </style>

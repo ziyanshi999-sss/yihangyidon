@@ -112,8 +112,8 @@ export default {
       uni.navigateBack()
     },
     
-    loadUserInfo() {
-      this.userInfo = getUserInfo()
+    async loadUserInfo() {
+      this.userInfo = await getUserInfo()
     },
     
     checkPasswordStrength() {
@@ -242,14 +242,12 @@ export default {
     
     async updateLocalDatabase(userInfo) {
       try {
-        // 从 db/user.json 文件读取用户数据
-        const response = await uni.request({
-          url: '/db/user.json',
-          method: 'GET'
-        })
+        // 从数据连接器获取用户数据
+        const dataConnector = await import('../../../db/data-connector.js')
+        await dataConnector.default.init()
+        const users = await dataConnector.default.getUsers()
         
-        if (response.data && Array.isArray(response.data)) {
-          const users = response.data
+        if (users && Array.isArray(users)) {
           const userIndex = users.findIndex(user => user.id === userInfo.id)
           if (userIndex !== -1) {
             // 更新用户信息

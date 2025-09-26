@@ -1,6 +1,6 @@
 /**
  * 用户数据加载器
- * 从 user.json 文件加载真实的用户数据
+ * 从数据连接器加载真实的用户数据
  */
 
 class UserDataLoader {
@@ -14,9 +14,21 @@ class UserDataLoader {
    */
   async loadAllUsers() {
     try {
-      // 尝试从user.json文件加载真实数据
-      console.log('尝试从user.json加载用户数据')
+      // 首先检查本地存储是否有更新的数据
+      const localUserData = uni.getStorageSync('userData')
+      if (localUserData && localUserData.length > 0) {
+        console.log('从本地存储加载用户数据')
+        this.userData = localUserData
+        return this.userData
+      }
+      
+      // 如果本地没有数据，从数据连接器加载
+      console.log('从数据连接器加载用户数据')
       this.userData = await this.getMockUserData()
+      
+      // 保存到本地存储
+      uni.setStorageSync('userData', this.userData)
+      
       return this.userData
     } catch (error) {
       console.error('加载用户数据失败:', error)
@@ -234,6 +246,11 @@ class UserDataLoader {
       // 保存到本地存储
       uni.setStorageSync('userData', this.userData)
       
+      // 同时更新用户store中的数据
+      uni.setStorageSync('userInfo', this.userData[userIndex])
+      
+      console.log('✅ 用户数据已更新并保存到本地存储:', userId)
+      
       return this.userData[userIndex]
     } catch (error) {
       console.error('更新用户数据失败:', error)
@@ -331,14 +348,13 @@ class UserDataLoader {
    */
   async getMockUserData() {
     try {
-      // 尝试从user.json文件加载真实数据
-      const response = await fetch('/db/user.json')
-      if (response.ok) {
-        const userData = await response.json()
-        return userData
-      }
+      // 尝试从数据连接器加载真实数据
+      const dataConnector = await import('../../db/data-connector.js')
+      await dataConnector.default.init()
+      const userData = await dataConnector.default.getUsers()
+      return userData
     } catch (error) {
-      console.error('加载user.json失败，使用默认数据:', error)
+      console.error('加载数据连接器失败，使用默认数据:', error)
     }
     
     // 如果加载失败，返回默认数据

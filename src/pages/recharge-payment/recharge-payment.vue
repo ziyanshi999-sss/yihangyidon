@@ -551,7 +551,61 @@ export default {
     },
 
     // 更新用户余额
-    updateUserBalance() {
+    async updateUserBalance() {
+      try {
+        // 使用新的交易记录API
+        const { addTransactionRecord } = await import('@/api/transaction.js')
+        
+        // 构建交易记录
+        const transaction = {
+          type: "expense",
+          category: this.getTransactionCategory(),
+          amount: this.paymentInfo.amount,
+          description: this.getTransactionDescription(),
+          source: this.getTransactionSource(),
+          reference: `${this.paymentType.toUpperCase()}${Date.now()}`,
+          status: "completed"
+        }
+        
+        // 添加交易记录（会自动更新用户余额）
+        const newTransaction = await addTransactionRecord(transaction)
+        console.log('✅ 交易记录添加成功:', newTransaction)
+        
+        // 更新本地余额显示
+        this.actualBalance -= this.paymentInfo.amount;
+        
+        // 更新银行卡余额（如果使用银行卡支付）
+        if (this.bankAccount) {
+          const users = uni.getStorageSync('users') || [];
+          const currentUserIndex = users.findIndex(user => user.isLoggedIn);
+          
+          if (currentUserIndex !== -1) {
+            const currentUser = users[currentUserIndex];
+            const bankAccountIndex = currentUser.bankAccounts.findIndex(account => 
+              account.accountNumber === this.bankAccount.accountNumber
+            );
+            if (bankAccountIndex !== -1) {
+              currentUser.bankAccounts[bankAccountIndex].balance -= this.paymentInfo.amount;
+              users[currentUserIndex] = currentUser;
+              uni.setStorageSync('users', users);
+            }
+          }
+        }
+        
+        console.log('✅ 用户余额更新成功:', {
+          paymentAmount: this.paymentInfo.amount,
+          transactionId: newTransaction.id
+        });
+        
+      } catch (error) {
+        console.error('❌ 更新用户余额失败:', error);
+        // 如果API调用失败，回退到原来的方法
+        this.fallbackUpdateUserBalance();
+      }
+    },
+
+    // 回退方法：直接更新本地存储
+    fallbackUpdateUserBalance() {
       try {
         const users = uni.getStorageSync('users') || [];
         const currentUserIndex = users.findIndex(user => user.isLoggedIn);
@@ -575,17 +629,21 @@ export default {
           // 更新本地余额显示
           this.actualBalance -= this.paymentInfo.amount;
           
-          // 添加交易记录
+          // 添加交易记录（使用新格式）
           const transactionRecord = {
-            id: Date.now(),
+            id: `tx_${Date.now()}`,
             type: "expense",
+            category: this.getTransactionCategory(),
             amount: this.paymentInfo.amount,
-            description: this.paymentType === "water" ? "水费缴费" : "手机充值",
+            description: this.getTransactionDescription(),
             balance: currentUser.balance,
             timestamp: new Date().toISOString(),
-            icon: this.paymentType === "water" ? "💧" : "📱",
-            title: this.paymentType === "water" ? "水费缴费" : "手机充值",
-            time: new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })
+            icon: this.getTransactionIcon(),
+            title: this.getTransactionDescription(),
+            time: new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' }),
+            status: "completed",
+            source: this.getTransactionSource(),
+            reference: `${this.paymentType.toUpperCase()}${Date.now()}`
           };
           
           if (!currentUser.transactionRecords) {
@@ -602,20 +660,68 @@ export default {
           uni.setStorageSync('userInfo', currentUser);
           uni.setStorageSync('currentUser', currentUser);
           
-          console.log('用户余额更新成功:', {
+          console.log('✅ 回退方法：用户余额更新成功:', {
             newBalance: currentUser.balance,
             paymentAmount: this.paymentInfo.amount
           });
         }
       } catch (error) {
-        console.error('更新用户余额失败:', error);
+        console.error('❌ 回退方法更新用户余额失败:', error);
       }
+    },
+
+    // 获取交易分类
+    getTransactionCategory() {
+      const categoryMap = {
+        'water': 'utility',
+        'electric': 'utility', 
+        'gas': 'utility',
+        'broadband': 'utility',
+        'recharge': 'recharge'
+      }
+      return categoryMap[this.paymentType] || 'other'
+    },
+
+    // 获取交易描述
+    getTransactionDescription() {
+      const descriptionMap = {
+        'water': '水费缴费',
+        'electric': '电费缴费',
+        'gas': '燃气费缴费', 
+        'broadband': '宽带费缴费',
+        'recharge': '手机充值'
+      }
+      return descriptionMap[this.paymentType] || '生活缴费'
+    },
+
+    // 获取交易来源
+    getTransactionSource() {
+      const sourceMap = {
+        'water': '保定市自来水公司',
+        'electric': '国家电网',
+        'gas': '华润燃气',
+        'broadband': '中国电信',
+        'recharge': '手机运营商'
+      }
+      return sourceMap[this.paymentType] || '生活服务商'
+    },
+
+    // 获取交易图标
+    getTransactionIcon() {
+      const iconMap = {
+        'water': '💧',
+        'electric': '⚡',
+        'gas': '🔥',
+        'broadband': '📶',
+        'recharge': '📱'
+      }
+      return iconMap[this.paymentType] || '💳'
     },
 
     // 处理支付成功后的跳转
     handlePaymentSuccess() {
-      if (this.paymentType === "water") {
-        // 水费支付成功后跳转到生活页面
+      if (['water', 'electric', 'gas', 'broadband'].includes(this.paymentType)) {
+        // 生活缴费支付成功后跳转到生活页面
         uni.reLaunch({
           url: "/pages/life/life",
         });

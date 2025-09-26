@@ -19,7 +19,7 @@ export function verifyPaymentPassword(password) {
       }
       
       // 获取用户信息
-      const userInfo = getUserInfo()
+      const userInfo = await getUserInfo()
       if (!userInfo) {
         console.error('用户未登录')
         reject(new Error('用户未登录'))
@@ -102,7 +102,7 @@ export function executeCreditCardRepayment(params) {
       }
       
       // 获取用户信息
-      const userInfo = getUserInfo()
+      const userInfo = await getUserInfo()
       if (!userInfo) {
         resolve({
           success: false,
@@ -249,8 +249,19 @@ function addTransactionRecord(userInfo, amount, cardNumber, newBalance) {
       userInfo.transactionRecords = userInfo.transactionRecords.slice(0, 100)
     }
     
+    // 更新本地存储
     uni.setStorageSync('userInfo', userInfo)
     uni.setStorageSync('currentUser', userInfo)
+    
+    // 同步更新到userData
+    const userData = uni.getStorageSync('userData') || []
+    const userIndex = userData.findIndex(u => u.id === userInfo.id)
+    if (userIndex !== -1) {
+      userData[userIndex].transactionRecords = userInfo.transactionRecords
+      userData[userIndex].lastUpdateTime = new Date().toISOString()
+      uni.setStorageSync('userData', userData)
+      console.log('✅ 交易记录已同步到userData')
+    }
     
     console.log('✅ 交易记录添加成功:', newRecord)
     
@@ -266,7 +277,7 @@ function addTransactionRecord(userInfo, amount, cardNumber, newBalance) {
 export function getUserPaymentInfo() {
   return new Promise((resolve, reject) => {
     try {
-      const userInfo = getUserInfo()
+      const userInfo = await getUserInfo()
       if (!userInfo) {
         reject(new Error('用户未登录'))
         return

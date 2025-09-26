@@ -1,12 +1,12 @@
-// 从JSON文件加载用户数据
-import userDataJson from '../../db/user.json'
+// 使用新的数据连接器
+import dataConnector from '../../db/data-connector.js'
 import { getStorage, setStorage } from '@/utils/storage'
 
 // 用户数据存储
 let users = []
 
 // 初始化用户数据
-function initUsers() {
+async function initUsers() {
   try {
     // 首先尝试从本地存储获取数据
     const storedUsers = uni.getStorageSync('users')
@@ -16,17 +16,18 @@ function initUsers() {
       users = storedUsers
       console.log('从本地存储加载用户数据:', users.length, '个用户')
     } else {
-      // 如果本地存储没有数据，使用JSON文件数据
-      users = userDataJson || []
+      // 如果本地存储没有数据，从数据连接器获取数据
+      await dataConnector.init()
+      users = await dataConnector.getUsers()
       // 保存到本地存储
       saveUsersToStorage()
-      console.log('从JSON文件加载用户数据:', users.length, '个用户')
+      console.log('从数据连接器加载用户数据:', users.length, '个用户')
     }
     
     console.log('用户数据详情:', users.map(u => ({ id: u.id, username: u.username, phone: u.phone, balance: u.balance })))
   } catch (error) {
     console.error('初始化用户数据失败:', error)
-    users = userDataJson || []
+    users = []
   }
 }
 
@@ -41,7 +42,9 @@ function saveUsersToStorage() {
 }
 
 // 初始化用户数据
-initUsers()
+initUsers().catch(error => {
+  console.error('初始化用户数据失败:', error)
+})
 
 // 模拟验证码存储
 const verificationCodes = new Map()
@@ -195,6 +198,20 @@ export function updateUser(userId, updateData) {
   if (userIndex !== -1) {
     users[userIndex] = { ...users[userIndex], ...updateData, lastUpdateTime: new Date().toISOString() }
     saveUsersToStorage()
+    
+    // 同步更新到userData存储
+    const userData = uni.getStorageSync('userData') || []
+    const userDataIndex = userData.findIndex(u => u.id === userId)
+    if (userDataIndex !== -1) {
+      userData[userDataIndex] = { ...userData[userDataIndex], ...updateData, lastUpdateTime: new Date().toISOString() }
+      uni.setStorageSync('userData', userData)
+      console.log('✅ 用户数据已同步到userData存储')
+    }
+    
+    // 同步更新到userInfo存储
+    uni.setStorageSync('userInfo', users[userIndex])
+    uni.setStorageSync('currentUser', users[userIndex])
+    
     return users[userIndex]
   }
   return null
@@ -209,21 +226,27 @@ export function getUsersData() {
 export { users }
 
 // 重置用户数据（用于测试）
-export function resetUsersData() {
-  users = userDataJson || []
-  saveUsersToStorage()
-  console.log('用户数据已重置')
+export async function resetUsersData() {
+  try {
+    await dataConnector.init()
+    users = await dataConnector.getUsers()
+    saveUsersToStorage()
+    console.log('用户数据已重置')
+  } catch (error) {
+    console.error('重置用户数据失败:', error)
+    users = []
+  }
 }
 
 // 清除本地存储并重新加载数据
-export function clearStorageAndReload() {
+export async function clearStorageAndReload() {
   try {
     // 清除本地存储
     uni.removeStorageSync('users')
     console.log('已清除本地存储')
     
     // 重新初始化用户数据
-    initUsers()
+    await initUsers()
     console.log('用户数据已重新加载')
   } catch (error) {
     console.error('清除存储并重新加载失败:', error)

@@ -90,6 +90,20 @@
 			}
 		},
 		{
+			"path": "pages/water-history/water-history",
+			"style": {
+				"navigationBarTitleText": "水费记录",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/transaction/transaction",
+			"style": {
+				"navigationBarTitleText": "交易记录",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
 			"path": "pages/electric/electric",
 			"style": {
 				"navigationBarTitleText": "电费",
@@ -223,6 +237,20 @@
 			}
 		},
 		{
+			"path": "pages/loan/loan-application",
+			"style": {
+				"navigationBarTitleText": "贷款申请",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/loan/loan-result",
+			"style": {
+				"navigationBarTitleText": "申请结果",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
 			"path": "pages/credit-cards/credit-cards",
 			"style": {
 				"navigationBarTitleText": "我的信用卡",
@@ -263,6 +291,22 @@
 			}
 		},
 		{
+			"path": "pages/user/enhanced-screen-protection",
+			"style": {
+				"navigationBarTitleText": "隐私保护设置",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/user/security-logs",
+			"style": {
+				"navigationBarTitleText": "安全日志",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+			}
+		},
+		{
 			"path": "pages/test/mobile-protection-debug",
 			"style": {
 				"navigationBarTitleText": "防录屏调试",
@@ -277,9 +321,16 @@
 			}
 		},
 		{
-			"path": "pages/wealth/deposit",
+			"path": "pages/wealth/branch",
 			"style": {
-				"navigationBarTitleText": "存款产品",
+				"navigationBarTitleText": "我的网点",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/map/map",
+			"style": {
+				"navigationBarTitleText": "我的地图",
 				"enablePullDownRefresh": false
 			}
 		},
@@ -380,6 +431,20 @@
 				"navigationBarTitleText": "编辑目标",
 				"enablePullDownRefresh": false,
 				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/test/data-persistence-test",
+			"style": {
+				"navigationBarTitleText": "数据持久化测试",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/test/transaction-test",
+			"style": {
+				"navigationBarTitleText": "交易记录持久化测试",
+				"enablePullDownRefresh": false
 			}
 		}
 	],

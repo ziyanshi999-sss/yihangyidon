@@ -4,6 +4,8 @@ import { initWealthDataSync } from "@/api/wealth.js";
 import { checkAndFixUserDataConsistency } from "@/utils/data-consistency.js";
 import dataStorageManager from '@/utils/data-storage-manager.js'
 import dataSync from '@/utils/data-sync.js'
+import dataSyncFix from '@/utils/data-sync-fix.js'
+import themeManager from '@/utils/theme.js'
 
 /**
  * 中国农业银行应用主入口
@@ -42,6 +44,12 @@ export default {
     
     // 初始化所有数据到本地存储
     this.initAllDataToStorage()
+    
+    // 初始化数据同步修复
+    this.initDataSyncFix()
+    
+    // 初始化主题
+    this.initTheme()
   },
 
   onShow(options) {
@@ -103,6 +111,25 @@ export default {
         }
       } catch (error) {
         console.error('初始化数据到本地存储失败:', error)
+      }
+    },
+
+    /**
+     * 初始化数据同步修复
+     */
+    async initDataSyncFix() {
+      try {
+        console.log('开始初始化数据同步修复...')
+        
+        // 初始化数据同步修复工具
+        await dataSyncFix.init()
+        
+        // 确保数据一致性
+        await dataSyncFix.ensureDataConsistency()
+        
+        console.log('✅ 数据同步修复初始化完成')
+      } catch (error) {
+        console.error('❌ 数据同步修复初始化失败:', error)
       }
     },
 
@@ -578,6 +605,29 @@ export default {
     },
 
     /**
+     * 初始化主题
+     */
+    initTheme() {
+      try {
+        console.log('🎨 初始化主题系统...');
+        
+        // 初始化主题管理器
+        themeManager.init();
+        
+        // 获取当前主题
+        const currentTheme = themeManager.getCurrentTheme();
+        console.log('当前主题:', currentTheme);
+        
+        // 应用主题
+        themeManager.applyTheme(currentTheme);
+        
+        console.log('✅ 主题系统初始化完成');
+      } catch (error) {
+        console.error('❌ 主题系统初始化失败:', error);
+      }
+    },
+
+    /**
      * 错误上报
      */
     reportError(error) {
@@ -599,6 +649,9 @@ export default {
 </script>
 
 <style>
+/* 引入主题样式 */
+@import '@/styles/theme.css';
+
 /* 重置默认样式（WXSS兼容写法） */
 page,
 view {
@@ -606,12 +659,13 @@ view {
 }
 
 page {
-  background-color: #f8f9fa;
+  background-color: var(--theme-background, #f8f9fa);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
     "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial,
     sans-serif;
   line-height: 1.6;
-  color: #333;
+  color: var(--theme-text-primary, #333);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* 通用容器样式 */
@@ -623,11 +677,12 @@ page {
 
 /* 卡片样式 */
 .card {
-  background: #fff;
+  background: var(--theme-card-background, #fff);
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px var(--theme-shadow-light, rgba(0, 0, 0, 0.1));
   padding: 20px;
   margin-bottom: 16px;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 /* 按钮样式 */

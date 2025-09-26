@@ -1,0 +1,836 @@
+{
+  "users": [
+    {
+      "id": "u001",
+      "username": "李华",
+      "phone": "13888888888",
+      "password": "123456",
+      "transactionPassword": "888888",
+      "balance": 280000.00,
+      "nickname": "华华",
+      "email": "lihua@example.com",
+      "idCard": "110101199503151234",
+      "avatar": "/static/wealth/useravatar.jpg",
+      "status": "active",
+      "createTime": "2024-01-10T08:30:00.000Z",
+      "lastLoginTime": "2024-01-20T16:45:00.000Z",
+      "realName": "李华",
+      "gender": "女",
+      "birthDate": "1995-03-15",
+      "address": "北京市朝阳区建国门外大街1号",
+      "avatarUpdateTime": "2024-01-15T14:20:00.000Z",
+      "lastUpdateTime": "2024-01-15T14:20:00.000Z",
+      "isLoggedIn": true,
+      "securitySettings": {
+        "biometricEnabled": true,
+        "smsVerificationEnabled": true,
+        "accountLockEnabled": true,
+        "twoFactorEnabled": true,
+        "securityNotificationsEnabled": true,
+        "transactionLimit": 100000,
+        "passwordUpdateTime": "2024-01-10T00:00:00.000Z",
+        "transactionPasswordUpdateTime": "2024-01-10T00:00:00.000Z",
+        "securityQuestionsSet": true,
+        "emergencyContactSet": true,
+        "loginDevices": [
+          {
+            "id": 1,
+            "name": "iPhone 15 Pro",
+            "lastLogin": "2024-01-15T14:20:00.000Z",
+            "location": "上海市",
+            "status": "active",
+            "ip": "192.168.1.200",
+            "deviceType": "mobile"
+          }
+        ],
+        "securityEvents": [
+          {
+            "id": 1,
+            "type": "login",
+            "description": "账户登录",
+            "timestamp": "2024-01-15T14:20:00.000Z",
+            "location": "上海市",
+            "ip": "192.168.1.200",
+            "status": "success"
+          }
+        ],
+        "securityQuestions": [
+          {
+            "question": "您的小学名称是什么？",
+            "answer": "实验小学"
+          }
+        ],
+        "emergencyContact": {
+          "name": "张大明",
+          "phone": "13800138000",
+          "relationship": "父亲"
+        },
+        "twoFactorSecret": "JBSWY3DPEHPK3PXP"
+      },
+      "creditCards": [
+        {
+          "id": "cc001",
+          "cardNumber": "6222 9999 9999 9999",
+          "cardType": "白金卡",
+          "cardBrand": "银联",
+          "creditLimit": 100000,
+          "availableCredit": 85000,
+          "currentBalance": 15000,
+          "minPayment": 1500,
+          "statementDate": "20",
+          "dueDate": "2024-02-10",
+          "lastStatementDate": "2024-01-20",
+          "cardStatus": "active",
+          "cardHolder": "李华",
+          "expiryDate": "2029-09-30",
+          "cvv": "456",
+          "annualFee": 500,
+          "interestRate": 0.0004,
+          "cashAdvanceLimit": 50000,
+          "rewardsPoints": 3200,
+          "cardColor": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+          "createTime": "2023-01-15T00:00:00.000Z",
+          "lastUsedTime": "2024-01-15T14:20:00.000Z",
+          "monthlySpending": 8500,
+          "transactionCount": 23,
+          "topCategory": "餐饮",
+          "securityFeatures": {
+            "chipEnabled": true,
+            "contactlessEnabled": true,
+            "onlineShoppingEnabled": true,
+            "internationalEnabled": true
+          }
+        }
+      ],
+      "transactionRecords": [
+        {
+          "id": "tx_001",
+          "type": "income",
+          "category": "salary",
+          "amount": 15000,
+          "description": "工资收入",
+          "balance": 280000,
+          "timestamp": "2024-01-15T09:00:00.000Z",
+          "icon": "💰",
+          "title": "工资收入",
+          "time": "09:00",
+          "status": "completed",
+          "source": "公司账户",
+          "reference": "SAL20240115001"
+        },
+        {
+          "id": "tx_002",
+          "type": "expense",
+          "category": "utility",
+          "amount": 500,
+          "description": "水费缴费",
+          "balance": 279500,
+          "timestamp": "2024-01-15T14:30:00.000Z",
+          "icon": "💧",
+          "title": "水费缴费",
+          "time": "14:30",
+          "status": "completed",
+          "source": "保定市自来水公司",
+          "reference": "WATER20240115001"
+        },
+        {
+          "id": "tx_003",
+          "type": "expense",
+          "category": "transfer",
+          "amount": 2000,
+          "description": "转账给朋友",
+          "balance": 277500,
+          "timestamp": "2024-01-15T16:45:00.000Z",
+          "icon": "💸",
+          "title": "转账",
+          "time": "16:45",
+          "status": "completed",
+          "source": "张三",
+          "reference": "TRF20240115001"
+        },
+        {
+          "id": "tx_004",
+          "type": "expense",
+          "category": "investment",
+          "amount": 10000,
+          "description": "购买理财产品",
+          "balance": 267500,
+          "timestamp": "2024-01-14T10:20:00.000Z",
+          "icon": "📈",
+          "title": "理财投资",
+          "time": "10:20",
+          "status": "completed",
+          "source": "稳健理财A",
+          "reference": "INV20240114001"
+        },
+        {
+          "id": "tx_005",
+          "type": "income",
+          "category": "investment",
+          "amount": 150,
+          "description": "理财收益",
+          "balance": 267650,
+          "timestamp": "2024-01-13T15:30:00.000Z",
+          "icon": "📊",
+          "title": "理财收益",
+          "time": "15:30",
+          "status": "completed",
+          "source": "稳健理财A",
+          "reference": "PROF20240113001"
+        },
+        {
+          "id": "tx_006",
+          "type": "expense",
+          "category": "shopping",
+          "amount": 320,
+          "description": "网上购物",
+          "balance": 267330,
+          "timestamp": "2024-01-12T20:15:00.000Z",
+          "icon": "🛒",
+          "title": "网上购物",
+          "time": "20:15",
+          "status": "completed",
+          "source": "淘宝网",
+          "reference": "SHOP20240112001"
+        },
+        {
+          "id": "tx_007",
+          "type": "expense",
+          "category": "food",
+          "amount": 85,
+          "description": "餐厅用餐",
+          "balance": 267245,
+          "timestamp": "2024-01-12T12:30:00.000Z",
+          "icon": "🍽️",
+          "title": "餐厅用餐",
+          "time": "12:30",
+          "status": "completed",
+          "source": "海底捞",
+          "reference": "FOOD20240112001"
+        },
+        {
+          "id": "tx_008",
+          "type": "income",
+          "category": "refund",
+          "amount": 200,
+          "description": "退款到账",
+          "balance": 267445,
+          "timestamp": "2024-01-11T11:45:00.000Z",
+          "icon": "↩️",
+          "title": "退款到账",
+          "time": "11:45",
+          "status": "completed",
+          "source": "京东商城",
+          "reference": "REF20240111001"
+        },
+        {
+          "id": "tx_009",
+          "type": "expense",
+          "category": "transport",
+          "amount": 15,
+          "description": "地铁出行",
+          "balance": 267430,
+          "timestamp": "2024-01-11T08:20:00.000Z",
+          "icon": "🚇",
+          "title": "地铁出行",
+          "time": "08:20",
+          "status": "completed",
+          "source": "保定地铁",
+          "reference": "TRANS20240111001"
+        },
+        {
+          "id": "tx_010",
+          "type": "expense",
+          "category": "utility",
+          "amount": 180,
+          "description": "电费缴费",
+          "balance": 267250,
+          "timestamp": "2024-01-10T16:00:00.000Z",
+          "icon": "⚡",
+          "title": "电费缴费",
+          "time": "16:00",
+          "status": "completed",
+          "source": "国家电网",
+          "reference": "ELEC20240110001"
+        }
+      ],
+      "wealthProducts": {
+        "deposits": {
+          "current": 80000,
+          "fixed": 100000,
+          "smart": 20000
+        },
+        "investments": [
+          {
+            "id": "inv002",
+            "name": "稳健理财B",
+            "type": "理财产品",
+            "amount": 30000,
+            "rate": 4.5,
+            "term": "180天",
+            "purchaseDate": "2024-01-05T00:00:00.000Z",
+            "maturityDate": "2024-07-05T00:00:00.000Z",
+            "status": "持有中"
+          }
+        ]
+      },
+      "investmentPortfolio": {
+        "totalValue": 50000,
+        "totalReturn": 4500,
+        "returnRate": 4.5,
+        "holdings": [
+          {
+            "id": "inv001",
+            "name": "稳健理财A",
+            "type": "理财产品",
+            "amount": 30000,
+            "rate": 3.8,
+            "term": "90天",
+            "purchaseDate": "2024-01-01T00:00:00.000Z",
+            "maturityDate": "2024-04-01T00:00:00.000Z",
+            "status": "持有中",
+            "currentValue": 30285
+          }
+        ]
+      }
+    },
+    {
+      "id": "u002",
+      "username": "李小红",
+      "phone": "13777777777", 
+      "password": "password123",
+      "transactionPassword": "789012",
+      "balance": 80000.00,
+      "nickname": "小红",
+      "email": "lixiaohong@example.com",
+      "idCard": "110101199303031789",
+      "avatar": "/static/wealth/useravatar.jpg",
+      "status": "active",
+      "createTime": "2024-01-03T16:45:00.000Z",
+      "lastLoginTime": "2024-01-14T11:10:00.000Z",
+      "realName": "李小红",
+      "gender": "女",
+      "birthDate": "1993-03-03",
+      "address": "广州市天河区珠江新城花城大道85号",
+      "avatarUpdateTime": "2024-01-14T11:10:00.000Z",
+      "lastUpdateTime": "2024-01-14T11:10:00.000Z",
+      "isLoggedIn": false,
+      "bankAccount": {
+        "accountNumber": "6228 4800 1234 5678",
+        "bankName": "中国农业银行",
+        "accountType": "储蓄卡",
+        "accountHolder": "李小红",
+        "branchName": "广州天河支行"
+      },
+      "transactionRecords": [
+        {
+          "id": 1,
+          "type": "income",
+          "amount": 12000,
+          "description": "工资收入",
+          "balance": 80000,
+          "timestamp": "2024-01-14T09:00:00.000Z",
+          "icon": "💰",
+          "title": "工资收入",
+          "time": "09:00"
+        },
+        {
+          "id": 2,
+          "type": "expense",
+          "amount": 1000,
+          "description": "生活缴费",
+          "balance": 79000,
+          "timestamp": "2024-01-11T16:45:00.000Z",
+          "icon": "🏠",
+          "title": "电费缴费",
+          "time": "16:45"
+        }
+      ]
+    },
+    {
+      "id": "u003",
+      "username": "王小明",
+      "phone": "13666666666",
+      "password": "password456",
+      "transactionPassword": "123456",
+      "balance": 150000.00,
+      "nickname": "小明",
+      "email": "wangxiaoming@example.com",
+      "idCard": "110101199203151234",
+      "avatar": "/static/wealth/useravatar.jpg",
+      "status": "active",
+      "createTime": "2024-01-05T10:20:00.000Z",
+      "lastLoginTime": "2024-01-18T14:30:00.000Z",
+      "realName": "王小明",
+      "gender": "男",
+      "birthDate": "1992-03-15",
+      "address": "深圳市南山区科技园南区深南大道10000号",
+      "avatarUpdateTime": "2024-01-18T14:30:00.000Z",
+      "lastUpdateTime": "2024-01-18T14:30:00.000Z",
+      "isLoggedIn": false,
+      "bankAccount": {
+        "accountNumber": "6228 4800 2345 6789",
+        "bankName": "中国工商银行",
+        "accountType": "储蓄卡",
+        "accountHolder": "王小明",
+        "branchName": "深圳南山支行"
+      },
+      "transactionRecords": [
+        {
+          "id": 1,
+          "type": "income",
+          "amount": 18000,
+          "description": "工资收入",
+          "balance": 150000,
+          "timestamp": "2024-01-18T09:00:00.000Z",
+          "icon": "💰",
+          "title": "工资收入",
+          "time": "09:00"
+        }
+      ]
+    },
+    {
+      "id": "u004",
+      "username": "张美丽",
+      "phone": "13555555555",
+      "password": "password789",
+      "transactionPassword": "654321",
+      "balance": 95000.00,
+      "nickname": "美丽",
+      "email": "zhangmeili@example.com",
+      "idCard": "110101199103151234",
+      "avatar": "/static/wealth/useravatar.jpg",
+      "status": "active",
+      "createTime": "2024-01-08T15:45:00.000Z",
+      "lastLoginTime": "2024-01-19T11:15:00.000Z",
+      "realName": "张美丽",
+      "gender": "女",
+      "birthDate": "1991-03-15",
+      "address": "杭州市西湖区文三路259号",
+      "avatarUpdateTime": "2024-01-19T11:15:00.000Z",
+      "lastUpdateTime": "2024-01-19T11:15:00.000Z",
+      "isLoggedIn": false,
+      "bankAccount": {
+        "accountNumber": "6228 4800 3456 7890",
+        "bankName": "中国建设银行",
+        "accountType": "储蓄卡",
+        "accountHolder": "张美丽",
+        "branchName": "杭州西湖支行"
+      },
+      "transactionRecords": [
+        {
+          "id": 1,
+          "type": "income",
+          "amount": 13000,
+          "description": "工资收入",
+          "balance": 95000,
+          "timestamp": "2024-01-19T09:00:00.000Z",
+          "icon": "💰",
+          "title": "工资收入",
+          "time": "09:00"
+        }
+      ]
+    },
+    {
+      "id": "u005",
+      "username": "刘强",
+      "phone": "13444444444",
+      "password": "password000",
+      "transactionPassword": "111111",
+      "balance": 120000.00,
+      "nickname": "强哥",
+      "email": "liuqiang@example.com",
+      "idCard": "110101199003151234",
+      "avatar": "/static/wealth/useravatar.jpg",
+      "status": "active",
+      "createTime": "2024-01-12T09:30:00.000Z",
+      "lastLoginTime": "2024-01-20T16:20:00.000Z",
+      "realName": "刘强",
+      "gender": "男",
+      "birthDate": "1990-03-15",
+      "address": "成都市锦江区春熙路123号",
+      "avatarUpdateTime": "2024-01-20T16:20:00.000Z",
+      "lastUpdateTime": "2024-01-20T16:20:00.000Z",
+      "isLoggedIn": false,
+      "bankAccount": {
+        "accountNumber": "6228 4800 4567 8901",
+        "bankName": "中国银行",
+        "accountType": "储蓄卡",
+        "accountHolder": "刘强",
+        "branchName": "成都锦江支行"
+      },
+      "transactionRecords": [
+        {
+          "id": 1,
+          "type": "income",
+          "amount": 16000,
+          "description": "工资收入",
+          "balance": 120000,
+          "timestamp": "2024-01-20T09:00:00.000Z",
+          "icon": "💰",
+          "title": "工资收入",
+          "time": "09:00"
+        }
+      ]
+    }
+  ],
+  "systemConfig": {
+    "version": "1.0.0",
+    "lastUpdate": "2024-01-20T00:00:00.000Z",
+    "features": {
+      "biometricLogin": true,
+      "aiChat": true,
+      "wealthManagement": true,
+      "lifeServices": true
+    }
+  },
+  "bankInfo": {
+    "name": "中国农业银行",
+    "logo": "/static/logo.png",
+    "hotline": "95599",
+    "website": "www.abchina.com",
+    "branches": [
+      {
+        "id": "br001",
+        "name": "上海陆家嘴支行",
+        "address": "上海市浦东新区陆家嘴环路1000号",
+        "phone": "021-12345678",
+        "hours": "09:00-17:00"
+      }
+    ]
+  },
+  "lifeServices": {
+    "quickServices": [
+      {
+        "id": "qs001",
+        "name": "手机充值",
+        "icon": "📱",
+        "url": "/pages/recharge/recharge",
+        "bgColor": "#FF9500",
+        "badge": "优惠"
+      },
+      {
+        "id": "qs002",
+        "name": "生活缴费",
+        "icon": "💧",
+        "url": "/pages/payment/payment",
+        "bgColor": "#00D4AA",
+        "badge": "热门"
+      },
+      {
+        "id": "qs003",
+        "name": "政务民生",
+        "icon": "🏛️",
+        "url": "/pages/government/government",
+        "bgColor": "#34C759"
+      },
+      {
+        "id": "qs004",
+        "name": "小豆乐园",
+        "icon": "🎮",
+        "url": "/pages/games/games",
+        "bgColor": "#FF6B35",
+        "badge": "新"
+      }
+    ],
+    "allServices": [
+      {
+        "id": "as001",
+        "name": "校园",
+        "icon": "🏫",
+        "url": "/pages/campus/campus",
+        "bgColor": "#5AC8FA",
+        "status": "在线"
+      },
+      {
+        "id": "as002",
+        "name": "食堂",
+        "icon": "⚡",
+        "url": "/pages/canteen/canteen",
+        "bgColor": "#30D158"
+      },
+      {
+        "id": "as003",
+        "name": "党费",
+        "icon": "🎉",
+        "url": "/pages/party/party",
+        "bgColor": "#FF3B30"
+      },
+      {
+        "id": "as004",
+        "name": "养老服务",
+        "icon": "👨‍⚕️",
+        "url": "/pages/elderly/elderly",
+        "bgColor": "#007AFF",
+        "status": "热门"
+      }
+    ],
+    "paymentCategories": [
+      {
+        "id": "utilities",
+        "name": "水电燃气",
+        "icon": "⚡",
+        "color": "#FF6B35",
+        "services": [
+          {
+            "id": "electricity",
+            "name": "电费",
+            "icon": "⚡",
+            "providers": ["国家电网", "南方电网", "地方电网"],
+            "defaultProvider": "国家电网"
+          },
+          {
+            "id": "water",
+            "name": "水费",
+            "icon": "💧",
+            "providers": ["保定市自来水公司", "保定市北部水务公司", "上海城投水务集团", "广州市自来水公司", "深圳市水务集团"],
+            "defaultProvider": "保定市自来水公司",
+            "paymentHistory": [],
+            "bills": []
+          },
+          {
+            "id": "gas",
+            "name": "燃气费",
+            "icon": "🔥",
+            "providers": ["华润燃气", "新奥燃气", "港华燃气"],
+            "defaultProvider": "华润燃气"
+          }
+        ]
+      }
+    ]
+  },
+  "wealthProducts": {
+    "depositProducts": {
+      "current": {
+        "rate": 0.35,
+        "features": ["随时存取", "灵活方便", "安全可靠"],
+        "riskWarning": "存款保险保障，风险极低"
+      },
+      "fixed": [
+        {
+          "term": "3个月",
+          "rate": 1.85,
+          "minAmount": 1000,
+          "features": ["保本保息", "收益稳定", "期限灵活"],
+          "riskWarning": "存款保险保障，风险极低"
+        },
+        {
+          "term": "6个月",
+          "rate": 2.05,
+          "minAmount": 1000,
+          "features": ["保本保息", "收益稳定", "期限灵活"],
+          "riskWarning": "存款保险保障，风险极低"
+        },
+        {
+          "term": "1年",
+          "rate": 2.10,
+          "minAmount": 1000,
+          "features": ["保本保息", "收益稳定", "期限灵活"],
+          "riskWarning": "存款保险保障，风险极低"
+        }
+      ],
+      "smart": {
+        "rate": 2.8,
+        "features": ["智能计息", "灵活存取", "收益优化"],
+        "riskWarning": "存款保险保障，风险极低"
+      }
+    },
+    "insuranceProducts": {
+      "categories": [
+        {
+          "id": "life",
+          "name": "人寿保险",
+          "icon": "👨‍👩‍👧‍👦",
+          "color": "#FF6B35",
+          "products": [
+            {
+              "id": "life001",
+              "name": "终身寿险",
+              "type": "人寿保险",
+              "premium": 5000,
+              "coverage": 500000,
+              "term": "终身",
+              "features": ["终身保障", "现金价值", "分红收益"],
+              "riskLevel": "低风险",
+              "status": "在售"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "aiSuggestions": {
+    "highPriority": [
+      {
+        "id": "sug001",
+        "title": "优化资产配置",
+        "description": "建议将部分现金转入农银汇理平衡基金，预期年化收益6-8%",
+        "benefit": "年化收益提升2-3%",
+        "action": "立即执行",
+        "category": "资产配置"
+      },
+      {
+        "id": "sug002", 
+        "title": "增加定投金额",
+        "description": "基于您的收入增长，建议将定投金额从2000元提升至3000元",
+        "benefit": "目标达成时间提前6个月",
+        "action": "立即执行",
+        "category": "定投优化"
+      }
+    ],
+    "mediumPriority": [
+      {
+        "id": "sug003",
+        "title": "保险配置建议",
+        "description": "建议增加重疾险保额至50万元，完善家庭保障体系",
+        "benefit": "风险保障提升80%",
+        "action": "立即执行",
+        "category": "保险规划"
+      }
+    ],
+    "lowPriority": [
+      {
+        "id": "sug004",
+        "title": "外汇配置建议",
+        "description": "可考虑配置5%的美元资产，分散汇率风险",
+        "benefit": "汇率风险降低30%",
+        "action": "立即执行",
+        "category": "外汇配置"
+      }
+    ]
+  },
+  "userGoals": [
+    {
+      "id": "goal001",
+      "title": "购房首付",
+      "target": 500000,
+      "current": 350000,
+      "progress": 70,
+      "timeline": "2026年8月",
+      "icon": "🏠",
+      "color": "#4CAF50",
+      "status": "active"
+    },
+    {
+      "id": "goal002",
+      "title": "教育基金",
+      "target": 150000,
+      "current": 60000,
+      "progress": 40,
+      "timeline": "2028年6月",
+      "icon": "🎓",
+      "color": "#2196F3",
+      "status": "active"
+    },
+    {
+      "id": "goal003",
+      "title": "退休规划",
+      "target": 1000000,
+      "current": 80000,
+      "progress": 8,
+      "timeline": "2040年12月",
+      "icon": "🌴",
+      "color": "#FF9800",
+      "status": "active"
+    }
+  ],
+  "waterPaymentData": {
+    "cities": {
+      "保定市": {
+        "companies": [
+          {
+            "name": "保定市自来水公司",
+            "description": "保定市主城区供水服务",
+            "code": "baoding_water",
+            "serviceArea": "主城区、高新区",
+            "phone": "0312-1234567",
+            "address": "保定市莲池区东风路123号"
+          },
+          {
+            "name": "保定市北部水务公司",
+            "description": "保定市北部地区供水服务",
+            "code": "baoding_north_water",
+            "serviceArea": "北部地区、郊区",
+            "phone": "0312-7654321",
+            "address": "保定市竞秀区建设路456号"
+          }
+        ]
+      },
+      "上海": {
+        "companies": [
+          {
+            "name": "上海城投水务集团",
+            "description": "上海市主要供水服务商",
+            "code": "shanghai_water",
+            "serviceArea": "全市范围",
+            "phone": "021-12345678",
+            "address": "上海市黄浦区南京东路789号"
+          }
+        ]
+      },
+      "广州市": {
+        "companies": [
+          {
+            "name": "广州市自来水公司",
+            "description": "广州市主城区供水服务",
+            "code": "guangzhou_water",
+            "serviceArea": "主城区",
+            "phone": "020-12345678",
+            "address": "广州市越秀区中山路101号"
+          },
+          {
+            "name": "广州市番禺水务公司",
+            "description": "番禺区供水服务",
+            "code": "guangzhou_panyu_water",
+            "serviceArea": "番禺区",
+            "phone": "020-87654321",
+            "address": "广州市番禺区市桥街202号"
+          }
+        ]
+      }
+    },
+    "paymentHistory": [
+      {
+        "id": "water_001",
+        "userId": "u001",
+        "company": "保定市自来水公司",
+        "userNumber": "BD2024001",
+        "amount": 85.50,
+        "paymentDate": "2024-01-15T10:30:00.000Z",
+        "status": "success",
+        "billPeriod": "2024年1月",
+        "city": "保定市"
+      },
+      {
+        "id": "water_002",
+        "userId": "u001",
+        "company": "保定市自来水公司",
+        "userNumber": "BD2024001",
+        "amount": 92.30,
+        "paymentDate": "2023-12-15T14:20:00.000Z",
+        "status": "success",
+        "billPeriod": "2023年12月",
+        "city": "保定市"
+      }
+    ],
+    "bills": [
+      {
+        "id": "bill_001",
+        "userId": "u001",
+        "company": "保定市自来水公司",
+        "userNumber": "BD2024001",
+        "amount": 78.60,
+        "billPeriod": "2024年2月",
+        "dueDate": "2024-03-15T23:59:59.000Z",
+        "status": "unpaid",
+        "city": "保定市",
+        "usage": {
+          "currentReading": 1256,
+          "previousReading": 1189,
+          "usage": 67,
+          "unitPrice": 1.17
+        }
+      }
+    ]
+  }
+}

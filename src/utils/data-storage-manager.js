@@ -1,10 +1,10 @@
 /**
  * 数据本地存储管理器
- * 统一管理所有数据的本地存储，基于 user.json 文件
+ * 统一管理所有数据的本地存储，基于数据连接器
  */
 
 import { setStorage, getStorage } from './storage.js'
-import userDataJson from '../../db/user.json'
+import dataConnector from '../../db/data-connector.js'
 
 class DataStorageManager {
   constructor() {
@@ -109,8 +109,9 @@ class DataStorageManager {
    */
   async initUserData() {
     try {
-      // 直接使用 user.json 中的数据
-      const users = userDataJson
+      // 从数据连接器获取用户数据
+      await dataConnector.init()
+      const users = await dataConnector.getUsers()
       
       // 存储所有用户数据
       await setStorage(this.storageKeys.USERS, users, true)
@@ -134,7 +135,7 @@ class DataStorageManager {
    */
   async initWealthData() {
     try {
-      const users = userDataJson
+      const users = await dataConnector.getUsers()
       const wealthData = {}
       
       users.forEach(user => {
@@ -178,7 +179,7 @@ class DataStorageManager {
    */
   async initAccountData() {
     try {
-      const users = userDataJson
+      const users = await dataConnector.getUsers()
       const accountData = {}
       const balanceData = {}
       const transactionData = {}
@@ -222,7 +223,7 @@ class DataStorageManager {
    */
   async initCreditCardData() {
     try {
-      const users = userDataJson
+      const users = await dataConnector.getUsers()
       const creditCardData = {}
       const creditCardTransactions = {}
       
@@ -252,7 +253,7 @@ class DataStorageManager {
    */
   async initTransferData() {
     try {
-      const users = userDataJson
+      const users = await dataConnector.getUsers()
       const transferData = {}
       const frequentContacts = {}
       
@@ -280,7 +281,7 @@ class DataStorageManager {
    */
   async initPaymentData() {
     try {
-      const users = userDataJson
+      const users = await dataConnector.getUsers()
       const paymentData = {}
       const lifeServices = {}
       
@@ -317,7 +318,7 @@ class DataStorageManager {
    */
   async initSecurityData() {
     try {
-      const users = userDataJson
+      const users = await dataConnector.getUsers()
       const securityData = {}
       const loginDevices = {}
       const securityEvents = {}
@@ -349,7 +350,7 @@ class DataStorageManager {
    */
   async initGoalData() {
     try {
-      const users = userDataJson
+      const users = await dataConnector.getUsers()
       const userGoals = {}
       const goalProgress = {}
       

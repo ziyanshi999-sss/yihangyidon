@@ -145,7 +145,7 @@ export default {
       try {
         uni.showLoading({ title: '加载中...' })
         
-        // 从user.json获取信用卡数据
+        // 从数据连接器获取信用卡数据
         const users = uni.getStorageSync('users') || []
         const currentUser = users.find(user => user.isLoggedIn)
         

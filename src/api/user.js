@@ -104,3 +104,23 @@ export const realNameAuth = (authInfo) => {
 export const getAuthStatus = () => {
   return http.get('/user/auth-status')
 }
+
+/**
+ * 用户登出
+ */
+export const logout = () => {
+  return new Promise((resolve) => {
+    // 清除本地存储的用户信息
+    uni.removeStorageSync('token')
+    uni.removeStorageSync('userInfo')
+    uni.removeStorageSync('currentUser')
+    uni.removeStorageSync('isLoggedIn')
+    
+    // 清除其他相关存储
+    uni.removeStorageSync('users')
+    uni.removeStorageSync('users_backup')
+    
+    console.log('✅ 用户登出成功')
+    resolve({ success: true })
+  })
+}

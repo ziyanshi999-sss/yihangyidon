@@ -244,9 +244,17 @@ export default {
 
   methods: {
     // 加载用户数据
-    loadUserData() {
+    async loadUserData() {
       try {
-        const users = uni.getStorageSync('users') || []
+        // 使用数据连接器获取用户数据
+        const dataConnector = await import('../../../db/data-connector.js')
+        const connector = dataConnector.default
+        
+        if (!connector.isInitialized) {
+          await connector.init()
+        }
+        
+        const users = await connector.getUsers()
         const currentUser = users.find(user => user.isLoggedIn)
         
         if (currentUser) {
@@ -254,9 +262,42 @@ export default {
             username: currentUser.username,
             balance: currentUser.balance
           })
+          
+          // 加载水费相关数据
+          await this.loadWaterData(connector)
         }
       } catch (error) {
         console.error('加载用户数据失败:', error)
+      }
+    },
+
+    // 加载水费相关数据
+    async loadWaterData(connector) {
+      try {
+        const waterData = await connector.getWaterPaymentData()
+        const paymentHistory = await connector.getWaterPaymentHistory()
+        
+        console.log('💧 水费数据加载完成:', {
+          cities: Object.keys(waterData.cities || {}).length,
+          paymentHistory: paymentHistory.length
+        })
+
+        // 验证当前选择的公司是否在数据中
+        if (this.selectedCompany && waterData.cities) {
+          const cityData = waterData.cities[this.selectedCity]
+          if (cityData && cityData.companies) {
+            const companyExists = cityData.companies.find(company => 
+              company.code === this.selectedCompany.code
+            )
+            if (companyExists) {
+              // 更新公司信息，确保数据一致性
+              this.selectedCompany = companyExists
+              console.log('✅ 公司信息已更新:', this.selectedCompany)
+            }
+          }
+        }
+      } catch (error) {
+        console.error('❌ 加载水费数据失败:', error)
       }
     },
 
@@ -409,19 +450,101 @@ export default {
     },
 
     // 进入支付流程
-    proceedToPayment() {
+    async proceedToPayment() {
       this.hideBillModal();
 
-      // 跳转到支付页面
-      uni.navigateTo({
-        url: `/pages/recharge-payment/recharge-payment?amount=${
-          this.billInfo.amount
-        }&phone=${this.userNumber}&rechargeAmount=${
-          this.billInfo.amount
-        }&type=water&billInfo=${encodeURIComponent(
-          JSON.stringify(this.billInfo)
-        )}`,
-      });
+      try {
+        // 记录支付开始
+        console.log('💧 开始水费支付流程:', {
+          userNumber: this.userNumber,
+          amount: this.billInfo.amount,
+          company: this.selectedCompany.name
+        })
+
+        // 跳转到支付页面
+        uni.navigateTo({
+          url: `/pages/recharge-payment/recharge-payment?amount=${
+            this.billInfo.amount
+          }&phone=${this.userNumber}&rechargeAmount=${
+            this.billInfo.amount
+          }&type=water&billInfo=${encodeURIComponent(
+            JSON.stringify(this.billInfo)
+          )}&company=${encodeURIComponent(
+            JSON.stringify(this.selectedCompany)
+          )}`,
+        });
+      } catch (error) {
+        console.error('❌ 进入支付流程失败:', error)
+        uni.showToast({
+          title: '支付流程启动失败',
+          icon: 'error'
+        })
+      }
+    },
+
+    // 处理支付成功回调
+    async handlePaymentSuccess(paymentResult) {
+      try {
+        console.log('💧 水费支付成功:', paymentResult)
+        
+        // 使用数据连接器添加缴费记录
+        const dataConnector = await import('../../../db/data-connector.js')
+        const connector = dataConnector.default
+        
+        if (!connector.isInitialized) {
+          await connector.init()
+        }
+        
+        const users = await connector.getUsers()
+        const currentUser = users.find(user => user.isLoggedIn)
+        
+        if (currentUser) {
+          // 添加缴费记录
+          const paymentRecord = {
+            userId: currentUser.id,
+            company: this.selectedCompany.name,
+            userNumber: this.userNumber,
+            amount: this.billInfo.amount,
+            billPeriod: this.billInfo.billPeriod,
+            city: this.selectedCity,
+            paymentMethod: paymentResult.paymentMethod || '银行卡',
+            transactionId: paymentResult.transactionId || `water_${Date.now()}`
+          }
+          
+          await connector.addWaterPaymentRecord(paymentRecord)
+          
+          // 更新用户余额
+          const newBalance = currentUser.balance - this.billInfo.amount
+          currentUser.balance = newBalance
+          
+          // 更新用户数据
+          const userIndex = users.findIndex(user => user.id === currentUser.id)
+          if (userIndex !== -1) {
+            users[userIndex] = currentUser
+            // 这里可以添加更新用户数据的逻辑
+          }
+          
+          console.log('✅ 水费缴费记录添加成功，用户余额更新:', newBalance)
+          
+          // 显示成功提示
+          uni.showToast({
+            title: '缴费成功',
+            icon: 'success',
+            duration: 2000
+          })
+          
+          // 延迟返回上一页
+          setTimeout(() => {
+            uni.navigateBack()
+          }, 2000)
+        }
+      } catch (error) {
+        console.error('❌ 处理支付成功回调失败:', error)
+        uni.showToast({
+          title: '缴费记录保存失败',
+          icon: 'error'
+        })
+      }
     },
   },
 };

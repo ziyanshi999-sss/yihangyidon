@@ -11,6 +11,10 @@
 
     <!-- 客服模块 -->
     <view class="service-card" @click="onOnlineService">
+      <view class="ai-assistant" @click.stop="goToAIWealthManager">
+        <image class="ai-assistant-icon" src="/static/wealth/aiavatar.png" mode="aspectFill" />
+        <text class="ai-assistant-text">AI助手</text>
+      </view>
       <image class="service-icon" src="/static/tabbar/service.png" mode="aspectFit" />
       <view class="service-info">
         <text class="service-title">专属客服</text>
@@ -25,20 +29,28 @@
 
     <!-- 四宫格入口 -->
     <view class="entry-grid">
-      <view class="entry-item" @click="navigateToPage('deposit')">
-        <view class="entry-icon">🏦</view>
-        <text class="entry-text">存款</text>
+      <view class="entry-item" @click="navigateToPage('branch')">
+        <view class="entry-icon branch-icon">
+          <text class="icon-text">网</text>
+        </view>
+        <text class="entry-text">我的网点</text>
       </view>
       <view class="entry-item" @click="navigateToPage('product')">
-        <view class="entry-icon">📈</view>
+        <view class="entry-icon product-icon">
+          <text class="icon-text">理</text>
+        </view>
         <text class="entry-text">理财产品</text>
       </view>
       <view class="entry-item" @click="navigateToPage('insurance')">
-        <view class="entry-icon">🛡️</view>
+        <view class="entry-icon insurance-icon">
+          <text class="icon-text">保</text>
+        </view>
         <text class="entry-text">保险</text>
       </view>
       <view class="entry-item" @click="navigateToPage('forex')">
-        <view class="entry-icon">💱</view>
+        <view class="entry-icon forex-icon">
+          <text class="icon-text">汇</text>
+        </view>
         <text class="entry-text">外汇</text>
       </view>
     </view>
@@ -237,6 +249,8 @@
 import ServiceModal from '@/components/common/ServiceModal.vue'
 import { getCurrentUserWealthData, initWealthDataSync, getCurrentUserId } from '@/api/wealth.js'
 import { checkAndFixUserDataConsistency } from '@/utils/data-consistency.js'
+import themeManager from '@/utils/theme.js'
+import { useAppStore } from '@/stores/app.js'
 
 export default {
   components: {
@@ -247,6 +261,7 @@ export default {
       hideAmount: false,
       activeTab: 'deposit',
       showServiceModal: false,
+      currentTheme: 'light',
       tabs: [
         { key: 'deposit', name: '存款' },
         { key: 'product', name: '理财产品' },
@@ -320,6 +335,7 @@ export default {
     this.ensureLoginStatus()
     this.initDataSync()
     this.loadWealthData()
+    this.initTheme()
   },
   
   methods: {
@@ -329,32 +345,57 @@ export default {
       const userInfo = uni.getStorageSync('userInfo')
       
       if (!isLoggedIn || !userInfo) {
-        // 使用数据一致性检查确保用户信息正确
-        const consistentUserInfo = checkAndFixUserDataConsistency()
+        console.log('财富页面：用户未登录，尝试从数据库恢复登录状态')
         
-        if (consistentUserInfo) {
-          uni.setStorageSync('isLoggedIn', true)
-          console.log('已设置真实用户登录状态:', consistentUserInfo.username, '余额:', consistentUserInfo.balance)
-        } else {
-          // 如果数据库中没有用户，使用默认数据
-          const defaultUser = {
-            id: 'u001',
-            username: '李华',
-            phone: '13888888888',
-            balance: 280000.00,
-            nickname: '华华',
-            realName: '李华',
-            email: 'lihua@example.com',
-            gender: '女',
-            birthDate: '1995-03-15',
-            address: '北京市朝阳区建国门外大街1号'
+        // 尝试从数据库恢复登录状态
+        try {
+          const users = uni.getStorageSync('users') || []
+          const loggedInUser = users.find(user => user.isLoggedIn === true)
+          
+          if (loggedInUser) {
+            console.log('从数据库恢复登录状态:', loggedInUser.username)
+            // 恢复登录状态
+            uni.setStorageSync('userInfo', loggedInUser)
+            uni.setStorageSync('isLoggedIn', true)
+            uni.setStorageSync('currentUser', loggedInUser)
+            uni.setStorageSync('currentUserId', loggedInUser.id)
+          } else {
+            // 使用数据一致性检查确保用户信息正确
+            const consistentUserInfo = checkAndFixUserDataConsistency()
+            
+            if (consistentUserInfo) {
+              uni.setStorageSync('isLoggedIn', true)
+              console.log('已设置真实用户登录状态:', consistentUserInfo.username, '余额:', consistentUserInfo.balance)
+            } else {
+              // 如果数据库中没有用户，使用默认数据
+              const defaultUser = {
+                id: 'u001',
+                username: '李华',
+                phone: '13888888888',
+                balance: 280000.00,
+                nickname: '华华',
+                realName: '李华',
+                email: 'lihua@example.com',
+                gender: '女',
+                birthDate: '1995-03-15',
+                address: '北京市朝阳区建国门外大街1号'
+              }
+              
+              uni.setStorageSync('userInfo', defaultUser)
+              uni.setStorageSync('isLoggedIn', true)
+              uni.setStorageSync('currentUser', defaultUser)
+              
+              console.log('已设置默认用户登录状态用于测试')
+            }
           }
-          
-          uni.setStorageSync('userInfo', defaultUser)
-          uni.setStorageSync('isLoggedIn', true)
-          uni.setStorageSync('currentUser', defaultUser)
-          
-          console.log('已设置默认用户登录状态用于测试')
+        } catch (recoveryError) {
+          console.error('恢复登录状态失败:', recoveryError)
+          // 使用数据一致性检查作为备选方案
+          const consistentUserInfo = checkAndFixUserDataConsistency()
+          if (consistentUserInfo) {
+            uni.setStorageSync('isLoggedIn', true)
+            console.log('已设置真实用户登录状态:', consistentUserInfo.username, '余额:', consistentUserInfo.balance)
+          }
         }
       } else {
         // 即使已登录，也要检查数据一致性
@@ -379,6 +420,13 @@ export default {
     },
     onCallHotline() {
       uni.makePhoneCall({ phoneNumber: this.serviceHotline })
+    },
+    
+    // 跳转到AI财富管理
+    goToAIWealthManager() {
+      uni.navigateTo({
+        url: '/pages/wealth/ai-wealth-manager'
+      })
     },
     onRecharge() {
       uni.showToast({ title: '充值功能开发中', icon: 'none' })
@@ -443,7 +491,7 @@ export default {
       }
       
       const pageMap = {
-        deposit: '/pages/wealth/deposit',
+        branch: '/pages/wealth/branch',
         product: '/pages/wealth/product',
         insurance: '/pages/wealth/insurance',
         forex: '/pages/wealth/forex'
@@ -504,7 +552,7 @@ export default {
       })
     },
     
-    // 从user.json加载财富数据
+    // 从数据连接器加载财富数据
     loadWealthData() {
       try {
         const wealthData = getCurrentUserWealthData()
@@ -608,6 +656,29 @@ export default {
       } catch (error) {
         console.error('计算总资产失败:', error)
       }
+    },
+
+    // 初始化主题
+    initTheme() {
+      try {
+        this.currentTheme = themeManager.getCurrentTheme()
+        console.log('财富页面初始化主题:', this.currentTheme)
+      } catch (error) {
+        console.error('财富页面初始化主题失败:', error)
+      }
+    },
+
+    // 检查主题变化
+    checkThemeChange() {
+      try {
+        const currentTheme = themeManager.getCurrentTheme()
+        if (this.currentTheme !== currentTheme) {
+          this.currentTheme = currentTheme
+          console.log('财富页面主题已更新:', currentTheme)
+        }
+      } catch (error) {
+        console.error('财富页面检查主题变化失败:', error)
+      }
     }
   }
 }
@@ -615,8 +686,9 @@ export default {
 
 <style scoped>
 .wealth-container {
-  background: #f5f7fb;
+  background: var(--theme-background, #f5f7fb);
   min-height: 100vh;
+  transition: background-color 0.3s ease;
 }
 
 /* 顶部轮播图片样式 */
@@ -625,45 +697,216 @@ export default {
 .swiper-image { width: 100%; height: 100%; border-radius: 20rpx; }
 
 /* 客服模块 */
-.service-card { margin: 0 20rpx 16rpx; background: #fff; border-radius: 16rpx; padding: 16rpx; display: flex; align-items: center; gap: 16rpx; box-shadow: 0 6rpx 20rpx rgba(0,0,0,0.04); border: 2rpx solid #f0f0f0; }
+.service-card { margin: 0 20rpx 16rpx; background: var(--theme-card-background, #fff); border-radius: 16rpx; padding: 16rpx; display: flex; align-items: center; gap: 16rpx; box-shadow: 0 6rpx 20rpx var(--theme-shadow-light, rgba(0,0,0,0.04)); border: 2rpx solid var(--theme-border, #f0f0f0); transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; }
 .service-icon { width: 64rpx; height: 64rpx; }
 .service-info { flex: 1; }
-.service-title { font-size: 28rpx; font-weight: 700; color: #222; }
-.service-sub { display: block; font-size: 22rpx; color: #888; margin-top: 4rpx; }
+.service-title { font-size: 28rpx; font-weight: 700; color: var(--theme-text-primary, #222); transition: color 0.3s ease; }
+.service-sub { display: block; font-size: 22rpx; color: var(--theme-text-secondary, #888); margin-top: 4rpx; transition: color 0.3s ease; }
 .service-actions { display: flex; gap: 12rpx; }
 .mini-btn.ghost { background: #fff; color: #2e7d32; border: 2rpx solid #2e7d32; }
 .mini-btn.call { background: #1e88e5; }
 
+/* AI助手 */
+.ai-assistant {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6rpx;
+  padding: 8rpx 12rpx;
+  background: linear-gradient(135deg, #f8f9ff, #e8f0ff);
+  border-radius: 16rpx;
+  border: 1rpx solid rgba(102, 126, 234, 0.15);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  min-width: 80rpx;
+  box-shadow: 0 2rpx 8rpx rgba(102, 126, 234, 0.1);
+}
+
+.ai-assistant::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transition: left 0.6s ease;
+}
+
+.ai-assistant:active::before {
+  left: 100%;
+}
+
+.ai-assistant:active {
+  background: linear-gradient(135deg, #e8f0ff, #d6e7ff);
+  transform: scale(0.98);
+  box-shadow: 0 4rpx 12rpx rgba(102, 126, 234, 0.2);
+}
+
+.ai-assistant-icon {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  border: 1rpx solid rgba(102, 126, 234, 0.2);
+  box-shadow: 0 2rpx 6rpx rgba(102, 126, 234, 0.15);
+}
+
+.ai-assistant-text {
+  font-size: 18rpx;
+  color: #667eea;
+  font-weight: 500;
+  text-align: center;
+  line-height: 1.2;
+}
+
 
 .entry-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20rpx; padding: 0 20rpx 20rpx; }
-.entry-item { background: #fff; border-radius: 16rpx; padding: 20rpx 10rpx; text-align: center; box-shadow: 0 6rpx 20rpx rgba(0,0,0,0.04); }
-.entry-icon { font-size: 48rpx; margin-bottom: 10rpx; }
-.entry-text { font-size: 24rpx; color: #333; }
+.entry-item { 
+  background: var(--theme-card-background, #fff); 
+  border-radius: 16rpx; 
+  padding: 20rpx 10rpx; 
+  text-align: center; 
+  box-shadow: 0 6rpx 20rpx var(--theme-shadow-light, rgba(0,0,0,0.04));
+  transition: all 0.3s ease;
+}
+.entry-item:active {
+  transform: scale(0.95);
+  box-shadow: 0 3rpx 10rpx rgba(0,0,0,0.1);
+}
+.entry-icon { 
+  width: 48rpx; 
+  height: 48rpx; 
+  margin: 0 auto 10rpx; 
+  border-radius: 12rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.icon-text {
+  font-size: 24rpx;
+  font-weight: bold;
+  color: white;
+  text-shadow: 0 1rpx 2rpx rgba(0,0,0,0.2);
+}
+/* 网点图标 - 银行建筑风格 */
+.branch-icon {
+  background: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%);
+}
+.branch-icon::before {
+  content: '';
+  position: absolute;
+  top: 8rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20rpx;
+  height: 12rpx;
+  background: rgba(255,255,255,0.3);
+  border-radius: 2rpx;
+}
+.branch-icon::after {
+  content: '';
+  position: absolute;
+  bottom: 8rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24rpx;
+  height: 16rpx;
+  background: rgba(255,255,255,0.2);
+  border-radius: 2rpx;
+}
+/* 理财产品图标 - 图表风格 */
+.product-icon {
+  background: linear-gradient(135deg, #1976d2 0%, #42a5f5 100%);
+}
+.product-icon::before {
+  content: '';
+  position: absolute;
+  bottom: 8rpx;
+  left: 8rpx;
+  width: 4rpx;
+  height: 12rpx;
+  background: rgba(255,255,255,0.6);
+  border-radius: 1rpx;
+}
+.product-icon::after {
+  content: '';
+  position: absolute;
+  bottom: 8rpx;
+  right: 8rpx;
+  width: 4rpx;
+  height: 20rpx;
+  background: rgba(255,255,255,0.8);
+  border-radius: 1rpx;
+}
+/* 保险图标 - 盾牌风格 */
+.insurance-icon {
+  background: linear-gradient(135deg, #7b1fa2 0%, #ab47bc 100%);
+}
+.insurance-icon::before {
+  content: '';
+  position: absolute;
+  top: 8rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 12rpx solid transparent;
+  border-right: 12rpx solid transparent;
+  border-bottom: 16rpx solid rgba(255,255,255,0.3);
+}
+/* 外汇图标 - 货币符号风格 */
+.forex-icon {
+  background: linear-gradient(135deg, #f57c00 0%, #ffb74d 100%);
+}
+.forex-icon::before {
+  content: '$';
+  position: absolute;
+  top: 8rpx;
+  left: 8rpx;
+  font-size: 16rpx;
+  color: rgba(255,255,255,0.7);
+  font-weight: bold;
+}
+.forex-icon::after {
+  content: '¥';
+  position: absolute;
+  bottom: 8rpx;
+  right: 8rpx;
+  font-size: 16rpx;
+  color: rgba(255,255,255,0.7);
+  font-weight: bold;
+}
+.entry-text { font-size: 24rpx; color: var(--theme-text-primary, #333); transition: color 0.3s ease; }
 
 .tabs { display: flex; padding: 0 12rpx; margin: 0 8rpx 12rpx; gap: 12rpx; }
-.tab-item { flex: none; padding: 16rpx 24rpx; background: #fff; border-radius: 999rpx; color: #333; }
-.tab-item.active { background: #2e7d32; color: #fff; font-weight: 700; }
+.tab-item { flex: none; padding: 16rpx 24rpx; background: var(--theme-card-background, #fff); border-radius: 999rpx; color: var(--theme-text-primary, #333); transition: background-color 0.3s ease, color 0.3s ease; }
+.tab-item.active { background: var(--theme-primary, #2e7d32); color: #fff; font-weight: 700; }
 
 .content { padding: 0 20rpx 30rpx; }
 
-.section-card { background: #fff; border-radius: 16rpx; padding: 24rpx; margin-bottom: 20rpx; box-shadow: 0 6rpx 20rpx rgba(0,0,0,0.04); }
-.section-card.highlight { background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%); }
+.section-card { background: var(--theme-card-background, #fff); border-radius: 16rpx; padding: 24rpx; margin-bottom: 20rpx; box-shadow: 0 6rpx 20rpx var(--theme-shadow-light, rgba(0,0,0,0.04)); transition: background-color 0.3s ease, box-shadow 0.3s ease; }
+.section-card.highlight { background: linear-gradient(135deg, #e8f5e9 0%, var(--theme-card-background, #ffffff) 100%); }
 .section-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 20rpx; }
-.section-title { font-size: 32rpx; font-weight: 700; color: #222; }
-.sub { font-size: 22rpx; color: #888; }
-.link { font-size: 24rpx; color: #2e7d32; }
+.section-title { font-size: 32rpx; font-weight: 700; color: var(--theme-text-primary, #222); transition: color 0.3s ease; }
+.sub { font-size: 22rpx; color: var(--theme-text-secondary, #888); transition: color 0.3s ease; }
+.link { font-size: 24rpx; color: var(--theme-primary, #2e7d32); transition: color 0.3s ease; }
 
 .deposit-stats { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; align-items: center; gap: 12rpx; }
-.divider { width: 2rpx; height: 60rpx; background: #eee; }
-.stat-label { font-size: 24rpx; color: #666; }
-.stat-value { font-size: 32rpx; font-weight: 700; color: #222; margin-top: 6rpx; display: block; }
+.divider { width: 2rpx; height: 60rpx; background: var(--theme-border, #eee); transition: background-color 0.3s ease; }
+.stat-label { font-size: 24rpx; color: var(--theme-text-secondary, #666); transition: color 0.3s ease; }
+.stat-value { font-size: 32rpx; font-weight: 700; color: var(--theme-text-primary, #222); margin-top: 6rpx; display: block; transition: color 0.3s ease; }
 
 .list { display: flex; flex-direction: column; gap: 20rpx; }
-.list-item { display: flex; align-items: center; justify-content: space-between; background: #fff; border-radius: 12rpx; padding: 18rpx; border: 2rpx solid #f0f0f0; }
+.list-item { display: flex; align-items: center; justify-content: space-between; background: var(--theme-card-background, #fff); border-radius: 12rpx; padding: 18rpx; border: 2rpx solid var(--theme-border, #f0f0f0); transition: background-color 0.3s ease, border-color 0.3s ease; }
 .li-left { flex: 1; }
 .title-row { display: flex; align-items: center; gap: 10rpx; }
-.li-title { font-size: 30rpx; font-weight: 700; color: #222; }
-.li-sub { font-size: 24rpx; color: #888; margin-top: 6rpx; display: block; }
+.li-title { font-size: 30rpx; font-weight: 700; color: var(--theme-text-primary, #222); transition: color 0.3s ease; }
+.li-sub { font-size: 24rpx; color: var(--theme-text-secondary, #888); margin-top: 6rpx; display: block; transition: color 0.3s ease; }
 .tag { font-size: 22rpx; padding: 4rpx 10rpx; border-radius: 8rpx; background: #f2f4f8; color: #556; }
 .tag.safe { background: #e3f2e6; color: #2e7d32; }
 .tag.warn { background: #fff4e5; color: #b26a00; }
@@ -671,26 +914,26 @@ export default {
 .li-right { min-width: 220rpx; display: flex; flex-direction: column; align-items: flex-end; gap: 8rpx; }
 .rate { font-size: 34rpx; font-weight: 700; color: #ff6a00; }
 .rate.strong { color: #e53935; }
-.rate-sub { font-size: 22rpx; color: #888; }
+.rate-sub { font-size: 22rpx; color: var(--theme-text-secondary, #888); transition: color 0.3s ease; }
 .mini-btn { background: #2e7d32; color: #fff; border: none; border-radius: 999rpx; padding: 10rpx 22rpx; font-size: 24rpx; }
 .mini-btn.primary { background: #1e88e5; }
 
 .ins-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16rpx; }
-.ins-card { background: #fff; border-radius: 12rpx; padding: 18rpx; border: 2rpx solid #f0f0f0; }
+.ins-card { background: var(--theme-card-background, #fff); border-radius: 12rpx; padding: 18rpx; border: 2rpx solid var(--theme-border, #f0f0f0); transition: background-color 0.3s ease, border-color 0.3s ease; }
 .ins-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8rpx; }
-.ins-name { font-size: 28rpx; font-weight: 700; color: #222; }
+.ins-name { font-size: 28rpx; font-weight: 700; color: var(--theme-text-primary, #222); transition: color 0.3s ease; }
 .ins-tag { font-size: 20rpx; padding: 4rpx 10rpx; border-radius: 999rpx; color: #fff; }
 .ins-tag.health { background: #43a047; }
 .ins-tag.accident { background: #1e88e5; }
 .ins-tag.critical { background: #8e24aa; }
-.ins-desc { font-size: 24rpx; color: #666; display: block; margin: 6rpx 0 12rpx; }
+.ins-desc { font-size: 24rpx; color: var(--theme-text-secondary, #666); display: block; margin: 6rpx 0 12rpx; transition: color 0.3s ease; }
 .ins-foot { display: flex; align-items: center; justify-content: space-between; }
 .ins-prem { font-size: 26rpx; color: #e53935; font-weight: 700; }
 
 .fx-table { width: 100%; }
-.fx-row { display: grid; grid-template-columns: 2fr 2fr 2fr 2fr; align-items: center; padding: 14rpx 10rpx; border-bottom: 2rpx solid #f1f1f1; }
-.fx-head { background: #f8fafc; border-radius: 8rpx; font-weight: 600; }
-.fx-col { font-size: 26rpx; color: #333; }
+.fx-row { display: grid; grid-template-columns: 2fr 2fr 2fr 2fr; align-items: center; padding: 14rpx 10rpx; border-bottom: 2rpx solid var(--theme-border, #f1f1f1); transition: border-color 0.3s ease; }
+.fx-head { background: var(--theme-background, #f8fafc); border-radius: 8rpx; font-weight: 600; transition: background-color 0.3s ease; }
+.fx-col { font-size: 26rpx; color: var(--theme-text-primary, #333); transition: color 0.3s ease; }
 .fx-col.code { font-weight: 700; }
 .fx-col.price { color: #111; }
 .fx-col.change.up { color: #2e7d32; }
@@ -698,23 +941,23 @@ export default {
 .fx-col.op { text-align: right; }
 
 .tool-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16rpx; }
-.tool-item { background: #fff; border-radius: 12rpx; padding: 20rpx 10rpx; text-align: center; border: 2rpx solid #f0f0f0; }
+.tool-item { background: var(--theme-card-background, #fff); border-radius: 12rpx; padding: 20rpx 10rpx; text-align: center; border: 2rpx solid var(--theme-border, #f0f0f0); transition: background-color 0.3s ease, border-color 0.3s ease; }
 .tool-icon { font-size: 40rpx; display: block; margin-bottom: 8rpx; }
-.tool-text { font-size: 24rpx; color: #333; }
+.tool-text { font-size: 24rpx; color: var(--theme-text-primary, #333); transition: color 0.3s ease; }
 
 /* 热点资讯 */
 .news-list { display: flex; flex-direction: column; gap: 16rpx; }
-.news-item { display: flex; align-items: center; gap: 14rpx; background: #fff; border: 2rpx solid #f0f0f0; border-radius: 14rpx; padding: 14rpx; }
+.news-item { display: flex; align-items: center; gap: 14rpx; background: var(--theme-card-background, #fff); border: 2rpx solid var(--theme-border, #f0f0f0); border-radius: 14rpx; padding: 14rpx; transition: background-color 0.3s ease, border-color 0.3s ease; }
 .news-cover { width: 160rpx; height: 112rpx; border-radius: 10rpx; object-fit: cover; }
 .news-body { flex: 1; min-width: 0; }
-.news-title { font-size: 28rpx; font-weight: 700; color: #1f2d3d; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.news-title { font-size: 28rpx; font-weight: 700; color: var(--theme-text-primary, #1f2d3d); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; transition: color 0.3s ease; }
 .news-meta { display: flex; align-items: center; gap: 12rpx; margin-top: 8rpx; }
 .news-tag { font-size: 20rpx; padding: 4rpx 10rpx; border-radius: 999rpx; color: #fff; background: #90a4ae; }
 .news-tag.tag-new { background: linear-gradient(135deg, #42a5f5, #1e88e5); }
 .news-tag.tag-rate { background: linear-gradient(135deg, #66bb6a, #43a047); }
 .news-tag.tag-wealth { background: linear-gradient(135deg, #ff7043, #f4511e); }
 .news-tag.tag-fx { background: linear-gradient(135deg, #ab47bc, #8e24aa); }
-.news-source { font-size: 22rpx; color: #607d8b; }
-.news-time { font-size: 22rpx; color: #90a4ae; }
-.news-arrow { font-size: 36rpx; color: #cfd8dc; padding-left: 8rpx; }
+.news-source { font-size: 22rpx; color: var(--theme-text-secondary, #607d8b); transition: color 0.3s ease; }
+.news-time { font-size: 22rpx; color: var(--theme-text-secondary, #90a4ae); transition: color 0.3s ease; }
+.news-arrow { font-size: 36rpx; color: var(--theme-text-secondary, #cfd8dc); padding-left: 8rpx; transition: color 0.3s ease; }
 </style>
